@@ -1567,6 +1567,8 @@ void monster::wander_to( const tripoint_abs_ms &p, int f )
 {
     wander_pos = p;
     wandf = f;
+    // Trilobit: turn toward the noise.
+    trl_face_toward( p );
 }
 
 Creature *monster::attack_target()
