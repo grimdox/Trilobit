@@ -1,0 +1,932 @@
+[
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_noodle_alley",
+  "name": "noodle alley",
+  "sym": "n",
+  "color": "light_red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_night_market",
+  "name": "night market",
+  "sym": "M",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_arcade_hall",
+  "name": "arcade hall",
+  "sym": "A",
+  "color": "pink",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_tea_house",
+  "name": "tea house",
+  "sym": "t",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_izakaya",
+  "name": "izakaya",
+  "sym": "I",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_neon_lounge",
+  "name": "neon lounge",
+  "sym": "L",
+  "color": "pink",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_capsule_hotel",
+  "name": "capsule hotel",
+  "sym": "H",
+  "color": "white",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_convenience_store",
+  "name": "convenience store",
+  "sym": "C",
+  "color": "light_cyan",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_electronics_bazaar",
+  "name": "electronics bazaar",
+  "sym": "E",
+  "color": "light_cyan",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_implant_clinic",
+  "name": "implant clinic",
+  "sym": "+",
+  "color": "white",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_corp_lobby",
+  "name": "corporate lobby",
+  "sym": "L",
+  "color": "white",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_govt_office",
+  "name": "government office",
+  "sym": "G",
+  "color": "light_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_server_hall",
+  "name": "server hall",
+  "sym": "S",
+  "color": "light_cyan",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_transit_station",
+  "name": "transit station",
+  "sym": "T",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_bike_pad",
+  "name": "hover-bike pad",
+  "sym": "B",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_slum_block",
+  "name": "slum block",
+  "sym": "s",
+  "color": "red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_micro_apartment",
+  "name": "micro apartment",
+  "sym": "a",
+  "color": "light_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_safehouse",
+  "name": "bare safehouse",
+  "sym": "h",
+  "color": "dark_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_shared_dorm",
+  "name": "shared dorm",
+  "sym": "d",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_rooftop_garden",
+  "name": "rooftop garden",
+  "sym": "g",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_shrine_courtyard",
+  "name": "shrine courtyard",
+  "sym": "S",
+  "color": "light_red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_koi_garden",
+  "name": "koi garden",
+  "sym": "k",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_gallery",
+  "name": "art gallery",
+  "sym": "a",
+  "color": "pink",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_archive_library",
+  "name": "data archive",
+  "sym": "l",
+  "color": "light_cyan",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_mech_garage",
+  "name": "mech garage",
+  "sym": "G",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_scrap_camp",
+  "name": "scrap camp",
+  "sym": "c",
+  "color": "red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_crystal_works",
+  "name": "crystal works",
+  "sym": "*",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_canal_dock",
+  "name": "canal dock",
+  "sym": "d",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_cargo_warehouse",
+  "name": "cargo warehouse",
+  "sym": "W",
+  "color": "brown",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_dojo_hall",
+  "name": "dojo hall",
+  "sym": "D",
+  "color": "brown",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_noodle_alley",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_noodle_alley_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_night_market",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_night_market_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_arcade_hall",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_arcade_hall_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_tea_house",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_tea_house_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_izakaya",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_izakaya_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_neon_lounge",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_neon_lounge_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_capsule_hotel",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_capsule_hotel_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_convenience_store",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_convenience_store_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_electronics_bazaar",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_electronics_bazaar_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_implant_clinic",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_implant_clinic_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_corp_lobby",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_corp_lobby_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_govt_office",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_govt_office_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_server_hall",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_server_hall_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_transit_station",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_transit_station_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_bike_pad",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_bike_pad_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_slum_block",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_slum_block_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_micro_apartment",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_micro_apartment_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_safehouse",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_safehouse_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_shared_dorm",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_shared_dorm_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_rooftop_garden",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_rooftop_garden_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_shrine_courtyard",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_shrine_courtyard_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_koi_garden",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_koi_garden_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_gallery",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_gallery_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_archive_library",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_archive_library_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_mech_garage",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_mech_garage_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_scrap_camp",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_scrap_camp_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_crystal_works",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_crystal_works_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_canal_dock",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_canal_dock_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_cargo_warehouse",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_cargo_warehouse_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_dojo_hall",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_dojo_hall_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ }
+]

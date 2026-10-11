@@ -1,0 +1,82 @@
+[
+ {
+  "tree": "Mend",
+  "blurb": "Repair the body.",
+  "programs": [
+   "Mend: Repair",
+   "Mend: Purge"
+  ]
+ },
+ {
+  "tree": "Shell",
+  "blurb": "Harden the body against damage.",
+  "programs": [
+   "Shell: Plating",
+   "Shell: Reactive Shell"
+  ]
+ },
+ {
+  "tree": "Reflex",
+  "blurb": "Speed and evasion.",
+  "programs": [
+   "Reflex: Overclock",
+   "Reflex: Afterimage"
+  ]
+ },
+ {
+  "tree": "Strike",
+  "blurb": "Sharpen and extend your attacks.",
+  "programs": [
+   "Strike: Lock-On",
+   "Strike: Shock Field"
+  ]
+ },
+ {
+  "tree": "Ghost",
+  "blurb": "Hide from sight and sound.",
+  "programs": [
+   "Ghost: Thermal Cloak",
+   "Ghost: Noise Dampener"
+  ]
+ },
+ {
+  "tree": "Sense",
+  "blurb": "See and detect more.",
+  "programs": [
+   "Sense: Pulse Scan",
+   "Sense: Night Eye"
+  ]
+ },
+ {
+  "tree": "Intrude",
+  "blurb": "Take over enemy systems.",
+  "programs": [
+   "Intrude: Overload",
+   "Intrude: Blind",
+   "Intrude: Lockdown"
+  ]
+ },
+ {
+  "tree": "Fabricate",
+  "blurb": "Print gear from raw energy.",
+  "programs": [
+   "Fabricate: Print Ammo",
+   "Fabricate: Print Bandages"
+  ]
+ },
+ {
+  "tree": "Phase",
+  "blurb": "Move through space.",
+  "programs": [
+   "Phase: Blink",
+   "Phase: Hop"
+  ]
+ },
+ {
+  "tree": "Drain",
+  "blurb": "Take power from enemies.",
+  "programs": [
+   "Drain: Siphon"
+  ]
+ }
+]

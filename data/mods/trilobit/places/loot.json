@@ -1,0 +1,179 @@
+[
+ {
+  "type": "item_group",
+  "id": "trl_loot_food",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "sake_filtered"
+   },
+   {
+    "item": "tea_green"
+   },
+   {
+    "item": "rice_cooked"
+   },
+   {
+    "item": "sushi_fishroll"
+   },
+   {
+    "item": "noodles_fast"
+   },
+   {
+    "item": "cola"
+   },
+   {
+    "item": "energy_drink"
+   },
+   {
+    "item": "candy"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_loot_drink",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "sake_filtered"
+   },
+   {
+    "item": "beer"
+   },
+   {
+    "item": "cola"
+   },
+   {
+    "item": "tea_green"
+   },
+   {
+    "item": "energy_drink"
+   },
+   {
+    "item": "water_clean"
+   },
+   {
+    "item": "cigar"
+   },
+   {
+    "item": "lighter"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_loot_tech",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "circuit"
+   },
+   {
+    "item": "processor"
+   },
+   {
+    "item": "RAM"
+   },
+   {
+    "item": "cable"
+   },
+   {
+    "item": "e_scrap"
+   },
+   {
+    "item": "amplifier"
+   },
+   {
+    "item": "small_lcd_screen"
+   },
+   {
+    "item": "light_battery_cell"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_loot_med",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "bandages"
+   },
+   {
+    "item": "aspirin"
+   },
+   {
+    "item": "vitamins"
+   },
+   {
+    "item": "water_clean"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_loot_tool",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "wrench"
+   },
+   {
+    "item": "screwdriver"
+   },
+   {
+    "item": "hammer"
+   },
+   {
+    "item": "welder"
+   },
+   {
+    "item": "crowbar"
+   },
+   {
+    "item": "duct_tape"
+   },
+   {
+    "item": "scrap"
+   },
+   {
+    "item": "pipe"
+   },
+   {
+    "item": "sheet_metal"
+   },
+   {
+    "item": "flashlight"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_loot_decor",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "kimono"
+   },
+   {
+    "item": "umbrella"
+   },
+   {
+    "item": "candle"
+   },
+   {
+    "item": "tshirt"
+   },
+   {
+    "item": "jacket_light"
+   },
+   {
+    "item": "cash_card"
+   },
+   {
+    "item": "tea_green"
+   }
+  ]
+ }
+]

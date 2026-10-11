@@ -289,6 +289,9 @@
           },
           {
             "item": "trl_implant_kit"
+          },
+          {
+            "group": "trl_new_chips"
           }
         ]
       }

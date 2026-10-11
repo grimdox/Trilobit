@@ -1,0 +1,276 @@
+[
+ {
+  "type": "terrain",
+  "id": "t_trl_pave",
+  "copy-from": "t_sidewalk",
+  "name": "wet paving stones",
+  "description": "Dark stone paving, slick with rain.",
+  "symbol": ".",
+  "color": "dark_gray"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_gravel",
+  "copy-from": "t_dirt",
+  "name": "raked gravel",
+  "description": "Pale gravel raked into neat lines.",
+  "symbol": ".",
+  "color": "light_gray"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_floor_corp",
+  "copy-from": "t_linoleum_white",
+  "name": "clean white tile",
+  "description": "Seamless pale tile, spotless and faintly blue under the light.",
+  "symbol": ".",
+  "color": "light_cyan"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_floor_wood",
+  "copy-from": "t_floor",
+  "name": "polished wood floor",
+  "description": "Dark polished boards.",
+  "symbol": ".",
+  "color": "brown"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_tatami",
+  "copy-from": "t_floor",
+  "name": "tatami mat",
+  "description": "A woven rush mat, pale green and soft underfoot.",
+  "symbol": ".",
+  "color": "light_green"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_slab",
+  "copy-from": "t_floor",
+  "name": "bare concrete slab",
+  "description": "A poured concrete floor, scuffed and oil-stained.",
+  "symbol": ".",
+  "color": "dark_gray"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_checker",
+  "copy-from": "t_linoleum_white",
+  "name": "checker tile",
+  "description": "Black and white tile in a worn checker pattern.",
+  "symbol": ".",
+  "color": "white"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_grating",
+  "copy-from": "t_floor",
+  "name": "metal grating",
+  "description": "A steel floor grating over a dark void.",
+  "symbol": "#",
+  "color": "light_gray"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_hazard",
+  "copy-from": "t_floor",
+  "name": "hazard-striped floor",
+  "description": "Painted yellow and black warning stripes.",
+  "symbol": ".",
+  "color": "yellow"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_neon_cyan",
+  "copy-from": "t_floor",
+  "name": "cyan light floor",
+  "description": "Floor panels with a cyan light strip beneath the glass.",
+  "symbol": ".",
+  "color": "light_cyan",
+  "light_emitted": 6
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_neon_amber",
+  "copy-from": "t_floor",
+  "name": "amber light floor",
+  "description": "Floor panels with a warm amber light strip beneath the glass.",
+  "symbol": ".",
+  "color": "yellow",
+  "light_emitted": 6
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_neon_pink",
+  "copy-from": "t_floor",
+  "name": "magenta light floor",
+  "description": "Floor panels that glow a deep magenta.",
+  "symbol": ".",
+  "color": "pink",
+  "light_emitted": 6
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_crystal",
+  "copy-from": "t_dirt",
+  "name": "crystal-seamed ground",
+  "description": "Rock veined with glowing blue-violet crystal.",
+  "symbol": ".",
+  "color": "light_blue",
+  "light_emitted": 7
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_wall_concrete",
+  "copy-from": "t_concrete_wall",
+  "name": "concrete wall",
+  "description": "A bare poured-concrete wall.",
+  "symbol": "#",
+  "color": "light_gray"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_wall_corp",
+  "copy-from": "t_concrete_wall",
+  "name": "white panel wall",
+  "description": "A smooth white composite wall.",
+  "symbol": "#",
+  "color": "white"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_wall_shoji",
+  "copy-from": "t_concrete_wall",
+  "name": "paper screen wall",
+  "description": "A wall of wooden frames and translucent paper, backlit from within.",
+  "symbol": "#",
+  "color": "light_green",
+  "light_emitted": 3
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_wall_slat",
+  "copy-from": "t_concrete_wall",
+  "name": "wooden slat wall",
+  "description": "A wall of dark vertical wooden slats.",
+  "symbol": "#",
+  "color": "brown"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_wall_rust",
+  "copy-from": "t_concrete_wall",
+  "name": "rusted sheet wall",
+  "description": "Corrugated sheet metal, patched, painted over and rusting.",
+  "symbol": "#",
+  "color": "red"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_wall_mural",
+  "copy-from": "t_concrete_wall",
+  "name": "mural wall",
+  "description": "A concrete wall painted with a huge faded mural of waves and cranes.",
+  "symbol": "#",
+  "color": "light_blue"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_wall_pipes",
+  "copy-from": "t_concrete_wall",
+  "name": "pipework wall",
+  "description": "A wall crowded with pipes, valves and cable trays.",
+  "symbol": "#",
+  "color": "dark_gray"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_wall_screens",
+  "copy-from": "t_concrete_wall",
+  "name": "screen wall",
+  "description": "A wall of small screens cycling through static and adverts.",
+  "symbol": "#",
+  "color": "light_cyan",
+  "light_emitted": 7
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_wall_neon",
+  "copy-from": "t_concrete_wall",
+  "name": "neon-banded wall",
+  "description": "A black wall with a glowing neon band running along it.",
+  "symbol": "#",
+  "color": "pink",
+  "light_emitted": 9
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_window",
+  "copy-from": "t_window_no_curtains",
+  "name": "tinted window",
+  "description": "A tall window of teal-tinted glass.",
+  "symbol": "\"",
+  "color": "cyan"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_door_c",
+  "copy-from": "t_door_glass_c",
+  "name": "sliding door",
+  "description": "A glass sliding door.",
+  "symbol": "+",
+  "color": "light_cyan",
+  "open": "t_trl_door_o"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_door_o",
+  "copy-from": "t_door_glass_o",
+  "name": "open sliding door",
+  "description": "A glass sliding door, slid open.",
+  "symbol": "'",
+  "color": "light_cyan",
+  "close": "t_trl_door_c"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_screen_c",
+  "copy-from": "t_door_c",
+  "name": "paper screen door",
+  "description": "A sliding screen door of wood and paper.",
+  "symbol": "+",
+  "color": "light_green",
+  "open": "t_trl_screen_o"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_screen_o",
+  "copy-from": "t_door_o",
+  "name": "open paper screen door",
+  "description": "A sliding screen door, pushed open.",
+  "symbol": "'",
+  "color": "light_green",
+  "close": "t_trl_screen_c"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_shutter_c",
+  "copy-from": "t_door_c",
+  "name": "rust shutter",
+  "description": "A rolling shutter patched with sheet metal.",
+  "symbol": "+",
+  "color": "red",
+  "open": "t_trl_shutter_o"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_shutter_o",
+  "copy-from": "t_door_o",
+  "name": "open rust shutter",
+  "description": "A rolling shutter, rattled up.",
+  "symbol": "'",
+  "color": "red",
+  "close": "t_trl_shutter_c"
+ }
+]

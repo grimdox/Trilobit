@@ -53,7 +53,7 @@
   {
     "type": "SPELL",
     "id": "trl_hack_overload",
-    "name": "Hack: Overload",
+    "name": "Intrude: Overload",
     "description": "Burns out a target's circuits with a surge of current.  Requires a cyber brain.",
     "spell_class": "NONE",
     "difficulty": 0,
@@ -87,7 +87,7 @@
   {
     "type": "SPELL",
     "id": "trl_hack_blind",
-    "name": "Hack: Blind",
+    "name": "Intrude: Blind",
     "description": "Floods a target's optic nerve with noise.  Requires a cyber brain.",
     "spell_class": "NONE",
     "difficulty": 0,
@@ -125,7 +125,7 @@
   {
     "type": "SPELL",
     "id": "trl_hack_lock",
-    "name": "Hack: Lockdown",
+    "name": "Intrude: Lockdown",
     "description": "Seizes a target's motor control for a few seconds.  Requires a cyber brain.",
     "spell_class": "NONE",
     "difficulty": 0,
@@ -163,7 +163,7 @@
   {
     "type": "SPELL",
     "id": "trl_nano_repair",
-    "name": "Nano: Repair",
+    "name": "Mend: Repair",
     "description": "Nanites knit your wounds.  Requires a cyber brain.",
     "spell_class": "NONE",
     "difficulty": 0,
@@ -198,7 +198,7 @@
   {
     "type": "SPELL",
     "id": "trl_nano_plating",
-    "name": "Nano: Plating",
+    "name": "Shell: Plating",
     "description": "Nanites harden your skin into plating for a minute.  Requires a cyber brain.",
     "spell_class": "NONE",
     "difficulty": 0,
@@ -236,7 +236,7 @@
   {
     "type": "SPELL",
     "id": "trl_nano_overclock",
-    "name": "Nano: Overclock",
+    "name": "Reflex: Overclock",
     "description": "Nanites overclock your nervous system for a minute.  Requires a cyber brain.",
     "spell_class": "NONE",
     "difficulty": 0,
@@ -275,7 +275,7 @@
     "type": "effect_type",
     "id": "trl_nano_plating",
     "name": [
-      "Nano Plating"
+      "Shell Plating"
     ],
     "desc": [
       "Your skin is hardened."

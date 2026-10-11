@@ -1,0 +1,1277 @@
+[
+ {
+  "type": "furniture",
+  "id": "f_trl_lantern",
+  "name": "paper lantern",
+  "description": "A round paper lantern glowing a soft amber.",
+  "symbol": "o",
+  "color": "yellow",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 10
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_lantern_stone",
+  "name": "stone lantern",
+  "description": "A squat stone lantern with a warm flame-coloured lamp inside.",
+  "symbol": "o",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 12
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_floor_lamp",
+  "name": "floor lamp",
+  "description": "A slim floor lamp with a warm shade.",
+  "symbol": "i",
+  "color": "yellow",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 14
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_street_lamp",
+  "name": "street lamp",
+  "description": "A tall street lamp casting an amber pool of light.",
+  "symbol": "Y",
+  "color": "yellow",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 30
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_desk_lamp",
+  "name": "desk lamp",
+  "description": "A small adjustable desk lamp.",
+  "symbol": "i",
+  "color": "white",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 9
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_holo_ad",
+  "name": "holographic advert",
+  "description": "A projector throwing a shimmering cyan advert into the air.",
+  "symbol": "h",
+  "color": "light_cyan",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 13
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_crystal_lamp",
+  "name": "crystal lamp",
+  "description": "A blue-violet crystal in a metal cradle, glowing steadily.",
+  "symbol": "*",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 15
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_neon_pink",
+  "name": "magenta neon sign",
+  "description": "A glass tube sign burning magenta.",
+  "symbol": "=",
+  "color": "pink",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 11
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_neon_cyan",
+  "name": "cyan neon sign",
+  "description": "A glass tube sign burning cyan.",
+  "symbol": "=",
+  "color": "light_cyan",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 11
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_neon_amber",
+  "name": "amber neon sign",
+  "description": "A glass tube sign burning a warm amber.",
+  "symbol": "=",
+  "color": "yellow",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 11
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_neon_violet",
+  "name": "violet neon sign",
+  "description": "A glass tube sign burning violet.",
+  "symbol": "=",
+  "color": "magenta",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 11
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_neon_red",
+  "name": "red neon sign",
+  "description": "A glass tube sign burning red.",
+  "symbol": "=",
+  "color": "light_red",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 11
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_neon_green",
+  "name": "green neon sign",
+  "description": "A glass tube sign burning green.",
+  "symbol": "=",
+  "color": "light_green",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 11
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_aquarium",
+  "name": "wall aquarium",
+  "description": "A glowing tank of slow, pale fish.",
+  "symbol": "A",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 9
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_fire_drum",
+  "name": "burning drum",
+  "description": "An oil drum with a fire burning inside.",
+  "symbol": "0",
+  "color": "light_red",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 22
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_vending",
+  "name": "vending machine",
+  "description": "A brightly lit vending machine.",
+  "symbol": "V",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 9
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_console",
+  "name": "glowing console",
+  "description": "A console with a panel of lit controls.",
+  "symbol": "C",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 7
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_server_rack",
+  "name": "server rack",
+  "description": "A tall rack of blinking servers.",
+  "symbol": "S",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 6
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_arcade",
+  "name": "arcade cabinet",
+  "description": "An arcade cabinet blaring colour.",
+  "symbol": "&",
+  "color": "pink",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 8
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_lightbox",
+  "name": "light box display",
+  "description": "A lit display case for small goods.",
+  "symbol": "L",
+  "color": "white",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 8
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_stool_plastic",
+  "name": "plastic stool",
+  "description": "A low plastic stool, the kind used at food stalls.",
+  "symbol": "s",
+  "color": "light_red",
+  "move_cost_mod": 1,
+  "coverage": 40,
+  "required_str": 4,
+  "flags": [
+   "TRANSPARENT",
+   "MOUNTABLE",
+   "CAN_SIT",
+   "EASY_DECONSTRUCT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 1
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_chair_lounge",
+  "name": "lounge chair",
+  "description": "A low, deep lounge chair in dark leatherette.",
+  "symbol": "h",
+  "color": "magenta",
+  "move_cost_mod": 1,
+  "coverage": 40,
+  "required_str": 4,
+  "flags": [
+   "TRANSPARENT",
+   "MOUNTABLE",
+   "CAN_SIT",
+   "EASY_DECONSTRUCT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 1
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_chair_office",
+  "name": "office chair",
+  "description": "A grey swivel chair.",
+  "symbol": "h",
+  "color": "light_gray",
+  "move_cost_mod": 1,
+  "coverage": 40,
+  "required_str": 4,
+  "flags": [
+   "TRANSPARENT",
+   "MOUNTABLE",
+   "CAN_SIT",
+   "EASY_DECONSTRUCT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 1
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_cushion",
+  "name": "floor cushion",
+  "description": "A flat floor cushion, deep red.",
+  "symbol": "o",
+  "color": "red",
+  "move_cost_mod": 1,
+  "coverage": 40,
+  "required_str": 4,
+  "flags": [
+   "TRANSPARENT",
+   "MOUNTABLE",
+   "CAN_SIT",
+   "EASY_DECONSTRUCT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 1
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_bar_stool",
+  "name": "bar stool",
+  "description": "A tall stool with a round metal seat.",
+  "symbol": "i",
+  "color": "light_gray",
+  "move_cost_mod": 1,
+  "coverage": 40,
+  "required_str": 4,
+  "flags": [
+   "TRANSPARENT",
+   "MOUNTABLE",
+   "CAN_SIT",
+   "EASY_DECONSTRUCT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 1
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_bench_scrap",
+  "name": "scrap bench",
+  "description": "A bench of planks on cinder blocks.",
+  "symbol": "=",
+  "color": "brown",
+  "move_cost_mod": 1,
+  "coverage": 40,
+  "required_str": 4,
+  "flags": [
+   "TRANSPARENT",
+   "MOUNTABLE",
+   "CAN_SIT",
+   "EASY_DECONSTRUCT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 1
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_bench_park",
+  "name": "slatted bench",
+  "description": "A slatted bench with iron ends.",
+  "symbol": "=",
+  "color": "green",
+  "move_cost_mod": 1,
+  "coverage": 40,
+  "required_str": 4,
+  "flags": [
+   "TRANSPARENT",
+   "MOUNTABLE",
+   "CAN_SIT",
+   "EASY_DECONSTRUCT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 1
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_chair_wicker",
+  "name": "wicker chair",
+  "description": "A tall wicker-backed chair.",
+  "symbol": "h",
+  "color": "yellow",
+  "move_cost_mod": 1,
+  "coverage": 40,
+  "required_str": 4,
+  "flags": [
+   "TRANSPARENT",
+   "MOUNTABLE",
+   "CAN_SIT",
+   "EASY_DECONSTRUCT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 1
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_table_low",
+  "name": "low table",
+  "description": "A low lacquered table for sitting on the floor.",
+  "symbol": "T",
+  "color": "red",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_counter_noodle",
+  "name": "noodle counter",
+  "description": "A narrow counter with a steaming broth pot sunk into it.",
+  "symbol": "T",
+  "color": "light_red",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_desk_corp",
+  "name": "white desk",
+  "description": "A white desk with built-in screens.",
+  "symbol": "T",
+  "color": "white",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_table_plastic",
+  "name": "plastic table",
+  "description": "A folding plastic table.",
+  "symbol": "T",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_shelf_clean",
+  "name": "retail shelf",
+  "description": "A clean white shelf of neatly arranged goods.",
+  "symbol": "H",
+  "color": "white",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_shelf_scrap",
+  "name": "scrap shelf",
+  "description": "A welded shelf of salvage.",
+  "symbol": "H",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_cabinet_lacquer",
+  "name": "lacquered cabinet",
+  "description": "A black lacquered cabinet with gold inlay.",
+  "symbol": "H",
+  "color": "black",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_crate",
+  "name": "cargo crate",
+  "description": "A stenciled cargo crate.",
+  "symbol": "X",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_workbench",
+  "name": "workbench",
+  "description": "A heavy workbench scarred with burns.",
+  "symbol": "W",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_reception",
+  "name": "reception desk",
+  "description": "A long curved reception desk.",
+  "symbol": "T",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_futon",
+  "name": "futon",
+  "description": "A rolled-out futon with a thin blanket.",
+  "symbol": "b",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 3
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_capsule",
+  "name": "sleeping capsule",
+  "description": "A stacked sleeping capsule with a curtain and a tiny screen.",
+  "symbol": "B",
+  "color": "white",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 4
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_vase_blue",
+  "name": "blue-glazed vase",
+  "description": "A tall vase with a deep blue glaze.",
+  "symbol": "v",
+  "color": "blue",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_vase_white",
+  "name": "white porcelain vase",
+  "description": "A slim white porcelain vase painted with cranes.",
+  "symbol": "v",
+  "color": "white",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_vase_red",
+  "name": "red lacquer jar",
+  "description": "A squat jar of red lacquer.",
+  "symbol": "v",
+  "color": "red",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_vase_tall",
+  "name": "tall floor vase",
+  "description": "A waist-high ceramic vase holding dry reeds.",
+  "symbol": "V",
+  "color": "light_green",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_bonsai",
+  "name": "bonsai tree",
+  "description": "A small twisted tree in a shallow tray.",
+  "symbol": "&",
+  "color": "green",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_planter",
+  "name": "bamboo planter",
+  "description": "A stand of bamboo in a long planter.",
+  "symbol": "#",
+  "color": "light_green",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_fern",
+  "name": "potted fern",
+  "description": "A fern in a plain white pot.",
+  "symbol": "&",
+  "color": "light_green",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_shrine",
+  "name": "small shrine",
+  "description": "A small shrine with offerings and incense.",
+  "symbol": "A",
+  "color": "light_red",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 5
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_torii",
+  "name": "gate",
+  "description": "A red gate of two pillars and two crossbeams.",
+  "symbol": "n",
+  "color": "red",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_statue_fox",
+  "name": "stone fox statue",
+  "description": "A stone fox with a red bib.",
+  "symbol": "f",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_scroll",
+  "name": "hanging scroll stand",
+  "description": "A stand with a long painted scroll of mountains.",
+  "symbol": "|",
+  "color": "white",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_wind_chime",
+  "name": "wind chime",
+  "description": "Glass chimes that clink in the draught.",
+  "symbol": "!",
+  "color": "light_cyan",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_laundry",
+  "name": "laundry line",
+  "description": "A line of damp clothes hung between balconies.",
+  "symbol": "~",
+  "color": "light_blue",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_pipes",
+  "name": "tangled pipes",
+  "description": "A knot of pipes and cabling.",
+  "symbol": "%",
+  "color": "dark_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_noodle_cart",
+  "name": "noodle cart",
+  "description": "A hand cart with a stove, a hanging lamp and a curtain.",
+  "symbol": "C",
+  "color": "light_red",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 8
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_bike_rack",
+  "name": "bike rack",
+  "description": "A rack for small hover bikes.",
+  "symbol": "H",
+  "color": "light_gray",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_charging_pod",
+  "name": "charging pod",
+  "description": "A pod with a cable and a green charge light.",
+  "symbol": "P",
+  "color": "light_green",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 5
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_ticket_machine",
+  "name": "ticket machine",
+  "description": "A ticket machine with a bright display.",
+  "symbol": "M",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 7
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_trash",
+  "name": "overflowing bin",
+  "description": "A bin overflowing with cans and wrappers.",
+  "symbol": "t",
+  "color": "dark_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_fountain",
+  "name": "stone basin",
+  "description": "A stone basin with a trickle of water.",
+  "symbol": "U",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ }
+]
