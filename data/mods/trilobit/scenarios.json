@@ -1,0 +1,44 @@
+[
+  {
+    "type": "start_location",
+    "id": "sloc_trl_midrise",
+    "name": "Mid-rise block (city middle ring)",
+    "terrain": [
+      "trl_mid01_00z1",
+      "trl_mid02_00z1",
+      "trl_mid03_00z1",
+      "trl_mid03_10z1",
+      "trl_mid04_00z1",
+      "trl_mid04_01z1",
+      "trl_mid05_00z1",
+      "trl_mid05_01z1",
+      "trl_mid05_10z1",
+      "trl_mid05_11z1",
+      "trl_mid06_00z1",
+      "trl_mid06_01z1",
+      "trl_mid06_10z1",
+      "trl_mid06_11z1"
+    ]
+  },
+  {
+    "type": "scenario",
+    "id": "trl_city_start",
+    "name": "City resident",
+    "points": 0,
+    "description": "You wake up in a mid-rise block in the middle ring of the megacity, between the glass towers downtown and the suburbs beyond.",
+    "allowed_locs": [
+      "sloc_trl_midrise"
+    ],
+    "start_name": "Mid-rise block",
+    "flags": [
+      "LONE_START"
+    ]
+  },
+  {
+    "type": "SCENARIO_BLACKLIST",
+    "subtype": "whitelist",
+    "scenarios": [
+      "trl_city_start"
+    ]
+  }
+]

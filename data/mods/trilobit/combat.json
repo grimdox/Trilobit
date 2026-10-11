@@ -1,0 +1,617 @@
+[
+  {
+    "type": "ITEM",
+    "subtypes": [
+      "GUN"
+    ],
+    "id": "trl_pistol",
+    "copy-from": "usp_9mm",
+    "name": {
+      "str": "Trilobit sidearm"
+    },
+    "description": "A heavy-framed 9mm service pistol with a tuned barrel.  Hits much harder than it should.",
+    "ranged_damage": {
+      "damage_type": "bullet",
+      "amount": 8
+    },
+    "dispersion": 160
+  },
+  {
+    "type": "ITEM",
+    "subtypes": [
+      "GUN"
+    ],
+    "id": "trl_smg",
+    "copy-from": "hk_mp5",
+    "name": {
+      "str": "Trilobit SMG"
+    },
+    "description": "A compact 9mm submachine gun with a ported barrel and stabilised frame.",
+    "ranged_damage": {
+      "damage_type": "bullet",
+      "amount": 6
+    },
+    "dispersion": 110
+  },
+  {
+    "type": "ITEM",
+    "subtypes": [
+      "GUN"
+    ],
+    "id": "trl_rifle",
+    "copy-from": "sig_assault_rifle",
+    "name": {
+      "str": "Trilobit rifle"
+    },
+    "description": "A 5.56 battle rifle with a match barrel.  Punches through armor.",
+    "dispersion": 70,
+    "ranged_damage": {
+      "damage_type": "bullet",
+      "amount": 14
+    }
+  },
+  {
+    "type": "SPELL",
+    "id": "trl_hack_overload",
+    "name": "Hack: Overload",
+    "description": "Burns out a target's circuits with a surge of current.  Requires a cyber brain.",
+    "spell_class": "NONE",
+    "difficulty": 0,
+    "max_level": 1,
+    "energy_source": "BIONIC",
+    "base_casting_time": 50,
+    "flags": [
+      "NO_LEGS",
+      "NO_HANDS",
+      "NO_FAIL",
+      "NO_PROJECTILE"
+    ],
+    "min_damage": 25,
+    "max_damage": 25,
+    "damage_increment": 0,
+    "effect": "attack",
+    "shape": "blast",
+    "valid_targets": [
+      "hostile"
+    ],
+    "min_range": 10,
+    "max_range": 10,
+    "min_aoe": 0,
+    "max_aoe": 0,
+    "base_energy_cost": 15,
+    "damage_type": "electric",
+    "condition": {
+      "u_has_flag": "MACHINE_BRAIN"
+    }
+  },
+  {
+    "type": "SPELL",
+    "id": "trl_hack_blind",
+    "name": "Hack: Blind",
+    "description": "Floods a target's optic nerve with noise.  Requires a cyber brain.",
+    "spell_class": "NONE",
+    "difficulty": 0,
+    "max_level": 1,
+    "energy_source": "BIONIC",
+    "base_casting_time": 50,
+    "flags": [
+      "NO_LEGS",
+      "NO_HANDS",
+      "NO_FAIL",
+      "SILENT",
+      "NO_PROJECTILE"
+    ],
+    "min_damage": 1,
+    "max_damage": 1,
+    "damage_increment": 0,
+    "effect": "attack",
+    "effect_str": "blind",
+    "shape": "blast",
+    "valid_targets": [
+      "hostile"
+    ],
+    "min_range": 10,
+    "max_range": 10,
+    "min_aoe": 0,
+    "max_aoe": 0,
+    "min_duration": 600,
+    "max_duration": 600,
+    "base_energy_cost": 10,
+    "damage_type": "biological",
+    "condition": {
+      "u_has_flag": "MACHINE_BRAIN"
+    }
+  },
+  {
+    "type": "SPELL",
+    "id": "trl_hack_lock",
+    "name": "Hack: Lockdown",
+    "description": "Seizes a target's motor control for a few seconds.  Requires a cyber brain.",
+    "spell_class": "NONE",
+    "difficulty": 0,
+    "max_level": 1,
+    "energy_source": "BIONIC",
+    "base_casting_time": 50,
+    "flags": [
+      "NO_LEGS",
+      "NO_HANDS",
+      "NO_FAIL",
+      "SILENT",
+      "NO_PROJECTILE"
+    ],
+    "min_damage": 1,
+    "max_damage": 1,
+    "damage_increment": 0,
+    "effect": "attack",
+    "effect_str": "stunned",
+    "shape": "blast",
+    "valid_targets": [
+      "hostile"
+    ],
+    "min_range": 10,
+    "max_range": 10,
+    "min_aoe": 0,
+    "max_aoe": 0,
+    "min_duration": 300,
+    "max_duration": 300,
+    "base_energy_cost": 20,
+    "damage_type": "biological",
+    "condition": {
+      "u_has_flag": "MACHINE_BRAIN"
+    }
+  },
+  {
+    "type": "SPELL",
+    "id": "trl_nano_repair",
+    "name": "Nano: Repair",
+    "description": "Nanites knit your wounds.  Requires a cyber brain.",
+    "spell_class": "NONE",
+    "difficulty": 0,
+    "max_level": 1,
+    "energy_source": "BIONIC",
+    "base_casting_time": 50,
+    "flags": [
+      "NO_LEGS",
+      "NO_HANDS",
+      "NO_FAIL",
+      "SILENT",
+      "NO_PROJECTILE"
+    ],
+    "min_damage": -30,
+    "max_damage": -30,
+    "damage_increment": 0,
+    "effect": "attack",
+    "shape": "blast",
+    "valid_targets": [
+      "self"
+    ],
+    "min_range": 0,
+    "max_range": 0,
+    "min_aoe": 0,
+    "max_aoe": 0,
+    "base_energy_cost": 25,
+    "damage_type": "biological",
+    "condition": {
+      "u_has_flag": "MACHINE_BRAIN"
+    }
+  },
+  {
+    "type": "SPELL",
+    "id": "trl_nano_plating",
+    "name": "Nano: Plating",
+    "description": "Nanites harden your skin into plating for a minute.  Requires a cyber brain.",
+    "spell_class": "NONE",
+    "difficulty": 0,
+    "max_level": 1,
+    "energy_source": "BIONIC",
+    "base_casting_time": 50,
+    "flags": [
+      "NO_LEGS",
+      "NO_HANDS",
+      "NO_FAIL",
+      "SILENT",
+      "NO_PROJECTILE"
+    ],
+    "min_damage": 1,
+    "max_damage": 1,
+    "damage_increment": 0,
+    "effect": "attack",
+    "effect_str": "trl_nano_plating",
+    "shape": "blast",
+    "valid_targets": [
+      "self"
+    ],
+    "min_range": 0,
+    "max_range": 0,
+    "min_aoe": 0,
+    "max_aoe": 0,
+    "min_duration": 6000,
+    "max_duration": 6000,
+    "base_energy_cost": 20,
+    "damage_type": "biological",
+    "condition": {
+      "u_has_flag": "MACHINE_BRAIN"
+    }
+  },
+  {
+    "type": "SPELL",
+    "id": "trl_nano_overclock",
+    "name": "Nano: Overclock",
+    "description": "Nanites overclock your nervous system for a minute.  Requires a cyber brain.",
+    "spell_class": "NONE",
+    "difficulty": 0,
+    "max_level": 1,
+    "energy_source": "BIONIC",
+    "base_casting_time": 50,
+    "flags": [
+      "NO_LEGS",
+      "NO_HANDS",
+      "NO_FAIL",
+      "SILENT",
+      "NO_PROJECTILE"
+    ],
+    "min_damage": 1,
+    "max_damage": 1,
+    "damage_increment": 0,
+    "effect": "attack",
+    "effect_str": "trl_nano_overclock",
+    "shape": "blast",
+    "valid_targets": [
+      "self"
+    ],
+    "min_range": 0,
+    "max_range": 0,
+    "min_aoe": 0,
+    "max_aoe": 0,
+    "min_duration": 6000,
+    "max_duration": 6000,
+    "base_energy_cost": 30,
+    "damage_type": "biological",
+    "condition": {
+      "u_has_flag": "MACHINE_BRAIN"
+    }
+  },
+  {
+    "type": "effect_type",
+    "id": "trl_nano_plating",
+    "name": [
+      "Nano Plating"
+    ],
+    "desc": [
+      "Your skin is hardened."
+    ],
+    "rating": "good",
+    "max_duration": "10 minutes",
+    "apply_message": "",
+    "remove_message": "The effect fades.",
+    "enchantments": [
+      {
+        "values": [
+          {
+            "value": "ARMOR_ALL",
+            "add": 8
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_type",
+    "id": "trl_nano_overclock",
+    "name": [
+      "Overclocked"
+    ],
+    "desc": [
+      "Your nervous system is running hot."
+    ],
+    "rating": "good",
+    "max_duration": "10 minutes",
+    "apply_message": "",
+    "remove_message": "The effect fades.",
+    "enchantments": [
+      {
+        "values": [
+          {
+            "value": "SPEED",
+            "add": 25
+          },
+          {
+            "value": "RANGE_DODGE",
+            "add": 0.15
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "mutation",
+    "id": "trl_hack_suite",
+    "name": {
+      "str": "Hack Suite"
+    },
+    "points": 0,
+    "visibility": 0,
+    "ugliness": 0,
+    "description": "Test trait: grants three hacks (Overload, Blind, Lockdown).",
+    "valid": false,
+    "purifiable": false,
+    "spells_learned": [
+      [
+        "trl_hack_overload",
+        1
+      ],
+      [
+        "trl_hack_blind",
+        1
+      ],
+      [
+        "trl_hack_lock",
+        1
+      ]
+    ]
+  },
+  {
+    "type": "mutation",
+    "id": "trl_nano_suite",
+    "name": {
+      "str": "Nano Suite"
+    },
+    "points": 0,
+    "visibility": 0,
+    "ugliness": 0,
+    "description": "Test trait: grants three nano-programs (Repair, Plating, Overclock).",
+    "valid": false,
+    "purifiable": false,
+    "spells_learned": [
+      [
+        "trl_nano_repair",
+        1
+      ],
+      [
+        "trl_nano_plating",
+        1
+      ],
+      [
+        "trl_nano_overclock",
+        1
+      ]
+    ]
+  },
+  {
+    "type": "bionic",
+    "id": "trl_bio_reflex",
+    "name": {
+      "str": "Reflex Accelerator"
+    },
+    "description": "Spinal reflex boosters.  +2 Dexterity and a 20% chance to sidestep any incoming bullet.",
+    "occupied_bodyparts": [
+      [
+        "torso",
+        4
+      ],
+      [
+        "leg_l",
+        2
+      ],
+      [
+        "leg_r",
+        2
+      ]
+    ],
+    "enchantments": [
+      {
+        "values": [
+          {
+            "value": "DEXTERITY",
+            "add": 2
+          },
+          {
+            "value": "RANGE_DODGE",
+            "add": 0.2
+          },
+          {
+            "value": "BONUS_DODGE",
+            "add": 1
+          }
+        ]
+      }
+    ],
+    "flags": [
+      "BIONIC_NPC_USABLE"
+    ],
+    "protec": [
+      [
+        "torso",
+        {
+          "bash": 8,
+          "cut": 8,
+          "stab": 8,
+          "bullet": 14
+        }
+      ],
+      [
+        "leg_l",
+        {
+          "bash": 6,
+          "cut": 6,
+          "stab": 6,
+          "bullet": 10
+        }
+      ],
+      [
+        "leg_r",
+        {
+          "bash": 6,
+          "cut": 6,
+          "stab": 6,
+          "bullet": 10
+        }
+      ]
+    ]
+  },
+  {
+    "type": "bionic",
+    "id": "trl_bio_threat_sense",
+    "name": {
+      "str": "Threat Predictor"
+    },
+    "description": "Optical threat prediction.  +2 Perception and a 15% chance to step out of the line of fire.",
+    "occupied_bodyparts": [
+      [
+        "eyes",
+        2
+      ],
+      [
+        "head",
+        3
+      ]
+    ],
+    "enchantments": [
+      {
+        "values": [
+          {
+            "value": "PERCEPTION",
+            "add": 2
+          },
+          {
+            "value": "RANGE_DODGE",
+            "add": 0.15
+          }
+        ]
+      }
+    ],
+    "flags": [
+      "BIONIC_NPC_USABLE"
+    ],
+    "protec": [
+      [
+        "eyes",
+        {
+          "bash": 6,
+          "cut": 6,
+          "stab": 6,
+          "bullet": 10
+        }
+      ],
+      [
+        "head",
+        {
+          "bash": 7,
+          "cut": 7,
+          "stab": 7,
+          "bullet": 12
+        }
+      ]
+    ]
+  },
+  {
+    "id": "trl_bio_reflex",
+    "copy-from": "bionic_general_npc_usable",
+    "type": "ITEM",
+    "subtypes": [
+      "BIONIC_ITEM"
+    ],
+    "name": {
+      "str": "Reflex Accelerator CBM"
+    },
+    "looks_like": "bio_int_enhancer",
+    "description": "Spinal reflex boosters.  +2 Dexterity and a 20% chance to sidestep any incoming bullet.",
+    "price": "8 kUSD",
+    "price_postapoc": "30 USD",
+    "weight": "500 g",
+    "difficulty": 10
+  },
+  {
+    "id": "trl_bio_threat_sense",
+    "copy-from": "bionic_general_npc_usable",
+    "type": "ITEM",
+    "subtypes": [
+      "BIONIC_ITEM"
+    ],
+    "name": {
+      "str": "Threat Predictor CBM"
+    },
+    "looks_like": "bio_int_enhancer",
+    "description": "Optical threat prediction.  +2 Perception and a 15% chance to step out of the line of fire.",
+    "price": "8 kUSD",
+    "price_postapoc": "30 USD",
+    "weight": "500 g",
+    "difficulty": 10
+  },
+  {
+    "type": "character_mod",
+    "id": "aim_speed_mod",
+    "description": "Gun aim speed modifier <color_dark_gray>(Manipulation, Grip, Lift)</color> ",
+    "mod_type": "x",
+    "value": {
+      "limb_score": [
+        [
+          "grip",
+          0.32
+        ],
+        [
+          "manip",
+          0.32
+        ],
+        [
+          "lift",
+          0.96
+        ]
+      ],
+      "limb_score_op": "+",
+      "min": 0.1,
+      "max": 1.6
+    }
+  },
+  {
+    "type": "json_flag",
+    "id": "MACHINE_BRAIN",
+    "info": "This implant is a <info>machine brain</info>; hacks and nano-programs need one to run."
+  },
+  {
+    "type": "bionic",
+    "id": "trl_bio_cyberbrain",
+    "name": {
+      "str": "Basic Cyber Brain"
+    },
+    "description": "A basic machine brain interfaced with your nervous system.  Machine-brain class.  Required to run hacks and nano-programs.",
+    "occupied_bodyparts": [
+      [
+        "head",
+        8
+      ]
+    ],
+    "flags": [
+      "MACHINE_BRAIN",
+      "BIONIC_NPC_USABLE"
+    ],
+    "protec": [
+      [
+        "head",
+        {
+          "bash": 12,
+          "cut": 12,
+          "stab": 12,
+          "bullet": 22
+        }
+      ]
+    ]
+  },
+  {
+    "id": "trl_bio_cyberbrain",
+    "copy-from": "bionic_general_npc_usable",
+    "type": "ITEM",
+    "subtypes": [
+      "BIONIC_ITEM"
+    ],
+    "name": {
+      "str": "Basic Cyber Brain CBM"
+    },
+    "looks_like": "bio_int_enhancer",
+    "description": "A basic machine brain.  Machine-brain class.  Required to run hacks and nano-programs.",
+    "price": "20 kUSD",
+    "price_postapoc": "100 USD",
+    "weight": "500 g",
+    "difficulty": 12
+  }
+]

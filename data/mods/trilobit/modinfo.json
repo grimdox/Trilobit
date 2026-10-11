@@ -1,0 +1,25 @@
+[
+  {
+    "type": "MOD_INFO",
+    "id": "trilobit",
+    "name": "Trilobit",
+    "authors": [
+      "Eric (design)",
+      "Claude (implementation)"
+    ],
+    "description": "A cyberpunk total conversion in progress.  Only monsters tagged TRILOBIT can spawn.  Cities: 10 skyscrapers, 6 mid-rise blocks, two megacities plus villages.  Enemies: soldier, cyborg soldier and unarmed aggressor, placed on every floor of the towers and mid-rises.  Start types: Test Human and Test Cyborg.  Implants: implant status display item, an implant lab in every mid-rise, five random implants at start.",
+    "category": "total_conversion",
+    "dependencies": [
+      "dda"
+    ],
+    "version": "0.0.12-milestone-5"
+  },
+  {
+    "type": "MONSTER_WHITELIST",
+    "//": "Exclusive whitelist: only monsters with the TRILOBIT category may exist.  No stock monster has it, so none spawn.  Trilobit's own enemies will add this category to their definitions.",
+    "mode": "EXCLUSIVE",
+    "categories": [
+      "TRILOBIT"
+    ]
+  }
+]

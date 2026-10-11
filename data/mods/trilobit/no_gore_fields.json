@@ -1,0 +1,65 @@
+[
+  {
+    "type": "field_type",
+    "id": "fd_blood",
+    "copy-from": "fd_blood",
+    "half_life": "1 seconds",
+    "display_field": false
+  },
+  {
+    "type": "field_type",
+    "id": "fd_bile",
+    "copy-from": "fd_bile",
+    "half_life": "1 seconds",
+    "display_field": false
+  },
+  {
+    "type": "field_type",
+    "id": "fd_gibs_flesh",
+    "copy-from": "fd_gibs_flesh",
+    "half_life": "1 seconds",
+    "display_field": false
+  },
+  {
+    "type": "field_type",
+    "id": "fd_gibs_veggy",
+    "copy-from": "fd_gibs_veggy",
+    "half_life": "1 seconds",
+    "display_field": false
+  },
+  {
+    "type": "field_type",
+    "id": "fd_blood_veggy",
+    "copy-from": "fd_blood_veggy",
+    "half_life": "1 seconds",
+    "display_field": false
+  },
+  {
+    "type": "field_type",
+    "id": "fd_blood_insect",
+    "copy-from": "fd_blood_insect",
+    "half_life": "1 seconds",
+    "display_field": false
+  },
+  {
+    "type": "field_type",
+    "id": "fd_blood_invertebrate",
+    "copy-from": "fd_blood_invertebrate",
+    "half_life": "1 seconds",
+    "display_field": false
+  },
+  {
+    "type": "field_type",
+    "id": "fd_gibs_insect",
+    "copy-from": "fd_gibs_insect",
+    "half_life": "1 seconds",
+    "display_field": false
+  },
+  {
+    "type": "field_type",
+    "id": "fd_gibs_invertebrate",
+    "copy-from": "fd_gibs_invertebrate",
+    "half_life": "1 seconds",
+    "display_field": false
+  }
+]

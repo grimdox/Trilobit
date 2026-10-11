@@ -1,0 +1,45 @@
+name: Windows build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, phase-b-facing ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            make
+            git
+            zip
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-ccache
+            mingw-w64-x86_64-SDL2
+            mingw-w64-x86_64-SDL2_image
+            mingw-w64-x86_64-SDL2_ttf
+            mingw-w64-x86_64-SDL2_mixer
+            mingw-w64-x86_64-freetype
+            mingw-w64-x86_64-zlib
+      - name: Build
+        run: |
+          make -j4 TILES=1 SOUND=1 RELEASE=1 LOCALIZE=0 LINTJSON=0 ASTYLE=0 TESTS=0 CCACHE=1 BACKTRACE=0 PCH=0
+      - name: Package
+        run: |
+          mkdir -p out/trilobit
+          cp cataclysm-tiles.exe out/trilobit/
+          cp -r data gfx out/trilobit/
+          ldd cataclysm-tiles.exe | grep -i mingw64 | awk '{print $3}' | xargs -I{} cp {} out/trilobit/
+          cd out && zip -qr ../trilobit-windows.zip trilobit
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trilobit-windows
+          path: trilobit-windows.zip
