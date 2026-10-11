@@ -310,7 +310,33 @@ void Creature::set_pos_bub_only( const map &here, const tripoint_bub_ms &p )
 
 void Creature::set_pos_abs_only( const tripoint_abs_ms &loc )
 {
+    // Trilobit: moving turns the creature to face the direction of travel.
+    const point step( loc.x() - location.x(), loc.y() - location.y() );
+    if( step != point::zero && std::abs( step.x ) <= 2 && std::abs( step.y ) <= 2 ) {
+        trl_facing = point( step.x > 0 ? 1 : ( step.x < 0 ? -1 : 0 ), step.y > 0 ? 1 : ( step.y < 0 ? -1 : 0 ) );
+    }
     location = loc;
+}
+
+void Creature::trl_face_toward( const tripoint_abs_ms &target )
+{
+    const int dx = target.x() - location.x();
+    const int dy = target.y() - location.y();
+    if( dx == 0 && dy == 0 ) {
+        return;
+    }
+    trl_facing = point( dx > 0 ? 1 : ( dx < 0 ? -1 : 0 ), dy > 0 ? 1 : ( dy < 0 ? -1 : 0 ) );
+}
+
+bool Creature::trl_in_front_cone( const tripoint_abs_ms &target ) const
+{
+    if( trl_facing == point::zero ) {
+        return true;
+    }
+    const int dx = target.x() - location.x();
+    const int dy = target.y() - location.y();
+    // dot product >= 0 means within 90 degrees of the facing step on either side
+    return trl_facing.x * dx + trl_facing.y * dy >= 0;
 }
 
 void Creature::on_move( const tripoint_abs_ms & ) {}
@@ -508,6 +534,12 @@ bool Creature::sees( const map &here, const Creature &critter ) const
     if( critter.has_flag( mon_flag_ALWAYS_VISIBLE ) || ( has_flag( mon_flag_ALWAYS_SEES_YOU ) &&
             critter.is_avatar() ) ) {
         return true;
+    }
+
+    // Trilobit: monsters only see within a 180 degree cone in front of them.
+    // Adjacent targets are always noticed.
+    if( as_monster() != nullptr && target_range > 1 && !trl_in_front_cone( critter.pos_abs() ) ) {
+        return false;
     }
 
     if( this->has_flag( mon_flag_ALL_SEEING ) ) {

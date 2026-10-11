@@ -801,6 +801,13 @@ class Creature : public viewer
 
         /** The creature's position in absolute coordinates */
         tripoint_abs_ms location;
+    public:
+        /** Trilobit: facing as a unit step (-1..1, -1..1); (0,0) means no facing yet. */
+        point trl_facing = point::zero;
+        /** Trilobit: turn to face a location. */
+        void trl_face_toward( const tripoint_abs_ms &target );
+        /** Trilobit: true if the point lies within the 180 degree cone in front of this creature. */
+        bool trl_in_front_cone( const tripoint_abs_ms &target ) const;
     protected:
         // Sets the creature's position without any side-effects.
         void set_pos_bub_only( const map &here, const tripoint_bub_ms &p );
