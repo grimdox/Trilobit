@@ -348,7 +348,7 @@ void main_menu::print_menu( const catacurses::window &w_open, int iSel, const po
 
     iLine++;
     center_print( w_open, iLine, c_light_blue,
-                  string_format( _( "Version: 0.I-1 (Ito-1) Stable Release" ),
+                  string_format( _( "Trilobit - based on Cataclysm: DDA 0.I-1" ),
                                  getVersionString() ) );
 
     int menu_length = 0;
@@ -428,7 +428,7 @@ void main_menu::init_windows()
 void main_menu::init_strings()
 {
     // ASCII Art
-    mmenu_title = load_file( PATH_INFO::title( current_holiday ), _( "Cataclysm: Dark Days Ahead" ) );
+    mmenu_title = load_file( PATH_INFO::title( current_holiday ), _( "TRILOBIT" ) );
     // MOTD
     auto motd = load_file( PATH_INFO::motd(), _( "No message today." ) );
 

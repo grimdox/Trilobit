@@ -199,7 +199,7 @@ static void InitSDL()
     // Requires SDL 2.0.18. String used multiple ways, one of them is the game
     // identifying itself when asking to inhibit screensaver via dbus under
     // Linux.
-    SDL_SetHint( SDL_HINT_APP_NAME, _( "Cataclysm: Dark Days Ahead" ) );
+    SDL_SetHint( SDL_HINT_APP_NAME, _( "Trilobit" ) );
 #endif
 
 #if defined(__linux__)
