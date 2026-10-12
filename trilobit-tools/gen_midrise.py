@@ -398,10 +398,11 @@ T["wall_corp"]  # ensure exists
 
 # ------------------------------------------------------------------ output
 POOL = list("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()-=+[]{}|;<>?/~")
-def emit():
+def emit(blds=None, outdir="midrise", new_t=None, new_f=None, write_loot=True):
+    blds = B if blds is None else blds
     ter_out, om_out, cb_out, mg_out = [], [], [], []
     full_tj = {t["id"]: t for t in gp.terrain_json()}
-    for S in B:
+    for S in blds:
         rng_seed = sum(map(ord, S["id"]))
         levels = []
         for z in range(0, S["stories"] + 1):
@@ -438,9 +439,11 @@ def emit():
             cb.append({"point": [0, 0, z], "overmap": oid + "_north"})
         cb_out.append({"type": "city_building", "id": S["id"], "locations": ["land"], "overmaps": cb, "city_sizes": [1, -1]})
         S["_g"] = levels
-    d = os.path.join(MOD, "midrise"); os.makedirs(d, exist_ok=True)
-    tj = [t for t in gp.terrain_json() if t["id"] in {T[k]["id"] for k in NEW_T}]
-    fj = [f for f in gp.furniture_json() if f["id"] in {F[k]["id"] for k in NEW_F}]
+    d = os.path.join(MOD, outdir); os.makedirs(d, exist_ok=True)
+    nt = NEW_T if new_t is None else new_t
+    nf = NEW_F if new_f is None else new_f
+    tj = [t for t in gp.terrain_json() if t["id"] in {T[k]["id"] for k in nt}]
+    fj = [f for f in gp.furniture_json() if f["id"] in {F[k]["id"] for k in nf}]
     json.dump(tj, open(os.path.join(d, "terrain.json"), "w"), indent=1)
     json.dump(fj, open(os.path.join(d, "furniture.json"), "w"), indent=1)
     loot = {
@@ -448,8 +451,9 @@ def emit():
       "android": ["circuit", "processor", "RAM", "cable", "e_scrap", "amplifier", "small_lcd_screen", "light_battery_cell", "scrap", "wrench"],
       "dingy": ["rag", "can_beans", "water_clean", "lighter", "bandages", "tshirt", "jacket_light", "candle", "matches"],
     }
-    json.dump([{"type": "item_group", "id": f"trl_loot_{k}", "subtype": "distribution", "entries": [{"item": i} for i in v]}
-               for k, v in loot.items()], open(os.path.join(d, "loot.json"), "w"), indent=1)
+    if write_loot:
+        json.dump([{"type": "item_group", "id": f"trl_loot_{k}", "subtype": "distribution", "entries": [{"item": i} for i in v]}
+                   for k, v in loot.items()], open(os.path.join(d, "loot.json"), "w"), indent=1)
     json.dump(om_out + cb_out, open(os.path.join(d, "buildings.json"), "w"), indent=1)
     json.dump(mg_out, open(os.path.join(d, "mapgen.json"), "w"), indent=1)
     # region overlay weights
@@ -457,12 +461,12 @@ def emit():
     ro = json.load(open(ro_path))
     parks = ro[0]["city"]["parks"]
     w = 1296   # weight gen_city gives each plain mid-rise
-    for S in B: parks[S["id"]] = w
+    for S in blds: parks[S["id"]] = w
     # generic test blocks: only trl_mid01 stays (the player start / testing building); the rest are replaced by themed buildings
     parks["trl_mid01"] = w * 3
     for i in range(2, 7): parks[f"trl_mid0{i}"] = 0
     json.dump(ro, open(ro_path, "w"), indent=1)
-    print(len(B), "buildings,", len(mg_out), "mapgen levels,", len(NEW_T), "new terrain,", len(NEW_F), "new furniture")
+    print(len(blds), "buildings,", len(mg_out), "mapgen levels,", len(NEW_T), "new terrain,", len(NEW_F), "new furniture")
 
 if __name__ == "__main__":
     gp.assign_chars()

@@ -6062,6 +6062,11 @@
         "type": "neutral"
       },
       {
+        "u_spawn_item": "trl_yen",
+        "count": 150,
+        "suppress_message": true
+      },
+      {
         "math": [
           "trl_quest_state",
           "=",

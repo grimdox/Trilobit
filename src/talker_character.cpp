@@ -32,6 +32,7 @@
 #include "martialarts.h"
 #include "math_parser_diag_value.h"
 #include "messages.h"
+#include "line.h"
 #include "npc.h"
 #include "npctalk.h"
 #include "output.h"
@@ -924,6 +925,11 @@ bool talker_character_const::can_see_location( const tripoint_bub_ms &pos ) cons
 {
     const map &here = get_map();
 
+    // Trilobit: NPCs only see locations inside their 180 degree cone (adjacent tiles always)
+    if( me_chr_const->is_npc() && rl_dist( me_chr_const->pos_bub( here ), pos ) > 1 &&
+        !me_chr_const->trl_in_front_cone( here.get_abs( pos ) ) ) {
+        return false;
+    }
     return me_chr_const->sees( here, pos );
 }
 

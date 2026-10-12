@@ -3797,18 +3797,28 @@ talk_effect_fun_t f_spawn_item( const JsonObject &jo, std::string_view member,
         loc_var = read_var_info( jo.get_object( "loc" ) );
     }
     bool force_equip = jo.get_bool( "force_equip", false );
+    // Trilobit: optionally drop the item on a free tile near loc (e.g. inside a building)
+    const bool near_indoor = jo.get_bool( "indoor_only", false );
+    const int near_radius = jo.get_int( "max_radius", 0 );
 
     std::vector<str_or_var> flags;
     for( JsonValue jv : jo.get_array( "flags" ) ) {
         flags.emplace_back( get_str_or_var( jv, "flags" ) );
     }
     talk_effect_fun_t ret( [item_name, count, container_name, use_item_group, suppress_message,
-               add_talker, loc_var, force_equip, flags]( dialogue & d ) {
+               add_talker, loc_var, force_equip, flags, near_indoor, near_radius]( dialogue & d ) {
         tripoint_abs_ms target_location;
         if( loc_var ) {
             target_location = read_var_value( *loc_var, d ).tripoint();
         } else {
             target_location = d.actor( false )->pos_abs();
+        }
+        if( near_radius > 0 ) {
+            tripoint_bub_ms found;
+            if( g->find_nearby_spawn_point( get_map().get_bub( target_location ), 0, near_radius, found, false,
+                                            near_indoor, false ) ) {
+                target_location = get_map().get_abs( found );
+            }
         }
         std::vector<std::string> flags_str;
         flags_str.reserve( flags.size() );

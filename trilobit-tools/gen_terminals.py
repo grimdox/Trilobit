@@ -1,0 +1,174 @@
+#!/usr/bin/env python3
+"""Generate the Mission Terminal and Shopping Terminal content.  usage: gen_terminals.py <mod dir>
+Writes terminals.json and patches the testing mid-rise (trl_mid01_00z1) mapgen in city/mapgen.json."""
+import json, os, sys
+MOD = sys.argv[1]
+out = []
+def add(o): out.append(o)
+
+# ------------------------------------------------------------------ furniture & items
+def terminal(fid, name, desc, sym, color, eoc):
+    return {"type": "furniture", "id": fid, "name": name, "description": desc, "symbol": sym, "color": color,
+            "move_cost_mod": -1, "coverage": 40, "required_str": -1, "light_emitted": 8,
+            "flags": ["TRANSPARENT", "FLAT_SURF", "CONTAINER", "NOITEM", "SEALED"],
+            "examine_action": {"type": "effect_on_condition", "effect_on_conditions": [eoc]},
+            "bash": {"str_min": 12, "str_max": 40, "sound": "smash!", "sound_fail": "thump."}}
+add(terminal("f_trl_mission_terminal", "mission terminal",
+             "A wall-bolted electric terminal with a cyan screen and a slot for credit chits.  Fixers post jobs here.  Examine it to browse contracts.",
+             "M", "light_cyan", "trl_term_mission_examine"))
+add(terminal("f_trl_shop_terminal", "shopping terminal",
+             "A mains-powered vending terminal with a glowing price list.  Examine it to buy goods with yen.",
+             "$", "yellow", "trl_term_shop_examine"))
+add({"type": "ITEM", "subtypes": ["GENERIC"], "id": "trl_data_core", "name": {"str": "encrypted data core"},
+     "description": "A fist-sized black core wrapped in a ribbon of warning tape.  Somebody paid a lot to get this back.",
+     "weight": "300 g", "volume": "250 ml", "price": "0 USD", "price_postapoc": "0 USD", "color": "light_cyan", "symbol": ",",
+     "material": ["steel"]})
+for nid, nm, att, dth in (("trl_t_target", "trl_nc_mark", 10, True), ("trl_t_subject", "trl_nc_mark", 0, False)):
+    o = {"type": "npc", "id": nid, "class": nm, "gender": "male", "attitude": att, "mission": 0, "chat": "TALK_DONE", "faction": "no_faction"}
+    if dth: o["death_eocs"] = ["trl_t_target_death"]
+    add(o)
+add({"type": "effect_on_condition", "id": "trl_t_target_death", "eoc_type": "NPC_DEATH", "effect": [{"math": ["trl_t_dead", "=", "1"]}]})
+
+# ------------------------------------------------------------------ placement
+def rnd_loc(var):
+    return [{"u_location_variable": {"global_val": var}, "x_adjust": {"math": ["(rand(1) * 2 - 1) * (22 + rand(26))"]},
+             "y_adjust": {"math": ["(rand(1) * 2 - 1) * (22 + rand(26))"]}}]
+placed_ok = lambda eid: [{"id": eid, "effect": [
+    {"math": ["trl_t_placed", "=", "1"]},
+    {"u_run_npc_eocs": ["trl_t_record_loc"], "unique_ids": [{"global_val": "trl_t_uid"}]}]}]
+add({"type": "effect_on_condition", "id": "trl_t_record_loc", "effect": [{"u_location_variable": {"global_val": "trl_t_loc"}}]})
+tries = []
+for k in range(12):
+    indoor = k < 8
+    tid = f"trl_t_try_{k}"; tries.append(tid)
+    add({"type": "effect_on_condition", "id": tid, "condition": {"math": ["trl_t_placed == 0"]},
+         "effect": rnd_loc("trl_t_loc") + [{"u_spawn_npc": {"global_val": "trl_t_npc"}, "real_count": 1, "unique_id": {"global_val": "trl_t_uid"},
+                                            "target_var": {"global_val": "trl_t_loc"}, "min_radius": 0, "max_radius": 24, "indoor_only": indoor,
+                                            "true_eocs": placed_ok(tid + "_ok")}]})
+add({"type": "effect_on_condition", "id": "trl_t_place_npc",
+     "effect": [{"math": ["trl_t_placed", "=", "0"]}, {"run_eocs": tries},
+                {"if": {"math": ["trl_t_placed == 0"]}, "then": {"u_message": "[Trilobit] The terminal could not locate a safe site.  Try another contract.", "type": "bad"}}]})
+add({"type": "effect_on_condition", "id": "trl_t_place_item",
+     "effect": rnd_loc("trl_t_loc") + [{"map_spawn_item": "trl_data_core", "loc": {"global_val": "trl_t_loc"}, "indoor_only": True,
+                                        "max_radius": 24, "suppress_message": True, "count": 1}]})
+cleanup = {"id": "trl_t_kill_one", "effect": [{"u_die": {"remove_corpse": True, "supress_message": True, "remove_from_creature_tracker": True}}]}
+add({"type": "effect_on_condition", "id": "trl_t_cleanup",
+     "effect": [{"u_run_npc_eocs": [cleanup], "unique_ids": ["trl_t_uid_target", "trl_t_uid_subject"]},
+                {"math": ["trl_t_state", "=", "0"]}, {"math": ["trl_spy_progress", "=", "0"]}]})
+add({"type": "effect_on_condition", "id": "trl_t_reward",
+     "effect": [{"u_spawn_item": "trl_yen", "count": 1000}, {"u_message": "[Trilobit] Contract complete.  1000 yen credited.", "type": "good"},
+                {"run_eocs": "trl_t_cleanup"}]})
+
+# ------------------------------------------------------------------ missions
+def mission(mid, name, desc, cond, start_target=None, end=None):
+    m = {"type": "mission_definition", "id": mid, "name": {"str": name}, "description": desc, "goal": "MGOAL_CONDITION",
+         "difficulty": 1, "value": 0, "urgent": False, "origins": ["ORIGIN_GAME_START"], "goal_condition": cond}
+    if start_target: m["start"] = {"assign_mission_target": {"var": {"global_val": start_target}, "reveal_radius": 1}}
+    if end: m["end"] = {"effect": end}
+    add(m)
+NEAR = {"math": ["distance('u', trl_t_loc) <= 12"]}
+AT_TERM = {"math": ["distance('u', trl_t_term_loc) <= 3"]}
+# retrieval
+mission("TRL_T_R1", "Retrieval (1/2): recover the data core",
+        "A data core has been hidden in a building in this district; the terminal's map marker shows the area.  Find it and pick it up.",
+        {"u_has_item": "trl_data_core"}, "trl_t_loc",
+        [{"assign_mission": "TRL_T_R2"}, {"u_message": "You have the core.  Return to the mission terminal.", "type": "good"}])
+mission("TRL_T_R2", "Retrieval (2/2): return the core to the terminal",
+        "Bring the data core back to the mission terminal in the testing mid-rise.  1000 yen on delivery.",
+        {"and": [{"u_has_item": "trl_data_core"}, AT_TERM]}, "trl_t_term_loc",
+        [{"u_consume_item": "trl_data_core", "count": 1}, {"run_eocs": "trl_t_reward"}])
+# assassination
+mission("TRL_T_A1", "Assassination (1/3): find the target",
+        "A target is holed up in a building in this district.  Go there and identify him.",
+        NEAR, "trl_t_loc", [{"assign_mission": "TRL_T_A2"}, {"u_message": "You are close.  The target should be in here.", "type": "mixed"}])
+mission("TRL_T_A2", "Assassination (2/3): kill the target",
+        "The target is somewhere in this building.  Kill him.", {"math": ["trl_t_dead == 1"]}, "trl_t_loc",
+        [{"assign_mission": "TRL_T_A3"}, {"u_message": "The target is dead.  Return to the mission terminal.", "type": "good"}])
+mission("TRL_T_A3", "Assassination (3/3): report to the terminal",
+        "Return to the mission terminal in the testing mid-rise.  1000 yen on completion.", AT_TERM, "trl_t_term_loc",
+        [{"run_eocs": "trl_t_reward"}])
+# spying
+mission("TRL_T_S1", "Spying (1/2): observe the subject",
+        "Watch the subject from at least 10 tiles away for 10 turns without being seen by them.  Staying out of their line of sight and moving behind them helps.",
+        {"math": ["trl_spy_progress >= 10"]}, "trl_t_loc",
+        [{"assign_mission": "TRL_T_S2"}, {"u_message": "Observation complete.  Return to the mission terminal.", "type": "good"}])
+mission("TRL_T_S2", "Spying (2/2): return to the terminal",
+        "Return to the mission terminal in the testing mid-rise.  1000 yen on completion.", AT_TERM, "trl_t_term_loc",
+        [{"run_eocs": "trl_t_reward"}])
+
+# spying tick: runs every turn while a spying contract is open
+add({"type": "effect_on_condition", "id": "trl_spy_probe",
+     "effect": [{"u_location_variable": {"global_val": "trl_spy_sloc"}},
+                {"if": "player_see_u", "then": {"math": ["trl_spy_see", "=", "1"]}},
+                {"if": {"u_can_see_location": {"global_val": "trl_spy_ploc"}}, "then": {"math": ["trl_spy_spotted", "=", "1"]}}]})
+add({"type": "effect_on_condition", "id": "trl_spy_tick", "eoc_type": "RECURRING", "recurrence": "1 seconds", "global": True,
+     "condition": {"and": [{"math": ["trl_t_state == 3"]}, {"math": ["trl_spy_progress < 10"]}]},
+     "effect": [{"math": ["trl_spy_see", "=", "0"]}, {"math": ["trl_spy_spotted", "=", "0"]},
+                {"u_location_variable": {"global_val": "trl_spy_ploc"}},
+                {"u_run_npc_eocs": ["trl_spy_probe"], "unique_ids": ["trl_t_uid_subject"]},
+                {"if": {"and": [{"math": ["trl_spy_spotted == 1"]}, {"math": ["trl_spy_progress > 0"]}]},
+                 "then": [{"math": ["trl_spy_progress", "=", "0"]}, {"u_message": "[Trilobit] The subject spotted you.  Observation reset.", "type": "bad"}]},
+                {"if": {"and": [{"math": ["trl_spy_see == 1"]}, {"math": ["trl_spy_spotted == 0"]}, {"math": ["distance('u', trl_spy_sloc) >= 10"]}]},
+                 "then": [{"math": ["trl_spy_progress", "+=", "1"]}, {"u_message": "[Trilobit] Observing the subject: <global_val:trl_spy_progress>/10", "type": "neutral"}]}]})
+
+# ------------------------------------------------------------------ mission terminal dialogue
+add({"type": "effect_on_condition", "id": "trl_term_mission_examine", "global": True,
+     "effect": [{"open_dialogue": {"topic": "TRL_TERM_MAIN"}}]})
+def accept(kind_text, state, mid, npc_cls, uid, place):
+    eff = [{"math": ["trl_t_state", "=", str(state)]}, {"math": ["trl_t_dead", "=", "0"]}, {"math": ["trl_spy_progress", "=", "0"]},
+           {"u_location_variable": {"global_val": "trl_t_term_loc"}}]
+    if npc_cls:
+        eff += [{"set_string_var": npc_cls, "target_var": {"global_val": "trl_t_npc"}}, {"set_string_var": uid, "target_var": {"global_val": "trl_t_uid"}}]
+    eff += [{"run_eocs": place}, {"assign_mission": mid}]
+    return eff
+resp_main = [
+ {"text": "[Retrieval] Recover a data core and bring it back.", "topic": "TRL_TERM_ACCEPTED", "condition": {"math": ["trl_t_state == 0"]},
+  "effect": accept("", 1, "TRL_T_R1", None, None, "trl_t_place_item")},
+ {"text": "[Assassination] Find a target, kill him, report back.", "topic": "TRL_TERM_ACCEPTED", "condition": {"math": ["trl_t_state == 0"]},
+  "effect": accept("", 2, "TRL_T_A1", "trl_t_target", "trl_t_uid_target", "trl_t_place_npc")},
+ {"text": "[Spying] Watch a subject from 10+ tiles for 10 turns unseen.", "topic": "TRL_TERM_ACCEPTED", "condition": {"math": ["trl_t_state == 0"]},
+  "effect": accept("", 3, "TRL_T_S1", "trl_t_subject", "trl_t_uid_subject", "trl_t_place_npc")},
+ {"text": "Abandon the current contract.", "topic": "TRL_TERM_ABANDONED", "condition": {"math": ["trl_t_state > 0"]},
+  "effect": [{"if": {"u_has_mission": mid}, "then": {"finish_mission": mid, "success": False}} for mid in
+             ("TRL_T_R1", "TRL_T_R2", "TRL_T_A1", "TRL_T_A2", "TRL_T_A3", "TRL_T_S1", "TRL_T_S2")] + [{"run_eocs": "trl_t_cleanup"}]},
+ {"text": "Step away from the terminal.", "topic": "TALK_DONE"}]
+add({"type": "talk_topic", "id": "TRL_TERM_MAIN", "dynamic_line": {"math": ["trl_t_state == 0"],
+     "yes": "&MISSION TERMINAL.  Three contracts are open.  Choose one.  Payment on completion: 1000 yen.",
+     "no": "&MISSION TERMINAL.  You already hold an open contract.  Check your mission log, or abandon it here."}, "responses": resp_main})
+add({"type": "talk_topic", "id": "TRL_TERM_ACCEPTED", "dynamic_line": "&CONTRACT ACCEPTED.  Details are in your mission log.  Payment is credited when you return to this terminal.",
+     "responses": [{"text": "Understood.", "topic": "TALK_DONE"}]})
+add({"type": "talk_topic", "id": "TRL_TERM_ABANDONED", "dynamic_line": "&CONTRACT ABANDONED.  No payment.  The terminal accepts new contracts.",
+     "responses": [{"text": "Back to the list.", "topic": "TRL_TERM_MAIN"}, {"text": "Step away.", "topic": "TALK_DONE"}]})
+
+# ------------------------------------------------------------------ shopping terminal
+add({"type": "effect_on_condition", "id": "trl_term_shop_examine", "global": True,
+     "effect": [{"math": ["trl_yen_cache", "=", "u_item_count('trl_yen')"]}, {"open_dialogue": {"topic": "TRL_SHOP_MAIN"}}]})
+GOODS = [("9mm", 1, 10, "one 9mm round", "bullet"), ("hat_hard", 1, 100, "a hard hat", "hard hat"), ("glock_19", 1, 500, "a Glock 19 handgun", "handgun")]
+resp = []
+for item, cnt, price, _, label in GOODS:
+    resp.append({"text": f"Buy {label} ({price} yen).", "topic": "TRL_SHOP_MAIN",
+                 "condition": {"u_has_items": {"item": "trl_yen", "count": price}},
+                 "effect": [{"u_consume_item": "trl_yen", "count": price}, {"u_spawn_item": item, "count": cnt},
+                            {"u_message": f"[Shop] Purchased {label} for {price} yen.", "type": "good"},
+                            {"math": ["trl_yen_cache", "=", "u_item_count('trl_yen')"]}]})
+    resp.append({"text": f"[Not enough yen] {label} ({price} yen).", "topic": "TRL_SHOP_MAIN",
+                 "condition": {"not": {"u_has_items": {"item": "trl_yen", "count": price}}},
+                 "effect": [{"u_message": f"[Shop] You can't afford the {label} ({price} yen).", "type": "bad"}]})
+resp.append({"text": "Step away.", "topic": "TALK_DONE"})
+add({"type": "talk_topic", "id": "TRL_SHOP_MAIN", "dynamic_line": "&SHOPPING TERMINAL.  Yen on hand: <global_val:trl_yen_cache>.  Select a good.  Items are restocked automatically.",
+     "responses": resp})
+
+json.dump(out, open(os.path.join(MOD, "terminals.json"), "w"), indent=2)
+
+# ------------------------------------------------------------------ place the terminals in the testing mid-rise
+p = os.path.join(MOD, "city", "mapgen.json")
+d = json.load(open(p))
+n = 0
+for o in d:
+    if o.get("type") == "mapgen" and "trl_mid01_00z1" in json.dumps(o.get("om_terrain")):
+        o["object"]["place_furniture"] = [f for f in o["object"].get("place_furniture", []) if not f["furn"].startswith("f_trl_m")
+                                          and not f["furn"].startswith("f_trl_shop")]
+        o["object"]["place_furniture"] += [{"furn": "f_trl_mission_terminal", "x": 14, "y": 19}, {"furn": "f_trl_shop_terminal", "x": 16, "y": 19}]
+        n += 1
+json.dump(d, open(p, "w"), indent=1)
+print("terminals.json written;", n, "mapgen patched;", len(out), "objects")
