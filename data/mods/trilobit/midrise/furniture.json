@@ -1,0 +1,758 @@
+[
+ {
+  "type": "furniture",
+  "id": "f_trl_pachinko",
+  "name": "pachinko machine",
+  "description": "A pachinko machine, a roaring waterfall of steel balls and light.",
+  "symbol": "P",
+  "color": "pink",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 9
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_karaoke",
+  "name": "karaoke booth",
+  "description": "A little booth with a glowing lyric screen and sticky microphones.",
+  "symbol": "K",
+  "color": "magenta",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 8
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_mirror_ball",
+  "name": "mirror ball",
+  "description": "A slow-turning mirror ball that scatters coloured light.",
+  "symbol": "o",
+  "color": "light_cyan",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 13
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_speaker",
+  "name": "speaker stack",
+  "description": "A stack of speakers, silent now.",
+  "symbol": "S",
+  "color": "dark_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_neon_pink_big",
+  "name": "huge magenta neon sign",
+  "description": "A sign the size of a door, burning magenta.",
+  "symbol": "=",
+  "color": "pink",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 14
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_samovar",
+  "name": "samovar",
+  "description": "A dented brass urn for boiling tea water, still warm to the touch.",
+  "symbol": "u",
+  "color": "yellow",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_red_lantern",
+  "name": "red lantern",
+  "description": "A round red paper lantern with a gold tassel.",
+  "symbol": "o",
+  "color": "light_red",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 11
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tea_shelf",
+  "name": "tea shelf",
+  "description": "A shelf of round tins and brick-pressed tea cakes.",
+  "symbol": "H",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tea_table",
+  "name": "tea table",
+  "description": "A heavy wooden table with a drain for spilled tea.",
+  "symbol": "T",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tiled_stove",
+  "name": "tiled stove",
+  "description": "A tall stove clad in glazed blue and white tiles.",
+  "symbol": "H",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_icon_lamp",
+  "name": "icon corner",
+  "description": "A small dark painted icon with a flickering lamp before it.",
+  "symbol": "+",
+  "color": "yellow",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 5
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_banner_red",
+  "name": "red banner",
+  "description": "A long red banner with gold lettering.",
+  "symbol": "|",
+  "color": "light_red",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_cot",
+  "name": "army cot",
+  "description": "A canvas cot with a grey blanket, squared away.",
+  "symbol": "b",
+  "color": "green",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 2
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_bunk_steel",
+  "name": "steel bunk",
+  "description": "A steel bunk, two high.",
+  "symbol": "B",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 2
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_ammo_crate",
+  "name": "ammo crate",
+  "description": "A green steel crate stencilled with ammunition codes.",
+  "symbol": "X",
+  "color": "green",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_map_table",
+  "name": "map table",
+  "description": "A big table under a sheet of scratched plastic, grease-pencil marks across it.",
+  "symbol": "T",
+  "color": "green",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_radio_set",
+  "name": "radio set",
+  "description": "A bank of military radios, dials faintly lit.",
+  "symbol": "R",
+  "color": "light_green",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 7
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_locker_mil",
+  "name": "steel locker",
+  "description": "A grey locker with a name card slot.",
+  "symbol": "H",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_sandbags",
+  "name": "sandbag wall",
+  "description": "A knee-high wall of sandbags.",
+  "symbol": "#",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_sentry_lamp",
+  "name": "sentry lamp",
+  "description": "A caged lamp on a pole, hard white light.",
+  "symbol": "Y",
+  "color": "white",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 30
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_banner_unit",
+  "name": "regimental banner",
+  "description": "A faded unit banner on a pole.",
+  "symbol": "|",
+  "color": "white",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_android_pod",
+  "name": "android pod",
+  "description": "A tall glass pod with a pale figure sleeping upright inside, lit blue.",
+  "symbol": "A",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 8
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_assembly_arm",
+  "name": "assembly arm",
+  "description": "A ceiling-mounted robot arm, frozen mid-stroke.",
+  "symbol": "Z",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 6
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_limb_bin",
+  "name": "limb bin",
+  "description": "A bin of pale synthetic limbs, tagged and sorted.",
+  "symbol": "L",
+  "color": "white",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_head_rack",
+  "name": "face-blank rack",
+  "description": "A rack of blank faces waiting for features.",
+  "symbol": "H",
+  "color": "white",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 5
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_test_bench",
+  "name": "diagnostic bench",
+  "description": "A bench with straps, probes and a flickering diagnostic screen.",
+  "symbol": "W",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 7
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_mannequin",
+  "name": "display mannequin",
+  "description": "A pale mannequin in the season's fashion.",
+  "symbol": "M",
+  "color": "white",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_charge_rack",
+  "name": "charging rack",
+  "description": "A rack of seats with cables and green charge lights.",
+  "symbol": "P",
+  "color": "light_green",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 6
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_mattress",
+  "name": "stained mattress",
+  "description": "A thin mattress, stained and sagging.",
+  "symbol": "b",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 1
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_hotplate",
+  "name": "hotplate on a crate",
+  "description": "A single hotplate on an upturned crate.",
+  "symbol": "h",
+  "color": "light_red",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_water_barrel",
+  "name": "water barrel",
+  "description": "A plastic barrel of stale rainwater.",
+  "symbol": "0",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tv_static",
+  "name": "flickering screen",
+  "description": "A cracked screen showing nothing but static.",
+  "symbol": "V",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 6
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_sewing_table",
+  "name": "sewing table",
+  "description": "A long table with a row of sewing machines bolted down.",
+  "symbol": "T",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_bunk_rust",
+  "name": "rust bunk",
+  "description": "A rusty bunk with a thin pad.",
+  "symbol": "B",
+  "color": "red",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 1
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_table_card",
+  "name": "card table",
+  "description": "A green-topped table scattered with chips and cards.",
+  "symbol": "T",
+  "color": "green",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_wall_pipes_f",
+  "name": "leaking pipe",
+  "description": "A pipe sweating rust-coloured water down the wall.",
+  "symbol": "%",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ }
+]

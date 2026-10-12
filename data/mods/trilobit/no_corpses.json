@@ -1,0 +1,314 @@
+[
+ {
+  "type": "item_group",
+  "id": "cannibal_corpse",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_bloody",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_child_calm",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_child_gunned",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_child_survival",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_child_survival_undam",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_female",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_female_mortuary",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_female_survival",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_female_survival_undam",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_generic_boy",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_generic_female",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_generic_girl",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_generic_gunned",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_generic_human",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_generic_infected",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_generic_male",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_gunned",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_half_beheaded",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_halved_upper",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_in_body_bag",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_male",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_male_mortuary",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_mansion",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_oldwoman_jewelry",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_painful",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_scorched",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_stabbed",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpse_viewing",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpses",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpses_no_items",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpses_unisex_survival",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpses_unisex_survival_undam",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpses_verydead",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "corpses_verydead_no_items",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "everyday_corpse",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "everyday_corpse_child",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "everyday_corpse_female",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "everyday_corpse_generic",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "everyday_corpse_male",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "map_extra_college_camping_corpse",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "map_extra_college_lake_corpse",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "map_extra_college_sports_corpse",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "map_extra_drugdeal_corpse",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "map_extra_police_corpse",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "map_extra_science_corpse",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "mil_base_clothes_corpse_soldier",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "mil_base_corpse_corpse_soldier",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "mil_base_corpse_soldier",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "prisoner_or_cop_clothes_corpse",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "void_spider_corpse_mayor_loot",
+  "subtype": "collection",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "void_spider_corpse_minor_loot",
+  "subtype": "collection",
+  "entries": []
+ }
+]
