@@ -29,6 +29,20 @@
  },
  {
   "type": "mapgen",
+  "nested_mapgen_id": "24x24_bridge_road_trash",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
   "nested_mapgen_id": "24x24_bridge_road_vehicles",
   "weight": 1000000000,
   "object": {
@@ -57,6 +71,20 @@
  },
  {
   "type": "mapgen",
+  "nested_mapgen_id": "24x24_bridgehead_ground_trash",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
   "nested_mapgen_id": "24x24_bridgehead_ground_vehicles",
   "weight": 1000000000,
   "object": {
@@ -72,6 +100,20 @@
  {
   "type": "mapgen",
   "nested_mapgen_id": "24x24_bridgehead_ground_vehicles_country",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_bridgehead_ramp_trash",
   "weight": 1000000000,
   "object": {
    "mapgensize": [
@@ -310,6 +352,20 @@
  {
   "type": "mapgen",
   "nested_mapgen_id": "24x24_road_tee_vehicles_country",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_trash",
   "weight": 1000000000,
   "object": {
    "mapgensize": [
@@ -995,6 +1051,20 @@
  },
  {
   "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_zombies_placement",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
   "nested_mapgen_id": "24x24_roadblock_crash",
   "weight": 1000000000,
   "object": {
@@ -1093,7 +1163,16 @@
      "mx_prison_van": 0,
      "mx_exocrash_1": 0,
      "mx_exocrash_2": 0,
-     "mx_helicopter": 0
+     "mx_helicopter": 0,
+     "mx_casings": 0,
+     "mx_corpses": 0,
+     "mx_collegekids": 0,
+     "mx_drugdeal": 0,
+     "mx_military": 0,
+     "mx_science": 0,
+     "mx_supplydrop": 0,
+     "mx_portal": 0,
+     "mx_portal_in": 0
     }
    },
    "research_facility_lot": {
@@ -1107,6 +1186,12 @@
     "extras": {
      "mx_exocrash_1": 0,
      "mx_exocrash_2": 0
+    }
+   },
+   "road_nesw_manhole": {
+    "extras": {
+     "mx_city_trap": 0,
+     "mx_laststand": 0
     }
    }
   }

@@ -12,7 +12,7 @@
     "dependencies": [
       "dda"
     ],
-    "version": "0.0.16-first-quest"
+    "version": "0.0.17-cleanup"
   },
   {
     "type": "MONSTER_WHITELIST",

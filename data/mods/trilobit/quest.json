@@ -3272,6 +3272,83 @@
   },
   {
     "type": "effect_on_condition",
+    "id": "trl_spawn_giver_1",
+    "effect": [
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "min_radius": 1,
+        "max_radius": 3,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_2"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_2",
+    "effect": [
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "min_radius": 1,
+        "max_radius": 6,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_3"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_3",
+    "effect": [
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "min_radius": 0,
+        "max_radius": 10,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_4"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_4",
+    "effect": [
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "min_radius": 0,
+        "max_radius": 16,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_5"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_5",
+    "effect": [
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "min_radius": 0,
+        "max_radius": 16,
+        "indoor_only": false
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
     "id": "trl_city_intro",
     "effect": [
       {
@@ -3305,13 +3382,6 @@
         "u_location_variable": {
           "global_val": "trl_giver_loc"
         }
-      },
-      {
-        "u_spawn_npc": "trl_fixer",
-        "unique_id": "quest_giver",
-        "min_radius": 1,
-        "max_radius": 4,
-        "indoor_only": true
       },
       {
         "run_eocs": [

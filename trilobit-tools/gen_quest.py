@@ -153,14 +153,21 @@ def place_eoc(i, dx, dy, rnd):
 for i, (dx, dy) in enumerate(offsets): place_eoc(i, dx, dy, True)
 for i, (dx, dy) in enumerate(offsets): place_eoc(i, dx, dy, False)
 J += eocs
+# the quest giver must start in the player's own building: widen the search until a free indoor tile is found
+def giver(i, lo, hi, nxt, indoor=True):
+    e = {"type": "effect_on_condition", "id": f"trl_spawn_giver_{i}",
+         "effect": [{"u_spawn_npc": "trl_fixer", "unique_id": "quest_giver", "min_radius": lo, "max_radius": hi,
+                     "indoor_only": indoor}]}
+    if nxt: e["effect"][0]["false_eocs"] = [f"trl_spawn_giver_{nxt}"]
+    return e
+J += [giver(1, 1, 3, 2), giver(2, 1, 6, 3), giver(3, 0, 10, 4), giver(4, 0, 16, 5), giver(5, 0, 16, None, False)]
 J += [{
   "type": "effect_on_condition", "id": "trl_city_intro",
   "effect": [
     {"math": ["trl_quest_state", "=", "0"]}, {"math": ["trl_mark_dead", "=", "0"]},
     {"math": ["trl_target_placed", "=", "0"]},
     {"u_location_variable": {"global_val": "trl_giver_loc"}},
-    {"u_spawn_npc": "trl_fixer", "unique_id": "quest_giver", "min_radius": 1, "max_radius": 4,
-     "indoor_only": True},
+    {"run_eocs": "trl_spawn_giver_1"},
     {"run_eocs": names},
     {"set_string_var": "somewhere nearby", "target_var": {"global_val": "trl_target_dir"},
      "//": "overwritten by the placement EOC when it succeeds"}

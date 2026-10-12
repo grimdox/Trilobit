@@ -1,0 +1,377 @@
+[
+ {
+  "type": "overmap_special",
+  "id": "anthill",
+  "subtype": "fixed",
+  "locations": [
+   "forest"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "forest"
+   }
+  ],
+  "occurrences": [
+   0,
+   0
+  ],
+  "flags": [
+   "WILDERNESS"
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "acid_anthill",
+  "subtype": "fixed",
+  "locations": [
+   "forest"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "forest"
+   }
+  ],
+  "occurrences": [
+   0,
+   0
+  ],
+  "flags": [
+   "WILDERNESS"
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Out-of-place Stone Barn",
+  "copy-from": "Out-of-place Stone Barn",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Strange warehouse",
+  "copy-from": "Strange warehouse",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "exodii_base",
+  "copy-from": "exodii_base",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "labyrinthine_structure",
+  "subtype": "fixed",
+  "locations": [
+   "forest"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "forest"
+   }
+  ],
+  "occurrences": [
+   0,
+   0
+  ],
+  "flags": [
+   "WILDERNESS"
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Bee Hive",
+  "copy-from": "Bee Hive",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Large Dermatik Nest",
+  "copy-from": "Large Dermatik Nest",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Lab with Anthill",
+  "copy-from": "Lab with Anthill",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Wasp Tower",
+  "copy-from": "Wasp Tower",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Wasp Tower 1",
+  "copy-from": "Wasp Tower 1",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Spider Pit",
+  "copy-from": "Spider Pit",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Slime Pit",
+  "copy-from": "Slime Pit",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Fungal Bloom",
+  "copy-from": "Fungal Bloom",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Fungal Tower",
+  "copy-from": "Fungal Tower",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Fungal Flowers",
+  "copy-from": "Fungal Flowers",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Triffid Grove",
+  "copy-from": "Triffid Grove",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "void_spider_lair",
+  "copy-from": "void_spider_lair",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Mi-Go Encampment",
+  "copy-from": "Mi-Go Encampment",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Mi-Go Scout Tower",
+  "copy-from": "Mi-Go Scout Tower",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Barry's Mi-Go Scout Tower",
+  "copy-from": "Barry's Mi-Go Scout Tower",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
+  "id": "Mi-Go Portal",
+  "copy-from": "Mi-Go Portal",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "region_overlay",
+  "regions": [
+   "all"
+  ],
+  "map_extras": {
+   "forest": {
+    "extras": {
+     "mx_nest_wasp": 0,
+     "mx_spider": 0,
+     "mx_beehive_natural": 0,
+     "mx_portal": 0,
+     "mx_portal_in": 0,
+     "mx_exocrash_1": 0,
+     "mx_exocrash_2": 0,
+     "mx_toxic_waste": 0,
+     "mx_mass_grave": 0
+    }
+   },
+   "forest_thick": {
+    "extras": {
+     "mx_nest_wasp": 0,
+     "mx_spider": 0,
+     "mx_beehive_natural": 0,
+     "mx_jabberwock": 0,
+     "mx_portal": 0,
+     "mx_portal_in": 0,
+     "mx_exocrash_1": 0,
+     "mx_exocrash_2": 0,
+     "mx_toxic_waste": 0,
+     "mx_mass_grave": 0
+    }
+   },
+   "forest_water": {
+    "extras": {
+     "mx_spider": 0,
+     "mx_nest_dermatik": 0,
+     "mx_beehive_natural": 0,
+     "mx_portal": 0,
+     "mx_portal_in": 0,
+     "mx_exocrash_1": 0,
+     "mx_exocrash_2": 0,
+     "mx_toxic_waste": 0
+    }
+   },
+   "field": {
+    "extras": {
+     "mx_nest_wasp": 0,
+     "mx_Trapdoor_spider_den": 0,
+     "mx_worm_sign": 0,
+     "mx_portal": 0,
+     "mx_portal_in": 0,
+     "mx_exocrash_1": 0,
+     "mx_exocrash_2": 0,
+     "mx_golden_monoliths": 0,
+     "mx_toxic_waste": 0,
+     "mx_mass_grave": 0
+    }
+   },
+   "road": {
+    "extras": {
+     "mx_portal": 0,
+     "mx_portal_in": 0,
+     "mx_exocrash_1": 0,
+     "mx_exocrash_2": 0
+    }
+   },
+   "park": {
+    "extras": {
+     "mx_fungal_zone": 0
+    }
+   },
+   "build": {
+    "extras": {
+     "mx_house_spider": 0,
+     "mx_house_wasp": 0,
+     "mx_portal": 0,
+     "mx_portal_in": 0,
+     "mx_dormant": 0,
+     "mx_bugout": 0,
+     "mx_looters": 0
+    }
+   },
+   "marloss": {
+    "extras": {
+     "mx_marloss_pilgrimage": 0
+    }
+   },
+   "subway": {
+    "extras": {
+     "mx_dormant": 0
+    }
+   },
+   "lab_subway": {
+    "extras": {
+     "mx_portal": 0,
+     "mx_portal_in": 0
+    }
+   },
+   "research_facility_lot": {
+    "extras": {
+     "mx_portal": 0,
+     "mx_portal_in": 0,
+     "mx_exocrash_1": 0,
+     "mx_exocrash_2": 0,
+     "mx_crater": 0
+    }
+   },
+   "research_facility_interior": {
+    "extras": {
+     "mx_jabberwock": 0,
+     "mx_portal": 0,
+     "mx_portal_in": 0,
+     "mx_crater": 0
+    }
+   },
+   "agricultural": {
+    "extras": {
+     "mx_nest_wasp": 0,
+     "mx_Trapdoor_spider_den": 0,
+     "mx_portal": 0,
+     "mx_portal_in": 0,
+     "mx_exocrash_1": 0,
+     "mx_exocrash_2": 0,
+     "mx_mass_grave": 0
+    }
+   }
+  }
+ }
+]

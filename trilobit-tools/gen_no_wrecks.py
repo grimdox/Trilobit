@@ -18,6 +18,10 @@ for f in glob.glob(os.path.join(STOCK, "mapgen/**/*.json"), recursive=True):
 # every road-vehicle chunk, plus any nested chunk with a vehicle-ish name that actually places vehicles or is a crash/wreck
 ids = sorted(i for i, hasv in nested.items() if PAT.search(i) and (hasv or i.startswith("24x24_road_") or i.startswith("24x24_bridge")))
 ids = [i for i in ids if not i.startswith("nest_exodii")]    # alien wrecks are handled by removing the crash extras
+# road litter chunks (the 'road'/'bridge' item groups hold wheels, seatbelts, tow cables, casings, corpses) and zombie placement
+ids += ["24x24_road_trash", "24x24_bridge_road_trash", "24x24_bridgehead_ground_trash", "24x24_bridgehead_ramp_trash",
+        "24x24_road_zombies_placement"]
+ids = sorted(set(i for i in ids if i in nested))
 out = [{"type": "mapgen", "nested_mapgen_id": i, "weight": 1000000000,
         "object": {"mapgensize": [24, 24] if i.startswith("24x24") else [1, 1], "rotation": [0]}} for i in ids]
 # vehicle map extras
@@ -29,6 +33,11 @@ zones = {}
 for zone, v in region["map_extras"].items():
     for e in EXTRAS:
         if e in v.get("extras", {}): zones.setdefault(zone, {})[e] = 0
+ROAD_EXTRAS = ["mx_casings", "mx_corpses", "mx_collegekids", "mx_drugdeal", "mx_military", "mx_science", "mx_supplydrop",
+               "mx_portal", "mx_portal_in", "mx_city_trap", "mx_laststand"]
+for zone in ("road", "road_nesw_manhole"):
+    for e in ROAD_EXTRAS:
+        if e in region["map_extras"][zone].get("extras", {}): zones.setdefault(zone, {})[e] = 0
 overlay = {"type": "region_overlay", "regions": ["all"], "map_extras": {z: {"extras": ex} for z, ex in zones.items()}}
 json.dump(out + [overlay], open(os.path.join(MOD, "no_wrecks.json"), "w"), indent=1)
 print(len(ids), "nested chunks blanked;", sum(len(v) for v in zones.values()), "extra entries zeroed in", len(zones), "zones")

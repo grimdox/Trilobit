@@ -1,0 +1,15 @@
+[
+  {
+    "type": "EXTERNAL_OPTION",
+    "name": "SPAWN_CITY_HORDE_THRESHOLD",
+    "//": "Negative disables the zombie hordes the game places in every city (they show as z/Z on the overmap).",
+    "stype": "int",
+    "value": -1
+  },
+  {
+    "type": "EXTERNAL_OPTION",
+    "name": "ZOMBIFY_INTO_ENABLED",
+    "stype": "bool",
+    "value": false
+  }
+]

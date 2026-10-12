@@ -32,7 +32,7 @@ ter("neon_pink", "p", "magenta light floor", "Floor panels that glow a deep mage
 ter("crystal", "z", "crystal-seamed ground", "Rock veined with glowing blue-violet crystal.", ".", "light_blue", "t_dirt", light_emitted=7)
 ter("wall_concrete", "W", "concrete wall", "A bare poured-concrete wall.", "#", "light_gray", "t_concrete_wall")
 ter("wall_corp", "X", "white panel wall", "A smooth white composite wall.", "#", "white", "t_concrete_wall")
-ter("wall_shoji", "S", "paper screen wall", "A wall of wooden frames and translucent paper, backlit from within.", "#", "light_green", "t_concrete_wall", light_emitted=3)
+ter("wall_shoji", "S", "paper screen wall", "A wall of wooden frames and translucent paper, backlit from within.", "#", "light_green", "t_concrete_wall", light_emitted=4)
 ter("wall_slat", "Y", "wooden slat wall", "A wall of dark vertical wooden slats.", "#", "brown", "t_concrete_wall")
 ter("wall_rust", "R", "rusted sheet wall", "Corrugated sheet metal, patched, painted over and rusting.", "#", "red", "t_concrete_wall")
 ter("wall_mural", "M", "mural wall", "A concrete wall painted with a huge faded mural of waves and cranes.", "#", "light_blue", "t_concrete_wall")
