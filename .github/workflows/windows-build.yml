@@ -58,7 +58,8 @@ jobs:
           mkdir -p out/trilobit
           cp cataclysm-tiles.exe out/trilobit/
           cp -r data gfx out/trilobit/
-          ldd cataclysm-tiles.exe | grep -i mingw64 | awk '{print $3}' | xargs -I{} cp {} out/trilobit/
+          ldd cataclysm-tiles.exe | grep -i mingw64 | awk '{print $3}' | xargs -r -I{} cp {} out/trilobit/ || true
+          ls -la out/trilobit | head
           cd out && zip -qr ../trilobit-windows.zip trilobit
       - uses: actions/upload-artifact@v4
         with:
