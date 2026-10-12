@@ -12,7 +12,7 @@
     "dependencies": [
       "dda"
     ],
-    "version": "0.0.14-towers"
+    "version": "0.0.15-no-wrecks"
   },
   {
     "type": "MONSTER_WHITELIST",

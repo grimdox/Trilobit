@@ -1,0 +1,1114 @@
+[
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "1x1_farm_house_parking",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "1x1_farm_vehicles",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_bridge_road_vehicles",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_bridge_road_vehicles_country",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_bridgehead_ground_vehicles",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_bridgehead_ground_vehicles_country",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_mayhem_crash",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_curved_layby_vehicles",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_curved_vehicles",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_curved_vehicles_city",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_curved_vehicles_country",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_end_vehicles",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_end_vehicles_city",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_end_vehicles_country",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_four_way_crossroad_vehicles",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_four_way_crossroad_vehicles_city",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_four_way_crossroad_vehicles_country",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_straight_vehicles",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_straight_vehicles_city",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_straight_vehicles_country",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_tee_vehicles",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_tee_vehicles_city",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_tee_vehicles_country",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_bridge_semi_crash",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_bridge_semi_crash_north",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_bridge_semi_crash_south",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_bridge_special",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_jack-knifed_semi",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_jack-knifed_semi_east",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_jack-knifed_semi_north",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_jack-knifed_semi_south",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_jack-knifed_semi_west",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_parked_east",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_parked_east_east_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_parked_east_west_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_parked_north",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_parked_north_north_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_parked_north_south_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_parked_south",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_parked_south_north_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_parked_south_south_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_parked_west",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_parked_west_east_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_parked_west_west_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_policecar_pileup",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_vehicle_pileup",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_wrecks_east",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_wrecks_east_east_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_wrecks_east_west_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_wrecks_north",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_wrecks_north_north_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_wrecks_north_south_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_wrecks_south",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_wrecks_south_north_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_wrecks_south_south_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_wrecks_west",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_wrecks_west_east_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_city_wrecks_west_west_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_country_out_of_fuel_east",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_country_out_of_fuel_east_east_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_country_out_of_fuel_east_west_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_country_out_of_fuel_north",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_country_out_of_fuel_north_north_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_country_out_of_fuel_north_south_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_country_out_of_fuel_south",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_country_out_of_fuel_south_north_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_country_out_of_fuel_south_south_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_country_out_of_fuel_west",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_country_out_of_fuel_west_east_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_country_out_of_fuel_west_west_facing",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_road_vehicles_special",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "24x24_roadblock_crash",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    24,
+    24
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "carcrash_10x10_diag_fromleft",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "carcrash_10x10_diag_fromright",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "carcrash_8x8_straight",
+  "weight": 1000000000,
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rotation": [
+    0
+   ]
+  }
+ },
+ {
+  "type": "region_overlay",
+  "regions": [
+   "all"
+  ],
+  "map_extras": {
+   "forest": {
+    "extras": {
+     "mx_exocrash_1": 0,
+     "mx_exocrash_2": 0,
+     "mx_helicopter": 0
+    }
+   },
+   "forest_thick": {
+    "extras": {
+     "mx_exocrash_1": 0,
+     "mx_exocrash_2": 0,
+     "mx_helicopter": 0
+    }
+   },
+   "forest_water": {
+    "extras": {
+     "mx_exocrash_1": 0,
+     "mx_exocrash_2": 0,
+     "mx_helicopter": 0
+    }
+   },
+   "field": {
+    "extras": {
+     "mx_exocrash_1": 0,
+     "mx_exocrash_2": 0
+    }
+   },
+   "road": {
+    "extras": {
+     "mx_roadblock": 0,
+     "mx_roadblock_mil": 0,
+     "mx_bandits_block": 0,
+     "mx_mayhem": 0,
+     "mx_roadworks": 0,
+     "mx_prison_bus": 0,
+     "mx_prison_van": 0,
+     "mx_exocrash_1": 0,
+     "mx_exocrash_2": 0,
+     "mx_helicopter": 0
+    }
+   },
+   "research_facility_lot": {
+    "extras": {
+     "mx_exocrash_1": 0,
+     "mx_exocrash_2": 0,
+     "mx_helicopter": 0
+    }
+   },
+   "agricultural": {
+    "extras": {
+     "mx_exocrash_1": 0,
+     "mx_exocrash_2": 0
+    }
+   }
+  }
+ }
+]
