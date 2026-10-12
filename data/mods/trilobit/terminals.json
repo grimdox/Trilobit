@@ -144,12 +144,12 @@
         },
         "x_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         },
         "y_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         }
       },
@@ -165,7 +165,7 @@
           "global_val": "trl_t_loc"
         },
         "min_radius": 0,
-        "max_radius": 24,
+        "max_radius": 12,
         "indoor_only": true,
         "true_eocs": [
           {
@@ -209,12 +209,12 @@
         },
         "x_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         },
         "y_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         }
       },
@@ -230,7 +230,7 @@
           "global_val": "trl_t_loc"
         },
         "min_radius": 0,
-        "max_radius": 24,
+        "max_radius": 12,
         "indoor_only": true,
         "true_eocs": [
           {
@@ -274,12 +274,12 @@
         },
         "x_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         },
         "y_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         }
       },
@@ -295,7 +295,7 @@
           "global_val": "trl_t_loc"
         },
         "min_radius": 0,
-        "max_radius": 24,
+        "max_radius": 12,
         "indoor_only": true,
         "true_eocs": [
           {
@@ -339,12 +339,12 @@
         },
         "x_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         },
         "y_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         }
       },
@@ -360,7 +360,7 @@
           "global_val": "trl_t_loc"
         },
         "min_radius": 0,
-        "max_radius": 24,
+        "max_radius": 12,
         "indoor_only": true,
         "true_eocs": [
           {
@@ -404,12 +404,12 @@
         },
         "x_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         },
         "y_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         }
       },
@@ -425,7 +425,7 @@
           "global_val": "trl_t_loc"
         },
         "min_radius": 0,
-        "max_radius": 24,
+        "max_radius": 12,
         "indoor_only": true,
         "true_eocs": [
           {
@@ -469,12 +469,12 @@
         },
         "x_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         },
         "y_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         }
       },
@@ -490,7 +490,7 @@
           "global_val": "trl_t_loc"
         },
         "min_radius": 0,
-        "max_radius": 24,
+        "max_radius": 12,
         "indoor_only": true,
         "true_eocs": [
           {
@@ -534,12 +534,12 @@
         },
         "x_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         },
         "y_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         }
       },
@@ -555,7 +555,7 @@
           "global_val": "trl_t_loc"
         },
         "min_radius": 0,
-        "max_radius": 24,
+        "max_radius": 12,
         "indoor_only": true,
         "true_eocs": [
           {
@@ -599,12 +599,12 @@
         },
         "x_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         },
         "y_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         }
       },
@@ -620,7 +620,7 @@
           "global_val": "trl_t_loc"
         },
         "min_radius": 0,
-        "max_radius": 24,
+        "max_radius": 12,
         "indoor_only": true,
         "true_eocs": [
           {
@@ -664,12 +664,12 @@
         },
         "x_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         },
         "y_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         }
       },
@@ -685,7 +685,7 @@
           "global_val": "trl_t_loc"
         },
         "min_radius": 0,
-        "max_radius": 24,
+        "max_radius": 12,
         "indoor_only": false,
         "true_eocs": [
           {
@@ -729,12 +729,12 @@
         },
         "x_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         },
         "y_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         }
       },
@@ -750,7 +750,7 @@
           "global_val": "trl_t_loc"
         },
         "min_radius": 0,
-        "max_radius": 24,
+        "max_radius": 12,
         "indoor_only": false,
         "true_eocs": [
           {
@@ -794,12 +794,12 @@
         },
         "x_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         },
         "y_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         }
       },
@@ -815,7 +815,7 @@
           "global_val": "trl_t_loc"
         },
         "min_radius": 0,
-        "max_radius": 24,
+        "max_radius": 12,
         "indoor_only": false,
         "true_eocs": [
           {
@@ -859,12 +859,12 @@
         },
         "x_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         },
         "y_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         }
       },
@@ -880,7 +880,7 @@
           "global_val": "trl_t_loc"
         },
         "min_radius": 0,
-        "max_radius": 24,
+        "max_radius": 12,
         "indoor_only": false,
         "true_eocs": [
           {
@@ -959,12 +959,12 @@
         },
         "x_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         },
         "y_adjust": {
           "math": [
-            "(rand(1) * 2 - 1) * (22 + rand(26))"
+            "(rand(1) * 2 - 1) * (24 + rand(24))"
           ]
         }
       },
@@ -974,7 +974,7 @@
           "global_val": "trl_t_loc"
         },
         "indoor_only": true,
-        "max_radius": 24,
+        "max_radius": 12,
         "suppress_message": true,
         "count": 1
       }

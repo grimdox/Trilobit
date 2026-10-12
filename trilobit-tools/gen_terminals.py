@@ -31,8 +31,8 @@ add({"type": "effect_on_condition", "id": "trl_t_target_death", "eoc_type": "NPC
 
 # ------------------------------------------------------------------ placement
 def rnd_loc(var):
-    return [{"u_location_variable": {"global_val": var}, "x_adjust": {"math": ["(rand(1) * 2 - 1) * (22 + rand(26))"]},
-             "y_adjust": {"math": ["(rand(1) * 2 - 1) * (22 + rand(26))"]}}]
+    return [{"u_location_variable": {"global_val": var}, "x_adjust": {"math": ["(rand(1) * 2 - 1) * (24 + rand(24))"]},
+             "y_adjust": {"math": ["(rand(1) * 2 - 1) * (24 + rand(24))"]}}]
 placed_ok = lambda eid: [{"id": eid, "effect": [
     {"math": ["trl_t_placed", "=", "1"]},
     {"u_run_npc_eocs": ["trl_t_record_loc"], "unique_ids": [{"global_val": "trl_t_uid"}]}]}]
@@ -43,14 +43,14 @@ for k in range(12):
     tid = f"trl_t_try_{k}"; tries.append(tid)
     add({"type": "effect_on_condition", "id": tid, "condition": {"math": ["trl_t_placed == 0"]},
          "effect": rnd_loc("trl_t_loc") + [{"u_spawn_npc": {"global_val": "trl_t_npc"}, "real_count": 1, "unique_id": {"global_val": "trl_t_uid"},
-                                            "target_var": {"global_val": "trl_t_loc"}, "min_radius": 0, "max_radius": 24, "indoor_only": indoor,
+                                            "target_var": {"global_val": "trl_t_loc"}, "min_radius": 0, "max_radius": 12, "indoor_only": indoor,
                                             "true_eocs": placed_ok(tid + "_ok")}]})
 add({"type": "effect_on_condition", "id": "trl_t_place_npc",
      "effect": [{"math": ["trl_t_placed", "=", "0"]}, {"run_eocs": tries},
                 {"if": {"math": ["trl_t_placed == 0"]}, "then": {"u_message": "[Trilobit] The terminal could not locate a safe site.  Try another contract.", "type": "bad"}}]})
 add({"type": "effect_on_condition", "id": "trl_t_place_item",
      "effect": rnd_loc("trl_t_loc") + [{"map_spawn_item": "trl_data_core", "loc": {"global_val": "trl_t_loc"}, "indoor_only": True,
-                                        "max_radius": 24, "suppress_message": True, "count": 1}]})
+                                        "max_radius": 12, "suppress_message": True, "count": 1}]})
 cleanup = {"id": "trl_t_kill_one", "effect": [{"u_die": {"remove_corpse": True, "supress_message": True, "remove_from_creature_tracker": True}}]}
 add({"type": "effect_on_condition", "id": "trl_t_cleanup",
      "effect": [{"u_run_npc_eocs": [cleanup], "unique_ids": ["trl_t_uid_target", "trl_t_uid_subject"]},
