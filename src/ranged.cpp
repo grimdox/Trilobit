@@ -1007,6 +1007,7 @@ int Character::fire_gun( const tripoint_bub_ms &target, int shots )
 int Character::fire_gun( map &here, const tripoint_bub_ms &target, int shots, item &gun,
                          item_location ammo )
 {
+    trl_face_toward( here.get_abs( target ) ); // Trilobit: turn toward the shot
     if( !gun.is_gun() ) {
         debugmsg( "%s tried to fire non-gun (%s).", get_name(), gun.tname() );
         return 0;

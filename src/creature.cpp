@@ -538,7 +538,7 @@ bool Creature::sees( const map &here, const Creature &critter ) const
 
     // Trilobit: monsters only see within a 180 degree cone in front of them.
     // Adjacent targets are always noticed.
-    if( as_monster() != nullptr && target_range > 1 && !trl_in_front_cone( critter.pos_abs() ) ) {
+    if( ( as_monster() != nullptr || as_npc() != nullptr ) && target_range > 1 && !trl_in_front_cone( critter.pos_abs() ) ) {
         return false;
     }
 

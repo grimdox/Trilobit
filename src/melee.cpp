@@ -512,6 +512,7 @@ static void melee_train( Character &you, int lo, int hi, const item &weap,
 bool Character::melee_attack( Creature &t, bool allow_special )
 {
     static const matec_id no_technique_id( "" );
+    trl_face_toward( t.pos_abs() ); // Trilobit: turn toward whatever we strike
     return melee_attack( t, allow_special, no_technique_id );
 }
 

@@ -4388,6 +4388,15 @@ void cata_tiles::draw_entity_with_overlays( const Character &ch, const tripoint_
         } else {
             ent_name = ch.male ? "player_male" : "player_female";
         }
+        // Trilobit: 8-direction sprites (e.g. player_male_ne) when the tileset has them
+        static const char *const dir_names[3][3] = { { "_nw", "_n", "_ne" }, { "_w", "", "_e" }, { "_sw", "_s", "_se" } };
+        const point tf = ch.trl_facing;
+        const std::string dir_sprite = tf == point::zero ? std::string() :
+                                       ent_name + dir_names[tf.y + 1][tf.x + 1];
+        if( !dir_sprite.empty() && tileset_ptr->find_tile_type( dir_sprite ) ) {
+            draw_from_id_string( dir_sprite, TILE_CATEGORY::NONE, "", p, corner, 0, ll, false,
+                                 height_3d );
+        } else
         // depending on the toggle flip sprite left or right
         if( facing == FacingDirection::RIGHT ) {
             draw_from_id_string( ent_name, TILE_CATEGORY::NONE, "", p, corner, 0, ll, false,
