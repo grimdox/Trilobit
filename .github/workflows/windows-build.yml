@@ -28,12 +28,27 @@ jobs:
             mingw-w64-x86_64-SDL2
             mingw-w64-x86_64-SDL2_image
             mingw-w64-x86_64-SDL2_ttf
+            mingw-w64-x86_64-SDL2_mixer
+            mingw-w64-x86_64-libjxl
+            mingw-w64-x86_64-libwebp
+            mingw-w64-x86_64-wavpack
+            mingw-w64-x86_64-libvorbis
+            mingw-w64-x86_64-libogg
+            mingw-w64-x86_64-flac
+            mingw-w64-x86_64-opusfile
+            mingw-w64-x86_64-mpg123
+            mingw-w64-x86_64-libmodplug
+            mingw-w64-x86_64-libtiff
+            mingw-w64-x86_64-libjpeg-turbo
+            mingw-w64-x86_64-libpng
             mingw-w64-x86_64-freetype
             mingw-w64-x86_64-zlib
       - name: Build
         run: |
           set -o pipefail
-          make -j4 DYNAMIC_LINKING=1 OTHERS=-Wno-error TILES=1 SOUND=0 RELEASE=1 LOCALIZE=0 LINTJSON=0 ASTYLE=0 TESTS=0 CCACHE=1 BACKTRACE=0 PCH=0 2>&1 | tee build.log
+          export LDFLAGS="$(pkg-config --static --libs SDL2_image SDL2_mixer SDL2_ttf)"
+          echo "LDFLAGS=$LDFLAGS"
+          make -j4 MSYS2=1 OTHERS=-Wno-error TILES=1 SOUND=1 RELEASE=1 LOCALIZE=0 LINTJSON=0 ASTYLE=0 TESTS=0 CCACHE=1 BACKTRACE=0 PCH=0 2>&1 | tee build.log
       - name: Report build errors
         if: failure()
         run: |
