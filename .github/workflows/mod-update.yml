@@ -1,0 +1,37 @@
+name: Mod update
+
+# Fast, no-compile package of just the Trilobit data: mod JSON, title art and
+# splash images.  Unzip over an existing Trilobit install (same folder layout).
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, phase-b-facing ]
+    paths:
+      - 'data/mods/trilobit/**'
+      - 'data/title/**'
+      - 'gfx/splash/**'
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package
+        run: |
+          mkdir -p out/trilobit/data/mods out/trilobit/gfx
+          cp -r data/mods/trilobit out/trilobit/data/mods/
+          cp -r data/title out/trilobit/data/
+          cp -r gfx/splash out/trilobit/gfx/
+          echo "Built from commit $GITHUB_SHA" > out/trilobit/MOD_VERSION.txt
+          cd out && zip -qr ../trilobit-mod.zip trilobit
+          ls -la ../trilobit-mod.zip
+      - name: Publish to the mod-latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete mod-latest --yes --cleanup-tag --repo "$GITHUB_REPOSITORY" || true
+          gh release create mod-latest trilobit-mod.zip --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease --title "Trilobit mod only (latest)" --notes "Mod data only (commit $GITHUB_SHA).  Unzip over your Trilobit folder so that data/mods/trilobit is replaced.  Delete data/cache, start a new world.  Requires an exe at least as new as the last Windows build."

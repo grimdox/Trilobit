@@ -4,6 +4,14 @@ on:
   workflow_dispatch:
   push:
     branches: [ main, phase-b-facing ]
+    # Only rebuild the exe when code or build files change.  JSON/image-only
+    # pushes are handled by the quick "Mod update" workflow instead.
+    paths:
+      - 'src/**'
+      - 'Makefile'
+      - 'build-scripts/**'
+      - 'lang/**'
+      - '.github/workflows/windows-build.yml'
 
 permissions:
   contents: write
