@@ -3272,78 +3272,1214 @@
   },
   {
     "type": "effect_on_condition",
-    "id": "trl_spawn_giver_1",
+    "id": "trl_spawn_giver_near_1",
     "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "clamp((u_val('pos_x') - 24 * floor(u_val('pos_x') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "clamp((u_val('pos_y') - 24 * floor(u_val('pos_y') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        }
+      },
       {
         "u_spawn_npc": "trl_fixer",
         "unique_id": "quest_giver",
-        "min_radius": 1,
-        "max_radius": 3,
-        "indoor_only": true,
-        "false_eocs": [
-          "trl_spawn_giver_2"
-        ]
-      }
-    ]
-  },
-  {
-    "type": "effect_on_condition",
-    "id": "trl_spawn_giver_2",
-    "effect": [
-      {
-        "u_spawn_npc": "trl_fixer",
-        "unique_id": "quest_giver",
-        "min_radius": 1,
-        "max_radius": 6,
-        "indoor_only": true,
-        "false_eocs": [
-          "trl_spawn_giver_3"
-        ]
-      }
-    ]
-  },
-  {
-    "type": "effect_on_condition",
-    "id": "trl_spawn_giver_3",
-    "effect": [
-      {
-        "u_spawn_npc": "trl_fixer",
-        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
         "min_radius": 0,
-        "max_radius": 10,
+        "max_radius": 0,
         "indoor_only": true,
         "false_eocs": [
-          "trl_spawn_giver_4"
+          "trl_spawn_giver_near_2"
         ]
       }
     ]
   },
   {
     "type": "effect_on_condition",
-    "id": "trl_spawn_giver_4",
+    "id": "trl_spawn_giver_near_2",
     "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "clamp((u_val('pos_x') - 24 * floor(u_val('pos_x') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "clamp((u_val('pos_y') - 24 * floor(u_val('pos_y') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        }
+      },
       {
         "u_spawn_npc": "trl_fixer",
         "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
         "min_radius": 0,
-        "max_radius": 16,
+        "max_radius": 0,
         "indoor_only": true,
         "false_eocs": [
-          "trl_spawn_giver_5"
+          "trl_spawn_giver_near_3"
         ]
       }
     ]
   },
   {
     "type": "effect_on_condition",
-    "id": "trl_spawn_giver_5",
+    "id": "trl_spawn_giver_near_3",
     "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "clamp((u_val('pos_x') - 24 * floor(u_val('pos_x') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "clamp((u_val('pos_y') - 24 * floor(u_val('pos_y') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        }
+      },
       {
         "u_spawn_npc": "trl_fixer",
         "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
         "min_radius": 0,
-        "max_radius": 16,
-        "indoor_only": false
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_near_4"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_near_4",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "clamp((u_val('pos_x') - 24 * floor(u_val('pos_x') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "clamp((u_val('pos_y') - 24 * floor(u_val('pos_y') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_near_5"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_near_5",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "clamp((u_val('pos_x') - 24 * floor(u_val('pos_x') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "clamp((u_val('pos_y') - 24 * floor(u_val('pos_y') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_near_6"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_near_6",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "clamp((u_val('pos_x') - 24 * floor(u_val('pos_x') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "clamp((u_val('pos_y') - 24 * floor(u_val('pos_y') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_near_7"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_near_7",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "clamp((u_val('pos_x') - 24 * floor(u_val('pos_x') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "clamp((u_val('pos_y') - 24 * floor(u_val('pos_y') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_near_8"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_near_8",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "clamp((u_val('pos_x') - 24 * floor(u_val('pos_x') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "clamp((u_val('pos_y') - 24 * floor(u_val('pos_y') / 24)) + rand(12) - 6, 0, 23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_1",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_2"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_2",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_3"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_3",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_4"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_4",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_5"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_5",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_6"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_6",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_7"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_7",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_8"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_8",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_9"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_9",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_10"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_10",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_11"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_11",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_12"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_12",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_13"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_13",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_14"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_14",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_15"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_15",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_16"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_16",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_17"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_17",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_18"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_18",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_19"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_19",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_20"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_20",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_21"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_21",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_22"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_22",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_23"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_23",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true,
+        "false_eocs": [
+          "trl_spawn_giver_any_24"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_spawn_giver_any_24",
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0
+        },
+        "x_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        },
+        "y_adjust": {
+          "math": [
+            "rand(23)"
+          ]
+        }
+      },
+      {
+        "u_spawn_npc": "trl_fixer",
+        "unique_id": "quest_giver",
+        "target_var": {
+          "global_val": "trl_giver_spawn_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 0,
+        "indoor_only": true
       }
     ]
   },

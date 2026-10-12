@@ -12,7 +12,7 @@
     "dependencies": [
       "dda"
     ],
-    "version": "0.0.17-cleanup"
+    "version": "0.0.18-giver-same-building"
   },
   {
     "type": "MONSTER_WHITELIST",

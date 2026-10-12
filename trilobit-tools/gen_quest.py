@@ -153,21 +153,29 @@ def place_eoc(i, dx, dy, rnd):
 for i, (dx, dy) in enumerate(offsets): place_eoc(i, dx, dy, True)
 for i, (dx, dy) in enumerate(offsets): place_eoc(i, dx, dy, False)
 J += eocs
-# the quest giver must start in the player's own building: widen the search until a free indoor tile is found
-def giver(i, lo, hi, nxt, indoor=True):
-    e = {"type": "effect_on_condition", "id": f"trl_spawn_giver_{i}",
-         "effect": [{"u_spawn_npc": "trl_fixer", "unique_id": "quest_giver", "min_radius": lo, "max_radius": hi,
-                     "indoor_only": indoor}]}
-    if nxt: e["effect"][0]["false_eocs"] = [f"trl_spawn_giver_{nxt}"]
-    return e
-J += [giver(1, 1, 3, 2), giver(2, 1, 6, 3), giver(3, 0, 10, 4), giver(4, 0, 16, 5), giver(5, 0, 16, None, False)]
+# The quest giver must start inside the PC's own building. Each mid-rise is one overmap tile (24x24) per floor, so we pick
+# tiles inside the PC's own overmap tile only: first close to the PC, then anywhere in the tile, indoors and on the PC's floor.
+PX = "(u_val('pos_x') - 24 * floor(u_val('pos_x') / 24))"
+PY = "(u_val('pos_y') - 24 * floor(u_val('pos_y') / 24))"
+def giver(name, nxt, near):
+    xa = {"math": [f"clamp({PX} + rand(12) - 6, 0, 23)"]} if near else {"math": ["rand(23)"]}
+    ya = {"math": [f"clamp({PY} + rand(12) - 6, 0, 23)"]} if near else {"math": ["rand(23)"]}
+    sp = {"u_spawn_npc": "trl_fixer", "unique_id": "quest_giver", "target_var": {"global_val": "trl_giver_spawn_loc"},
+          "min_radius": 0, "max_radius": 0, "indoor_only": True}
+    if nxt: sp["false_eocs"] = [nxt]
+    return {"type": "effect_on_condition", "id": name,
+            "effect": [{"u_location_variable": {"global_val": "trl_giver_spawn_loc"}, "target_params": {"offset_x": 0, "offset_y": 0},
+                        "x_adjust": xa, "y_adjust": ya}, sp]}
+chain = [(f"trl_spawn_giver_near_{i}", True) for i in range(1, 9)] + [(f"trl_spawn_giver_any_{i}", False) for i in range(1, 25)]
+for i, (n, near) in enumerate(chain):
+    J.append(giver(n, chain[i + 1][0] if i + 1 < len(chain) else None, near))
 J += [{
   "type": "effect_on_condition", "id": "trl_city_intro",
   "effect": [
     {"math": ["trl_quest_state", "=", "0"]}, {"math": ["trl_mark_dead", "=", "0"]},
     {"math": ["trl_target_placed", "=", "0"]},
     {"u_location_variable": {"global_val": "trl_giver_loc"}},
-    {"run_eocs": "trl_spawn_giver_1"},
+    {"run_eocs": "trl_spawn_giver_near_1"},
     {"run_eocs": names},
     {"set_string_var": "somewhere nearby", "target_var": {"global_val": "trl_target_dir"},
      "//": "overwritten by the placement EOC when it succeeds"}
