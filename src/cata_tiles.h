@@ -587,6 +587,8 @@ class cata_tiles
         bool would_apply_vision_effects( visibility_type visibility ) const;
         bool apply_vision_effects( const tripoint_bub_ms &pos, visibility_type visibility, int &height_3d );
         void draw_square_below( const point_bub_ms &p, const nc_color &col, int sizefactor );
+        // Trilobit: small arrow showing which of the 8 directions a creature faces
+        void draw_facing_arrow( const Creature &critter, const tripoint_bub_ms &p );
         bool draw_terrain( const tripoint_bub_ms &p, lit_level ll, int &height_3d,
                            const std::array<bool, 5> &invisible, bool memorize_only );
         bool draw_terrain_below( const tripoint_bub_ms &p, lit_level ll, int &height_3d,

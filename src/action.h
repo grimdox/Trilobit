@@ -214,6 +214,8 @@ enum action_id : int {
     /**@{*/
     /** Open wait menu */
     ACTION_WAIT,
+    /** Trilobit: turn in place */
+    ACTION_TURN,
     /** Open crafting menu */
     ACTION_CRAFT,
     /** Repeat last craft command */

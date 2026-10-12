@@ -2757,6 +2757,14 @@ bool game::do_regular_action( action_id &act, avatar &player_character,
             wait();
             break;
 
+        case ACTION_TURN:
+            // Trilobit: turn in place toward a chosen direction (costs a little time)
+            if( const std::optional<tripoint_rel_ms> dirp = choose_direction( _( "Turn which way?" ) ) ) {
+                player_character.trl_face_toward( player_character.pos_abs() + *dirp );
+                player_character.mod_moves( -30 );
+            }
+            break;
+
         case ACTION_CRAFT:
             player_character.craft();
             break;

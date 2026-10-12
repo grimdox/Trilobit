@@ -4926,5 +4926,12 @@
     "category": "STRING_EDITOR",
     "//": "'?' is treated as text input, so a different key is used.",
     "bindings": [ { "input_method": "keyboard_any", "key": "F1" } ]
+  },
+  {
+    "type": "keybinding",
+    "name": "Turn in place",
+    "category": "DEFAULTMODE",
+    "id": "turn_in_place",
+    "bindings": [ { "input_method": "keyboard_any", "key": "`" } ]
   }
 ]

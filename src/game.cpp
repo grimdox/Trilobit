@@ -4319,6 +4319,12 @@ void game::draw_critter( const Creature &critter, const tripoint_bub_ms &center 
     }
     if( u.sees( here, critter ) || &critter == &u ) {
         critter.draw( w_terrain, point_bub_ms( center.xy() ), false );
+        if( getenv( "TRL_FACING" ) != nullptr && critter.trl_facing != point::zero ) {
+            // Trilobit debug: show facing arrow in place of the glyph (curses build)
+            static const char *const arrows[3][3] = { { "\\", "^", "/" }, { "<", "o", ">" }, { "/", "v", "\\" } };
+            mvwprintz( w_terrain, point( mx, my ), c_light_cyan, "%s",
+                       arrows[critter.trl_facing.y + 1][critter.trl_facing.x + 1] );
+        }
         return;
     }
     const_dialogue d( get_const_talker_for( u ), get_const_talker_for( critter ) );

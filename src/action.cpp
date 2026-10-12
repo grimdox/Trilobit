@@ -279,6 +279,8 @@ std::string action_ident( action_id act )
             return "sort_armor";
         case ACTION_WAIT:
             return "wait";
+        case ACTION_TURN:
+            return "turn_in_place";
         case ACTION_CRAFT:
             return "craft";
         case ACTION_RECRAFT:
@@ -984,6 +986,7 @@ action_id handle_action_menu( map &here )
             REGISTER_ACTION( ACTION_DIARY );
         } else if( category == _( "Misc" ) ) {
             REGISTER_ACTION( ACTION_WAIT );
+            REGISTER_ACTION( ACTION_TURN );
             REGISTER_ACTION( ACTION_SLEEP );
             REGISTER_ACTION( ACTION_WORKOUT );
             REGISTER_ACTION( ACTION_BIONICS );

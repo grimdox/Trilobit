@@ -3221,6 +3221,34 @@ const memorized_tile &cata_tiles::get_vpart_memory_at( const tripoint_abs_ms &p 
     return mm_submap::default_tile;
 }
 
+void cata_tiles::draw_facing_arrow( const Creature &critter, const tripoint_bub_ms &p )
+{
+    const point f = critter.trl_facing;
+    if( f == point::zero ) {
+        return;
+    }
+    const point screen = player_to_screen( point_bub_ms( p.xy() ) );
+    const int cx = screen.x + tile_width / 2;
+    const int cy = screen.y + tile_height / 2;
+    SDL_Color col = critter.is_avatar() ? SDL_Color{ 80, 255, 255, 255 } :
+                    critter.is_npc() ? SDL_Color{ 120, 255, 120, 255 } : SDL_Color{ 255, 90, 90, 255 };
+    const SDL_Color black{ 0, 0, 0, 255 };
+    const bool diag = f.x != 0 && f.y != 0;
+    const int step = std::max( 2, ( tile_width * ( diag ? 7 : 10 ) ) / 100 );
+    const int dot = std::max( 2, tile_width / 9 );
+    for( int i = 1; i <= 4; ++i ) {
+        const int sz = i == 4 ? dot * 2 : dot;
+        SDL_Rect r;
+        r.w = sz;
+        r.h = sz;
+        r.x = cx + f.x * step * ( i + 1 ) - sz / 2;
+        r.y = cy + f.y * step * ( i + 1 ) - sz / 2;
+        SDL_Rect o{ r.x - 1, r.y - 1, r.w + 2, r.h + 2 };
+        geometry->rect( renderer, o, black );
+        geometry->rect( renderer, r, col );
+    }
+}
+
 void cata_tiles::draw_square_below( const point_bub_ms &p, const nc_color &col,
                                     const int sizefactor )
 {
@@ -4184,6 +4212,9 @@ bool cata_tiles::draw_critter_at( const tripoint_bub_ms &p, lit_level ll, int &h
         }
     }
 
+    if( result && pcritter != nullptr && override == monster_override.end() ) {
+        draw_facing_arrow( *pcritter, p );
+    }
     if( result && !is_player && show_creature_overlay_icons ) {
         std::string draw_id = "overlay_" + Creature::attitude_raw_string( attitude );
         if( sees_player && !you.has_trait( trait_INATTENTIVE ) ) {
