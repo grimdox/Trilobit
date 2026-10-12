@@ -12,7 +12,7 @@
     "dependencies": [
       "dda"
     ],
-    "version": "0.0.13-places-nanos"
+    "version": "0.0.14-towers"
   },
   {
     "type": "MONSTER_WHITELIST",

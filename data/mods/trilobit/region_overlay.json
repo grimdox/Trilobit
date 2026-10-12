@@ -272,7 +272,22 @@
     "trl_pl_crystal_works": 300,
     "trl_pl_canal_dock": 300,
     "trl_pl_cargo_warehouse": 300,
-    "trl_pl_dojo_hall": 300
+    "trl_pl_dojo_hall": 300,
+    "trl_mt01": 700,
+    "trl_mt02": 700,
+    "trl_mt08": 700,
+    "trl_mt03": 700,
+    "trl_mt04": 700,
+    "trl_mt07": 700,
+    "trl_mt05": 700,
+    "trl_mt10": 700,
+    "trl_mt06": 700,
+    "trl_mt09": 700,
+    "trl_mt11": 300,
+    "trl_mt12": 300,
+    "trl_mt13": 300,
+    "trl_mt14": 300,
+    "trl_mt15": 300
    },
    "parks": {
     "park": 50,
