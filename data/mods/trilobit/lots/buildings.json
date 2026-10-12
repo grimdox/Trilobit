@@ -1,0 +1,398 @@
+[
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_plaza",
+  "name": "stone plaza",
+  "sym": "P",
+  "color": "light_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_neon_square",
+  "name": "neon square",
+  "sym": "N",
+  "color": "pink",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_rubble",
+  "name": "rubble lot",
+  "sym": "r",
+  "color": "dark_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_shanty",
+  "name": "shanty camp",
+  "sym": "s",
+  "color": "brown",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_scrapyard",
+  "name": "scrap yard",
+  "sym": "S",
+  "color": "light_red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_hydro",
+  "name": "hydroponic yard",
+  "sym": "h",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_helipad",
+  "name": "rooftop-style helipad",
+  "sym": "H",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_parking",
+  "name": "parking deck",
+  "sym": "p",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_shrine_garden",
+  "name": "shrine garden",
+  "sym": "g",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_memorial",
+  "name": "memorial park",
+  "sym": "m",
+  "color": "green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_bombed",
+  "name": "bombed block",
+  "sym": "b",
+  "color": "dark_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_fight_pit",
+  "name": "fight pit",
+  "sym": "F",
+  "color": "red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_plaza",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_plaza_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_neon_square",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_neon_square_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_rubble",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_rubble_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_shanty",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_shanty_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_scrapyard",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_scrapyard_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_hydro",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_hydro_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_helipad",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_helipad_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_parking",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_parking_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_shrine_garden",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_shrine_garden_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_memorial",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_memorial_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_bombed",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_bombed_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_fight_pit",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_fight_pit_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ }
+]

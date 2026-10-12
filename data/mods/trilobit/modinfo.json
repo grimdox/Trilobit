@@ -1,25 +1,25 @@
 [
-  {
-    "type": "MOD_INFO",
-    "id": "trilobit",
-    "name": "Trilobit",
-    "authors": [
-      "Eric (design)",
-      "Claude (implementation)"
-    ],
-    "description": "A cyberpunk total conversion in progress.  Only monsters tagged TRILOBIT can spawn.  Cities: 10 skyscrapers, 6 plain plus 41 themed mid-rise buildings, two megacities plus villages.  No enemies are placed in buildings; a fixer in your starting building gives the first mission (kill Ryo Kurogane for 1000 yen).  Start types: Test Human and Test Cyborg.  Implants: implant status display item, an implant lab in every mid-rise, five random implants at start.",
-    "category": "total_conversion",
-    "dependencies": [
-      "dda"
-    ],
-    "version": "0.0.21-midrise-names"
-  },
-  {
-    "type": "MONSTER_WHITELIST",
-    "//": "Exclusive whitelist: only monsters with the TRILOBIT category may exist.  No stock monster has it, so none spawn.  Trilobit's own enemies will add this category to their definitions.",
-    "mode": "EXCLUSIVE",
-    "categories": [
-      "TRILOBIT"
-    ]
-  }
+ {
+  "type": "MOD_INFO",
+  "id": "trilobit",
+  "name": "Trilobit",
+  "authors": [
+   "Eric (design)",
+   "Claude (implementation)"
+  ],
+  "description": "A cyberpunk total conversion in progress.  Only monsters tagged TRILOBIT can spawn.  Cities: 10 skyscrapers, 6 plain plus 41 themed mid-rise buildings, two megacities plus villages, 12 city-square lots, an east coast and (Trilobit exe only) a highway grid.  No enemies are placed in buildings; a fixer in your starting building gives the first mission (kill Ryo Kurogane for 1000 yen).  Start types: Test Human and Test Cyborg.  Implants: implant status display item, an implant lab in every mid-rise, five random implants at start.",
+  "category": "total_conversion",
+  "dependencies": [
+   "dda"
+  ],
+  "version": "0.0.22-highways-lots"
+ },
+ {
+  "type": "MONSTER_WHITELIST",
+  "//": "Exclusive whitelist: only monsters with the TRILOBIT category may exist.  No stock monster has it, so none spawn.  Trilobit's own enemies will add this category to their definitions.",
+  "mode": "EXCLUSIVE",
+  "categories": [
+   "TRILOBIT"
+  ]
+ }
 ]

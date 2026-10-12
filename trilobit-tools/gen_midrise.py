@@ -456,7 +456,7 @@ def emit():
     ro_path = os.path.join(MOD, "region_overlay.json")
     ro = json.load(open(ro_path))
     parks = ro[0]["city"]["parks"]
-    w = parks["trl_mid01"]
+    w = 1296   # weight gen_city gives each plain mid-rise
     for S in B: parks[S["id"]] = w
     for i in range(1, 7): parks[f"trl_mid0{i}"] = max(1, w // 5)
     json.dump(ro, open(ro_path, "w"), indent=1)

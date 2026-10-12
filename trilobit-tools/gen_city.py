@@ -230,7 +230,7 @@ def main():
     R = CITY_RINGS
     # Two megacities (A at the world origin, where new characters start; B further east),
     # plus small towns/villages in about one overmap in four.  Everything else is wilderness.
-    MEGA = eval(os.environ.get('TRL_MEGA', '{(0, 0): ("Trilobit A", 100), (3, -1): ("Trilobit B", 90)}'))
+    MEGA = eval(os.environ.get('TRL_MEGA', '{(0, 0): ("Trilobit A", 100), (4, -2): ("Trilobit B", 90)}'))
     rnd = random.Random(1999)
     for oy in range(-R, R + 1):
         for ox in range(-R, R + 1):

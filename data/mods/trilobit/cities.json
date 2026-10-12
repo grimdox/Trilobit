@@ -385,22 +385,6 @@
  },
  {
   "type": "city",
-  "id": "TRL_25",
-  "database_id": 25,
-  "name": "Village 25",
-  "population": 3000,
-  "size": 10,
-  "pos_om": [
-   4,
-   -2
-  ],
-  "pos": [
-   96,
-   66
-  ]
- },
- {
-  "type": "city",
   "id": "TRL_26",
   "database_id": 26,
   "name": "Village 26",
@@ -455,8 +439,8 @@
   "population": 96040,
   "size": 49,
   "pos_om": [
-   3,
-   -1
+   4,
+   -2
   ],
   "pos": [
    50,
@@ -471,8 +455,8 @@
   "population": 96040,
   "size": 49,
   "pos_om": [
-   3,
-   -1
+   4,
+   -2
   ],
   "pos": [
    130,
@@ -487,8 +471,8 @@
   "population": 96040,
   "size": 49,
   "pos_om": [
-   3,
-   -1
+   4,
+   -2
   ],
   "pos": [
    50,
@@ -503,8 +487,8 @@
   "population": 96040,
   "size": 49,
   "pos_om": [
-   3,
-   -1
+   4,
+   -2
   ],
   "pos": [
    130,

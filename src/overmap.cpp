@@ -3746,6 +3746,9 @@ void overmap::generate( const std::vector<const overmap *> &neighbor_overmaps,
     if( get_option<bool>( "OVERMAP_PLACE_FOREST_TRAILHEADS" ) ) {
         place_forest_trailheads();
     }
+    if( has_option( "OVERMAP_PLACE_HIGHWAYS" ) && get_option<bool>( "OVERMAP_PLACE_HIGHWAYS" ) ) {
+        place_trilobit_highways();
+    }
 
     polish_river( neighbor_overmaps );
 
@@ -4995,6 +4998,73 @@ void overmap::place_forest_trailheads()
                 try_place_trailhead_special( p, static_cast<om_direction::type>( oter->get_rotation() ) );
             }
         }
+    }
+}
+
+// Trilobit: a simple highway grid.  Every overmap with an even x coordinate gets a north-south
+// highway, every overmap with an even y coordinate gets an east-west highway.  The lines sit at
+// the same local row/column in every overmap, so they join up across overmap borders.  They are
+// two tiles wide, cut straight through whatever is in the way (clearing the levels above), and
+// cross water on bridges.
+void overmap::place_trilobit_highways()
+{
+    const int line_pos = 90;
+    const bool vertical = pos().x() % 2 == 0;
+    const bool horizontal = pos().y() % 2 == 0;
+    static const overmap_special_id flat( "highway_segment_flat" );
+    static const overmap_special_id bridge( "highway_segment_bridge" );
+    static const overmap_special_id crossroad( "Highway Fallback Crossroad" );
+    if( !flat.is_valid() || !bridge.is_valid() ) {
+        return;
+    }
+    const auto is_wet = [this]( const tripoint_om_omt & t ) {
+        const oter_id &o = ter( t );
+        return o->is_river() || o->is_lake() || o->is_ocean();
+    };
+    const auto lay = [&]( const point_om_omt & at, om_direction::type dir ) {
+        const point_om_omt lane_a = at + om_direction::rotate( point_rel_omt::zero, dir );
+        const point_om_omt lane_b = at + om_direction::rotate( point_rel_omt( 1, 0 ), dir );
+        bool wet = false;
+        for( const point_om_omt &lane : { lane_a, lane_b } ) {
+            const tripoint_om_omt t( lane, 0 );
+            if( !inbounds( t ) ) {
+                return;
+            }
+            if( ter( t )->is_ocean() ) {
+                return;   // the highway ends at the sea
+            }
+            if( is_wet( t ) ) {
+                wet = true;
+            }
+        }
+        if( !wet ) {
+            for( const point_om_omt &lane : { lane_a, lane_b } ) {
+                ter_set( tripoint_om_omt( lane, 0 ), oter_id( "field" ) );
+            }
+        }
+        for( const point_om_omt &lane : { lane_a, lane_b } ) {
+            for( int z = 1; z <= OVERMAP_HEIGHT; z++ ) {
+                const tripoint_om_omt up( lane, z );
+                if( ter( up ) != get_default_terrain( z ) ) {
+                    ter_set( up, get_default_terrain( z ) );
+                }
+            }
+        }
+        place_special_forced( wet ? bridge : flat, tripoint_om_omt( at, 0 ), dir );
+    };
+    if( vertical ) {
+        for( int y = 0; y < OMAPY; y++ ) {
+            lay( point_om_omt( line_pos, y ), om_direction::type::north );
+        }
+    }
+    if( horizontal ) {
+        for( int x = 0; x < OMAPX; x++ ) {
+            lay( point_om_omt( x, line_pos ), om_direction::type::east );
+        }
+    }
+    if( vertical && horizontal && crossroad.is_valid() ) {
+        place_special_forced( crossroad, tripoint_om_omt( line_pos, line_pos, 0 ),
+                              om_direction::type::north );
     }
 }
 
