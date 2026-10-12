@@ -458,7 +458,9 @@ def emit():
     parks = ro[0]["city"]["parks"]
     w = 1296   # weight gen_city gives each plain mid-rise
     for S in B: parks[S["id"]] = w
-    for i in range(1, 7): parks[f"trl_mid0{i}"] = max(1, w // 5)
+    # generic test blocks: only trl_mid01 stays (the player start / testing building); the rest are replaced by themed buildings
+    parks["trl_mid01"] = w * 3
+    for i in range(2, 7): parks[f"trl_mid0{i}"] = 0
     json.dump(ro, open(ro_path, "w"), indent=1)
     print(len(B), "buildings,", len(mg_out), "mapgen levels,", len(NEW_T), "new terrain,", len(NEW_F), "new furniture")
 

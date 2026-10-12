@@ -1,0 +1,94 @@
+[
+ {
+  "type": "item_group",
+  "id": "trl_loot_house_mid",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "can_beans"
+   },
+   {
+    "item": "water_clean"
+   },
+   {
+    "item": "bandages"
+   },
+   {
+    "item": "jacket_light"
+   },
+   {
+    "item": "tshirt"
+   },
+   {
+    "item": "flashlight"
+   },
+   {
+    "item": "candle"
+   },
+   {
+    "item": "matches"
+   },
+   {
+    "item": "lighter"
+   },
+   {
+    "item": "rag"
+   },
+   {
+    "item": "duct_tape"
+   },
+   {
+    "item": "wrench"
+   },
+   {
+    "item": "small_lcd_screen"
+   },
+   {
+    "item": "cable"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_loot_house_rich",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "circuit"
+   },
+   {
+    "item": "processor"
+   },
+   {
+    "item": "RAM"
+   },
+   {
+    "item": "amplifier"
+   },
+   {
+    "item": "small_lcd_screen"
+   },
+   {
+    "item": "light_battery_cell"
+   },
+   {
+    "item": "cable"
+   },
+   {
+    "item": "e_scrap"
+   },
+   {
+    "item": "flashlight"
+   },
+   {
+    "item": "bandages"
+   },
+   {
+    "item": "water_clean"
+   },
+   {
+    "item": "jacket_light"
+   }
+  ]
+ }
+]

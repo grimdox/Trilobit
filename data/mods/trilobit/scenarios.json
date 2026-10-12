@@ -2,22 +2,9 @@
   {
     "type": "start_location",
     "id": "sloc_trl_midrise",
-    "name": "Mid-rise block (city middle ring)",
+    "name": "Testing mid-rise block",
     "terrain": [
-      "trl_mid01_00z1",
-      "trl_mid02_00z1",
-      "trl_mid03_00z1",
-      "trl_mid03_10z1",
-      "trl_mid04_00z1",
-      "trl_mid04_01z1",
-      "trl_mid05_00z1",
-      "trl_mid05_01z1",
-      "trl_mid05_10z1",
-      "trl_mid05_11z1",
-      "trl_mid06_00z1",
-      "trl_mid06_01z1",
-      "trl_mid06_10z1",
-      "trl_mid06_11z1"
+      "trl_mid01_00z1"
     ]
   },
   {

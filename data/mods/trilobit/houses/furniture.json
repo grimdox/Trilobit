@@ -1,0 +1,334 @@
+[
+ {
+  "type": "furniture",
+  "id": "f_trl_tv_flat",
+  "name": "wall screen",
+  "description": "A flat screen on the wall, dark and faintly reflecting the room.",
+  "symbol": "V",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 6
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_nightstand",
+  "name": "nightstand",
+  "description": "A small bedside table with a drawer.",
+  "symbol": "n",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_weight_rack",
+  "name": "weight rack",
+  "description": "A rack of iron plates and a bench.",
+  "symbol": "W",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_hot_tub",
+  "name": "hot tub",
+  "description": "A round tub of steaming water with a faintly glowing rim.",
+  "symbol": "O",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 8
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_kitchen_island",
+  "name": "kitchen island",
+  "description": "A counter island with a built-in induction hob.",
+  "symbol": "I",
+  "color": "white",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_clothesline",
+  "name": "clothesline",
+  "description": "A sagging line of damp laundry between two poles.",
+  "symbol": "~",
+  "color": "white",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_vr_rig",
+  "name": "immersion rig",
+  "description": "A reclined chair with a visor, cables and a humming rack behind it.",
+  "symbol": "v",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 7
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_garden_bed",
+  "name": "garden bed",
+  "description": "A raised bed of vegetables and herbs.",
+  "symbol": "g",
+  "color": "green",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_sun_lounger",
+  "name": "sun lounger",
+  "description": "A folding lounger beside the water.",
+  "symbol": "l",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_bbq",
+  "name": "barbecue grill",
+  "description": "A squat charcoal grill.",
+  "symbol": "b",
+  "color": "dark_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_mailbox",
+  "name": "mailbox",
+  "description": "A dented mailbox on a post.",
+  "symbol": "m",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_antenna",
+  "name": "rooftop antenna",
+  "description": "A tangle of salvaged antenna and dish.",
+  "symbol": "Y",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_car_charger",
+  "name": "charge post",
+  "description": "A charging post with a steady green light.",
+  "symbol": "c",
+  "color": "light_green",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 7
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_holo_wall",
+  "name": "holographic wall",
+  "description": "A wall of shifting light showing a rain-lit city that does not exist.",
+  "symbol": "H",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 13
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_garden_lamp",
+  "name": "garden lamp",
+  "description": "A low lamp lighting the path.",
+  "symbol": "i",
+  "color": "yellow",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 12
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_koi_basin",
+  "name": "koi basin",
+  "description": "A stone basin with slow orange fish.",
+  "symbol": "o",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 5
+ }
+]
