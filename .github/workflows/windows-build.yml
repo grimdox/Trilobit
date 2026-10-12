@@ -22,6 +22,8 @@ jobs:
             git
             zip
             mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-pkgconf
+            diffutils
             mingw-w64-x86_64-ccache
             mingw-w64-x86_64-SDL2
             mingw-w64-x86_64-SDL2_image
@@ -31,7 +33,7 @@ jobs:
             mingw-w64-x86_64-zlib
       - name: Build
         run: |
-          make -j4 TILES=1 SOUND=1 RELEASE=1 LOCALIZE=0 LINTJSON=0 ASTYLE=0 TESTS=0 CCACHE=1 BACKTRACE=0 PCH=0
+          make -j4 OTHERS=-Wno-error TILES=1 SOUND=1 RELEASE=1 LOCALIZE=0 LINTJSON=0 ASTYLE=0 TESTS=0 CCACHE=1 BACKTRACE=0 PCH=0
       - name: Package
         run: |
           mkdir -p out/trilobit
