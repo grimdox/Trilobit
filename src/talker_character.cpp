@@ -925,8 +925,8 @@ bool talker_character_const::can_see_location( const tripoint_bub_ms &pos ) cons
 {
     const map &here = get_map();
 
-    // Trilobit: NPCs only see locations inside their 180 degree cone (adjacent tiles always)
-    if( me_chr_const->is_npc() && rl_dist( me_chr_const->pos_bub( here ), pos ) > 1 &&
+    // Trilobit: NPCs only see locations inside their 180 degree cone (including nothing directly behind)
+    if( me_chr_const->is_npc() &&
         !me_chr_const->trl_in_front_cone( here.get_abs( pos ) ) ) {
         return false;
     }

@@ -237,6 +237,10 @@ npc::npc()
     , companion_mission_time( calendar::before_time_starts )
     , companion_mission_time_ret( calendar::before_time_starts )
 {
+    // Trilobit: spawn facing a random one of the eight directions
+    do {
+        trl_facing = point( rng( -1, 1 ), rng( -1, 1 ) );
+    } while( trl_facing == point::zero );
     last_updated = calendar::turn;
     last_player_seen_pos = std::nullopt;
     last_seen_player_turn = 999;

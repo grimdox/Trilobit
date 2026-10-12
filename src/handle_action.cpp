@@ -2762,6 +2762,9 @@ bool game::do_regular_action( action_id &act, avatar &player_character,
             if( const std::optional<tripoint_rel_ms> dirp = choose_direction( _( "Turn which way?" ) ) ) {
                 player_character.trl_face_toward( player_character.pos_abs() + *dirp );
                 player_character.mod_moves( -30 );
+                // rebuild the view right away so the visible area follows the new facing
+                get_map().build_map_cache( get_map().get_abs_sub().z() );
+                g->invalidate_main_ui_adaptor();
             }
             break;
 

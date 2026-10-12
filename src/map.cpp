@@ -9591,7 +9591,7 @@ void map::build_map_cache( const int zlev, bool skip_lightmap )
         if( inbounds( p ) ) {
             build_seen_cache( get_bub( p ), zlev, sr );
             // Trilobit: the avatar only sees terrain in the 180 degree half-plane in front of it
-            // (everything within one tile stays visible).
+            // (including the tiles directly behind it).
             if( trl_face != point::zero ) {
                 const tripoint_bub_ms o = get_bub( p );
                 for( int z = -OVERMAP_DEPTH; z <= OVERMAP_HEIGHT; z++ ) {
@@ -9600,8 +9600,7 @@ void map::build_map_cache( const int zlev, bool skip_lightmap )
                         const int dx = x - o.x();
                         for( int y = 0; y < MAPSIZE_Y; ++y ) {
                             const int dy = y - o.y();
-                            if( ( std::abs( dx ) > 1 || std::abs( dy ) > 1 ) &&
-                                trl_face.x * dx + trl_face.y * dy < 0 ) {
+                            if( trl_face.x * dx + trl_face.y * dy < 0 ) {
                                 sc[x][y] = LIGHT_TRANSPARENCY_SOLID;
                             }
                         }

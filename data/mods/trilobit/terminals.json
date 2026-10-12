@@ -1089,15 +1089,8 @@
       "ORIGIN_GAME_START"
     ],
     "goal_condition": {
-      "and": [
-        {
-          "u_has_item": "trl_data_core"
-        },
-        {
-          "math": [
-            "distance('u', trl_t_term_loc) <= 3"
-          ]
-        }
+      "math": [
+        "0 == 1"
       ]
     },
     "start": {
@@ -1214,7 +1207,7 @@
     ],
     "goal_condition": {
       "math": [
-        "distance('u', trl_t_term_loc) <= 3"
+        "0 == 1"
       ]
     },
     "start": {
@@ -1288,7 +1281,7 @@
     ],
     "goal_condition": {
       "math": [
-        "distance('u', trl_t_term_loc) <= 3"
+        "0 == 1"
       ]
     },
     "start": {
@@ -1475,9 +1468,55 @@
         "trl_t_state == 0"
       ],
       "yes": "&MISSION TERMINAL.  Three contracts are open.  Choose one.  Payment on completion: 1000 yen.",
-      "no": "&MISSION TERMINAL.  You already hold an open contract.  Check your mission log, or abandon it here."
+      "no": "&MISSION TERMINAL.  You already hold an open contract.  Check your mission log, report a finished one, or abandon it here."
     },
     "responses": [
+      {
+        "text": "[Report] Hand over the data core.",
+        "topic": "TRL_TERM_REPORTED",
+        "condition": {
+          "and": [
+            {
+              "u_has_mission": "TRL_T_R2"
+            },
+            {
+              "u_has_item": "trl_data_core"
+            }
+          ]
+        },
+        "effect": [
+          {
+            "finish_mission": "TRL_T_R2",
+            "success": true
+          }
+        ]
+      },
+      {
+        "text": "[Report] The target is dead.",
+        "topic": "TRL_TERM_REPORTED",
+        "condition": {
+          "u_has_mission": "TRL_T_A3"
+        },
+        "effect": [
+          {
+            "finish_mission": "TRL_T_A3",
+            "success": true
+          }
+        ]
+      },
+      {
+        "text": "[Report] Observation of the subject complete.",
+        "topic": "TRL_TERM_REPORTED",
+        "condition": {
+          "u_has_mission": "TRL_T_S2"
+        },
+        "effect": [
+          {
+            "finish_mission": "TRL_T_S2",
+            "success": true
+          }
+        ]
+      },
       {
         "text": "[Retrieval] Recover a data core and bring it back.",
         "topic": "TRL_TERM_ACCEPTED",
@@ -1717,10 +1756,25 @@
   {
     "type": "talk_topic",
     "id": "TRL_TERM_ACCEPTED",
-    "dynamic_line": "&CONTRACT ACCEPTED.  Details are in your mission log.  Payment is credited when you return to this terminal.",
+    "dynamic_line": "&CONTRACT ACCEPTED.  Details are in your mission log.  When the objective is done, return and speak to this terminal to report and be paid.",
     "responses": [
       {
         "text": "Understood.",
+        "topic": "TALK_DONE"
+      }
+    ]
+  },
+  {
+    "type": "talk_topic",
+    "id": "TRL_TERM_REPORTED",
+    "dynamic_line": "&REPORT RECEIVED.  Verified.  Payment credited.",
+    "responses": [
+      {
+        "text": "Back to the list.",
+        "topic": "TRL_TERM_MAIN"
+      },
+      {
+        "text": "Step away.",
         "topic": "TALK_DONE"
       }
     ]
@@ -1746,174 +1800,95 @@
     "global": true,
     "effect": [
       {
-        "math": [
-          "trl_yen_cache",
-          "=",
-          "u_item_count('trl_yen')"
-        ]
-      },
-      {
-        "open_dialogue": {
-          "topic": "TRL_SHOP_MAIN"
-        }
+        "open_shop": "trl_nc_shop"
       }
     ]
   },
   {
-    "type": "talk_topic",
-    "id": "TRL_SHOP_MAIN",
-    "dynamic_line": "&SHOPPING TERMINAL.  Yen on hand: <global_val:trl_yen_cache>.  Select a good.  Items are restocked automatically.",
-    "responses": [
+    "type": "faction",
+    "id": "trl_terminal",
+    "name": "Vending Terminal",
+    "description": "Automated vending terminals.",
+    "mon_faction": "human",
+    "likes_u": 0,
+    "respects_u": 0,
+    "known_by_u": false,
+    "size": 100,
+    "power": 100,
+    "fac_food_supply": [
+      [
+        0,
+        {
+          "calories": 0,
+          "vitamins": {}
+        }
+      ]
+    ],
+    "wealth": 20000000,
+    "currency": "trl_yen",
+    "price_rules": [],
+    "relations": {}
+  },
+  {
+    "type": "item_group",
+    "id": "trl_shop_stock",
+    "subtype": "collection",
+    "entries": [
       {
-        "text": "Buy bullet (10 yen).",
-        "topic": "TRL_SHOP_MAIN",
-        "condition": {
-          "u_has_items": {
-            "item": "trl_yen",
-            "count": 10
-          }
-        },
-        "effect": [
-          {
-            "u_consume_item": "trl_yen",
-            "count": 10
-          },
-          {
-            "u_spawn_item": "9mm",
-            "count": 1
-          },
-          {
-            "u_message": "[Shop] Purchased bullet for 10 yen.",
-            "type": "good"
-          },
-          {
-            "math": [
-              "trl_yen_cache",
-              "=",
-              "u_item_count('trl_yen')"
-            ]
-          }
-        ]
+        "item": "9mm",
+        "charges": 500
       },
       {
-        "text": "[Not enough yen] bullet (10 yen).",
-        "topic": "TRL_SHOP_MAIN",
-        "condition": {
-          "not": {
-            "u_has_items": {
-              "item": "trl_yen",
-              "count": 10
-            }
-          }
-        },
-        "effect": [
-          {
-            "u_message": "[Shop] You can't afford the bullet (10 yen).",
-            "type": "bad"
-          }
-        ]
+        "item": "hat_hard",
+        "count": 10
       },
       {
-        "text": "Buy hard hat (100 yen).",
-        "topic": "TRL_SHOP_MAIN",
-        "condition": {
-          "u_has_items": {
-            "item": "trl_yen",
-            "count": 100
-          }
-        },
-        "effect": [
-          {
-            "u_consume_item": "trl_yen",
-            "count": 100
-          },
-          {
-            "u_spawn_item": "hat_hard",
-            "count": 1
-          },
-          {
-            "u_message": "[Shop] Purchased hard hat for 100 yen.",
-            "type": "good"
-          },
-          {
-            "math": [
-              "trl_yen_cache",
-              "=",
-              "u_item_count('trl_yen')"
-            ]
-          }
-        ]
+        "item": "glock_19",
+        "count": 5
+      }
+    ]
+  },
+  {
+    "type": "item_group",
+    "id": "trl_shop_none",
+    "subtype": "collection",
+    "entries": []
+  },
+  {
+    "type": "npc_class",
+    "id": "trl_nc_shop",
+    "worn_override": "trl_shop_none",
+    "weapon_override": "trl_shop_none",
+    "name": {
+      "str": "Terminal"
+    },
+    "job_description": "A vending terminal.",
+    "common": false,
+    "shopkeeper_item_group": [
+      {
+        "group": "trl_shop_stock",
+        "rigid": true
+      }
+    ],
+    "shopkeeper_price_rules": [
+      {
+        "item": "9mm",
+        "price": 50000,
+        "fixed_adj": 0
       },
       {
-        "text": "[Not enough yen] hard hat (100 yen).",
-        "topic": "TRL_SHOP_MAIN",
-        "condition": {
-          "not": {
-            "u_has_items": {
-              "item": "trl_yen",
-              "count": 100
-            }
-          }
-        },
-        "effect": [
-          {
-            "u_message": "[Shop] You can't afford the hard hat (100 yen).",
-            "type": "bad"
-          }
-        ]
+        "item": "hat_hard",
+        "price": 10000,
+        "fixed_adj": 0
       },
       {
-        "text": "Buy handgun (500 yen).",
-        "topic": "TRL_SHOP_MAIN",
-        "condition": {
-          "u_has_items": {
-            "item": "trl_yen",
-            "count": 500
-          }
-        },
-        "effect": [
-          {
-            "u_consume_item": "trl_yen",
-            "count": 500
-          },
-          {
-            "u_spawn_item": "glock_19",
-            "count": 1
-          },
-          {
-            "u_message": "[Shop] Purchased handgun for 500 yen.",
-            "type": "good"
-          },
-          {
-            "math": [
-              "trl_yen_cache",
-              "=",
-              "u_item_count('trl_yen')"
-            ]
-          }
-        ]
+        "item": "glock_19",
+        "price": 50000,
+        "fixed_adj": 0
       },
       {
-        "text": "[Not enough yen] handgun (500 yen).",
-        "topic": "TRL_SHOP_MAIN",
-        "condition": {
-          "not": {
-            "u_has_items": {
-              "item": "trl_yen",
-              "count": 500
-            }
-          }
-        },
-        "effect": [
-          {
-            "u_message": "[Shop] You can't afford the handgun (500 yen).",
-            "type": "bad"
-          }
-        ]
-      },
-      {
-        "text": "Step away.",
-        "topic": "TALK_DONE"
+        "item": "trl_yen",
+        "fixed_adj": 0
       }
     ]
   }

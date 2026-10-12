@@ -67,7 +67,9 @@ def mission(mid, name, desc, cond, start_target=None, end=None):
     if end: m["end"] = {"effect": end}
     add(m)
 NEAR = {"math": ["distance('u', trl_t_loc) <= 12"]}
-AT_TERM = {"math": ["distance('u', trl_t_term_loc) <= 3"]}
+# Return legs never complete on their own: the player must speak to the terminal ("Report" response),
+# which finishes the mission and runs its end effect (the payout).
+AT_TERM = {"math": ["0 == 1"]}
 # retrieval
 mission("TRL_T_R1", "Retrieval (1/2): recover the data core",
         "A data core has been hidden in a building in this district; the terminal's map marker shows the area.  Find it and pick it up.",
@@ -75,7 +77,7 @@ mission("TRL_T_R1", "Retrieval (1/2): recover the data core",
         [{"assign_mission": "TRL_T_R2"}, {"u_message": "You have the core.  Return to the mission terminal.", "type": "good"}])
 mission("TRL_T_R2", "Retrieval (2/2): return the core to the terminal",
         "Bring the data core back to the mission terminal in the testing mid-rise.  1000 yen on delivery.",
-        {"and": [{"u_has_item": "trl_data_core"}, AT_TERM]}, "trl_t_term_loc",
+        AT_TERM, "trl_t_term_loc",
         [{"u_consume_item": "trl_data_core", "count": 1}, {"run_eocs": "trl_t_reward"}])
 # assassination
 mission("TRL_T_A1", "Assassination (1/3): find the target",
@@ -121,7 +123,15 @@ def accept(kind_text, state, mid, npc_cls, uid, place):
         eff += [{"set_string_var": npc_cls, "target_var": {"global_val": "trl_t_npc"}}, {"set_string_var": uid, "target_var": {"global_val": "trl_t_uid"}}]
     eff += [{"run_eocs": place}, {"assign_mission": mid}]
     return eff
+def report(label, mid, extra=None):
+    cond = {"u_has_mission": mid}
+    if extra: cond = {"and": [cond, extra]}
+    return {"text": label, "topic": "TRL_TERM_REPORTED", "condition": cond,
+            "effect": [{"finish_mission": mid, "success": True}]}
 resp_main = [
+ report("[Report] Hand over the data core.", "TRL_T_R2", {"u_has_item": "trl_data_core"}),
+ report("[Report] The target is dead.", "TRL_T_A3"),
+ report("[Report] Observation of the subject complete.", "TRL_T_S2"),
  {"text": "[Retrieval] Recover a data core and bring it back.", "topic": "TRL_TERM_ACCEPTED", "condition": {"math": ["trl_t_state == 0"]},
   "effect": accept("", 1, "TRL_T_R1", None, None, "trl_t_place_item")},
  {"text": "[Assassination] Find a target, kill him, report back.", "topic": "TRL_TERM_ACCEPTED", "condition": {"math": ["trl_t_state == 0"]},
@@ -134,29 +144,34 @@ resp_main = [
  {"text": "Step away from the terminal.", "topic": "TALK_DONE"}]
 add({"type": "talk_topic", "id": "TRL_TERM_MAIN", "dynamic_line": {"math": ["trl_t_state == 0"],
      "yes": "&MISSION TERMINAL.  Three contracts are open.  Choose one.  Payment on completion: 1000 yen.",
-     "no": "&MISSION TERMINAL.  You already hold an open contract.  Check your mission log, or abandon it here."}, "responses": resp_main})
-add({"type": "talk_topic", "id": "TRL_TERM_ACCEPTED", "dynamic_line": "&CONTRACT ACCEPTED.  Details are in your mission log.  Payment is credited when you return to this terminal.",
+     "no": "&MISSION TERMINAL.  You already hold an open contract.  Check your mission log, report a finished one, or abandon it here."}, "responses": resp_main})
+add({"type": "talk_topic", "id": "TRL_TERM_ACCEPTED", "dynamic_line": "&CONTRACT ACCEPTED.  Details are in your mission log.  When the objective is done, return and speak to this terminal to report and be paid.",
      "responses": [{"text": "Understood.", "topic": "TALK_DONE"}]})
+add({"type": "talk_topic", "id": "TRL_TERM_REPORTED", "dynamic_line": "&REPORT RECEIVED.  Verified.  Payment credited.",
+     "responses": [{"text": "Back to the list.", "topic": "TRL_TERM_MAIN"}, {"text": "Step away.", "topic": "TALK_DONE"}]})
 add({"type": "talk_topic", "id": "TRL_TERM_ABANDONED", "dynamic_line": "&CONTRACT ABANDONED.  No payment.  The terminal accepts new contracts.",
      "responses": [{"text": "Back to the list.", "topic": "TRL_TERM_MAIN"}, {"text": "Step away.", "topic": "TALK_DONE"}]})
 
-# ------------------------------------------------------------------ shopping terminal
+# ------------------------------------------------------------------ shopping terminal (CDDA barter screen)
+# Examining the terminal opens the standard trade window against a temporary shopkeeper of class
+# trl_nc_shop (C++ effect "open_shop").  Prices are pinned (no speech/int markup) via price rules.
+# Item prices are per default stack, so the 9mm round (stack_size 50) is priced as 50 rounds.
 add({"type": "effect_on_condition", "id": "trl_term_shop_examine", "global": True,
-     "effect": [{"math": ["trl_yen_cache", "=", "u_item_count('trl_yen')"]}, {"open_dialogue": {"topic": "TRL_SHOP_MAIN"}}]})
-GOODS = [("9mm", 1, 10, "one 9mm round", "bullet"), ("hat_hard", 1, 100, "a hard hat", "hard hat"), ("glock_19", 1, 500, "a Glock 19 handgun", "handgun")]
-resp = []
-for item, cnt, price, _, label in GOODS:
-    resp.append({"text": f"Buy {label} ({price} yen).", "topic": "TRL_SHOP_MAIN",
-                 "condition": {"u_has_items": {"item": "trl_yen", "count": price}},
-                 "effect": [{"u_consume_item": "trl_yen", "count": price}, {"u_spawn_item": item, "count": cnt},
-                            {"u_message": f"[Shop] Purchased {label} for {price} yen.", "type": "good"},
-                            {"math": ["trl_yen_cache", "=", "u_item_count('trl_yen')"]}]})
-    resp.append({"text": f"[Not enough yen] {label} ({price} yen).", "topic": "TRL_SHOP_MAIN",
-                 "condition": {"not": {"u_has_items": {"item": "trl_yen", "count": price}}},
-                 "effect": [{"u_message": f"[Shop] You can't afford the {label} ({price} yen).", "type": "bad"}]})
-resp.append({"text": "Step away.", "topic": "TALK_DONE"})
-add({"type": "talk_topic", "id": "TRL_SHOP_MAIN", "dynamic_line": "&SHOPPING TERMINAL.  Yen on hand: <global_val:trl_yen_cache>.  Select a good.  Items are restocked automatically.",
-     "responses": resp})
+     "effect": [{"open_shop": "trl_nc_shop"}]})
+add({"type": "faction", "id": "trl_terminal", "name": "Vending Terminal", "description": "Automated vending terminals.", "mon_faction": "human",
+     "likes_u": 0, "respects_u": 0, "known_by_u": False, "size": 100, "power": 100,
+     "fac_food_supply": [[0, {"calories": 0, "vitamins": {}}]],
+     "wealth": 20000000, "currency": "trl_yen", "price_rules": [], "relations": {}})
+add({"type": "item_group", "id": "trl_shop_stock", "subtype": "collection",
+     "entries": [{"item": "9mm", "charges": 500}, {"item": "hat_hard", "count": 10}, {"item": "glock_19", "count": 5}]})
+add({"type": "item_group", "id": "trl_shop_none", "subtype": "collection", "entries": []})
+add({"type": "npc_class", "id": "trl_nc_shop", "worn_override": "trl_shop_none", "weapon_override": "trl_shop_none", "name": {"str": "Terminal"}, "job_description": "A vending terminal.",
+     "common": False,
+     "shopkeeper_item_group": [{"group": "trl_shop_stock", "rigid": True}],
+     "shopkeeper_price_rules": [{"item": "9mm", "price": 10 * 100 * 50, "fixed_adj": 0},
+                                {"item": "hat_hard", "price": 100 * 100, "fixed_adj": 0},
+                                {"item": "glock_19", "price": 500 * 100, "fixed_adj": 0},
+                                {"item": "trl_yen", "fixed_adj": 0}]})
 
 json.dump(out, open(os.path.join(MOD, "terminals.json"), "w"), indent=2)
 

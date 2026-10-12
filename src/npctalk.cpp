@@ -5483,6 +5483,21 @@ talk_effect_fun_t::func f_add_wet( const JsonObject &jo, std::string_view member
     };
 }
 
+talk_effect_fun_t::func f_open_shop( const JsonObject &jo, std::string_view member,
+                                     std::string_view )
+{
+    // Trilobit: open the standard barter screen against a temporary shopkeeper of the given npc_class
+    str_or_var cls = get_str_or_var( jo.get_member( member ), member, true );
+    return [cls]( dialogue const & d ) {
+        std::unique_ptr<npc> shop = std::make_unique<npc>();
+        shop->randomize( npc_class_id( cls.evaluate( d ) ) );
+        shop->set_fac( faction_id( "trl_terminal" ) );
+        shop->name = _( "Terminal" );
+        shop->setpos( get_avatar().pos_abs(), false );
+        npc_trading::trade( *shop, 0, _( "Shop" ) );
+    };
+}
+
 talk_effect_fun_t::func f_open_dialogue( const JsonObject &jo, std::string_view member,
         std::string_view src )
 {
@@ -8134,6 +8149,7 @@ parsers = {
     { "set_condition", jarg::member, &talk_effect_fun::f_set_condition },
     { "set_item_category_spawn_rates", jarg::member | jarg::array, &talk_effect_fun::f_set_item_category_spawn_rates },
     { "open_dialogue", jarg::member, &talk_effect_fun::f_open_dialogue },
+    { "open_shop", jarg::member, &talk_effect_fun::f_open_shop },
     { "take_control", jarg::member, &talk_effect_fun::f_take_control },
     { "trigger_event", jarg::member, &talk_effect_fun::f_trigger_event },
     { "add_debt", jarg::array, &talk_effect_fun::f_add_debt },

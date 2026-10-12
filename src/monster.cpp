@@ -243,6 +243,10 @@ static int compute_kill_xp( const mtype_id &mon_type )
 
 monster::monster()
 {
+    // Trilobit: spawn facing a random one of the eight directions
+    do {
+        trl_facing = point( rng( -1, 1 ), rng( -1, 1 ) );
+    } while( trl_facing == point::zero );
     unset_dest();
     wandf = 0;
     hp = 60;

@@ -139,6 +139,7 @@ static const trait_id trait_WHISKERS_RAT( "WHISKERS_RAT" );
 
 avatar::avatar()
 {
+    trl_facing = point( 0, 1 ); // Trilobit: start facing south
     player_map_memory = std::make_unique<map_memory>();
     show_map_memory = true;
     active_mission = nullptr;
