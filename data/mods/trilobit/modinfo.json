@@ -12,7 +12,7 @@
     "dependencies": [
       "dda"
     ],
-    "version": "0.0.18-giver-same-building"
+    "version": "0.0.19-giver-diagnostics"
   },
   {
     "type": "MONSTER_WHITELIST",

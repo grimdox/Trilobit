@@ -148,6 +148,7 @@ def place_eoc(i, dx, dy, rnd):
          "min_radius": 0, "max_radius": 6, "indoor_only": True,
          "true_eocs": [{"id": eid + "_ok", "effect": [
              {"math": ["trl_target_placed", "=", "1"]},
+             {"u_message": "[Trilobit] Mission target placed " + phrase(dx, dy) + ".", "type": "good"},
              {"set_string_var": phrase(dx, dy), "target_var": {"global_val": "trl_target_dir"}}]}]}]})
     names.append(eid)
 for i, (dx, dy) in enumerate(offsets): place_eoc(i, dx, dy, True)
@@ -162,16 +163,24 @@ def giver(name, nxt, near):
     ya = {"math": [f"clamp({PY} + rand(12) - 6, 0, 23)"]} if near else {"math": ["rand(23)"]}
     sp = {"u_spawn_npc": "trl_fixer", "unique_id": "quest_giver", "target_var": {"global_val": "trl_giver_spawn_loc"},
           "min_radius": 0, "max_radius": 0, "indoor_only": True}
-    if nxt: sp["false_eocs"] = [nxt]
+    sp["true_eocs"] = ["trl_giver_ok"]
+    sp["spawn_message"] = "Sachiko Imai is somewhere nearby in this building."
+    sp["false_eocs"] = [nxt] if nxt else ["trl_giver_failed"]
     return {"type": "effect_on_condition", "id": name,
             "effect": [{"u_location_variable": {"global_val": "trl_giver_spawn_loc"}, "target_params": {"offset_x": 0, "offset_y": 0},
                         "x_adjust": xa, "y_adjust": ya}, sp]}
+J += [{"type": "effect_on_condition", "id": "trl_giver_ok",
+       "effect": [{"math": ["trl_giver_spawned", "=", "1"]},
+                  {"u_message": "[Trilobit] Quest giver Sachiko Imai placed in your building.", "type": "good"}]},
+      {"type": "effect_on_condition", "id": "trl_giver_failed",
+       "effect": [{"u_message": "[Trilobit] Could not place quest giver Sachiko Imai (no free indoor tile found).", "type": "bad"}]}]
 chain = [(f"trl_spawn_giver_near_{i}", True) for i in range(1, 9)] + [(f"trl_spawn_giver_any_{i}", False) for i in range(1, 25)]
 for i, (n, near) in enumerate(chain):
     J.append(giver(n, chain[i + 1][0] if i + 1 < len(chain) else None, near))
 J += [{
   "type": "effect_on_condition", "id": "trl_city_intro",
   "effect": [
+    {"u_message": "[Trilobit] Start event running.", "type": "neutral"},
     {"math": ["trl_quest_state", "=", "0"]}, {"math": ["trl_mark_dead", "=", "0"]},
     {"math": ["trl_target_placed", "=", "0"]},
     {"u_location_variable": {"global_val": "trl_giver_loc"}},
@@ -184,5 +193,7 @@ J += [{
 J[-1]["effect"] = [e for e in J[-1]["effect"] if "run_eocs" not in e and "set_string_var" not in e]
 J[-1]["effect"].insert(3, {"set_string_var": "somewhere in this district", "target_var": {"global_val": "trl_target_dir"}})
 J[-1]["effect"].append({"run_eocs": names})
+J[-1]["effect"].append({"if": {"math": ["trl_target_placed == 0"]},
+                        "then": {"u_message": "[Trilobit] Could not place the mission target anywhere.", "type": "bad"}})
 json.dump(fix(J), open(out + "/quest.json", "w"), indent=2)
 print(len(J), "objects,", len(names), "placement eocs")

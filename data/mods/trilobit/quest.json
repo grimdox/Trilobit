@@ -467,6 +467,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed two blocks west and two blocks north.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "two blocks west and two blocks north",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -529,6 +533,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed two blocks west and a block north.",
+                "type": "good"
               },
               {
                 "set_string_var": "two blocks west and a block north",
@@ -595,6 +603,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed two blocks west.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "two blocks west",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -657,6 +669,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed two blocks west and a block south.",
+                "type": "good"
               },
               {
                 "set_string_var": "two blocks west and a block south",
@@ -723,6 +739,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed two blocks west and two blocks south.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "two blocks west and two blocks south",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -785,6 +805,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed a block west and two blocks north.",
+                "type": "good"
               },
               {
                 "set_string_var": "a block west and two blocks north",
@@ -851,6 +875,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed a block west and a block north.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "a block west and a block north",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -913,6 +941,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed a block west.",
+                "type": "good"
               },
               {
                 "set_string_var": "a block west",
@@ -979,6 +1011,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed a block west and a block south.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "a block west and a block south",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -1041,6 +1077,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed a block west and two blocks south.",
+                "type": "good"
               },
               {
                 "set_string_var": "a block west and two blocks south",
@@ -1107,6 +1147,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed two blocks north.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "two blocks north",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -1169,6 +1213,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed a block north.",
+                "type": "good"
               },
               {
                 "set_string_var": "a block north",
@@ -1235,6 +1283,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed a block south.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "a block south",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -1297,6 +1349,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed two blocks south.",
+                "type": "good"
               },
               {
                 "set_string_var": "two blocks south",
@@ -1363,6 +1419,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed a block east and two blocks north.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "a block east and two blocks north",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -1425,6 +1485,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed a block east and a block north.",
+                "type": "good"
               },
               {
                 "set_string_var": "a block east and a block north",
@@ -1491,6 +1555,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed a block east.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "a block east",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -1553,6 +1621,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed a block east and a block south.",
+                "type": "good"
               },
               {
                 "set_string_var": "a block east and a block south",
@@ -1619,6 +1691,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed a block east and two blocks south.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "a block east and two blocks south",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -1681,6 +1757,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed two blocks east and two blocks north.",
+                "type": "good"
               },
               {
                 "set_string_var": "two blocks east and two blocks north",
@@ -1747,6 +1827,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed two blocks east and a block north.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "two blocks east and a block north",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -1809,6 +1893,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed two blocks east.",
+                "type": "good"
               },
               {
                 "set_string_var": "two blocks east",
@@ -1875,6 +1963,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed two blocks east and a block south.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "two blocks east and a block south",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -1939,6 +2031,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed two blocks east and two blocks south.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "two blocks east and two blocks south",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -1992,6 +2088,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed two blocks west and two blocks north.",
+                "type": "good"
               },
               {
                 "set_string_var": "two blocks west and two blocks north",
@@ -2049,6 +2149,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed two blocks west and a block north.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "two blocks west and a block north",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -2102,6 +2206,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed two blocks west.",
+                "type": "good"
               },
               {
                 "set_string_var": "two blocks west",
@@ -2159,6 +2267,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed two blocks west and a block south.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "two blocks west and a block south",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -2212,6 +2324,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed two blocks west and two blocks south.",
+                "type": "good"
               },
               {
                 "set_string_var": "two blocks west and two blocks south",
@@ -2269,6 +2385,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed a block west and two blocks north.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "a block west and two blocks north",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -2322,6 +2442,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed a block west and a block north.",
+                "type": "good"
               },
               {
                 "set_string_var": "a block west and a block north",
@@ -2379,6 +2503,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed a block west.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "a block west",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -2432,6 +2560,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed a block west and a block south.",
+                "type": "good"
               },
               {
                 "set_string_var": "a block west and a block south",
@@ -2489,6 +2621,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed a block west and two blocks south.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "a block west and two blocks south",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -2542,6 +2678,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed two blocks north.",
+                "type": "good"
               },
               {
                 "set_string_var": "two blocks north",
@@ -2599,6 +2739,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed a block north.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "a block north",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -2652,6 +2796,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed a block south.",
+                "type": "good"
               },
               {
                 "set_string_var": "a block south",
@@ -2709,6 +2857,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed two blocks south.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "two blocks south",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -2762,6 +2914,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed a block east and two blocks north.",
+                "type": "good"
               },
               {
                 "set_string_var": "a block east and two blocks north",
@@ -2819,6 +2975,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed a block east and a block north.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "a block east and a block north",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -2872,6 +3032,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed a block east.",
+                "type": "good"
               },
               {
                 "set_string_var": "a block east",
@@ -2929,6 +3093,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed a block east and a block south.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "a block east and a block south",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -2982,6 +3150,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed a block east and two blocks south.",
+                "type": "good"
               },
               {
                 "set_string_var": "a block east and two blocks south",
@@ -3039,6 +3211,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed two blocks east and two blocks north.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "two blocks east and two blocks north",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -3092,6 +3268,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed two blocks east and a block north.",
+                "type": "good"
               },
               {
                 "set_string_var": "two blocks east and a block north",
@@ -3149,6 +3329,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed two blocks east.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "two blocks east",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -3202,6 +3386,10 @@
                   "=",
                   "1"
                 ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed two blocks east and a block south.",
+                "type": "good"
               },
               {
                 "set_string_var": "two blocks east and a block south",
@@ -3259,6 +3447,10 @@
                 ]
               },
               {
+                "u_message": "[Trilobit] Mission target placed two blocks east and two blocks south.",
+                "type": "good"
+              },
+              {
                 "set_string_var": "two blocks east and two blocks south",
                 "target_var": {
                   "global_val": "trl_target_dir"
@@ -3267,6 +3459,33 @@
             ]
           }
         ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_giver_ok",
+    "effect": [
+      {
+        "math": [
+          "trl_giver_spawned",
+          "=",
+          "1"
+        ]
+      },
+      {
+        "u_message": "[Trilobit] Quest giver Sachiko Imai placed in your building.",
+        "type": "good"
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_giver_failed",
+    "effect": [
+      {
+        "u_message": "[Trilobit] Could not place quest giver Sachiko Imai (no free indoor tile found).",
+        "type": "bad"
       }
     ]
   },
@@ -3302,6 +3521,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_near_2"
         ]
@@ -3340,6 +3563,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_near_3"
         ]
@@ -3378,6 +3605,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_near_4"
         ]
@@ -3416,6 +3647,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_near_5"
         ]
@@ -3454,6 +3689,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_near_6"
         ]
@@ -3492,6 +3731,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_near_7"
         ]
@@ -3530,6 +3773,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_near_8"
         ]
@@ -3568,6 +3815,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_1"
         ]
@@ -3606,6 +3857,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_2"
         ]
@@ -3644,6 +3899,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_3"
         ]
@@ -3682,6 +3941,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_4"
         ]
@@ -3720,6 +3983,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_5"
         ]
@@ -3758,6 +4025,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_6"
         ]
@@ -3796,6 +4067,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_7"
         ]
@@ -3834,6 +4109,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_8"
         ]
@@ -3872,6 +4151,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_9"
         ]
@@ -3910,6 +4193,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_10"
         ]
@@ -3948,6 +4235,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_11"
         ]
@@ -3986,6 +4277,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_12"
         ]
@@ -4024,6 +4319,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_13"
         ]
@@ -4062,6 +4361,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_14"
         ]
@@ -4100,6 +4403,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_15"
         ]
@@ -4138,6 +4445,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_16"
         ]
@@ -4176,6 +4487,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_17"
         ]
@@ -4214,6 +4529,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_18"
         ]
@@ -4252,6 +4571,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_19"
         ]
@@ -4290,6 +4613,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_20"
         ]
@@ -4328,6 +4655,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_21"
         ]
@@ -4366,6 +4697,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_22"
         ]
@@ -4404,6 +4739,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_23"
         ]
@@ -4442,6 +4781,10 @@
         "min_radius": 0,
         "max_radius": 0,
         "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
         "false_eocs": [
           "trl_spawn_giver_any_24"
         ]
@@ -4479,7 +4822,14 @@
         },
         "min_radius": 0,
         "max_radius": 0,
-        "indoor_only": true
+        "indoor_only": true,
+        "true_eocs": [
+          "trl_giver_ok"
+        ],
+        "spawn_message": "Sachiko Imai is somewhere nearby in this building.",
+        "false_eocs": [
+          "trl_giver_failed"
+        ]
       }
     ]
   },
@@ -4487,6 +4837,10 @@
     "type": "effect_on_condition",
     "id": "trl_city_intro",
     "effect": [
+      {
+        "u_message": "[Trilobit] Start event running.",
+        "type": "neutral"
+      },
       {
         "math": [
           "trl_quest_state",
@@ -4502,17 +4856,17 @@
         ]
       },
       {
+        "set_string_var": "somewhere in this district",
+        "target_var": {
+          "global_val": "trl_target_dir"
+        }
+      },
+      {
         "math": [
           "trl_target_placed",
           "=",
           "0"
         ]
-      },
-      {
-        "set_string_var": "somewhere in this district",
-        "target_var": {
-          "global_val": "trl_target_dir"
-        }
       },
       {
         "u_location_variable": {
@@ -4570,6 +4924,17 @@
           "trl_place_target_f22",
           "trl_place_target_f23"
         ]
+      },
+      {
+        "if": {
+          "math": [
+            "trl_target_placed == 0"
+          ]
+        },
+        "then": {
+          "u_message": "[Trilobit] Could not place the mission target anywhere.",
+          "type": "bad"
+        }
       }
     ]
   }
