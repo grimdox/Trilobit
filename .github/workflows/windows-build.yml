@@ -28,13 +28,12 @@ jobs:
             mingw-w64-x86_64-SDL2
             mingw-w64-x86_64-SDL2_image
             mingw-w64-x86_64-SDL2_ttf
-            mingw-w64-x86_64-SDL2_mixer
             mingw-w64-x86_64-freetype
             mingw-w64-x86_64-zlib
       - name: Build
         run: |
           set -o pipefail
-          make -j4 OTHERS=-Wno-error TILES=1 SOUND=1 RELEASE=1 LOCALIZE=0 LINTJSON=0 ASTYLE=0 TESTS=0 CCACHE=1 BACKTRACE=0 PCH=0 2>&1 | tee build.log
+          make -j4 OTHERS=-Wno-error TILES=1 SOUND=0 RELEASE=1 LOCALIZE=0 LINTJSON=0 ASTYLE=0 TESTS=0 CCACHE=1 BACKTRACE=0 PCH=0 2>&1 | tee build.log
       - name: Report build errors
         if: failure()
         run: |
