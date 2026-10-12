@@ -2760,6 +2760,7 @@ input_context get_default_mode_input_context()
     ctxt.register_action( "bodystatus" );
     ctxt.register_action( "sort_armor" );
     ctxt.register_action( "wait" );
+    ctxt.register_action( "turn_in_place" );
     ctxt.register_action( "craft" );
     ctxt.register_action( "recraft" );
     ctxt.register_action( "long_craft" );
