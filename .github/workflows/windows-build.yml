@@ -33,7 +33,12 @@ jobs:
             mingw-w64-x86_64-zlib
       - name: Build
         run: |
-          make -j4 OTHERS=-Wno-error TILES=1 SOUND=1 RELEASE=1 LOCALIZE=0 LINTJSON=0 ASTYLE=0 TESTS=0 CCACHE=1 BACKTRACE=0 PCH=0
+          set -o pipefail
+          make -j4 OTHERS=-Wno-error TILES=1 SOUND=1 RELEASE=1 LOCALIZE=0 LINTJSON=0 ASTYLE=0 TESTS=0 CCACHE=1 BACKTRACE=0 PCH=0 2>&1 | tee build.log
+      - name: Report build errors
+        if: failure()
+        run: |
+          grep -n -i -B2 -A6 "error\|undefined reference\|\*\*\*" build.log | tail -n 60 | sed 's/^/::error::/' | head -n 60
       - name: Package
         run: |
           mkdir -p out/trilobit
