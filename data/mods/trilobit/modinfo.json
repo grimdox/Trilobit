@@ -7,12 +7,12 @@
       "Eric (design)",
       "Claude (implementation)"
     ],
-    "description": "A cyberpunk total conversion in progress.  Only monsters tagged TRILOBIT can spawn.  Cities: 10 skyscrapers, 6 mid-rise blocks, two megacities plus villages.  Enemies: soldier, cyborg soldier and unarmed aggressor, placed on every floor of the towers and mid-rises.  Start types: Test Human and Test Cyborg.  Implants: implant status display item, an implant lab in every mid-rise, five random implants at start.",
+    "description": "A cyberpunk total conversion in progress.  Only monsters tagged TRILOBIT can spawn.  Cities: 10 skyscrapers, 6 mid-rise blocks, two megacities plus villages.  No enemies are placed in buildings; a fixer in your starting building gives the first mission (kill Ryo Kurogane for 1000 yen).  Start types: Test Human and Test Cyborg.  Implants: implant status display item, an implant lab in every mid-rise, five random implants at start.",
     "category": "total_conversion",
     "dependencies": [
       "dda"
     ],
-    "version": "0.0.15-no-wrecks"
+    "version": "0.0.16-first-quest"
   },
   {
     "type": "MONSTER_WHITELIST",

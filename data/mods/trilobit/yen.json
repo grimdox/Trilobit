@@ -1,0 +1,24 @@
+[
+  {
+    "type": "ITEM",
+    "subtypes": [
+      "GENERIC"
+    ],
+    "id": "trl_yen",
+    "category": "currency",
+    "name": {
+      "str_sp": "yen"
+    },
+    "description": "A single aluminium one-yen coin: the smallest physical unit of the city's currency.  Cash is still used for street vendors, back-alley deals and anywhere that does not want a record.",
+    "price": "1 USD",
+    "price_postapoc": "1 USD",
+    "//": "Placeholder price.  Real trade values will be set when the economy (Milestone 8) is built.",
+    "weight": "1 g",
+    "volume": "1 ml",
+    "color": "light_gray",
+    "symbol": "$",
+    "material": [
+      "aluminum"
+    ]
+  }
+]

@@ -32,6 +32,9 @@
     "start_name": "Mid-rise block",
     "flags": [
       "LONE_START"
+    ],
+    "eoc": [
+      "trl_city_intro"
     ]
   },
   {

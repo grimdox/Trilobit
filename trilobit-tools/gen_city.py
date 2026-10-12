@@ -165,12 +165,6 @@ def make_building(b, out_ter, out_map, out_cb):
                         obj["terrain"].update({"b": "t_floor_blue", "a": "t_floor_blue", "c": "t_floor_blue", "r": "t_floor_blue"})
                         obj["items"] = {"a": {"item": "autodoc_supplies", "chance": 100},
                                         "r": {"item": "dissection", "chance": 40}}
-                    if (cx, cy) == sc and z == st - 1:
-                        # one of each test enemy on the top floor only
-                        obj["place_monster"] = [
-                            {"monster": "mon_trl_soldier", "x": 4, "y": 4},
-                            {"monster": "mon_trl_cyborg", "x": 4, "y": 6},
-                            {"monster": "mon_trl_thug", "x": 4, "y": 8}]
                     out_map.append({"type": "mapgen", "om_terrain": [oid], "object": obj})
                 cb.append({"point": [cx, cy, z], "overmap": seen[key] + "_north"})
     # overmap terrains
