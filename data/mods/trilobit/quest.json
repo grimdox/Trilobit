@@ -4915,6 +4915,1146 @@
   },
   {
     "type": "effect_on_condition",
+    "id": "trl_place_target_fb0",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": -1,
+          "offset_y": 0,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": true,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb0_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block west.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block west",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb1",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": 1,
+          "offset_y": 0,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": true,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb1_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block east.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block east",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb2",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": -1,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": true,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb2_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block north.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block north",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb3",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 1,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": true,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb3_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block south.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block south",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb4",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": -1,
+          "offset_y": -1,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": true,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb4_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block northwest.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block northwest",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb5",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": 1,
+          "offset_y": -1,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": true,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb5_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block northeast.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block northeast",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb6",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": -1,
+          "offset_y": 1,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": true,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb6_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block southwest.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block southwest",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb7",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": 1,
+          "offset_y": 1,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": true,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb7_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block southeast.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block southeast",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb8",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": -1,
+          "offset_y": 0,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": false,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb8_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block west.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block west",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb9",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": 1,
+          "offset_y": 0,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": false,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb9_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block east.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block east",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb10",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": -1,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": false,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb10_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block north.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block north",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb11",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 1,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": false,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb11_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block south.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block south",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb12",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": -1,
+          "offset_y": -1,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": false,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb12_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block northwest.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block northwest",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb13",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": 1,
+          "offset_y": -1,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": false,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb13_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block northeast.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block northeast",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb14",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": -1,
+          "offset_y": 1,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": false,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb14_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block southwest.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block southwest",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb15",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": 1,
+          "offset_y": 1,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 11,
+        "indoor_only": false,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb15_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed one block southeast.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "one block southeast",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb16",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 12,
+        "indoor_only": true,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb16_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed close by.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "close by",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb17",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 12,
+        "indoor_only": false,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb17_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed close by.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "close by",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_place_target_fb18",
+    "condition": {
+      "math": [
+        "trl_target_placed == 0"
+      ]
+    },
+    "effect": [
+      {
+        "u_location_variable": {
+          "global_val": "trl_target_loc"
+        },
+        "target_params": {
+          "offset_x": 0,
+          "offset_y": 0,
+          "z": 0
+        },
+        "x_adjust": 12,
+        "y_adjust": 12,
+        "z_adjust": 0,
+        "z_override": true
+      },
+      {
+        "u_spawn_npc": "trl_mark",
+        "real_count": 1,
+        "unique_id": "mission_target",
+        "target_var": {
+          "global_val": "trl_target_loc"
+        },
+        "min_radius": 0,
+        "max_radius": 24,
+        "indoor_only": false,
+        "true_eocs": [
+          {
+            "id": "trl_place_target_fb18_ok",
+            "effect": [
+              {
+                "math": [
+                  "trl_target_placed",
+                  "=",
+                  "1"
+                ]
+              },
+              {
+                "u_message": "[Trilobit] Mission target placed close by.",
+                "type": "good"
+              },
+              {
+                "set_string_var": "close by",
+                "target_var": {
+                  "global_val": "trl_target_dir"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
     "id": "trl_city_intro",
     "effect": [
       {
@@ -5012,7 +6152,26 @@
           "trl_place_target_f20",
           "trl_place_target_f21",
           "trl_place_target_f22",
-          "trl_place_target_f23"
+          "trl_place_target_f23",
+          "trl_place_target_fb0",
+          "trl_place_target_fb1",
+          "trl_place_target_fb2",
+          "trl_place_target_fb3",
+          "trl_place_target_fb4",
+          "trl_place_target_fb5",
+          "trl_place_target_fb6",
+          "trl_place_target_fb7",
+          "trl_place_target_fb8",
+          "trl_place_target_fb9",
+          "trl_place_target_fb10",
+          "trl_place_target_fb11",
+          "trl_place_target_fb12",
+          "trl_place_target_fb13",
+          "trl_place_target_fb14",
+          "trl_place_target_fb15",
+          "trl_place_target_fb16",
+          "trl_place_target_fb17",
+          "trl_place_target_fb18"
         ]
       },
       {

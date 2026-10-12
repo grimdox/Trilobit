@@ -9583,11 +9583,33 @@ void map::build_map_cache( const int zlev, bool skip_lightmap )
     int const sr = u.unimpaired_range();
     static tripoint_abs_ms player_prev_pos;
     static int player_prev_range( 0 );
-    seen_cache_dirty |= player_prev_pos != p || sr != player_prev_range || camera_cache_dirty;
+    static point trl_prev_facing;
+    const point trl_face = u.trl_facing;
+    seen_cache_dirty |= player_prev_pos != p || sr != player_prev_range || camera_cache_dirty ||
+                        trl_prev_facing != trl_face;
     if( seen_cache_dirty ) {
         if( inbounds( p ) ) {
             build_seen_cache( get_bub( p ), zlev, sr );
+            // Trilobit: the avatar only sees terrain in the 180 degree half-plane in front of it
+            // (everything within one tile stays visible).
+            if( trl_face != point::zero ) {
+                const tripoint_bub_ms o = get_bub( p );
+                for( int z = -OVERMAP_DEPTH; z <= OVERMAP_HEIGHT; z++ ) {
+                    auto &sc = get_cache( z ).seen_cache;
+                    for( int x = 0; x < MAPSIZE_X; ++x ) {
+                        const int dx = x - o.x();
+                        for( int y = 0; y < MAPSIZE_Y; ++y ) {
+                            const int dy = y - o.y();
+                            if( ( std::abs( dx ) > 1 || std::abs( dy ) > 1 ) &&
+                                trl_face.x * dx + trl_face.y * dy < 0 ) {
+                                sc[x][y] = LIGHT_TRANSPARENCY_SOLID;
+                            }
+                        }
+                    }
+                }
+            }
         }
+        trl_prev_facing = trl_face;
         player_prev_pos = p;
         player_prev_range = sr;
         camera_cache_dirty = true;

@@ -7644,12 +7644,12 @@ talk_effect_fun_t::func f_spawn_npc( const JsonObject &jo, std::string_view memb
                     lifespan.reset();
                 }
                 if( g->spawn_npc( spawn_point, cur_npc_class, cur_unique_id, cur_traits, lifespan ) ) {
+                    // Trilobit: the NPC counts as spawned even if it was nudged off the exact tile
+                    // (otherwise true_eocs never run and the unique id then blocks every retry).
+                    spawns++;
                     Creature *guy = get_creature_tracker().creature_at( spawn_point );
-                    if( guy ) {
-                        spawns++;
-                        if( get_avatar().sees( here, *guy ) ) {
-                            visible_spawns++;
-                        }
+                    if( guy && get_avatar().sees( here, *guy ) ) {
+                        visible_spawns++;
                     }
                 }
             }
