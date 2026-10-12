@@ -576,8 +576,26 @@ void main_menu::load_char_templates()
     std::sort( templates.begin(), templates.end(), localized_compare );
 }
 
+#if defined(TILES)
+void trl_set_menu_splash( bool on );
+#else
+static void trl_set_menu_splash( bool ) {}
+#endif
+namespace
+{
+struct trl_splash_guard {
+    trl_splash_guard() {
+        trl_set_menu_splash( true );
+    }
+    ~trl_splash_guard() {
+        trl_set_menu_splash( false );
+    }
+};
+} // namespace
+
 bool main_menu::opening_screen()
 {
+    trl_splash_guard splash_guard;
     // set holiday based on local system time
     current_holiday = get_holiday_from_time();
 

@@ -536,6 +536,48 @@ SDL_Rect get_android_render_rect( float DisplayBufferWidth, float DisplayBufferH
 
 #endif
 
+static bool trl_splash_on = false;
+static SDL_Texture_Ptr trl_splash_tex;
+static bool trl_splash_tried = false;
+
+void trl_set_menu_splash( bool on )
+{
+    trl_splash_on = on;
+}
+
+static void trl_draw_splash_row( const point &dst, int w, int h )
+{
+    if( !trl_splash_tex && !trl_splash_tried ) {
+        trl_splash_tried = true;
+        try {
+            const std::string path = ( PATH_INFO::gfxdir() / "splash" /
+                                       "trilobit_splash_1_race.png" ).generic_u8string();
+            trl_splash_tex = CreateTextureFromSurface( renderer, load_image( path.c_str() ) );
+        } catch( const std::exception & ) {
+            trl_splash_tex.reset();
+        }
+    }
+    if( !trl_splash_tex ) {
+        geometry->rect( renderer, dst, w, h, color_as_sdl( catacurses::black ) );
+        return;
+    }
+    int tw = 0;
+    int th = 0;
+    SDL_QueryTexture( trl_splash_tex.get(), nullptr, nullptr, &tw, &th );
+    SDL_Rect src;
+    src.x = dst.x * tw / WindowWidth;
+    src.y = dst.y * th / WindowHeight;
+    src.w = std::max( 1, w * tw / WindowWidth );
+    src.h = std::max( 1, h * th / WindowHeight );
+    SDL_Rect d{ dst.x, dst.y, w, h };
+    RenderCopy( renderer, trl_splash_tex, &src, &d );
+    SDL_BlendMode bm;
+    GetRenderDrawBlendMode( renderer, bm );
+    SetRenderDrawBlendMode( renderer, SDL_BLENDMODE_BLEND );
+    geometry->rect( renderer, dst, w, h, SDL_Color{ 0, 0, 0, 120 } );
+    SetRenderDrawBlendMode( renderer, bm );
+}
+
 void refresh_display()
 {
     needupdate = false;
@@ -1256,9 +1298,14 @@ static bool draw_window( Font_Ptr &font, const catacurses::window &w, const poin
         // only clearing those lines that are touched, we avoid
         // clearing lines that were already drawn in a previous
         // window but are untouched in this one.
-        geometry->rect( renderer, point( win->pos.x * font->width, ( win->pos.y + j ) * font->height ),
-                        win->width * font->width, font->height,
-                        color_as_sdl( catacurses::black ) );
+        if( trl_splash_on && win->width * font->width >= WindowWidth * 9 / 10 ) {
+            trl_draw_splash_row( point( win->pos.x * font->width, ( win->pos.y + j ) * font->height ),
+                                 win->width * font->width, font->height );
+        } else {
+            geometry->rect( renderer, point( win->pos.x * font->width, ( win->pos.y + j ) * font->height ),
+                            win->width * font->width, font->height,
+                            color_as_sdl( catacurses::black ) );
+        }
         update = true;
         win->line[j].touched = false;
         for( int i = 0; i < win->width; i++ ) {
