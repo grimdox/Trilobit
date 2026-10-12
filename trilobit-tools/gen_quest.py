@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Generates yen.json and quest.json (first NPC + mission chain) for the Trilobit mod."""
-import json, sys
+import json, sys, os
+TEST = os.environ.get("TRL_TEST") == "1"   # test build: chain completes immediately
 out = sys.argv[1]
 J = []
 
@@ -66,7 +67,7 @@ J += [
  mission("TRL_M1_FIND", "Find Ryo Kurogane (1/3)",
          "Sachiko Imai wants Ryo Kurogane dead. Go to the building she described and find him. "
          "Step 1 of 3: find the target. Step 2: kill him. Step 3: report back to Sachiko.",
-         "MGOAL_CONDITION", cond={"math": ["distance('u', trl_target_loc) <= 9"]},
+         "MGOAL_CONDITION", cond={"math": ["distance('u', trl_target_loc) <= " + ("100000" if TEST else "9")]},
          start={"assign_mission_target": {"var": {"global_val": "trl_target_loc"}, "reveal_radius": 1}},
          end={"effect": [{"assign_mission": "TRL_M2_KILL"},
                          {"u_message": "You are close. Ryo Kurogane should be somewhere in here.", "type": "mixed"}]}),
@@ -143,7 +144,7 @@ def place_eoc(i, dx, dy, rnd):
         {"u_location_variable": {"global_val": "trl_target_loc"},
          "target_params": {"offset_x": dx, "offset_y": dy, "z": 0},
          "x_adjust": 12, "y_adjust": 12, "z_adjust": 0, "z_override": True},
-        {"u_spawn_npc": "trl_mark", "unique_id": "mission_target",
+        {"u_spawn_npc": "trl_mark", "real_count": 1, "unique_id": "mission_target",
          "target_var": {"global_val": "trl_target_loc"},
          "min_radius": 0, "max_radius": 6, "indoor_only": True,
          "true_eocs": [{"id": eid + "_ok", "effect": [
@@ -161,7 +162,7 @@ PY = "(u_val('pos_y') - 24 * floor(u_val('pos_y') / 24))"
 def giver(name, nxt, near):
     xa = {"math": [f"clamp({PX} + rand(12) - 6, 0, 23)"]} if near else {"math": ["rand(23)"]}
     ya = {"math": [f"clamp({PY} + rand(12) - 6, 0, 23)"]} if near else {"math": ["rand(23)"]}
-    sp = {"u_spawn_npc": "trl_fixer", "unique_id": "quest_giver", "target_var": {"global_val": "trl_giver_spawn_loc"},
+    sp = {"u_spawn_npc": "trl_fixer", "real_count": 1, "unique_id": "quest_giver", "target_var": {"global_val": "trl_giver_spawn_loc"},
           "min_radius": 0, "max_radius": 0, "indoor_only": True}
     sp["true_eocs"] = ["trl_giver_ok"]
     sp["spawn_message"] = "Sachiko Imai is somewhere nearby in this building."
@@ -181,19 +182,14 @@ J += [{
   "type": "effect_on_condition", "id": "trl_city_intro",
   "effect": [
     {"u_message": "[Trilobit] Start event running.", "type": "neutral"},
-    {"math": ["trl_quest_state", "=", "0"]}, {"math": ["trl_mark_dead", "=", "0"]},
-    {"math": ["trl_target_placed", "=", "0"]},
+    {"math": ["trl_quest_state", "=", "0"]}, {"math": ["trl_mark_dead", "=", "1" if TEST else "0"]},
+    {"math": ["trl_target_placed", "=", "0"]}, {"math": ["trl_giver_spawned", "=", "0"]},
+    {"set_string_var": "somewhere in this district", "target_var": {"global_val": "trl_target_dir"}},
     {"u_location_variable": {"global_val": "trl_giver_loc"}},
     {"run_eocs": "trl_spawn_giver_near_1"},
     {"run_eocs": names},
-    {"set_string_var": "somewhere nearby", "target_var": {"global_val": "trl_target_dir"},
-     "//": "overwritten by the placement EOC when it succeeds"}
+    {"if": {"math": ["trl_target_placed == 0"]},
+     "then": {"u_message": "[Trilobit] Could not place the mission target anywhere.", "type": "bad"}}
   ]}]
-# do not let the default text overwrite the real one: reorder
-J[-1]["effect"] = [e for e in J[-1]["effect"] if "run_eocs" not in e and "set_string_var" not in e]
-J[-1]["effect"].insert(3, {"set_string_var": "somewhere in this district", "target_var": {"global_val": "trl_target_dir"}})
-J[-1]["effect"].append({"run_eocs": names})
-J[-1]["effect"].append({"if": {"math": ["trl_target_placed == 0"]},
-                        "then": {"u_message": "[Trilobit] Could not place the mission target anywhere.", "type": "bad"}})
 json.dump(fix(J), open(out + "/quest.json", "w"), indent=2)
 print(len(J), "objects,", len(names), "placement eocs")

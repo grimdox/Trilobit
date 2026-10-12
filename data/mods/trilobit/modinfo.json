@@ -12,7 +12,7 @@
     "dependencies": [
       "dda"
     ],
-    "version": "0.0.19-giver-diagnostics"
+    "version": "0.0.20-npc-fixed"
   },
   {
     "type": "MONSTER_WHITELIST",
