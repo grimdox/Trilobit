@@ -5,6 +5,9 @@ on:
   push:
     branches: [ main, phase-b-facing ]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -65,3 +68,10 @@ jobs:
         with:
           name: trilobit-windows
           path: trilobit-windows.zip
+      - name: Publish to the windows-latest release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete windows-latest --yes --cleanup-tag --repo "$GITHUB_REPOSITORY" || true
+          gh release create windows-latest trilobit-windows.zip --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease --title "Trilobit Windows build (latest)" --notes "Automatic build of commit $GITHUB_SHA.  Unzip, run trilobit/cataclysm-tiles.exe, enable the Trilobit mod when creating a world."
