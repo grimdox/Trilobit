@@ -474,6 +474,10 @@ def _(g):
     g.f_("lantern_stone", 5, 17); g.f_("lantern_stone", 18, 17); g.f_("bonsai", 4, 11)
     g.loot("trl_loot_decor", 5, 6, 18, 17, 30, 2)
 
+# ---------------------------------------------------------------- service shops (implant, nanohack, grocery, android; poor/middle/rich)
+import shoplayout
+shoplayout.register(globals())
+
 # ---------------------------------------------------------------- output
 def terrain_json():
     out = []; done = set()
@@ -526,7 +530,7 @@ def mapgen_json():
         if bn: obj["place_npcs"] = [{"class": c, "x": x, "y": y} for c, x, y in bn]
         an = gand.android_npcs(p["id"])
         if an:
-            taken = {(x, y) for _, x, y in bn} | {(x, y) for _, x, y in [(k, fx, fy) for k, fx, fy in g.f]}
+            taken = {(x, y) for _, x, y in bn} | set(g.occ)
             cx = cy = 11
             cells = sorted(((x, y) for y in range(2, 22) for x in range(2, 22)), key=lambda c: (c[0] - cx) ** 2 + (c[1] - cy) ** 2)
             ok = [c for c in cells if g.t[c[1]][c[0]] in FLOORS and c not in taken]
@@ -560,7 +564,17 @@ def mapgen_json():
                            all(f["x"] != px or f["y"] != py for f in obj["place_furniture"]) and \
                            all(a["x"] != px or a["y"] != py for a in obj.get("place_npcs", [])):
                             obj["place_furniture"].append({"furn": "f_trl_door_panel", "x": px, "y": py}); done = True; break
-        out.append({"type": "mapgen", "om_terrain": [p["id"]], "object": obj})
+        for fid, ex, ey in getattr(g, "extra", []):
+            obj["place_furniture"].append({"furn": fid, "x": ex, "y": ey})
+        if p.get("service"):
+            variants = gand.android_variants(p["id"])
+            for vi, classes in enumerate(variants):
+                o2 = json.loads(json.dumps(obj))
+                for ent, cl in zip(o2.get("place_npcs", []), classes):
+                    ent["class"] = cl
+                out.append({"type": "mapgen", "om_terrain": [p["id"]], "weight": 1000, "object": o2})
+        else:
+            out.append({"type": "mapgen", "om_terrain": [p["id"]], "object": obj})
         p["lights"] = g.lights(); p["rows"] = rows; p["nf"] = len(g.f)
     return out
 LOOT = {
@@ -599,7 +613,11 @@ if __name__ == "__main__":
     ro_path = os.path.join(MOD, "region_overlay.json")
     ro = json.load(open(ro_path))
     shops = ro[0]["city"]["shops"]
-    for p in PLACES: shops[p["id"]] = 300
+    for p in PLACES:
+        if p.get("service"):
+            shops.pop(p["id"], None)      # placed by the district code, not by the stock shop picker
+        else:
+            shops[p["id"]] = 300
     json.dump(ro, open(ro_path, "w"), indent=1)
     print(len(PLACES), "places;", len(F), "furniture;", len(T), "terrain keys")
     for p in PLACES: print(f'{p["id"]:28} lights={p["lights"]:3} furn={p["nf"]:3}')

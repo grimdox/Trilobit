@@ -40,6 +40,58 @@
  },
  {
   "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_arm_l_adv",
+  "condition": {
+   "u_has_bionics": "trl_imp_arm_l_adv"
+  },
+  "effect": [
+   {
+    "u_message": "Advanced cyber arm (left) - passive implant.  Uses slots: arm_l 4.  A advanced cyber arm replacing your left arm.  Uses 4 of the 6 points in the left arm; +1 Strength, +1 Dexterity; absorbs damage at quality 85%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_arm_r_adv",
+  "condition": {
+   "u_has_bionics": "trl_imp_arm_r_adv"
+  },
+  "effect": [
+   {
+    "u_message": "Advanced cyber arm (right) - passive implant.  Uses slots: arm_r 4.  A advanced cyber arm replacing your right arm.  Uses 4 of the 6 points in the right arm; +1 Strength, +1 Dexterity; absorbs damage at quality 85%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_leg_l_adv",
+  "condition": {
+   "u_has_bionics": "trl_imp_leg_l_adv"
+  },
+  "effect": [
+   {
+    "u_message": "Advanced cyber leg (left) - passive implant.  Uses slots: leg_l 6.  A advanced cyber leg replacing your left leg.  Uses 6 of the 10 points in the left leg; +1 Dexterity, +1 Strength; absorbs damage at quality 85%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_leg_r_adv",
+  "condition": {
+   "u_has_bionics": "trl_imp_leg_r_adv"
+  },
+  "effect": [
+   {
+    "u_message": "Advanced cyber leg (right) - passive implant.  Uses slots: leg_r 6.  A advanced cyber leg replacing your right leg.  Uses 6 of the 10 points in the right leg; +1 Dexterity, +1 Strength; absorbs damage at quality 85%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
   "id": "trl_status_bio_evap",
   "condition": {
    "u_has_bionics": "bio_evap"
@@ -131,13 +183,52 @@
  },
  {
   "type": "effect_on_condition",
-  "id": "trl_status_trl_bio_cyberbrain",
+  "id": "trl_status_trl_imp_arm_l_basic",
   "condition": {
-   "u_has_bionics": "trl_bio_cyberbrain"
+   "u_has_bionics": "trl_imp_arm_l_basic"
   },
   "effect": [
    {
-    "u_message": "Cyberbrain Mk I - passive implant.  Uses slots: head 8.  A cyberbrain interfaced with your nervous system.  Control Value limit 4.  Required to run nanohacks.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "u_message": "Basic cyber arm (left) - passive implant.  Uses slots: arm_l 5.  A basic cyber arm replacing your left arm.  Uses 5 of the 6 points in the left arm; +1 Strength; absorbs damage at quality 70%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_arm_r_basic",
+  "condition": {
+   "u_has_bionics": "trl_imp_arm_r_basic"
+  },
+  "effect": [
+   {
+    "u_message": "Basic cyber arm (right) - passive implant.  Uses slots: arm_r 5.  A basic cyber arm replacing your right arm.  Uses 5 of the 6 points in the right arm; +1 Strength; absorbs damage at quality 70%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_leg_l_basic",
+  "condition": {
+   "u_has_bionics": "trl_imp_leg_l_basic"
+  },
+  "effect": [
+   {
+    "u_message": "Basic cyber leg (left) - passive implant.  Uses slots: leg_l 8.  A basic cyber leg replacing your left leg.  Uses 8 of the 10 points in the left leg; +1 Dexterity; absorbs damage at quality 70%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_leg_r_basic",
+  "condition": {
+   "u_has_bionics": "trl_imp_leg_r_basic"
+  },
+  "effect": [
+   {
+    "u_message": "Basic cyber leg (right) - passive implant.  Uses slots: leg_r 8.  A basic cyber leg replacing your right leg.  Uses 8 of the 10 points in the right leg; +1 Dexterity; absorbs damage at quality 70%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
     "type": "neutral"
    }
   ]
@@ -326,6 +417,71 @@
  },
  {
   "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_gun_l",
+  "condition": {
+   "u_has_bionics": "trl_imp_gun_l"
+  },
+  "effect": [
+   {
+    "u_message": "Concealed arm gun (left) - passive implant.  Uses slots: arm_l 3.  A power-fed pistol folded inside the left forearm.  Activate it to raise the gun; it fires bullets using bionic power.  Uses 3 of the 6 points in the arm.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_gun_r",
+  "condition": {
+   "u_has_bionics": "trl_imp_gun_r"
+  },
+  "effect": [
+   {
+    "u_message": "Concealed arm gun (right) - passive implant.  Uses slots: arm_r 3.  A power-fed pistol folded inside the right forearm.  Activate it to raise the gun; it fires bullets using bionic power.  Uses 3 of the 6 points in the arm.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_head_int_1",
+  "condition": {
+   "u_has_bionics": "trl_imp_head_int_1"
+  },
+  "effect": [
+   {
+    "u_message": "Cortical coprocessor - passive implant.  Uses slots: head 2.  Cortical coprocessor: a cranial implant that gives +1 Intelligence.  Uses 2 of the 8 points in the head.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_head_int_2",
+  "condition": {
+   "u_has_bionics": "trl_imp_head_int_2"
+  },
+  "effect": [
+   {
+    "u_message": "Cortical coprocessor II - passive implant.  Uses slots: head 3.  Cortical coprocessor II: a cranial implant that gives +2 Intelligence.  Uses 3 of the 8 points in the head.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_head_int_3",
+  "condition": {
+   "u_has_bionics": "trl_imp_head_int_3"
+  },
+  "effect": [
+   {
+    "u_message": "Cortical coprocessor III - passive implant.  Uses slots: head 4.  Cortical coprocessor III: a cranial implant that gives +3 Intelligence.  Uses 4 of the 8 points in the head.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
   "id": "trl_status_bio_flashlight",
   "condition": {
    "u_has_bionics": "bio_flashlight"
@@ -333,6 +489,32 @@
   "effect": [
    {
     "u_message": "Cranial Flashlight - toggled implant.  Power: activation cost 2 J.  Power: running cost 2 J.  Uses slots: head 1.  Surgically mounted between your eyes is a small but powerful LED flashlight.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_bio_cyberbrain",
+  "condition": {
+   "u_has_bionics": "trl_bio_cyberbrain"
+  },
+  "effect": [
+   {
+    "u_message": "Cyberbrain Mk I - passive implant.  Uses slots: head 3.  A cyberbrain interfaced with your nervous system.  Control Value limit 4.  Required to run nanohacks.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_stomach",
+  "condition": {
+   "u_has_bionics": "trl_imp_stomach"
+  },
+  "effect": [
+   {
+    "u_message": "Cyberstomach - toggled implant.  Uses slots: torso 4.  A synthetic stomach that turns food into bionic power (toggle it on) and lets you eat cyber rations, which an ordinary stomach cannot digest.  Uses 4 of the 24 points in the torso.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
     "type": "neutral"
    }
   ]
@@ -437,6 +619,58 @@
   "effect": [
    {
     "u_message": "Electroshock Unit - toggled implant.  Power: trigger cost 2 kJ.  Uses slots: torso 8, arm_l 3, arm_r 3, hand_l 1, hand_r 1.  While fighting unarmed, or with a weapon that conducts electricity, there is a chance that a successful hit will shock your opponent, inflicting extra damage and disabling them temporarily at the cost of some energy.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_arm_l_elite",
+  "condition": {
+   "u_has_bionics": "trl_imp_arm_l_elite"
+  },
+  "effect": [
+   {
+    "u_message": "Elite cyber arm (left) - passive implant.  Uses slots: arm_l 3.  A elite cyber arm replacing your left arm.  Uses 3 of the 6 points in the left arm; +2 Strength, +1 Dexterity; absorbs damage at quality 100%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_arm_r_elite",
+  "condition": {
+   "u_has_bionics": "trl_imp_arm_r_elite"
+  },
+  "effect": [
+   {
+    "u_message": "Elite cyber arm (right) - passive implant.  Uses slots: arm_r 3.  A elite cyber arm replacing your right arm.  Uses 3 of the 6 points in the right arm; +2 Strength, +1 Dexterity; absorbs damage at quality 100%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_leg_l_elite",
+  "condition": {
+   "u_has_bionics": "trl_imp_leg_l_elite"
+  },
+  "effect": [
+   {
+    "u_message": "Elite cyber leg (left) - passive implant.  Uses slots: leg_l 5.  A elite cyber leg replacing your left leg.  Uses 5 of the 10 points in the left leg; +2 Dexterity, +1 Strength; absorbs damage at quality 100%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_leg_r_elite",
+  "condition": {
+   "u_has_bionics": "trl_imp_leg_r_elite"
+  },
+  "effect": [
+   {
+    "u_message": "Elite cyber leg (right) - passive implant.  Uses slots: leg_r 5.  A elite cyber leg replacing your right leg.  Uses 5 of the 10 points in the right leg; +2 Dexterity, +1 Strength; absorbs damage at quality 100%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
     "type": "neutral"
    }
   ]
@@ -645,6 +879,84 @@
   "effect": [
    {
     "u_message": "Heat Drain - toggled implant.  Power: trigger cost 3 kJ.  Uses slots: torso 6, head 3, arm_l 3, arm_r 3, hand_l 1, hand_r 1, leg_l 5, leg_r 5, foot_l 2, foot_r 2.  While fighting unarmed against a warm-blooded opponent, there is a chance that a successful hit will drain body heat, inflicting a small amount of extra damage, and increasing your power reserves slightly.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_plate_head_heavy",
+  "condition": {
+   "u_has_bionics": "trl_imp_plate_head_heavy"
+  },
+  "effect": [
+   {
+    "u_message": "Heavy dermal plating (head) - passive implant.  Uses slots: head 3.  Plates of ceramic and polymer under the skin of the head: +8 bullet armor and +4 against blows and blades.  Uses 3 of the 8 points in the head; only one plating fits per body part.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_plate_arm_l_heavy",
+  "condition": {
+   "u_has_bionics": "trl_imp_plate_arm_l_heavy"
+  },
+  "effect": [
+   {
+    "u_message": "Heavy dermal plating (left arm) - passive implant.  Uses slots: arm_l 3.  Plates of ceramic and polymer under the skin of the left arm: +8 bullet armor and +4 against blows and blades.  Uses 3 of the 6 points in the left arm; only one plating fits per body part.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_plate_leg_l_heavy",
+  "condition": {
+   "u_has_bionics": "trl_imp_plate_leg_l_heavy"
+  },
+  "effect": [
+   {
+    "u_message": "Heavy dermal plating (left leg) - passive implant.  Uses slots: leg_l 5.  Plates of ceramic and polymer under the skin of the left leg: +8 bullet armor and +4 against blows and blades.  Uses 5 of the 10 points in the left leg; only one plating fits per body part.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_plate_arm_r_heavy",
+  "condition": {
+   "u_has_bionics": "trl_imp_plate_arm_r_heavy"
+  },
+  "effect": [
+   {
+    "u_message": "Heavy dermal plating (right arm) - passive implant.  Uses slots: arm_r 3.  Plates of ceramic and polymer under the skin of the right arm: +8 bullet armor and +4 against blows and blades.  Uses 3 of the 6 points in the right arm; only one plating fits per body part.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_plate_leg_r_heavy",
+  "condition": {
+   "u_has_bionics": "trl_imp_plate_leg_r_heavy"
+  },
+  "effect": [
+   {
+    "u_message": "Heavy dermal plating (right leg) - passive implant.  Uses slots: leg_r 5.  Plates of ceramic and polymer under the skin of the right leg: +8 bullet armor and +4 against blows and blades.  Uses 5 of the 10 points in the right leg; only one plating fits per body part.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_plate_torso_heavy",
+  "condition": {
+   "u_has_bionics": "trl_imp_plate_torso_heavy"
+  },
+  "effect": [
+   {
+    "u_message": "Heavy dermal plating (torso) - passive implant.  Uses slots: torso 8.  Plates of ceramic and polymer under the skin of the torso: +11 bullet armor and +5 against blows and blades.  Uses 8 of the 24 points in the torso; only one plating fits per body part.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
     "type": "neutral"
    }
   ]
@@ -885,6 +1197,149 @@
  },
  {
   "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_plate_head_light",
+  "condition": {
+   "u_has_bionics": "trl_imp_plate_head_light"
+  },
+  "effect": [
+   {
+    "u_message": "Light dermal plating (head) - passive implant.  Uses slots: head 2.  Plates of ceramic and polymer under the skin of the head: +4 bullet armor and +2 against blows and blades.  Uses 2 of the 8 points in the head; only one plating fits per body part.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_plate_arm_l_light",
+  "condition": {
+   "u_has_bionics": "trl_imp_plate_arm_l_light"
+  },
+  "effect": [
+   {
+    "u_message": "Light dermal plating (left arm) - passive implant.  Uses slots: arm_l 2.  Plates of ceramic and polymer under the skin of the left arm: +4 bullet armor and +2 against blows and blades.  Uses 2 of the 6 points in the left arm; only one plating fits per body part.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_plate_leg_l_light",
+  "condition": {
+   "u_has_bionics": "trl_imp_plate_leg_l_light"
+  },
+  "effect": [
+   {
+    "u_message": "Light dermal plating (left leg) - passive implant.  Uses slots: leg_l 3.  Plates of ceramic and polymer under the skin of the left leg: +4 bullet armor and +2 against blows and blades.  Uses 3 of the 10 points in the left leg; only one plating fits per body part.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_plate_arm_r_light",
+  "condition": {
+   "u_has_bionics": "trl_imp_plate_arm_r_light"
+  },
+  "effect": [
+   {
+    "u_message": "Light dermal plating (right arm) - passive implant.  Uses slots: arm_r 2.  Plates of ceramic and polymer under the skin of the right arm: +4 bullet armor and +2 against blows and blades.  Uses 2 of the 6 points in the right arm; only one plating fits per body part.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_plate_leg_r_light",
+  "condition": {
+   "u_has_bionics": "trl_imp_plate_leg_r_light"
+  },
+  "effect": [
+   {
+    "u_message": "Light dermal plating (right leg) - passive implant.  Uses slots: leg_r 3.  Plates of ceramic and polymer under the skin of the right leg: +4 bullet armor and +2 against blows and blades.  Uses 3 of the 10 points in the right leg; only one plating fits per body part.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_plate_torso_light",
+  "condition": {
+   "u_has_bionics": "trl_imp_plate_torso_light"
+  },
+  "effect": [
+   {
+    "u_message": "Light dermal plating (torso) - passive implant.  Uses slots: torso 4.  Plates of ceramic and polymer under the skin of the torso: +6 bullet armor and +3 against blows and blades.  Uses 4 of the 24 points in the torso; only one plating fits per body part.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_spine_all",
+  "condition": {
+   "u_has_bionics": "trl_imp_spine_all"
+  },
+  "effect": [
+   {
+    "u_message": "Master spine - passive implant.  Uses slots: torso 6.  A full-stack spinal implant: +2 Strength, +2 Dexterity and +2 Intelligence.  Uses the 6 spine points of the torso; only one spine implant fits.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_arm_l_med",
+  "condition": {
+   "u_has_bionics": "trl_imp_arm_l_med"
+  },
+  "effect": [
+   {
+    "u_message": "Medical prosthetic arm (left) - passive implant.  Uses slots: arm_l 6.  A medical prosthetic arm replacing your left arm.  Uses 6 of the 6 points in the left arm (a complete replacement: the limb is fully cyberized); no stat bonus; absorbs damage at quality 50%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_arm_r_med",
+  "condition": {
+   "u_has_bionics": "trl_imp_arm_r_med"
+  },
+  "effect": [
+   {
+    "u_message": "Medical prosthetic arm (right) - passive implant.  Uses slots: arm_r 6.  A medical prosthetic arm replacing your right arm.  Uses 6 of the 6 points in the right arm (a complete replacement: the limb is fully cyberized); no stat bonus; absorbs damage at quality 50%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_leg_l_med",
+  "condition": {
+   "u_has_bionics": "trl_imp_leg_l_med"
+  },
+  "effect": [
+   {
+    "u_message": "Medical prosthetic leg (left) - passive implant.  Uses slots: leg_l 10.  A medical prosthetic leg replacing your left leg.  Uses 10 of the 10 points in the left leg (a complete replacement: the limb is fully cyberized); no stat bonus; absorbs damage at quality 50%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_leg_r_med",
+  "condition": {
+   "u_has_bionics": "trl_imp_leg_r_med"
+  },
+  "effect": [
+   {
+    "u_message": "Medical prosthetic leg (right) - passive implant.  Uses slots: leg_r 10.  A medical prosthetic leg replacing your right leg.  Uses 10 of the 10 points in the right leg (a complete replacement: the limb is fully cyberized); no stat bonus; absorbs damage at quality 50%.  Installing it rebuilds the limb.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
   "id": "trl_status_bio_metabolics",
   "condition": {
    "u_has_bionics": "bio_metabolics"
@@ -931,6 +1386,97 @@
   "effect": [
    {
     "u_message": "Muscle Augmentation - passive implant.  Uses slots: torso 6, arm_l 4, arm_r 4, leg_l 8, leg_r 8.  Your muscular system has been surgically enhanced with myomer fibers, giving you a +2 bonus to strength.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_spine_str_1",
+  "condition": {
+   "u_has_bionics": "trl_imp_spine_str_1"
+  },
+  "effect": [
+   {
+    "u_message": "Myomer spine I - passive implant.  Uses slots: torso 6.  Myomer spine I: a spinal implant that gives +1 Strength.  Uses the 6 spine points of the torso; only one spine implant fits.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_spine_str_2",
+  "condition": {
+   "u_has_bionics": "trl_imp_spine_str_2"
+  },
+  "effect": [
+   {
+    "u_message": "Myomer spine II - passive implant.  Uses slots: torso 6.  Myomer spine II: a spinal implant that gives +2 Strength.  Uses the 6 spine points of the torso; only one spine implant fits.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_spine_str_3",
+  "condition": {
+   "u_has_bionics": "trl_imp_spine_str_3"
+  },
+  "effect": [
+   {
+    "u_message": "Myomer spine III - passive implant.  Uses slots: torso 6.  Myomer spine III: a spinal implant that gives +3 Strength.  Uses the 6 spine points of the torso; only one spine implant fits.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_head_lace",
+  "condition": {
+   "u_has_bionics": "trl_imp_head_lace"
+  },
+  "effect": [
+   {
+    "u_message": "Neural lace - passive implant.  Uses slots: head 5.  Neural lace: a cranial implant that gives +2 Intelligence, +2 Perception.  Uses 5 of the 8 points in the head.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_spine_int_1",
+  "condition": {
+   "u_has_bionics": "trl_imp_spine_int_1"
+  },
+  "effect": [
+   {
+    "u_message": "Neural spine I - passive implant.  Uses slots: torso 6.  Neural spine I: a spinal implant that gives +1 Intelligence.  Uses the 6 spine points of the torso; only one spine implant fits.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_spine_int_2",
+  "condition": {
+   "u_has_bionics": "trl_imp_spine_int_2"
+  },
+  "effect": [
+   {
+    "u_message": "Neural spine II - passive implant.  Uses slots: torso 6.  Neural spine II: a spinal implant that gives +2 Intelligence.  Uses the 6 spine points of the torso; only one spine implant fits.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_spine_int_3",
+  "condition": {
+   "u_has_bionics": "trl_imp_spine_int_3"
+  },
+  "effect": [
+   {
+    "u_message": "Neural spine III - passive implant.  Uses slots: torso 6.  Neural spine III: a spinal implant that gives +3 Intelligence.  Uses the 6 spine points of the torso; only one spine implant fits.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
     "type": "neutral"
    }
   ]
@@ -1145,6 +1691,45 @@
  },
  {
   "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_spine_dex_1",
+  "condition": {
+   "u_has_bionics": "trl_imp_spine_dex_1"
+  },
+  "effect": [
+   {
+    "u_message": "Reflex spine I - passive implant.  Uses slots: torso 6.  Reflex spine I: a spinal implant that gives +1 Dexterity.  Uses the 6 spine points of the torso; only one spine implant fits.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_spine_dex_2",
+  "condition": {
+   "u_has_bionics": "trl_imp_spine_dex_2"
+  },
+  "effect": [
+   {
+    "u_message": "Reflex spine II - passive implant.  Uses slots: torso 6.  Reflex spine II: a spinal implant that gives +2 Dexterity.  Uses the 6 spine points of the torso; only one spine implant fits.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_spine_dex_3",
+  "condition": {
+   "u_has_bionics": "trl_imp_spine_dex_3"
+  },
+  "effect": [
+   {
+    "u_message": "Reflex spine III - passive implant.  Uses slots: torso 6.  Reflex spine III: a spinal implant that gives +3 Dexterity.  Uses the 6 spine points of the torso; only one spine implant fits.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
   "id": "trl_status_bio_remote",
   "condition": {
    "u_has_bionics": "bio_remote"
@@ -1197,6 +1782,45 @@
  },
  {
   "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_head_per_1",
+  "condition": {
+   "u_has_bionics": "trl_imp_head_per_1"
+  },
+  "effect": [
+   {
+    "u_message": "Sensor array - passive implant.  Uses slots: head 2.  Sensor array: a cranial implant that gives +1 Perception.  Uses 2 of the 8 points in the head.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_head_per_2",
+  "condition": {
+   "u_has_bionics": "trl_imp_head_per_2"
+  },
+  "effect": [
+   {
+    "u_message": "Sensor array II - passive implant.  Uses slots: head 3.  Sensor array II: a cranial implant that gives +2 Perception.  Uses 3 of the 8 points in the head.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_head_per_3",
+  "condition": {
+   "u_has_bionics": "trl_imp_head_per_3"
+  },
+  "effect": [
+   {
+    "u_message": "Sensor array III - passive implant.  Uses slots: head 4.  Sensor array III: a cranial implant that gives +3 Perception.  Uses 4 of the 8 points in the head.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
   "id": "trl_status_bio_painkiller",
   "condition": {
    "u_has_bionics": "bio_painkiller"
@@ -1230,6 +1854,19 @@
   "effect": [
    {
     "u_message": "Shotgun Arm - toggled implant.  Power: activation cost 50 J.  Uses slots: arm_l 12.  Concealed in your left arm is a single shot 12 gauge shotgun.  Activate the bionic to fire and reload the shotgun.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_servos",
+  "condition": {
+   "u_has_bionics": "trl_imp_servos"
+  },
+  "effect": [
+   {
+    "u_message": "Silent servos - passive implant.  Uses slots: leg_l 3, leg_r 3.  Damped joint servos in both legs: your footsteps make far less noise.  Uses 3 points in each leg.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
     "type": "neutral"
    }
   ]
@@ -1704,4995 +2341,25 @@
  },
  {
   "type": "effect_on_condition",
+  "id": "trl_status_trl_imp_blade_r",
+  "condition": {
+   "u_has_bionics": "trl_imp_blade_r"
+  },
+  "effect": [
+   {
+    "u_message": "Wrist blade (right) - passive implant.  Uses slots: arm_r 3.  A monomolecular blade that slides out of the right wrist.  Uses 3 of the 6 points in the arm.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "type": "neutral"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
   "id": "trl_body_overview",
   "effect": [
    {
-    "math": [
-     "u_trl_cnt_head",
-     "=",
-     "0"
+    "run_eocs": [
+     "trl_body_check"
     ]
-   },
-   {
-    "math": [
-     "u_trl_cnt_eyes",
-     "=",
-     "0"
-    ]
-   },
-   {
-    "math": [
-     "u_trl_cnt_mouth",
-     "=",
-     "0"
-    ]
-   },
-   {
-    "math": [
-     "u_trl_cnt_torso",
-     "=",
-     "0"
-    ]
-   },
-   {
-    "math": [
-     "u_trl_cnt_arm_l",
-     "=",
-     "0"
-    ]
-   },
-   {
-    "math": [
-     "u_trl_cnt_arm_r",
-     "=",
-     "0"
-    ]
-   },
-   {
-    "math": [
-     "u_trl_cnt_hand_l",
-     "=",
-     "0"
-    ]
-   },
-   {
-    "math": [
-     "u_trl_cnt_hand_r",
-     "=",
-     "0"
-    ]
-   },
-   {
-    "math": [
-     "u_trl_cnt_leg_l",
-     "=",
-     "0"
-    ]
-   },
-   {
-    "math": [
-     "u_trl_cnt_leg_r",
-     "=",
-     "0"
-    ]
-   },
-   {
-    "math": [
-     "u_trl_cnt_foot_l",
-     "=",
-     "0"
-    ]
-   },
-   {
-    "math": [
-     "u_trl_cnt_foot_r",
-     "=",
-     "0"
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_adrenaline"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ads"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ads"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ads"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ads"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ads"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ads"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_alarm"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_alarm"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ankles"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ankles"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ar"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_eyes",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_armor_arms"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_armor_arms"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_armor_arms"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_armor_arms"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_armor_eyes"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_eyes",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_armor_head"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_armor_head"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_mouth",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_armor_legs"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_armor_legs"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_armor_legs"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_armor_legs"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_armor_torso"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_batteries"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_blade"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_blade"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_blindfold"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_blood_anal"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_blood_filter"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_cable"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_carbon"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_carbon"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_carbon"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_carbon"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_carbon"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_carbon"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_carbon"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_carbon"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_carbon"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_carbon"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_carbon"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_mouth",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_chain_lightning"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_chain_lightning"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_claws"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_claws"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_climate"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_climate"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_climate"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_climate"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_climate"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_climate"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_climate"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_climate"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_climate"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_climate"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_cloak"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_cloak"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_cloak"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_cloak"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_cloak"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_cloak"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_cloak"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_cloak"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_cloak"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_cloak"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_cqb"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_deformity"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_deformity"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_mouth",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_dex_enhancer"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_dex_enhancer"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_dex_enhancer"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_dex_enhancer"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_dex_enhancer"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_dex_enhancer"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_digestion"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_dis_acid"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_dis_acid"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_dis_acid"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_dis_acid"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_dis_acid"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_dis_shock"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_drain"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_earplugs"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ears"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_electrokit"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_electrokit"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_emp"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_emp"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_emp_armgun"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_emp_armgun"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ethanol"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_evap"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_eye_enhancer"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_eyes",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_eye_optic"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_eyes",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_face_mask"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_face_mask"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_mouth",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_faraday"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_faraday"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_faraday"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_faraday"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_faraday"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_faraday"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_faraday"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_faraday"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_faraday"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_faraday"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_faulty_electromagnetic_leak"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_faulty_grossfood"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_faulty_grossfood"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_mouth",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_fingerhack"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_fitnessband"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_flashbang"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_flashbang"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_flashbang"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_flashbang"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_flashbang"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_flashlight"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_flashlight_highmode"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_fuel_cell_gasoline"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_geiger"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_geiger"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_geiger"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_geiger"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_geiger"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_geiger"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_gills"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_gills"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_gills"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_mouth",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_glowy"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ground_sonar"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ground_sonar"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heat_absorb"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heat_absorb"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heat_absorb"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heat_absorb"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heat_absorb"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heat_absorb"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heat_absorb"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heat_absorb"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heat_absorb"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heat_absorb"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heatsink"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heatsink"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heatsink"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heatsink"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heatsink"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heatsink"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heatsink"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heatsink"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heatsink"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_heatsink"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_hydraulics"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_hydraulics"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_hydraulics"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_hydraulics"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_hydraulics"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_infrared"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_eyes",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_int_enhancer"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_itchy"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_itchy"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_jointservo"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_jointservo"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_lampoil"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_laser"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_leaky"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_leukocyte"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_lighter"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_lockpick"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_magnet"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_membrane"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_eyes",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_memory"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_metabolics"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_meteorologist"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_meteorologist"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_mp3"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_multimeter"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_multimeter"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_nanobots"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_night"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_night_vision"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_eyes",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_noise"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_noise"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_noise"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_noise"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_noise"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_nostril"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_nostril"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_mouth",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ods"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ods"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ods"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ods"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ods"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ods"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_painkiller"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_pitch_perfect"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_eyes",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_pitch_perfect"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_pitch_perfect"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_pitch_perfect"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_pitch_perfect"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_pokedeye"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_eyes",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_power_storage"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_power_storage_mkII"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_power_weakness"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_power_weakness"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_power_weakness"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_power_weakness"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_power_weakness"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_probability_travel"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_probability_travel"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_probability_travel"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_probability_travel"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_probability_travel"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_probability_travel"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_probability_travel"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_purifier"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_purifier"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_mouth",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_radio"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_radleak"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_radscrubber"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_radscrubber"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_radscrubber"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_radscrubber"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_radscrubber"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_razors"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_razors"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_recoil"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_recoil"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_recoil"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_recoil"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_recycler"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_remote"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_resonator"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_resonator"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_resonator"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_resonator"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_resonator"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_resonator"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_scent_mask"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_scent_mask"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_scent_mask"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_scent_mask"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_scent_mask"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_scent_mask"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_shakes"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_shakes"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_shakes"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_shakes"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_shakes"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_shock"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_shock"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_shock"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_shock"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_shock"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_shockwave"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_shotgun"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_sleep_shutdown"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_sleepy"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_sonar"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_soporific"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_spasm"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_speed"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_speed"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_speed"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_speed"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_speed"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_speed"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_speed"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_speed"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_speed"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_stiff"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_stiff"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_stiff"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_stiff"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_stiff"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_stiff"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_stiff"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_str_enhancer"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_str_enhancer"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_str_enhancer"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_str_enhancer"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_str_enhancer"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_sunglasses"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_eyes",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_surgical_razor"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_surgical_razor"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_synaptic_regen"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_synaptic_regen"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_synlungs"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_syringe"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_targeting"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_eyes",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_targeting"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_targeting"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_targeting"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_targeting"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_taser"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_taste_blocker"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_taste_blocker"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_mouth",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_tattoo_led"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_teleport"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_teleport"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_teleport"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_teleport"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_teleport"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_thumbs"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_thumbs"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_time_freeze"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_time_freeze"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_time_freeze"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_time_freeze"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_time_freeze"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_time_freeze"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_time_freeze"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_time_freeze"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_time_freeze"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_time_freeze"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_tools"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_tools"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_tools"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_tools"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_torsionratchet"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_torsionratchet"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_torsionratchet"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_torsionratchet"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_trip"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_eyes",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_uncanny_dodge"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_uncanny_dodge"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_uncanny_dodge"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_uncanny_dodge"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_uncanny_dodge"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_uncanny_dodge"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_uncanny_dodge"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_foot_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_ups"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_voice"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_voice"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_mouth",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_voice_b"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_voice_b"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_mouth",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_watch"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_water_extractor"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_water_extractor"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_hand_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_weight"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_weight"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_weight"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_arm_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_weight"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "bio_weight"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "trl_bio_cyberbrain"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "trl_bio_reflex"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_torso",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "trl_bio_reflex"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_l",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "trl_bio_reflex"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_leg_r",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "trl_bio_threat_sense"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_eyes",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "u_has_bionics": "trl_bio_threat_sense"
-    },
-    "then": [
-     {
-      "math": [
-       "u_trl_cnt_head",
-       "+=",
-       "1"
-      ]
-     }
-    ]
-   },
-   {
-    "u_message": "Implants per body part.  Head: <u_val:trl_cnt_head>.  Eyes: <u_val:trl_cnt_eyes>.  Mouth: <u_val:trl_cnt_mouth>.  Torso: <u_val:trl_cnt_torso>.  Left arm: <u_val:trl_cnt_arm_l>.  Right arm: <u_val:trl_cnt_arm_r>.  Left hand: <u_val:trl_cnt_hand_l>.  Right hand: <u_val:trl_cnt_hand_r>.  Left leg: <u_val:trl_cnt_leg_l>.  Right leg: <u_val:trl_cnt_leg_r>.  Left foot: <u_val:trl_cnt_foot_l>.  Right foot: <u_val:trl_cnt_foot_r>.",
-    "type": "neutral"
    }
   ]
  },
@@ -6711,6 +2378,10 @@
        "trl_status_bio_dis_acid",
        "trl_status_bio_ads",
        "trl_status_bio_adrenaline",
+       "trl_status_trl_imp_arm_l_adv",
+       "trl_status_trl_imp_arm_r_adv",
+       "trl_status_trl_imp_leg_l_adv",
+       "trl_status_trl_imp_leg_r_adv",
        "trl_status_bio_evap",
        "trl_status_bio_purifier",
        "trl_status_bio_alarm",
@@ -6718,7 +2389,10 @@
        "trl_status_bio_night",
        "trl_status_bio_voice_b",
        "trl_status_bio_surgical_razor",
-       "trl_status_trl_bio_cyberbrain",
+       "trl_status_trl_imp_arm_l_basic",
+       "trl_status_trl_imp_arm_r_basic",
+       "trl_status_trl_imp_leg_l_basic",
+       "trl_status_trl_imp_leg_r_basic",
        "trl_status_bio_batteries",
        "trl_status_bio_claws",
        "trl_status_bio_nostril",
@@ -6733,7 +2407,14 @@
        "trl_status_bio_chain_lightning",
        "trl_status_bio_cloak",
        "trl_status_bio_cqb",
+       "trl_status_trl_imp_gun_l",
+       "trl_status_trl_imp_gun_r",
+       "trl_status_trl_imp_head_int_1",
+       "trl_status_trl_imp_head_int_2",
+       "trl_status_trl_imp_head_int_3",
        "trl_status_bio_flashlight",
+       "trl_status_trl_bio_cyberbrain",
+       "trl_status_trl_imp_stomach",
        "trl_status_bio_eye_enhancer",
        "trl_status_bio_faraday",
        "trl_status_bio_emp",
@@ -6742,6 +2423,10 @@
        "trl_status_bio_faulty_electromagnetic_leak",
        "trl_status_bio_magnet",
        "trl_status_bio_shock",
+       "trl_status_trl_imp_arm_l_elite",
+       "trl_status_trl_imp_arm_r_elite",
+       "trl_status_trl_imp_leg_l_elite",
+       "trl_status_trl_imp_leg_r_elite",
        "trl_status_bio_emp_armgun",
        "trl_status_bio_sleepy",
        "trl_status_bio_ears",
@@ -6758,6 +2443,12 @@
        "trl_status_bio_fuel_cell_gasoline",
        "trl_status_bio_glowy",
        "trl_status_bio_heat_absorb",
+       "trl_status_trl_imp_plate_head_heavy",
+       "trl_status_trl_imp_plate_arm_l_heavy",
+       "trl_status_trl_imp_plate_leg_l_heavy",
+       "trl_status_trl_imp_plate_arm_r_heavy",
+       "trl_status_trl_imp_plate_leg_r_heavy",
+       "trl_status_trl_imp_plate_torso_heavy",
        "trl_status_bio_hydraulics",
        "trl_status_bio_night_vision",
        "trl_status_bio_radio",
@@ -6776,10 +2467,28 @@
        "trl_status_bio_leaky",
        "trl_status_bio_tattoo_led",
        "trl_status_bio_leukocyte",
+       "trl_status_trl_imp_plate_head_light",
+       "trl_status_trl_imp_plate_arm_l_light",
+       "trl_status_trl_imp_plate_leg_l_light",
+       "trl_status_trl_imp_plate_arm_r_light",
+       "trl_status_trl_imp_plate_leg_r_light",
+       "trl_status_trl_imp_plate_torso_light",
+       "trl_status_trl_imp_spine_all",
+       "trl_status_trl_imp_arm_l_med",
+       "trl_status_trl_imp_arm_r_med",
+       "trl_status_trl_imp_leg_l_med",
+       "trl_status_trl_imp_leg_r_med",
        "trl_status_bio_metabolics",
        "trl_status_bio_blade",
        "trl_status_bio_spasm",
        "trl_status_bio_str_enhancer",
+       "trl_status_trl_imp_spine_str_1",
+       "trl_status_trl_imp_spine_str_2",
+       "trl_status_trl_imp_spine_str_3",
+       "trl_status_trl_imp_head_lace",
+       "trl_status_trl_imp_spine_int_1",
+       "trl_status_trl_imp_spine_int_2",
+       "trl_status_trl_imp_spine_int_3",
        "trl_status_bio_membrane",
        "trl_status_bio_noise",
        "trl_status_bio_ods",
@@ -6796,13 +2505,20 @@
        "trl_status_bio_recoil",
        "trl_status_bio_recycler",
        "trl_status_trl_bio_reflex",
+       "trl_status_trl_imp_spine_dex_1",
+       "trl_status_trl_imp_spine_dex_2",
+       "trl_status_trl_imp_spine_dex_3",
        "trl_status_bio_remote",
        "trl_status_bio_nanobots",
        "trl_status_bio_gills",
        "trl_status_bio_thumbs",
+       "trl_status_trl_imp_head_per_1",
+       "trl_status_trl_imp_head_per_2",
+       "trl_status_trl_imp_head_per_3",
        "trl_status_bio_painkiller",
        "trl_status_bio_shockwave",
        "trl_status_bio_shotgun",
+       "trl_status_trl_imp_servos",
        "trl_status_bio_sleep_shutdown",
        "trl_status_bio_resonator",
        "trl_status_bio_soporific",
@@ -6838,13 +2554,18 @@
        "trl_status_bio_mp3",
        "trl_status_bio_meteorologist",
        "trl_status_bio_stiff",
-       "trl_status_bio_dex_enhancer"
+       "trl_status_bio_dex_enhancer",
+       "trl_status_trl_imp_blade_r"
       ],
       "names": [
-       "Body overview (implants per body part)",
+       "Body overview (implant points and condition)",
        "Acidic Discharge",
        "Active Defense System",
        "Adrenaline Pump",
+       "Advanced cyber arm (left)",
+       "Advanced cyber arm (right)",
+       "Advanced cyber leg (left)",
+       "Advanced cyber leg (right)",
        "Aero-Evaporator",
        "Air Filtration System",
        "Alarm System",
@@ -6852,7 +2573,10 @@
        "Artificial Night Generator",
        "AudioVox",
        "Autonomous Surgical Scalpels",
-       "Cyberbrain Mk I",
+       "Basic cyber arm (left)",
+       "Basic cyber arm (right)",
+       "Basic cyber leg (left)",
+       "Basic cyber leg (right)",
        "Battery System",
        "Bionic Claws",
        "Bionic Nostril",
@@ -6867,7 +2591,14 @@
        "Chain Lightning",
        "Cloaking System",
        "Close Quarters Battle",
+       "Concealed arm gun (left)",
+       "Concealed arm gun (right)",
+       "Cortical coprocessor",
+       "Cortical coprocessor II",
+       "Cortical coprocessor III",
        "Cranial Flashlight",
+       "Cyberbrain Mk I",
+       "Cyberstomach",
        "Diamond Cornea",
        "Dielectric Capacitance System",
        "Directional EMP",
@@ -6876,6 +2607,10 @@
        "Electromagnetic Leak",
        "Electromagnetic Unit",
        "Electroshock Unit",
+       "Elite cyber arm (left)",
+       "Elite cyber arm (right)",
+       "Elite cyber leg (left)",
+       "Elite cyber leg (right)",
        "EMP Projector",
        "Endocrine Enervator",
        "Enhanced Hearing",
@@ -6892,6 +2627,12 @@
        "Gasoline Fuel Cell",
        "Glowy Thing",
        "Heat Drain",
+       "Heavy dermal plating (head)",
+       "Heavy dermal plating (left arm)",
+       "Heavy dermal plating (left leg)",
+       "Heavy dermal plating (right arm)",
+       "Heavy dermal plating (right leg)",
+       "Heavy dermal plating (torso)",
        "Hydraulic Muscles",
        "Implanted Night Vision",
        "Infolink",
@@ -6910,10 +2651,28 @@
        "Leaky Bionic",
        "LED Tattoo",
        "Leukocyte Breeder System",
+       "Light dermal plating (head)",
+       "Light dermal plating (left arm)",
+       "Light dermal plating (left leg)",
+       "Light dermal plating (right arm)",
+       "Light dermal plating (right leg)",
+       "Light dermal plating (torso)",
+       "Master spine",
+       "Medical prosthetic arm (left)",
+       "Medical prosthetic arm (right)",
+       "Medical prosthetic leg (left)",
+       "Medical prosthetic leg (right)",
        "Metabolic Interchange",
        "Monomolecular Blade",
        "Motor Control Overstimulator",
        "Muscle Augmentation",
+       "Myomer spine I",
+       "Myomer spine II",
+       "Myomer spine III",
+       "Neural lace",
+       "Neural spine I",
+       "Neural spine II",
+       "Neural spine III",
        "Nictitating Membrane",
        "Noisemaker",
        "Offensive Defense System",
@@ -6930,13 +2689,20 @@
        "Recoil Compensators",
        "Recycler Unit",
        "Reflex Accelerator",
+       "Reflex spine I",
+       "Reflex spine II",
+       "Reflex spine III",
        "Remote Controller",
        "Repair Nanobots",
        "Respirator",
        "Self-Locking Thumbs",
+       "Sensor array",
+       "Sensor array II",
+       "Sensor array III",
        "Sensory Dulling",
        "Shockwave Generator",
        "Shotgun Arm",
+       "Silent servos",
        "Sleep Mode Shutdown",
        "Sonic Resonator",
        "Soporific Induction",
@@ -6972,13 +2738,18 @@
        "WearMan",
        "Weather Reader",
        "Wire-Induced Stiffness",
-       "Wired Reflexes"
+       "Wired Reflexes",
+       "Wrist blade (right)"
       ],
       "descriptions": [
-       "How many installed implants occupy each part of your body.",
+       "Implant points used in each part of your body, and the condition of the implants.",
        "Acidic Discharge - passive implant.  Uses slots: torso 3, arm_l 1, arm_r 1, leg_l 2, leg_r 2.  A malfunctioning bionic which occasionally discharges acid into your muscles, causing sharp pain and minor damage.",
        "Active Defense System - toggled implant.  Power: activation cost 1 kJ.  Power: running cost 1 kJ.  Power: trigger cost 10 kJ.  Uses slots: torso 10, head 1, arm_l 1, arm_r 1, leg_l 2, leg_r 2.  A thin forcefield surrounds your body, continually draining power.  Everything loses velocity when penetrating this field, which results in reduced amount of dealt damage at the cost of your bionic energy.  Bullets and stabbing attacks will lose more velocity than cutting attacks and those in turn more than bashing attacks.",
        "Adrenaline Pump - activated implant.  Power: activation cost 5 J.  Uses slots: torso 4.  A stimulator system has been surgically implanted alongside your adrenal glands, allowing you to trigger your body's adrenaline response at the cost of some bionic power.",
+       "Advanced cyber arm (left) - passive implant.  Uses slots: arm_l 4.  A advanced cyber arm replacing your left arm.  Uses 4 of the 6 points in the left arm; +1 Strength, +1 Dexterity; absorbs damage at quality 85%.  Installing it rebuilds the limb.",
+       "Advanced cyber arm (right) - passive implant.  Uses slots: arm_r 4.  A advanced cyber arm replacing your right arm.  Uses 4 of the 6 points in the right arm; +1 Strength, +1 Dexterity; absorbs damage at quality 85%.  Installing it rebuilds the limb.",
+       "Advanced cyber leg (left) - passive implant.  Uses slots: leg_l 6.  A advanced cyber leg replacing your left leg.  Uses 6 of the 10 points in the left leg; +1 Dexterity, +1 Strength; absorbs damage at quality 85%.  Installing it rebuilds the limb.",
+       "Advanced cyber leg (right) - passive implant.  Uses slots: leg_r 6.  A advanced cyber leg replacing your right leg.  Uses 6 of the 10 points in the right leg; +1 Dexterity, +1 Strength; absorbs damage at quality 85%.  Installing it rebuilds the limb.",
        "Aero-Evaporator - toggled implant.  Power: running cost 60 J.  Uses slots: torso 5.  This unit draws moisture from the surrounding air, which slowly trickles directly into your blood stream.  It may fail in very dry environments.",
        "Air Filtration System - passive implant.  Uses slots: torso 5, mouth 1.  Surgically implanted in your trachea is an advanced filtration system.  If toxins or airborne diseases find their way into your windpipe, the filter will attempt to remove them.",
        "Alarm System - toggled implant.  Power: activation cost 1 J.  Power: running cost 1 J.  Power: trigger cost 5 J.  Uses slots: torso 2, head 1.  A motion-detecting alarm system will notice almost all movement within a fifteen-foot radius, and will silently alert you.  This is very useful during sleep, or if you suspect a cloaked pursuer.",
@@ -6986,7 +2757,10 @@
        "Artificial Night Generator - toggled implant.  Power: activation cost 9 kJ.  Power: running cost 9 kJ.  Uses slots: torso 16.  When active, this bionic eliminates all light within a 2 tile radius through destructive interference.",
        "AudioVox - passive implant.  Uses slots: torso 3, mouth 2.  Hailing from a world choked with neon smog, and appreciated by Exodii artists, the AudioVox implant allows you to change, remodulate, and even autotune your voice.  It also causes vocalizations /(such as shouts and singing/) to be much louder.  It consists of an electronic voice box, synthetic larynx and multiple speakers implanted throughout your throat.",
        "Autonomous Surgical Scalpels - toggled implant.  Uses slots: arm_r 2, arm_l 2.  A system of surgical grade scalpels is implanted in your forearms, extending from just above your wrists.  They allow you to make automated precise cuts and can also be used as a high-quality butchering tool.",
-       "Cyberbrain Mk I - passive implant.  Uses slots: head 8.  A cyberbrain interfaced with your nervous system.  Control Value limit 4.  Required to run nanohacks.",
+       "Basic cyber arm (left) - passive implant.  Uses slots: arm_l 5.  A basic cyber arm replacing your left arm.  Uses 5 of the 6 points in the left arm; +1 Strength; absorbs damage at quality 70%.  Installing it rebuilds the limb.",
+       "Basic cyber arm (right) - passive implant.  Uses slots: arm_r 5.  A basic cyber arm replacing your right arm.  Uses 5 of the 6 points in the right arm; +1 Strength; absorbs damage at quality 70%.  Installing it rebuilds the limb.",
+       "Basic cyber leg (left) - passive implant.  Uses slots: leg_l 8.  A basic cyber leg replacing your left leg.  Uses 8 of the 10 points in the left leg; +1 Dexterity; absorbs damage at quality 70%.  Installing it rebuilds the limb.",
+       "Basic cyber leg (right) - passive implant.  Uses slots: leg_r 8.  A basic cyber leg replacing your right leg.  Uses 8 of the 10 points in the right leg; +1 Dexterity; absorbs damage at quality 70%.  Installing it rebuilds the limb.",
        "Battery System - toggled implant.  Uses slots: torso 20.  You have a battery draining attachment, and thus can make use of the energy contained in normal, everyday batteries.  Use bionic menu to drain charge from a battery.  Can be toggled on and off at will.",
        "Bionic Claws - toggled implant.  Power: activation cost 25 J.  Uses slots: hand_l 4, hand_r 4.  Vicious claws have been surgically installed inside your fingers, allowing you to extend and retract them at the cost of a small amount of power.  These do considerable cutting damage, but prevent you from holding anything else while extended.",
        "Bionic Nostril - passive implant.  Uses slots: head 2, mouth 1.  You're really not sure how the CBM ended up in your nose, but no matter how it got there this badly misplaced bionic makes it difficult to breathe.  Increases mouth encumbrance by ten.",
@@ -7001,7 +2775,14 @@
        "Chain Lightning - activated implant.  Uses slots: torso 16, arm_l 4.  Your body is equipped with a chain lightning generator, allowing you to emit a blast of lightning at a target, leaving a trail of lightning in its wake, jumping to additional targets within 4 tiles of the previous target.",
        "Cloaking System - toggled implant.  Power: activation cost 30 kJ.  Power: running cost 30 kJ.  Uses slots: torso 8, head 2, arm_l 3, arm_r 3, hand_l 1, hand_r 1, leg_l 4, leg_r 4, foot_l 1, foot_r 1.  This high-power system uses a set of cameras and LEDs to make you blend into your background, rendering you fully invisible to normal vision.  However, you may be detected by infrared, sonar, etc.",
        "Close Quarters Battle - toggled implant.  Power: activation cost 20 J.  Power: running cost 20 J.  Uses slots: head 3.  Bionic processors and databanks, loaded with martial arts combat programs, are surgically integrated into your nervous system.  While active, the CQB module will improve your hand-to-hand combat skills, but prevents you from improving them through combat experience.",
+       "Concealed arm gun (left) - passive implant.  Uses slots: arm_l 3.  A power-fed pistol folded inside the left forearm.  Activate it to raise the gun; it fires bullets using bionic power.  Uses 3 of the 6 points in the arm.",
+       "Concealed arm gun (right) - passive implant.  Uses slots: arm_r 3.  A power-fed pistol folded inside the right forearm.  Activate it to raise the gun; it fires bullets using bionic power.  Uses 3 of the 6 points in the arm.",
+       "Cortical coprocessor - passive implant.  Uses slots: head 2.  Cortical coprocessor: a cranial implant that gives +1 Intelligence.  Uses 2 of the 8 points in the head.",
+       "Cortical coprocessor II - passive implant.  Uses slots: head 3.  Cortical coprocessor II: a cranial implant that gives +2 Intelligence.  Uses 3 of the 8 points in the head.",
+       "Cortical coprocessor III - passive implant.  Uses slots: head 4.  Cortical coprocessor III: a cranial implant that gives +3 Intelligence.  Uses 4 of the 8 points in the head.",
        "Cranial Flashlight - toggled implant.  Power: activation cost 2 J.  Power: running cost 2 J.  Uses slots: head 1.  Surgically mounted between your eyes is a small but powerful LED flashlight.",
+       "Cyberbrain Mk I - passive implant.  Uses slots: head 3.  A cyberbrain interfaced with your nervous system.  Control Value limit 4.  Required to run nanohacks.",
+       "Cyberstomach - toggled implant.  Uses slots: torso 4.  A synthetic stomach that turns food into bionic power (toggle it on) and lets you eat cyber rations, which an ordinary stomach cannot digest.  Uses 4 of the 24 points in the torso.",
        "Diamond Cornea - passive implant.  Uses slots: eyes 1.  Your vision is greatly enhanced, giving you a +2 bonus to perception.",
        "Dielectric Capacitance System - toggled implant.  Power: activation cost 5 J.  Power: running cost 5 J.  Uses slots: torso 8, head 2, arm_l 2, arm_r 2, hand_l 1, hand_r 1, leg_l 3, leg_r 3, foot_l 1, foot_r 1.  Throughout your body lies a network of miniature piezoelectric capacitors which can be charged with bionic power to temporarily protect you from external electrical discharge.",
        "Directional EMP - activated implant.  Power: activation cost 50 kJ.  Uses slots: arm_l 6, hand_l 1.  Surgically mounted in your left arm and the palm of your left hand are small parabolic EMP field generators.  You may use power to fire a wide but short-ranged blast that will disable electronics and robots.",
@@ -7010,6 +2791,10 @@
        "Electromagnetic Leak - passive implant.  Adds -25 kJ of power capacity.  A broken implant that sends electromagnetic impulses that reduce other implants capacity to store charge.",
        "Electromagnetic Unit - activated implant.  Power: activation cost 15 kJ.  Uses slots: arm_l 9.  Surgically embedded in your left arm is a powerful electromagnet, allowing you to use your own strength to pull all nearby magnetic objects towards you.  Unlucky bystanders might be injured or killed by flying objects.",
        "Electroshock Unit - toggled implant.  Power: trigger cost 2 kJ.  Uses slots: torso 8, arm_l 3, arm_r 3, hand_l 1, hand_r 1.  While fighting unarmed, or with a weapon that conducts electricity, there is a chance that a successful hit will shock your opponent, inflicting extra damage and disabling them temporarily at the cost of some energy.",
+       "Elite cyber arm (left) - passive implant.  Uses slots: arm_l 3.  A elite cyber arm replacing your left arm.  Uses 3 of the 6 points in the left arm; +2 Strength, +1 Dexterity; absorbs damage at quality 100%.  Installing it rebuilds the limb.",
+       "Elite cyber arm (right) - passive implant.  Uses slots: arm_r 3.  A elite cyber arm replacing your right arm.  Uses 3 of the 6 points in the right arm; +2 Strength, +1 Dexterity; absorbs damage at quality 100%.  Installing it rebuilds the limb.",
+       "Elite cyber leg (left) - passive implant.  Uses slots: leg_l 5.  A elite cyber leg replacing your left leg.  Uses 5 of the 10 points in the left leg; +2 Dexterity, +1 Strength; absorbs damage at quality 100%.  Installing it rebuilds the limb.",
+       "Elite cyber leg (right) - passive implant.  Uses slots: leg_r 5.  A elite cyber leg replacing your right leg.  Uses 5 of the 10 points in the right leg; +2 Dexterity, +1 Strength; absorbs damage at quality 100%.  Installing it rebuilds the limb.",
        "EMP Projector - activated implant.  Uses slots: arm_r 8, hand_r 2.  A ranged EMP generator system is implanted in your right arm and the palm of your right hand.  The system fires precise, single-target pulses that require time to aim.  Extremely effective against electronic targets but mostly useless otherwise.",
        "Endocrine Enervator - passive implant.  Uses slots: head 2.  Through a combination of psychochemical manipulation and old fashioned electrical nerve stimulation, this malfunctioning bionic alters your brain chemistry in such a way as to cause sleepiness.  You will find yourself tiring a bit faster than before.",
        "Enhanced Hearing - toggled implant.  Uses slots: head 2.  When this bionic is active, your hearing will be drastically improved, allowing you to hear ten times better than the average person.  Additionally, high-intensity sounds will be automatically dampened before they can damage your hearing.",
@@ -7026,6 +2811,12 @@
        "Gasoline Fuel Cell - toggled implant.  Uses slots: torso 8.  A small gasoline fuel cell fixed to your scapula.  Despite its limited energy output compared to other fuel cells, this device still produces a significant amount of heat dissipated through a heat exhaust protruding from your back.  A diffuse network of bio-plastic bladders has been meshed with your circulatory system and serves as a fuel tank.",
        "Glowy Thing - passive implant.  Power: trigger cost 1 kJ.  You don't think that capacitor is *meant* to glow, but it does, and usually at bad times.  A malfunctioning bionic randomly turns on and off, causing you to glow and making you visible in the dark without improving how much you can see in the slightest.",
        "Heat Drain - toggled implant.  Power: trigger cost 3 kJ.  Uses slots: torso 6, head 3, arm_l 3, arm_r 3, hand_l 1, hand_r 1, leg_l 5, leg_r 5, foot_l 2, foot_r 2.  While fighting unarmed against a warm-blooded opponent, there is a chance that a successful hit will drain body heat, inflicting a small amount of extra damage, and increasing your power reserves slightly.",
+       "Heavy dermal plating (head) - passive implant.  Uses slots: head 3.  Plates of ceramic and polymer under the skin of the head: +8 bullet armor and +4 against blows and blades.  Uses 3 of the 8 points in the head; only one plating fits per body part.",
+       "Heavy dermal plating (left arm) - passive implant.  Uses slots: arm_l 3.  Plates of ceramic and polymer under the skin of the left arm: +8 bullet armor and +4 against blows and blades.  Uses 3 of the 6 points in the left arm; only one plating fits per body part.",
+       "Heavy dermal plating (left leg) - passive implant.  Uses slots: leg_l 5.  Plates of ceramic and polymer under the skin of the left leg: +8 bullet armor and +4 against blows and blades.  Uses 5 of the 10 points in the left leg; only one plating fits per body part.",
+       "Heavy dermal plating (right arm) - passive implant.  Uses slots: arm_r 3.  Plates of ceramic and polymer under the skin of the right arm: +8 bullet armor and +4 against blows and blades.  Uses 3 of the 6 points in the right arm; only one plating fits per body part.",
+       "Heavy dermal plating (right leg) - passive implant.  Uses slots: leg_r 5.  Plates of ceramic and polymer under the skin of the right leg: +8 bullet armor and +4 against blows and blades.  Uses 5 of the 10 points in the right leg; only one plating fits per body part.",
+       "Heavy dermal plating (torso) - passive implant.  Uses slots: torso 8.  Plates of ceramic and polymer under the skin of the torso: +11 bullet armor and +5 against blows and blades.  Uses 8 of the 24 points in the torso; only one plating fits per body part.",
        "Hydraulic Muscles - toggled implant.  Power: activation cost 10 kJ.  Power: running cost 10 kJ.  Uses slots: torso 10, arm_l 8, arm_r 8, leg_l 10, leg_r 10.  While activated, your muscles will be greatly enhanced, increasing your strength by 20.",
        "Implanted Night Vision - toggled implant.  Power: activation cost 10 J.  Power: running cost 10 J.  Uses slots: eyes 1.  When active, this bionic will amplify existing light, allowing you to see in the dark.",
        "Infolink - passive implant.  Uses slots: head 2.  A compact communications device has been built into your ears, enabling you to communicate over radio waves.",
@@ -7044,10 +2835,28 @@
        "Leaky Bionic - passive implant.  Uses slots: torso 5.  This botched piece of bionic hardware slowly leaks electrolytic compounds, piezoelectric nanomaterials, and other high-tech contaminants into your bloodstream.  Needless to say, this is not good for your health.",
        "LED Tattoo - toggled implant.  Power: activation cost 1 J.  Power: running cost 1 J.  A small LED display just beneath your dermal layer can be illuminated on command to show patterns of your choice at dim or bright luminosity.  It doesn't provide enough light to comfortably read or craft, but it can suffice if you have nothing else.",
        "Leukocyte Breeder System - toggled implant.  Power: activation cost 5 J.  Power: running cost 5 J.  Uses slots: torso 10.  You are equipped with bionic stimulators which augment your haematopoiesis system, allowing you to accelerate white blood cell production using bionic power.  It is supposed to run continuously and may cause unpleasant side effects when turned off.",
+       "Light dermal plating (head) - passive implant.  Uses slots: head 2.  Plates of ceramic and polymer under the skin of the head: +4 bullet armor and +2 against blows and blades.  Uses 2 of the 8 points in the head; only one plating fits per body part.",
+       "Light dermal plating (left arm) - passive implant.  Uses slots: arm_l 2.  Plates of ceramic and polymer under the skin of the left arm: +4 bullet armor and +2 against blows and blades.  Uses 2 of the 6 points in the left arm; only one plating fits per body part.",
+       "Light dermal plating (left leg) - passive implant.  Uses slots: leg_l 3.  Plates of ceramic and polymer under the skin of the left leg: +4 bullet armor and +2 against blows and blades.  Uses 3 of the 10 points in the left leg; only one plating fits per body part.",
+       "Light dermal plating (right arm) - passive implant.  Uses slots: arm_r 2.  Plates of ceramic and polymer under the skin of the right arm: +4 bullet armor and +2 against blows and blades.  Uses 2 of the 6 points in the right arm; only one plating fits per body part.",
+       "Light dermal plating (right leg) - passive implant.  Uses slots: leg_r 3.  Plates of ceramic and polymer under the skin of the right leg: +4 bullet armor and +2 against blows and blades.  Uses 3 of the 10 points in the right leg; only one plating fits per body part.",
+       "Light dermal plating (torso) - passive implant.  Uses slots: torso 4.  Plates of ceramic and polymer under the skin of the torso: +6 bullet armor and +3 against blows and blades.  Uses 4 of the 24 points in the torso; only one plating fits per body part.",
+       "Master spine - passive implant.  Uses slots: torso 6.  A full-stack spinal implant: +2 Strength, +2 Dexterity and +2 Intelligence.  Uses the 6 spine points of the torso; only one spine implant fits.",
+       "Medical prosthetic arm (left) - passive implant.  Uses slots: arm_l 6.  A medical prosthetic arm replacing your left arm.  Uses 6 of the 6 points in the left arm (a complete replacement: the limb is fully cyberized); no stat bonus; absorbs damage at quality 50%.  Installing it rebuilds the limb.",
+       "Medical prosthetic arm (right) - passive implant.  Uses slots: arm_r 6.  A medical prosthetic arm replacing your right arm.  Uses 6 of the 6 points in the right arm (a complete replacement: the limb is fully cyberized); no stat bonus; absorbs damage at quality 50%.  Installing it rebuilds the limb.",
+       "Medical prosthetic leg (left) - passive implant.  Uses slots: leg_l 10.  A medical prosthetic leg replacing your left leg.  Uses 10 of the 10 points in the left leg (a complete replacement: the limb is fully cyberized); no stat bonus; absorbs damage at quality 50%.  Installing it rebuilds the limb.",
+       "Medical prosthetic leg (right) - passive implant.  Uses slots: leg_r 10.  A medical prosthetic leg replacing your right leg.  Uses 10 of the 10 points in the right leg (a complete replacement: the limb is fully cyberized); no stat bonus; absorbs damage at quality 50%.  Installing it rebuilds the limb.",
        "Metabolic Interchange - toggled implant.  Uses slots: torso 20.  Your digestive system and power supply are interconnected; bionic energy is replenished by burning calories.  Can be toggled on and off at will.",
        "Monomolecular Blade - toggled implant.  Power: activation cost 50 J.  Uses slots: arm_r 7, hand_r 1.  A deadly foot-long blade made of advanced material now resides inside your forearm, capable of being extended through the back of your wrist at the cost of a small amount of power.  Though exceptionally sharp, it will prevent you from holding anything else while extended.",
        "Motor Control Overstimulator - passive implant.  Uses slots: head 3.  One piezoelectric solenoid surgically installed backwards, two crossed wires, and four burned-out capacitors later you started falling on your face and writhing around at the least convenient times.  This incorrectly-configured bionic periodically stuns you for a short duration.",
        "Muscle Augmentation - passive implant.  Uses slots: torso 6, arm_l 4, arm_r 4, leg_l 8, leg_r 8.  Your muscular system has been surgically enhanced with myomer fibers, giving you a +2 bonus to strength.",
+       "Myomer spine I - passive implant.  Uses slots: torso 6.  Myomer spine I: a spinal implant that gives +1 Strength.  Uses the 6 spine points of the torso; only one spine implant fits.",
+       "Myomer spine II - passive implant.  Uses slots: torso 6.  Myomer spine II: a spinal implant that gives +2 Strength.  Uses the 6 spine points of the torso; only one spine implant fits.",
+       "Myomer spine III - passive implant.  Uses slots: torso 6.  Myomer spine III: a spinal implant that gives +3 Strength.  Uses the 6 spine points of the torso; only one spine implant fits.",
+       "Neural lace - passive implant.  Uses slots: head 5.  Neural lace: a cranial implant that gives +2 Intelligence, +2 Perception.  Uses 5 of the 8 points in the head.",
+       "Neural spine I - passive implant.  Uses slots: torso 6.  Neural spine I: a spinal implant that gives +1 Intelligence.  Uses the 6 spine points of the torso; only one spine implant fits.",
+       "Neural spine II - passive implant.  Uses slots: torso 6.  Neural spine II: a spinal implant that gives +2 Intelligence.  Uses the 6 spine points of the torso; only one spine implant fits.",
+       "Neural spine III - passive implant.  Uses slots: torso 6.  Neural spine III: a spinal implant that gives +3 Intelligence.  Uses the 6 spine points of the torso; only one spine implant fits.",
        "Nictitating Membrane - passive implant.  Uses slots: eyes 1.  Your eyes are equipped with thin membranes that cover your eyes while underwater, negating any vision penalties.",
        "Noisemaker - passive implant.  Uses slots: torso 4, arm_l 1, arm_r 1, leg_l 1, leg_r 1.  A malfunctioning bionic.  It will occasionally emit a loud burst of noise.",
        "Offensive Defense System - toggled implant.  Power: activation cost 10 J.  Power: running cost 10 J.  Power: trigger cost 400 J.  Uses slots: torso 10, head 1, arm_l 1, arm_r 1, leg_l 2, leg_r 2.  A thin forcefield surrounds your body, continually draining power.  This field does not deflect attacks, but rather delivers a strong shock, damaging unarmed attackers and those with a conductive weapon.",
@@ -7064,13 +2873,20 @@
        "Recoil Compensators - passive implant.  Uses slots: arm_l 4, arm_r 4, hand_l 2, hand_r 2.  Reactive shock absorbers installed in your wrists and elbows which greatly reduce felt recoil.",
        "Recycler Unit - passive implant.  Uses slots: torso 15.  Your digestive system has been outfitted with a series of filters and processors, allowing you to reclaim waste liquid and, to a lesser degree, nutrients.  The net effect is a greatly reduced need to eat and drink.",
        "Reflex Accelerator - passive implant.  Uses slots: torso 4, leg_l 2, leg_r 2.  Spinal reflex boosters.  +2 Dexterity and a 20% chance to sidestep any incoming bullet.",
+       "Reflex spine I - passive implant.  Uses slots: torso 6.  Reflex spine I: a spinal implant that gives +1 Dexterity.  Uses the 6 spine points of the torso; only one spine implant fits.",
+       "Reflex spine II - passive implant.  Uses slots: torso 6.  Reflex spine II: a spinal implant that gives +2 Dexterity.  Uses the 6 spine points of the torso; only one spine implant fits.",
+       "Reflex spine III - passive implant.  Uses slots: torso 6.  Reflex spine III: a spinal implant that gives +3 Dexterity.  Uses the 6 spine points of the torso; only one spine implant fits.",
        "Remote Controller - toggled implant.  Power: running cost 1.  Uses slots: head 2.  A small module connected to your brain allows you to interface with nearby devices with wireless capabilities.",
        "Repair Nanobots - toggled implant.  Power: activation cost 80 J.  Power: running cost 40 J.  Uses slots: torso 12.  Inside your body is a fleet of tiny dormant robots.  While activated they will flit about your body, repairing damage at 1 HP per minute and stopping bleeding at the cost of extra power and stored calories.  No power is consumed if there is nothing to heal.",
        "Respirator - toggled implant.  Power: trigger cost 25 kJ.  Uses slots: torso 8, head 2, mouth 2.  A complex respiration augmentation system.  Improves respiration ability in air and allows breathing water.  Will automatically activate when drowning.  Turn on to recharge stamina faster, at moderate power cost.  Asthmatics may also use it to stop asthma attacks.",
        "Self-Locking Thumbs - passive implant.  Uses slots: hand_l 1, hand_r 1.  Self-locking thumbs hold tight (even when you really don't want them to) and don't let go (even when you'd rather they did).  Increases hand encumbrance by ten, while failing to improve your ability to hold objects whatsoever.",
+       "Sensor array - passive implant.  Uses slots: head 2.  Sensor array: a cranial implant that gives +1 Perception.  Uses 2 of the 8 points in the head.",
+       "Sensor array II - passive implant.  Uses slots: head 3.  Sensor array II: a cranial implant that gives +2 Perception.  Uses 3 of the 8 points in the head.",
+       "Sensor array III - passive implant.  Uses slots: head 4.  Sensor array III: a cranial implant that gives +3 Perception.  Uses 4 of the 8 points in the head.",
        "Sensory Dulling - toggled implant.  Power: trigger cost 2 kJ.  Uses slots: head 2.  Your nervous system is wired to allow you to inhibit the signals of pain, allowing you to dull your senses at will.  However, the use of this system may cause delayed reaction time and drowsiness.",
        "Shockwave Generator - activated implant.  Power: activation cost 250.  Uses slots: torso 20.  You generate a powerful shockwave, knocking back all nearby creatures.  Targets are stunned briefly, take damage and additional stun upon impact with impassable terrain, and knockback any creatures they collide with.",
        "Shotgun Arm - toggled implant.  Power: activation cost 50 J.  Uses slots: arm_l 12.  Concealed in your left arm is a single shot 12 gauge shotgun.  Activate the bionic to fire and reload the shotgun.",
+       "Silent servos - passive implant.  Uses slots: leg_l 3, leg_r 3.  Damped joint servos in both legs: your footsteps make far less noise.  Uses 3 points in each leg.",
        "Sleep Mode Shutdown - passive implant.  Uses slots: head 1.  For better or worse, this CBM suppresses stimuli while asleep, preventing you from waking up until the end of your natural sleep cycle.",
        "Sonic Resonator - activated implant.  Power: activation cost 100.  Uses slots: torso 15, head 1, arm_l 2, arm_r 2, leg_l 4, leg_r 4.  Your entire body may resonate at very high power, creating a short-range shockwave.  While it will not do much damage to creatures, solid objects such as walls and doors will be damaged.",
        "Soporific Induction - toggled implant.  Uses slots: head 1.  An electrode has been implanted into your brain's ventrolateral preoptic nucleus.  It turns on whenever you're trying to fall asleep, creating an artificial but effective sensation of sleepiness.",
@@ -7106,7 +2922,8 @@
        "WearMan - toggled implant.  Power: activation cost 1 J.  Power: running cost 1 J.  Uses slots: head 1.  Surgically implanted into your skull near the eardrums are two speakers, as well as a small port behind the left earlobe.  They can pick up local radio waves and play downloaded music in concert hall quality.  It came pre-installed with \"Rubik's Mickse\".",
        "Weather Reader - activated implant.  Power: activation cost 10 J.  Uses slots: torso 1, head 1.  A multitude of scientific instruments and sensors collect environmental data.  The data is compiled and presented as a simple readout of the current weather.  It also passively tells you the local air temperature.",
        "Wire-Induced Stiffness - passive implant.  Uses slots: torso 2, arm_l 1, arm_r 1, leg_l 1, leg_r 1, foot_l 1, foot_r 1.  Improperly installed wires cause a physical stiffness in most of your body, causing increased encumbrance.",
-       "Wired Reflexes - passive implant.  Uses slots: head 3, torso 6, arm_l 3, arm_r 3, leg_l 7, leg_r 7.  Your reaction time has been greatly enhanced with bionic nerve stimulators, giving you a +2 bonus to dexterity."
+       "Wired Reflexes - passive implant.  Uses slots: head 3, torso 6, arm_l 3, arm_r 3, leg_l 7, leg_r 7.  Your reaction time has been greatly enhanced with bionic nerve stimulators, giving you a +2 bonus to dexterity.",
+       "Wrist blade (right) - passive implant.  Uses slots: arm_r 3.  A monomolecular blade that slides out of the right wrist.  Uses 3 of the 6 points in the arm."
       ],
       "title": "Implant Status",
       "hide_failing": true,

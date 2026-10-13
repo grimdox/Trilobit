@@ -107,6 +107,8 @@ COST = {"trl_nh_repair": 2, "trl_nh_purge": 1, "trl_nh_plating": 3, "trl_nh_reac
         "trl_nh_hop": 3, "trl_nh_siphon": 4, "trl_nh_probe": 1, "trl_nh_disrupt": 2, "trl_nh_takeover": 4,
         "trl_nh_override": 2, "trl_nh_seal": 2, "trl_nh_command": 3}
 assert set(COST) == set(ALL)
+import limbdata as _LD
+CHIP_PRICE = dict(_LD.CHIP_PRICE)
 GRADES = [("trl_bio_cyberbrain", "Cyberbrain Mk I", 4), ("trl_bio_cyberbrain_2", "Cyberbrain Mk II", 8), ("trl_bio_cyberbrain_3", "Cyberbrain Mk III", 14),
           ("trl_bio_cyberbrain_4", "Cyberbrain Mk IV", 22), ("trl_bio_cyberbrain_5", "Cyberbrain Mk V", 32)]
 items = []
@@ -114,7 +116,7 @@ for sid, tree in ALL.items():
     items.append({"type": "ITEM", "subtypes": ["GENERIC"], "id": "trl_chip_" + sid.replace("trl_", ""), "name": {"str": f"nanohack chip ({names[sid]})", "str_pl": f"nanohack chips ({names[sid]})"},
                   "description": f"A data chip holding the {names[sid]} nanohack (Control Value cost {COST[sid]}).  Use it to install the nanohack in your cyberbrain; remove it again from a nanohack console to get the chip back.",
                   "weight": "5 g", "volume": "5 ml", "symbol": "=", "color": TREECOLOR[tree], "material": ["plastic"],
-                  "price": "600 USD", "price_postapoc": "50 USD", "flags": ["TRADER_AVOID"],
+                  "price": f"{CHIP_PRICE[sid]} USD", "price_postapoc": f"{CHIP_PRICE[sid]} USD", "flags": ["TRADER_AVOID"],
                   "use_action": {"type": "effect_on_conditions", "menu_text": "Install nanohack", "description": "Install this nanohack in your cyberbrain.",
                                  "effect_on_conditions": ["trl_nh_inst_" + sid[len("trl_nh_"):]]}})
 groups = [
@@ -140,11 +142,11 @@ for sid in sids:
 for gid, gname, lim in GRADES:
     if gid == "trl_bio_cyberbrain": continue
     cvx.append({"type": "bionic", "id": gid, "name": {"str": gname}, "description": f"{gname}: a machine brain with a Control Value limit of {lim}.  Required to run nanohacks.  Do not install more than one cyberbrain.",
-                "occupied_bodyparts": [["head", 12]], "flags": ["MACHINE_BRAIN", "BIONIC_NPC_USABLE"],
+                "occupied_bodyparts": [["head", 3]], "flags": ["MACHINE_BRAIN", "BIONIC_NPC_USABLE"],
                 "protec": [["head", {"bash": 12, "cut": 12, "stab": 12, "bullet": 22}]]})
     cvx.append({"id": gid, "copy-from": "bionic_general_npc_usable", "type": "ITEM", "subtypes": ["BIONIC_ITEM"], "name": {"str": f"{gname} CBM"}, "looks_like": "bio_int_enhancer",
-                "description": f"{gname}: Control Value limit {lim}.  Required to run nanohacks.", "price": f"{[0,0,60,150,400,1000][int(gid[-1])]} kUSD",
-                "price_postapoc": "100 USD", "weight": "500 g", "difficulty": 12 + int(gid[-1])})
+                "description": f"{gname}: Control Value limit {lim}.  Required to run nanohacks.", "price": f"{[0,0,40000,90000,200000,450000][int(gid[-1])]} USD",
+                "price_postapoc": f"{[0,0,40000,90000,200000,450000][int(gid[-1])]} USD", "weight": "500 g", "difficulty": 12 + int(gid[-1])})
 cvx.append({"type": "ITEM", "subtypes": ["GENERIC"], "id": "trl_nh_console", "name": {"str": "nanohack console"}, "symbol": ",", "color": "light_cyan",
             "description": "A thin interface card tied to your cyberbrain.  Use it to see your Control Value and remove installed nanohacks (the chip comes back).",
             "weight": "20 g", "volume": "10 ml", "material": ["plastic"], "price": "50 USD", "price_postapoc": "5 USD",

@@ -225,6 +225,50 @@
      "x": 20,
      "y": 17
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 1,
+     "y": 7
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 5,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 8,
+     "y": 18
+    }
    ]
   }
  },
@@ -513,6 +557,50 @@
      "x": 18,
      "y": 17
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 18,
+     "y": 9
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 12,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 6,
+     "y": 12
+    }
    ]
   }
  },
@@ -711,6 +799,50 @@
      "class": "trl_nc_res_poor_day_laborer",
      "x": 13,
      "y": 13
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 15,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 8,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 5,
+     "y": 1
     }
    ]
   }
@@ -934,6 +1066,50 @@
      "x": 15,
      "y": 14
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 5,
+     "y": 19
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 7,
+     "y": 4
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 17
+    }
    ]
   }
  },
@@ -1136,6 +1312,50 @@
      "class": "trl_nc_res_poor_day_laborer",
      "x": 13,
      "y": 15
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 10,
+     "y": 3
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 18,
+     "y": 18
     }
    ]
   }
@@ -1406,6 +1626,50 @@
      "class": "trl_nc_res_poor_dishwasher",
      "x": 20,
      "y": 15
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 14,
+     "y": 10
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 5,
+     "y": 3
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 17,
+     "y": 22
     }
    ]
   }
@@ -1681,6 +1945,50 @@
      "x": 19,
      "y": 17
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 15,
+     "y": 4
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 20
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 11,
+     "y": 20
+    }
    ]
   }
  },
@@ -1893,6 +2201,50 @@
      "class": "trl_nc_res_poor_dishwasher",
      "x": 17,
      "y": 14
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 9,
+     "y": 5
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 18,
+     "y": 9
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 15,
+     "y": 3
     }
    ]
   }
@@ -2117,6 +2469,50 @@
      "x": 18,
      "y": 12
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 18,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 5,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 22
+    }
    ]
   }
  },
@@ -2334,6 +2730,50 @@
      "class": "trl_nc_res_poor_day_laborer",
      "x": 10,
      "y": 16
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 16,
+     "y": 2
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 1
     }
    ]
   }
@@ -2594,6 +3034,50 @@
      "class": "trl_nc_res_poor_dishwasher",
      "x": 19,
      "y": 15
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 17,
+     "y": 5
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 3,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 17,
+     "y": 19
     }
    ]
   }
@@ -2865,6 +3349,50 @@
      "x": 18,
      "y": 15
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 11,
+     "y": 2
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 19,
+     "y": 6
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 16
+    }
    ]
   }
  },
@@ -3088,6 +3616,50 @@
      "x": 6,
      "y": 15
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 9,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 6,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 21
+    }
    ]
   }
  },
@@ -3290,6 +3862,50 @@
      "class": "trl_nc_res_poor_janitor",
      "x": 17,
      "y": 15
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 2,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 14,
+     "y": 4
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 22,
+     "y": 20
     }
    ]
   }
@@ -3513,6 +4129,50 @@
      "class": "trl_nc_res_poor_day_laborer",
      "x": 15,
      "y": 14
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 20,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 17,
+     "y": 14
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 18,
+     "y": 22
     }
    ]
   }
@@ -3784,6 +4444,50 @@
      "x": 18,
      "y": 16
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 1,
+     "y": 19
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 10,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 8
+    }
    ]
   }
  },
@@ -4028,6 +4732,50 @@
      "x": 19,
      "y": 17
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 1,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 8,
+     "y": 6
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 17,
+     "y": 1
+    }
    ]
   }
  },
@@ -4216,6 +4964,50 @@
      "class": "trl_nc_res_poor_janitor",
      "x": 6,
      "y": 14
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 1,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 22,
+     "y": 9
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 22,
+     "y": 18
     }
    ]
   }
@@ -4408,6 +5200,50 @@
      "class": "trl_nc_res_poor_janitor",
      "x": 18,
      "y": 13
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 17,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 18,
+     "y": 8
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 21
     }
    ]
   }
@@ -4615,6 +5451,50 @@
      "class": "trl_nc_res_poor_janitor",
      "x": 14,
      "y": 16
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 7,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 18,
+     "y": 10
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 3,
+     "y": 14
     }
    ]
   }
@@ -4874,6 +5754,50 @@
      "class": "trl_nc_res_poor_janitor",
      "x": 20,
      "y": 16
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 3,
+     "y": 3
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 2,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 13
     }
    ]
   }
@@ -5135,6 +6059,50 @@
      "x": 17,
      "y": 15
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 7,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 3
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 18
+    }
    ]
   }
  },
@@ -5344,6 +6312,50 @@
      "x": 7,
      "y": 15
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 22,
+     "y": 6
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 8,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 5,
+     "y": 22
+    }
    ]
   }
  },
@@ -5516,6 +6528,50 @@
      "class": "trl_nc_res_poor_janitor",
      "x": 12,
      "y": 15
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 1,
+     "y": 14
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 15,
+     "y": 16
     }
    ]
   }
@@ -5724,6 +6780,50 @@
      "class": "trl_nc_res_poor_courier",
      "x": 16,
      "y": 14
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 18,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 20,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 10
     }
    ]
   }
@@ -5972,6 +7072,50 @@
      "class": "trl_nc_res_poor_courier",
      "x": 16,
      "y": 12
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 12,
+     "y": 10
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 14,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 9,
+     "y": 8
     }
    ]
   }
@@ -6232,6 +7376,50 @@
      "x": 18,
      "y": 18
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 11,
+     "y": 19
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 8,
+     "y": 9
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 2,
+     "y": 12
+    }
    ]
   }
  },
@@ -6449,6 +7637,50 @@
      "x": 14,
      "y": 18
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 8,
+     "y": 11
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 11,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 9,
+     "y": 10
+    }
    ]
   }
  },
@@ -6645,6 +7877,50 @@
      "class": "trl_nc_res_poor_courier",
      "x": 4,
      "y": 12
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 4,
+     "y": 19
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 9,
+     "y": 20
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 12,
+     "y": 22
     }
    ]
   }
@@ -6867,6 +8143,50 @@
      "class": "trl_nc_res_poor_courier",
      "x": 7,
      "y": 15
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 10,
+     "y": 11
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 5,
+     "y": 10
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 15,
+     "y": 2
     }
    ]
   }
@@ -7128,6 +8448,50 @@
      "x": 16,
      "y": 12
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 2,
+     "y": 10
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 16,
+     "y": 7
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 21,
+     "y": 5
+    }
    ]
   }
  },
@@ -7387,6 +8751,50 @@
      "x": 19,
      "y": 14
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 22,
+     "y": 8
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 11,
+     "y": 9
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 3,
+     "y": 8
+    }
    ]
   }
  },
@@ -7599,6 +9007,50 @@
      "x": 17,
      "y": 14
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 18,
+     "y": 14
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 15,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 17,
+     "y": 13
+    }
    ]
   }
  },
@@ -7807,6 +9259,50 @@
      "x": 10,
      "y": 18
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 8,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 15,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 12,
+     "y": 16
+    }
    ]
   }
  },
@@ -8013,6 +9509,50 @@
      "class": "trl_nc_res_poor_dishwasher",
      "x": 14,
      "y": 15
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 21,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 14,
+     "y": 19
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 16,
+     "y": 4
     }
    ]
   }
@@ -8301,6 +9841,50 @@
      "x": 19,
      "y": 17
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 7,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 12,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 14
+    }
    ]
   }
  },
@@ -8558,6 +10142,50 @@
      "x": 19,
      "y": 13
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 10,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 12,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 22,
+     "y": 5
+    }
    ]
   }
  },
@@ -8776,6 +10404,50 @@
      "class": "trl_nc_res_poor_dishwasher",
      "x": 15,
      "y": 16
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 1,
+     "y": 6
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 17
     }
    ]
   }
@@ -8999,6 +10671,50 @@
      "x": 15,
      "y": 15
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 13,
+     "y": 9
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 8,
+     "y": 20
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 18,
+     "y": 18
+    }
    ]
   }
  },
@@ -9206,6 +10922,50 @@
      "class": "trl_nc_res_poor_day_laborer",
      "x": 11,
      "y": 17
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 13,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 12,
+     "y": 8
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 6,
+     "y": 11
     }
    ]
   }
@@ -9476,6 +11236,50 @@
      "x": 17,
      "y": 16
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 16,
+     "y": 20
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 10,
+     "y": 7
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 12,
+     "y": 18
+    }
    ]
   }
  },
@@ -9744,6 +11548,50 @@
      "x": 15,
      "y": 12
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 4,
+     "y": 7
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 16,
+     "y": 7
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 15,
+     "y": 15
+    }
    ]
   }
  },
@@ -9941,6 +11789,50 @@
      "class": "trl_nc_res_poor_courier",
      "x": 6,
      "y": 15
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 9,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 8,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 8,
+     "y": 16
     }
    ]
   }
@@ -10154,6 +12046,50 @@
      "class": "trl_nc_res_poor_courier",
      "x": 14,
      "y": 15
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 8,
+     "y": 11
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 13,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 13,
+     "y": 11
     }
    ]
   }
@@ -10372,6 +12308,50 @@
      "class": "trl_nc_res_poor_courier",
      "x": 4,
      "y": 16
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 20,
+     "y": 11
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 10,
+     "y": 4
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 16,
+     "y": 18
     }
    ]
   }
@@ -10621,6 +12601,50 @@
      "class": "trl_nc_res_poor_street_vendor",
      "x": 19,
      "y": 12
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 5,
+     "y": 8
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 11,
+     "y": 5
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 8,
+     "y": 4
     }
    ]
   }
@@ -10901,6 +12925,50 @@
      "x": 17,
      "y": 15
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 6,
+     "y": 6
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 17,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 16
+    }
    ]
   }
  },
@@ -11133,6 +13201,50 @@
      "x": 13,
      "y": 16
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 17,
+     "y": 7
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 7,
+     "y": 2
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 10
+    }
    ]
   }
  },
@@ -11349,6 +13461,50 @@
     {
      "class": "trl_nc_res_poor_courier",
      "x": 17,
+     "y": 15
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 22,
+     "y": 19
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 22,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 22,
      "y": 15
     }
    ]
@@ -11572,6 +13728,50 @@
      "class": "trl_nc_res_poor_janitor",
      "x": 13,
      "y": 16
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       12
+      ],
+      [
+       "null",
+       88
+      ]
+     ],
+     "x": 10,
+     "y": 12
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 1,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       4
+      ],
+      [
+       "null",
+       96
+      ]
+     ],
+     "x": 16,
+     "y": 20
     }
    ]
   }
@@ -11891,6 +14091,50 @@
      "chance": 55,
      "status": 60,
      "rotation": 270
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 1,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 8,
+     "y": 19
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 4,
+     "y": 16
     }
    ]
   }
@@ -12348,6 +14592,50 @@
      "status": 60,
      "rotation": 270
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 1,
+     "y": 8
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 22,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 6,
+     "y": 21
+    }
    ]
   }
  },
@@ -12780,6 +15068,50 @@
      "x": 18,
      "y": 17
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 15,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 13,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 19,
+     "y": 19
+    }
    ]
   }
  },
@@ -13064,6 +15396,50 @@
      "chance": 55,
      "status": 60,
      "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 6,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 8,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 1,
+     "y": 11
     }
    ]
   }
@@ -13585,6 +15961,50 @@
      "status": 60,
      "rotation": 270
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 15,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 11,
+     "y": 11
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 14,
+     "y": 13
+    }
    ]
   }
  },
@@ -14105,6 +16525,50 @@
      "status": 60,
      "rotation": 90
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 5,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 8,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 19,
+     "y": 18
+    }
    ]
   }
  },
@@ -14360,6 +16824,50 @@
      "class": "trl_nc_res_mid_police_clerk",
      "x": 16,
      "y": 15
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 22,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 22,
+     "y": 5
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 9,
+     "y": 22
     }
    ]
   }
@@ -14841,6 +17349,50 @@
      "status": 60,
      "rotation": 270
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 5,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 17,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 6,
+     "y": 16
+    }
    ]
   }
  },
@@ -15276,6 +17828,50 @@
      "status": 60,
      "rotation": 270
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 5,
+     "y": 19
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 22,
+     "y": 11
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 1,
+     "y": 18
+    }
    ]
   }
  },
@@ -15609,6 +18205,50 @@
      "chance": 55,
      "status": 60,
      "rotation": 270
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 5,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 15,
+     "y": 18
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 3,
+     "y": 19
     }
    ]
   }
@@ -16017,6 +18657,50 @@
      "class": "trl_nc_res_mid_nurse",
      "x": 9,
      "y": 16
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 11,
+     "y": 18
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 18,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 22,
+     "y": 21
     }
    ]
   }
@@ -16452,6 +19136,50 @@
      "status": 60,
      "rotation": 90
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 22,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 18,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 6,
+     "y": 16
+    }
    ]
   }
  },
@@ -16731,6 +19459,50 @@
      "chance": 55,
      "status": 60,
      "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 14,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 15,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 17,
+     "y": 15
     }
    ]
   }
@@ -17178,6 +19950,50 @@
      "status": 60,
      "rotation": 90
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 1,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 16,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 15,
+     "y": 16
+    }
    ]
   }
  },
@@ -17579,6 +20395,50 @@
      "x": 14,
      "y": 19
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 15,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 15,
+     "y": 14
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 13,
+     "y": 13
+    }
    ]
   }
  },
@@ -17883,6 +20743,50 @@
      "chance": 55,
      "status": 60,
      "rotation": 270
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 22,
+     "y": 10
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 1,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 13,
+     "y": 19
     }
    ]
   }
@@ -18324,6 +21228,50 @@
      "chance": 55,
      "status": 60,
      "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 16,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 13,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 22,
+     "y": 14
     }
    ]
   }
@@ -18785,6 +21733,50 @@
      "status": 60,
      "rotation": 90
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 16,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 11,
+     "y": 12
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 10,
+     "y": 14
+    }
    ]
   }
  },
@@ -19071,6 +22063,50 @@
      "class": "trl_nc_res_mid_nurse",
      "x": 9,
      "y": 17
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 7,
+     "y": 19
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 20,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 1,
+     "y": 22
     }
    ]
   }
@@ -19551,6 +22587,50 @@
      "status": 60,
      "rotation": 90
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 7,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 13,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 18,
+     "y": 17
+    }
    ]
   }
  },
@@ -20011,6 +23091,50 @@
      "status": 60,
      "rotation": 90
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 22,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 22,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 16,
+     "y": 21
+    }
    ]
   }
  },
@@ -20345,6 +23469,50 @@
      "chance": 55,
      "status": 60,
      "rotation": 270
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 12,
+     "y": 18
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 1,
+     "y": 9
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 17,
+     "y": 14
     }
    ]
   }
@@ -20781,6 +23949,50 @@
     {
      "class": "trl_nc_res_mid_shop_assistant",
      "x": 14,
+     "y": 16
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 1,
+     "y": 12
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 1,
+     "y": 5
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 10,
      "y": 16
     }
    ]
@@ -21231,6 +24443,50 @@
      "status": 60,
      "rotation": 90
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 21,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 7,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 7,
+     "y": 22
+    }
    ]
   }
  },
@@ -21523,6 +24779,50 @@
      "chance": 55,
      "status": 60,
      "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 7,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 12,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 4,
+     "y": 18
     }
    ]
   }
@@ -21959,6 +25259,50 @@
      "status": 60,
      "rotation": 270
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 14,
+     "y": 14
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 15,
+     "y": 19
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 22,
+     "y": 2
+    }
    ]
   }
  },
@@ -22330,6 +25674,50 @@
      "x": 14,
      "y": 18
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 22,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 22,
+     "y": 11
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 7,
+     "y": 22
+    }
    ]
   }
  },
@@ -22623,6 +26011,50 @@
      "chance": 55,
      "status": 60,
      "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 6,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 22,
+     "y": 6
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 1,
+     "y": 11
     }
    ]
   }
@@ -23048,6 +26480,50 @@
      "chance": 55,
      "status": 60,
      "rotation": 270
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 1,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 17,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 17,
+     "y": 17
     }
    ]
   }
@@ -23498,6 +26974,50 @@
      "status": 60,
      "rotation": 270
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 15,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 7,
+     "y": 18
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 4,
+     "y": 19
+    }
    ]
   }
  },
@@ -23749,6 +27269,50 @@
      "class": "trl_nc_res_mid_nurse",
      "x": 15,
      "y": 18
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 7,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 13,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 10,
+     "y": 22
     }
    ]
   }
@@ -24205,6 +27769,50 @@
      "status": 60,
      "rotation": 90
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 15,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 11,
+     "y": 18
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 22,
+     "y": 12
+    }
    ]
   }
  },
@@ -24650,6 +28258,50 @@
      "status": 60,
      "rotation": 270
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 22,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 1,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 22,
+     "y": 5
+    }
    ]
   }
  },
@@ -24959,6 +28611,50 @@
      "chance": 55,
      "status": 60,
      "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 5,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 22,
+     "y": 7
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 12,
+     "y": 22
     }
    ]
   }
@@ -25396,6 +29092,50 @@
      "class": "trl_nc_res_mid_driver",
      "x": 10,
      "y": 16
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 16,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nasim_hacker",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 10,
+     "y": 14
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 13,
+     "y": 12
     }
    ]
   }
@@ -25938,6 +29678,36 @@
      "x": 23,
      "y": 11
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 12,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 9,
+     "y": 6
+    }
    ]
   }
  },
@@ -26192,6 +29962,36 @@
      "chance": 55,
      "status": 60,
      "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 17,
+     "y": 12
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 8,
+     "y": 15
     }
    ]
   }
@@ -26733,6 +30533,36 @@
      "status": 60,
      "rotation": 90
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 1,
+     "y": 19
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 22,
+     "y": 1
+    }
    ]
   }
  },
@@ -26916,6 +30746,36 @@
      "class": "trl_nc_res_rich_investor",
      "x": 6,
      "y": 13
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 22,
+     "y": 3
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 13,
+     "y": 1
     }
    ]
   }
@@ -27778,6 +31638,36 @@
      "status": 60,
      "rotation": 90
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 23,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 15,
+     "y": 6
+    }
    ]
   }
  },
@@ -27914,6 +31804,36 @@
      "class": "trl_nc_res_rich_surgeon",
      "x": 0,
      "y": 16
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 5,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 16,
+     "y": 22
     }
    ]
   }
@@ -28638,6 +32558,36 @@
      "x": 22,
      "y": 16
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 23,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 19,
+     "y": 19
+    }
    ]
   }
  },
@@ -28927,6 +32877,36 @@
      "chance": 55,
      "status": 60,
      "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 2,
+     "y": 18
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 13,
+     "y": 13
     }
    ]
   }
@@ -29594,6 +33574,36 @@
      "status": 60,
      "rotation": 270
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 15,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 3,
+     "y": 1
+    }
    ]
   }
  },
@@ -29864,6 +33874,36 @@
      "status": 60,
      "rotation": 90
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 1,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 17,
+     "y": 17
+    }
    ]
   }
  },
@@ -30074,6 +34114,36 @@
      "class": "trl_nc_res_rich_executive",
      "x": 2,
      "y": 16
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 5,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 5,
+     "y": 13
     }
    ]
   }
@@ -30799,6 +34869,36 @@
      "status": 60,
      "rotation": 270
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 15,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 22,
+     "y": 20
+    }
    ]
   }
  },
@@ -31344,6 +35444,36 @@
      "x": 23,
      "y": 16
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 10,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 21,
+     "y": 22
+    }
    ]
   }
  },
@@ -31631,6 +35761,36 @@
      "chance": 55,
      "status": 60,
      "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 4,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 19,
+     "y": 14
     }
    ]
   }
@@ -32349,6 +36509,36 @@
      "status": 60,
      "rotation": 90
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 5,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 22,
+     "y": 5
+    }
    ]
   }
  },
@@ -32859,6 +37049,36 @@
      "status": 60,
      "rotation": 90
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 18,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 17,
+     "y": 13
+    }
    ]
   }
  },
@@ -33018,6 +37238,36 @@
      "class": "trl_nc_res_rich_owner",
      "x": 1,
      "y": 19
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 20,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 12,
+     "y": 22
     }
    ]
   }
@@ -33449,6 +37699,36 @@
      "status": 60,
      "rotation": 270
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 10,
+     "y": 17
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 1,
+     "y": 13
+    }
    ]
   }
  },
@@ -33846,6 +38126,36 @@
      "x": 23,
      "y": 12
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 20,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 6,
+     "y": 1
+    }
    ]
   }
  },
@@ -34123,6 +38433,36 @@
      "chance": 55,
      "status": 60,
      "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 22,
+     "y": 8
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 1,
+     "y": 11
     }
    ]
   }
@@ -34820,6 +39160,36 @@
      "status": 60,
      "rotation": 90
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 22,
+     "y": 2
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 20,
+     "y": 22
+    }
    ]
   }
  },
@@ -35241,6 +39611,36 @@
      "x": 16,
      "y": 16
     }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 21,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 7,
+     "y": 22
+    }
    ]
   }
  },
@@ -35467,6 +39867,36 @@
      "chance": 55,
      "status": 60,
      "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 2,
+     "y": 18
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 9,
+     "y": 22
     }
    ]
   }
@@ -36205,6 +40635,36 @@
      "chance": 55,
      "status": 60,
      "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_patrol",
+       10
+      ],
+      [
+       "null",
+       90
+      ]
+     ],
+     "x": 22,
+     "y": 8
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_jsdf_tactical",
+       3
+      ],
+      [
+       "null",
+       97
+      ]
+     ],
+     "x": 10,
+     "y": 7
     }
    ]
   }

@@ -11,6 +11,11 @@ if os.path.exists(_cf):
         if x.get("type") == "bionic":
             bs[x["id"]] = x
 
+import limbdata as _LD
+for _i in _LD.IMPL.values():
+    bs[_i["id"]] = {"id": _i["id"], "name": {"str": _i["name"]}, "description": _i["desc"], "occupied_bodyparts": [[p, n] for p, n in _i["parts"]],
+                    "flags": ["BIONIC_TOGGLED"] if _i["id"] in ("trl_imp_stomach",) else []}
+
 def nm(x):
     n = x["name"]; return n["str"] if isinstance(n, dict) else n
 
@@ -39,26 +44,11 @@ for bid, b in sorted(bs.items(), key=lambda kv: nm(kv[1]).lower()):
                 "condition": {"u_has_bionics": bid},
                 "effect": [{"u_message": text + "  Status: installed.  Use the bionics screen (})  to switch it on or off.", "type": "neutral"}]})
     ids.append(eid); names.append(nm(b)); descs.append(text)
-# body overview: implants per body part (an implant counts once for every part it occupies)
-parts = ["head", "eyes", "mouth", "torso", "arm_l", "arm_r", "hand_l", "hand_r", "leg_l", "leg_r", "foot_l", "foot_r"]
-pretty = {"head": "Head", "eyes": "Eyes", "mouth": "Mouth", "torso": "Torso", "arm_l": "Left arm", "arm_r": "Right arm",
-          "hand_l": "Left hand", "hand_r": "Right hand", "leg_l": "Left leg", "leg_r": "Right leg",
-          "foot_l": "Left foot", "foot_r": "Right foot"}
-eff = []
-for part in parts:
-    eff.append({"math": [f"u_trl_cnt_{part}", "=", "0"]})
-for bid, b in sorted(bs.items()):
-    if not any(pt in parts for pt, _ in (b.get("occupied_bodyparts") or [])):
-        eff.append({"if": {"u_has_bionics": bid}, "then": [{"math": ["u_trl_cnt_torso", "+=", "1"]}]})
-    for part, n in (b.get("occupied_bodyparts") or []):
-        if part in parts:
-            eff.append({"if": {"u_has_bionics": bid}, "then": [{"math": [f"u_trl_cnt_{part}", "+=", "1"]}]})
-lines = "  ".join(f"{pretty[p]}: <u_val:trl_cnt_{p}>." for p in parts)
-eff.append({"u_message": "Implants per body part.  " + lines, "type": "neutral"})
-out.append({"type": "effect_on_condition", "id": "trl_body_overview", "effect": eff})
+# body overview: points used per body part and implant condition (computed by trl_body_check in limbs.json)
+out.append({"type": "effect_on_condition", "id": "trl_body_overview", "effect": [{"run_eocs": ["trl_body_check"]}]})
 sel_ids = ["trl_body_overview"] + ids
-sel_names = ["Body overview (implants per body part)"] + names
-sel_desc = ["How many installed implants occupy each part of your body."] + descs
+sel_names = ["Body overview (implant points and condition)"] + names
+sel_desc = ["Implant points used in each part of your body, and the condition of the implants."] + descs
 out.append({"type": "effect_on_condition", "id": "trl_implant_status",
             "effect": [{"if": {"u_has_bionics": "ANY"},
                         "then": [{"run_eoc_selector": sel_ids, "names": sel_names, "descriptions": sel_desc,

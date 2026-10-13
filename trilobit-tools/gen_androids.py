@@ -5,6 +5,7 @@ usage: gen_androids.py <mod dir>  -> <mod>/androids.json
 Hacking nanohacks (Probe, Disrupt, Take Over) are declared in gen_nanohacks.py and call the EOCs defined here.
 """
 import json, os, sys
+import shopdata as SD
 
 # ---- frames: stat bonuses (npc_class), hit-point modifier (trait), description
 FRAMES = {
@@ -81,6 +82,8 @@ def build():
                     "entries": [{"item": i, "prob": p} for i, p in d["carry"]]})
     for fw, fd in FIRMWARE.items():
         for r, rd in ROLES.items():
+            if rd.get("fw") and fw not in rd["fw"]:
+                continue
             for f in rd["frames"]:
                 fr = FRAMES[f]
                 c = {"type": "npc_class", "id": cls(f, r, fw), "name": {"str": f"{rd['name'].capitalize()} android"},
@@ -90,11 +93,31 @@ def build():
                      "skills": [{"skill": "ALL", "level": {"constant": 2}}] + [{"skill": k, "level": {"constant": v}} for k, v in rd["skills"].items()]}
                 if rd.get("shop"):
                     c["shopkeeper_item_group"] = [{"group": f"trl_shop_{t}", "rigid": True} for t in rd["shop"]]
+                if rd.get("rules"):
+                    c["shopkeeper_price_rules"] = [{"item": i, "price": y * 100, "fixed_adj": 0} for i, y in rd["rules"]] + [{"item": "trl_yen", "fixed_adj": 0}]
                 for k, v in fr["bonus"].items():
                     c["bonus_" + k] = {"constant": v}
                 out.append(c)
                 out.append({"type": "npc", "id": cls(f, r, fw), "class": cls(f, r, fw), "attitude": 0, "mission": 7, "faction": "trl_merchants" if rd.get("shop") else "no_faction",
                             "chat": "TRL_ANDROID_TALK_" + r, "temp_suffix": f"{rd['name']} android"})
+    # ---- androids for sale: an activation contract; using it spawns the android beside you and makes it yours
+    out.append(dict(base, id="trl_andr_fresh", name={"str": "Newly bought"}, description="Just out of the box; waiting to be claimed by its buyer."))
+    out.append({"type": "effect_on_condition", "id": "trl_andr_claim", "condition": {"u_has_trait": "trl_andr_fresh"},
+                "effect": [{"u_recruit_npc": True}, {"math": ["u_andr_owned = 1"]}, {"u_lose_trait": "trl_andr_fresh"},
+                           {"npc_message": "Its eyes light up.  It registers you as its owner and falls in beside you.", "type": "good"}]})
+    out.append({"type": "effect_on_condition", "id": "trl_andr_claim_now", "effect": [{"u_run_npc_eocs": ["trl_andr_claim"], "local": True, "npc_range": 5}]})
+    for key, (nm, fr, ro, price, desc) in SD.ANDROIDS.items():
+        eid = f"trl_buy_use_{key}"
+        out.append({"type": "ITEM", "subtypes": ["GENERIC"], "id": SD.android_item(key), "name": {"str": f"android contract ({nm})", "str_pl": f"android contracts ({nm})"},
+                    "description": desc + "  A sealed activation contract: use it where there is room and the android steps out of its crate and becomes yours.",
+                    "weight": "50 g", "volume": "10 ml", "symbol": "?", "color": "light_cyan", "material": ["plastic"],
+                    "price": f"{price} USD", "price_postapoc": f"{price} USD", "flags": ["TRADER_AVOID"],
+                    "use_action": {"type": "effect_on_conditions", "menu_text": "Activate the android", "description": "Spawn and claim the android.", "effect_on_conditions": [eid]}})
+        out.append({"type": "effect_on_condition", "id": eid,
+                    "effect": [{"u_spawn_npc": cls(fr, ro, "stock"), "real_count": 1, "min_radius": 1, "max_radius": 3, "traits": ["trl_andr_fresh"],
+                                "spawn_message": f"A {nm} unfolds from its crate and stands up."},
+                               {"run_eocs": ["trl_andr_claim_now"]},
+                               {"run_eocs": ["trl_andr_claim_now"], "time_in_future": "2 seconds"}]})
     # ---- talk
     for r, rd in ROLES.items():
         resp = []
@@ -226,8 +249,25 @@ ATM_PLACES = ["trl_pl_convenience_store", "trl_pl_electronics_bazaar", "trl_pl_i
 
 JACK_PLACES = ["trl_pl_server_hall", "trl_pl_arcade_hall", "trl_pl_electronics_bazaar", "trl_pl_corp_lobby", "trl_pl_transit_station", "trl_pl_capsule_hotel"]
 
+FRAMES.update(SD.FRAMES_NEW)
+ROLES.update(SD.ROLES_NEW)
+ROLES.update(SD.ROLES_BOUGHT)
+SHOP.update(SD.GROUPS)
+HOURS.update(SD.HOURS_NEW)
+ATM_PLACES.extend(sorted(SD.VARIANT_PLACEMENT))
+
+
 def android_npcs(place_id):
+    if place_id in SD.VARIANT_PLACEMENT:
+        return [cls(*t) for t in SD.VARIANT_PLACEMENT[place_id][0]]
     return [cls(*t) for t in PLACEMENT.get(place_id, [])]
+
+
+def android_variants(place_id):
+    """Worker class lists, one per stock variant (a mapgen is emitted for each); a single list for ordinary places."""
+    if place_id in SD.VARIANT_PLACEMENT:
+        return [[cls(*t) for t in v] for v in SD.VARIANT_PLACEMENT[place_id]]
+    return [android_npcs(place_id)]
 
 if __name__ == "__main__":
     json.dump(build(), open(os.path.join(sys.argv[1], "androids.json"), "w"), indent=1)

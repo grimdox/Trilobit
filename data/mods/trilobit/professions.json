@@ -170,9 +170,6 @@
           },
           {
             "item": "trl_implant_monitor"
-          },
-          {
-            "item": "trl_implant_kit"
           }
         ]
       }
@@ -286,9 +283,6 @@
           {
             "item": "556",
             "charges": 150
-          },
-          {
-            "item": "trl_implant_kit"
           },
           {
             "group": "trl_new_chips"

@@ -6274,6 +6274,104 @@ overmap_special_id overmap::pick_random_building_to_place( int town_dist, int to
     return ret;
 }
 
+namespace trl_district
+{
+namespace
+{
+// Trilobit: a city is cut into 6x6 overmap-tile districts.  Each district is poor (0), middle (1) or rich (2),
+// decided from a hash of its cell and its distance from the city centre.  Houses are drawn from the tier of their
+// district, and each district gets one service shop (implant, nanohack, grocery or android) when it fills up.
+constexpr int CELL = 6;
+
+uint32_t mix( uint32_t a, uint32_t b, uint32_t c )
+{
+    uint32_t h = ( a * 0x9E3779B1u ) ^ ( ( b + 0x7F4A7C15u ) * 0x85EBCA6Bu ) ^ ( c * 0xC2B2AE35u );
+    h ^= h >> 15;
+    h *= 0x2C1B3C6Du;
+    h ^= h >> 12;
+    h *= 0x297A2D39u;
+    h ^= h >> 15;
+    return h;
+}
+
+int floor_div( int a, int b )
+{
+    return a >= 0 ? a / b : -( ( -a + b - 1 ) / b );
+}
+
+struct cell_info {
+    int cx = 0;
+    int cy = 0;
+    int tier = 1;
+    uint32_t h = 0;
+};
+
+cell_info locate( const point_abs_om &om, const tripoint_om_omt &bp, const city &town )
+{
+    cell_info ci;
+    const int ax = om.x() * OMAPX + bp.x();
+    const int ay = om.y() * OMAPY + bp.y();
+    ci.cx = floor_div( ax, CELL );
+    ci.cy = floor_div( ay, CELL );
+    const point_om_omt centre( bp.x() - ( ax - ci.cx * CELL ) + CELL / 2, bp.y() - ( ay - ci.cy * CELL ) + CELL / 2 );
+    const int dist = ( trig_dist( centre, town.pos ) * 100 ) / std::max( town.size, 1 );
+    const uint32_t seed = static_cast<uint32_t>( g->get_seed() );
+    ci.h = mix( static_cast<uint32_t>( ci.cx ), static_cast<uint32_t>( ci.cy ), seed );
+    const int roll = static_cast<int>( ci.h % 100u );
+    int rich = 5;
+    int mid = 35;     // poor takes the rest
+    if( dist < 25 ) {
+        rich = 55;
+        mid = 35;
+    } else if( dist < 55 ) {
+        rich = 20;
+        mid = 55;
+    }
+    ci.tier = roll < rich ? 2 : ( roll < rich + mid ? 1 : 0 );
+    return ci;
+}
+
+// -1: no tier (not a Trilobit house); otherwise the tier the building belongs to
+int tier_of( const overmap_special_id &id )
+{
+    const std::string &s = id.str();
+    if( string_starts_with( s, "trl_slum_" ) ) {
+        return 0;
+    }
+    if( string_starts_with( s, "trl_home_" ) ) {
+        return 1;
+    }
+    if( string_starts_with( s, "trl_estate_" ) ) {
+        return 2;
+    }
+    return -1;
+}
+
+std::set<std::tuple<int, int, uint32_t>> &served()
+{
+    static std::set<std::tuple<int, int, uint32_t>> s;
+    return s;
+}
+
+// the service shop for this district, or an empty id when the district gets none
+std::string service_for( const cell_info &ci )
+{
+    static const char *kinds[4] = { "implant", "nano", "grocery", "android" };
+    static const char *letters = "pmr";
+    int k = static_cast<int>( ( ci.h >> 8 ) % 4u );
+    if( k == 3 ) {
+        // android shops: only some middle and some (not all) rich districts
+        const int roll = static_cast<int>( ( ci.h >> 16 ) % 100u );
+        const bool ok = ( ci.tier == 1 && roll < 35 ) || ( ci.tier == 2 && roll < 60 );
+        if( !ok ) {
+            k = 2;
+        }
+    }
+    return std::string( "trl_pl_" ) + kinds[k] + "_" + letters[ci.tier];
+}
+} // namespace
+} // namespace trl_district
+
 void overmap::place_building( const tripoint_om_omt &p, om_direction::type dir, const city &town,
                               std::unordered_set<overmap_special_id> &placed_unique_buildings )
 {
@@ -6281,10 +6379,29 @@ void overmap::place_building( const tripoint_om_omt &p, om_direction::type dir, 
     const om_direction::type building_dir = om_direction::opposite( dir );
 
     const int town_dist = ( trig_dist( building_pos.xy(), town.pos ) * 100 ) / std::max( town.size, 1 );
+    const trl_district::cell_info dist_info = trl_district::locate( pos(), building_pos, town );
+    const auto served_key = std::make_tuple( dist_info.cx, dist_info.cy, static_cast<uint32_t>( g->get_seed() ) );
 
     for( size_t retries = 10; retries > 0; --retries ) {
-        const overmap_special_id building_tid = pick_random_building_to_place( town_dist, town.size,
-                                                placed_unique_buildings );
+        overmap_special_id building_tid;
+        bool service = false;
+        if( trl_district::served().count( served_key ) == 0 && one_in( 4 ) ) {
+            const overmap_special_id sid( trl_district::service_for( dist_info ) );
+            if( sid.is_valid() ) {
+                building_tid = sid;
+                service = true;
+            }
+        }
+        if( !service ) {
+            building_tid = pick_random_building_to_place( town_dist, town.size, placed_unique_buildings );
+            for( int again = 0; again < 24; ++again ) {
+                const int t = trl_district::tier_of( building_tid );
+                if( t < 0 || t == dist_info.tier ) {
+                    break;
+                }
+                building_tid = pick_random_building_to_place( town_dist, town.size, placed_unique_buildings );
+            }
+        }
         if( can_place_special( *building_tid, building_pos, building_dir, false ) ) {
             std::vector<tripoint_om_omt> used_tripoints = place_special( *building_tid, building_pos,
                     building_dir, town, false, false );
@@ -6293,6 +6410,11 @@ void overmap::place_building( const tripoint_om_omt &p, om_direction::type dir, 
             }
             if( building_tid->has_flag( "CITY_UNIQUE" ) ) {
                 placed_unique_buildings.emplace( building_tid );
+            }
+            if( service ) {
+                trl_district::served().insert( served_key );
+                DebugLog( D_INFO, DC_ALL ) << "TRL_SHOP " << building_tid.str() << " at omt "
+                                           << ( pos().x() * OMAPX + building_pos.x() ) << "," << ( pos().y() * OMAPY + building_pos.y() );
             }
             break;
         }
