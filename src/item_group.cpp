@@ -499,7 +499,8 @@ void Item_modifier::modify( item &new_item, const std::string &context ) const
         return;
     }
 
-    new_item.set_damage( rng( damage.first, damage.second ) );
+    // Trilobit: gear in the world is capped at light wear (damage level 1 of 4), never broken
+    new_item.set_damage( std::min( rng( damage.first, damage.second ), itype::damage_scale ) );
     new_item.rand_degradation();
     // no need for dirt if it's a bow
     if( new_item.is_gun() && !new_item.has_flag( flag_PRIMITIVE_RANGED_WEAPON ) &&
