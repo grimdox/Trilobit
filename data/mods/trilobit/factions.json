@@ -232,14 +232,18 @@
   "entries": [
    {
     "item": "pipe",
-    "prob": 40
-   },
-   {
-    "item": "knife_combat",
     "prob": 30
    },
    {
-    "item": "makarov",
+    "item": "trl_kama",
+    "prob": 15
+   },
+   {
+    "item": "knife_combat",
+    "prob": 25
+   },
+   {
+    "item": "trl_gun_vp9",
     "prob": 30
    }
   ]
@@ -334,7 +338,7 @@
   "subtype": "distribution",
   "entries": [
    {
-    "item": "ak47",
+    "item": "trl_gun_va7",
     "prob": 40
    },
    {
@@ -440,7 +444,7 @@
   "subtype": "distribution",
   "entries": [
    {
-    "item": "colt_python",
+    "item": "trl_gun_gr44",
     "prob": 40
    }
   ]
@@ -697,7 +701,7 @@
   "subtype": "distribution",
   "entries": [
    {
-    "item": "m1911",
+    "item": "trl_gun_hp9",
     "prob": 60
    },
    {
@@ -793,7 +797,7 @@
   "subtype": "distribution",
   "entries": [
    {
-    "item": "remington_870",
+    "item": "trl_gun_hs12",
     "prob": 60
    },
    {
@@ -892,11 +896,11 @@
   "subtype": "distribution",
   "entries": [
    {
-    "item": "modular_m4_carbine",
+    "item": "trl_gun_ga5",
     "prob": 50
    },
    {
-    "item": "m14ebr",
+    "item": "trl_gun_gs300",
     "prob": 30
    },
    {
@@ -1169,7 +1173,7 @@
   "subtype": "distribution",
   "entries": [
    {
-    "item": "tec9",
+    "item": "trl_gun_lp5",
     "prob": 30
    },
    {
@@ -1381,11 +1385,15 @@
    },
    {
     "item": "tanto",
-    "prob": 30
+    "prob": 20
    },
    {
     "item": "machete",
-    "prob": 30
+    "prob": 20
+   },
+   {
+    "item": "trl_kusarigama",
+    "prob": 20
    }
   ]
  },

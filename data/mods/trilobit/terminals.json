@@ -1845,6 +1845,50 @@
       {
         "item": "m1911",
         "count": 5
+      },
+      {
+        "item": "trl_gun_hp9",
+        "count": 3
+      },
+      {
+        "item": "trl_gun_vp9",
+        "count": 3
+      },
+      {
+        "item": "trl_gun_hs12",
+        "count": 2
+      },
+      {
+        "item": "trl_gun_va7",
+        "count": 2
+      },
+      {
+        "item": "trl_kama",
+        "count": 4
+      },
+      {
+        "item": "trl_yari",
+        "count": 2
+      },
+      {
+        "item": "trl_nunchaku",
+        "count": 3
+      },
+      {
+        "item": "katana",
+        "count": 2
+      },
+      {
+        "item": "trl_shuriken_4",
+        "count": 20
+      },
+      {
+        "item": "trl_yumi",
+        "count": 2
+      },
+      {
+        "item": "trl_arrow_ap",
+        "count": 30
       }
     ]
   },
@@ -1884,6 +1928,61 @@
       {
         "item": "m1911",
         "price": 50000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_gun_hp9",
+        "price": 90000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_gun_vp9",
+        "price": 45000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_gun_hs12",
+        "price": 120000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_gun_va7",
+        "price": 180000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_kama",
+        "price": 12000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_yari",
+        "price": 26000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_nunchaku",
+        "price": 7000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "katana",
+        "price": 150000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_shuriken_4",
+        "price": 800,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_yumi",
+        "price": 70000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_arrow_ap",
+        "price": 3500,
         "fixed_adj": 0
       },
       {

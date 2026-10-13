@@ -162,15 +162,17 @@ add({"type": "faction", "id": "trl_terminal", "name": "Vending Terminal", "descr
      "likes_u": 0, "respects_u": 0, "known_by_u": False, "size": 100, "power": 100,
      "fac_food_supply": [[0, {"calories": 0, "vitamins": {}}]],
      "wealth": 20000000, "currency": "trl_yen", "price_rules": [], "relations": {}})
+NEWSTOCK = [("trl_gun_hp9", 3, 900), ("trl_gun_vp9", 3, 450), ("trl_gun_hs12", 2, 1200), ("trl_gun_va7", 2, 1800), ("trl_kama", 4, 120),
+            ("trl_yari", 2, 260), ("trl_nunchaku", 3, 70), ("katana", 2, 1500), ("trl_shuriken_4", 20, 8), ("trl_yumi", 2, 700), ("trl_arrow_ap", 30, 35)]
 add({"type": "item_group", "id": "trl_shop_stock", "subtype": "collection",
-     "entries": [{"item": "9mm", "charges": 500}, {"item": "hat_hard", "count": 10}, {"item": "m1911", "count": 5}]})
+     "entries": [{"item": "9mm", "charges": 500}, {"item": "hat_hard", "count": 10}, {"item": "m1911", "count": 5}] + [{"item": i, "count": n} for i, n, _ in NEWSTOCK]})
 add({"type": "item_group", "id": "trl_shop_none", "subtype": "collection", "entries": []})
 add({"type": "npc_class", "id": "trl_nc_shop", "worn_override": "trl_shop_none", "weapon_override": "trl_shop_none", "name": {"str": "Terminal"}, "job_description": "A vending terminal.",
      "common": False,
      "shopkeeper_item_group": [{"group": "trl_shop_stock", "rigid": True}],
      "shopkeeper_price_rules": [{"item": "9mm", "price": 10 * 100 * 50, "fixed_adj": 0},
                                 {"item": "hat_hard", "price": 100 * 100, "fixed_adj": 0},
-                                {"item": "m1911", "price": 500 * 100, "fixed_adj": 0},
+                                {"item": "m1911", "price": 500 * 100, "fixed_adj": 0}] + [{"item": i, "price": pr * 100, "fixed_adj": 0} for i, _, pr in NEWSTOCK] + [
                                 {"item": "trl_yen", "fixed_adj": 0}]})
 
 json.dump(out, open(os.path.join(MOD, "terminals.json"), "w"), indent=2)
