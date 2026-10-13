@@ -210,8 +210,9 @@ n = 0
 for o in d:
     if o.get("type") == "mapgen" and "trl_mid01_00z1" in json.dumps(o.get("om_terrain")):
         o["object"]["place_furniture"] = [f for f in o["object"].get("place_furniture", []) if not f["furn"].startswith("f_trl_m")
-                                          and not f["furn"].startswith("f_trl_shop")]
-        o["object"]["place_furniture"] += [{"furn": "f_trl_mission_terminal", "x": 14, "y": 19}, {"furn": "f_trl_shop_terminal", "x": 16, "y": 19}]
+                                          and not f["furn"].startswith("f_trl_shop") and f["furn"] not in ("f_trl_atm", "f_trl_jack")]
+        o["object"]["place_furniture"] += [{"furn": "f_trl_mission_terminal", "x": 14, "y": 19}, {"furn": "f_trl_shop_terminal", "x": 16, "y": 19},
+                                                 {"furn": "f_trl_atm", "x": 12, "y": 19}, {"furn": "f_trl_jack", "x": 18, "y": 19}]
         n += 1
 json.dump(d, open(p, "w"), indent=1)
 print("terminals.json written;", n, "mapgen patched;", len(out), "objects")

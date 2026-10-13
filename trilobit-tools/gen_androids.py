@@ -187,6 +187,8 @@ PLACEMENT = {  # place id -> list of (frame, role, firmware)
 ATM_PLACES = ["trl_pl_convenience_store", "trl_pl_electronics_bazaar", "trl_pl_implant_clinic", "trl_pl_corp_lobby", "trl_pl_govt_office",
               "trl_pl_transit_station", "trl_pl_capsule_hotel", "trl_pl_arcade_hall"]
 
+JACK_PLACES = ["trl_pl_server_hall", "trl_pl_arcade_hall", "trl_pl_electronics_bazaar", "trl_pl_corp_lobby", "trl_pl_transit_station", "trl_pl_capsule_hotel"]
+
 def android_npcs(place_id):
     return [cls(*t) for t in PLACEMENT.get(place_id, [])]
 

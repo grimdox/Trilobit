@@ -532,6 +532,11 @@ def mapgen_json():
             cand = [(x, y) for y in range(3, 21) for x in range(3, 21) if g.t[y][x] in FLOORS and (x, y) not in used]
             cand.sort(key=lambda c: (c[0] - 16) ** 2 + (c[1] - 11) ** 2)
             obj["place_monster"] = [{"monster": "mon_trl_kumo", "x": cand[0][0], "y": cand[0][1]}]
+        if p["id"] in gand.JACK_PLACES:
+            usedj = {(a["x"], a["y"]) for a in obj.get("place_npcs", [])} | {(f["x"], f["y"]) for f in obj["place_furniture"]} | {(fx, fy) for _, fx, fy in g.f}
+            candj = [(x, y) for y in range(2, 22) for x in range(2, 22) if g.t[y][x] in FLOORS and g.t[y][x] not in ("walk", "road", "grass", "pave", "gravel") and (x, y) not in usedj]
+            if candj:
+                obj["place_furniture"].append({"furn": "f_trl_jack", "x": candj[(2 * len(candj)) // 3][0], "y": candj[(2 * len(candj)) // 3][1]})
         if p["id"] in gand.ATM_PLACES:
             taken2 = {(x, y) for _, x, y in bn} | {(fx, fy) for _, fx, fy in g.f} | {(a["x"], a["y"]) for a in obj.get("place_npcs", [])}
             cand = [(x, y) for y in range(2, 22) for x in range(2, 22) if g.t[y][x] in FLOORS and g.t[y][x] not in ("walk", "road", "grass", "pave", "gravel") and (x, y) not in taken2]
