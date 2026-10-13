@@ -1,0 +1,1746 @@
+[
+ {
+  "type": "mutation",
+  "id": "trl_ghost_left",
+  "name": {
+   "str": "Abandoned shell"
+  },
+  "description": "This body was left behind when its ghost jumped.",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": false
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "EOC_DEATH_SWITCH",
+  "eoc_type": "AVATAR_DEATH",
+  "condition": {
+   "and": [
+    {
+     "u_has_flag": "MACHINE_BRAIN"
+    },
+    {
+     "npc_allies_global": 1
+    },
+    {
+     "u_query": "Your body has died.  Jump your ghost into one of your shells?",
+     "default": true
+    }
+   ]
+  },
+  "effect": [
+   {
+    "math": [
+     "trl_gh_s_speech",
+     "=",
+     "floor(u_skill('speech') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_computer",
+     "=",
+     "floor(u_skill('computer') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_firstaid",
+     "=",
+     "floor(u_skill('firstaid') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_mechanics",
+     "=",
+     "floor(u_skill('mechanics') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_traps",
+     "=",
+     "floor(u_skill('traps') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_driving",
+     "=",
+     "floor(u_skill('driving') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_swimming",
+     "=",
+     "floor(u_skill('swimming') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_fabrication",
+     "=",
+     "floor(u_skill('fabrication') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_cooking",
+     "=",
+     "floor(u_skill('cooking') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_tailor",
+     "=",
+     "floor(u_skill('tailor') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_survival",
+     "=",
+     "floor(u_skill('survival') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_electronics",
+     "=",
+     "floor(u_skill('electronics') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_archery",
+     "=",
+     "floor(u_skill('archery') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_gun",
+     "=",
+     "floor(u_skill('gun') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_launcher",
+     "=",
+     "floor(u_skill('launcher') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_pistol",
+     "=",
+     "floor(u_skill('pistol') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_rifle",
+     "=",
+     "floor(u_skill('rifle') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_shotgun",
+     "=",
+     "floor(u_skill('shotgun') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_smg",
+     "=",
+     "floor(u_skill('smg') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_throw",
+     "=",
+     "floor(u_skill('throw') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_melee",
+     "=",
+     "floor(u_skill('melee') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_bashing",
+     "=",
+     "floor(u_skill('bashing') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_cutting",
+     "=",
+     "floor(u_skill('cutting') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_dodge",
+     "=",
+     "floor(u_skill('dodge') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_stabbing",
+     "=",
+     "floor(u_skill('stabbing') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_unarmed",
+     "=",
+     "floor(u_skill('unarmed') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_chemistry",
+     "=",
+     "floor(u_skill('chemistry') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_s_weapon",
+     "=",
+     "floor(u_skill('weapon') / 2)"
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_repair",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_repair"
+      },
+      {
+       "u_has_trait": "trl_nhq_repair"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_repair",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_purge",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_purge"
+      },
+      {
+       "u_has_trait": "trl_nhq_purge"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_purge",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_plating",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_plating"
+      },
+      {
+       "u_has_trait": "trl_nhq_plating"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_plating",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_reactive",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_reactive"
+      },
+      {
+       "u_has_trait": "trl_nhq_reactive"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_reactive",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_overclock",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_overclock"
+      },
+      {
+       "u_has_trait": "trl_nhq_overclock"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_overclock",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_afterimage",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_afterimage"
+      },
+      {
+       "u_has_trait": "trl_nhq_afterimage"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_afterimage",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_lock_on",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_lock_on"
+      },
+      {
+       "u_has_trait": "trl_nhq_lock_on"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_lock_on",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_shock_field",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_shock_field"
+      },
+      {
+       "u_has_trait": "trl_nhq_shock_field"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_shock_field",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_cloak",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_cloak"
+      },
+      {
+       "u_has_trait": "trl_nhq_cloak"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_cloak",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_dampener",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_dampener"
+      },
+      {
+       "u_has_trait": "trl_nhq_dampener"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_dampener",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_pulse_scan",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_pulse_scan"
+      },
+      {
+       "u_has_trait": "trl_nhq_pulse_scan"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_pulse_scan",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_night_eye",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_night_eye"
+      },
+      {
+       "u_has_trait": "trl_nhq_night_eye"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_night_eye",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_overload",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_overload"
+      },
+      {
+       "u_has_trait": "trl_nhq_overload"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_overload",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_blind",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_blind"
+      },
+      {
+       "u_has_trait": "trl_nhq_blind"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_blind",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_lock",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_lock"
+      },
+      {
+       "u_has_trait": "trl_nhq_lock"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_lock",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_print_ammo",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_print_ammo"
+      },
+      {
+       "u_has_trait": "trl_nhq_print_ammo"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_print_ammo",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_print_kit",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_print_kit"
+      },
+      {
+       "u_has_trait": "trl_nhq_print_kit"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_print_kit",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_blink",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_blink"
+      },
+      {
+       "u_has_trait": "trl_nhq_blink"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_blink",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_hop",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_hop"
+      },
+      {
+       "u_has_trait": "trl_nhq_hop"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_hop",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_siphon",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_siphon"
+      },
+      {
+       "u_has_trait": "trl_nhq_siphon"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_siphon",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_probe",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_probe"
+      },
+      {
+       "u_has_trait": "trl_nhq_probe"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_probe",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_disrupt",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_disrupt"
+      },
+      {
+       "u_has_trait": "trl_nhq_disrupt"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_disrupt",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_takeover",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_takeover"
+      },
+      {
+       "u_has_trait": "trl_nhq_takeover"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_takeover",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "u_add_trait": "trl_ghost_left"
+   },
+   {
+    "math": [
+     "trl_gh_pending",
+     "=",
+     "1"
+    ]
+   },
+   "take_control_menu"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_gh_apply",
+  "eoc_type": "RECURRING",
+  "recurrence": [
+   "1 seconds",
+   "1 seconds"
+  ],
+  "global": true,
+  "condition": {
+   "and": [
+    {
+     "math": [
+      "trl_gh_pending == 1"
+     ]
+    },
+    {
+     "not": {
+      "u_has_trait": "trl_ghost_left"
+     }
+    }
+   ]
+  },
+  "effect": [
+   {
+    "math": [
+     "trl_gh_pending",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('speech')",
+     "=",
+     "max(u_skill('speech'), trl_gh_s_speech)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('computer')",
+     "=",
+     "max(u_skill('computer'), trl_gh_s_computer)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('firstaid')",
+     "=",
+     "max(u_skill('firstaid'), trl_gh_s_firstaid)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('mechanics')",
+     "=",
+     "max(u_skill('mechanics'), trl_gh_s_mechanics)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('traps')",
+     "=",
+     "max(u_skill('traps'), trl_gh_s_traps)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('driving')",
+     "=",
+     "max(u_skill('driving'), trl_gh_s_driving)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('swimming')",
+     "=",
+     "max(u_skill('swimming'), trl_gh_s_swimming)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('fabrication')",
+     "=",
+     "max(u_skill('fabrication'), trl_gh_s_fabrication)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('cooking')",
+     "=",
+     "max(u_skill('cooking'), trl_gh_s_cooking)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('tailor')",
+     "=",
+     "max(u_skill('tailor'), trl_gh_s_tailor)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('survival')",
+     "=",
+     "max(u_skill('survival'), trl_gh_s_survival)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('electronics')",
+     "=",
+     "max(u_skill('electronics'), trl_gh_s_electronics)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('archery')",
+     "=",
+     "max(u_skill('archery'), trl_gh_s_archery)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('gun')",
+     "=",
+     "max(u_skill('gun'), trl_gh_s_gun)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('launcher')",
+     "=",
+     "max(u_skill('launcher'), trl_gh_s_launcher)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('pistol')",
+     "=",
+     "max(u_skill('pistol'), trl_gh_s_pistol)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('rifle')",
+     "=",
+     "max(u_skill('rifle'), trl_gh_s_rifle)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('shotgun')",
+     "=",
+     "max(u_skill('shotgun'), trl_gh_s_shotgun)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('smg')",
+     "=",
+     "max(u_skill('smg'), trl_gh_s_smg)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('throw')",
+     "=",
+     "max(u_skill('throw'), trl_gh_s_throw)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('melee')",
+     "=",
+     "max(u_skill('melee'), trl_gh_s_melee)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('bashing')",
+     "=",
+     "max(u_skill('bashing'), trl_gh_s_bashing)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('cutting')",
+     "=",
+     "max(u_skill('cutting'), trl_gh_s_cutting)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('dodge')",
+     "=",
+     "max(u_skill('dodge'), trl_gh_s_dodge)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('stabbing')",
+     "=",
+     "max(u_skill('stabbing'), trl_gh_s_stabbing)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('unarmed')",
+     "=",
+     "max(u_skill('unarmed'), trl_gh_s_unarmed)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('chemistry')",
+     "=",
+     "max(u_skill('chemistry'), trl_gh_s_chemistry)"
+    ]
+   },
+   {
+    "math": [
+     "u_skill('weapon')",
+     "=",
+     "max(u_skill('weapon'), trl_gh_s_weapon)"
+    ]
+   },
+   {
+    "if": {
+     "not": {
+      "u_has_flag": "MACHINE_BRAIN"
+     }
+    },
+    "then": [
+     {
+      "u_add_bionic": "trl_bio_cyberbrain"
+     }
+    ]
+   },
+   {
+    "math": [
+     "u_nh_seq",
+     "=",
+     "1"
+    ]
+   },
+   {
+    "u_spawn_item": "trl_nh_console"
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_repair == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_repair"
+     },
+     {
+      "math": [
+       "u_nh_ord_repair",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_purge == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_purge"
+     },
+     {
+      "math": [
+       "u_nh_ord_purge",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_plating == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_plating"
+     },
+     {
+      "math": [
+       "u_nh_ord_plating",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_reactive == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_reactive"
+     },
+     {
+      "math": [
+       "u_nh_ord_reactive",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_overclock == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_overclock"
+     },
+     {
+      "math": [
+       "u_nh_ord_overclock",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_afterimage == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_afterimage"
+     },
+     {
+      "math": [
+       "u_nh_ord_afterimage",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_lock_on == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_lock_on"
+     },
+     {
+      "math": [
+       "u_nh_ord_lock_on",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_shock_field == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_shock_field"
+     },
+     {
+      "math": [
+       "u_nh_ord_shock_field",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_cloak == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_cloak"
+     },
+     {
+      "math": [
+       "u_nh_ord_cloak",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_dampener == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_dampener"
+     },
+     {
+      "math": [
+       "u_nh_ord_dampener",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_pulse_scan == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_pulse_scan"
+     },
+     {
+      "math": [
+       "u_nh_ord_pulse_scan",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_night_eye == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_night_eye"
+     },
+     {
+      "math": [
+       "u_nh_ord_night_eye",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_overload == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_overload"
+     },
+     {
+      "math": [
+       "u_nh_ord_overload",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_blind == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_blind"
+     },
+     {
+      "math": [
+       "u_nh_ord_blind",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_lock == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_lock"
+     },
+     {
+      "math": [
+       "u_nh_ord_lock",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_print_ammo == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_print_ammo"
+     },
+     {
+      "math": [
+       "u_nh_ord_print_ammo",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_print_kit == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_print_kit"
+     },
+     {
+      "math": [
+       "u_nh_ord_print_kit",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_blink == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_blink"
+     },
+     {
+      "math": [
+       "u_nh_ord_blink",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_hop == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_hop"
+     },
+     {
+      "math": [
+       "u_nh_ord_hop",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_siphon == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_siphon"
+     },
+     {
+      "math": [
+       "u_nh_ord_siphon",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_probe == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_probe"
+     },
+     {
+      "math": [
+       "u_nh_ord_probe",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_disrupt == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_disrupt"
+     },
+     {
+      "math": [
+       "u_nh_ord_disrupt",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_takeover == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_takeover"
+     },
+     {
+      "math": [
+       "u_nh_ord_takeover",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "run_eocs": [
+     "trl_nh_recalc"
+    ]
+   },
+   {
+    "u_message": "[Trilobit] Your ghost settles into the new shell.  Skills are halved, installed nanohacks wake as far as this cyberbrain allows.",
+    "type": "good"
+   }
+  ]
+ }
+]
