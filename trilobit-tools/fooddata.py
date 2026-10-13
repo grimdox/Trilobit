@@ -78,4 +78,5 @@ CYBER_TIER = {"p": ["nutrient_paste", "hydration_gel"], "m": ["nutrient_paste", 
 
 # plain staples from the stock game that every grocery carries as well
 STAPLES = [("water_clean", 6, "water"), ("cola", 12, "cola"), ("tea_green", 14, "tea"), ("noodles_fast", 16, "noodles"), ("rice_cooked", 9, "rice"),
-           ("energy_drink", 22, "energy drink")]
+           ("energy_drink", 22, "energy drink"),
+           ("dogfood", 30, "dog food"), ("catfood", 25, "cat food"), ("birdfood", 18, "bird feed")]

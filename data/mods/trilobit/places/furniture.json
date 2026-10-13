@@ -276,7 +276,7 @@
   "type": "furniture",
   "id": "f_trl_aquarium",
   "name": "wall aquarium",
-  "description": "A glowing tank of slow, pale fish.",
+  "description": "A glowing tank of slow, pale fish.  Examine it to watch them for a while.",
   "symbol": "A",
   "color": "light_cyan",
   "move_cost_mod": -1,
@@ -291,7 +291,13 @@
    "sound": "smash!",
    "sound_fail": "whump."
   },
-  "light_emitted": 9
+  "light_emitted": 9,
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_fish_watch"
+   ]
+  }
  },
  {
   "type": "furniture",
@@ -1273,5 +1279,107 @@
    "sound": "smash!",
    "sound_fail": "whump."
   }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_ward_bed",
+  "name": "hospital bed",
+  "description": "A rail-sided bed with a thin mattress and a clipboard.",
+  "symbol": "B",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "comfort": 2
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_ward_iv",
+  "name": "IV stand",
+  "description": "A drip stand on wheels.",
+  "symbol": "!",
+  "color": "white",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_ward_cabinet",
+  "name": "medicine cabinet",
+  "description": "A locked glass cabinet of drugs and dressings.",
+  "symbol": "C",
+  "color": "light_green",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_ward_gurney",
+  "name": "ward_gurney",
+  "description": "A wheeled stretcher.",
+  "symbol": "=",
+  "color": "light_gray",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_ward_scanner",
+  "name": "body scanner",
+  "description": "A ring-shaped scanner with a padded table.",
+  "symbol": "O",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 8
  }
 ]

@@ -410,6 +410,26 @@
   "flags": []
  },
  {
+  "type": "overmap_terrain",
+  "id": "trl_pl_hospital_m",
+  "name": "hospital",
+  "sym": "H",
+  "color": "light_red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_pl_hospital_r",
+  "name": "private hospital",
+  "sym": "H",
+  "color": "white",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
   "type": "city_building",
   "id": "trl_pl_noodle_alley",
   "locations": [
@@ -1263,6 +1283,48 @@
      0
     ],
     "overmap": "trl_pl_android_r_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_hospital_m",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_hospital_m_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_hospital_r",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_hospital_r_north"
    }
   ],
   "city_sizes": [

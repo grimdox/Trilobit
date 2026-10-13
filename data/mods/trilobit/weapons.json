@@ -698,6 +698,76 @@
   "longest_side": "900 mm"
  },
  {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_w2011",
+  "looks_like": "laser_rifle",
+  "name": {
+   "str": "Cameco W-2011"
+  },
+  "description": "An enormous steel electric rifle: a rounded body, a long pointed nose and a neon-green chamber glowing in the middle.  It is far too big for most people to handle comfortably, but it throws bolts of lightning that cook flesh and punch through armor.  Made by Cameco Power Systems for site security.  Takes a medium or heavy battery cell.",
+  "weight": "7800 g",
+  "volume": "6 L",
+  "longest_side": "1250 mm",
+  "price": "60 kUSD",
+  "price_postapoc": "3 kUSD",
+  "to_hit": -4,
+  "recoil": 450,
+  "material": [
+   "steel",
+   "plastic"
+  ],
+  "symbol": "(",
+  "color": "light_green",
+  "skill": "rifle",
+  "ammo": [
+   "battery"
+  ],
+  "ammo_to_fire": 6,
+  "range": 45,
+  "ranged_damage": {
+   "damage_type": "electric",
+   "amount": 70,
+   "armor_penetration": 30
+  },
+  "dispersion": 6,
+  "durability": 9,
+  "modes": [
+   [
+    "DEFAULT",
+    "semi-auto",
+    1
+   ],
+   [
+    "AUTO",
+    "auto",
+    5
+   ]
+  ],
+  "loudness": 14,
+  "reload": 260,
+  "ammo_effects": [
+   "LIGHTNING"
+  ],
+  "flags": [
+   "NEVER_JAMS",
+   "NON_FOULING",
+   "NEEDS_NO_LUBE"
+  ],
+  "pocket_data": [
+   {
+    "pocket_type": "MAGAZINE_WELL",
+    "holster": false,
+    "item_restriction": [
+     "medium_battery_cell",
+     "heavy_battery_cell"
+    ]
+   }
+  ]
+ },
+ {
   "type": "item_group",
   "id": "trl_loot_guns",
   "subtype": "distribution",
@@ -800,6 +870,10 @@
    },
    {
     "item": "trl_gun_vlx",
+    "prob": 1
+   },
+   {
+    "item": "trl_gun_w2011",
     "prob": 1
    }
   ]

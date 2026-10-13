@@ -89,8 +89,18 @@ for gid, name, maker, base, text, weight, extra in GUNS:
          "description": f"{text}  Made by {maker}.", "weight": weight, "price": "4 kUSD", "price_postapoc": "200 USD"}
     o.update(extra)
     out.append(o)
+# ---- the Cameco W-2011: an overpowered electric rifle that runs on battery cells (design doc section M)
+out.append({"type": "ITEM", "subtypes": ["GUN"], "id": "trl_gun_w2011", "looks_like": "laser_rifle", "name": {"str": "Cameco W-2011"},
+            "description": "An enormous steel electric rifle: a rounded body, a long pointed nose and a neon-green chamber glowing in the middle.  It is far too big for most people to handle comfortably, but it throws bolts of lightning that cook flesh and punch through armor.  Made by Cameco Power Systems for site security.  Takes a medium or heavy battery cell.",
+            "weight": "7800 g", "volume": "6 L", "longest_side": "1250 mm", "price": "60 kUSD", "price_postapoc": "3 kUSD", "to_hit": -4, "recoil": 450,
+            "material": ["steel", "plastic"], "symbol": "(", "color": "light_green", "skill": "rifle", "ammo": ["battery"], "ammo_to_fire": 6,
+            "range": 45, "ranged_damage": {"damage_type": "electric", "amount": 70, "armor_penetration": 30}, "dispersion": 6, "durability": 9,
+            "modes": [["DEFAULT", "semi-auto", 1], ["AUTO", "auto", 5]], "loudness": 14, "reload": 260, "ammo_effects": ["LIGHTNING"],
+            "flags": ["NEVER_JAMS", "NON_FOULING", "NEEDS_NO_LUBE"],
+            "pocket_data": [{"pocket_type": "MAGAZINE_WELL", "holster": False, "item_restriction": ["medium_battery_cell", "heavy_battery_cell"]}]})
 out.append({"type": "item_group", "id": "trl_loot_guns", "subtype": "distribution",
-            "entries": [{"item": "trl_gun_" + g[0], "prob": (1 if g[0] in ("gam50", "vlx", "ll3", "vr7", "lr80") else 8)} for g in GUNS]})
+            "entries": [{"item": "trl_gun_" + g[0], "prob": (1 if g[0] in ("gam50", "vlx", "ll3", "vr7", "lr80") else 8)} for g in GUNS] +
+                       [{"item": "trl_gun_w2011", "prob": 1}]})
 out.append({"type": "item_group", "id": "trl_loot_melee", "subtype": "distribution",
             "entries": [{"item": i, "prob": p} for i, p in (("trl_kama", 20), ("trl_yari", 10), ("trl_nunchaku", 15), ("trl_kusarigama", 5), ("katana", 5),
                                                          ("wakizashi", 8), ("tanto", 20), ("nodachi", 3), ("naginata", 4), ("bo", 15))]})

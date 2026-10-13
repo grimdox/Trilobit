@@ -83,7 +83,7 @@ fur("neon_amber", "amber neon sign", "A glass tube sign burning a warm amber.", 
 fur("neon_violet", "violet neon sign", "A glass tube sign burning violet.", "=", "magenta", 11, flags=SOLID, passable=True)
 fur("neon_red", "red neon sign", "A glass tube sign burning red.", "=", "light_red", 11, flags=SOLID, passable=True)
 fur("neon_green", "green neon sign", "A glass tube sign burning green.", "=", "light_green", 11, flags=SOLID, passable=True)
-fur("aquarium", "wall aquarium", "A glowing tank of slow, pale fish.", "A", "light_cyan", 9, flags=SOLID)
+fur("aquarium", "wall aquarium", "A glowing tank of slow, pale fish.  Examine it to watch them for a while.", "A", "light_cyan", 9, flags=SOLID, examine="trl_fish_watch")
 fur("fire_drum", "burning drum", "An oil drum with a fire burning inside.", "0", "light_red", 22, flags=SOLID)
 fur("vending", "vending machine", "A brightly lit vending machine.", "V", "light_blue", 9, flags=SOLID)
 fur("console", "glowing console", "A console with a panel of lit controls.", "C", "light_cyan", 7, flags=SOLID)
@@ -503,6 +503,7 @@ def furniture_json():
             d["move_cost_mod"] = 1; d["coverage"] = 40; d["comfort"] = 1; d["required_str"] = 4
         if f["kw"].get("comfort"): d["comfort"] = f["kw"]["comfort"]
         if f["light"]: d["light_emitted"] = f["light"]
+        if f["kw"].get("examine"): d["examine_action"] = {"type": "effect_on_condition", "effect_on_conditions": [f["kw"]["examine"]]}
         out.append(d)
     return out
 CHAR = {}

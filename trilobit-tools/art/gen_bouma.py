@@ -666,6 +666,11 @@ def main(stock, repo):
         tgt = want(key, "chars", lambda role=role, fem=fem: p_human(role, 3 if role == "player" else 1, fem))
         entries.setdefault(tgt, []).extend(ids)
 
+    # held weapons: overlays drawn on top of the character
+    key = ("o", "w2011")
+    tgt = want(key, "chars", lambda: itm.outline(itm.p_wield_arcrifle()))
+    entries.setdefault(tgt, []).append("overlay_wielded_trl_gun_w2011")
+
     # markers (drawn on the flat sheet)
     for mk, ids in (("cursor", ["cursor"]), ("highlight", ["highlight", "highlight_item", "highlight_item_static"]), ("line_target", ["line_target"]),
                     ("animation_line", ["animation_line", "line_trail"]), ("sees_hostile", ["overlay_hostile_sees_player"]),

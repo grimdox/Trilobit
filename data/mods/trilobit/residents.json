@@ -1403,7 +1403,7 @@
      "u_val": "trl_work"
     },
     "target_params": {
-     "om_terrain": "trl_fn24_hospital",
+     "om_terrain": "trl_pl_hospital",
      "om_terrain_match_type": "PREFIX",
      "random": true,
      "search_range": 15,
@@ -2715,7 +2715,7 @@
      "u_val": "trl_work"
     },
     "target_params": {
-     "om_terrain": "trl_fn24_hospital",
+     "om_terrain": "trl_pl_hospital",
      "om_terrain_match_type": "PREFIX",
      "random": true,
      "search_range": 15,
@@ -3191,13 +3191,478 @@
   ]
  },
  {
-  "type": "talk_topic",
-  "id": "TRL_RESIDENT_TALK",
-  "dynamic_line": "Hm?  Can I help you?",
-  "responses": [
+  "type": "effect_on_condition",
+  "id": "trl_res_work_tick",
+  "recurrence": [
+   "90 seconds",
+   "3 minutes"
+  ],
+  "global": true,
+  "effect": [
    {
-    "text": "Just passing through.",
-    "topic": "TALK_DONE"
+    "u_run_npc_eocs": [
+     "trl_res_wander"
+    ],
+    "local": true,
+    "npc_range": 40
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_wander",
+  "condition": {
+   "and": [
+    {
+     "u_has_trait": "trl_resident"
+    },
+    {
+     "not": "u_following"
+    },
+    {
+     "math": [
+      "u_trl_inited == 1"
+     ]
+    },
+    {
+     "math": [
+      "u_npc_anger() <= 0"
+     ]
+    },
+    {
+     "math": [
+      "u_npc_fear() <= 0"
+     ]
+    }
+   ]
+  },
+  "effect": [
+   {
+    "if": {
+     "and": [
+      {
+       "math": [
+        "u_trl_at == 1"
+       ]
+      },
+      {
+       "math": [
+        "u_trl_has_work == 1"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "if": {
+       "math": [
+        "distance('u', u_trl_work) > 14"
+       ]
+      },
+      "then": [
+       {
+        "u_go_to_loc": {
+         "u_val": "trl_work"
+        }
+       }
+      ],
+      "else": [
+       {
+        "if": {
+         "math": [
+          "rand(3) > 0"
+         ]
+        },
+        "then": [
+         {
+          "u_location_variable": {
+           "u_val": "trl_spot"
+          },
+          "max_radius": 7,
+          "passable_only": true,
+          "true_eocs": [
+           "trl_res_goto_spot"
+          ]
+         }
+        ]
+       },
+       {
+        "run_eocs": [
+         "trl_res_bark"
+        ]
+       }
+      ]
+     }
+    ],
+    "else": [
+     {
+      "if": {
+       "math": [
+        "u_trl_at == 0"
+       ]
+      },
+      "then": [
+       {
+        "if": {
+         "math": [
+          "distance('u', u_trl_home) > 10"
+         ]
+        },
+        "then": [
+         {
+          "u_go_to_loc": {
+           "u_val": "trl_home"
+          }
+         }
+        ],
+        "else": [
+         {
+          "if": {
+           "math": [
+            "rand(4) == 0"
+           ]
+          },
+          "then": [
+           {
+            "u_location_variable": {
+             "u_val": "trl_spot"
+            },
+            "max_radius": 4,
+            "passable_only": true,
+            "true_eocs": [
+             "trl_res_goto_spot"
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark",
+  "effect": [
+   {
+    "if": {
+     "math": [
+      "rand(9) == 0"
+     ]
+    },
+    "then": [
+     {
+      "run_eocs": [
+       "trl_res_bark_poor_day_laborer",
+       "trl_res_bark_poor_street_vendor",
+       "trl_res_bark_poor_scrapper",
+       "trl_res_bark_poor_courier",
+       "trl_res_bark_poor_dishwasher",
+       "trl_res_bark_poor_janitor",
+       "trl_res_bark_mid_clerk",
+       "trl_res_bark_mid_technician",
+       "trl_res_bark_mid_nurse",
+       "trl_res_bark_mid_teacher",
+       "trl_res_bark_mid_shop_assistant",
+       "trl_res_bark_mid_police_clerk",
+       "trl_res_bark_mid_driver",
+       "trl_res_bark_mid_engineer",
+       "trl_res_bark_rich_executive",
+       "trl_res_bark_rich_owner",
+       "trl_res_bark_rich_investor",
+       "trl_res_bark_rich_surgeon",
+       "trl_res_bark_rich_official"
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_poor_day_laborer",
+  "condition": {
+   "u_has_class": "trl_nc_res_poor_day_laborer"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_poor_day_laborer",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_poor_street_vendor",
+  "condition": {
+   "u_has_class": "trl_nc_res_poor_street_vendor"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_poor_street_vendor",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_poor_scrapper",
+  "condition": {
+   "u_has_class": "trl_nc_res_poor_scrapper"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_poor_scrapper",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_poor_courier",
+  "condition": {
+   "u_has_class": "trl_nc_res_poor_courier"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_poor_courier",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_poor_dishwasher",
+  "condition": {
+   "u_has_class": "trl_nc_res_poor_dishwasher"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_poor_dishwasher",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_poor_janitor",
+  "condition": {
+   "u_has_class": "trl_nc_res_poor_janitor"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_poor_janitor",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_mid_clerk",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_clerk"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_mid_clerk",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_mid_technician",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_technician"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_mid_technician",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_mid_nurse",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_nurse"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_mid_nurse",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_mid_teacher",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_teacher"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_mid_teacher",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_mid_shop_assistant",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_shop_assistant"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_mid_shop_assistant",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_mid_police_clerk",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_police_clerk"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_mid_police_clerk",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_mid_driver",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_driver"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_mid_driver",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_mid_engineer",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_engineer"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_mid_engineer",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_rich_executive",
+  "condition": {
+   "u_has_class": "trl_nc_res_rich_executive"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_rich_executive",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_rich_owner",
+  "condition": {
+   "u_has_class": "trl_nc_res_rich_owner"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_rich_owner",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_rich_investor",
+  "condition": {
+   "u_has_class": "trl_nc_res_rich_investor"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_rich_investor",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_rich_surgeon",
+  "condition": {
+   "u_has_class": "trl_nc_res_rich_surgeon"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_rich_surgeon",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_bark_rich_official",
+  "condition": {
+   "u_has_class": "trl_nc_res_rich_official"
+  },
+  "effect": [
+   {
+    "u_make_sound": "trl_bark_rich_official",
+    "snippet": true,
+    "volume": 14,
+    "type": "speech"
    }
   ]
  }

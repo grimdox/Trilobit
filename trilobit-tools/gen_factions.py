@@ -20,7 +20,7 @@ MEMBERS = {
     "trl_jsdf": [
         ("patrol", "Patrol officer", ["leather_police_jacket", "pants_cargo", "boots_combat", "ballistic_vest_light"], [("trl_gun_hp9", 60), ("baton-extended", 40)], {"pistol": 3, "melee": 2}),
         ("riot", "Riot trooper", ["armor_riot", "helmet_riot", "boots_combat", "gloves_light"], [("trl_gun_hs12", 60), ("baton-extended", 40)], {"shotgun": 4, "melee": 3}),
-        ("tactical", "Tactical operator", ["ballistic_vest_esapi", "tac_helmet", "pants_army", "boots_combat", "gloves_light"], [("trl_gun_ga5", 50), ("trl_gun_gs300", 30), ("katana", 20)], {"smg": 6, "rifle": 5, "melee": 4}),
+        ("tactical", "Tactical operator", ["ballistic_vest_esapi", "tac_helmet", "pants_army", "boots_combat", "gloves_light"], [("trl_gun_ga5", 50), ("trl_gun_gs300", 30), ("katana", 20), ("trl_gun_w2011", 4)], {"smg": 6, "rifle": 5, "melee": 4}),
     ],
     "trl_nasim": [
         ("hacker", "Script-hacker", ["hoodie", "jeans", "sneakers", "gloves_light"], [("trl_gun_lp5", 30), ("knife_folding", 30)], {"computer": 7, "electronics": 5, "pistol": 2}),
@@ -158,8 +158,6 @@ def build():
                         "no": {"math": [f"{r} <= 6"], "yes": "Friendly.  People here like you.",
                         "no": {"math": [f"{r} <= 9"], "yes": "Trusted.  You're one of ours, almost.", "no": "Inner circle."}}}}}}},
                     "responses": [{"text": "Fair enough.", "topic": "TALK_DONE"}]})
-    out.append({"type": "talk_topic", "id": "TRL_FACTION_MEMBER", "dynamic_line": "Keep walking.",
-                "responses": [{"text": "Fine.", "topic": "TALK_DONE"}]})
     # ----- ranks
     # rank -> faction likes_u/respects_u/trusts_u: 3 * rank (enemy when likes_u < -10, i.e. rank <= -4)
     sync = []

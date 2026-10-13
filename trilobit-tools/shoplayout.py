@@ -79,10 +79,47 @@ def register(env):
             for x in (6, 17): g.f_("statue_fox", x, 16)
         decor(g, t)
 
+    fur = env["fur"]
+    SOLID, SEAT = env["SOLID"], env["SEAT"]
+    fur("ward_bed", "hospital bed", "A rail-sided bed with a thin mattress and a clipboard.", "B", "light_cyan", flags=env["SOLID"], comfort=2)
+    fur("ward_iv", "IV stand", "A drip stand on wheels.", "!", "white", flags=SOLID, passable=True)
+    fur("ward_cabinet", "medicine cabinet", "A locked glass cabinet of drugs and dressings.", "C", "light_green", flags=SOLID)
+    fur("ward_gurney", "ward_gurney", "A wheeled stretcher.", "=", "light_gray", flags=SOLID, passable=True)
+    fur("ward_scanner", "body scanner", "A ring-shaped scanner with a padded table.", "O", "light_cyan", 8, flags=SOLID)
+
+    def post(g, t):
+        """a power charging post just outside the building's east wall"""
+        g.extra = getattr(g, "extra", [])
+        g.extra.append((f"f_trl_recharge_{t}", 22, 12)); g.occ.add((22, 12))
+
+    def hospital(g, t):
+        k = LOOK[t]
+        shell(g, 2, 3, 21, 20, k["wall"], k["floor"], door="elock_c", win=k["win"] or True)
+        g.line(k["counter"], 5, 13, 16, 13)
+        for x in (4, 8, 12, 16):              # ward row along the north wall
+            g.f_("ward_bed", x, 5); g.f_("ward_iv", x + 1, 5)
+        for x in (4, 8, 12, 16):
+            g.f_("ward_bed", x, 8); g.f_("ward_iv", x + 1, 8)
+        g.line("ward_cabinet", 19, 5, 19, 9)
+        g.f_("ward_scanner", 19, 16); g.f_("ward_gurney", 17, 16); g.f_("console", 20, 16)
+        g.line("lightbox", 4, 15, 4, 18)
+        for x in (7, 9, 11): g.f_(k["seat"], x, 18)
+        g.f_("vending", 20, 19)
+        decor(g, t)
+        post(g, t); g.f_("street_lamp", 22, 14)
+
     FN = {"implant": implant, "nano": nano, "grocery": grocery, "android": android}
     for kind, tiers in SD.TIERS.items():
         for t in tiers:
             def wrapped(g, kind=kind, t=t):
                 FN[kind](g, t)
                 ensure_lights(g)
-            PLACES.append(dict(id=SD.pid(kind, t), name=SD.NAME[(kind, t)], sym=SD.SYM[kind], color=SD.COLOR[t], fn=wrapped, tag="shop", service=True))
+            def with_post(g, kind=kind, t=t):
+                wrapped(g)
+                post(g, t)
+            PLACES.append(dict(id=SD.pid(kind, t), name=SD.NAME[(kind, t)], sym=SD.SYM[kind], color=SD.COLOR[t], fn=with_post, tag="shop", service=True))
+    for t in "mr":
+        def hosp(g, t=t):
+            hospital(g, t); ensure_lights(g)
+        PLACES.append(dict(id=f"trl_pl_hospital_{t}", name={"m": "hospital", "r": "private hospital"}[t], sym="H", color="light_red" if t == "m" else "white",
+                           fn=hosp, tag="shop", service=True))

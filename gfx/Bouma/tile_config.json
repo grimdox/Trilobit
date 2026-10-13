@@ -1351,6 +1351,7 @@
       "f_trl_sun_lounger",
       "f_trl_ticket_gate",
       "f_trl_transformer",
+      "f_trl_ward_gurney",
       "f_vitrified_birdbath",
       "f_vitrified_water_heater",
       "f_water_heater",
@@ -1459,6 +1460,7 @@
       "f_torah_ark",
       "f_training_dummy_heavy",
       "f_trl_nightstand",
+      "f_trl_recharge_p",
       "f_trl_wall_pipes_f",
       "f_utility_pole",
       "f_wooden_flagpole"
@@ -1540,13 +1542,20 @@
       "f_skin_door",
       "f_skin_door_o",
       "f_styling_station",
+      "f_trl_autodoc_imp_m",
+      "f_trl_autodoc_imp_p",
+      "f_trl_autodoc_imp_r",
+      "f_trl_autodoc_nano_m",
+      "f_trl_autodoc_nano_p",
+      "f_trl_autodoc_nano_r",
       "f_trl_chandelier",
       "f_trl_clothesline",
       "f_trl_iv_stand",
       "f_trl_kitchen_island",
       "f_trl_paper_stack",
       "f_trl_scroll",
-      "f_trl_vase_white"
+      "f_trl_vase_white",
+      "f_trl_ward_iv"
      ],
      "fg": 133
     },
@@ -1699,6 +1708,7 @@
       "f_trl_holo_wall",
       "f_trl_koi_basin",
       "f_trl_mirror_ball",
+      "f_trl_recharge_m",
       "f_trl_sheet_roll",
       "f_trl_vr_rig",
       "f_trl_wind_chime"
@@ -1869,6 +1879,7 @@
       "f_trl_departure_board",
       "f_trl_net_node",
       "f_trl_polymer_vat",
+      "f_trl_recharge_r",
       "f_trl_status_panel",
       "f_trl_vase_tall",
       "f_winter_wreath"
@@ -2244,7 +2255,10 @@
      "fg": 212
     },
     {
-     "id": "f_trl_hospital_bed",
+     "id": [
+      "f_trl_hospital_bed",
+      "f_trl_ward_bed"
+     ],
      "fg": 213
     },
     {
@@ -4245,7 +4259,8 @@
     {
      "id": [
       "f_diesel_tank_smashed",
-      "f_trl_charge_rack"
+      "f_trl_charge_rack",
+      "f_trl_ward_cabinet"
      ],
      "fg": 419
     },
@@ -4367,6 +4382,7 @@
       "f_trl_dispatch_desk",
       "f_trl_mission_terminal",
       "f_trl_server_rack",
+      "f_trl_ward_scanner",
       "f_vending_c",
       "f_vending_c_networked",
       "f_vending_c_off"
@@ -4914,6 +4930,7 @@
       "mon_fish_sturgeon_lake",
       "mon_flatlander",
       "mon_generator",
+      "mon_trl_chicken",
       "mon_turkey_domestic",
       "mon_vortex"
      ],
@@ -5185,6 +5202,7 @@
       "mon_skeleton_necro",
       "mon_tainted_shadow",
       "mon_thing",
+      "mon_trl_assassin",
       "mon_zombie_creepy",
       "mon_zombie_necro",
       "mon_zombie_necro_boomer",
@@ -5312,6 +5330,7 @@
       "mon_reindeer",
       "mon_reindeer_fawn",
       "mon_squirrel_red",
+      "mon_trl_dog",
       "mon_weasel",
       "mon_wild_rabbit",
       "mon_wild_rabbit_baby",
@@ -5451,6 +5470,7 @@
       "mon_raccoon",
       "mon_sewer_rat",
       "mon_squirrel",
+      "mon_trl_cat",
       "mon_tusked_moose_calf",
       "mon_zeer_fungus",
       "mon_zeindeer_fungus",
@@ -5812,6 +5832,7 @@
       "mon_mink_tadpole",
       "mon_spade_tadpole",
       "mon_tiger",
+      "mon_trl_sniper",
       "mon_turtle_painted",
       "mon_turtle_painted_baby",
       "mon_turtle_snapping_common",
@@ -6689,6 +6710,10 @@
     {
      "id": "npc_female",
      "fg": 716
+    },
+    {
+     "id": "overlay_wielded_trl_gun_w2011",
+     "fg": 717
     }
    ]
   },
@@ -8495,6 +8520,17 @@
       "tempered_glass_sheet",
       "test_tube",
       "test_tube_micro",
+      "trl_buy_basic",
+      "trl_buy_bodyguard",
+      "trl_buy_elite",
+      "trl_buy_porter",
+      "trl_buy_standard",
+      "trl_cf_ghost_sashimi",
+      "trl_cf_hydration_gel",
+      "trl_cf_marrow_ampoule",
+      "trl_cf_nutrient_paste",
+      "trl_cf_overclock_chow",
+      "trl_cf_protein_brick",
       "trl_nh_console",
       "tumbler_plastic",
       "v12_combustion",
@@ -10660,6 +10696,18 @@
       "toast",
       "tortilla_corn",
       "tortilla_flour",
+      "trl_f_dorayaki",
+      "trl_f_kasha",
+      "trl_f_katsu_bento",
+      "trl_f_kotleta",
+      "trl_f_miso_soup",
+      "trl_f_mooncake",
+      "trl_f_natto",
+      "trl_f_okonomiyaki",
+      "trl_f_piroshki",
+      "trl_f_takoyaki",
+      "trl_f_unagi_don",
+      "trl_f_yakitori",
       "vegan_butter",
       "vegan_gravy_mix",
       "walnut_pulp",
@@ -11558,6 +11606,10 @@
       "toasterpastryfrozen",
       "tomato",
       "tomato_cut",
+      "trl_f_borscht",
+      "trl_f_dandan",
+      "trl_f_kung_pao",
+      "trl_f_mapo_tofu",
       "wintergreen_berry"
      ],
      "fg": 793
@@ -11610,6 +11662,8 @@
       "pepper",
       "roasted_cattail_rhizome",
       "slime_scrap",
+      "trl_f_black_bread",
+      "trl_f_century_egg",
       "tupelo_fruit"
      ],
      "fg": 795
@@ -11941,6 +11995,9 @@
       "stout",
       "tea",
       "tea_sweetened",
+      "trl_f_kan_coffee",
+      "trl_f_kvass",
+      "trl_f_mugicha",
       "wash_moonshine",
       "wash_whiskey",
       "whiskey",
@@ -13163,6 +13220,7 @@
       "tea_bag_dandelion",
       "tea_fruit_bag",
       "tea_green_bag",
+      "trl_f_soy_milk",
       "vinegar",
       "walnut_milk",
       "wine_chardonnay",
@@ -13828,6 +13886,12 @@
       "tallow",
       "tofu",
       "tofu_fried",
+      "trl_f_baozi",
+      "trl_f_congee",
+      "trl_f_mochi",
+      "trl_f_olivier",
+      "trl_f_onigiri",
+      "trl_f_tangyuan",
       "wastebread",
       "yeast",
       "yogurt_starter_culture"
@@ -13942,7 +14006,6 @@
       "smoxygen_tank",
       "stand_ring_clamps",
       "tongs",
-      "trl_implant_kit",
       "v_planter_item"
      ],
      "fg": 839
@@ -14158,6 +14221,13 @@
       "taco",
       "tofu_rice",
       "tofu_stirfry",
+      "trl_f_blini",
+      "trl_f_chow_mein",
+      "trl_f_cup_ramen",
+      "trl_f_fried_rice",
+      "trl_f_jianbing",
+      "trl_f_syrniki",
+      "trl_f_tamagoyaki",
       "tuna_noodle_casserole",
       "t\u00d6ttchen",
       "vegetable_omelet",
@@ -15446,6 +15516,8 @@
       "sushi_fishroll",
       "sushi_meatroll",
       "sushi_veggyroll",
+      "trl_f_shchi",
+      "trl_f_zongzi",
       "underbrush",
       "veggy",
       "veggy_aspic",
@@ -15770,6 +15842,10 @@
       "straw_pile",
       "syrup_simple",
       "tallow_tainted",
+      "trl_f_gyoza",
+      "trl_f_jiaozi",
+      "trl_f_pelmeni",
+      "trl_f_vobla",
       "venom_paralytic"
      ],
      "fg": 903
@@ -16118,7 +16194,57 @@
       "trl_bio_reflex",
       "trl_bio_threat_sense",
       "trl_chip_nh_afterimage",
-      "trl_chip_nh_overclock"
+      "trl_chip_nh_overclock",
+      "trl_imp_arm_l_adv",
+      "trl_imp_arm_l_basic",
+      "trl_imp_arm_l_elite",
+      "trl_imp_arm_l_med",
+      "trl_imp_arm_r_adv",
+      "trl_imp_arm_r_basic",
+      "trl_imp_arm_r_elite",
+      "trl_imp_arm_r_med",
+      "trl_imp_blade_r",
+      "trl_imp_gun_l",
+      "trl_imp_gun_r",
+      "trl_imp_head_int_1",
+      "trl_imp_head_int_2",
+      "trl_imp_head_int_3",
+      "trl_imp_head_lace",
+      "trl_imp_head_per_1",
+      "trl_imp_head_per_2",
+      "trl_imp_head_per_3",
+      "trl_imp_leg_l_adv",
+      "trl_imp_leg_l_basic",
+      "trl_imp_leg_l_elite",
+      "trl_imp_leg_l_med",
+      "trl_imp_leg_r_adv",
+      "trl_imp_leg_r_basic",
+      "trl_imp_leg_r_elite",
+      "trl_imp_leg_r_med",
+      "trl_imp_plate_arm_l_heavy",
+      "trl_imp_plate_arm_l_light",
+      "trl_imp_plate_arm_r_heavy",
+      "trl_imp_plate_arm_r_light",
+      "trl_imp_plate_head_heavy",
+      "trl_imp_plate_head_light",
+      "trl_imp_plate_leg_l_heavy",
+      "trl_imp_plate_leg_l_light",
+      "trl_imp_plate_leg_r_heavy",
+      "trl_imp_plate_leg_r_light",
+      "trl_imp_plate_torso_heavy",
+      "trl_imp_plate_torso_light",
+      "trl_imp_servos",
+      "trl_imp_spine_all",
+      "trl_imp_spine_dex_1",
+      "trl_imp_spine_dex_2",
+      "trl_imp_spine_dex_3",
+      "trl_imp_spine_int_1",
+      "trl_imp_spine_int_2",
+      "trl_imp_spine_int_3",
+      "trl_imp_spine_str_1",
+      "trl_imp_spine_str_2",
+      "trl_imp_spine_str_3",
+      "trl_imp_stomach"
      ],
      "fg": 911
     },
@@ -16531,6 +16657,7 @@
       "tea_green",
       "tea_green_raw",
       "tea_raw",
+      "trl_f_sencha",
       "water_sewage",
       "watermelon",
       "watermelon_wedge"
@@ -16752,7 +16879,8 @@
       "juice_pulp",
       "mixed_alcohol_weak",
       "pineapple_juice",
-      "sports_drink"
+      "sports_drink",
+      "trl_f_kompot"
      ],
      "fg": 940
     },
@@ -17028,7 +17156,9 @@
       "rehydrated_froglegs",
       "rehydrated_meat",
       "rehydrated_poultry",
-      "salted_mollusk"
+      "salted_mollusk",
+      "trl_f_sashimi",
+      "trl_f_solyanka"
      ],
      "fg": 965
     },
@@ -17274,7 +17404,8 @@
       "chem_glycerol",
       "chem_phenol",
       "chem_toluene",
-      "liquid_soap"
+      "liquid_soap",
+      "trl_f_herring"
      ],
      "fg": 975
     },
@@ -17402,6 +17533,7 @@
       "energy_drink_atomic",
       "pine_tea",
       "pine_wine",
+      "trl_f_oolong",
       "zerotropical"
      ],
      "fg": 987
@@ -17809,7 +17941,8 @@
     {
      "id": [
       "gelatin_dessert_fruit",
-      "gelatin_dessert_homemade"
+      "gelatin_dessert_homemade",
+      "trl_f_hotpot_tin"
      ],
      "fg": 1029
     },
@@ -17967,7 +18100,8 @@
       "hpt3895",
       "rm103a_pistol",
       "rm228",
-      "sw_610"
+      "sw_610",
+      "trl_fake_arm_gun"
      ],
      "fg": 1047
     },
@@ -18424,17 +18558,24 @@
     },
     {
      "id": [
+      "trl_cf_cell_ramen",
+      "trl_cf_glucose_cube"
+     ],
+     "fg": 1111
+    },
+    {
+     "id": [
       "trl_chip_nh_blink",
       "trl_chip_nh_hop"
      ],
-     "fg": 1111
+     "fg": 1112
     },
     {
      "id": [
       "trl_chip_nh_lock_on",
       "trl_chip_nh_shock_field"
      ],
-     "fg": 1112
+     "fg": 1113
     },
     {
      "id": [
@@ -18442,45 +18583,56 @@
       "trl_chip_nh_pulse_scan",
       "trl_data_core"
      ],
-     "fg": 1113
+     "fg": 1114
     },
     {
      "id": [
       "trl_chip_nh_purge",
       "trl_chip_nh_repair"
      ],
-     "fg": 1114
-    },
-    {
-     "id": "trl_implant_monitor",
      "fg": 1115
     },
     {
-     "id": "trousers_eod",
+     "id": [
+      "trl_f_caviar_blini",
+      "trl_f_tushonka"
+     ],
      "fg": 1116
     },
     {
-     "id": "veggy_canned",
+     "id": "trl_gun_w2011",
      "fg": 1117
+    },
+    {
+     "id": "trl_implant_monitor",
+     "fg": 1118
+    },
+    {
+     "id": "trousers_eod",
+     "fg": 1119
+    },
+    {
+     "id": "veggy_canned",
+     "fg": 1120
     },
     {
      "id": [
       "water",
       "water_murky"
      ],
-     "fg": 1118
+     "fg": 1121
     },
     {
      "id": "welder_crude",
-     "fg": 1119
+     "fg": 1122
     },
     {
      "id": "workbench_with_recharger",
-     "fg": 1120
+     "fg": 1123
     },
     {
      "id": "wristrocket",
-     "fg": 1121
+     "fg": 1124
     }
    ]
   },

@@ -20,7 +20,7 @@ JOBS = {
     "mid": {
         "clerk":          ("Clerk", "trl_fn12_department_store", ["tie_necktie", "buttonshirt"], [], {"speech": 2}),
         "technician":     ("Technician", "trl_fn09_telecom", ["technician_shirt_gray", "technician_pants_gray"], [], {"electronics": 3, "computer": 2}),
-        "nurse":          ("Nurse", "trl_fn24_hospital", ["coat_lab"], [], {"firstaid": 4}),
+        "nurse":          ("Nurse", "trl_pl_hospital", ["coat_lab"], [], {"firstaid": 4}),
         "teacher":        ("Teacher", "trl_fn19_library_school", ["sweater"], [], {"speech": 3}),
         "shop_assistant": ("Shop assistant", "trl_fn13_supermarket", ["apron_cotton"], [], {"speech": 1}),
         "police_clerk":   ("Police clerk", "trl_fn02_precinct", ["leather_police_jacket"], [("baton", 25)], {"computer": 2, "pistol": 1}),
@@ -36,7 +36,7 @@ JOBS = {
     },
 }
 RICH_WORK = {"executive": "trl_fn08_corp_office", "owner": "trl_fn10_hotel", "investor": "trl_fn06_bank",
-             "surgeon": "trl_fn24_hospital", "official": "trl_fn01_district_office"}
+             "surgeon": "trl_pl_hospital", "official": "trl_fn01_district_office"}
 BASE_WORN = {
     "poor": [("tshirt", 60), ("tank_top", 40), ("jeans", 50), ("pants_cargo", 50), ("socks", 100), ("sneakers", 60), ("boots_rubber", 40), ("hoodie", 40)],
     "mid": [("dress_shirt", 40), ("polo_shirt", 30), ("buttonshirt", 30), ("jeans", 40), ("pants_checkered", 20), ("socks", 100), ("dress_shoes", 60), ("sneakers", 40)],
@@ -152,9 +152,33 @@ def build():
                               {"math": ["u_trl_at = 2"]}],
                      "else": [{"if": {"math": ["u_trl_at != 0"]},
                                "then": [{"u_go_to_loc": {"u_val": "trl_home"}}, {"math": ["u_trl_at = 0"]}]}]}]},
-        {"type": "talk_topic", "id": "TRL_RESIDENT_TALK", "dynamic_line": "Hm?  Can I help you?",
-         "responses": [{"text": "Just passing through.", "topic": "TALK_DONE"}]},
+        # ---- doing the job: residents at work wander around their workplace (every few minutes while the player is near),
+        # call out a line now and then, and off duty they potter about near home.
+        {"type": "effect_on_condition", "id": "trl_res_work_tick", "recurrence": ["90 seconds", "3 minutes"], "global": True,
+         "effect": [{"u_run_npc_eocs": ["trl_res_wander"], "local": True, "npc_range": 40}]},
+        {"type": "effect_on_condition", "id": "trl_res_wander",
+         "condition": {"and": [{"u_has_trait": "trl_resident"}, {"not": "u_following"}, {"math": ["u_trl_inited == 1"]},
+                               {"math": ["u_npc_anger() <= 0"]}, {"math": ["u_npc_fear() <= 0"]}]},
+         "effect": [
+             {"if": {"and": [{"math": ["u_trl_at == 1"]}, {"math": ["u_trl_has_work == 1"]}]},
+             "then": [{"if": {"math": ["distance('u', u_trl_work) > 14"]},
+                       "then": [{"u_go_to_loc": {"u_val": "trl_work"}}],
+                       "else": [{"if": {"math": ["rand(3) > 0"]},
+                                 "then": [{"u_location_variable": {"u_val": "trl_spot"}, "max_radius": 7, "passable_only": True,
+                                           "true_eocs": ["trl_res_goto_spot"]}]},
+                                {"run_eocs": ["trl_res_bark"]}]}],
+             "else": [{"if": {"math": ["u_trl_at == 0"]},
+                       "then": [{"if": {"math": ["distance('u', u_trl_home) > 10"]},
+                                 "then": [{"u_go_to_loc": {"u_val": "trl_home"}}],
+                                 "else": [{"if": {"math": ["rand(4) == 0"]},
+                                           "then": [{"u_location_variable": {"u_val": "trl_spot"}, "max_radius": 4, "passable_only": True,
+                                                     "true_eocs": ["trl_res_goto_spot"]}]}]}]}]}]},
+        {"type": "effect_on_condition", "id": "trl_res_bark", "effect": [
+            {"if": {"math": ["rand(9) == 0"]}, "then": [{"run_eocs": [f"trl_res_bark_{t}_{j}" for t, j in all_jobs()]}]}]},
     ]
+    for tier, job in all_jobs():
+        out.append({"type": "effect_on_condition", "id": f"trl_res_bark_{tier}_{job}", "condition": {"u_has_class": template_id(tier, job)},
+                    "effect": [{"u_make_sound": f"trl_bark_{tier}_{job}", "snippet": True, "volume": 14, "type": "speech"}]})
     return out
 
 

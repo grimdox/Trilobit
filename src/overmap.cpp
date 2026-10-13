@@ -6353,6 +6353,25 @@ std::set<std::tuple<int, int, uint32_t>> &served()
     return s;
 }
 
+std::set<std::tuple<int, int, uint32_t>> &hospital_served()
+{
+    static std::set<std::tuple<int, int, uint32_t>> s;
+    return s;
+}
+
+// a hospital for this district, or an empty id: only middle and rich districts, about one in four
+std::string hospital_for( const cell_info &ci )
+{
+    if( ci.tier == 0 ) {
+        return std::string();
+    }
+    const int roll = static_cast<int>( ( ci.h >> 20 ) % 100u );
+    if( roll >= ( ci.tier == 2 ? 30 : 22 ) ) {
+        return std::string();
+    }
+    return ci.tier == 2 ? "trl_pl_hospital_r" : "trl_pl_hospital_m";
+}
+
 // the service shop for this district, or an empty id when the district gets none
 std::string service_for( const cell_info &ci )
 {
@@ -6385,7 +6404,16 @@ void overmap::place_building( const tripoint_om_omt &p, om_direction::type dir, 
     for( size_t retries = 10; retries > 0; --retries ) {
         overmap_special_id building_tid;
         bool service = false;
-        if( trl_district::served().count( served_key ) == 0 && one_in( 4 ) ) {
+        bool hospital = false;
+        if( trl_district::hospital_served().count( served_key ) == 0 && one_in( 4 ) ) {
+            const overmap_special_id hid( trl_district::hospital_for( dist_info ) );
+            if( hid.is_valid() ) {
+                building_tid = hid;
+                service = true;
+                hospital = true;
+            }
+        }
+        if( !service && trl_district::served().count( served_key ) == 0 && one_in( 4 ) ) {
             const overmap_special_id sid( trl_district::service_for( dist_info ) );
             if( sid.is_valid() ) {
                 building_tid = sid;
@@ -6412,7 +6440,11 @@ void overmap::place_building( const tripoint_om_omt &p, om_direction::type dir, 
                 placed_unique_buildings.emplace( building_tid );
             }
             if( service ) {
-                trl_district::served().insert( served_key );
+                if( hospital ) {
+                    trl_district::hospital_served().insert( served_key );
+                } else {
+                    trl_district::served().insert( served_key );
+                }
                 DebugLog( D_INFO, DC_ALL ) << "TRL_SHOP " << building_tid.str() << " at omt "
                                            << ( pos().x() * OMAPX + building_pos.x() ) << "," << ( pos().y() * OMAPY + building_pos.y() );
             }

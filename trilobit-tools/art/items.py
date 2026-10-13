@@ -55,6 +55,8 @@ def classify_item(i, o):
     st = set(o.get("subtypes") or [])
     t = o.get("type")
     col = pal(o.get("color"))
+    if i == "trl_gun_w2011":
+        return ("arcrifle", "light_green")
     if "GUN" in st or t == "GUN":
         sk = str(o.get("skill") or "")
         if "archery" in sk or has(s, "bow", "crossbow"):
@@ -148,6 +150,41 @@ def classify_item(i, o):
     return ("gem", col)
 
 
+def _arcrifle(cv):
+    """The Cameco W-2011 electric rifle, drawn pointing right on a 32x32 canvas.  Original design from the brief: an oversized steel
+    body with a rounded belly, a pointed nose, and a glowing neon-green chamber in the middle; it looks too big for one person."""
+    steel = (150, 158, 176)
+    steel_d = (86, 92, 110)
+    steel_l = (214, 220, 232)
+    glow = (90, 255, 140)
+    cv.ellipse((8, 8, 21, 22), steel_d)                     # rounded body, deep belly
+    cv.ellipse((8, 7, 21, 19), steel)
+    cv.poly([(20, 11), (31, 14.5), (20, 17)], steel)         # long pointed nose
+    cv.poly([(20, 11), (31, 14.5), (20, 14.5)], steel_l)
+    cv.rect((2, 11, 9, 19), steel_d)                         # heavy stock block
+    cv.poly([(2, 11), (9, 9), (9, 11)], steel)
+    cv.ellipse((10.5, 9.5, 18.5, 17.5), (20, 60, 40))        # chamber window in the middle
+    cv.ellipse((11.5, 10.5, 17.5, 16.5), glow)
+    cv.ellipse((13, 12, 16, 15), (225, 255, 235))
+    for x in (6, 8):
+        cv.rect((x, 12, x + 0.6, 18), steel_l)
+    cv.rect((11, 21, 14, 27), steel_d)                       # fat grip
+    cv.rect((14, 20, 17, 21), steel_d)
+    cv.line([(30, 14.5), (31.5, 14.5)], glow, 0.8)           # muzzle glow
+
+
+def p_wield_arcrifle():
+    """The W-2011 as held by a person: a 32x36 overlay for the chars sheet.  It is drawn slanted across the whole body,
+    nearly as long as the person is tall, to read as huge and unwieldy."""
+    tmp = Canvas(32, 32)
+    _arcrifle(tmp)
+    g = tmp.done()
+    g = g.resize((36, 36), Image.LANCZOS).rotate(28, resample=Image.BICUBIC, center=(18, 18))
+    out = Image.new("RGBA", (32, 36), (0, 0, 0, 0))
+    out.alpha_composite(g, (-2, 2))
+    return out
+
+
 def p_item(kind, col, seed):
     cv = Canvas(32, 32)
     c = PAL[col]
@@ -155,7 +192,9 @@ def p_item(kind, col, seed):
     l = shade(c, 1.25)
     rnd = random.Random(seed)
     steel = (176, 182, 196)
-    if kind in ("pistol", "smg", "shotgun", "rifle", "laser", "launcher"):
+    if kind == "arcrifle":
+        _arcrifle(cv)
+    elif kind in ("pistol", "smg", "shotgun", "rifle", "laser", "launcher"):
         L = {"pistol": 12, "smg": 16, "shotgun": 22, "rifle": 22, "laser": 16, "launcher": 22}[kind]
         x0 = 16 - L // 2
         body = (60, 62, 74) if kind != "laser" else (84, 90, 110)

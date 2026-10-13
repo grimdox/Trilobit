@@ -44,6 +44,17 @@ def ruleset(oid):
     return []
 
 
+def petrules(oid):
+    """-> list of (pet kind, chance percent); slums keep chickens and strays, homes dogs and cats, estates mostly dogs"""
+    if re.match(r"^trl_slum_\d+_t\d+_z0$", oid):
+        return [("pet_chicken", 14), ("pet_chicken", 10), ("pet_cat", 10), ("pet_dog", 5)]
+    if re.match(r"^trl_home_\d+_t\d+_z0$", oid):
+        return [("pet_cat", 18), ("pet_dog", 14)]
+    if re.match(r"^trl_estate_\d+_t\d+_z0$", oid):
+        return [("pet_dog", 22), ("pet_cat", 14), ("pet_dog", 8)]
+    return []
+
+
 total = 0
 for sub in ("houses", "midrise", "midrise2", "towers", "city"):
     path = os.path.join(MOD, sub, "mapgen.json")
@@ -59,7 +70,7 @@ for sub in ("houses", "midrise", "midrise2", "towers", "city"):
             c = n.get("class")
             return isinstance(c, dict) or (isinstance(c, str) and "chance" in n and c.startswith((NPC + "bratva_", NPC + "jsdf_", NPC + "nasim_")))
         npcs = [n for n in obj.get("place_npcs", []) if not _ours(n)]
-        rules = ruleset(m["om_terrain"][0])
+        rules = ruleset(m["om_terrain"][0]) + petrules(m["om_terrain"][0])
         if rules:
             r = random.Random("presence-" + m["om_terrain"][0])
             cells = floor_cells(obj)

@@ -1280,6 +1280,10 @@
    {
     "item": "katana",
     "prob": 20
+   },
+   {
+    "item": "trl_gun_w2011",
+    "prob": 4
    }
   ]
  },
@@ -2754,17 +2758,6 @@
   "responses": [
    {
     "text": "Fair enough.",
-    "topic": "TALK_DONE"
-   }
-  ]
- },
- {
-  "type": "talk_topic",
-  "id": "TRL_FACTION_MEMBER",
-  "dynamic_line": "Keep walking.",
-  "responses": [
-   {
-    "text": "Fine.",
     "topic": "TALK_DONE"
    }
   ]

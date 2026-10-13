@@ -228,6 +228,8 @@ def build():
 HOURS = {"clerk": (7, 22), "techclerk": (7, 22), "medclerk": (7, 22), "reception": (7, 22), "bartender": (12, 3)}  # role: (open hour, close hour)
 
 PLACEMENT = {  # place id -> list of (frame, role, firmware)
+    "trl_pl_hospital_m": [("civ", "reception", "stock"), ("civ", "medclerk", "stock"), ("sec", "guard", "stock")],
+    "trl_pl_hospital_r": [("civ", "reception", "stock"), ("civ", "medclerk", "stock"), ("sec", "guard", "stock"), ("sec", "guard", "stock")],
     "trl_pl_convenience_store": [("civ", "clerk", "stock")],
     "trl_pl_electronics_bazaar": [("civ", "techclerk", "stock"), ("sec", "guard", "stock")],
     "trl_pl_implant_clinic": [("civ", "medclerk", "stock"), ("sec", "guard", "stock")],
