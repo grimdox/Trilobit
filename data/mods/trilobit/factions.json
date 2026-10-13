@@ -32,7 +32,7 @@
     "defends your space": true,
     "knows your voice": true
    },
-   "trl_jsdf": {
+   "trl_nap": {
     "kill on sight": true,
     "watch your back": false,
     "share my stuff": false,
@@ -54,9 +54,9 @@
  },
  {
   "type": "faction",
-  "id": "trl_jsdf",
-  "name": "JSDF",
-  "description": "City police and military.  Placeholder name.",
+  "id": "trl_nap",
+  "name": "NAP",
+  "description": "The Nippon Autonomous Protectorate: city police and military.",
   "likes_u": 0,
   "respects_u": 0,
   "trusts_u": 0,
@@ -85,7 +85,7 @@
     "defends your space": false,
     "knows your voice": false
    },
-   "trl_jsdf": {
+   "trl_nap": {
     "kill on sight": false,
     "watch your back": true,
     "share my stuff": true,
@@ -138,7 +138,7 @@
     "defends your space": false,
     "knows your voice": false
    },
-   "trl_jsdf": {
+   "trl_nap": {
     "kill on sight": true,
     "watch your back": false,
     "share my stuff": false,
@@ -160,9 +160,9 @@
  },
  {
   "type": "mutation",
-  "id": "trl_align_jsdf",
+  "id": "trl_align_nap",
   "name": {
-   "str": "JSDF-aligned"
+   "str": "NAP-aligned"
   },
   "points": 0,
   "visibility": 0,
@@ -174,12 +174,12 @@
  {
   "type": "profession",
   "subtype": "hobby",
-  "id": "trl_hobby_jsdf",
-  "name": "JSDF-aligned",
-  "description": "You have friends in the JSDF.  Bratva wants you dead; the JSDF will deal with you.",
+  "id": "trl_hobby_nap",
+  "name": "NAP-aligned",
+  "description": "You have friends in the NAP.  Bratva wants you dead; the NAP will deal with you.",
   "points": 0,
   "traits": [
-   "trl_align_jsdf"
+   "trl_align_nap"
   ]
  },
  {
@@ -200,7 +200,7 @@
   "subtype": "hobby",
   "id": "trl_hobby_bratva",
   "name": "Bratva-aligned",
-  "description": "You have friends in the Bratva.  The JSDF hunts you.",
+  "description": "You have friends in the Bratva.  The NAP hunts you.",
   "points": 0,
   "traits": [
    "trl_align_bratva"
@@ -1042,7 +1042,7 @@
  },
  {
   "type": "item_group",
-  "id": "trl_nc_jsdf_patrol_worn",
+  "id": "trl_nc_nap_patrol_worn",
   "subtype": "collection",
   "entries": [
    {
@@ -1061,7 +1061,7 @@
  },
  {
   "type": "item_group",
-  "id": "trl_nc_jsdf_patrol_weapon",
+  "id": "trl_nc_nap_patrol_weapon",
   "subtype": "distribution",
   "entries": [
    {
@@ -1076,7 +1076,7 @@
  },
  {
   "type": "item_group",
-  "id": "trl_nc_jsdf_patrol_carry",
+  "id": "trl_nc_nap_patrol_carry",
   "subtype": "collection",
   "entries": [
    {
@@ -1090,15 +1090,15 @@
  },
  {
   "type": "npc_class",
-  "id": "trl_nc_jsdf_patrol",
+  "id": "trl_nc_nap_patrol",
   "name": {
    "str": "Patrol officer"
   },
-  "job_description": "I'm patrol officer for JSDF.",
+  "job_description": "I'm patrol officer for NAP.",
   "common": false,
-  "worn_override": "trl_nc_jsdf_patrol_worn",
-  "weapon_override": "trl_nc_jsdf_patrol_weapon",
-  "carry_override": "trl_nc_jsdf_patrol_carry",
+  "worn_override": "trl_nc_nap_patrol_worn",
+  "weapon_override": "trl_nc_nap_patrol_weapon",
+  "carry_override": "trl_nc_nap_patrol_carry",
   "traits": [
    {
     "trait": "trl_alert_aware"
@@ -1133,17 +1133,17 @@
  },
  {
   "type": "npc",
-  "id": "trl_nc_jsdf_patrol",
-  "class": "trl_nc_jsdf_patrol",
+  "id": "trl_nc_nap_patrol",
+  "class": "trl_nc_nap_patrol",
   "attitude": 0,
   "mission": 7,
-  "faction": "trl_jsdf",
+  "faction": "trl_nap",
   "chat": "TRL_FACTION_MEMBER",
   "temp_suffix": "Patrol officer"
  },
  {
   "type": "item_group",
-  "id": "trl_nc_jsdf_riot_worn",
+  "id": "trl_nc_nap_riot_worn",
   "subtype": "collection",
   "entries": [
    {
@@ -1162,7 +1162,7 @@
  },
  {
   "type": "item_group",
-  "id": "trl_nc_jsdf_riot_weapon",
+  "id": "trl_nc_nap_riot_weapon",
   "subtype": "distribution",
   "entries": [
    {
@@ -1177,7 +1177,7 @@
  },
  {
   "type": "item_group",
-  "id": "trl_nc_jsdf_riot_carry",
+  "id": "trl_nc_nap_riot_carry",
   "subtype": "collection",
   "entries": [
    {
@@ -1191,15 +1191,15 @@
  },
  {
   "type": "npc_class",
-  "id": "trl_nc_jsdf_riot",
+  "id": "trl_nc_nap_riot",
   "name": {
    "str": "Riot trooper"
   },
-  "job_description": "I'm riot trooper for JSDF.",
+  "job_description": "I'm riot trooper for NAP.",
   "common": false,
-  "worn_override": "trl_nc_jsdf_riot_worn",
-  "weapon_override": "trl_nc_jsdf_riot_weapon",
-  "carry_override": "trl_nc_jsdf_riot_carry",
+  "worn_override": "trl_nc_nap_riot_worn",
+  "weapon_override": "trl_nc_nap_riot_weapon",
+  "carry_override": "trl_nc_nap_riot_carry",
   "traits": [
    {
     "trait": "trl_alert_aware"
@@ -1234,17 +1234,17 @@
  },
  {
   "type": "npc",
-  "id": "trl_nc_jsdf_riot",
-  "class": "trl_nc_jsdf_riot",
+  "id": "trl_nc_nap_riot",
+  "class": "trl_nc_nap_riot",
   "attitude": 0,
   "mission": 7,
-  "faction": "trl_jsdf",
+  "faction": "trl_nap",
   "chat": "TRL_FACTION_MEMBER",
   "temp_suffix": "Riot trooper"
  },
  {
   "type": "item_group",
-  "id": "trl_nc_jsdf_tactical_worn",
+  "id": "trl_nc_nap_tactical_worn",
   "subtype": "collection",
   "entries": [
    {
@@ -1266,7 +1266,7 @@
  },
  {
   "type": "item_group",
-  "id": "trl_nc_jsdf_tactical_weapon",
+  "id": "trl_nc_nap_tactical_weapon",
   "subtype": "distribution",
   "entries": [
    {
@@ -1289,7 +1289,7 @@
  },
  {
   "type": "item_group",
-  "id": "trl_nc_jsdf_tactical_carry",
+  "id": "trl_nc_nap_tactical_carry",
   "subtype": "collection",
   "entries": [
    {
@@ -1303,15 +1303,15 @@
  },
  {
   "type": "npc_class",
-  "id": "trl_nc_jsdf_tactical",
+  "id": "trl_nc_nap_tactical",
   "name": {
    "str": "Tactical operator"
   },
-  "job_description": "I'm tactical operator for JSDF.",
+  "job_description": "I'm tactical operator for NAP.",
   "common": false,
-  "worn_override": "trl_nc_jsdf_tactical_worn",
-  "weapon_override": "trl_nc_jsdf_tactical_weapon",
-  "carry_override": "trl_nc_jsdf_tactical_carry",
+  "worn_override": "trl_nc_nap_tactical_worn",
+  "weapon_override": "trl_nc_nap_tactical_weapon",
+  "carry_override": "trl_nc_nap_tactical_carry",
   "traits": [
    {
     "trait": "trl_alert_aware"
@@ -1368,17 +1368,17 @@
  },
  {
   "type": "npc",
-  "id": "trl_nc_jsdf_tactical",
-  "class": "trl_nc_jsdf_tactical",
+  "id": "trl_nc_nap_tactical",
+  "class": "trl_nc_nap_tactical",
   "attitude": 0,
   "mission": 7,
-  "faction": "trl_jsdf",
+  "faction": "trl_nap",
   "chat": "TRL_FACTION_MEMBER",
   "temp_suffix": "Tactical operator"
  },
  {
   "type": "item_group",
-  "id": "trl_nc_jsdf_contact_worn",
+  "id": "trl_nc_nap_contact_worn",
   "subtype": "collection",
   "entries": [
    {
@@ -1397,13 +1397,13 @@
  },
  {
   "type": "npc_class",
-  "id": "trl_nc_jsdf_contact",
+  "id": "trl_nc_nap_contact",
   "name": {
-   "str": "JSDF contact"
+   "str": "NAP contact"
   },
   "job_description": "I know who needs what done.",
   "common": false,
-  "worn_override": "trl_nc_jsdf_contact_worn",
+  "worn_override": "trl_nc_nap_contact_worn",
   "skills": [
    {
     "skill": "ALL",
@@ -1421,30 +1421,30 @@
  },
  {
   "type": "npc",
-  "id": "trl_nc_jsdf_contact",
-  "class": "trl_nc_jsdf_contact",
+  "id": "trl_nc_nap_contact",
+  "class": "trl_nc_nap_contact",
   "attitude": 0,
   "mission": 7,
-  "faction": "trl_jsdf",
-  "chat": "TRL_CONTACT_JSDF",
-  "temp_suffix": "JSDF contact"
+  "faction": "trl_nap",
+  "chat": "TRL_CONTACT_NAP",
+  "temp_suffix": "NAP contact"
  },
  {
   "type": "talk_topic",
-  "id": "TRL_CONTACT_JSDF",
+  "id": "TRL_CONTACT_NAP",
   "dynamic_line": {
    "math": [
-    "trl_rank_jsdf <= -4"
+    "trl_rank_nap <= -4"
    ],
    "yes": "I don't talk to you.  Leave before somebody gets hurt.",
    "no": {
     "math": [
-     "trl_rank_jsdf <= 0"
+     "trl_rank_nap <= 0"
     ],
     "yes": "A stranger.  Buy a drink or move along.",
     "no": {
      "math": [
-      "trl_rank_jsdf <= 3"
+      "trl_rank_nap <= 3"
      ],
      "yes": "You again.  You keep your head down, which I like.",
      "no": "Good to see you.  Sit.  What do you need?"
@@ -1454,16 +1454,16 @@
   "responses": [
    {
     "text": "I'm looking for work.",
-    "topic": "TRL_CONTACT_JSDF_WORK",
+    "topic": "TRL_CONTACT_NAP_WORK",
     "condition": {
      "math": [
-      "trl_rank_jsdf > -4"
+      "trl_rank_nap > -4"
      ]
     }
    },
    {
     "text": "Where do I stand with you?",
-    "topic": "TRL_CONTACT_JSDF_STAND"
+    "topic": "TRL_CONTACT_NAP_STAND"
    },
    {
     "text": "Never mind.",
@@ -1473,10 +1473,10 @@
  },
  {
   "type": "talk_topic",
-  "id": "TRL_CONTACT_JSDF_WORK",
+  "id": "TRL_CONTACT_NAP_WORK",
   "dynamic_line": {
    "math": [
-    "trl_rank_jsdf <= 0"
+    "trl_rank_nap <= 0"
    ],
    "yes": "Nothing for strangers.  Do something useful first.",
    "no": {
@@ -1490,7 +1490,7 @@
   "responses": [
    {
     "text": "[Report] Here is the data core.",
-    "topic": "TRL_CONTACT_JSDF_PAID",
+    "topic": "TRL_CONTACT_NAP_PAID",
     "condition": {
      "and": [
       {
@@ -1510,7 +1510,7 @@
    },
    {
     "text": "[Report] The target is dead.",
-    "topic": "TRL_CONTACT_JSDF_PAID",
+    "topic": "TRL_CONTACT_NAP_PAID",
     "condition": {
      "u_has_mission": "TRL_T_A3"
     },
@@ -1523,7 +1523,7 @@
    },
    {
     "text": "[Report] I watched the subject, as asked.",
-    "topic": "TRL_CONTACT_JSDF_PAID",
+    "topic": "TRL_CONTACT_NAP_PAID",
     "condition": {
      "u_has_mission": "TRL_T_S2"
     },
@@ -1541,7 +1541,7 @@
      "and": [
       {
        "math": [
-        "trl_rank_jsdf > 0"
+        "trl_rank_nap > 0"
        ]
       },
       {
@@ -1600,7 +1600,7 @@
      "and": [
       {
        "math": [
-        "trl_rank_jsdf > 0"
+        "trl_rank_nap > 0"
        ]
       },
       {
@@ -1671,7 +1671,7 @@
      "and": [
       {
        "math": [
-        "trl_rank_jsdf > 0"
+        "trl_rank_nap > 0"
        ]
       },
       {
@@ -1820,12 +1820,12 @@
  },
  {
   "type": "talk_topic",
-  "id": "TRL_CONTACT_JSDF_PAID",
+  "id": "TRL_CONTACT_NAP_PAID",
   "dynamic_line": "Good.  That is how this works.  Your pay is in your hand.",
   "responses": [
    {
     "text": "Anything else?",
-    "topic": "TRL_CONTACT_JSDF_WORK"
+    "topic": "TRL_CONTACT_NAP_WORK"
    },
    {
     "text": "Later.",
@@ -1835,40 +1835,40 @@
  },
  {
   "type": "talk_topic",
-  "id": "TRL_CONTACT_JSDF_STAND",
+  "id": "TRL_CONTACT_NAP_STAND",
   "dynamic_line": {
    "math": [
-    "trl_rank_jsdf <= -7"
+    "trl_rank_nap <= -7"
    ],
    "yes": "Enemy.",
    "no": {
     "math": [
-     "trl_rank_jsdf <= -4"
+     "trl_rank_nap <= -4"
     ],
     "yes": "Hostile.  Don't push it.",
     "no": {
      "math": [
-      "trl_rank_jsdf <= -1"
+      "trl_rank_nap <= -1"
      ],
      "yes": "Unfriendly.  I wouldn't trust you with a coat.",
      "no": {
       "math": [
-       "trl_rank_jsdf == 0"
+       "trl_rank_nap == 0"
       ],
       "yes": "Neutral.  You are nobody to me.",
       "no": {
        "math": [
-        "trl_rank_jsdf <= 3"
+        "trl_rank_nap <= 3"
        ],
        "yes": "Tolerated.  You can trade here.",
        "no": {
         "math": [
-         "trl_rank_jsdf <= 6"
+         "trl_rank_nap <= 6"
         ],
         "yes": "Friendly.  People here like you.",
         "no": {
          "math": [
-          "trl_rank_jsdf <= 9"
+          "trl_rank_nap <= 9"
          ],
          "yes": "Trusted.  You're one of ours, almost.",
          "no": "Inner circle."
@@ -2779,7 +2779,7 @@
    },
    {
     "math": [
-     "trl_rank_jsdf = 0"
+     "trl_rank_nap = 0"
     ]
    },
    {
@@ -2789,7 +2789,7 @@
    },
    {
     "if": {
-     "u_has_trait": "trl_align_jsdf"
+     "u_has_trait": "trl_align_nap"
     },
     "then": [
      {
@@ -2799,7 +2799,7 @@
      },
      {
       "math": [
-       "trl_rank_jsdf = 4"
+       "trl_rank_nap = 4"
       ]
      }
     ]
@@ -2816,7 +2816,7 @@
      },
      {
       "math": [
-       "trl_rank_jsdf = -8"
+       "trl_rank_nap = -8"
       ]
      }
     ]
@@ -2859,22 +2859,22 @@
    },
    {
     "math": [
-     "trl_eff_jsdf = trl_rank_jsdf"
+     "trl_eff_nap = trl_rank_nap"
     ]
    },
    {
     "math": [
-     "trl_rank_jsdf = max(-10, min(10, trl_rank_jsdf))"
+     "trl_rank_nap = max(-10, min(10, trl_rank_nap))"
     ]
    },
    {
     "math": [
-     "faction_like('trl_jsdf') = 3 * trl_eff_jsdf"
+     "faction_like('trl_nap') = 3 * trl_eff_nap"
     ]
    },
    {
     "math": [
-     "faction_respect('trl_jsdf') = 3 * trl_eff_jsdf"
+     "faction_respect('trl_nap') = 3 * trl_eff_nap"
     ]
    },
    {
@@ -2945,7 +2945,7 @@
      },
      {
       "math": [
-       "trl_rank_jsdf = trl_rank_jsdf + 1"
+       "trl_rank_nap = trl_rank_nap + 1"
       ]
      },
      {
@@ -2958,7 +2958,7 @@
    {
     "if": {
      "compare_string": [
-      "trl_jsdf",
+      "trl_nap",
       {
        "global_val": "trl_victim_faction"
       }
@@ -2967,7 +2967,7 @@
     "then": [
      {
       "math": [
-       "trl_rank_jsdf = trl_rank_jsdf - 2"
+       "trl_rank_nap = trl_rank_nap - 2"
       ]
      },
      {
@@ -2999,7 +2999,7 @@
      },
      {
       "math": [
-       "trl_rank_jsdf = trl_rank_jsdf + 1"
+       "trl_rank_nap = trl_rank_nap + 1"
       ]
      },
      {

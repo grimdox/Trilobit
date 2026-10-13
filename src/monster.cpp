@@ -2388,6 +2388,9 @@ void monster::apply_damage( Creature *source, bodypart_id /*bp*/, int dam,
     // Ensure we can try to get at what hit us.
     reset_pathfinding_cd();
     hp -= dam;
+    if( source != nullptr && dam > 0 ) {
+        trl_aware::church_violence( *this, source );
+    }
     if( source != nullptr && dam > 0 && trl_aware::enabled( *this ) ) {
         trl_aware::alerted( *this, source->pos_abs() );
     }

@@ -10,6 +10,7 @@ from PIL import Image, ImageDraw, ImageFont
 sys.path.insert(0, os.path.dirname(__file__))
 import defs
 import items as itm
+import extra as ex
 from iso import Canvas, box, face, sides, diamond, shade, mix, W, DH
 
 PAL = {
@@ -190,6 +191,8 @@ def glow_poly(cv, col, pts):
 
 def p_furn(kind, col, seed):
     """furniture; returns (sheet, image)."""
+    if kind in ex.KINDS:
+        return ex.furn_extra(kind, col, seed)
     c = rgb(col)
     if kind in ("table", "seat", "bed", "crate", "plant", "generic_low", "rubble", "lamp_low"):
         H = 48
@@ -240,6 +243,18 @@ def p_furn(kind, col, seed):
         face(cv, R, 0.08, 0.92, 0.08, 0.92, shade(top, 0.62))
         face(cv, R, 0.45, 0.5, 0.1, 0.9, shade(top, 0.38))
         face(cv, R, 0.55, 0.62, 0.45, 0.55, (220, 220, 230))
+    elif kind == "aquarium":
+        box(cv, H, 10, 0.86, (46, 44, 60))
+        box(cv, H, 30, 0.8, (110, 205, 235), base=10, edge=True)
+        L, R = sides(H, 30, 0.8, 10)
+        face(cv, R, 0.06, 0.94, 0.05, 0.95, (40, 120, 170))
+        face(cv, L, 0.06, 0.94, 0.05, 0.95, (30, 96, 146))
+        face(cv, R, 0.06, 0.94, 0.7, 0.95, (150, 230, 250))
+        face(cv, R, 0.22, 0.46, 0.4, 0.6, (250, 150, 60)); face(cv, R, 0.46, 0.58, 0.45, 0.55, (250, 150, 60))
+        face(cv, R, 0.6, 0.78, 0.2, 0.34, (90, 170, 255))
+        face(cv, R, 0.8, 0.88, 0.05, 0.4, (60, 190, 110))
+        face(cv, L, 0.25, 0.5, 0.3, 0.45, (250, 220, 90))
+        face(cv, R, 0.06, 0.94, 0.05, 0.12, (214, 190, 150))
     elif kind == "machine":
         body = (36, 38, 52)
         box(cv, H, 40, 0.66, body)
@@ -483,6 +498,17 @@ def fkind(i, o):
     n = defs.nm(o).lower()
     s = i.lower() + " " + n
     col = defs.color(o)
+    if has(s, "aquarium"):
+        return ("aquarium", col, "full")
+    for words, k in ((("recharge",), "charger"), (("autodoc",), "autodoc"), (("pylon",), "pylon"), (("transformer", "substation_unit", "capacitor_bank"), "transformer"),
+                     (("cable_ew",), "cable_ew"), (("cable_ns",), "cable_ns"), (("reactor",), "reactor"), (("solar_panel", "solar_array"), "solar"),
+                     (("wind_turbine",), "windturbine"), (("tidal",), "tidalturbine"), (("_turbine",), "turbine"), (("shinto_torii",), "torii"),
+                     (("komainu",), "komainu"), (("statue",), "statue"), (("holo_ad", "hologram"), "holo"), (("gurney",), "gurney"),
+                     (("android_pod", "charging_pod"), "pod"), (("iconostasis",), "iconostasis"), (("candle_stand",), "candlestand"),
+                     (("altar_table",), "altar"), (("church_bell",), "bell"), (("analoy",), "analoy"), (("baptismal",), "font"), (("chozuya",), "chozuya"),
+                     (("ema_rack",), "ema"), (("saisen",), "offering"), (("shimenawa",), "shimenawa"), (("hokora",), "shrine"), (("worship_cross",), "cross")):
+        if has(i, *words):
+            return (k, col, "full")
     if has(s, "terminal", "computer", "atm", "console", "vending", "kiosk", "arcade", "server", "jack", "monitor", "screen", "tv", "television", "radio", "machine", "dispenser", "scanner", "charger"):
         return ("machine", col, "full")
     if has(s, "streetlamp", "street lamp", "lamp", "lantern", "torch", "floodlight", "light"):
@@ -634,8 +660,14 @@ def main(stock, repo):
         entries.setdefault(sprite_of[key], []).append(i)
 
     # monsters
+    PETSHAPE = {"mon_trl_dog": "dog", "mon_trl_cat": "cat", "mon_trl_rabbit": "rabbit", "mon_trl_chicken": "chicken"}
     for i, o in sorted(D["monster"].items()):
         cls, shape, col = mkind(i, o)
+        if i in PETSHAPE:
+            key = ("m", "pet", PETSHAPE[i], col)
+            tgt = want(key, "chars", lambda shape=PETSHAPE[i], col=col, key=key: ex.p_pet(shape, col, seed_of(key)))
+            entries.setdefault(tgt, []).append(i)
+            continue
         key = ("m", cls, shape, col)
         if cls == "machine":
             tgt = want(key, "chars", lambda shape=shape, col=col, key=key: p_machine(shape, col, seed_of(key)))
@@ -670,6 +702,19 @@ def main(stock, repo):
     key = ("o", "w2011")
     tgt = want(key, "chars", lambda: itm.outline(itm.p_wield_arcrifle()))
     entries.setdefault(tgt, []).append("overlay_wielded_trl_gun_w2011")
+
+    # held overlays for every Trilobit weapon (guns, bows, blades, spears, axes, blunt weapons)
+    held = 0
+    for i, o in sorted(D["item"].items()):
+        if not i.startswith("trl_") or i == "trl_gun_w2011":
+            continue
+        kind, col = itm.classify_item(i, o)
+        if kind in itm.WIELD_KINDS:
+            key = ("o", "wield", kind, col)
+            tgt = want(key, "chars", lambda kind=kind, col=col, key=key: itm.outline(itm.p_wield(kind, col, seed_of(key))))
+            entries.setdefault(tgt, []).append("overlay_wielded_" + i)
+            held += 1
+    print("held-weapon overlays:", held)
 
     # worn armor: overlays over the body
     for iid, akind in itm.ARMOR_KINDS.items():

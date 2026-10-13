@@ -287,7 +287,8 @@
       "t_platform_resin",
       "t_rock_floor",
       "t_stone_masonry_floor",
-      "t_stone_masonry_floor_balcony"
+      "t_stone_masonry_floor_balcony",
+      "t_trl_floor_church"
      ],
      "fg": 14
     },
@@ -579,6 +580,7 @@
      "id": [
       "t_floor_wax",
       "t_floor_waxed_y",
+      "t_trl_floor_hinoki",
       "t_trl_hazard",
       "t_trl_neon_amber"
      ],
@@ -1070,6 +1072,7 @@
       "t_splitrail_fence",
       "t_splitrail_fencegate_c",
       "t_splitrail_fencegate_o",
+      "t_trl_fence_wood",
       "t_wattle_fence",
       "t_wattle_fence_posts"
      ],
@@ -1117,6 +1120,7 @@
     {
      "id": [
       "t_metal_railing",
+      "t_trl_fence_iron",
       "t_vitrified_chickenwire_fence",
       "t_vitrified_fence_barbed",
       "t_vitrified_fence_post"
@@ -1251,7 +1255,6 @@
       "f_pallet_belted",
       "f_pallet_belted_open",
       "f_pallet_cement",
-      "f_roof_turbine_vent",
       "f_sandbag_wall",
       "f_trl_mailbox",
       "f_trl_parts_bin",
@@ -1344,15 +1347,11 @@
       "f_trl_bunk_steel",
       "f_trl_checkout",
       "f_trl_cubicle_wall",
-      "f_trl_gurney",
+      "f_trl_kitchen_range",
       "f_trl_lathe",
-      "f_trl_pylon",
       "f_trl_roof_dish",
-      "f_trl_statue_fox",
       "f_trl_sun_lounger",
       "f_trl_ticket_gate",
-      "f_trl_transformer",
-      "f_trl_ward_gurney",
       "f_vitrified_birdbath",
       "f_vitrified_water_heater",
       "f_water_heater",
@@ -1461,7 +1460,6 @@
       "f_torah_ark",
       "f_training_dummy_heavy",
       "f_trl_nightstand",
-      "f_trl_recharge_p",
       "f_trl_wall_pipes_f",
       "f_utility_pole",
       "f_wooden_flagpole"
@@ -1543,17 +1541,12 @@
       "f_skin_door",
       "f_skin_door_o",
       "f_styling_station",
-      "f_trl_autodoc_imp_m",
-      "f_trl_autodoc_imp_p",
-      "f_trl_autodoc_imp_r",
-      "f_trl_autodoc_nano_m",
-      "f_trl_autodoc_nano_p",
-      "f_trl_autodoc_nano_r",
       "f_trl_chandelier",
       "f_trl_clothesline",
       "f_trl_cooling_fan",
       "f_trl_iv_stand",
       "f_trl_kitchen_island",
+      "f_trl_menu_board",
       "f_trl_paper_stack",
       "f_trl_scroll",
       "f_trl_vase_white",
@@ -1584,13 +1577,10 @@
       "f_sand_mound_mid",
       "f_sand_mound_short",
       "f_sand_mound_tall",
-      "f_trl_capacitor_bank",
       "f_trl_fire_pole",
       "f_trl_press",
       "f_trl_robot_arm",
-      "f_trl_samovar",
-      "f_trl_statue_gilt",
-      "f_trl_substation_unit"
+      "f_trl_samovar"
      ],
      "fg": 135
     },
@@ -1600,7 +1590,6 @@
       "f_alien_zapper",
       "f_capacitor",
       "f_metal_detector",
-      "f_trl_android_pod",
       "f_trl_bath_basin",
       "f_trl_hot_tub",
       "f_trl_laundry"
@@ -1627,8 +1616,6 @@
       "f_nm_nether_grass",
       "f_nm_nether_grass_tall",
       "f_swamp_gas",
-      "f_trl_solar_array",
-      "f_trl_solar_panel",
       "f_trl_vase_blue",
       "f_vent_cold_air2_blast",
       "f_vent_cold_air2_stream",
@@ -1699,29 +1686,23 @@
     },
     {
      "id": [
-      "f_autodoc",
-      "f_butter_churn",
-      "f_exodii_portal_tower",
-      "f_glass_mound_mid",
-      "f_glass_mound_short",
-      "f_glass_mound_tall",
-      "f_trl_aquarium",
-      "f_trl_assembly_arm",
-      "f_trl_fume_hood",
-      "f_trl_holo_ad",
-      "f_trl_holo_wall",
-      "f_trl_koi_basin",
-      "f_trl_mirror_ball",
-      "f_trl_recharge_m",
-      "f_trl_sheet_roll",
-      "f_trl_vr_rig",
-      "f_trl_wind_chime"
+      "f_bandsaw",
+      "f_mitresaw"
      ],
      "fg": 144
     },
     {
      "id": [
-      "f_autodoc_couch",
+      "f_barber_chair",
+      "f_vitrified_armchair",
+      "f_vitrified_bench",
+      "f_vitrified_chair",
+      "f_vitrified_sofa"
+     ],
+     "fg": 145
+    },
+    {
+     "id": [
       "f_barstool",
       "f_chair_black",
       "f_chair_folding",
@@ -1736,24 +1717,7 @@
       "f_trl_exam_couch",
       "f_trl_gym_bench"
      ],
-     "fg": 145
-    },
-    {
-     "id": [
-      "f_bandsaw",
-      "f_mitresaw"
-     ],
      "fg": 146
-    },
-    {
-     "id": [
-      "f_barber_chair",
-      "f_vitrified_armchair",
-      "f_vitrified_bench",
-      "f_vitrified_chair",
-      "f_vitrified_sofa"
-     ],
-     "fg": 147
     },
     {
      "id": [
@@ -1782,13 +1746,10 @@
       "f_rock_mound_short",
       "f_rock_mound_tall",
       "f_slab",
-      "f_statue",
       "f_target",
       "f_treadmill",
       "f_treadmill_mechanical",
       "f_trl_blackboard",
-      "f_trl_cable_ew",
-      "f_trl_cable_ns",
       "f_trl_chop_lift",
       "f_trl_pipes",
       "f_trl_speaker",
@@ -1798,7 +1759,7 @@
       "f_wind_vane",
       "f_xedra_antenna"
      ],
-     "fg": 148
+     "fg": 147
     },
     {
      "id": [
@@ -1815,7 +1776,7 @@
       "f_planter_mature",
       "f_planter_seedling"
      ],
-     "fg": 149
+     "fg": 148
     },
     {
      "id": [
@@ -1826,7 +1787,7 @@
       "f_sea_anemone",
       "f_trl_net_exit"
      ],
-     "fg": 150
+     "fg": 149
     },
     {
      "id": [
@@ -1840,14 +1801,14 @@
       "f_straw_bed",
       "f_triple_bunkbed"
      ],
-     "fg": 151
+     "fg": 150
     },
     {
      "id": [
       "f_bed_frame",
       "f_trl_mattress"
      ],
-     "fg": 152
+     "fg": 151
     },
     {
      "id": [
@@ -1861,17 +1822,18 @@
       "f_logstool",
       "f_stool",
       "f_trl_bench_scrap",
+      "f_trl_church_bench",
       "f_trl_judge_bench",
       "f_trl_workbench"
      ],
-     "fg": 153
+     "fg": 152
     },
     {
      "id": [
       "f_beverly_shear",
       "f_drill_press"
      ],
-     "fg": 154
+     "fg": 153
     },
     {
      "id": [
@@ -1881,17 +1843,14 @@
       "f_firefly_terrarium",
       "f_mutant_tree_adult",
       "f_trl_battery_bank",
-      "f_trl_charging_pod",
       "f_trl_departure_board",
       "f_trl_net_node",
       "f_trl_polymer_vat",
-      "f_trl_reactor_core",
-      "f_trl_recharge_r",
       "f_trl_status_panel",
       "f_trl_vase_tall",
       "f_winter_wreath"
      ],
-     "fg": 155
+     "fg": 154
     },
     {
      "id": [
@@ -1900,16 +1859,18 @@
       "f_trl_cot",
       "f_trl_garden_bed"
      ],
-     "fg": 156
+     "fg": 155
     },
     {
      "id": [
       "f_bullettrailer_desk",
+      "f_trl_dining_table",
       "f_trl_ledger_desk",
+      "f_trl_offering_table",
       "f_trl_school_desk",
       "f_trl_tea_table"
      ],
-     "fg": 157
+     "fg": 156
     },
     {
      "id": [
@@ -1917,7 +1878,7 @@
       "f_fake_bench_hands",
       "f_workbench"
      ],
-     "fg": 158
+     "fg": 157
     },
     {
      "id": [
@@ -1925,7 +1886,26 @@
       "f_bullettrailer_table_middle",
       "f_bullettrailer_table_top",
       "f_solar_unit",
+      "f_trl_charm_counter",
       "f_trl_stall_awning"
+     ],
+     "fg": 158
+    },
+    {
+     "id": [
+      "f_butter_churn",
+      "f_exodii_portal_tower",
+      "f_glass_mound_mid",
+      "f_glass_mound_short",
+      "f_glass_mound_tall",
+      "f_trl_assembly_arm",
+      "f_trl_fume_hood",
+      "f_trl_holo_wall",
+      "f_trl_koi_basin",
+      "f_trl_mirror_ball",
+      "f_trl_sheet_roll",
+      "f_trl_vr_rig",
+      "f_trl_wind_chime"
      ],
      "fg": 159
     },
@@ -1946,8 +1926,7 @@
       "f_egg_sackbw",
       "f_egg_sackcs",
       "f_egg_sacke",
-      "f_trl_limb_bin",
-      "f_trl_wind_turbine"
+      "f_trl_limb_bin"
      ],
      "fg": 162
     },
@@ -2190,38 +2169,43 @@
      "fg": 199
     },
     {
-     "id": "f_router",
+     "id": "f_roof_turbine_vent",
      "fg": 200
     },
     {
-     "id": "f_rubble_rock",
+     "id": "f_router",
      "fg": 201
     },
     {
-     "id": "f_satellite",
+     "id": "f_rubble_rock",
      "fg": 202
     },
     {
-     "id": "f_shaker",
+     "id": "f_satellite",
      "fg": 203
+    },
+    {
+     "id": "f_shaker",
+     "fg": 204
     },
     {
      "id": [
       "f_solar_unit_v2",
       "f_trl_water_barrel"
      ],
-     "fg": 204
+     "fg": 205
     },
     {
      "id": "f_tablesaw",
-     "fg": 205
+     "fg": 206
     },
     {
      "id": [
       "f_trl_banquet_table",
+      "f_trl_cloth_table",
       "f_trl_desk_corp"
      ],
-     "fg": 206
+     "fg": 207
     },
     {
      "id": [
@@ -2231,89 +2215,108 @@
       "f_vitrified_desk",
       "f_vitrified_table"
      ],
-     "fg": 207
+     "fg": 208
     },
     {
      "id": "f_trl_bench_waiting",
-     "fg": 208
+     "fg": 209
     },
     {
      "id": [
       "f_trl_bunk_bed",
       "f_trl_futon"
      ],
-     "fg": 209
+     "fg": 210
+    },
+    {
+     "id": "f_trl_cable_ew",
+     "fg": 211
+    },
+    {
+     "id": "f_trl_cable_ns",
+     "fg": 212
     },
     {
      "id": "f_trl_chair_lounge",
-     "fg": 210
+     "fg": 213
     },
     {
      "id": [
       "f_trl_chair_wicker",
       "f_trl_throne"
      ],
-     "fg": 211
+     "fg": 214
     },
     {
      "id": [
       "f_trl_fire_drum",
       "f_trl_hotplate"
      ],
-     "fg": 212
+     "fg": 215
     },
     {
      "id": [
       "f_trl_hospital_bed",
       "f_trl_ward_bed"
      ],
-     "fg": 213
+     "fg": 216
     },
     {
      "id": [
       "f_trl_implant_chair",
       "f_trl_test_bench"
      ],
-     "fg": 214
+     "fg": 217
     },
     {
      "id": "f_trl_implant_printer",
-     "fg": 215
+     "fg": 218
     },
     {
      "id": "f_trl_karaoke",
-     "fg": 216
+     "fg": 219
     },
     {
      "id": [
       "f_trl_reception",
       "f_trl_surgical_table"
      ],
-     "fg": 217
-    },
-    {
-     "id": "f_trl_silk_bed",
-     "fg": 218
-    },
-    {
-     "id": "f_trl_stool_plastic",
-     "fg": 219
-    },
-    {
-     "id": "f_trl_tidal_turbine",
      "fg": 220
     },
     {
-     "id": "f_vitrified_bed",
+     "id": "f_trl_silk_bed",
      "fg": 221
     },
     {
-     "id": "f_vitrified_flower",
+     "id": [
+      "f_trl_solar_array",
+      "f_trl_solar_panel"
+     ],
      "fg": 222
     },
     {
-     "id": "f_web_up",
+     "id": "f_trl_stool_plastic",
      "fg": 223
+    },
+    {
+     "id": "f_trl_tidal_turbine",
+     "fg": 224
+    },
+    {
+     "id": "f_trl_turbine",
+     "fg": 225
+    },
+    {
+     "id": "f_vitrified_bed",
+     "fg": 226
+    },
+    {
+     "id": "f_vitrified_flower",
+     "fg": 227
+    },
+    {
+     "id": "f_web_up",
+     "fg": 228
     },
     {
      "id": [
@@ -2325,7 +2328,7 @@
       "vp_storage_battery_mount",
       "vp_turret_mount"
      ],
-     "fg": 224
+     "fg": 229
     },
     {
      "id": [
@@ -2358,18 +2361,18 @@
       "vp_vehicle_scoop",
       "vp_water_faucet"
      ],
-     "fg": 225
+     "fg": 230
     },
     {
      "id": [
       "vp_aisle",
       "vp_trunk_floor"
      ],
-     "fg": 226
+     "fg": 231
     },
     {
      "id": "vp_aisle_curtain",
-     "fg": 227
+     "fg": 232
     },
     {
      "id": [
@@ -2384,7 +2387,7 @@
       "vp_motorcycle_headlight",
       "vp_wide_headlight"
      ],
-     "fg": 228
+     "fg": 233
     },
     {
      "id": [
@@ -2416,7 +2419,7 @@
       "vp_stowed_router",
       "vp_stowed_tablesaw"
      ],
-     "fg": 229
+     "fg": 234
     },
     {
      "id": [
@@ -2435,7 +2438,7 @@
       "vp_wind_turbine",
       "vp_xl_wind_turbine"
      ],
-     "fg": 230
+     "fg": 235
     },
     {
      "id": [
@@ -2449,7 +2452,7 @@
       "vp_spring_plate",
       "vp_tearer"
      ],
-     "fg": 231
+     "fg": 236
     },
     {
      "id": [
@@ -2461,7 +2464,7 @@
       "vp_ap_portable_generator",
       "vp_compact_ASRG_containment"
      ],
-     "fg": 232
+     "fg": 237
     },
     {
      "id": [
@@ -2470,7 +2473,7 @@
       "vp_stowed_air_compressor",
       "vp_stowed_hydraulic_press"
      ],
-     "fg": 233
+     "fg": 238
     },
     {
      "id": [
@@ -2479,11 +2482,11 @@
       "vp_app_microwave",
       "vp_inflatable_airbag"
      ],
-     "fg": 234
+     "fg": 239
     },
     {
      "id": "vp_ap_ammonia_machine_reactor",
-     "fg": 235
+     "fg": 240
     },
     {
      "id": [
@@ -2517,14 +2520,14 @@
       "vp_stowed_minifreezer",
       "vp_stowed_minifridge"
      ],
-     "fg": 236
+     "fg": 241
     },
     {
      "id": [
       "vp_ap_arc_furnace",
       "vp_water_purifier"
      ],
-     "fg": 237
+     "fg": 242
     },
     {
      "id": [
@@ -2542,7 +2545,7 @@
       "vp_veh_table_foldable",
       "vp_veh_table_wood"
      ],
-     "fg": 238
+     "fg": 243
     },
     {
      "id": [
@@ -2562,18 +2565,18 @@
       "vp_stowed_broken_yrax_quadraphract_leg",
       "vp_washing_machine"
      ],
-     "fg": 239
+     "fg": 244
     },
     {
      "id": "vp_ap_battery",
-     "fg": 240
+     "fg": 245
     },
     {
      "id": [
       "vp_ap_battery_car",
       "vp_ap_battery_large"
      ],
-     "fg": 241
+     "fg": 246
     },
     {
      "id": [
@@ -2597,29 +2600,29 @@
       "vp_storage_battery",
       "vp_storage_battery_removable"
      ],
-     "fg": 242
+     "fg": 247
     },
     {
      "id": [
       "vp_ap_battery_motorbike",
       "vp_ap_battery_motorbike_small"
      ],
-     "fg": 243
+     "fg": 248
     },
     {
      "id": "vp_ap_battery_small",
-     "fg": 244
+     "fg": 249
     },
     {
      "id": [
       "vp_ap_box_battery_charger",
       "vp_battery_charger"
      ],
-     "fg": 245
+     "fg": 250
     },
     {
      "id": "vp_ap_catalytic_cracking_reactor",
-     "fg": 246
+     "fg": 251
     },
     {
      "id": [
@@ -2628,11 +2631,11 @@
       "vp_reinforced_solar_panel",
       "vp_reinforced_solar_panel_v2"
      ],
-     "fg": 247
+     "fg": 252
     },
     {
      "id": "vp_ap_foot_locker_recharge_station",
-     "fg": 248
+     "fg": 253
     },
     {
      "id": [
@@ -2643,11 +2646,11 @@
       "vp_stowed_glass_fridge",
       "vp_stowed_glass_fridge_double"
      ],
-     "fg": 249
+     "fg": 254
     },
     {
      "id": "vp_ap_glassblowers_crucible",
-     "fg": 250
+     "fg": 255
     },
     {
      "id": [
@@ -2657,7 +2660,7 @@
       "vp_veh_forge",
       "vp_veh_kiln"
      ],
-     "fg": 251
+     "fg": 256
     },
     {
      "id": [
@@ -2668,7 +2671,7 @@
       "vp_stowed_oven",
       "vp_v_curtain"
      ],
-     "fg": 252
+     "fg": 257
     },
     {
      "id": [
@@ -2677,7 +2680,7 @@
       "vp_veh_tools_kitchen",
       "vp_veh_tools_workshop"
      ],
-     "fg": 253
+     "fg": 258
     },
     {
      "id": [
@@ -2685,7 +2688,7 @@
       "vp_ap_water_purifier",
       "vp_birchbark_funnel"
      ],
-     "fg": 254
+     "fg": 259
     },
     {
      "id": [
@@ -2694,7 +2697,7 @@
       "vp_water_wheel",
       "vp_xl_water_wheel"
      ],
-     "fg": 255
+     "fg": 260
     },
     {
      "id": [
@@ -2711,7 +2714,7 @@
       "vp_workbench",
       "vp_workbench_with_recharger"
      ],
-     "fg": 256
+     "fg": 261
     },
     {
      "id": [
@@ -2720,7 +2723,7 @@
       "vp_headlight_reinforced",
       "vp_wide_headlight_reinforced"
      ],
-     "fg": 257
+     "fg": 262
     },
     {
      "id": [
@@ -2732,7 +2735,7 @@
       "vp_towel_hanger",
       "vp_travois"
      ],
-     "fg": 258
+     "fg": 263
     },
     {
      "id": [
@@ -2750,11 +2753,11 @@
       "vp_spike_wood",
       "vp_woodboard"
      ],
-     "fg": 259
+     "fg": 264
     },
     {
      "id": "vp_bed",
-     "fg": 260
+     "fg": 265
     },
     {
      "id": [
@@ -2779,7 +2782,7 @@
       "vp_tank_small",
       "vp_xl_pressure_tank"
      ],
-     "fg": 261
+     "fg": 266
     },
     {
      "id": [
@@ -2797,7 +2800,7 @@
       "vp_roof_cloth",
       "vp_roof_wood"
      ],
-     "fg": 262
+     "fg": 267
     },
     {
      "id": [
@@ -2806,18 +2809,18 @@
       "vp_tank_barrel",
       "vp_wood box"
      ],
-     "fg": 263
+     "fg": 268
     },
     {
      "id": "vp_cam_control",
-     "fg": 264
+     "fg": 269
     },
     {
      "id": [
       "vp_car_light_battery_cell",
       "vp_car_light_minus_battery_cell"
      ],
-     "fg": 265
+     "fg": 270
     },
     {
      "id": [
@@ -2828,7 +2831,7 @@
       "vp_tank_55gal_drum_aluminum",
       "vp_veh_binoculars"
      ],
-     "fg": 266
+     "fg": 271
     },
     {
      "id": [
@@ -2837,7 +2840,7 @@
       "vp_spike",
       "vp_stowboard"
      ],
-     "fg": 267
+     "fg": 272
     },
     {
      "id": [
@@ -2857,22 +2860,22 @@
       "vp_hdhatch",
       "vp_hdhatch_opaque"
      ],
-     "fg": 268
+     "fg": 273
     },
     {
      "id": [
       "vp_controls",
       "vp_hand_controls"
      ],
-     "fg": 269
+     "fg": 274
     },
     {
      "id": "vp_controls_electronic",
-     "fg": 270
+     "fg": 275
     },
     {
      "id": "vp_controls_turret",
-     "fg": 271
+     "fg": 276
     },
     {
      "id": [
@@ -2882,7 +2885,7 @@
       "vp_ram_steel",
       "vp_wing_mirror"
      ],
-     "fg": 272
+     "fg": 277
     },
     {
      "id": [
@@ -2909,15 +2912,15 @@
       "vp_engine_v8",
       "vp_engine_vtwin"
      ],
-     "fg": 273
+     "fg": 278
     },
     {
      "id": "vp_door_lock",
-     "fg": 274
+     "fg": 279
     },
     {
      "id": "vp_door_motor",
-     "fg": 275
+     "fg": 280
     },
     {
      "id": [
@@ -2928,18 +2931,18 @@
       "vp_trunk_sedan",
       "vp_wooden_aisle"
      ],
-     "fg": 276
+     "fg": 281
     },
     {
      "id": "vp_drive_by_wire_controls",
-     "fg": 277
+     "fg": 282
     },
     {
      "id": [
       "vp_engine_aero_light",
       "vp_frame_wood_light_handle"
      ],
-     "fg": 278
+     "fg": 283
     },
     {
      "id": [
@@ -2948,23 +2951,23 @@
       "vp_xlframe",
       "vp_xlhalfboard"
      ],
-     "fg": 279
+     "fg": 284
     },
     {
      "id": "vp_frame_wood_handle",
-     "fg": 280
+     "fg": 285
     },
     {
      "id": "vp_frame_wood_light",
-     "fg": 281
+     "fg": 286
     },
     {
      "id": "vp_halfboard",
-     "fg": 282
+     "fg": 287
     },
     {
      "id": "vp_hdhalfboard",
-     "fg": 283
+     "fg": 288
     },
     {
      "id": [
@@ -2972,37 +2975,37 @@
       "vp_plating_military",
       "vp_ram_military"
      ],
-     "fg": 284
+     "fg": 289
     },
     {
      "id": [
       "vp_integrated_cooler",
       "vp_plating_steel"
      ],
-     "fg": 285
+     "fg": 290
     },
     {
      "id": "vp_light_blue",
-     "fg": 286
+     "fg": 291
     },
     {
      "id": "vp_light_red",
-     "fg": 287
+     "fg": 292
     },
     {
      "id": "vp_long_extension_cable",
-     "fg": 288
+     "fg": 293
     },
     {
      "id": [
       "vp_motorcycle_kickstand",
       "vp_smart_engine_controller"
      ],
-     "fg": 289
+     "fg": 294
     },
     {
      "id": "vp_mountable_cooler",
-     "fg": 290
+     "fg": 295
     },
     {
      "id": [
@@ -3020,7 +3023,7 @@
       "vp_wheel_mount_medium_steerable",
       "vp_wheel_mount_skateboard"
      ],
-     "fg": 291
+     "fg": 296
     },
     {
      "id": [
@@ -3028,18 +3031,18 @@
       "vp_omnicamera_reinforced",
       "vp_vehicle_alarm"
      ],
-     "fg": 292
+     "fg": 297
     },
     {
      "id": "vp_plating_hard",
-     "fg": 293
+     "fg": 298
     },
     {
      "id": [
       "vp_plating_spiked",
       "vp_ram_spiked"
      ],
-     "fg": 294
+     "fg": 299
     },
     {
      "id": [
@@ -3047,41 +3050,41 @@
       "vp_seed_drill",
       "vp_seed_drill_advanced"
      ],
-     "fg": 295
+     "fg": 300
     },
     {
      "id": "vp_programmable_autopilot",
-     "fg": 296
+     "fg": 301
     },
     {
      "id": [
       "vp_ram_acidchitin",
       "vp_ram_chitin"
      ],
-     "fg": 297
+     "fg": 302
     },
     {
      "id": "vp_ram_hardsteel",
-     "fg": 298
+     "fg": 303
     },
     {
      "id": "vp_recharge_station",
-     "fg": 299
+     "fg": 304
     },
     {
      "id": [
       "vp_reinforced_windshield",
       "vp_windshield"
      ],
-     "fg": 300
+     "fg": 305
     },
     {
      "id": "vp_robot_controls",
-     "fg": 301
+     "fg": 306
     },
     {
      "id": "vp_roller_drum",
-     "fg": 302
+     "fg": 307
     },
     {
      "id": [
@@ -3089,22 +3092,22 @@
       "vp_seat_wood_bench",
       "vp_seat_wood_flimsy"
      ],
-     "fg": 303
+     "fg": 308
     },
     {
      "id": [
       "vp_seatbelt",
       "vp_seatbelt_heavyduty"
      ],
-     "fg": 304
+     "fg": 309
     },
     {
      "id": "vp_turret_generic",
-     "fg": 305
+     "fg": 310
     },
     {
      "id": "vp_veh_oil_press_electric",
-     "fg": 306
+     "fg": 311
     },
     {
      "id": [
@@ -3128,11 +3131,11 @@
       "vp_wheel_wide_or",
       "vp_yoke_harness_heavyduty"
      ],
-     "fg": 307
+     "fg": 312
     },
     {
      "id": "vp_wheel_armor",
-     "fg": 308
+     "fg": 313
     },
     {
      "id": [
@@ -3142,11 +3145,11 @@
       "vp_wheel_wood_b",
       "vp_yoke_harness"
      ],
-     "fg": 309
+     "fg": 314
     },
     {
      "id": "vp_woodhalfboard",
-     "fg": 310
+     "fg": 315
     }
    ]
   },
@@ -3270,6 +3273,7 @@
       "t_strconc_wall_r",
       "t_trl_wall_brick",
       "t_trl_wall_rust",
+      "t_trl_wall_vermilion",
       "t_wall_r",
       "t_wood_wall_r"
      ],
@@ -3362,7 +3366,8 @@
       "t_door_white_c",
       "t_rdoor_boarded",
       "t_rdoor_boarded_damaged",
-      "t_screen_door_c"
+      "t_screen_door_c",
+      "t_trl_door_church_c"
      ],
      "fg": 327
     },
@@ -3392,7 +3397,8 @@
       "t_door_white_frame",
       "t_door_white_o",
       "t_palisade_gate_o",
-      "t_screen_door_o"
+      "t_screen_door_o",
+      "t_trl_door_church_o"
      ],
      "fg": 329
     },
@@ -3457,6 +3463,7 @@
       "t_plastic_window_with_curtain",
       "t_reinforced_plastic_window",
       "t_reinforced_plastic_window_with_curtain",
+      "t_trl_window_church",
       "t_window_stained_blue"
      ],
      "fg": 335
@@ -3464,6 +3471,7 @@
     {
      "id": [
       "t_card_science_mu",
+      "t_trl_cobble",
       "t_trl_pave"
      ],
      "fg": 336
@@ -3625,6 +3633,7 @@
       "t_rock_smooth",
       "t_sconc_wall_w",
       "t_strconc_wall_w",
+      "t_trl_wall_chapel",
       "t_trl_wall_clean",
       "t_trl_wall_corp",
       "t_wall_w",
@@ -3637,6 +3646,7 @@
       "t_concrete_wall_y",
       "t_sconc_wall_y",
       "t_strconc_wall_y",
+      "t_trl_wall_cypress",
       "t_trl_wall_gilt",
       "t_wall_black",
       "t_wall_y",
@@ -3919,19 +3929,27 @@
      "fg": 380
     },
     {
+     "id": "t_trl_door_shrine_c",
+     "fg": 381
+    },
+    {
+     "id": "t_trl_door_shrine_o",
+     "fg": 382
+    },
+    {
      "id": [
       "t_trl_elock_c",
       "t_trl_screen_c"
      ],
-     "fg": 381
+     "fg": 383
     },
     {
      "id": "t_trl_wall_mural",
-     "fg": 382
+     "fg": 384
     },
     {
      "id": "t_trl_wall_shoji",
-     "fg": 383
+     "fg": 385
     },
     {
      "id": [
@@ -3939,26 +3957,26 @@
       "t_window_enhanced",
       "t_window_enhanced_noglass"
      ],
-     "fg": 384
-    },
-    {
-     "id": "t_unfolded_wall",
-     "fg": 385
-    },
-    {
-     "id": "t_vitrified_stairs_down",
      "fg": 386
     },
     {
-     "id": "t_vitrified_window_frame",
+     "id": "t_unfolded_wall",
      "fg": 387
+    },
+    {
+     "id": "t_vitrified_stairs_down",
+     "fg": 388
+    },
+    {
+     "id": "t_vitrified_window_frame",
+     "fg": 389
     },
     {
      "id": [
       "t_water_pool_outdoors",
       "t_water_pool_shallow_outdoors"
      ],
-     "fg": 388
+     "fg": 390
     },
     {
      "id": [
@@ -3966,14 +3984,14 @@
       "t_window_boarded_noglass",
       "t_window_boarded_shutters_closed"
      ],
-     "fg": 389
+     "fg": 391
     },
     {
      "id": [
       "t_window_boarded_shutters_open",
       "t_window_boarded_shutters_open_fully"
      ],
-     "fg": 390
+     "fg": 392
     },
     {
      "id": [
@@ -3981,40 +3999,40 @@
       "t_window_empty_curtains_closed",
       "t_window_empty_curtains_open"
      ],
-     "fg": 391
+     "fg": 393
     },
     {
      "id": [
       "t_window_no_curtains",
       "t_window_no_curtains_alarm"
      ],
-     "fg": 392
+     "fg": 394
     },
     {
      "id": [
       "t_window_no_curtains_open",
       "t_window_no_curtains_open_alarm"
      ],
-     "fg": 393
+     "fg": 395
     },
     {
      "id": [
       "t_window_reinforced",
       "t_window_reinforced_noglass"
      ],
-     "fg": 394
-    },
-    {
-     "id": "t_window_stained_green",
-     "fg": 395
-    },
-    {
-     "id": "t_window_stained_red",
      "fg": 396
     },
     {
-     "id": "t_wood_stairs_down",
+     "id": "t_window_stained_green",
      "fg": 397
+    },
+    {
+     "id": "t_window_stained_red",
+     "fg": 398
+    },
+    {
+     "id": "t_wood_stairs_down",
+     "fg": 399
     },
     {
      "id": [
@@ -4022,7 +4040,7 @@
       "t_wood_stairs_up_broken",
       "t_wood_stairs_up_half"
      ],
-     "fg": 398
+     "fg": 400
     },
     {
      "id": [
@@ -4031,7 +4049,7 @@
       "f_diesel_generator",
       "f_military_generator"
      ],
-     "fg": 399
+     "fg": 401
     },
     {
      "id": [
@@ -4052,7 +4070,7 @@
       "f_washer",
       "f_xray"
      ],
-     "fg": 400
+     "fg": 402
     },
     {
      "id": [
@@ -4063,18 +4081,18 @@
       "f_trl_gilt_screen",
       "f_trl_shop_terminal"
      ],
-     "fg": 401
+     "fg": 403
     },
     {
      "id": "f_anesthetic",
-     "fg": 402
+     "fg": 404
     },
     {
      "id": [
       "f_arcade_machine",
       "f_pinball_machine"
      ],
-     "fg": 403
+     "fg": 405
     },
     {
      "id": [
@@ -4089,21 +4107,21 @@
       "f_minifreezer",
       "f_speaker_cabinet"
      ],
-     "fg": 404
+     "fg": 406
     },
     {
      "id": [
       "f_arcfurnace_full",
       "f_kiln_metal_full"
      ],
-     "fg": 405
+     "fg": 407
     },
     {
      "id": [
       "f_aut_gas_console",
       "f_console"
      ],
-     "fg": 406
+     "fg": 408
     },
     {
      "id": [
@@ -4114,7 +4132,15 @@
       "f_trl_press_machine",
       "f_vending_o"
      ],
-     "fg": 407
+     "fg": 409
+    },
+    {
+     "id": "f_autodoc",
+     "fg": 410
+    },
+    {
+     "id": "f_autodoc_couch",
+     "fg": 411
     },
     {
      "id": [
@@ -4132,7 +4158,7 @@
       "f_trl_med_cabinet",
       "f_trl_shelf_clean"
      ],
-     "fg": 408
+     "fg": 412
     },
     {
      "id": [
@@ -4180,14 +4206,14 @@
       "f_warehouse_shelf",
       "f_woodstove"
      ],
-     "fg": 409
+     "fg": 413
     },
     {
      "id": [
       "f_bladderwrack",
       "f_exodii_generator_3"
      ],
-     "fg": 410
+     "fg": 414
     },
     {
      "id": [
@@ -4206,14 +4232,15 @@
       "f_trl_water_tank",
       "f_wardrobe"
      ],
-     "fg": 411
+     "fg": 415
     },
     {
      "id": [
       "f_bullettrailer_cabinet",
-      "f_trl_cash_cage"
+      "f_trl_cash_cage",
+      "f_trl_liquor_shelf"
      ],
-     "fg": 412
+     "fg": 416
     },
     {
      "id": [
@@ -4222,29 +4249,18 @@
       "f_sign_stop",
       "f_sign_warning"
      ],
-     "fg": 413
+     "fg": 417
     },
     {
-     "id": [
-      "f_catalytic_cracking_reactor",
-      "f_display_fridge",
-      "f_displaycase",
-      "f_displaycase_o",
-      "f_fridge",
-      "f_glass_fridge",
-      "f_glass_fridge_double",
-      "f_heavy_duty_fridge",
-      "f_minifridge",
-      "f_trl_turbine"
-     ],
-     "fg": 414
+     "id": "f_catalytic_cracking_reactor",
+     "fg": 418
     },
     {
      "id": [
       "f_cellphone_booster",
       "f_trl_banner_unit"
      ],
-     "fg": 415
+     "fg": 419
     },
     {
      "id": [
@@ -4257,17 +4273,18 @@
       "f_forge_artisan_1",
       "f_forge_rock",
       "f_gas_tank_smashed",
-      "f_trl_hose_rack"
+      "f_trl_hose_rack",
+      "f_trl_pizza_oven"
      ],
-     "fg": 416
+     "fg": 420
     },
     {
      "id": "f_compact_ASRG_containment",
-     "fg": 417
+     "fg": 421
     },
     {
      "id": "f_diesel_tank",
-     "fg": 418
+     "fg": 422
     },
     {
      "id": [
@@ -4275,19 +4292,33 @@
       "f_trl_charge_rack",
       "f_trl_ward_cabinet"
      ],
-     "fg": 419
+     "fg": 423
+    },
+    {
+     "id": [
+      "f_display_fridge",
+      "f_displaycase",
+      "f_displaycase_o",
+      "f_fridge",
+      "f_glass_fridge",
+      "f_glass_fridge_double",
+      "f_heavy_duty_fridge",
+      "f_minifridge",
+      "f_trl_kitchen_fridge",
+      "f_trl_sushi_case"
+     ],
+     "fg": 424
     },
     {
      "id": [
       "f_exodii_charger",
       "f_exodii_charger_cheap",
-      "f_reactor_meltdown",
       "f_trl_atm",
       "f_trl_car_charger",
       "f_trl_jack",
       "f_trl_radio_set"
      ],
-     "fg": 420
+     "fg": 425
     },
     {
      "id": [
@@ -4295,11 +4326,11 @@
       "f_hobo_stove",
       "f_trl_tool_cabinet"
      ],
-     "fg": 421
+     "fg": 426
     },
     {
      "id": "f_exodii_generator_4",
-     "fg": 422
+     "fg": 427
     },
     {
      "id": [
@@ -4310,7 +4341,7 @@
       "f_trl_lantern_stone",
       "f_vitrified_floor_lamp"
      ],
-     "fg": 423
+     "fg": 428
     },
     {
      "id": [
@@ -4335,26 +4366,37 @@
       "f_vitrified_sink",
       "f_vitrified_toilet"
      ],
-     "fg": 424
+     "fg": 429
     },
     {
      "id": [
       "f_gas_tank",
       "f_kiln_full"
      ],
-     "fg": 425
+     "fg": 430
     },
     {
      "id": "f_machinery_old",
-     "fg": 426
+     "fg": 431
+    },
+    {
+     "id": [
+      "f_reactor_meltdown",
+      "f_trl_reactor_core"
+     ],
+     "fg": 432
     },
     {
      "id": "f_server",
-     "fg": 427
+     "fg": 433
     },
     {
      "id": "f_sign",
-     "fg": 428
+     "fg": 434
+    },
+    {
+     "id": "f_statue",
+     "fg": 435
     },
     {
      "id": [
@@ -4365,29 +4407,97 @@
       "f_trl_lightbox",
       "f_trl_sentry_lamp"
      ],
-     "fg": 429
+     "fg": 436
     },
     {
      "id": "f_training_dummy_light",
-     "fg": 430
+     "fg": 437
+    },
+    {
+     "id": "f_trl_altar_table",
+     "fg": 438
+    },
+    {
+     "id": "f_trl_analoy",
+     "fg": 439
+    },
+    {
+     "id": "f_trl_android_pod",
+     "fg": 440
+    },
+    {
+     "id": [
+      "f_trl_aquarium",
+      "f_trl_tank_s_cardinal",
+      "f_trl_tank_s_hawk",
+      "f_trl_tank_s_horse",
+      "f_trl_tank_s_lemon",
+      "f_trl_tank_s_mandarin",
+      "f_trl_tank_s_reef",
+      "f_trl_tank_w_dwarf_l",
+      "f_trl_tank_w_emperor_l",
+      "f_trl_tank_w_lion_l",
+      "f_trl_tank_w_tang_l",
+      "f_trl_tank_w_trigger_l",
+      "f_trl_tank_w_tusk_l"
+     ],
+     "fg": 441
     },
     {
      "id": [
       "f_trl_arcade",
       "f_trl_pachinko"
      ],
-     "fg": 431
+     "fg": 442
+    },
+    {
+     "id": [
+      "f_trl_autodoc_imp_m",
+      "f_trl_autodoc_imp_p",
+      "f_trl_autodoc_imp_r",
+      "f_trl_autodoc_nano_m",
+      "f_trl_autodoc_nano_p",
+      "f_trl_autodoc_nano_r"
+     ],
+     "fg": 443
     },
     {
      "id": [
       "f_trl_banner_red",
       "f_trl_neon_red"
      ],
-     "fg": 432
+     "fg": 444
+    },
+    {
+     "id": "f_trl_baptismal_font",
+     "fg": 445
     },
     {
      "id": "f_trl_cabinet_lacquer",
-     "fg": 433
+     "fg": 446
+    },
+    {
+     "id": "f_trl_candle_stand",
+     "fg": 447
+    },
+    {
+     "id": [
+      "f_trl_capacitor_bank",
+      "f_trl_substation_unit"
+     ],
+     "fg": 448
+    },
+    {
+     "id": "f_trl_charging_pod",
+     "fg": 449
+    },
+    {
+     "id": "f_trl_chozuya",
+     "fg": 450
+    },
+    {
+     "id": "f_trl_church_bell",
+     "fg": 451
     },
     {
      "id": [
@@ -4400,22 +4510,27 @@
       "f_vending_c_networked",
       "f_vending_c_off"
      ],
-     "fg": 434
+     "fg": 452
     },
     {
      "id": "f_trl_crystal_lamp",
-     "fg": 435
+     "fg": 453
+    },
+    {
+     "id": "f_trl_ema_rack",
+     "fg": 454
     },
     {
      "id": [
       "f_trl_floor_lamp",
       "f_trl_garden_lamp",
+      "f_trl_hall_lamp",
       "f_trl_icon_lamp",
       "f_trl_lantern",
       "f_trl_street_lamp",
       "f_trl_warm_lamp"
      ],
-     "fg": 436
+     "fg": 455
     },
     {
      "id": [
@@ -4427,41 +4542,84 @@
       "f_trl_washer_row",
       "f_trl_water_cooler"
      ],
-     "fg": 437
+     "fg": 456
+    },
+    {
+     "id": [
+      "f_trl_gurney",
+      "f_trl_ward_gurney"
+     ],
+     "fg": 457
+    },
+    {
+     "id": "f_trl_hokora",
+     "fg": 458
+    },
+    {
+     "id": "f_trl_holo_ad",
+     "fg": 459
+    },
+    {
+     "id": "f_trl_iconostasis",
+     "fg": 460
     },
     {
      "id": [
       "f_trl_koi_lantern",
       "f_trl_strip_light"
      ],
-     "fg": 438
+     "fg": 461
+    },
+    {
+     "id": "f_trl_komainu",
+     "fg": 462
     },
     {
      "id": "f_trl_neon_amber",
-     "fg": 439
+     "fg": 463
     },
     {
      "id": "f_trl_neon_cyan",
-     "fg": 440
+     "fg": 464
     },
     {
      "id": "f_trl_neon_green",
-     "fg": 441
+     "fg": 465
     },
     {
      "id": [
       "f_trl_neon_pink",
       "f_trl_neon_pink_big"
      ],
-     "fg": 442
+     "fg": 466
     },
     {
      "id": "f_trl_neon_violet",
-     "fg": 443
+     "fg": 467
+    },
+    {
+     "id": "f_trl_pylon",
+     "fg": 468
+    },
+    {
+     "id": "f_trl_recharge_m",
+     "fg": 469
+    },
+    {
+     "id": "f_trl_recharge_p",
+     "fg": 470
+    },
+    {
+     "id": "f_trl_recharge_r",
+     "fg": 471
     },
     {
      "id": "f_trl_red_lantern",
-     "fg": 444
+     "fg": 472
+    },
+    {
+     "id": "f_trl_saisen_box",
+     "fg": 473
     },
     {
      "id": [
@@ -4469,7 +4627,46 @@
       "f_trl_ticket_machine",
       "f_trl_vending"
      ],
-     "fg": 445
+     "fg": 474
+    },
+    {
+     "id": "f_trl_shimenawa_pole",
+     "fg": 475
+    },
+    {
+     "id": "f_trl_shinto_torii",
+     "fg": 476
+    },
+    {
+     "id": "f_trl_statue_fox",
+     "fg": 477
+    },
+    {
+     "id": "f_trl_statue_gilt",
+     "fg": 478
+    },
+    {
+     "id": [
+      "f_trl_tank_w_dwarf_r",
+      "f_trl_tank_w_emperor_r",
+      "f_trl_tank_w_lion_r",
+      "f_trl_tank_w_tang_r",
+      "f_trl_tank_w_trigger_r",
+      "f_trl_tank_w_tusk_r"
+     ],
+     "fg": 479
+    },
+    {
+     "id": "f_trl_transformer",
+     "fg": 480
+    },
+    {
+     "id": "f_trl_wind_turbine",
+     "fg": 481
+    },
+    {
+     "id": "f_trl_worship_cross",
+     "fg": 482
     },
     {
      "id": [
@@ -4477,7 +4674,7 @@
       "f_vending_reinforced_networked",
       "f_vending_reinforced_off"
      ],
-     "fg": 446
+     "fg": 483
     }
    ]
   },
@@ -4490,371 +4687,371 @@
    "tiles": [
     {
      "id": "t_marloss_tree",
-     "fg": 449
-    },
-    {
-     "id": "t_region_tree",
-     "fg": 450
-    },
-    {
-     "id": "t_region_tree_dead",
-     "fg": 451
-    },
-    {
-     "id": "t_region_tree_evergreen",
-     "fg": 452
-    },
-    {
-     "id": "t_region_tree_forest",
-     "fg": 453
-    },
-    {
-     "id": "t_region_tree_forest_dense",
-     "fg": 454
-    },
-    {
-     "id": "t_region_tree_forest_other",
-     "fg": 455
-    },
-    {
-     "id": "t_region_tree_fruit",
-     "fg": 456
-    },
-    {
-     "id": "t_region_tree_nut",
-     "fg": 457
-    },
-    {
-     "id": "t_region_tree_shade",
-     "fg": 458
-    },
-    {
-     "id": "t_tree",
-     "fg": 459
-    },
-    {
-     "id": "t_tree_abstract",
-     "fg": 460
-    },
-    {
-     "id": "t_tree_alder",
-     "fg": 461
-    },
-    {
-     "id": "t_tree_alder_harvested",
-     "fg": 462
-    },
-    {
-     "id": "t_tree_almond",
-     "fg": 463
-    },
-    {
-     "id": "t_tree_almond_harvested",
-     "fg": 464
-    },
-    {
-     "id": "t_tree_apple",
-     "fg": 465
-    },
-    {
-     "id": "t_tree_apple_harvested",
-     "fg": 466
-    },
-    {
-     "id": "t_tree_apple_vitrified",
-     "fg": 467
-    },
-    {
-     "id": "t_tree_apricot",
-     "fg": 468
-    },
-    {
-     "id": "t_tree_apricot_harvested",
-     "fg": 469
-    },
-    {
-     "id": "t_tree_basswood",
-     "fg": 470
-    },
-    {
-     "id": "t_tree_basswood_harvested",
-     "fg": 471
-    },
-    {
-     "id": "t_tree_beech",
-     "fg": 472
-    },
-    {
-     "id": "t_tree_beech_harvested",
-     "fg": 473
-    },
-    {
-     "id": "t_tree_birch",
-     "fg": 474
-    },
-    {
-     "id": "t_tree_birch_harvested",
-     "fg": 475
-    },
-    {
-     "id": "t_tree_blackjack",
-     "fg": 476
-    },
-    {
-     "id": "t_tree_blackjack_harvested",
-     "fg": 477
-    },
-    {
-     "id": "t_tree_butternut",
-     "fg": 478
-    },
-    {
-     "id": "t_tree_butternut_harvested",
-     "fg": 479
-    },
-    {
-     "id": "t_tree_cherry",
-     "fg": 480
-    },
-    {
-     "id": "t_tree_cherry_harvested",
-     "fg": 481
-    },
-    {
-     "id": "t_tree_chestnut",
-     "fg": 482
-    },
-    {
-     "id": "t_tree_chestnut_harvested",
-     "fg": 483
-    },
-    {
-     "id": "t_tree_coffee",
-     "fg": 484
-    },
-    {
-     "id": "t_tree_coffee_harvested",
-     "fg": 485
-    },
-    {
-     "id": "t_tree_cottonwood",
-     "fg": 486
-    },
-    {
-     "id": "t_tree_cottonwood_harvested",
-     "fg": 487
-    },
-    {
-     "id": "t_tree_crabapple",
-     "fg": 488
-    },
-    {
-     "id": "t_tree_crabapple_harvested",
-     "fg": 489
-    },
-    {
-     "id": "t_tree_dead",
-     "fg": 490
-    },
-    {
-     "id": "t_tree_dead_warped",
-     "fg": 491
-    },
-    {
-     "id": "t_tree_deadpine",
-     "fg": 492
-    },
-    {
-     "id": "t_tree_deadpine_warped",
-     "fg": 493
-    },
-    {
-     "id": "t_tree_elderberry",
-     "fg": 494
-    },
-    {
-     "id": "t_tree_elderberry_harvested",
-     "fg": 495
-    },
-    {
-     "id": "t_tree_elm",
-     "fg": 496
-    },
-    {
-     "id": "t_tree_fungal",
      "fg": 497
     },
     {
-     "id": "t_tree_fungal_young",
+     "id": "t_region_tree",
      "fg": 498
     },
     {
-     "id": "t_tree_harvested",
+     "id": "t_region_tree_dead",
      "fg": 499
     },
     {
-     "id": "t_tree_hazelnut",
+     "id": "t_region_tree_evergreen",
      "fg": 500
     },
     {
-     "id": "t_tree_hazelnut_harvested",
+     "id": "t_region_tree_forest",
      "fg": 501
     },
     {
-     "id": "t_tree_hickory",
+     "id": "t_region_tree_forest_dense",
      "fg": 502
     },
     {
-     "id": "t_tree_hickory_dead",
+     "id": "t_region_tree_forest_other",
      "fg": 503
     },
     {
-     "id": "t_tree_hickory_harvested",
+     "id": "t_region_tree_fruit",
      "fg": 504
     },
     {
-     "id": "t_tree_juniper",
+     "id": "t_region_tree_nut",
      "fg": 505
     },
     {
-     "id": "t_tree_juniper_harvested",
+     "id": "t_region_tree_shade",
      "fg": 506
     },
     {
-     "id": "t_tree_maple",
+     "id": "t_tree",
      "fg": 507
     },
     {
-     "id": "t_tree_maple_tapped",
+     "id": "t_tree_abstract",
      "fg": 508
     },
     {
-     "id": "t_tree_mulberry",
+     "id": "t_tree_alder",
      "fg": 509
     },
     {
-     "id": "t_tree_mulberry_harvested",
+     "id": "t_tree_alder_harvested",
      "fg": 510
     },
     {
-     "id": "t_tree_nannyberry",
+     "id": "t_tree_almond",
      "fg": 511
     },
     {
-     "id": "t_tree_nannyberry_harvested",
+     "id": "t_tree_almond_harvested",
      "fg": 512
     },
     {
-     "id": "t_tree_peach",
+     "id": "t_tree_apple",
      "fg": 513
     },
     {
-     "id": "t_tree_peach_harvested",
+     "id": "t_tree_apple_harvested",
      "fg": 514
     },
     {
-     "id": "t_tree_pear",
+     "id": "t_tree_apple_vitrified",
      "fg": 515
     },
     {
-     "id": "t_tree_pear_harvested",
+     "id": "t_tree_apricot",
      "fg": 516
     },
     {
-     "id": "t_tree_pecan",
+     "id": "t_tree_apricot_harvested",
      "fg": 517
     },
     {
-     "id": "t_tree_pecan_harvested",
+     "id": "t_tree_basswood",
      "fg": 518
     },
     {
-     "id": "t_tree_pine",
+     "id": "t_tree_basswood_harvested",
      "fg": 519
     },
     {
-     "id": "t_tree_pine_harvested",
+     "id": "t_tree_beech",
      "fg": 520
     },
     {
-     "id": "t_tree_pistachio",
+     "id": "t_tree_beech_harvested",
      "fg": 521
     },
     {
-     "id": "t_tree_pistachio_harvested",
+     "id": "t_tree_birch",
      "fg": 522
     },
     {
-     "id": "t_tree_plum",
+     "id": "t_tree_birch_harvested",
      "fg": 523
     },
     {
-     "id": "t_tree_plum_harvested",
+     "id": "t_tree_blackjack",
      "fg": 524
     },
     {
-     "id": "t_tree_sassafras",
+     "id": "t_tree_blackjack_harvested",
      "fg": 525
     },
     {
-     "id": "t_tree_sassafras_harvested",
+     "id": "t_tree_butternut",
      "fg": 526
     },
     {
-     "id": "t_tree_tupelo",
+     "id": "t_tree_butternut_harvested",
      "fg": 527
     },
     {
-     "id": "t_tree_tupelo_harvested",
+     "id": "t_tree_cherry",
      "fg": 528
     },
     {
-     "id": "t_tree_very_dead",
+     "id": "t_tree_cherry_harvested",
      "fg": 529
     },
     {
-     "id": "t_tree_walnut",
+     "id": "t_tree_chestnut",
      "fg": 530
     },
     {
-     "id": "t_tree_walnut_harvested",
+     "id": "t_tree_chestnut_harvested",
      "fg": 531
     },
     {
-     "id": "t_tree_willow",
+     "id": "t_tree_coffee",
      "fg": 532
     },
     {
-     "id": "t_tree_willow_harvested",
+     "id": "t_tree_coffee_harvested",
      "fg": 533
     },
     {
-     "id": "t_tree_young",
+     "id": "t_tree_cottonwood",
      "fg": 534
     },
     {
-     "id": "t_treetop",
+     "id": "t_tree_cottonwood_harvested",
      "fg": 535
     },
     {
-     "id": "t_treetop_dead",
+     "id": "t_tree_crabapple",
      "fg": 536
     },
     {
-     "id": "t_treetop_evergreen",
+     "id": "t_tree_crabapple_harvested",
      "fg": 537
     },
     {
-     "id": "t_treetop_giant_fern",
+     "id": "t_tree_dead",
      "fg": 538
     },
     {
-     "id": "t_trunk",
+     "id": "t_tree_dead_warped",
      "fg": 539
     },
     {
-     "id": "t_vitrified_tree",
+     "id": "t_tree_deadpine",
      "fg": 540
+    },
+    {
+     "id": "t_tree_deadpine_warped",
+     "fg": 541
+    },
+    {
+     "id": "t_tree_elderberry",
+     "fg": 542
+    },
+    {
+     "id": "t_tree_elderberry_harvested",
+     "fg": 543
+    },
+    {
+     "id": "t_tree_elm",
+     "fg": 544
+    },
+    {
+     "id": "t_tree_fungal",
+     "fg": 545
+    },
+    {
+     "id": "t_tree_fungal_young",
+     "fg": 546
+    },
+    {
+     "id": "t_tree_harvested",
+     "fg": 547
+    },
+    {
+     "id": "t_tree_hazelnut",
+     "fg": 548
+    },
+    {
+     "id": "t_tree_hazelnut_harvested",
+     "fg": 549
+    },
+    {
+     "id": "t_tree_hickory",
+     "fg": 550
+    },
+    {
+     "id": "t_tree_hickory_dead",
+     "fg": 551
+    },
+    {
+     "id": "t_tree_hickory_harvested",
+     "fg": 552
+    },
+    {
+     "id": "t_tree_juniper",
+     "fg": 553
+    },
+    {
+     "id": "t_tree_juniper_harvested",
+     "fg": 554
+    },
+    {
+     "id": "t_tree_maple",
+     "fg": 555
+    },
+    {
+     "id": "t_tree_maple_tapped",
+     "fg": 556
+    },
+    {
+     "id": "t_tree_mulberry",
+     "fg": 557
+    },
+    {
+     "id": "t_tree_mulberry_harvested",
+     "fg": 558
+    },
+    {
+     "id": "t_tree_nannyberry",
+     "fg": 559
+    },
+    {
+     "id": "t_tree_nannyberry_harvested",
+     "fg": 560
+    },
+    {
+     "id": "t_tree_peach",
+     "fg": 561
+    },
+    {
+     "id": "t_tree_peach_harvested",
+     "fg": 562
+    },
+    {
+     "id": "t_tree_pear",
+     "fg": 563
+    },
+    {
+     "id": "t_tree_pear_harvested",
+     "fg": 564
+    },
+    {
+     "id": "t_tree_pecan",
+     "fg": 565
+    },
+    {
+     "id": "t_tree_pecan_harvested",
+     "fg": 566
+    },
+    {
+     "id": "t_tree_pine",
+     "fg": 567
+    },
+    {
+     "id": "t_tree_pine_harvested",
+     "fg": 568
+    },
+    {
+     "id": "t_tree_pistachio",
+     "fg": 569
+    },
+    {
+     "id": "t_tree_pistachio_harvested",
+     "fg": 570
+    },
+    {
+     "id": "t_tree_plum",
+     "fg": 571
+    },
+    {
+     "id": "t_tree_plum_harvested",
+     "fg": 572
+    },
+    {
+     "id": "t_tree_sassafras",
+     "fg": 573
+    },
+    {
+     "id": "t_tree_sassafras_harvested",
+     "fg": 574
+    },
+    {
+     "id": "t_tree_tupelo",
+     "fg": 575
+    },
+    {
+     "id": "t_tree_tupelo_harvested",
+     "fg": 576
+    },
+    {
+     "id": "t_tree_very_dead",
+     "fg": 577
+    },
+    {
+     "id": "t_tree_walnut",
+     "fg": 578
+    },
+    {
+     "id": "t_tree_walnut_harvested",
+     "fg": 579
+    },
+    {
+     "id": "t_tree_willow",
+     "fg": 580
+    },
+    {
+     "id": "t_tree_willow_harvested",
+     "fg": 581
+    },
+    {
+     "id": "t_tree_young",
+     "fg": 582
+    },
+    {
+     "id": "t_treetop",
+     "fg": 583
+    },
+    {
+     "id": "t_treetop_dead",
+     "fg": 584
+    },
+    {
+     "id": "t_treetop_evergreen",
+     "fg": 585
+    },
+    {
+     "id": "t_treetop_giant_fern",
+     "fg": 586
+    },
+    {
+     "id": "t_trunk",
+     "fg": 587
+    },
+    {
+     "id": "t_vitrified_tree",
+     "fg": 588
     }
    ]
   },
@@ -4870,7 +5067,7 @@
       "mon_EMP_hack",
       "mon_tazer_hack"
      ],
-     "fg": 545
+     "fg": 593
     },
     {
      "id": [
@@ -4881,7 +5078,7 @@
       "mon_zombie_regenerating_final",
       "mon_zombie_regenerating_hunter"
      ],
-     "fg": 546
+     "fg": 594
     },
     {
      "id": [
@@ -4899,7 +5096,7 @@
       "mon_zombie_soldier_lixa_police",
       "mon_zombie_soldier_no_weakpoints"
      ],
-     "fg": 547
+     "fg": 595
     },
     {
      "id": [
@@ -4919,11 +5116,11 @@
       "mon_spider_widow_giant_s",
       "mon_twisted_reflection"
      ],
-     "fg": 548
+     "fg": 596
     },
     {
      "id": "mon_afs_headless_horror",
-     "fg": 549
+     "fg": 597
     },
     {
      "id": [
@@ -4943,11 +5140,10 @@
       "mon_fish_sturgeon_lake",
       "mon_flatlander",
       "mon_generator",
-      "mon_trl_chicken",
       "mon_turkey_domestic",
       "mon_vortex"
      ],
-     "fg": 550
+     "fg": 598
     },
     {
      "id": [
@@ -4959,7 +5155,7 @@
       "mon_fox_red",
       "mon_zoose_brute"
      ],
-     "fg": 551
+     "fg": 599
     },
     {
      "id": [
@@ -4978,25 +5174,25 @@
       "mon_zombie_wretch_dusted",
       "mon_zombie_wretch_fungalize"
      ],
-     "fg": 552
+     "fg": 600
     },
     {
      "id": [
       "mon_amalgamation_breather_hub",
       "mon_breather_hub"
      ],
-     "fg": 553
+     "fg": 601
     },
     {
      "id": "mon_amalgamation_corroder",
-     "fg": 554
+     "fg": 602
     },
     {
      "id": [
       "mon_amalgamation_jumper",
       "mon_amalgamation_zapper"
      ],
-     "fg": 555
+     "fg": 603
     },
     {
      "id": [
@@ -5005,7 +5201,7 @@
       "mon_shadow",
       "mon_silverfish_nymph"
      ],
-     "fg": 556
+     "fg": 604
     },
     {
      "id": [
@@ -5015,7 +5211,7 @@
       "mon_giant_appendage",
       "mon_wasp_larva"
      ],
-     "fg": 557
+     "fg": 605
     },
     {
      "id": [
@@ -5067,7 +5263,7 @@
       "pseudo_debug_mon",
       "pseudo_weakpoint_mon"
      ],
-     "fg": 558
+     "fg": 606
     },
     {
      "id": [
@@ -5086,7 +5282,7 @@
       "mon_skink_fivelined_baby",
       "mon_skittering_plague"
      ],
-     "fg": 559
+     "fg": 607
     },
     {
      "id": [
@@ -5096,7 +5292,7 @@
       "mon_centipede_mom",
       "mon_slime_ocularium"
      ],
-     "fg": 560
+     "fg": 608
     },
     {
      "id": [
@@ -5120,21 +5316,21 @@
       "mon_wasp_small_guard",
       "mon_wasp_small_guard_fungus"
      ],
-     "fg": 561
+     "fg": 609
     },
     {
      "id": [
       "mon_ant_fungus",
       "mon_whisper_fungus"
      ],
-     "fg": 562
+     "fg": 610
     },
     {
      "id": [
       "mon_ant_queen",
       "mon_kraken_guard"
      ],
-     "fg": 563
+     "fg": 611
     },
     {
      "id": [
@@ -5145,7 +5341,7 @@
       "mon_kraken_queen",
       "mon_moth_fly_larva"
      ],
-     "fg": 564
+     "fg": 612
     },
     {
      "id": [
@@ -5178,7 +5374,7 @@
       "mon_waxwing_chick",
       "mon_woodpecker_chick"
      ],
-     "fg": 565
+     "fg": 613
     },
     {
      "id": [
@@ -5187,7 +5383,7 @@
       "mon_dog_zombie_rot",
       "mon_spider_web_s"
      ],
-     "fg": 566
+     "fg": 614
     },
     {
      "id": [
@@ -5201,7 +5397,7 @@
       "mon_fly_mega",
       "mon_fly_small"
      ],
-     "fg": 567
+     "fg": 615
     },
     {
      "id": [
@@ -5221,7 +5417,7 @@
       "mon_zombie_necro_boomer",
       "mon_zombie_smoker"
      ],
-     "fg": 568
+     "fg": 616
     },
     {
      "id": [
@@ -5285,14 +5481,14 @@
       "mon_zomborg",
       "mon_zomborg_devourer"
      ],
-     "fg": 569
+     "fg": 617
     },
     {
      "id": [
       "mon_bat",
       "mon_woodlouse"
      ],
-     "fg": 570
+     "fg": 618
     },
     {
      "id": [
@@ -5301,7 +5497,7 @@
       "mon_bear_mutant_3headed",
       "mon_twisting_blade"
      ],
-     "fg": 571
+     "fg": 619
     },
     {
      "id": [
@@ -5343,13 +5539,12 @@
       "mon_reindeer",
       "mon_reindeer_fawn",
       "mon_squirrel_red",
-      "mon_trl_dog",
       "mon_weasel",
       "mon_wild_rabbit",
       "mon_wild_rabbit_baby",
       "mon_zougar_hunter"
      ],
-     "fg": 572
+     "fg": 620
     },
     {
      "id": [
@@ -5358,7 +5553,7 @@
       "mon_leech_root_runner",
       "mon_mutant_camouflaged"
      ],
-     "fg": 573
+     "fg": 621
     },
     {
      "id": [
@@ -5370,7 +5565,7 @@
       "mon_zombie_resort_bouncer",
       "mon_zombie_tough"
      ],
-     "fg": 574
+     "fg": 622
     },
     {
      "id": [
@@ -5378,7 +5573,7 @@
       "mon_zombie_armored",
       "mon_zombie_marine_upgrade"
      ],
-     "fg": 575
+     "fg": 623
     },
     {
      "id": [
@@ -5388,7 +5583,7 @@
       "mon_star_vampire",
       "mon_triffid_flower"
      ],
-     "fg": 576
+     "fg": 624
     },
     {
      "id": [
@@ -5397,7 +5592,7 @@
       "mon_toad_bloat",
       "mon_zombullfrog"
      ],
-     "fg": 577
+     "fg": 625
     },
     {
      "id": [
@@ -5483,7 +5678,6 @@
       "mon_raccoon",
       "mon_sewer_rat",
       "mon_squirrel",
-      "mon_trl_cat",
       "mon_tusked_moose_calf",
       "mon_zeer_fungus",
       "mon_zeindeer_fungus",
@@ -5492,7 +5686,7 @@
       "mon_zougar_fungus",
       "mon_zougar_shady"
      ],
-     "fg": 578
+     "fg": 626
     },
     {
      "id": [
@@ -5507,7 +5701,7 @@
       "mon_zougar",
       "mon_zow"
      ],
-     "fg": 579
+     "fg": 627
     },
     {
      "id": [
@@ -5517,7 +5711,7 @@
       "mon_leech_stalk",
       "mon_unseen_hunter"
      ],
-     "fg": 580
+     "fg": 628
     },
     {
      "id": [
@@ -5538,7 +5732,7 @@
       "mon_wood_frog",
       "mon_wood_worm"
      ],
-     "fg": 581
+     "fg": 629
     },
     {
      "id": [
@@ -5562,7 +5756,7 @@
       "mon_zombie_prisoner_brute",
       "mon_zpig_brute"
      ],
-     "fg": 582
+     "fg": 630
     },
     {
      "id": [
@@ -5570,11 +5764,11 @@
       "mon_boomer_fungalize",
       "mon_boomer_fungus"
      ],
-     "fg": 583
+     "fg": 631
     },
     {
      "id": "mon_boomer_huge",
-     "fg": 584
+     "fg": 632
     },
     {
      "id": [
@@ -5588,7 +5782,7 @@
       "mon_shrapnel_swarm",
       "mon_talon_m202a1"
      ],
-     "fg": 585
+     "fg": 633
     },
     {
      "id": [
@@ -5601,7 +5795,7 @@
       "mon_zombear",
       "mon_zombull"
      ],
-     "fg": 586
+     "fg": 634
     },
     {
      "id": [
@@ -5621,7 +5815,7 @@
       "mon_zombie_pupa_medical_decoy",
       "mon_zombie_pupa_shady"
      ],
-     "fg": 587
+     "fg": 635
     },
     {
      "id": [
@@ -5736,7 +5930,7 @@
       "mon_wolf_skeleton",
       "mon_zap_rat"
      ],
-     "fg": 588
+     "fg": 636
     },
     {
      "id": [
@@ -5760,7 +5954,7 @@
       "mon_void_spider_limb",
       "mon_wasp_pupa"
      ],
-     "fg": 589
+     "fg": 637
     },
     {
      "id": [
@@ -5773,7 +5967,7 @@
       "mon_secubot_america",
       "mon_secubot_america_refurbished"
      ],
-     "fg": 590
+     "fg": 638
     },
     {
      "id": [
@@ -5786,7 +5980,7 @@
       "mon_shift_bigtad",
       "mon_triffid_queen"
      ],
-     "fg": 591
+     "fg": 639
     },
     {
      "id": [
@@ -5807,7 +6001,7 @@
       "mon_turkey",
       "mon_vocal_bigtad"
      ],
-     "fg": 592
+     "fg": 640
     },
     {
      "id": [
@@ -5822,7 +6016,7 @@
       "mon_zombie_dog",
       "mon_zoose_thorny"
      ],
-     "fg": 593
+     "fg": 641
     },
     {
      "id": [
@@ -5867,7 +6061,7 @@
       "mon_zombie_shell",
       "mon_zombie_urchin"
      ],
-     "fg": 594
+     "fg": 642
     },
     {
      "id": [
@@ -5890,7 +6084,7 @@
       "mon_waxwing",
       "mon_woodpecker"
      ],
-     "fg": 595
+     "fg": 643
     },
     {
      "id": [
@@ -5912,7 +6106,7 @@
       "mon_zombie_thorny",
       "mon_zombie_winged"
      ],
-     "fg": 596
+     "fg": 644
     },
     {
      "id": [
@@ -5922,7 +6116,7 @@
       "mon_strange_bigtad",
       "mon_strange_megafrog"
      ],
-     "fg": 597
+     "fg": 645
     },
     {
      "id": [
@@ -5930,7 +6124,7 @@
       "mon_grenade_hack",
       "mon_hazmatbot"
      ],
-     "fg": 598
+     "fg": 646
     },
     {
      "id": [
@@ -5940,7 +6134,7 @@
       "mon_spider_trapdoor_s",
       "mon_spider_trapdoor_small"
      ],
-     "fg": 599
+     "fg": 647
     },
     {
      "id": [
@@ -5954,7 +6148,7 @@
       "mon_spider_widow_small",
       "mon_swarm_structure"
      ],
-     "fg": 600
+     "fg": 648
     },
     {
      "id": [
@@ -5964,14 +6158,14 @@
       "mon_spider_web_mega",
       "mon_spider_web_small"
      ],
-     "fg": 601
+     "fg": 649
     },
     {
      "id": [
       "mon_devourer",
       "mon_zombie_wretched"
      ],
-     "fg": 602
+     "fg": 650
     },
     {
      "id": [
@@ -5984,15 +6178,15 @@
       "mon_zombie_reenactor",
       "mon_zombie_swat"
      ],
-     "fg": 603
+     "fg": 651
     },
     {
      "id": "mon_dispatch",
-     "fg": 604
+     "fg": 652
     },
     {
      "id": "mon_dispatch_military",
-     "fg": 605
+     "fg": 653
     },
     {
      "id": [
@@ -6001,18 +6195,18 @@
       "mon_gray_frog",
       "mon_shift_frog"
      ],
-     "fg": 606
+     "fg": 654
     },
     {
      "id": "mon_dog_cuspated",
-     "fg": 607
+     "fg": 655
     },
     {
      "id": [
       "mon_dog_howling",
       "mon_razorclaw"
      ],
-     "fg": 608
+     "fg": 656
     },
     {
      "id": [
@@ -6021,7 +6215,7 @@
       "mon_octupus_stalker",
       "mon_octupus_stalker_spawn"
      ],
-     "fg": 609
+     "fg": 657
     },
     {
      "id": [
@@ -6033,7 +6227,7 @@
       "mon_triffid_young",
       "mon_vinebeast"
      ],
-     "fg": 610
+     "fg": 658
     },
     {
      "id": [
@@ -6041,7 +6235,7 @@
       "mon_labyrinth_turret_1_1",
       "mon_turret"
      ],
-     "fg": 611
+     "fg": 659
     },
     {
      "id": [
@@ -6086,7 +6280,7 @@
       "mon_zombie_shrieker",
       "mon_zombie_shriekling"
      ],
-     "fg": 612
+     "fg": 660
     },
     {
      "id": [
@@ -6097,7 +6291,7 @@
       "mon_zombie_swimmer",
       "mon_zombie_swimmer_base"
      ],
-     "fg": 613
+     "fg": 661
     },
     {
      "id": [
@@ -6105,7 +6299,7 @@
       "mon_fleshy_shambler",
       "mon_jabberwock"
      ],
-     "fg": 614
+     "fg": 662
     },
     {
      "id": [
@@ -6115,23 +6309,23 @@
       "mon_zombie_predator",
       "mon_zombtreefrog"
      ],
-     "fg": 615
+     "fg": 663
     },
     {
      "id": "mon_frog_mother",
-     "fg": 616
+     "fg": 664
     },
     {
      "id": "mon_frog_shadow",
-     "fg": 617
+     "fg": 665
     },
     {
      "id": "mon_frog_shocker",
-     "fg": 618
+     "fg": 666
     },
     {
      "id": "mon_fungal_blossom",
-     "fg": 619
+     "fg": 667
     },
     {
      "id": [
@@ -6142,7 +6336,7 @@
       "mon_zombie_grabber",
       "mon_zombie_nullfield"
      ],
-     "fg": 620
+     "fg": 668
     },
     {
      "id": [
@@ -6153,7 +6347,7 @@
       "mon_zombie_nomex",
       "mon_zombie_tear_gasbag"
      ],
-     "fg": 621
+     "fg": 669
     },
     {
      "id": [
@@ -6190,7 +6384,7 @@
       "mon_wormsnake",
       "mon_wormsnake_baby"
      ],
-     "fg": 622
+     "fg": 670
     },
     {
      "id": [
@@ -6199,7 +6393,7 @@
       "mon_zombie_fireproof_grappler",
       "mon_zombie_gasbag_fungus"
      ],
-     "fg": 623
+     "fg": 671
     },
     {
      "id": [
@@ -6212,7 +6406,7 @@
       "mon_yrax_triakis",
       "mon_yrax_trifacet"
      ],
-     "fg": 624
+     "fg": 672
     },
     {
      "id": [
@@ -6223,14 +6417,14 @@
       "mon_worm",
       "mon_worm_small"
      ],
-     "fg": 625
+     "fg": 673
     },
     {
      "id": [
       "mon_grocerybot",
       "mon_nursebot"
      ],
-     "fg": 626
+     "fg": 674
     },
     {
      "id": [
@@ -6239,7 +6433,7 @@
       "mon_nether_unviable_chunk",
       "mon_star_vampire_coiling"
      ],
-     "fg": 627
+     "fg": 675
     },
     {
      "id": [
@@ -6247,7 +6441,7 @@
       "mon_hulk_pupa_decoy",
       "mon_zombie_hulk"
      ],
-     "fg": 628
+     "fg": 676
     },
     {
      "id": [
@@ -6255,44 +6449,44 @@
       "mon_nether_cucumber",
       "mon_nether_leech"
      ],
-     "fg": 629
+     "fg": 677
     },
     {
      "id": [
       "mon_lab_security_drone_BM",
       "mon_leech_root_drone"
      ],
-     "fg": 630
+     "fg": 678
     },
     {
      "id": "mon_lab_security_drone_BM2",
-     "fg": 631
+     "fg": 679
     },
     {
      "id": "mon_lab_security_drone_BS",
-     "fg": 632
+     "fg": 680
     },
     {
      "id": [
       "mon_lab_security_drone_GM",
       "mon_lab_security_drone_GR"
      ],
-     "fg": 633
+     "fg": 681
     },
     {
      "id": "mon_lab_security_drone_YM",
-     "fg": 634
+     "fg": 682
     },
     {
      "id": "mon_lady_bug",
-     "fg": 635
+     "fg": 683
     },
     {
      "id": [
       "mon_lady_bug_giant",
       "mon_lady_bug_larva"
      ],
-     "fg": 636
+     "fg": 684
     },
     {
      "id": [
@@ -6302,19 +6496,19 @@
       "mon_zombie_miner",
       "mon_zombie_technician"
      ],
-     "fg": 637
+     "fg": 685
     },
     {
      "id": "mon_lieutenant_shadow",
-     "fg": 638
+     "fg": 686
     },
     {
      "id": "mon_manhack",
-     "fg": 639
+     "fg": 687
     },
     {
      "id": "mon_mantis_mega",
-     "fg": 640
+     "fg": 688
     },
     {
      "id": [
@@ -6323,27 +6517,27 @@
       "mon_meat_cocoon_small",
       "mon_meat_cocoon_tiny"
      ],
-     "fg": 641
+     "fg": 689
     },
     {
      "id": "mon_mech_combat",
-     "fg": 642
+     "fg": 690
     },
     {
      "id": "mon_mech_lifter",
-     "fg": 643
+     "fg": 691
     },
     {
      "id": "mon_mech_recon",
-     "fg": 644
+     "fg": 692
     },
     {
      "id": "mon_moth_titan",
-     "fg": 645
+     "fg": 693
     },
     {
      "id": "mon_mutant_arthropod",
-     "fg": 646
+     "fg": 694
     },
     {
      "id": [
@@ -6351,7 +6545,7 @@
       "mon_mutant_salmon_huge",
       "mon_mutant_salmon_mega"
      ],
-     "fg": 647
+     "fg": 695
     },
     {
      "id": [
@@ -6359,19 +6553,19 @@
       "mon_ocean_zhark",
       "mon_zhark"
      ],
-     "fg": 648
+     "fg": 696
     },
     {
      "id": "mon_nether_unviable_bug",
-     "fg": 649
+     "fg": 697
     },
     {
      "id": "mon_nether_unviable_butterfly",
-     "fg": 650
+     "fg": 698
     },
     {
      "id": "mon_nether_unviable_stomper",
-     "fg": 651
+     "fg": 699
     },
     {
      "id": [
@@ -6381,34 +6575,34 @@
       "mon_toad_zombie",
       "mon_tunnel_rat"
      ],
-     "fg": 652
+     "fg": 700
     },
     {
      "id": "mon_palette_frog",
-     "fg": 653
+     "fg": 701
     },
     {
      "id": "mon_pattern_bigfrog",
-     "fg": 654
+     "fg": 702
     },
     {
      "id": "mon_robofac_laserturret_mk1",
-     "fg": 655
+     "fg": 703
     },
     {
      "id": "mon_robofac_prototype",
-     "fg": 656
+     "fg": 704
     },
     {
      "id": "mon_robofac_skittergun",
-     "fg": 657
+     "fg": 705
     },
     {
      "id": [
       "mon_science_bot",
       "mon_skitterbot"
      ],
-     "fg": 658
+     "fg": 706
     },
     {
      "id": [
@@ -6420,14 +6614,14 @@
       "mon_spider_jumping_small",
       "mon_stag_beetle_larva"
      ],
-     "fg": 659
+     "fg": 707
     },
     {
      "id": [
       "mon_skeleton_electric",
       "mon_zombie_horse_black"
      ],
-     "fg": 660
+     "fg": 708
     },
     {
      "id": [
@@ -6435,11 +6629,11 @@
       "mon_zombie_bruiser",
       "mon_zombie_brute_grappler"
      ],
-     "fg": 661
+     "fg": 709
     },
     {
      "id": "mon_skunk",
-     "fg": 662
+     "fg": 710
     },
     {
      "id": [
@@ -6449,7 +6643,7 @@
       "mon_strider_small",
       "mon_void_spider"
      ],
-     "fg": 663
+     "fg": 711
     },
     {
      "id": [
@@ -6460,31 +6654,47 @@
       "mon_wolf",
       "mon_wolf_pup"
      ],
-     "fg": 664
+     "fg": 712
     },
     {
      "id": "mon_structural_spur",
-     "fg": 665
+     "fg": 713
     },
     {
      "id": "mon_tadpole_grabber",
-     "fg": 666
+     "fg": 714
     },
     {
      "id": "mon_toad_bone",
-     "fg": 667
+     "fg": 715
+    },
+    {
+     "id": "mon_trl_cat",
+     "fg": 716
+    },
+    {
+     "id": "mon_trl_chicken",
+     "fg": 717
     },
     {
      "id": "mon_trl_cyborg",
-     "fg": 668
+     "fg": 718
     },
     {
      "id": "mon_trl_daikumo",
-     "fg": 669
+     "fg": 719
+    },
+    {
+     "id": "mon_trl_dog",
+     "fg": 720
     },
     {
      "id": "mon_trl_kumo",
-     "fg": 670
+     "fg": 721
+    },
+    {
+     "id": "mon_trl_rabbit",
+     "fg": 722
     },
     {
      "id": [
@@ -6493,30 +6703,30 @@
       "mon_turret_rifle",
       "mon_turret_rifle_balthazar"
      ],
-     "fg": 671
+     "fg": 723
     },
     {
      "id": "mon_turret_riot",
-     "fg": 672
+     "fg": 724
     },
     {
      "id": [
       "mon_turret_searchlight",
       "mon_turret_speaker"
      ],
-     "fg": 673
+     "fg": 725
     },
     {
      "id": "mon_tusked_moose",
-     "fg": 674
+     "fg": 726
     },
     {
      "id": "mon_void_spider_spiderling",
-     "fg": 675
+     "fg": 727
     },
     {
      "id": "mon_void_spider_spiderling_skewered",
-     "fg": 676
+     "fg": 728
     },
     {
      "id": [
@@ -6524,19 +6734,19 @@
       "mon_worm_larva",
       "mon_yugg"
      ],
-     "fg": 677
+     "fg": 729
     },
     {
      "id": "mon_zolf",
-     "fg": 678
+     "fg": 730
     },
     {
      "id": "mon_zombear_acidic",
-     "fg": 679
+     "fg": 731
     },
     {
      "id": "mon_zombear_skeleton",
-     "fg": 680
+     "fg": 732
     },
     {
      "id": [
@@ -6547,18 +6757,18 @@
       "mon_zombie_horse_white",
       "mon_zombie_medical_acidic"
      ],
-     "fg": 681
+     "fg": 733
     },
     {
      "id": "mon_zombie_biter",
-     "fg": 682
+     "fg": 734
     },
     {
      "id": [
       "mon_zombie_brute_ninja",
       "mon_zombie_grue"
      ],
-     "fg": 683
+     "fg": 735
     },
     {
      "id": [
@@ -6566,11 +6776,11 @@
       "mon_zombie_lashing",
       "mon_zombie_scientist"
      ],
-     "fg": 684
+     "fg": 736
     },
     {
      "id": "mon_zombie_corrosive",
-     "fg": 685
+     "fg": 737
     },
     {
      "id": [
@@ -6578,68 +6788,68 @@
       "mon_zombie_crawler_pupa",
       "mon_zombie_crawler_pupa_decoy"
      ],
-     "fg": 686
+     "fg": 738
     },
     {
      "id": "mon_zombie_crushed_giant",
-     "fg": 687
+     "fg": 739
     },
     {
      "id": "mon_zombie_dog_acidic",
-     "fg": 688
+     "fg": 740
     },
     {
      "id": "mon_zombie_dog_brute_acidic",
-     "fg": 689
+     "fg": 741
     },
     {
      "id": "mon_zombie_fireproof",
-     "fg": 690
+     "fg": 742
     },
     {
      "id": "mon_zombie_fireproof_brute",
-     "fg": 691
+     "fg": 743
     },
     {
      "id": [
       "mon_zombie_fursuit",
       "mon_zombie_hazmat"
      ],
-     "fg": 692
+     "fg": 744
     },
     {
      "id": "mon_zombie_gasbag",
-     "fg": 693
+     "fg": 745
     },
     {
      "id": [
       "mon_zombie_gasbag_crawler",
       "mon_zombie_gasbag_impaler"
      ],
-     "fg": 694
+     "fg": 746
     },
     {
      "id": "mon_zombie_gasbag_immobile",
-     "fg": 695
+     "fg": 747
     },
     {
      "id": [
       "mon_zombie_giant_heart",
       "mon_zombie_scissorlimbs"
      ],
-     "fg": 696
+     "fg": 748
     },
     {
      "id": "mon_zombie_grappler",
-     "fg": 697
+     "fg": 749
     },
     {
      "id": "mon_zombie_hanging_innards",
-     "fg": 698
+     "fg": 750
     },
     {
      "id": "mon_zombie_hollow",
-     "fg": 699
+     "fg": 751
     },
     {
      "id": [
@@ -6647,19 +6857,19 @@
       "mon_zombie_kevlar_1",
       "mon_zombie_kevlar_2"
      ],
-     "fg": 700
+     "fg": 752
     },
     {
      "id": "mon_zombie_living_wall",
-     "fg": 701
+     "fg": 753
     },
     {
      "id": "mon_zombie_mancroc",
-     "fg": 702
+     "fg": 754
     },
     {
      "id": "mon_zombie_ocular",
-     "fg": 703
+     "fg": 755
     },
     {
      "id": [
@@ -6668,89 +6878,173 @@
       "mon_zombie_survivor_elite",
       "mon_zombie_survivor_no_weakpoints"
      ],
-     "fg": 704
+     "fg": 756
     },
     {
      "id": [
       "mon_zombie_phase_shrike",
       "mon_zombie_phase_skulker"
      ],
-     "fg": 705
+     "fg": 757
     },
     {
      "id": [
       "mon_zombie_relax_gasbag",
       "mon_zombie_screecher"
      ],
-     "fg": 706
+     "fg": 758
     },
     {
      "id": "mon_zombie_rot",
-     "fg": 707
+     "fg": 759
     },
     {
      "id": "mon_zombie_runner",
-     "fg": 708
+     "fg": 760
     },
     {
      "id": "mon_zombie_sheep",
-     "fg": 709
+     "fg": 761
     },
     {
      "id": "mon_zombie_spitter",
-     "fg": 710
+     "fg": 762
     },
     {
      "id": "mon_zombie_strider",
-     "fg": 711
+     "fg": 763
     },
     {
      "id": "mon_zombie_tentacle",
-     "fg": 712
+     "fg": 764
     },
     {
      "id": "player_male",
-     "fg": 713
+     "fg": 765
     },
     {
      "id": "player_female",
-     "fg": 714
+     "fg": 766
     },
     {
      "id": "npc_male",
-     "fg": 715
+     "fg": 767
     },
     {
      "id": "npc_female",
-     "fg": 716
+     "fg": 768
     },
     {
      "id": "overlay_wielded_trl_gun_w2011",
-     "fg": 717
+     "fg": 769
+    },
+    {
+     "id": "overlay_wielded_trl_fake_arm_gun",
+     "fg": 770
+    },
+    {
+     "id": [
+      "overlay_wielded_trl_gun_ga5",
+      "overlay_wielded_trl_gun_gam50",
+      "overlay_wielded_trl_gun_gm4",
+      "overlay_wielded_trl_gun_gs300",
+      "overlay_wielded_trl_gun_ha20",
+      "overlay_wielded_trl_gun_hs7",
+      "overlay_wielded_trl_gun_lh95",
+      "overlay_wielded_trl_gun_lm95",
+      "overlay_wielded_trl_gun_va7",
+      "overlay_wielded_trl_gun_vm6",
+      "overlay_wielded_trl_rifle",
+      "overlay_wielded_trl_soldier_rifle"
+     ],
+     "fg": 771
+    },
+    {
+     "id": [
+      "overlay_wielded_trl_gun_gl9",
+      "overlay_wielded_trl_gun_hl1",
+      "overlay_wielded_trl_gun_ll3",
+      "overlay_wielded_trl_gun_vlx"
+     ],
+     "fg": 772
+    },
+    {
+     "id": [
+      "overlay_wielded_trl_gun_gp45",
+      "overlay_wielded_trl_gun_gr44",
+      "overlay_wielded_trl_gun_hp9",
+      "overlay_wielded_trl_gun_hr357",
+      "overlay_wielded_trl_gun_lp5",
+      "overlay_wielded_trl_gun_vp9",
+      "overlay_wielded_trl_pistol"
+     ],
+     "fg": 773
+    },
+    {
+     "id": [
+      "overlay_wielded_trl_gun_gr8",
+      "overlay_wielded_trl_gun_hs12",
+      "overlay_wielded_trl_gun_vz12"
+     ],
+     "fg": 774
+    },
+    {
+     "id": "overlay_wielded_trl_gun_lr80",
+     "fg": 775
+    },
+    {
+     "id": "overlay_wielded_trl_gun_vr7",
+     "fg": 776
+    },
+    {
+     "id": [
+      "overlay_wielded_trl_hankyu",
+      "overlay_wielded_trl_yumi"
+     ],
+     "fg": 777
+    },
+    {
+     "id": [
+      "overlay_wielded_trl_kama",
+      "overlay_wielded_trl_kusarigama"
+     ],
+     "fg": 778
+    },
+    {
+     "id": "overlay_wielded_trl_nunchaku",
+     "fg": 779
+    },
+    {
+     "id": "overlay_wielded_trl_smg",
+     "fg": 780
+    },
+    {
+     "id": "overlay_wielded_trl_yari",
+     "fg": 781
     },
     {
      "id": "overlay_worn_trl_plasteel_armor",
-     "fg": 718
+     "fg": 782
     },
     {
      "id": "overlay_worn_trl_plasteel_helm",
-     "fg": 719
+     "fg": 783
     },
     {
      "id": "overlay_worn_trl_kp_vest",
-     "fg": 720
+     "fg": 784
     },
     {
      "id": "overlay_worn_trl_kp_helmet",
-     "fg": 721
+     "fg": 785
     },
     {
      "id": "overlay_worn_trl_plasteel_boots",
-     "fg": 722
+     "fg": 786
     },
     {
      "id": "overlay_worn_trl_plasteel_gloves",
-     "fg": 723
+     "fg": 787
     }
    ]
   },
@@ -6845,7 +7139,7 @@
       "vinegar_maker",
       "webbasics_computer"
      ],
-     "fg": 737
+     "fg": 809
     },
     {
      "id": [
@@ -6884,7 +7178,7 @@
       "tricorne",
       "wooden_hair_beads"
      ],
-     "fg": 738
+     "fg": 810
     },
     {
      "id": [
@@ -7013,7 +7307,7 @@
       "thread_nomex",
       "tin"
      ],
-     "fg": 739
+     "fg": 811
     },
     {
      "id": [
@@ -7265,7 +7559,7 @@
       "rosin",
       "y_carpet"
      ],
-     "fg": 740
+     "fg": 812
     },
     {
      "id": [
@@ -7285,7 +7579,7 @@
       "unfinished_charcoal",
       "wooden_bead"
      ],
-     "fg": 741
+     "fg": 813
     },
     {
      "id": [
@@ -7304,7 +7598,7 @@
       "light_minus_disposable_cell",
       "medium_battery_cell"
      ],
-     "fg": 742
+     "fg": 814
     },
     {
      "id": [
@@ -7313,7 +7607,7 @@
       "polycarbonate_sheet",
       "water_purifying"
      ],
-     "fg": 743
+     "fg": 815
     },
     {
      "id": [
@@ -7396,7 +7690,7 @@
       "white_phosphorous",
       "yarn"
      ],
-     "fg": 744
+     "fg": 816
     },
     {
      "id": [
@@ -7472,7 +7766,7 @@
       "pseudo_archery_target_box",
       "wooden_barrel"
      ],
-     "fg": 745
+     "fg": 817
     },
     {
      "id": [
@@ -7667,7 +7961,7 @@
       "yrax_scrap",
       "yrax_trinket"
      ],
-     "fg": 746
+     "fg": 818
     },
     {
      "id": [
@@ -7782,7 +8076,7 @@
       "trimmer_on",
       "wheel_armor"
      ],
-     "fg": 747
+     "fg": 819
     },
     {
      "id": [
@@ -7883,7 +8177,7 @@
       "zipper_long_plastic",
       "zipper_short_plastic"
      ],
-     "fg": 748
+     "fg": 820
     },
     {
      "id": [
@@ -7894,7 +8188,7 @@
       "pool_ball",
       "zinc_metal"
      ],
-     "fg": 749
+     "fg": 821
     },
     {
      "id": [
@@ -8017,7 +8311,7 @@
       "win70",
       "win70_458"
      ],
-     "fg": 750
+     "fg": 822
     },
     {
      "id": [
@@ -8137,7 +8431,7 @@
       "witness_10",
       "xd_10"
      ],
-     "fg": 751
+     "fg": 823
     },
     {
      "id": [
@@ -8471,7 +8765,7 @@
       "xedra40",
       "zpap85mag"
      ],
-     "fg": 752
+     "fg": 824
     },
     {
      "id": [
@@ -8557,18 +8851,12 @@
       "tempered_glass_sheet",
       "test_tube",
       "test_tube_micro",
-      "trl_buy_basic",
-      "trl_buy_bodyguard",
-      "trl_buy_elite",
-      "trl_buy_porter",
-      "trl_buy_standard",
       "trl_cf_ghost_sashimi",
       "trl_cf_hydration_gel",
       "trl_cf_marrow_ampoule",
       "trl_cf_nutrient_paste",
       "trl_cf_overclock_chow",
       "trl_cf_protein_brick",
-      "trl_nh_console",
       "tumbler_plastic",
       "v12_combustion",
       "v12_diesel",
@@ -8579,7 +8867,7 @@
       "v8_diesel",
       "vehicle_controls"
      ],
-     "fg": 753
+     "fg": 825
     },
     {
      "id": [
@@ -8995,7 +9283,6 @@
       "trashcan",
       "trashcan_large",
       "tree_spile",
-      "trl_kusarigama",
       "troglobite_sample",
       "turret_chassis",
       "uranium",
@@ -9029,7 +9316,7 @@
       "zweihander_fake",
       "zweihander_inferior"
      ],
-     "fg": 754
+     "fg": 826
     },
     {
      "id": [
@@ -9067,7 +9354,7 @@
       "welder",
       "welding_kit"
      ],
-     "fg": 755
+     "fg": 827
     },
     {
      "id": [
@@ -9101,7 +9388,7 @@
       "tac50mag",
       "xedra10"
      ],
-     "fg": 756
+     "fg": 828
     },
     {
      "id": [
@@ -9112,14 +9399,14 @@
       "8mm_caseless",
       "8mm_jhp"
      ],
-     "fg": 757
+     "fg": 829
     },
     {
      "id": [
       "20x66_shot",
       "20x66_slug"
      ],
-     "fg": 758
+     "fg": 830
     },
     {
      "id": [
@@ -9328,7 +9615,7 @@
       "wooden_post_long",
       "wooden_post_short"
      ],
-     "fg": 759
+     "fg": 831
     },
     {
      "id": [
@@ -9340,7 +9627,7 @@
       "wind_turbine",
       "xl_wind_turbine"
      ],
-     "fg": 760
+     "fg": 832
     },
     {
      "id": [
@@ -9352,7 +9639,7 @@
       "40x53mm_slug_m169",
       "bp_40x53mm_slug_m169"
      ],
-     "fg": 761
+     "fg": 833
     },
     {
      "id": [
@@ -9462,7 +9749,7 @@
       "xs_duster_leather",
       "xs_duster_survivor"
      ],
-     "fg": 762
+     "fg": 834
     },
     {
      "id": [
@@ -9496,7 +9783,7 @@
       "xl_legguard_larmor",
       "xs_legguard_larmor"
      ],
-     "fg": 763
+     "fg": 835
     },
     {
      "id": [
@@ -9518,7 +9805,7 @@
       "spear_wood",
       "spear_wood_simple"
      ],
-     "fg": 764
+     "fg": 836
     },
     {
      "id": [
@@ -9557,7 +9844,7 @@
       "trl_nunchaku",
       "warhammer"
      ],
-     "fg": 765
+     "fg": 837
     },
     {
      "id": [
@@ -9593,7 +9880,7 @@
       "staff_pipe",
       "tonfa"
      ],
-     "fg": 766
+     "fg": 838
     },
     {
      "id": [
@@ -9738,7 +10025,7 @@
       "xshsurvivor_suit",
       "zentai"
      ],
-     "fg": 767
+     "fg": 839
     },
     {
      "id": [
@@ -9748,7 +10035,7 @@
       "chest_minifreezer",
       "gelbox"
      ],
-     "fg": 768
+     "fg": 840
     },
     {
      "id": [
@@ -10075,7 +10362,7 @@
       "wheel_wide_or",
       "wrapper_foil_roll"
      ],
-     "fg": 769
+     "fg": 841
     },
     {
      "id": [
@@ -10095,14 +10382,14 @@
       "tinderbox",
       "tinderbox_on"
      ],
-     "fg": 770
+     "fg": 842
     },
     {
      "id": [
       "40x53mm_buckshot_m169",
       "bp_40x53mm_buckshot_m169"
      ],
-     "fg": 771
+     "fg": 843
     },
     {
      "id": [
@@ -10138,7 +10425,7 @@
       "reloaded_50ae_jhp",
       "signal_flare"
      ],
-     "fg": 772
+     "fg": 844
     },
     {
      "id": [
@@ -10238,7 +10525,7 @@
       "workbench",
       "wrapping_vacuumed"
      ],
-     "fg": 773
+     "fg": 845
     },
     {
      "id": [
@@ -10267,7 +10554,7 @@
       "shot_slug",
       "wax_slug"
      ],
-     "fg": 774
+     "fg": 846
     },
     {
      "id": [
@@ -10305,7 +10592,7 @@
       "uran_cell",
       "wood_atlatl_spear"
      ],
-     "fg": 775
+     "fg": 847
     },
     {
      "id": [
@@ -10317,7 +10604,7 @@
       "gun_lock",
       "power_cord"
      ],
-     "fg": 776
+     "fg": 848
     },
     {
      "id": [
@@ -10325,7 +10612,7 @@
       "60mm_shell_m768",
       "rubber_slug"
      ],
-     "fg": 777
+     "fg": 849
     },
     {
      "id": [
@@ -10335,7 +10622,7 @@
       "m4_carlgustav",
       "trl_gun_vr7"
      ],
-     "fg": 778
+     "fg": 850
     },
     {
      "id": [
@@ -10757,7 +11044,7 @@
       "wild_rice_stalks",
       "wild_sarsaparilla_root"
      ],
-     "fg": 779
+     "fg": 851
     },
     {
      "id": [
@@ -10924,7 +11211,7 @@
       "xsboxer_shorts",
       "xsboy_shorts"
      ],
-     "fg": 780
+     "fg": 852
     },
     {
      "id": [
@@ -11178,14 +11465,14 @@
       "yrax_robotics",
       "yrax_sensor"
      ],
-     "fg": 781
+     "fg": 853
     },
     {
      "id": [
       "FlatCoin",
       "coin_penny"
      ],
-     "fg": 782
+     "fg": 854
     },
     {
      "id": [
@@ -11213,14 +11500,14 @@
       "usb_drive_nano",
       "usb_drive_older"
      ],
-     "fg": 783
+     "fg": 855
     },
     {
      "id": [
       "LIXA_lab_file",
       "gambeson_batting"
      ],
-     "fg": 784
+     "fg": 856
     },
     {
      "id": [
@@ -11233,7 +11520,7 @@
       "migo_bio_gun",
       "nether_huntsman_arm"
      ],
-     "fg": 785
+     "fg": 857
     },
     {
      "id": [
@@ -11243,7 +11530,7 @@
       "masterkey",
       "u_shotgun"
      ],
-     "fg": 786
+     "fg": 858
     },
     {
      "id": [
@@ -11258,7 +11545,7 @@
       "trl_chip_nh_cloak",
       "trl_chip_nh_dampener"
      ],
-     "fg": 787
+     "fg": 859
     },
     {
      "id": [
@@ -11267,7 +11554,7 @@
       "resonance_measurement_device",
       "two_way_radio"
      ],
-     "fg": 788
+     "fg": 860
     },
     {
      "id": [
@@ -11275,7 +11562,7 @@
       "altered_keyring",
       "coin_gold"
      ],
-     "fg": 789
+     "fg": 861
     },
     {
      "id": [
@@ -11357,7 +11644,7 @@
       "trappers_companion",
       "welding_book"
      ],
-     "fg": 790
+     "fg": 862
     },
     {
      "id": [
@@ -11382,7 +11669,7 @@
       "trl_smg",
       "uzi"
      ],
-     "fg": 791
+     "fg": 863
     },
     {
      "id": [
@@ -11426,7 +11713,7 @@
       "wine_noir",
       "wine_vermouth"
      ],
-     "fg": 792
+     "fg": 864
     },
     {
      "id": [
@@ -11649,7 +11936,7 @@
       "trl_f_mapo_tofu",
       "wintergreen_berry"
      ],
-     "fg": 793
+     "fg": 865
     },
     {
      "id": [
@@ -11677,10 +11964,12 @@
       "pur_tablets",
       "skunk_spray_neutralizing_solution",
       "strong_antibiotic",
+      "trl_drug_lotus",
+      "trl_rx_antirej",
       "tums",
       "weak_antibiotic"
      ],
-     "fg": 794
+     "fg": 866
     },
     {
      "id": [
@@ -11703,7 +11992,7 @@
       "trl_f_century_egg",
       "tupelo_fruit"
      ],
-     "fg": 795
+     "fg": 867
     },
     {
      "id": [
@@ -11762,7 +12051,7 @@
       "young_yeast",
       "zeroorange"
      ],
-     "fg": 796
+     "fg": 868
     },
     {
      "id": [
@@ -11793,7 +12082,7 @@
       "xs_lsurvivor_jumpsuit",
       "xs_survivor_vest"
      ],
-     "fg": 797
+     "fg": 869
     },
     {
      "id": [
@@ -11841,7 +12130,7 @@
       "xs_armguard_acidchitin",
       "xs_armguard_chitin"
      ],
-     "fg": 798
+     "fg": 870
     },
     {
      "id": [
@@ -11858,7 +12147,7 @@
       "tacoma_drink_token",
       "trl_yen"
      ],
-     "fg": 799
+     "fg": 871
     },
     {
      "id": [
@@ -11876,7 +12165,7 @@
       "tablesaw",
       "wash_kit"
      ],
-     "fg": 800
+     "fg": 872
     },
     {
      "id": [
@@ -11938,7 +12227,7 @@
       "wire_stock",
       "wire_stock_folded"
      ],
-     "fg": 801
+     "fg": 873
     },
     {
      "id": [
@@ -12041,7 +12330,7 @@
       "wine_barley",
       "zerocola"
      ],
-     "fg": 802
+     "fg": 874
     },
     {
      "id": [
@@ -12049,13 +12338,15 @@
       "antihistamine",
       "iv_mutagen_medical",
       "pills_sleep",
-      "thorazine"
+      "thorazine",
+      "trl_drug_redeye",
+      "trl_rx_pain"
      ],
-     "fg": 803
+     "fg": 875
     },
     {
      "id": "adrenaline_injector",
-     "fg": 804
+     "fg": 876
     },
     {
      "id": [
@@ -12149,7 +12440,7 @@
       "xs_wetsuit_hood",
       "xs_wetsuit_hood_thick"
      ],
-     "fg": 805
+     "fg": 877
     },
     {
      "id": [
@@ -12162,7 +12453,7 @@
       "weldkit",
       "wide_headlight_reinforced"
      ],
-     "fg": 806
+     "fg": 878
     },
     {
      "id": [
@@ -12247,7 +12538,7 @@
       "world_nations",
       "wrapped_rad_badge"
      ],
-     "fg": 807
+     "fg": 879
     },
     {
      "id": [
@@ -12308,7 +12599,7 @@
       "vehicle_dashboard",
       "wine_glass"
      ],
-     "fg": 808
+     "fg": 880
     },
     {
      "id": [
@@ -12334,7 +12625,7 @@
       "sunlight",
       "wall_light"
      ],
-     "fg": 809
+     "fg": 881
     },
     {
      "id": [
@@ -12345,7 +12636,7 @@
       "hydraulic_press",
       "piano"
      ],
-     "fg": 810
+     "fg": 882
     },
     {
      "id": [
@@ -12406,7 +12697,7 @@
       "touristmap",
       "warehouse_rebooter"
      ],
-     "fg": 811
+     "fg": 883
     },
     {
      "id": [
@@ -12434,7 +12725,7 @@
       "tac_helmet",
       "xl_helmet_kabuto"
      ],
-     "fg": 812
+     "fg": 884
     },
     {
      "id": [
@@ -12453,7 +12744,7 @@
       "speargun",
       "staff_sling"
      ],
-     "fg": 813
+     "fg": 885
     },
     {
      "id": [
@@ -12661,7 +12952,7 @@
       "xs_mc_vambrace_brigandine",
       "xs_qt_vambrace_brigandine"
      ],
-     "fg": 814
+     "fg": 886
     },
     {
      "id": [
@@ -12931,7 +13222,7 @@
       "xs_mc_mirror_armor",
       "xs_qt_mirror_armor"
      ],
-     "fg": 815
+     "fg": 887
     },
     {
      "id": [
@@ -13047,7 +13338,7 @@
       "xs_knuckle_skewer",
       "xs_knuckle_steel_forged"
      ],
-     "fg": 816
+     "fg": 888
     },
     {
      "id": [
@@ -13148,7 +13439,7 @@
       "xs_hood_fsurvivor",
       "xs_hood_wsurvivor"
      ],
-     "fg": 817
+     "fg": 889
     },
     {
      "id": [
@@ -13178,7 +13469,7 @@
       "xs_gloves_lsurvivor",
       "xs_gloves_lsurvivor_fingerless"
      ],
-     "fg": 818
+     "fg": 890
     },
     {
      "id": [
@@ -13197,7 +13488,7 @@
       "xl_hood_lsurvivor",
       "xs_hood_lsurvivor"
      ],
-     "fg": 819
+     "fg": 891
     },
     {
      "id": [
@@ -13264,7 +13555,7 @@
       "wine_mycus",
       "wine_riesling"
      ],
-     "fg": 820
+     "fg": 892
     },
     {
      "id": [
@@ -13373,7 +13664,7 @@
       "xs_bra",
       "xssports_bra"
      ],
-     "fg": 821
+     "fg": 893
     },
     {
      "id": [
@@ -13435,7 +13726,7 @@
       "xl_armguard_bronze",
       "xs_armguard_bronze"
      ],
-     "fg": 822
+     "fg": 894
     },
     {
      "id": [
@@ -13458,11 +13749,11 @@
       "xl_wetsuit_jacket",
       "xs_wetsuit_jacket"
      ],
-     "fg": 823
+     "fg": 895
     },
     {
      "id": "altered_phone",
-     "fg": 824
+     "fg": 896
     },
     {
      "id": [
@@ -13492,7 +13783,7 @@
       "tourmaline",
       "void_spider_test_item"
      ],
-     "fg": 825
+     "fg": 897
     },
     {
      "id": [
@@ -13512,7 +13803,7 @@
       "sunglasses_reading",
       "survivor_goggles"
      ],
-     "fg": 826
+     "fg": 898
     },
     {
      "id": [
@@ -13624,7 +13915,7 @@
       "xs_shark_suit",
       "xs_shark_suit_faraday"
      ],
-     "fg": 827
+     "fg": 899
     },
     {
      "id": [
@@ -13677,7 +13968,7 @@
       "xs_wetsuit_spring_sleeveless",
       "yukata"
      ],
-     "fg": 828
+     "fg": 900
     },
     {
      "id": [
@@ -13703,7 +13994,7 @@
       "xs_gloves_wool",
       "xs_gloves_wool_fingerless"
      ],
-     "fg": 829
+     "fg": 901
     },
     {
      "id": [
@@ -13730,7 +14021,7 @@
       "wearable_light",
       "wearable_light_on"
      ],
-     "fg": 830
+     "fg": 902
     },
     {
      "id": [
@@ -13756,7 +14047,7 @@
       "frame_wood_light",
       "tangram"
      ],
-     "fg": 831
+     "fg": 903
     },
     {
      "id": [
@@ -13767,7 +14058,7 @@
       "survivor_duffel_bag",
       "survivor_rucksack"
      ],
-     "fg": 832
+     "fg": 904
     },
     {
      "id": [
@@ -13784,7 +14075,7 @@
       "survivor_pack",
       "survivor_runner_pack"
      ],
-     "fg": 833
+     "fg": 905
     },
     {
      "id": [
@@ -13929,11 +14220,12 @@
       "trl_f_olivier",
       "trl_f_onigiri",
       "trl_f_tangyuan",
+      "trl_prosphora",
       "wastebread",
       "yeast",
       "yogurt_starter_culture"
      ],
-     "fg": 834
+     "fg": 906
     },
     {
      "id": [
@@ -13960,7 +14252,7 @@
       "wrench_large",
       "wrench_small"
      ],
-     "fg": 835
+     "fg": 907
     },
     {
      "id": [
@@ -13973,7 +14265,7 @@
       "oven_cabinet",
       "pencil_case"
      ],
-     "fg": 836
+     "fg": 908
     },
     {
      "id": [
@@ -13991,7 +14283,7 @@
       "trl_chip_nh_reactive",
       "xlframe"
      ],
-     "fg": 837
+     "fg": 909
     },
     {
      "id": [
@@ -14005,7 +14297,7 @@
       "welding_rod_alloy",
       "welding_wire_alloy"
      ],
-     "fg": 838
+     "fg": 910
     },
     {
      "id": [
@@ -14045,11 +14337,11 @@
       "tongs",
       "v_planter_item"
      ],
-     "fg": 839
+     "fg": 911
     },
     {
      "id": "anesthetic_kit",
-     "fg": 840
+     "fg": 912
     },
     {
      "id": [
@@ -14101,7 +14393,7 @@
       "xs_espadrilles",
       "xsnomex_socks"
      ],
-     "fg": 841
+     "fg": 913
     },
     {
      "id": [
@@ -14109,7 +14401,7 @@
       "fake_radio",
       "rc_car_box"
      ],
-     "fg": 842
+     "fg": 914
     },
     {
      "id": [
@@ -14120,7 +14412,7 @@
       "offal_canned",
       "peppermutant_human"
      ],
-     "fg": 843
+     "fg": 915
     },
     {
      "id": [
@@ -14271,18 +14563,18 @@
       "venom_bee",
       "waffles"
      ],
-     "fg": 844
+     "fg": 916
     },
     {
      "id": "apron_plastic",
-     "fg": 845
+     "fg": 917
     },
     {
      "id": [
       "aquamarine_dental_grill",
       "towel"
      ],
-     "fg": 846
+     "fg": 918
     },
     {
      "id": [
@@ -14306,7 +14598,7 @@
       "xl_gloves_light",
       "xs_gloves_light"
      ],
-     "fg": 847
+     "fg": 919
     },
     {
      "id": [
@@ -14339,7 +14631,7 @@
       "rad_badge",
       "tarp"
      ],
-     "fg": 848
+     "fg": 920
     },
     {
      "id": [
@@ -14352,7 +14644,7 @@
       "throat_guard_nylon",
       "wizard_hat_costume"
      ],
-     "fg": 849
+     "fg": 921
     },
     {
      "id": [
@@ -14395,7 +14687,7 @@
       "winchester_1887",
       "winchester_1897"
      ],
-     "fg": 850
+     "fg": 922
     },
     {
      "id": [
@@ -14405,7 +14697,7 @@
       "glasses_safety",
       "iggaak"
      ],
-     "fg": 851
+     "fg": 923
     },
     {
      "id": [
@@ -14441,7 +14733,7 @@
       "underbarrel_mount",
       "upstest"
      ],
-     "fg": 852
+     "fg": 924
     },
     {
      "id": [
@@ -14462,7 +14754,7 @@
       "staff_sling_grenade_cradle",
       "wooden_grip"
      ],
-     "fg": 853
+     "fg": 925
     },
     {
      "id": [
@@ -14504,7 +14796,7 @@
       "xs_vambrace_larmor",
       "xssurvivor_jumpsuit"
      ],
-     "fg": 854
+     "fg": 926
     },
     {
      "id": [
@@ -14593,13 +14885,14 @@
       "sword_sheets_welded_large",
       "throwing_knife",
       "trl_kama",
+      "trl_kusarigama",
       "utility_knife_folding",
       "wakizashi",
       "wakizashi_fake",
       "wakizashi_inferior",
       "xacto"
      ],
-     "fg": 855
+     "fg": 927
     },
     {
      "id": [
@@ -14679,7 +14972,7 @@
       "xs_wsurvivor_jumpsuit",
       "xs_wsurvivor_jumpsuit_nofur"
      ],
-     "fg": 856
+     "fg": 928
     },
     {
      "id": [
@@ -14695,7 +14988,7 @@
       "xs_armor_cuirass",
       "xs_cuirass_bronze"
      ],
-     "fg": 857
+     "fg": 929
     },
     {
      "id": [
@@ -14716,7 +15009,7 @@
       "xs_lsurvivor_pants",
       "xs_pants_survivor"
      ],
-     "fg": 858
+     "fg": 930
     },
     {
      "id": [
@@ -14759,7 +15052,7 @@
       "xs_mc_chainmail_vest",
       "xs_qt_chainmail_vest"
      ],
-     "fg": 859
+     "fg": 931
     },
     {
      "id": [
@@ -14826,7 +15119,7 @@
       "xs_wetsuit_shorts_technical",
       "xs_wetsuit_shorts_technical_loose"
      ],
-     "fg": 860
+     "fg": 932
     },
     {
      "id": [
@@ -14835,7 +15128,7 @@
       "morningstar_fake",
       "morningstar_inferior"
      ],
-     "fg": 861
+     "fg": 933
     },
     {
      "id": [
@@ -14884,7 +15177,7 @@
       "xedra_gun_ar",
       "xedra_gun_shotgun"
      ],
-     "fg": 862
+     "fg": 934
     },
     {
      "id": [
@@ -14917,18 +15210,18 @@
       "trl_arrow_ap",
       "trl_arrow_emp"
      ],
-     "fg": 863
+     "fg": 935
     },
     {
      "id": [
       "arrow_flamming",
       "flamable_arrow"
      ],
-     "fg": 864
+     "fg": 936
     },
     {
      "id": "arrow_meteor",
-     "fg": 865
+     "fg": 937
     },
     {
      "id": [
@@ -14953,7 +15246,7 @@
       "xl_knuckle_brass",
       "xs_knuckle_brass"
      ],
-     "fg": 866
+     "fg": 938
     },
     {
      "id": [
@@ -14998,7 +15291,7 @@
       "xs_wetsuit_booties",
       "xs_wetsuit_booties_thick"
      ],
-     "fg": 867
+     "fg": 939
     },
     {
      "id": [
@@ -15008,7 +15301,7 @@
       "jacket_army_modern",
       "tacjacket"
      ],
-     "fg": 868
+     "fg": 940
     },
     {
      "id": [
@@ -15029,7 +15322,7 @@
       "xl_coat_fur",
       "xs_coat_fur"
      ],
-     "fg": 869
+     "fg": 941
     },
     {
      "id": [
@@ -15083,7 +15376,7 @@
       "xs_wetsuit_gloves",
       "xs_wetsuit_gloves_thick"
      ],
-     "fg": 870
+     "fg": 942
     },
     {
      "id": [
@@ -15099,7 +15392,7 @@
       "xl_helmet_corinthian",
       "xs_helmet_bronze"
      ],
-     "fg": 871
+     "fg": 943
     },
     {
      "id": [
@@ -15119,7 +15412,7 @@
       "soup_fish",
       "soup_mushroom"
      ],
-     "fg": 872
+     "fg": 944
     },
     {
      "id": [
@@ -15146,7 +15439,7 @@
       "wire_draw_machine",
       "wire_mesh"
      ],
-     "fg": 873
+     "fg": 945
     },
     {
      "id": [
@@ -15172,7 +15465,7 @@
       "spike",
       "trl_yari"
      ],
-     "fg": 874
+     "fg": 946
     },
     {
      "id": [
@@ -15187,7 +15480,7 @@
       "rm451_flamethrower",
       "surv_rocket_launcher"
      ],
-     "fg": 875
+     "fg": 947
     },
     {
      "id": [
@@ -15215,9 +15508,9 @@
       "pseudo_magazine_mod",
       "slime_sample",
       "tobacco_raw",
-      "trl_kumo_wreck"
+      "trl_inj_regen"
      ],
-     "fg": 876
+     "fg": 948
     },
     {
      "id": [
@@ -15230,7 +15523,7 @@
       "bot_turret_searchlight",
       "engineering_engine_kit"
      ],
-     "fg": 877
+     "fg": 949
     },
     {
      "id": [
@@ -15249,7 +15542,7 @@
       "mesh_nape_protector",
       "tinfoil_hat"
      ],
-     "fg": 878
+     "fg": 950
     },
     {
      "id": [
@@ -15261,7 +15554,7 @@
       "juniper",
       "paint_blue"
      ],
-     "fg": 879
+     "fg": 951
     },
     {
      "id": [
@@ -15285,7 +15578,7 @@
       "qt_battleaxe",
       "throwing_axe"
      ],
-     "fg": 880
+     "fg": 952
     },
     {
      "id": [
@@ -15304,7 +15597,7 @@
       "rm88_battle_rifle",
       "sig_mcx_rattler_sbr"
      ],
-     "fg": 881
+     "fg": 953
     },
     {
      "id": [
@@ -15333,11 +15626,11 @@
       "sword_wood_large",
       "teeth_macuahuitl"
      ],
-     "fg": 882
+     "fg": 954
     },
     {
      "id": "b_shorts",
-     "fg": 883
+     "fg": 955
     },
     {
      "id": [
@@ -15374,11 +15667,11 @@
       "trapper_pack",
       "wicker_backpack"
      ],
-     "fg": 884
+     "fg": 956
     },
     {
      "id": "backpack_denim",
-     "fg": 885
+     "fg": 957
     },
     {
      "id": [
@@ -15433,7 +15726,7 @@
       "rehydrated_fruit",
       "rehydrated_mollusk"
      ],
-     "fg": 886
+     "fg": 958
     },
     {
      "id": [
@@ -15451,14 +15744,14 @@
       "pillowcase",
       "sauerkraut_ferment"
      ],
-     "fg": 887
+     "fg": 959
     },
     {
      "id": [
       "bag_durasack_cement",
       "dairy_book"
      ],
-     "fg": 888
+     "fg": 960
     },
     {
      "id": [
@@ -15477,7 +15770,7 @@
       "smartphone_music",
       "waterproof_smart_phone_case"
      ],
-     "fg": 889
+     "fg": 961
     },
     {
      "id": [
@@ -15567,7 +15860,7 @@
       "wild_herbs",
       "wintergreen_leaves"
      ],
-     "fg": 890
+     "fg": 962
     },
     {
      "id": [
@@ -15576,7 +15869,7 @@
       "gene_sting_gun",
       "khuunaofaai"
      ],
-     "fg": 891
+     "fg": 963
     },
     {
      "id": [
@@ -15595,7 +15888,7 @@
       "xl_wsurvivor_suit_nofur",
       "xs_wetsuit_spring"
      ],
-     "fg": 892
+     "fg": 964
     },
     {
      "id": [
@@ -15607,7 +15900,7 @@
       "m249semi",
       "tec9_auto_parts"
      ],
-     "fg": 893
+     "fg": 965
     },
     {
      "id": [
@@ -15721,14 +16014,14 @@
       "trade_writ",
       "visions_solitude"
      ],
-     "fg": 894
+     "fg": 966
     },
     {
      "id": [
       "basket",
       "folding_basket"
      ],
-     "fg": 895
+     "fg": 967
     },
     {
      "id": [
@@ -15760,11 +16053,11 @@
       "xs_boots_fur",
       "xs_boots_larmor"
      ],
-     "fg": 896
+     "fg": 968
     },
     {
      "id": "bat_anklet",
-     "fg": 897
+     "fg": 969
     },
     {
      "id": [
@@ -15776,14 +16069,14 @@
       "mace_bronze",
       "socket_wrench_set"
      ],
-     "fg": 898
+     "fg": 970
     },
     {
      "id": [
       "battery_bionic",
       "battery_ups"
      ],
-     "fg": 899
+     "fg": 971
     },
     {
      "id": [
@@ -15795,11 +16088,11 @@
       "small_storage_battery",
       "storage_battery"
      ],
-     "fg": 900
+     "fg": 972
     },
     {
      "id": "battery_charger",
-     "fg": 901
+     "fg": 973
     },
     {
      "id": [
@@ -15832,7 +16125,7 @@
       "xs_gloves_survivor_fingerless",
       "xs_knuckle_nail"
      ],
-     "fg": 902
+     "fg": 974
     },
     {
      "id": [
@@ -15885,7 +16178,7 @@
       "trl_f_vobla",
       "venom_paralytic"
      ],
-     "fg": 903
+     "fg": 975
     },
     {
      "id": [
@@ -15903,7 +16196,7 @@
       "spurge_tea",
       "weed"
      ],
-     "fg": 904
+     "fg": 976
     },
     {
      "id": [
@@ -15944,7 +16237,7 @@
       "winter_gloves_army",
       "wool_sockmitts"
      ],
-     "fg": 905
+     "fg": 977
     },
     {
      "id": [
@@ -15976,11 +16269,11 @@
       "turban",
       "zombie_mask"
      ],
-     "fg": 906
+     "fg": 978
     },
     {
      "id": "betavoltaic",
-     "fg": 907
+     "fg": 979
     },
     {
      "id": [
@@ -16018,7 +16311,7 @@
       "xs_qt_chainmail_half_legs",
       "xs_qt_chainmail_legs"
      ],
-     "fg": 908
+     "fg": 980
     },
     {
      "id": [
@@ -16033,7 +16326,7 @@
       "tourniquet_lower_XL",
       "tourniquet_lower_XS"
      ],
-     "fg": 909
+     "fg": 981
     },
     {
      "id": [
@@ -16078,7 +16371,7 @@
       "tourniquet_upper_XS",
       "wool_suit_devil"
      ],
-     "fg": 910
+     "fg": 982
     },
     {
      "id": [
@@ -16232,17 +16525,6 @@
       "trl_bio_threat_sense",
       "trl_chip_nh_afterimage",
       "trl_chip_nh_overclock",
-      "trl_imp_arm_l_adv",
-      "trl_imp_arm_l_basic",
-      "trl_imp_arm_l_elite",
-      "trl_imp_arm_l_med",
-      "trl_imp_arm_r_adv",
-      "trl_imp_arm_r_basic",
-      "trl_imp_arm_r_elite",
-      "trl_imp_arm_r_med",
-      "trl_imp_blade_r",
-      "trl_imp_gun_l",
-      "trl_imp_gun_r",
       "trl_imp_head_int_1",
       "trl_imp_head_int_2",
       "trl_imp_head_int_3",
@@ -16250,24 +16532,8 @@
       "trl_imp_head_per_1",
       "trl_imp_head_per_2",
       "trl_imp_head_per_3",
-      "trl_imp_leg_l_adv",
-      "trl_imp_leg_l_basic",
-      "trl_imp_leg_l_elite",
-      "trl_imp_leg_l_med",
-      "trl_imp_leg_r_adv",
-      "trl_imp_leg_r_basic",
-      "trl_imp_leg_r_elite",
-      "trl_imp_leg_r_med",
-      "trl_imp_plate_arm_l_heavy",
-      "trl_imp_plate_arm_l_light",
-      "trl_imp_plate_arm_r_heavy",
-      "trl_imp_plate_arm_r_light",
       "trl_imp_plate_head_heavy",
       "trl_imp_plate_head_light",
-      "trl_imp_plate_leg_l_heavy",
-      "trl_imp_plate_leg_l_light",
-      "trl_imp_plate_leg_r_heavy",
-      "trl_imp_plate_leg_r_light",
       "trl_imp_plate_torso_heavy",
       "trl_imp_plate_torso_light",
       "trl_imp_servos",
@@ -16283,7 +16549,7 @@
       "trl_imp_spine_str_3",
       "trl_imp_stomach"
      ],
-     "fg": 911
+     "fg": 983
     },
     {
      "id": [
@@ -16323,7 +16589,7 @@
       "tanto_fake",
       "tanto_inferior"
      ],
-     "fg": 912
+     "fg": 984
     },
     {
      "id": [
@@ -16331,7 +16597,7 @@
       "emp_gun",
       "exodii_plasma_projectile"
      ],
-     "fg": 913
+     "fg": 985
     },
     {
      "id": [
@@ -16342,14 +16608,14 @@
       "yrax_deterrent_laser",
       "yrax_metaljet_cannon"
      ],
-     "fg": 914
+     "fg": 986
     },
     {
      "id": [
       "bio_lightning",
       "mut_longpull"
      ],
-     "fg": 915
+     "fg": 987
     },
     {
      "id": [
@@ -16357,14 +16623,14 @@
       "fake_razor",
       "knife_swissarmy"
      ],
-     "fg": 916
+     "fg": 988
     },
     {
      "id": [
       "bio_shotgun_gun",
       "mut_quills"
      ],
-     "fg": 917
+     "fg": 989
     },
     {
      "id": [
@@ -16377,7 +16643,7 @@
       "teleporter",
       "umbrella"
      ],
-     "fg": 918
+     "fg": 990
     },
     {
      "id": [
@@ -16407,7 +16673,7 @@
       "robofac_yrax_trifacet_deactivation_manual",
       "textbook_atomic_lab"
      ],
-     "fg": 919
+     "fg": 991
     },
     {
      "id": [
@@ -16417,26 +16683,26 @@
       "drink_strawberry_surprise",
       "wine_marloss"
      ],
-     "fg": 920
+     "fg": 992
     },
     {
      "id": "blueberries_cooked",
-     "fg": 921
+     "fg": 993
     },
     {
      "id": "blunderbuss",
-     "fg": 922
+     "fg": 994
     },
     {
      "id": "bone_dart",
-     "fg": 923
+     "fg": 995
     },
     {
      "id": [
       "bone_knife",
       "msu14_password"
      ],
-     "fg": 924
+     "fg": 996
     },
     {
      "id": [
@@ -16475,7 +16741,7 @@
       "zucchini",
       "zucchini_cut"
      ],
-     "fg": 925
+     "fg": 997
     },
     {
      "id": [
@@ -16492,7 +16758,7 @@
       "phonebook",
       "poetic_edda"
      ],
-     "fg": 926
+     "fg": 998
     },
     {
      "id": [
@@ -16550,7 +16816,7 @@
       "survival_book",
       "tall_tales"
      ],
-     "fg": 927
+     "fg": 999
     },
     {
      "id": [
@@ -16600,7 +16866,7 @@
       "retool_instructions",
       "vacuum_sealing"
      ],
-     "fg": 928
+     "fg": 1000
     },
     {
      "id": [
@@ -16615,7 +16881,7 @@
       "xs_boots_chitin",
       "xs_boots_lsurvivor"
      ],
-     "fg": 929
+     "fg": 1001
     },
     {
      "id": [
@@ -16628,7 +16894,7 @@
       "sneakers_steel",
       "socks_bag"
      ],
-     "fg": 930
+     "fg": 1002
     },
     {
      "id": [
@@ -16637,7 +16903,7 @@
       "xl_boots_wsurvivor_nofur",
       "xs_boots_wsurvivor_nofur"
      ],
-     "fg": 931
+     "fg": 1003
     },
     {
      "id": [
@@ -16667,6 +16933,7 @@
       "sweet_water",
       "tonic_water",
       "triple_sec",
+      "trl_holy_water",
       "vodka",
       "wash_rum",
       "wash_vodka",
@@ -16674,7 +16941,7 @@
       "water_spring",
       "zeromdew"
      ],
-     "fg": 932
+     "fg": 1004
     },
     {
      "id": [
@@ -16682,7 +16949,7 @@
       "bottle_twoliter",
       "drink_boozeberry"
      ],
-     "fg": 933
+     "fg": 1005
     },
     {
      "id": [
@@ -16699,11 +16966,11 @@
       "watermelon",
       "watermelon_wedge"
      ],
-     "fg": 934
+     "fg": 1006
     },
     {
      "id": "box_battery_charger",
-     "fg": 935
+     "fg": 1007
     },
     {
      "id": [
@@ -16739,7 +17006,7 @@
       "training_dummy_light",
       "wood_plate"
      ],
-     "fg": 936
+     "fg": 1008
     },
     {
      "id": [
@@ -16749,7 +17016,7 @@
       "id_industrial",
       "id_military"
      ],
-     "fg": 937
+     "fg": 1009
     },
     {
      "id": [
@@ -16770,7 +17037,7 @@
       "santa_gloves",
       "suitcase_l"
      ],
-     "fg": 938
+     "fg": 1010
     },
     {
      "id": [
@@ -16903,7 +17170,7 @@
       "occult_economicon",
       "occult_glimpses"
      ],
-     "fg": 939
+     "fg": 1011
     },
     {
      "id": [
@@ -16919,7 +17186,7 @@
       "sports_drink",
       "trl_f_kompot"
      ],
-     "fg": 940
+     "fg": 1012
     },
     {
      "id": [
@@ -16933,11 +17200,11 @@
       "winter_pants_army",
       "zubon_gi"
      ],
-     "fg": 941
+     "fg": 1013
     },
     {
      "id": "broken_mech_combat",
-     "fg": 942
+     "fg": 1014
     },
     {
      "id": [
@@ -16951,7 +17218,7 @@
       "tool_rocket_candy",
       "tool_rocket_candy_act"
      ],
-     "fg": 943
+     "fg": 1015
     },
     {
      "id": [
@@ -16959,7 +17226,7 @@
       "bronze_brush_axe",
       "bronze_pickaxe"
      ],
-     "fg": 944
+     "fg": 1016
     },
     {
      "id": [
@@ -16969,14 +17236,14 @@
       "sword_bronze",
       "sword_xiphos"
      ],
-     "fg": 945
+     "fg": 1017
     },
     {
      "id": [
       "brush_axe",
       "copper_ax"
      ],
-     "fg": 946
+     "fg": 1018
     },
     {
      "id": [
@@ -16988,14 +17255,14 @@
       "huge_crossbow",
       "rep_crossbow"
      ],
-     "fg": 947
+     "fg": 1019
     },
     {
      "id": [
       "bundle_copper_pipe",
       "cu_pipe"
      ],
-     "fg": 948
+     "fg": 1020
     },
     {
      "id": [
@@ -17004,7 +17271,7 @@
       "folding_poncho",
       "grass_cloak"
      ],
-     "fg": 949
+     "fg": 1021
     },
     {
      "id": [
@@ -17027,7 +17294,7 @@
       "thyme",
       "yoghurt"
      ],
-     "fg": 950
+     "fg": 1022
     },
     {
      "id": [
@@ -17036,7 +17303,7 @@
       "iv_mutagen_bird",
       "xanax"
      ],
-     "fg": 951
+     "fg": 1023
     },
     {
      "id": [
@@ -17048,7 +17315,7 @@
       "vitc_fragment",
       "vitc_tablet"
      ],
-     "fg": 952
+     "fg": 1024
     },
     {
      "id": [
@@ -17061,7 +17328,7 @@
       "remotevehcontrol",
       "yrax_computer"
      ],
-     "fg": 953
+     "fg": 1025
     },
     {
      "id": [
@@ -17070,7 +17337,7 @@
       "dive_bag",
       "travelpack"
      ],
-     "fg": 954
+     "fg": 1026
     },
     {
      "id": [
@@ -17079,7 +17346,7 @@
       "omnicamera_reinforced",
       "vortex"
      ],
-     "fg": 955
+     "fg": 1027
     },
     {
      "id": [
@@ -17090,7 +17357,7 @@
       "mre_potato",
       "pale_ale"
      ],
-     "fg": 956
+     "fg": 1028
     },
     {
      "id": [
@@ -17099,7 +17366,7 @@
       "canned_heart",
       "canned_liver"
      ],
-     "fg": 957
+     "fg": 1029
     },
     {
      "id": [
@@ -17109,7 +17376,7 @@
       "fish_canned",
       "lobster_canned"
      ],
-     "fg": 958
+     "fg": 1030
     },
     {
      "id": [
@@ -17120,7 +17387,7 @@
       "marloss_gel",
       "poutine"
      ],
-     "fg": 959
+     "fg": 1031
     },
     {
      "id": [
@@ -17131,7 +17398,7 @@
       "trl_gun_lr80",
       "watercannon"
      ],
-     "fg": 960
+     "fg": 1032
     },
     {
      "id": [
@@ -17139,7 +17406,7 @@
       "solar_cell",
       "solar_cell_v2"
      ],
-     "fg": 961
+     "fg": 1033
     },
     {
      "id": [
@@ -17154,7 +17421,7 @@
       "santa_hat",
       "zucchetto"
      ],
-     "fg": 962
+     "fg": 1034
     },
     {
      "id": [
@@ -17166,11 +17433,11 @@
       "xl_hood_wsurvivor_nofur",
       "xs_hood_wsurvivor_nofur"
      ],
-     "fg": 963
+     "fg": 1035
     },
     {
      "id": "carpet_cuirass",
-     "fg": 964
+     "fg": 1036
     },
     {
      "id": [
@@ -17197,7 +17464,7 @@
       "trl_f_sashimi",
       "trl_f_solyanka"
      ],
-     "fg": 965
+     "fg": 1037
     },
     {
      "id": [
@@ -17207,16 +17474,17 @@
       "old_key",
       "puck"
      ],
-     "fg": 966
+     "fg": 1038
     },
     {
      "id": [
       "cattail_jelly",
       "eyedrops",
       "iv_mutagen_fish",
-      "steroid_eyedrops"
+      "steroid_eyedrops",
+      "trl_rx_sleep"
      ],
-     "fg": 967
+     "fg": 1039
     },
     {
      "id": [
@@ -17227,7 +17495,7 @@
       "methanol_fuel_cell",
       "misc_repairkit"
      ],
-     "fg": 968
+     "fg": 1040
     },
     {
      "id": [
@@ -17298,7 +17566,7 @@
       "xs_qt_chainmail_hood",
       "xs_qt_steel_facemask"
      ],
-     "fg": 969
+     "fg": 1041
     },
     {
      "id": [
@@ -17320,7 +17588,7 @@
       "xs_mc_chainmail_feet",
       "xs_qt_chainmail_feet"
      ],
-     "fg": 970
+     "fg": 1042
     },
     {
      "id": [
@@ -17347,7 +17615,7 @@
       "xs_mc_chainmail_hands",
       "xs_qt_chainmail_hands"
      ],
-     "fg": 971
+     "fg": 1043
     },
     {
      "id": [
@@ -17411,7 +17679,7 @@
       "xs_qt_helmet_nasal",
       "xs_qt_helmet_turban"
      ],
-     "fg": 972
+     "fg": 1044
     },
     {
      "id": [
@@ -17419,7 +17687,7 @@
       "coat_winter",
       "jacket_flannel"
      ],
-     "fg": 973
+     "fg": 1045
     },
     {
      "id": [
@@ -17431,7 +17699,7 @@
       "elec_chainsaw_on",
       "nre_recorder"
      ],
-     "fg": 974
+     "fg": 1046
     },
     {
      "id": [
@@ -17444,7 +17712,7 @@
       "liquid_soap",
       "trl_f_herring"
      ],
-     "fg": 975
+     "fg": 1047
     },
     {
      "id": [
@@ -17454,7 +17722,7 @@
       "snowcone",
       "snowcone_alcoholic"
      ],
-     "fg": 976
+     "fg": 1048
     },
     {
      "id": [
@@ -17466,7 +17734,7 @@
       "iv_mutagen_slime",
       "iv_mutagen_troglobite"
      ],
-     "fg": 977
+     "fg": 1049
     },
     {
      "id": [
@@ -17477,7 +17745,7 @@
       "tea_willowbark",
       "tobacco"
      ],
-     "fg": 978
+     "fg": 1050
     },
     {
      "id": [
@@ -17485,7 +17753,7 @@
       "jacket_jean",
       "ski_jacket"
      ],
-     "fg": 979
+     "fg": 1051
     },
     {
      "id": [
@@ -17493,7 +17761,7 @@
       "santa_jacket",
       "santa_jacket_short"
      ],
-     "fg": 980
+     "fg": 1052
     },
     {
      "id": [
@@ -17504,7 +17772,7 @@
       "peacoat",
       "sweater"
      ],
-     "fg": 981
+     "fg": 1053
     },
     {
      "id": [
@@ -17513,7 +17781,7 @@
       "gold_anklet",
       "gold_toe_ring"
      ],
-     "fg": 982
+     "fg": 1054
     },
     {
      "id": [
@@ -17521,7 +17789,7 @@
       "xl_coat_faux_fur",
       "xs_coat_faux_fur"
      ],
-     "fg": 983
+     "fg": 1055
     },
     {
      "id": [
@@ -17536,7 +17804,7 @@
       "robe_wizard",
       "waistcoat"
      ],
-     "fg": 984
+     "fg": 1056
     },
     {
      "id": [
@@ -17546,9 +17814,10 @@
       "ghost_robe_sheet",
       "jacket_chef",
       "kimono",
+      "trl_kannushi_robe",
       "winter_jacket_army"
      ],
-     "fg": 985
+     "fg": 1057
     },
     {
      "id": [
@@ -17559,9 +17828,10 @@
       "iv_mutagen_snail",
       "iv_mutagen_spider",
       "morphine",
-      "quikclot"
+      "quikclot",
+      "trl_drug_neon"
      ],
-     "fg": 986
+     "fg": 1058
     },
     {
      "id": [
@@ -17573,7 +17843,7 @@
       "trl_f_oolong",
       "zerotropical"
      ],
-     "fg": 987
+     "fg": 1059
     },
     {
      "id": [
@@ -17582,7 +17852,7 @@
       "modular_ump",
       "rm2000_smg"
      ],
-     "fg": 988
+     "fg": 1060
     },
     {
      "id": [
@@ -17602,14 +17872,14 @@
       "trl_yumi",
       "woodgreatbow"
      ],
-     "fg": 989
+     "fg": 1061
     },
     {
      "id": [
       "conc_venom",
       "plant_fibre"
      ],
-     "fg": 990
+     "fg": 1062
     },
     {
      "id": [
@@ -17620,21 +17890,21 @@
       "textbook_arthropod",
       "winemaking_beginner"
      ],
-     "fg": 991
+     "fg": 1063
     },
     {
      "id": [
       "cordage_36_leather",
       "cordage_6_leather"
      ],
-     "fg": 992
+     "fg": 1064
     },
     {
      "id": [
       "corded_powerdrill",
       "cordless_drill"
      ],
-     "fg": 993
+     "fg": 1065
     },
     {
      "id": [
@@ -17642,7 +17912,7 @@
       "pipe_glass",
       "pipe_water"
      ],
-     "fg": 994
+     "fg": 1066
     },
     {
      "id": [
@@ -17650,7 +17920,7 @@
       "energy_drink",
       "purple_drink"
      ],
-     "fg": 995
+     "fg": 1067
     },
     {
      "id": [
@@ -17660,7 +17930,7 @@
       "military_explosive_full_barrel_bomb_act",
       "military_explosive_half_barrel_bomb_act"
      ],
-     "fg": 996
+     "fg": 1068
     },
     {
      "id": [
@@ -17673,7 +17943,7 @@
       "restaurantmap",
       "talking_doll"
      ],
-     "fg": 997
+     "fg": 1069
     },
     {
      "id": [
@@ -17681,11 +17951,11 @@
       "trl_shuriken_4",
       "trl_shuriken_8"
      ],
-     "fg": 998
+     "fg": 1070
     },
     {
      "id": "daypack",
-     "fg": 999
+     "fg": 1071
     },
     {
      "id": [
@@ -17699,9 +17969,10 @@
       "nic_gum",
       "thyme_oil",
       "tramadol",
+      "trl_rx_focus",
       "wintergreen_oil"
      ],
-     "fg": 1000
+     "fg": 1072
     },
     {
      "id": [
@@ -17714,7 +17985,7 @@
       "mutagen_jabberblood",
       "panacea"
      ],
-     "fg": 1001
+     "fg": 1073
     },
     {
      "id": [
@@ -17722,7 +17993,7 @@
       "drive_by_wire_controls",
       "valentine_card"
      ],
-     "fg": 1002
+     "fg": 1074
     },
     {
      "id": [
@@ -17735,7 +18006,7 @@
       "wheel_mount_light",
       "whistle_multitool"
      ],
-     "fg": 1003
+     "fg": 1075
     },
     {
      "id": [
@@ -17743,9 +18014,10 @@
       "disinfectant_makeshift",
       "meth",
       "pure_meth",
-      "saline"
+      "saline",
+      "trl_drug_glass"
      ],
-     "fg": 1004
+     "fg": 1076
     },
     {
      "id": [
@@ -17772,7 +18044,7 @@
       "smart_lamp",
       "smart_lamp_on"
      ],
-     "fg": 1005
+     "fg": 1077
     },
     {
      "id": [
@@ -17783,14 +18055,14 @@
       "survivor_dry_bag",
       "survivor_dry_duffelbag"
      ],
-     "fg": 1006
+     "fg": 1078
     },
     {
      "id": [
       "egg_robin",
       "triffid_fungicide"
      ],
-     "fg": 1007
+     "fg": 1079
     },
     {
      "id": [
@@ -17800,11 +18072,11 @@
       "exodii_portalizer",
       "exodii_scanner_dish"
      ],
-     "fg": 1008
+     "fg": 1080
     },
     {
      "id": "emp_frond",
-     "fg": 1009
+     "fg": 1081
     },
     {
      "id": [
@@ -17821,11 +18093,11 @@
       "small_lcd_screen",
       "xedra_microphone"
      ],
-     "fg": 1010
+     "fg": 1082
     },
     {
      "id": "exodii_plasma_fan",
-     "fg": 1011
+     "fg": 1083
     },
     {
      "id": [
@@ -17836,7 +18108,7 @@
       "jumper_cable_heavy",
       "long_extension_cable"
      ],
-     "fg": 1012
+     "fg": 1084
     },
     {
      "id": [
@@ -17844,11 +18116,11 @@
       "heavy_crowbar",
       "sinister_cane"
      ],
-     "fg": 1013
+     "fg": 1085
     },
     {
      "id": "fake_firestarter",
-     "fg": 1014
+     "fg": 1086
     },
     {
      "id": [
@@ -17864,7 +18136,7 @@
       "sweets_book",
       "tailor_portfolio"
      ],
-     "fg": 1015
+     "fg": 1087
     },
     {
      "id": [
@@ -17877,11 +18149,11 @@
       "welding_rod_steel",
       "welding_wire_steel"
      ],
-     "fg": 1016
+     "fg": 1088
     },
     {
      "id": "flaregun",
-     "fg": 1017
+     "fg": 1089
     },
     {
      "id": [
@@ -17891,7 +18163,7 @@
       "nether_grub",
       "ruined_chunks"
      ],
-     "fg": 1018
+     "fg": 1090
     },
     {
      "id": [
@@ -17901,7 +18173,7 @@
       "xlsocks_wool",
       "xssocks_wool"
      ],
-     "fg": 1019
+     "fg": 1091
     },
     {
      "id": [
@@ -17909,7 +18181,7 @@
       "inj_iron",
       "purifier_smart_shot"
      ],
-     "fg": 1020
+     "fg": 1092
     },
     {
      "id": [
@@ -17920,22 +18192,22 @@
       "xlsocks",
       "xssocks"
      ],
-     "fg": 1021
+     "fg": 1093
     },
     {
      "id": [
       "fp_loyalty_card",
       "trl_chip_nh_siphon"
      ],
-     "fg": 1022
+     "fg": 1094
     },
     {
      "id": "frame",
-     "fg": 1023
+     "fg": 1095
     },
     {
      "id": "fuel_bunker",
-     "fg": 1024
+     "fg": 1096
     },
     {
      "id": [
@@ -17945,7 +18217,7 @@
       "military_explosive_full_barrel_bomb",
       "military_explosive_half_barrel_bomb"
      ],
-     "fg": 1025
+     "fg": 1097
     },
     {
      "id": [
@@ -17955,7 +18227,7 @@
       "poppy_pain",
       "purifier"
      ],
-     "fg": 1026
+     "fg": 1098
     },
     {
      "id": [
@@ -17964,7 +18236,7 @@
       "recon_mech_laser",
       "recon_mech_laser_single"
      ],
-     "fg": 1027
+     "fg": 1099
     },
     {
      "id": [
@@ -17973,7 +18245,7 @@
       "gelatin_dessert_processed",
       "insect_dust"
      ],
-     "fg": 1028
+     "fg": 1100
     },
     {
      "id": [
@@ -17981,18 +18253,18 @@
       "gelatin_dessert_homemade",
       "trl_f_hotpot_tin"
      ],
-     "fg": 1029
+     "fg": 1101
     },
     {
      "id": [
       "gelatin_dessert_vegan",
       "gelatin_dessert_vegan_fruit"
      ],
-     "fg": 1030
+     "fg": 1102
     },
     {
      "id": "glass_goggles",
-     "fg": 1031
+     "fg": 1103
     },
     {
      "id": [
@@ -18001,7 +18273,7 @@
       "glasses_monocle",
       "glasses_reading"
      ],
-     "fg": 1032
+     "fg": 1104
     },
     {
      "id": [
@@ -18009,25 +18281,25 @@
       "xl_gloves_wsurvivor_nofur",
       "xs_gloves_wsurvivor_nofur"
      ],
-     "fg": 1033
+     "fg": 1105
     },
     {
      "id": [
       "godcotrader_accounting_records_clean",
       "godcotrader_accounting_records_dirty"
      ],
-     "fg": 1034
+     "fg": 1106
     },
     {
      "id": [
       "goggles_swim",
       "shield_visor"
      ],
-     "fg": 1035
+     "fg": 1107
     },
     {
      "id": "gun_crossbow",
-     "fg": 1036
+     "fg": 1108
     },
     {
      "id": [
@@ -18042,11 +18314,11 @@
       "swim_briefs",
       "trunks"
      ],
-     "fg": 1037
+     "fg": 1109
     },
     {
      "id": "heavy_atomic_battery_cell",
-     "fg": 1038
+     "fg": 1110
     },
     {
      "id": [
@@ -18066,7 +18338,7 @@
       "xl_helmet_chitin",
       "xl_helmet_chitin_light"
      ],
-     "fg": 1039
+     "fg": 1111
     },
     {
      "id": [
@@ -18079,18 +18351,18 @@
       "xl_helmet_conical",
       "xl_helmet_larmor"
      ],
-     "fg": 1040
+     "fg": 1112
     },
     {
      "id": "helmet_ball",
-     "fg": 1041
+     "fg": 1113
     },
     {
      "id": [
       "helmet_eod",
       "helmet_eod_on"
      ],
-     "fg": 1042
+     "fg": 1114
     },
     {
      "id": [
@@ -18101,7 +18373,7 @@
       "xl_helmet_scavenger",
       "xs_helmet_nomad"
      ],
-     "fg": 1043
+     "fg": 1115
     },
     {
      "id": [
@@ -18112,7 +18384,7 @@
       "trl_gun_ll3",
       "trl_gun_vlx"
      ],
-     "fg": 1044
+     "fg": 1116
     },
     {
      "id": [
@@ -18122,7 +18394,7 @@
       "wizard_cane_cheap_on",
       "wizard_cane_on"
      ],
-     "fg": 1045
+     "fg": 1117
     },
     {
      "id": [
@@ -18130,7 +18402,7 @@
       "money_strap_FMCNote",
       "signed_chit"
      ],
-     "fg": 1046
+     "fg": 1118
     },
     {
      "id": [
@@ -18140,25 +18412,25 @@
       "sw_610",
       "trl_fake_arm_gun"
      ],
-     "fg": 1047
+     "fg": 1119
     },
     {
      "id": [
       "huge_atomic_battery_cell",
       "pseudo_magazine"
      ],
-     "fg": 1048
+     "fg": 1120
     },
     {
      "id": [
       "iceaxe",
       "pickaxe"
      ],
-     "fg": 1049
+     "fg": 1121
     },
     {
      "id": "id_science",
-     "fg": 1050
+     "fg": 1122
     },
     {
      "id": [
@@ -18179,7 +18451,7 @@
       "vine_30",
       "vine_6"
      ],
-     "fg": 1051
+     "fg": 1123
     },
     {
      "id": [
@@ -18191,7 +18463,7 @@
       "internal_gasoline_tank",
       "internal_oil_tank"
      ],
-     "fg": 1052
+     "fg": 1124
     },
     {
      "id": [
@@ -18225,20 +18497,21 @@
       "mutagen_troglobite",
       "mutagen_ursine",
       "oxycodone",
-      "prozac"
+      "prozac",
+      "trl_drug_static"
      ],
-     "fg": 1053
+     "fg": 1125
     },
     {
      "id": "jacket_eod",
-     "fg": 1054
+     "fg": 1126
     },
     {
      "id": [
       "jacket_evac",
       "jacket_windbreaker"
      ],
-     "fg": 1055
+     "fg": 1127
     },
     {
      "id": [
@@ -18248,7 +18521,7 @@
       "vest_jean_mod",
       "vest_jean_mod_ch"
      ],
-     "fg": 1056
+     "fg": 1128
     },
     {
      "id": [
@@ -18258,7 +18531,7 @@
       "medium_turbine_engine",
       "small_turbine_engine"
      ],
-     "fg": 1057
+     "fg": 1129
     },
     {
      "id": [
@@ -18269,19 +18542,19 @@
       "jeans_vintage",
       "shorts_denim"
      ],
-     "fg": 1058
+     "fg": 1130
     },
     {
      "id": "kevlar_harness",
-     "fg": 1059
+     "fg": 1131
     },
     {
      "id": "knee_high_boots",
-     "fg": 1060
+     "fg": 1132
     },
     {
      "id": "laser_rifle",
-     "fg": 1061
+     "fg": 1133
     },
     {
      "id": [
@@ -18289,7 +18562,7 @@
       "nyquil",
       "prussian_blue"
      ],
-     "fg": 1062
+     "fg": 1134
     },
     {
      "id": [
@@ -18298,37 +18571,37 @@
       "xl_legguard_bronze",
       "xs_legguard_bronze"
      ],
-     "fg": 1063
+     "fg": 1135
     },
     {
      "id": "lunchbox",
-     "fg": 1064
+     "fg": 1136
     },
     {
      "id": "m203",
-     "fg": 1065
+     "fg": 1137
     },
     {
      "id": [
       "m203_mod",
       "masterkey_mod"
      ],
-     "fg": 1066
+     "fg": 1138
     },
     {
      "id": "m26_mass",
-     "fg": 1067
+     "fg": 1139
     },
     {
      "id": [
       "m26_mass_mod",
       "muzzle_weight"
      ],
-     "fg": 1068
+     "fg": 1140
     },
     {
      "id": "machete_gimmick",
-     "fg": 1069
+     "fg": 1141
     },
     {
      "id": [
@@ -18337,7 +18610,7 @@
       "magazine_battery_medium_mod",
       "magazine_battery_mod"
      ],
-     "fg": 1070
+     "fg": 1142
     },
     {
      "id": [
@@ -18365,18 +18638,18 @@
       "money_twenty",
       "money_two"
      ],
-     "fg": 1071
+     "fg": 1143
     },
     {
      "id": "manual_makerspace",
-     "fg": 1072
+     "fg": 1144
     },
     {
      "id": [
       "marloss_scarf",
       "nape_protector"
      ],
-     "fg": 1073
+     "fg": 1145
     },
     {
      "id": [
@@ -18389,7 +18662,7 @@
       "peridot_silver_bracelet",
       "peridot_silver_ring"
      ],
-     "fg": 1074
+     "fg": 1146
     },
     {
      "id": [
@@ -18397,38 +18670,38 @@
       "recipe_dave_manual",
       "theater_props"
      ],
-     "fg": 1075
+     "fg": 1147
     },
     {
      "id": [
       "monitoring_equipment_doc",
       "waterproof_camera_case"
      ],
-     "fg": 1076
+     "fg": 1148
     },
     {
      "id": "nailgun",
-     "fg": 1077
+     "fg": 1149
     },
     {
      "id": "nanoskirt",
-     "fg": 1078
+     "fg": 1150
     },
     {
      "id": "nether_huntsman_organ",
-     "fg": 1079
+     "fg": 1151
     },
     {
      "id": "nuts_bolts",
-     "fg": 1080
+     "fg": 1152
     },
     {
      "id": "oxygen_cylinder",
-     "fg": 1081
+     "fg": 1153
     },
     {
      "id": "p_carpet",
-     "fg": 1082
+     "fg": 1154
     },
     {
      "id": [
@@ -18444,7 +18717,7 @@
       "trl_chip_nh_seal",
       "trl_chip_nh_takeover"
      ],
-     "fg": 1083
+     "fg": 1155
     },
     {
      "id": [
@@ -18452,7 +18725,7 @@
       "peridot_platinum_tiara",
       "peridot_silver_tiara"
      ],
-     "fg": 1084
+     "fg": 1156
     },
     {
      "id": [
@@ -18460,39 +18733,39 @@
       "spear_bronze",
       "spear_dory"
      ],
-     "fg": 1085
+     "fg": 1157
     },
     {
      "id": "pistol_flintlock",
-     "fg": 1086
+     "fg": 1158
     },
     {
      "id": "plasma_rifle",
-     "fg": 1087
+     "fg": 1159
     },
     {
      "id": "ppsh",
-     "fg": 1088
+     "fg": 1160
     },
     {
      "id": "pressurized_tank",
-     "fg": 1089
+     "fg": 1161
     },
     {
      "id": "prophylactic_antivenom",
-     "fg": 1090
+     "fg": 1162
     },
     {
      "id": "razor_blade",
-     "fg": 1091
+     "fg": 1163
     },
     {
      "id": "razor_shaving",
-     "fg": 1092
+     "fg": 1164
     },
     {
      "id": "ref_matches",
-     "fg": 1093
+     "fg": 1165
     },
     {
      "id": [
@@ -18503,7 +18776,7 @@
       "retool_ump_45",
       "retool_ump_9"
      ],
-     "fg": 1094
+     "fg": 1166
     },
     {
      "id": [
@@ -18511,44 +18784,44 @@
       "rm121aux",
       "rm20"
      ],
-     "fg": 1095
+     "fg": 1167
     },
     {
      "id": [
       "robofac_gun",
       "xedra_gun"
      ],
-     "fg": 1096
+     "fg": 1168
     },
     {
      "id": "robofac_gun_40mm",
-     "fg": 1097
+     "fg": 1169
     },
     {
      "id": [
       "scout_bipod",
       "scout_bipod_deployed"
      ],
-     "fg": 1098
+     "fg": 1170
     },
     {
      "id": "screen_mesh",
-     "fg": 1099
+     "fg": 1171
     },
     {
      "id": "scythe_game",
-     "fg": 1100
+     "fg": 1172
     },
     {
      "id": "self_monitoring_module",
-     "fg": 1101
+     "fg": 1173
     },
     {
      "id": [
       "sheet_metal_small",
       "water_clean"
      ],
-     "fg": 1102
+     "fg": 1174
     },
     {
      "id": [
@@ -18556,11 +18829,11 @@
       "sleeping_bag_improvised",
       "sleeping_bag_roll"
      ],
-     "fg": 1103
+     "fg": 1175
     },
     {
      "id": "slingshot",
-     "fg": 1104
+     "fg": 1176
     },
     {
      "id": [
@@ -18568,51 +18841,65 @@
       "tinyweldtank",
       "weldtank"
      ],
-     "fg": 1105
+     "fg": 1177
     },
     {
      "id": "solarpack",
-     "fg": 1106
+     "fg": 1178
     },
     {
      "id": "spear_copper",
-     "fg": 1107
+     "fg": 1179
     },
     {
      "id": "spear_rebar",
-     "fg": 1108
+     "fg": 1180
     },
     {
      "id": "spiked_plate",
-     "fg": 1109
+     "fg": 1181
     },
     {
      "id": [
       "takedown_recurbow",
       "takedown_recurbow_folded"
      ],
-     "fg": 1110
+     "fg": 1182
+    },
+    {
+     "id": [
+      "trl_buy_basic",
+      "trl_buy_bodyguard",
+      "trl_buy_elite",
+      "trl_buy_porter",
+      "trl_buy_standard"
+     ],
+     "fg": 1183
+    },
+    {
+     "id": "trl_censer",
+     "fg": 1184
     },
     {
      "id": [
       "trl_cf_cell_ramen",
       "trl_cf_glucose_cube"
      ],
-     "fg": 1111
+     "fg": 1185
     },
     {
      "id": [
       "trl_chip_nh_blink",
       "trl_chip_nh_hop"
      ],
-     "fg": 1112
+     "fg": 1186
     },
     {
      "id": [
       "trl_chip_nh_lock_on",
       "trl_chip_nh_shock_field"
      ],
-     "fg": 1113
+     "fg": 1187
     },
     {
      "id": [
@@ -18620,80 +18907,249 @@
       "trl_chip_nh_pulse_scan",
       "trl_data_core"
      ],
-     "fg": 1114
+     "fg": 1188
     },
     {
      "id": [
       "trl_chip_nh_purge",
       "trl_chip_nh_repair"
      ],
-     "fg": 1115
+     "fg": 1189
+    },
+    {
+     "id": "trl_chotki",
+     "fg": 1190
+    },
+    {
+     "id": "trl_church_candle",
+     "fg": 1191
+    },
+    {
+     "id": "trl_drug_drip",
+     "fg": 1192
+    },
+    {
+     "id": "trl_ema",
+     "fg": 1193
     },
     {
      "id": [
       "trl_f_caviar_blini",
       "trl_f_tushonka"
      ],
-     "fg": 1116
+     "fg": 1194
+    },
+    {
+     "id": [
+      "trl_fish_banggai",
+      "trl_fish_moorish_idol"
+     ],
+     "fg": 1195
+    },
+    {
+     "id": [
+      "trl_fish_bicolor_angel",
+      "trl_fish_blue_tang",
+      "trl_fish_emperor_angel",
+      "trl_fish_ribbon_eel"
+     ],
+     "fg": 1196
+    },
+    {
+     "id": "trl_fish_blue_devil",
+     "fg": 1197
+    },
+    {
+     "id": [
+      "trl_fish_boxfish",
+      "trl_fish_lemonpeel",
+      "trl_fish_longnose_bf",
+      "trl_fish_pajama_cardinal",
+      "trl_fish_yellow_tang"
+     ],
+     "fg": 1198
+    },
+    {
+     "id": [
+      "trl_fish_chromis",
+      "trl_fish_sixline_wrasse"
+     ],
+     "fg": 1199
+    },
+    {
+     "id": "trl_fish_clown_trigger",
+     "fg": 1200
+    },
+    {
+     "id": [
+      "trl_fish_clownfish",
+      "trl_fish_copperband",
+      "trl_fish_flame_angel",
+      "trl_fish_hawkfish",
+      "trl_fish_tuskfish"
+     ],
+     "fg": 1201
+    },
+    {
+     "id": "trl_fish_lionfish",
+     "fg": 1202
+    },
+    {
+     "id": [
+      "trl_fish_mandarinfish",
+      "trl_fish_picasso_trigger"
+     ],
+     "fg": 1203
+    },
+    {
+     "id": "trl_fish_seahorse",
+     "fg": 1204
+    },
+    {
+     "id": "trl_gohei",
+     "fg": 1205
+    },
+    {
+     "id": "trl_gospel",
+     "fg": 1206
     },
     {
      "id": "trl_gun_w2011",
-     "fg": 1117
+     "fg": 1207
     },
     {
-     "id": "trl_implant_monitor",
-     "fg": 1118
+     "id": "trl_icon",
+     "fg": 1208
+    },
+    {
+     "id": [
+      "trl_imp_arm_l_adv",
+      "trl_imp_arm_l_basic",
+      "trl_imp_arm_l_elite",
+      "trl_imp_arm_l_med",
+      "trl_imp_arm_r_adv",
+      "trl_imp_arm_r_basic",
+      "trl_imp_arm_r_elite",
+      "trl_imp_arm_r_med",
+      "trl_imp_blade_r",
+      "trl_imp_gun_l",
+      "trl_imp_gun_r",
+      "trl_imp_plate_arm_l_heavy",
+      "trl_imp_plate_arm_l_light",
+      "trl_imp_plate_arm_r_heavy",
+      "trl_imp_plate_arm_r_light"
+     ],
+     "fg": 1209
+    },
+    {
+     "id": [
+      "trl_imp_leg_l_adv",
+      "trl_imp_leg_l_basic",
+      "trl_imp_leg_l_elite",
+      "trl_imp_leg_l_med",
+      "trl_imp_leg_r_adv",
+      "trl_imp_leg_r_basic",
+      "trl_imp_leg_r_elite",
+      "trl_imp_leg_r_med",
+      "trl_imp_plate_leg_l_heavy",
+      "trl_imp_plate_leg_l_light",
+      "trl_imp_plate_leg_r_heavy",
+      "trl_imp_plate_leg_r_light"
+     ],
+     "fg": 1210
+    },
+    {
+     "id": [
+      "trl_implant_monitor",
+      "trl_nh_console"
+     ],
+     "fg": 1211
     },
     {
      "id": "trl_kp_helmet",
-     "fg": 1119
+     "fg": 1212
     },
     {
      "id": "trl_kp_vest",
-     "fg": 1120
+     "fg": 1213
+    },
+    {
+     "id": "trl_kumo_wreck",
+     "fg": 1214
+    },
+    {
+     "id": "trl_ofuda",
+     "fg": 1215
+    },
+    {
+     "id": "trl_omamori",
+     "fg": 1216
+    },
+    {
+     "id": "trl_omikuji",
+     "fg": 1217
+    },
+    {
+     "id": [
+      "trl_pet_cat",
+      "trl_pet_dog"
+     ],
+     "fg": 1218
+    },
+    {
+     "id": "trl_pet_rabbit",
+     "fg": 1219
     },
     {
      "id": "trl_plasteel_armor",
-     "fg": 1121
+     "fg": 1220
     },
     {
      "id": "trl_plasteel_boots",
-     "fg": 1122
+     "fg": 1221
     },
     {
      "id": "trl_plasteel_gloves",
-     "fg": 1123
+     "fg": 1222
     },
     {
      "id": "trl_plasteel_helm",
-     "fg": 1124
+     "fg": 1223
+    },
+    {
+     "id": [
+      "trl_tank_bowl",
+      "trl_tank_cube",
+      "trl_tank_long"
+     ],
+     "fg": 1224
     },
     {
      "id": "trousers_eod",
-     "fg": 1125
+     "fg": 1225
     },
     {
      "id": "veggy_canned",
-     "fg": 1126
+     "fg": 1226
     },
     {
      "id": [
       "water",
       "water_murky"
      ],
-     "fg": 1127
+     "fg": 1227
     },
     {
      "id": "welder_crude",
-     "fg": 1128
+     "fg": 1228
     },
     {
      "id": "workbench_with_recharger",
-     "fg": 1129
+     "fg": 1229
     },
     {
      "id": "wristrocket",
-     "fg": 1130
+     "fg": 1230
     }
    ]
   },

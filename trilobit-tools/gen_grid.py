@@ -194,9 +194,9 @@ def build_plant():
             r.fur(x, y, "solar_panel")
     for x in range(32, 43, 2):
         r.fur(x, 59, "solar_panel"); r.fur(x, 63, "solar_panel")
-    # people: the JSDF guard the gate and the reactor; engineers work the control block
-    npcs = [("trl_nc_jsdf_patrol", 46, 66), ("trl_nc_jsdf_patrol", 49, 66), ("trl_nc_jsdf_patrol", 55, 61), ("trl_nc_jsdf_patrol", 46, 40),
-            ("trl_nc_jsdf_tactical", 74, 46), ("trl_nc_jsdf_tactical", 68, 36), ("trl_nc_jsdf_riot", 48, 60),
+    # people: the NAP guard the gate and the reactor; engineers work the control block
+    npcs = [("trl_nc_nap_patrol", 46, 66), ("trl_nc_nap_patrol", 49, 66), ("trl_nc_nap_patrol", 55, 61), ("trl_nc_nap_patrol", 46, 40),
+            ("trl_nc_nap_tactical", 74, 46), ("trl_nc_nap_tactical", 68, 36), ("trl_nc_nap_riot", 48, 60),
             ("trl_nc_res_mid_engineer", 70, 11), ("trl_nc_res_mid_engineer", 80, 11), ("trl_nc_res_mid_engineer", 45, 19)]
     return g, r, ARMORY, npcs
 

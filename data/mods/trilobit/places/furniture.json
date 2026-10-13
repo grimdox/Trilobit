@@ -1019,8 +1019,8 @@
  {
   "type": "furniture",
   "id": "f_trl_shrine",
-  "name": "small shrine",
-  "description": "A small shrine with offerings and incense.",
+  "name": "lit alcove",
+  "description": "A small lit alcove set into the wall with a few ornaments.",
   "symbol": "A",
   "color": "light_red",
   "move_cost_mod": -1,
@@ -1040,8 +1040,8 @@
  {
   "type": "furniture",
   "id": "f_trl_torii",
-  "name": "gate",
-  "description": "A red gate of two pillars and two crossbeams.",
+  "name": "red lacquer arch",
+  "description": "A red lacquered archway of two pillars and two crossbeams, purely decorative.",
   "symbol": "n",
   "color": "red",
   "move_cost_mod": 0,
@@ -1060,8 +1060,8 @@
  {
   "type": "furniture",
   "id": "f_trl_statue_fox",
-  "name": "stone fox statue",
-  "description": "A stone fox with a red bib.",
+  "name": "stone fox figure",
+  "description": "A stone fox figure on a plinth.",
   "symbol": "f",
   "color": "light_gray",
   "move_cost_mod": -1,
@@ -1381,5 +1381,177 @@
    "sound_fail": "whump."
   },
   "light_emitted": 8
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_kitchen_range",
+  "name": "kitchen range",
+  "description": "A heavy steel range with burners, a griddle and a hanging rack of pans.",
+  "symbol": "&",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 4
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_pizza_oven",
+  "name": "brick pizza oven",
+  "description": "A domed brick oven with a fire glowing in its mouth.",
+  "symbol": "O",
+  "color": "light_red",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 8
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_sushi_case",
+  "name": "sushi display case",
+  "description": "A chilled glass case of fish and rice, lit from within.",
+  "symbol": "=",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 5
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_menu_board",
+  "name": "menu board",
+  "description": "A framed board listing the day's dishes and drinks.",
+  "symbol": "m",
+  "color": "white",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 3
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_liquor_shelf",
+  "name": "liquor shelf",
+  "description": "A lit glass shelf of bottles behind the bar.",
+  "symbol": "H",
+  "color": "yellow",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 5
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_dining_table",
+  "name": "dining table",
+  "description": "A small table with a place setting.",
+  "symbol": "T",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_cloth_table",
+  "name": "white-cloth table",
+  "description": "A table dressed in white linen with a candle at its centre.",
+  "symbol": "T",
+  "color": "white",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF",
+   "MOUNTABLE"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 3
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_kitchen_fridge",
+  "name": "kitchen cooler",
+  "description": "A steel walk-in cooler door with a frosted window.",
+  "symbol": "C",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 30,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
  }
 ]

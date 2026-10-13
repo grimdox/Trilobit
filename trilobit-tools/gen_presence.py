@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Faction presence by district (design doc section E and L): adds faction NPCs to building mapgens with a spawn chance.
   poor districts (slum shacks):   Bratva (thugs, a few enforcers) and Nasim cyberterrorists
-  middle districts (homes):       a few Bratva and Nasim, and some JSDF
-  rich districts (estates):       JSDF patrols and tactical operators
-  mid-rise and tower sections:    JSDF, more on the ground floor
+  middle districts (homes):       a few Bratva and Nasim, and some NAP
+  rich districts (estates):       NAP patrols and tactical operators
+  mid-rise and tower sections:    NAP, more on the ground floor
 usage: gen_presence.py <mod dir>   (run after the building generators: it edits their mapgen files)"""
 import json, os, random, re, sys
 MOD = sys.argv[1]
@@ -33,14 +33,14 @@ def ruleset(oid):
     if re.match(r"^trl_slum_\d+_t\d+_z0$", oid):
         return [("bratva_thug", 12), ("bratva_enforcer", 4), ("nasim_hacker", 4)]
     if re.match(r"^trl_home_\d+_t\d+_z0$", oid):
-        return [("bratva_thug", 3), ("nasim_hacker", 2), ("jsdf_patrol", 3)]
+        return [("bratva_thug", 3), ("nasim_hacker", 2), ("nap_patrol", 3)]
     if re.match(r"^trl_estate_\d+_t\d+_z0$", oid):
-        return [("jsdf_patrol", 10), ("jsdf_tactical", 3)]
+        return [("nap_patrol", 10), ("nap_tactical", 3)]
     if oid.startswith("trl_mid01_"):
         return []                     # the starting building stays calm
     if re.match(r"^trl_(sky\d+|mid\d+|mr\d+|fn\d+|mt\d+)_", oid):
         ground = bool(re.search(r"z0$", oid)) and not oid.startswith("trl_mt")
-        return [("jsdf_patrol", 12 if ground else 5), ("jsdf_riot", 3 if ground else 2)]
+        return [("nap_patrol", 12 if ground else 5), ("nap_riot", 3 if ground else 2)]
     return []
 
 
@@ -68,7 +68,7 @@ for sub in ("houses", "midrise", "midrise2", "towers", "city"):
         nest = []
         def _ours(n):
             c = n.get("class")
-            return isinstance(c, dict) or (isinstance(c, str) and "chance" in n and c.startswith((NPC + "bratva_", NPC + "jsdf_", NPC + "nasim_")))
+            return isinstance(c, dict) or (isinstance(c, str) and "chance" in n and c.startswith((NPC + "bratva_", NPC + "nap_", NPC + "nasim_")))
         npcs = [n for n in obj.get("place_npcs", []) if not _ours(n)]
         rules = ruleset(m["om_terrain"][0]) + petrules(m["om_terrain"][0])
         if rules:
@@ -89,7 +89,7 @@ for sub in ("houses", "midrise", "midrise2", "towers", "city"):
             del obj["place_npcs"]
     data = [m for m in data if not str(m.get("nested_mapgen_id", "")).startswith("trl_pres_")]
     if sub == "city":
-        for cls in ("bratva_thug", "bratva_enforcer", "nasim_hacker", "jsdf_patrol", "jsdf_tactical", "jsdf_riot"):
+        for cls in ("bratva_thug", "bratva_enforcer", "nasim_hacker", "nap_patrol", "nap_tactical", "nap_riot"):
             data.append({"type": "mapgen", "nested_mapgen_id": "trl_pres_" + cls,
                          "object": {"mapgensize": [1, 1], "rows": ["."], "place_npcs": [{"class": NPC + cls, "x": 0, "y": 0}]}})
     json.dump(data, open(path, "w"), indent=1)

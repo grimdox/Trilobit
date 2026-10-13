@@ -98,7 +98,7 @@
  {
   "type": "overmap_terrain",
   "id": "trl_lot_shrine_garden",
-  "name": "shrine garden",
+  "name": "stone garden",
   "sym": "g",
   "color": "light_green",
   "see_cost": "full_high",

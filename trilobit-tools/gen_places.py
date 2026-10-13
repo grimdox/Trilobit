@@ -121,9 +121,9 @@ fur("vase_tall", "tall floor vase", "A waist-high ceramic vase holding dry reeds
 fur("bonsai", "bonsai tree", "A small twisted tree in a shallow tray.", "&", "green", flags=SOLID)
 fur("planter", "bamboo planter", "A stand of bamboo in a long planter.", "#", "light_green", flags=SOLID)
 fur("fern", "potted fern", "A fern in a plain white pot.", "&", "light_green", flags=SOLID)
-fur("shrine", "small shrine", "A small shrine with offerings and incense.", "A", "light_red", 5, flags=SOLID)
-fur("torii", "gate", "A red gate of two pillars and two crossbeams.", "n", "red", flags=SOLID, passable=True)
-fur("statue_fox", "stone fox statue", "A stone fox with a red bib.", "f", "light_gray", flags=SOLID)
+fur("shrine", "lit alcove", "A small lit alcove set into the wall with a few ornaments.", "A", "light_red", 5, flags=SOLID)
+fur("torii", "red lacquer arch", "A red lacquered archway of two pillars and two crossbeams, purely decorative.", "n", "red", flags=SOLID, passable=True)
+fur("statue_fox", "stone fox figure", "A stone fox figure on a plinth.", "f", "light_gray", flags=SOLID)
 fur("scroll", "hanging scroll stand", "A stand with a long painted scroll of mountains.", "|", "white", flags=SOLID)
 fur("wind_chime", "wind chime", "Glass chimes that clink in the draught.", "!", "light_cyan", flags=SOLID, passable=True)
 fur("laundry", "laundry line", "A line of damp clothes hung between balconies.", "~", "light_blue", flags=SOLID, passable=True)
@@ -143,6 +143,8 @@ class G:
             for j in (0, H - 1): self.t[j][i] = edge
             for j in (0, H - 1): self.t[i][j] = edge
         self.f = []   # (key, x, y)
+        self.nest = []   # (nested mapgen id, x, y) for the display aquariums
+        self.mons = []   # (monster id, x, y)
         self.occ = set()
         self.items = []
         self.rng = random.Random(0)
@@ -168,6 +170,14 @@ class G:
     def f_(self, key, x, y):
         if self.free(x, y) or (F[key]["kw"].get("passable") and 0 < x < W - 1 and 0 < y < H - 1 and self.t[y][x] in FLOORS and (x, y) not in self.occ):
             self.f.append((key, x, y)); self.occ.add((x, y)); return True
+        return False
+    def tank(self, x, y, wide=False):
+        """a display aquarium (1 tile, or 2 tiles wide), its fish themed at random by the nested mapgen"""
+        cells = [(x, y), (x + 1, y)] if wide else [(x, y)]
+        if all(self.free(cx, cy) for cx, cy in cells):
+            self.nest.append(("trl_tank_2" if wide else "trl_tank_1", x, y))
+            for c in cells: self.occ.add(c)
+            return True
         return False
     def line(self, key, x0, y0, x1, y1):
         n = max(abs(x1 - x0), abs(y1 - y0))
@@ -257,7 +267,7 @@ def _(g):
     for x in (6, 11, 16): g.f_("table_low", x, 14); g.f_("cushion", x, 13); g.f_("cushion", x, 15)
     g.f_("vase_white", 4, 5); g.f_("vase_blue", 19, 5); g.f_("bonsai", 4, 18); g.f_("scroll", 19, 18)
     g.f_("lantern", 8, 6); g.f_("lantern", 14, 6); g.f_("lantern", 8, 17); g.f_("lantern", 14, 17)
-    g.f_("cabinet_lacquer", 12, 5); g.f_("wind_chime", 11, 18)
+    g.f_("cabinet_lacquer", 12, 5); g.f_("wind_chime", 11, 18); g.tank(7, 5, False); g.tank(16, 5, False)
     g.loot("trl_loot_drink", 5, 6, 18, 17, 50, 2)
 @place("izakaya", "izakaya", "I", "yellow", "drink")
 def _(g):
@@ -268,6 +278,7 @@ def _(g):
     for x in (4, 8, 12, 16, 20): g.f_("lantern", x, 5)
     g.f_("neon_red", 9, 5); g.f_("neon_amber", 14, 5); g.f_("vase_red", 3, 6); g.f_("vase_blue", 20, 6)
     g.f_("shelf_clean", 6, 6); g.f_("shelf_clean", 12, 6); g.f_("fridge" if False else "lightbox", 17, 6)
+    g.tank(19, 10, False); g.tank(3, 11, False)
     g.loot("trl_loot_drink", 5, 5, 19, 7, 70, 3); g.loot("trl_loot_food", 4, 13, 18, 16, 40, 2)
 @place("neon_lounge", "neon lounge", "L", "pink", "drink")
 def _(g):
@@ -277,7 +288,7 @@ def _(g):
     for x in range(5, 15, 2): g.f_("bar_stool", x, 7)
     for (x, y) in ((5, 12), (11, 12), (17, 12), (5, 16), (11, 16), (17, 16)):
         g.f_("table_plastic", x, y); g.f_("chair_lounge", x - 1, y); g.f_("chair_lounge", x + 1, y)
-    g.f_("neon_pink", 7, 4); g.f_("neon_violet", 12, 4); g.f_("neon_cyan", 17, 4); g.f_("aquarium", 19, 8)
+    g.f_("neon_pink", 7, 4); g.f_("neon_violet", 12, 4); g.f_("neon_cyan", 17, 4); g.tank(18, 8, True); g.tank(4, 18)
     g.f_("holo_ad", 11, 10)
     g.loot("trl_loot_drink", 5, 5, 15, 6, 70, 3)
 @place("capsule_hotel", "capsule hotel", "H", "white", "tech")
@@ -320,6 +331,7 @@ def _(g):
     for x in (4, 19): g.f_("fern", x, 5); g.f_("vase_white", x, 17); g.f_("vase_tall", x, 11)
     for y in (13, 16): g.f_("chair_lounge", 8, y); g.f_("chair_lounge", 15, y)
     g.f_("holo_ad", 11, 14); g.f_("holo_ad", 11, 5); g.f_("neon_cyan", 5, 4); g.f_("neon_cyan", 18, 4); g.f_("floor_lamp", 11, 18)
+    g.tank(4, 14, True); g.tank(18, 14, True)
     g.loot("trl_loot_decor", 4, 5, 19, 18, 40, 2); g.loot("trl_loot_chips", 6, 7, 17, 9, 30, 1)
 @place("govt_office", "government office", "G", "light_gray", "tech")
 def _(g):
@@ -388,7 +400,7 @@ def _(g):
     for (x, y) in ((3, 3), (20, 3), (3, 20), (20, 20), (11, 6), (11, 17)): g.f_("lantern_stone", x, y)
     g.f_("shrine", 12, 9); g.f_("neon_green", 2, 12); g.f_("neon_green", 21, 12)
     g.loot("trl_loot_decor", 4, 4, 19, 19, 20, 2)
-@place("shrine_courtyard", "shrine courtyard", "S", "light_red", "decor")
+@place("shrine_courtyard", "gravel courtyard", "S", "light_red", "decor")
 def _(g):
     g.fill(1, 1, 22, 22, "gravel"); g.fill(9, 1, 14, 22, "pave")
     g.f_("torii", 11, 20); g.f_("torii", 12, 20); g.f_("torii", 11, 17)
@@ -411,7 +423,7 @@ def _(g):
     for (x, y) in ((6, 8), (11, 8), (16, 8), (6, 14), (11, 14), (16, 14)): g.f_("lightbox", x, y)
     for x in (4, 8, 13, 19): g.f_("vase_tall", x, 5); g.f_("scroll", x, 18)
     for x in (9, 15): g.f_("vase_blue", x, 11); g.f_("vase_white", x - 5, 11)
-    g.f_("bench_park", 11, 11); g.f_("holo_ad", 11, 16); g.f_("neon_violet", 7, 4); g.f_("neon_violet", 16, 4); g.f_("floor_lamp", 11, 19)
+    g.f_("bench_park", 11, 11); g.f_("holo_ad", 11, 16); g.f_("neon_violet", 7, 4); g.f_("neon_violet", 16, 4); g.f_("floor_lamp", 11, 19); g.tank(4, 19, True); g.tank(17, 19, True)
     g.loot("trl_loot_decor", 4, 6, 19, 17, 40, 3)
 @place("archive_library", "data archive", "l", "light_cyan", "tech")
 def _(g):
@@ -565,6 +577,10 @@ def mapgen_json():
                            all(f["x"] != px or f["y"] != py for f in obj["place_furniture"]) and \
                            all(a["x"] != px or a["y"] != py for a in obj.get("place_npcs", [])):
                             obj["place_furniture"].append({"furn": "f_trl_door_panel", "x": px, "y": py}); done = True; break
+        if g.nest:
+            obj["place_nested"] = [{"chunks": [[nid, 100]], "x": nx, "y": ny} for nid, nx, ny in g.nest]
+        if g.mons:
+            obj["place_monster"] = [{"monster": m, "x": mx, "y": my} for m, mx, my in g.mons]
         for fid, ex, ey in getattr(g, "extra", []):
             obj["place_furniture"].append({"furn": fid, "x": ex, "y": ey})
         if p.get("service"):

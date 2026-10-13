@@ -73,7 +73,7 @@ def _(g):
     for y in (5, 10, 15): g.f_("bike_rack", 5, y); g.f_("bike_rack", 14, y)
     g.f_("charging_pod", 2, 3); g.f_("charging_pod", 21, 20); g.f_("ticket_machine", 11, 2); g.f_("neon_cyan", 11, 21)
     g.f_("street_lamp", 3, 11); g.f_("street_lamp", 20, 11)
-@lot("shrine_garden", "shrine garden", "g", "light_green", "decor", base="gravel")
+@lot("shrine_garden", "stone garden", "g", "light_green", "decor", base="gravel")
 def _(g):
     g.f_("torii", 11, 20); g.f_("shrine", 11, 5); g.f_("fountain", 6, 8); g.f_("fountain", 17, 8)
     for x, y in ((5, 5), (18, 5), (5, 17), (18, 17), (8, 14), (15, 14)): g.f_("lantern_stone", x, y)

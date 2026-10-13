@@ -67,6 +67,7 @@
 #include "rotatable_symbols.h"
 #include "sets_intersect.h"
 #include "simple_pathfinding.h"
+#include <map>
 #include "string_formatter.h"
 #include "talker.h"
 #include "text_snippets.h"
@@ -6461,6 +6462,44 @@ std::string hospital_for( const cell_info &ci )
     return ci.tier == 2 ? "trl_pl_hospital_r" : "trl_pl_hospital_m";
 }
 
+// religious buildings: one per district cell at most
+std::set<std::tuple<int, int, uint32_t>> &faith_served()
+{
+    static std::set<std::tuple<int, int, uint32_t>> s;
+    return s;
+}
+
+// a Russian Orthodox church (only in poor districts, the Bratva's ground) or a Shinto shrine (anywhere in the outskirts); 1, 2, 3 or 4 tiles
+std::string faith_for( const cell_info &ci )
+{
+    static const int weights[4] = { 45, 25, 12, 18 };   // 1x1, 2x1, 3x1, 2x2
+    static const char *letters = "abcd";
+    int roll = rng( 0, 99 );
+    int v = 0;
+    while( v < 3 && roll >= weights[v] ) {
+        roll -= weights[v];
+        ++v;
+    }
+    const bool church = ci.tier == 0 && rng( 0, 99 ) < 55;
+    return std::string( church ? "trl_church_" : "trl_shrine_" ) + letters[v];
+}
+
+// restaurants: up to two per district cell, chosen from the 36 types by tier (10 poor, 16 middle, 10 rich)
+std::map<std::tuple<int, int, uint32_t>, int> &restaurants_served()
+{
+    static std::map<std::tuple<int, int, uint32_t>, int> s;
+    return s;
+}
+
+std::string restaurant_for( const cell_info &ci )
+{
+    static const int counts[3] = { 10, 16, 10 };
+    static const char *letters = "pmr";
+    const int n = rng( 1, counts[ci.tier] );
+    const char l = letters[ci.tier];
+    return string_format( "trl_pl_rest%c%02d_%c", l, n, l );
+}
+
 // the service shop for this district, or an empty id when the district gets none
 std::string service_for( const cell_info &ci )
 {
@@ -6473,6 +6512,13 @@ std::string service_for( const cell_info &ci )
         const bool ok = ( ci.tier == 1 && roll < 35 ) || ( ci.tier == 2 && roll < 60 );
         if( !ok ) {
             k = 2;
+        }
+    }
+    if( k == 2 && ci.tier >= 1 ) {
+        // pet shops (fish, cats, dogs, rabbits): some groceries' districts get one instead, middle and rich only
+        const int roll = static_cast<int>( ( ci.h >> 12 ) % 100u );
+        if( roll < ( ci.tier == 2 ? 26 : 16 ) ) {
+            return std::string( "trl_pl_pet_" ) + letters[ci.tier];
         }
     }
     return std::string( "trl_pl_" ) + kinds[k] + "_" + letters[ci.tier];
@@ -6502,6 +6548,15 @@ void overmap::place_building( const tripoint_om_omt &p, om_direction::type dir, 
                 hospital = true;
             }
         }
+        bool faith = false;
+        if( !service && town_dist >= 45 && trl_district::faith_served().count( served_key ) == 0 && one_in( 16 ) ) {
+            const overmap_special_id fid( trl_district::faith_for( dist_info ) );
+            if( fid.is_valid() ) {
+                building_tid = fid;
+                service = true;
+                faith = true;
+            }
+        }
         bool substation = false;
         if( !service && trl_district::wants_substation( dist_info ) &&
             trl_district::substation_served().count( served_key ) == 0 && one_in( 4 ) ) {
@@ -6510,6 +6565,15 @@ void overmap::place_building( const tripoint_om_omt &p, om_direction::type dir, 
                 building_tid = uid;
                 service = true;
                 substation = true;
+            }
+        }
+        bool restaurant = false;
+        if( !service && trl_district::restaurants_served()[served_key] < 2 && one_in( 6 ) ) {
+            const overmap_special_id rid( trl_district::restaurant_for( dist_info ) );
+            if( rid.is_valid() ) {
+                building_tid = rid;
+                service = true;
+                restaurant = true;
             }
         }
         if( !service && trl_district::served().count( served_key ) == 0 && one_in( 4 ) ) {
@@ -6539,7 +6603,11 @@ void overmap::place_building( const tripoint_om_omt &p, om_direction::type dir, 
                 placed_unique_buildings.emplace( building_tid );
             }
             if( service ) {
-                if( substation ) {
+                if( restaurant ) {
+                    ++trl_district::restaurants_served()[served_key];
+                } else if( faith ) {
+                    trl_district::faith_served().insert( served_key );
+                } else if( substation ) {
                     trl_district::substation_served().insert( served_key );
                 } else if( hospital ) {
                     trl_district::hospital_served().insert( served_key );

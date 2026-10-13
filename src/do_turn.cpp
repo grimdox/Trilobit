@@ -626,7 +626,7 @@ static void trl_test_hook()
         std::ofstream out( "/tmp/claude-0/npcdump.txt", std::ios::app );
         out << "== turn " << t << " hour " << to_hours<int>( time_past_midnight( calendar::turn ) )
             << " player omt " << u.pos_abs_omt().to_string() << "\n";
-        for( const char *f : { "trl_bratva", "trl_jsdf", "trl_nasim" } ) {
+        for( const char *f : { "trl_bratva", "trl_nap", "trl_nasim" } ) {
             out << f << " likes_u " << g->faction_manager_ptr->get( faction_id( f ) )->likes_u << "\n";
         }
         for( const shared_ptr_fast<npc> &guy : overmap_buffer.get_npcs_near_player( 480 ) ) {

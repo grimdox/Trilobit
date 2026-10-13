@@ -5,6 +5,9 @@
 #include <unordered_map>
 
 #include "calendar.h"
+#include "faction.h"
+#include "game.h"
+#include "overmapbuffer.h"
 #include "character.h"
 #include "creature.h"
 #include "creature_tracker.h"
@@ -14,6 +17,8 @@
 #include "mtype.h"
 #include "npc.h"
 #include "rng.h"
+#include "string_formatter.h"
+#include "translations.h"
 #include "line.h"
 
 namespace trl_aware
@@ -93,7 +98,67 @@ point rot( const point &f, int k )
     return ring[( idx + k + 8 ) % 8];
 }
 
+std::string church_key( const tripoint_abs_omt &p )
+{
+    return string_format( "trl_church_bad_%d_%d_%d", p.x(), p.y(), p.z() );
+}
+
+bool desecrated( const tripoint_abs_omt &p )
+{
+    return get_player_character().maybe_get_value( church_key( p ) ) != nullptr;
+}
+
+bool bratva( const Creature &c )
+{
+    if( const monster *m = c.as_monster() ) {
+        return m->type->id.str() == "mon_trl_thug";
+    }
+    if( const npc *n = c.as_npc() ) {
+        const faction *f = n->get_faction();
+        return f != nullptr && f->id.str() == "trl_bratva";
+    }
+    return false;
+}
+
 } // namespace
+
+bool church_at( const tripoint_abs_omt &p )
+{
+    return overmap_buffer.ter( p )->get_type_id().str().rfind( "trl_church_", 0 ) == 0;
+}
+
+bool church_truce( const Creature &c )
+{
+    const tripoint_abs_omt pp = get_player_character().pos_abs_omt();
+    return bratva( c ) && church_at( pp ) && !desecrated( pp );
+}
+
+void church_violence( const Creature &victim, const Creature *attacker )
+{
+    if( attacker == nullptr || !attacker->is_avatar() ) {
+        return;
+    }
+    Character &u = get_player_character();
+    const tripoint_abs_omt pp = u.pos_abs_omt();
+    if( !church_at( pp ) || !church_at( victim.pos_abs_omt() ) || desecrated( pp ) ) {
+        return;
+    }
+    // the whole church (all tiles within two overmap tiles that are church) is now hostile ground
+    for( int dx = -2; dx <= 2; ++dx ) {
+        for( int dy = -2; dy <= 2; ++dy ) {
+            const tripoint_abs_omt q( pp.x() + dx, pp.y() + dy, pp.z() );
+            if( church_at( q ) ) {
+                u.set_value( church_key( q ), std::string( "1" ) );
+            }
+        }
+    }
+    add_msg( m_bad, _( "You have broken the peace of the church.  Everyone inside turns on you!" ) );
+    for( npc &n : g->all_npcs() ) {
+        if( church_at( n.pos_abs_omt() ) && !n.is_dead() && !n.is_player_ally() ) {
+            n.make_angry();
+        }
+    }
+}
 
 bool enabled( const Creature &c )
 {
@@ -142,6 +207,16 @@ bool gate( Creature &c, const Creature &player, bool raw )
         return e.last_result;
     }
     e.last_turn = t;
+    if( church_truce( c ) ) {
+        // in a church the Bratva keep the peace: forget you, go back to normal, and resume when you leave
+        e.st = UNAWARE;
+        e.meter = 0;
+        e.timer = 0;
+        e.post.reset();
+        e.last_pos.reset();
+        e.last_result = false;
+        return false;
+    }
 
     const int prev = e.st;
     const tripoint_abs_ms ppos = player.pos_abs();
@@ -216,7 +291,7 @@ bool gate( Creature &c, const Creature &player, bool raw )
 
 void heard( Creature &c, const tripoint_abs_ms &src, int volume )
 {
-    if( volume < 1 ) {
+    if( volume < 1 || church_truce( c ) ) {
         return;
     }
     // Ordinary city noise (residents walking about) must not keep guards twitchy: only noise that
@@ -249,6 +324,9 @@ void heard( Creature &c, const tripoint_abs_ms &src, int volume )
 
 void alerted( Creature &c, const tripoint_abs_ms &src )
 {
+    if( church_truce( c ) ) {
+        return;
+    }
     entry &e = get( c );
     note_post( c, e );
     e.meter = 100;

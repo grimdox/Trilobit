@@ -1819,6 +1819,7 @@ void npc::make_angry()
 void npc::on_attacked( const Creature &attacker )
 {
     map &here = get_map();
+    trl_aware::church_violence( *this, &attacker );
     if( trl_aware::enabled( *this ) ) {
         trl_aware::alerted( *this, attacker.pos_abs() );
     }

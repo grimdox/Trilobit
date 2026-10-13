@@ -339,7 +339,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -353,7 +353,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -547,7 +547,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -561,7 +561,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -755,7 +755,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -769,7 +769,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -915,7 +915,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -929,7 +929,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -1272,13 +1272,26 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_injector",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 35,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -1292,7 +1305,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -1519,13 +1532,26 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_injector",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 35,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -1539,7 +1565,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -1766,13 +1792,26 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_injector",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 35,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -1786,7 +1825,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -1936,13 +1975,26 @@
      ],
      "chance": 25,
      "repeat": 2
+    },
+    {
+     "item": "trl_loot_injector",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 35,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -1956,7 +2008,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -2204,7 +2256,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -2218,7 +2270,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -2412,7 +2464,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -2426,7 +2478,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -2620,7 +2672,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -2634,7 +2686,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -2770,7 +2822,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -2784,7 +2836,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -3067,13 +3119,26 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 60,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -3087,7 +3152,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -3270,13 +3335,26 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 60,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -3290,7 +3368,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -3473,13 +3551,26 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 60,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -3493,7 +3584,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -3623,13 +3714,26 @@
      ],
      "chance": 25,
      "repeat": 2
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 60,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -3643,7 +3747,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -3947,7 +4051,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -3961,7 +4065,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -4170,7 +4274,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -4184,7 +4288,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -4393,7 +4497,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -4407,7 +4511,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -4616,7 +4720,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -4630,7 +4734,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -4826,7 +4930,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -4840,7 +4944,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -5199,7 +5303,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -5213,7 +5317,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -5422,7 +5526,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -5436,7 +5540,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -5645,7 +5749,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -5659,7 +5763,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -5850,7 +5954,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -5864,7 +5968,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -6122,7 +6226,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -6136,7 +6240,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -6325,7 +6429,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -6339,7 +6443,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -6528,7 +6632,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -6542,7 +6646,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -6678,7 +6782,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -6692,7 +6796,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -7221,7 +7325,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -7235,7 +7339,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -7614,7 +7718,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -7628,7 +7732,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -8007,7 +8111,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -8021,7 +8125,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -8400,7 +8504,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -8414,7 +8518,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -8590,7 +8694,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -8604,7 +8708,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -8873,7 +8977,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -8887,7 +8991,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -9116,7 +9220,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -9130,7 +9234,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -9359,7 +9463,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -9373,7 +9477,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -9602,7 +9706,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -9616,7 +9720,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -9757,7 +9861,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -9771,7 +9875,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -10115,7 +10219,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -10129,7 +10233,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -10323,7 +10427,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -10337,7 +10441,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -10531,7 +10635,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -10545,7 +10649,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -10739,7 +10843,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -10753,7 +10857,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -10899,7 +11003,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -10913,7 +11017,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -11287,7 +11391,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -11301,7 +11405,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -11585,7 +11689,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -11599,7 +11703,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -11883,7 +11987,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -11897,7 +12001,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -12181,7 +12285,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -12195,7 +12299,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -12376,7 +12480,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -12390,7 +12494,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -12639,7 +12743,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -12653,7 +12757,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -12907,7 +13011,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -12921,7 +13025,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -13175,7 +13279,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -13189,7 +13293,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -13443,7 +13547,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -13457,7 +13561,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -13613,7 +13717,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -13627,7 +13731,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -13916,7 +14020,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -13930,7 +14034,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -14124,7 +14228,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -14138,7 +14242,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -14332,7 +14436,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -14346,7 +14450,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -14507,7 +14611,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -14521,7 +14625,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -14910,7 +15014,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -14924,7 +15028,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -15158,7 +15262,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -15172,7 +15276,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -15406,7 +15510,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -15420,7 +15524,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -15576,7 +15680,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -15590,7 +15694,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -15793,7 +15897,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -15807,7 +15911,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -15996,7 +16100,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -16010,7 +16114,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -16199,7 +16303,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -16213,7 +16317,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -16364,7 +16468,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -16378,7 +16482,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -16577,7 +16681,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -16591,7 +16695,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -16785,7 +16889,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -16799,7 +16903,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -16993,7 +17097,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -17007,7 +17111,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -17168,7 +17272,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -17182,7 +17286,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -17376,7 +17480,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -17390,7 +17494,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -17599,7 +17703,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -17613,7 +17717,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -17822,7 +17926,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -17836,7 +17940,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -18002,7 +18106,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -18016,7 +18120,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -18294,13 +18398,26 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 60,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -18314,7 +18431,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -18497,13 +18614,26 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 60,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -18517,7 +18647,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -18700,13 +18830,26 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 60,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -18720,7 +18863,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -18910,13 +19053,26 @@
      ],
      "chance": 25,
      "repeat": 2
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 60,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -18930,7 +19086,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -19184,7 +19340,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -19198,7 +19354,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -19632,7 +19788,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -19646,7 +19802,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -20080,7 +20236,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -20094,7 +20250,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -20240,7 +20396,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -20254,7 +20410,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -20578,7 +20734,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -20592,7 +20748,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -21021,7 +21177,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -21035,7 +21191,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -21464,7 +21620,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -21478,7 +21634,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -21907,7 +22063,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -21921,7 +22077,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -22102,7 +22258,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -22116,7 +22272,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -22355,7 +22511,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -22369,7 +22525,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -22608,7 +22764,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -22622,7 +22778,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -22861,7 +23017,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -22875,7 +23031,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -23114,7 +23270,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -23128,7 +23284,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -23294,7 +23450,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -23308,7 +23464,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -23547,7 +23703,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -23561,7 +23717,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -23750,7 +23906,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -23764,7 +23920,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -23953,7 +24109,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -23967,7 +24123,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -24156,7 +24312,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -24170,7 +24326,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -24316,7 +24472,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -24330,7 +24486,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -24609,7 +24765,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -24623,7 +24779,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -24812,7 +24968,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -24826,7 +24982,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -25015,7 +25171,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -25029,7 +25185,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -25218,7 +25374,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -25232,7 +25388,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -25383,7 +25539,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -25397,7 +25553,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -25675,13 +25831,39 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_injector",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 80,
+     "repeat": 1
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 70,
+     "repeat": 2
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -25695,7 +25877,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -25928,13 +26110,39 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_injector",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 80,
+     "repeat": 1
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 70,
+     "repeat": 2
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -25948,7 +26156,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -26181,13 +26389,39 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_injector",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 80,
+     "repeat": 1
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 70,
+     "repeat": 2
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -26201,7 +26435,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -26434,13 +26668,39 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_injector",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 80,
+     "repeat": 1
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 70,
+     "repeat": 2
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -26454,7 +26714,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -26599,13 +26859,39 @@
      ],
      "chance": 25,
      "repeat": 2
+    },
+    {
+     "item": "trl_loot_injector",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 80,
+     "repeat": 1
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 70,
+     "repeat": 2
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -26619,7 +26905,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -26783,7 +27069,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -26797,7 +27083,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -26961,7 +27247,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -26975,7 +27261,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -27139,7 +27425,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -27153,7 +27439,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -27289,7 +27575,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -27303,7 +27589,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -27577,7 +27863,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -27591,7 +27877,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -27890,7 +28176,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -27904,7 +28190,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -28203,7 +28489,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -28217,7 +28503,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -28368,7 +28654,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -28382,7 +28668,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -28565,7 +28851,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -28579,7 +28865,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -28778,7 +29064,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -28792,7 +29078,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -28991,7 +29277,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -29005,7 +29291,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -29186,7 +29472,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -29200,7 +29486,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -29519,7 +29805,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -29533,7 +29819,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -29772,7 +30058,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -29786,7 +30072,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -30025,7 +30311,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -30039,7 +30325,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -30278,7 +30564,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -30292,7 +30578,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -30458,7 +30744,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -30472,7 +30758,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -30664,13 +30950,26 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 60,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -30684,7 +30983,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -30887,13 +31186,26 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 60,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -30907,7 +31219,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -31110,13 +31422,26 @@
      ],
      "chance": 55,
      "repeat": 6
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 60,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -31130,7 +31455,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -31260,13 +31585,26 @@
      ],
      "chance": 25,
      "repeat": 2
+    },
+    {
+     "item": "trl_loot_rx",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 60,
+     "repeat": 1
     }
    ],
    "place_nested": [
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -31280,7 +31618,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -31704,7 +32042,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        12
       ],
       [
@@ -31718,7 +32056,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        3
       ],
       [
@@ -31927,7 +32265,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -31941,7 +32279,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -32150,7 +32488,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -32164,7 +32502,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [
@@ -32310,7 +32648,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        5
       ],
       [
@@ -32324,7 +32662,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_riot",
+       "trl_pres_nap_riot",
        2
       ],
       [

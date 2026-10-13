@@ -42,13 +42,13 @@ GREET = {
     "rich": ["Good day.  Is there something you require?", "Yes?  Do be brief.", "You are not from this part of town.", "I was not expecting visitors."],
 }
 LIFE = {
-    "poor": ["Rent is a joke and the water is worse.  The Bratva want their cut and the JSDF want to look the other way.",
+    "poor": ["Rent is a joke and the water is worse.  The Bratva want their cut and the NAP want to look the other way.",
              "Nobody here has an implant that works.  We buy them used in the back alleys and hope.",
              "The poor end of town: bars on the windows and dogs on the roofs.  Still, it is home.",
              "Food is cheap on the corner, if you do not mind what it was this morning."],
     "mid": ["Things are all right.  Work, a flat, a small place at the market.  Do not count on the weather.",
             "Rents go up every year.  The clinics only get busier.  Everybody wants one more upgrade.",
-            "We keep our heads down.  The JSDF patrols are polite, the Bratva stay mostly in the east, and I try not to notice either.",
+            "We keep our heads down.  The NAP patrols are polite, the Bratva stay mostly in the east, and I try not to notice either.",
             "It is a decent district.  I would not want to go lower, and I cannot afford to go higher."],
     "rich": ["Quiet, clean, guarded.  Exactly as it should be.",
              "The towers keep the noise out, and the patrols keep the rest out.",
@@ -63,23 +63,23 @@ RUMOR = {
     "mid": ["The new clinic on the avenue installs limbs the same day.  You pay for the speed.",
             "There are android showrooms uptown.  Fifty thousand yen buys you a basic one.  A decent one costs far more.",
             "A power post stands outside the hospital, and most shops.  Ten minutes and a few hundred yen, and your implants are full.",
-            "The JSDF have doubled the patrols near the towers.  Somebody important must be moving."],
+            "The NAP have doubled the patrols near the towers.  Somebody important must be moving."],
     "rich": ["The atelier uptown has a new range of spinal work.  Lovely, and expensive.",
              "Androids are quite fashionable, if you are willing to pay for the top frames.",
              "The hospital's cyber wing has a waiting list, naturally.  Money makes lists shorter.",
-             "The lower districts have been restless.  The JSDF assure us it is under control."],
+             "The lower districts have been restless.  The NAP assure us it is under control."],
 }
 RECHARGE = ("Charging posts?  There is one outside every hospital, and a few outside the shops.  A few hundred yen for a top-up; "
             "more for a full charge.  Cheaper than a night in the clinic.")
 FAC = {
     "bratva": ("Keep walking.  This street pays us, not you.", "We look after the district.  The district looks after us.  Do not make it complicated.",
                "Money is respect.  Pay and nobody gets hurt."),
-    "jsdf": ("Move along, citizen.  Keep your weapons holstered.", "Patrolling the district.  Report any trouble to a precinct.",
+    "nap": ("Move along, citizen.  Keep your weapons holstered.", "Patrolling the district.  Report any trouble to a precinct.",
              "The city is stable.  Please keep it that way."),
     "nasim": ("Do not look at me.  Do not look at my screen.", "We do not like what the corporations did to flesh.  Keep your implants quiet.",
               "The Net is bigger than any of you."),
 }
-FAC_CLASS = {"bratva": ["thug", "enforcer", "fixer"], "jsdf": ["patrol", "riot", "tactical"], "nasim": ["hacker", "saboteur", "zealot"]}
+FAC_CLASS = {"bratva": ["thug", "enforcer", "fixer"], "nap": ["patrol", "riot", "tactical"], "nasim": ["hacker", "saboteur", "zealot"]}
 
 
 def nest(conds, default):

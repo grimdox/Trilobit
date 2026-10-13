@@ -48,6 +48,8 @@ def outline(img, col=(16, 16, 24)):
 
 
 # ------------------------------------------------------------------ items
+RELIGIOUS_KINDS = {"trl_omamori": "charm", "trl_ofuda": "talisman", "trl_ema": "ema_plaque", "trl_omikuji": "omikuji", "trl_gohei": "gohei",
+                   "trl_icon": "icon_item", "trl_chotki": "prayer_rope", "trl_censer": "censer", "trl_church_candle": "church_candle", "trl_gospel": "gospel"}
 ARMOR_KINDS = {"trl_plasteel_armor": "plasteel_suit", "trl_plasteel_helm": "plasteel_helm", "trl_kp_vest": "kp_vest", "trl_kp_helmet": "kp_helmet",
                "trl_plasteel_boots": "plasteel_boots", "trl_plasteel_gloves": "plasteel_gloves"}
 PLATE, PLATE_D, PLATE_L = (176, 190, 212), (96, 110, 134), (226, 236, 250)
@@ -166,6 +168,29 @@ def classify_item(i, o):
         return ("arcrifle", "light_green")
     if i in ARMOR_KINDS:
         return (ARMOR_KINDS[i], "light_cyan")
+    if i.startswith("trl_fish_"):
+        return ("fish", col)
+    if i.startswith("trl_tank_"):
+        return ("fishtank", "light_cyan")
+    if i.startswith("trl_pet_"):
+        return ("petticket", col)
+    if i.startswith("trl_buy_"):
+        return ("contract", "light_cyan")
+    if i in ("trl_nh_console",):
+        return ("device", col)
+    if i in ("trl_kumo_wreck",):
+        return ("box", col)
+    if "kusarigama" in i:
+        return ("blade", col)
+    if i in RELIGIOUS_KINDS:
+        return (RELIGIOUS_KINDS[i], col)
+    if ("BIONIC_ITEM" in st or t == "BIONIC_ITEM") and i.startswith("trl_"):
+        if has(s, " arm", "hand", "wrist", "forearm"):
+            return ("limb_arm", col)
+        if has(s, " leg", "foot", "thigh", "knee"):
+            return ("limb_leg", col)
+        if has(s, "eye", "optic", "retina", "vision"):
+            return ("implant_eye", col)
     if "GUN" in st or t == "GUN":
         sk = str(o.get("skill") or "")
         if "archery" in sk or has(s, "bow", "crossbow"):
@@ -294,6 +319,27 @@ def p_wield_arcrifle():
     return out
 
 
+WIELD_KINDS = {"pistol", "smg", "shotgun", "rifle", "laser", "launcher", "bow", "blade", "spear", "axe", "blunt"}
+
+
+def p_wield(kind, col, seed):
+    """Held-weapon overlay (32x36) for any weapon kind: the item icon, slanted and set in the character's hands."""
+    g = p_item(kind, col, seed)
+    if kind in ("pistol", "smg", "shotgun", "rifle", "laser", "launcher", "bow"):
+        scale, ang, dx, dy = (1.15, 18, 3, 5) if kind != "pistol" else (1.0, 8, 5, 6)
+    elif kind in ("spear",):
+        scale, ang, dx, dy = (1.25, 0, 5, 0)
+    else:
+        scale, ang, dx, dy = (1.0, 0, 5, 3)
+    n = int(32 * scale)
+    g = g.resize((n, n), Image.LANCZOS)
+    if ang:
+        g = g.rotate(ang, resample=Image.BICUBIC, center=(n // 2, n // 2))
+    out = Image.new("RGBA", (32, 36), (0, 0, 0, 0))
+    out.alpha_composite(g, (dx - (n - 32) // 2, dy - (n - 32) // 2)) if dx - (n - 32) // 2 >= 0 and dy - (n - 32) // 2 >= 0 else out.alpha_composite(g.crop((max(0, -(dx - (n - 32) // 2)), max(0, -(dy - (n - 32) // 2)), n, n)), (max(0, dx - (n - 32) // 2), max(0, dy - (n - 32) // 2)))
+    return out
+
+
 def p_item(kind, col, seed):
     cv = Canvas(32, 32)
     c = PAL[col]
@@ -303,6 +349,78 @@ def p_item(kind, col, seed):
     steel = (176, 182, 196)
     if kind == "arcrifle":
         _arcrifle(cv)
+    elif kind == "charm":
+        cv.line([(16, 4), (16, 9)], (232, 200, 90), 1); cv.rect((10, 9, 22, 26), (200, 40, 56)); cv.rect((10, 9, 22, 12), (236, 200, 90))
+        cv.rect((10, 22, 22, 26), (236, 200, 90)); cv.rect((14, 14, 18, 20), (250, 240, 220)); cv.rect((15, 15, 17, 19), (200, 40, 56))
+    elif kind == "talisman":
+        cv.rect((11, 5, 21, 27), (244, 240, 224)); cv.rect((13, 8, 19, 24), (30, 30, 36)); cv.rect((14, 9, 18, 14), (200, 40, 56)); cv.rect((14, 17, 18, 22), (200, 40, 56))
+    elif kind == "ema_plaque":
+        cv.poly([(7, 12), (16, 6), (25, 12), (25, 26), (7, 26)], (214, 172, 112)); cv.line([(16, 6), (16, 3)], (120, 80, 50), 1)
+        cv.ellipse((12, 15, 20, 23), (200, 50, 60)); cv.rect((14, 17, 18, 21), (250, 240, 220))
+    elif kind == "omikuji":
+        cv.rect((13, 4, 19, 28), (246, 242, 230)); cv.rect((13, 4, 19, 8), (200, 40, 56))
+        for y in (11, 15, 19, 23): cv.rect((15, y, 17, y + 2), (60, 60, 70))
+    elif kind == "gohei":
+        cv.line([(16, 28), (16, 8)], (176, 126, 76), 2)
+        for dx in (-1, 1): cv.poly([(16, 8), (16 + 9 * dx, 11), (16 + 4 * dx, 14), (16 + 11 * dx, 18), (16 + 5 * dx, 20), (16, 14)], (250, 250, 252))
+    elif kind == "icon_item":
+        cv.rect((8, 5, 24, 27), (120, 76, 44)); cv.rect((10, 7, 22, 25), (226, 180, 70)); cv.ellipse((13, 10, 19, 17), (220, 170, 130))
+        cv.rect((12, 17, 20, 24), (160, 40, 50)); cv.line([(10, 7), (22, 7)], (255, 230, 120), 0.6)
+    elif kind == "prayer_rope":
+        cv.ellipse((8, 6, 24, 24), (0, 0, 0, 0))
+        for k in range(14):
+            a = k / 14 * 6.2832
+            x, y = 16 + 8 * np.cos(a), 14 + 8 * np.sin(a)
+            cv.ellipse((x - 1.6, y - 1.6, x + 1.6, y + 1.6), (40, 40, 48))
+        cv.rect((15, 24, 17, 29), (200, 200, 210)); cv.rect((13, 26, 19, 27), (200, 200, 210))
+    elif kind == "censer":
+        cv.line([(16, 3), (16, 10)], (190, 190, 200), 0.8); cv.ellipse((9, 10, 23, 22), (222, 180, 70)); cv.rect((9, 15, 23, 16), (170, 130, 40))
+        cv.rect((12, 22, 20, 25), (170, 130, 40)); cv.ellipse((13, 5, 19, 9), (210, 210, 220, 160))
+    elif kind == "church_candle":
+        cv.rect((14, 9, 18, 27), (240, 214, 120)); cv.rect((14, 9, 15, 27), (250, 232, 160)); cv.line([(16, 9), (16, 6)], (60, 50, 40), 0.6)
+        cv.ellipse((14, 2, 18, 8), (255, 190, 60))
+    elif kind == "gospel":
+        cv.rect((6, 7, 26, 26), (150, 40, 50)); cv.rect((7, 8, 25, 25), (236, 200, 90)); cv.rect((8, 9, 24, 24), (150, 40, 50))
+        cv.rect((15, 11, 17, 22), (236, 200, 90)); cv.rect((12, 14, 20, 16), (236, 200, 90))
+    elif kind == "contract":
+        cv.rect((7, 7, 25, 25), (236, 240, 246)); cv.rect((7, 7, 25, 11), c)
+        for y in (14, 17, 20): cv.rect((10, y, 22, y + 1), (150, 156, 170))
+        cv.rect((18, 19, 24, 25), NEON["cyan"]); cv.rect((19, 20, 23, 24), (20, 40, 50))
+    elif kind == "limb_arm":
+        cv.rect((4, 12, 14, 20), (150, 156, 172)); cv.rect((14, 13, 24, 19), (110, 116, 134)); cv.ellipse((12, 10, 18, 22), (90, 96, 112))
+        cv.rect((24, 11, 29, 21), (170, 176, 192))
+        for x in (25, 27): cv.rect((x, 9, x + 1, 12), (170, 176, 192))
+        cv.rect((5, 15, 13, 17), NEON["cyan"]); cv.rect((15, 15, 23, 17), shade(NEON["cyan"], 0.7))
+    elif kind == "limb_leg":
+        cv.rect((11, 4, 18, 14), (150, 156, 172)); cv.ellipse((9, 12, 20, 19), (90, 96, 112)); cv.rect((12, 17, 17, 26), (110, 116, 134))
+        cv.poly([(10, 25), (21, 25), (27, 29), (10, 29)], (170, 176, 192))
+        cv.rect((13, 7, 15, 12), NEON["cyan"]); cv.rect((13, 20, 15, 24), shade(NEON["cyan"], 0.7))
+    elif kind == "implant_eye":
+        cv.ellipse((5, 9, 27, 23), (232, 236, 244)); cv.ellipse((11, 9, 21, 23), c); cv.ellipse((14, 12, 18, 20), (16, 16, 24))
+        cv.ellipse((13, 11, 15, 13), (255, 255, 255)); cv.rect((6, 22, 26, 24), (90, 96, 112))
+    elif kind == "fish":
+        # a fish in a clear water bag: body, tail, fin, eye
+        cv.poly([(7, 8), (25, 8), (26, 25), (6, 25)], (150, 200, 232, 90))
+        cv.ellipse((9, 12, 22, 21), c)
+        cv.ellipse((10, 13, 20, 17), l)
+        cv.poly([(21, 16), (27, 11), (27, 22)], d)
+        cv.poly([(13, 12), (17, 8), (18, 12)], d)
+        cv.rect((11, 15, 13, 17), (20, 20, 30))
+        cv.line([(15, 13), (15, 21)], d, 0.7)
+        cv.rect((10, 6, 22, 8), (226, 232, 240))
+    elif kind == "fishtank":
+        cv.rect((6, 10, 26, 26), (130, 200, 232, 120))
+        cv.rect((6, 10, 26, 12), (226, 240, 250))
+        cv.rect((6, 24, 26, 27), (60, 66, 84))
+        cv.ellipse((10, 16, 17, 20), (240, 150, 60)); cv.poly([(16, 18), (20, 15), (20, 21)], (240, 150, 60))
+        cv.ellipse((17, 20, 22, 23), (90, 170, 255))
+        cv.rect((22, 17, 24, 24), (60, 190, 110))
+        cv.line([(6, 10), (6, 26)], (226, 240, 250), 0.6); cv.line([(26, 10), (26, 26)], (226, 240, 250), 0.6)
+    elif kind == "petticket":
+        cv.rect((7, 9, 25, 23), (232, 232, 220))
+        cv.rect((7, 9, 25, 12), c)
+        cv.ellipse((12, 14, 20, 21), shade(c, 0.7))
+        cv.ellipse((11, 13, 14, 16), shade(c, 0.7)); cv.ellipse((18, 13, 21, 16), shade(c, 0.7))
     elif kind in ("plasteel_suit", "plasteel_helm", "kp_vest", "kp_helmet", "plasteel_boots", "plasteel_gloves"):
         _armor_icon(cv, kind); _armor_icon2(cv, kind)
     elif kind in ("pistol", "smg", "shotgun", "rifle", "laser", "launcher"):

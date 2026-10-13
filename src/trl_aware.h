@@ -60,6 +60,14 @@ int level( const Creature &c );
 /** Damage multiplier for a hit by attacker on target, from surprise (1.0 when it does not apply). */
 float sneak_mult( const Creature &target, const Creature &attacker );
 
+/** True if the overmap tile is part of a church (a Russian Orthodox church special from gen_faith.py). */
+bool church_at( const tripoint_abs_omt &p );
+/** True if c is a Bratva creature that must not fight the player right now: the player stands in a church
+ *  and has not broken the peace there. */
+bool church_truce( const Creature &c );
+/** The player hurt victim; if both are inside a church, the peace is broken: the church turns on the player. */
+void church_violence( const Creature &victim, const Creature *attacker );
+
 /** Idle sweep: turn an unaware creature toward a new direction now and then. */
 void sweep( Creature &c );
 

@@ -1,0 +1,4824 @@
+[
+ {
+  "type": "terrain",
+  "id": "t_trl_wall_chapel",
+  "copy-from": "t_concrete_wall",
+  "name": "whitewashed wall",
+  "description": "A thick whitewashed brick wall.",
+  "symbol": "#",
+  "color": "white"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_wall_cypress",
+  "copy-from": "t_concrete_wall",
+  "name": "unpainted cypress wall",
+  "description": "A wall of pale, close-fitted cypress boards.",
+  "symbol": "#",
+  "color": "yellow"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_wall_vermilion",
+  "copy-from": "t_concrete_wall",
+  "name": "vermilion-lacquered wall",
+  "description": "A wall of dark timber lacquered a deep vermilion.",
+  "symbol": "#",
+  "color": "red"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_window_church",
+  "copy-from": "t_window_no_curtains",
+  "name": "narrow arched window",
+  "description": "A tall, narrow window of leaded glass in pale blue and gold.",
+  "symbol": "\"",
+  "color": "light_blue"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_floor_church",
+  "copy-from": "t_floor",
+  "name": "worn flagstone floor",
+  "description": "Pale flagstones, worn smooth and hollowed by centuries of feet.",
+  "symbol": ".",
+  "color": "light_gray"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_floor_hinoki",
+  "copy-from": "t_floor",
+  "name": "pale hinoki boards",
+  "description": "Fine pale wooden boards, swept and faintly scented.",
+  "symbol": ".",
+  "color": "yellow"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_cobble",
+  "copy-from": "t_sidewalk",
+  "name": "cobblestones",
+  "description": "Rounded cobbles set in damp earth.",
+  "symbol": ".",
+  "color": "dark_gray"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_fence_iron",
+  "copy-from": "t_chainfence",
+  "name": "wrought-iron fence",
+  "description": "A tall fence of black wrought-iron bars with gilded finials.",
+  "symbol": "#",
+  "color": "dark_gray"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_fence_wood",
+  "copy-from": "t_fence",
+  "name": "low wooden fence",
+  "description": "A low fence of unpainted wooden rails.",
+  "symbol": "#",
+  "color": "brown"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_door_church_c",
+  "copy-from": "t_door_c",
+  "name": "heavy church doors",
+  "description": "Tall double doors of dark oak with iron hinges.",
+  "color": "brown",
+  "open": "t_trl_door_church_o"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_door_church_o",
+  "copy-from": "t_door_o",
+  "name": "open church doors",
+  "description": "Tall double doors of dark oak with iron hinges.",
+  "color": "brown",
+  "close": "t_trl_door_church_c"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_door_shrine_c",
+  "copy-from": "t_door_c",
+  "name": "lattice door",
+  "description": "A sliding door of wooden lattice and paper.",
+  "color": "yellow",
+  "open": "t_trl_door_shrine_o"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_door_shrine_o",
+  "copy-from": "t_door_o",
+  "name": "open lattice door",
+  "description": "A sliding door of wooden lattice and paper.",
+  "color": "yellow",
+  "close": "t_trl_door_shrine_c"
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_iconostasis",
+  "name": "iconostasis",
+  "description": "A tall carved and gilded screen of painted icons that divides the nave from the altar: saints and angels in gold and deep red.  Examine it to venerate the icons.",
+  "symbol": "I",
+  "color": "yellow",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 6,
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_f_icons"
+   ]
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_candle_stand",
+  "name": "candle stand",
+  "description": "A brass stand filled with sand, with thin beeswax candles burning in it.  Examine it to light a candle.",
+  "symbol": "i",
+  "color": "yellow",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 8,
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_f_candle"
+   ]
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_altar_table",
+  "name": "altar table",
+  "description": "A square altar table covered in a white cloth, with a gospel book and a cross.",
+  "symbol": "T",
+  "color": "white",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 3
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_analoy",
+  "name": "analoy",
+  "description": "A tall wooden lectern with a slanted top, holding an icon of the saint of the day.  Examine it to kiss the icon.",
+  "symbol": "a",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 3,
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_f_analoy"
+   ]
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_church_bell",
+  "name": "church bell",
+  "description": "A bronze bell hung in a timber frame, its rope worn smooth.  Examine it to ring it.",
+  "symbol": "B",
+  "color": "yellow",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_f_bell"
+   ]
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_f_bell",
+  "effect": [
+   {
+    "u_message": "You pull the rope.  A deep note rolls out over the roofs.",
+    "type": "info"
+   },
+   {
+    "u_make_sound": "A church bell rings out across the district.",
+    "volume": 40,
+    "type": "alarm"
+   }
+  ]
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_baptismal_font",
+  "name": "baptismal font",
+  "description": "A wide stone font with a gilded cross above it, filled with clear water.",
+  "symbol": "u",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 2
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_church_bench",
+  "name": "church bench",
+  "description": "A plain wooden bench along the wall for the old and the tired.",
+  "symbol": "=",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "MOUNTABLE",
+   "CAN_SIT",
+   "EASY_DECONSTRUCT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_worship_cross",
+  "name": "stone cross",
+  "description": "A tall stone cross on a stepped base, carved with a small roof and an eight-pointed arm.  Candle stubs sit at its foot.",
+  "symbol": "+",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 2
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_shinto_torii",
+  "name": "torii gate",
+  "description": "A vermilion gate of two round pillars and two crossbeams, marking the way to a shrine.",
+  "symbol": "n",
+  "color": "red",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_hokora",
+  "name": "small shrine",
+  "description": "A small raised wooden shrine with a lacquered door and a thick rope of rice straw above it, set on a stone plinth.  Examine it to bow before it.",
+  "symbol": "A",
+  "color": "light_red",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 5,
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_f_hokora"
+   ]
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_komainu",
+  "name": "guardian lion-dog statue",
+  "description": "A weathered stone lion-dog on a plinth, sitting upright with its mouth open or shut to guard the shrine.",
+  "symbol": "f",
+  "color": "light_gray",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 2
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_ema_rack",
+  "name": "ema rack",
+  "description": "A wooden frame hung with small wooden prayer plaques, each painted and written on with a wish.  Examine it to read some.",
+  "symbol": "e",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_f_ema"
+   ]
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_saisen_box",
+  "name": "offering box",
+  "description": "A slatted wooden offering box with a rope hanging in front.  Examine it to make an offering of a hundred yen.",
+  "symbol": "O",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_f_saisen"
+   ]
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_chozuya",
+  "name": "purification basin",
+  "description": "A stone water basin under a small roof, with a few bamboo ladles laid across it.  Examine it to wash your hands.",
+  "symbol": "u",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_f_chozuya"
+   ]
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_shimenawa_pole",
+  "name": "sacred rope",
+  "description": "Two posts with a thick rope of rice straw and white paper streamers hung between them.",
+  "symbol": "|",
+  "color": "white",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_offering_table",
+  "name": "offering table",
+  "description": "A low wooden table with dishes of rice, salt and sake set out for the spirits.",
+  "symbol": "t",
+  "color": "brown",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_charm_counter",
+  "name": "charm counter",
+  "description": "A lacquered counter with rows of small brocade charms, paper talismans and wooden plaques for sale.",
+  "symbol": "C",
+  "color": "yellow",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT",
+   "FLAT_SURF"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 4
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_hall_lamp",
+  "name": "hanging lamp",
+  "description": "A round paper lamp hung from a bracket, glowing a warm amber.",
+  "symbol": "o",
+  "color": "yellow",
+  "move_cost_mod": 0,
+  "coverage": 0,
+  "required_str": -1,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "bash": {
+   "str_min": 8,
+   "str_max": 40,
+   "sound": "smash!",
+   "sound_fail": "whump."
+  },
+  "light_emitted": 12
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "category": "other",
+  "price_postapoc": "1 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "id": "trl_omamori",
+  "name": {
+   "str": "omamori charm",
+   "str_pl": "omamori charms"
+  },
+  "description": "A small brocade pouch on a cord, stitched shut, with a prayer inside.  Sold at shrines for luck and safety.  Carrying it is a comfort.",
+  "weight": "25 g",
+  "volume": "30 ml",
+  "price": "800 USD",
+  "symbol": "o",
+  "color": "red",
+  "material": [
+   "cotton"
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Hold it and make a wish",
+   "description": "A moment of quiet.",
+   "effect_on_conditions": [
+    "trl_use_omamori"
+   ]
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "category": "other",
+  "price_postapoc": "1 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "id": "trl_ofuda",
+  "name": {
+   "str": "ofuda talisman",
+   "str_pl": "ofuda talismans"
+  },
+  "description": "A strip of paper stamped with the name of a shrine's spirit in black and red ink, kept on a household shelf.",
+  "weight": "5 g",
+  "volume": "10 ml",
+  "price": "600 USD",
+  "symbol": "|",
+  "color": "white",
+  "material": [
+   "paper"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "category": "other",
+  "price_postapoc": "1 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "id": "trl_ema",
+  "name": {
+   "str": "ema prayer plaque",
+   "str_pl": "ema prayer plaques"
+  },
+  "description": "A small wooden plaque with a painted picture and a handwritten wish on the back.",
+  "weight": "40 g",
+  "volume": "60 ml",
+  "price": "500 USD",
+  "symbol": "e",
+  "color": "brown",
+  "material": [
+   "wood"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "category": "other",
+  "price_postapoc": "1 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "id": "trl_omikuji",
+  "name": {
+   "str": "omikuji fortune slip",
+   "str_pl": "omikuji fortune slips"
+  },
+  "description": "A narrow strip of paper from a shrine, with a fortune on it.  Use it to read.",
+  "weight": "2 g",
+  "volume": "2 ml",
+  "price": "100 USD",
+  "symbol": "|",
+  "color": "white",
+  "material": [
+   "paper"
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Read the fortune",
+   "description": "Read your fortune.",
+   "effect_on_conditions": [
+    "trl_use_omikuji"
+   ]
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_use_omikuji",
+  "effect": [
+   {
+    "u_message": "You unfold the slip and read.  Great blessing: patience will bring what haste cannot.",
+    "type": "good"
+   }
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "category": "other",
+  "price_postapoc": "1 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "id": "trl_gohei",
+  "name": {
+   "str": "gohei wand",
+   "str_pl": "gohei wands"
+  },
+  "description": "A short wooden wand with two zigzag paper streamers, waved by a shrine priest to purify.  It is a flimsy club.",
+  "weight": "250 g",
+  "volume": "500 ml",
+  "price": "1200 USD",
+  "symbol": "/",
+  "color": "white",
+  "material": [
+   "wood",
+   "paper"
+  ],
+  "melee_damage": {
+   "bash": 3
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "ARMOR"
+  ],
+  "category": "other",
+  "price_postapoc": "1 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "id": "trl_kannushi_robe",
+  "name": {
+   "str": "shrine priest robe",
+   "str_pl": "shrine priest robes"
+  },
+  "description": "A white ceremonial robe and pale hakama trousers, as worn by a shrine priest.",
+  "weight": "900 g",
+  "volume": "5 L",
+  "price": "9000 USD",
+  "symbol": "[",
+  "color": "white",
+  "material": [
+   "cotton"
+  ],
+  "copy-from": "robe"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "category": "other",
+  "price_postapoc": "1 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "id": "trl_icon",
+  "name": {
+   "str": "icon",
+   "str_pl": "icons"
+  },
+  "description": "A small hand-painted icon on a wooden panel: a saint's face in gold leaf, dark paint and a deep red border.  Examine one in your hand to venerate it.",
+  "weight": "300 g",
+  "volume": "400 ml",
+  "price": "4500 USD",
+  "symbol": "I",
+  "color": "yellow",
+  "material": [
+   "wood"
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Venerate",
+   "description": "A quiet moment before the icon.",
+   "effect_on_conditions": [
+    "trl_use_icon"
+   ]
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "category": "other",
+  "price_postapoc": "1 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "id": "trl_chotki",
+  "name": {
+   "str": "prayer rope",
+   "str_pl": "prayer ropes"
+  },
+  "description": "A loop of black wool knots with a small cross, used to count prayers.",
+  "weight": "30 g",
+  "volume": "40 ml",
+  "price": "700 USD",
+  "symbol": "o",
+  "color": "dark_gray",
+  "material": [
+   "wool"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "category": "other",
+  "price_postapoc": "1 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "id": "trl_censer",
+  "name": {
+   "str": "censer",
+   "str_pl": "censers"
+  },
+  "description": "A brass censer on three short chains with little bells, used to carry fragrant smoke before the icons.",
+  "weight": "400 g",
+  "volume": "700 ml",
+  "price": "3800 USD",
+  "symbol": "c",
+  "color": "yellow",
+  "material": [
+   "brass"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "category": "other",
+  "price_postapoc": "1 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "id": "trl_church_candle",
+  "name": {
+   "str": "beeswax candle",
+   "str_pl": "beeswax candles"
+  },
+  "description": "A thin, tall beeswax candle, bought at the church door.",
+  "weight": "30 g",
+  "volume": "60 ml",
+  "price": "150 USD",
+  "symbol": "i",
+  "color": "yellow",
+  "material": [
+   "wood"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "category": "other",
+  "price_postapoc": "1 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "id": "trl_gospel",
+  "name": {
+   "str": "gospel book",
+   "str_pl": "gospel books"
+  },
+  "description": "A heavy gospel book with a silver-gilt cover and ribbon markers, set in Church Slavonic and Russian.",
+  "weight": "1500 g",
+  "volume": "1500 ml",
+  "price": "9000 USD",
+  "symbol": "B",
+  "color": "yellow",
+  "material": [
+   "paper"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "COMESTIBLE"
+  ],
+  "id": "trl_prosphora",
+  "copy-from": "bread",
+  "name": {
+   "str": "prosphora loaf",
+   "str_pl": "prosphora loaves"
+  },
+  "description": "A small round loaf of leavened bread stamped with a cross, baked for the liturgy and given out afterwards.  Soft, plain and filling.",
+  "price": "300 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "color": "white"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "COMESTIBLE"
+  ],
+  "id": "trl_holy_water",
+  "copy-from": "water_clean",
+  "name": {
+   "str": "blessed water"
+  },
+  "description": "Clean water blessed by a priest and given out in plain bottles.  It tastes of nothing, but you feel a little steadier after drinking it.",
+  "price": "300 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_loot_shinto",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "trl_omamori",
+    "prob": 30
+   },
+   {
+    "item": "trl_ofuda",
+    "prob": 25
+   },
+   {
+    "item": "trl_ema",
+    "prob": 25
+   },
+   {
+    "item": "trl_omikuji",
+    "prob": 30
+   },
+   {
+    "item": "trl_gohei",
+    "prob": 6
+   },
+   {
+    "item": "trl_kannushi_robe",
+    "prob": 6
+   },
+   {
+    "item": "sake_filtered",
+    "prob": 14
+   },
+   {
+    "item": "rice_cooked",
+    "prob": 10
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_loot_orthodox",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "trl_church_candle",
+    "prob": 40
+   },
+   {
+    "item": "trl_chotki",
+    "prob": 18
+   },
+   {
+    "item": "trl_icon",
+    "prob": 12
+   },
+   {
+    "item": "trl_censer",
+    "prob": 6
+   },
+   {
+    "item": "trl_gospel",
+    "prob": 6
+   },
+   {
+    "item": "trl_prosphora",
+    "prob": 22
+   },
+   {
+    "item": "trl_holy_water",
+    "prob": 18
+   },
+   {
+    "item": "holybook_orthodox",
+    "prob": 5
+   },
+   {
+    "item": "holybook_bible2",
+    "prob": 7
+   },
+   {
+    "item": "cassock",
+    "prob": 5
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_worn_priest_orth",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "cassock"
+   },
+   {
+    "item": "hat_cotton"
+   },
+   {
+    "item": "dress_shoes"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_worn_priest_shinto",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "trl_kannushi_robe"
+   },
+   {
+    "item": "dress_shoes"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_carry_priest",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_weapon_priest",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "trl_gohei",
+    "prob": 1
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_weapon_priest_orth",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "trl_censer",
+    "prob": 1
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_priest_orth",
+  "name": {
+   "str": "Orthodox priest"
+  },
+  "job_description": "I keep this church.",
+  "common": false,
+  "worn_override": "trl_worn_priest_orth",
+  "carry_override": "trl_carry_priest",
+  "weapon_override": "trl_weapon_priest_orth",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_priest_orth",
+  "class": "trl_nc_priest_orth",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_PRIEST_ORTH",
+  "faction": "no_faction",
+  "temp_suffix": "Orthodox priest"
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_priest_shinto",
+  "name": {
+   "str": "Shinto priest"
+  },
+  "job_description": "I keep this shrine.",
+  "common": false,
+  "worn_override": "trl_worn_priest_shinto",
+  "carry_override": "trl_carry_priest",
+  "weapon_override": "trl_weapon_priest",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_priest_shinto",
+  "class": "trl_nc_priest_shinto",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_PRIEST_SHINTO",
+  "faction": "no_faction",
+  "temp_suffix": "Shinto priest"
+ },
+ {
+  "type": "talk_topic",
+  "id": "TRL_PRIEST_ORTH",
+  "dynamic_line": "Peace to you.  Come in, come in: the doors are open to everyone, whoever you are and whoever you work for.  Fighting is left at the door here.",
+  "responses": [
+   {
+    "text": "Could I light a candle?",
+    "topic": "TRL_PRIEST_ORTH_CANDLE",
+    "effect": {
+     "u_add_morale": "morale_feeling_good",
+     "bonus": 3,
+     "max_bonus": 6,
+     "duration": "3 hours",
+     "decay_start": "40 minutes"
+    }
+   },
+   {
+    "text": "Tell me about this church.",
+    "topic": "TRL_PRIEST_ORTH_ABOUT"
+   },
+   {
+    "text": "Is it really safe here, with the syndicate about?",
+    "topic": "TRL_PRIEST_ORTH_SAFE"
+   },
+   {
+    "text": "Thank you.",
+    "topic": "TALK_DONE"
+   }
+  ]
+ },
+ {
+  "type": "talk_topic",
+  "id": "TRL_PRIEST_ORTH_CANDLE",
+  "dynamic_line": "Of course.  Take one from the box and set it in the sand, and say whatever you need to say.  God hears the short prayers as well as the long.",
+  "responses": [
+   {
+    "text": "Thank you.",
+    "topic": "TRL_PRIEST_ORTH"
+   }
+  ]
+ },
+ {
+  "type": "talk_topic",
+  "id": "TRL_PRIEST_ORTH_ABOUT",
+  "dynamic_line": "Our parish is old, and poor, and stubborn.  The icons came from the old country with the first families.  The bell still rings, the candles still burn, and on a feast day the whole street comes.",
+  "responses": [
+   {
+    "text": "I see.",
+    "topic": "TRL_PRIEST_ORTH"
+   }
+  ]
+ },
+ {
+  "type": "talk_topic",
+  "id": "TRL_PRIEST_ORTH_SAFE",
+  "dynamic_line": "Inside these walls, yes.  The men from the syndicate bring their mothers here, and they keep the peace, as long as no one breaks it.  If someone does break it, I would not like to be standing in the way.",
+  "responses": [
+   {
+    "text": "I understand.",
+    "topic": "TRL_PRIEST_ORTH"
+   }
+  ]
+ },
+ {
+  "type": "talk_topic",
+  "id": "TRL_PRIEST_SHINTO",
+  "dynamic_line": "Welcome.  Please wash your hands at the basin, bow at the gate, and walk at the edge of the path, for the middle belongs to the spirits.",
+  "responses": [
+   {
+    "text": "How do I pray here?",
+    "topic": "TRL_PRIEST_SHINTO_HOW"
+   },
+   {
+    "text": "Tell me about this shrine.",
+    "topic": "TRL_PRIEST_SHINTO_ABOUT"
+   },
+   {
+    "text": "Any charms for sale?",
+    "topic": "TRL_PRIEST_SHINTO_CHARM"
+   },
+   {
+    "text": "Thank you.",
+    "topic": "TALK_DONE"
+   }
+  ]
+ },
+ {
+  "type": "talk_topic",
+  "id": "TRL_PRIEST_SHINTO_HOW",
+  "dynamic_line": "Bow twice, clap twice, and bow once more.  Say what you wish for, and leave a coin in the box.  It is the manner, not the amount, that matters.",
+  "responses": [
+   {
+    "text": "I see.",
+    "topic": "TRL_PRIEST_SHINTO"
+   }
+  ]
+ },
+ {
+  "type": "talk_topic",
+  "id": "TRL_PRIEST_SHINTO_ABOUT",
+  "dynamic_line": "A shrine has stood on this ground longer than the towers.  People come to ask for a safe road, a healthy child, a good exam.  Few of them stay, but most of them return.",
+  "responses": [
+   {
+    "text": "I see.",
+    "topic": "TRL_PRIEST_SHINTO"
+   }
+  ]
+ },
+ {
+  "type": "talk_topic",
+  "id": "TRL_PRIEST_SHINTO_CHARM",
+  "dynamic_line": "There are charms and fortune slips at the counter, left out for anyone who needs them.  Please take what you need, and leave a coin if you can.",
+  "responses": [
+   {
+    "text": "Thank you.",
+    "topic": "TRL_PRIEST_SHINTO"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_f_icons",
+  "effect": [
+   {
+    "u_message": "You stand before the icons, cross yourself and bow.  The gold glows in the candlelight, and for a moment the noise of the city is far away.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "3 hours",
+    "decay_start": "40 minutes"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_f_candle",
+  "effect": [
+   {
+    "u_message": "You light a thin beeswax candle, set it among the others and say a short, quiet prayer.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 2,
+    "max_bonus": 4,
+    "duration": "3 hours",
+    "decay_start": "40 minutes"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_f_analoy",
+  "effect": [
+   {
+    "u_message": "You kiss the icon on the lectern.  The painted face looks back at you, calm and patient.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 2,
+    "max_bonus": 4,
+    "duration": "3 hours",
+    "decay_start": "40 minutes"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_f_hokora",
+  "effect": [
+   {
+    "u_message": "You stop, bow twice, clap twice and bow once more before the little shrine.  A breeze moves the paper streamers.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "3 hours",
+    "decay_start": "40 minutes"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_f_ema",
+  "effect": [
+   {
+    "u_message": "You read the plaques, each a small, private wish: a good harvest, an exam, a safe return, a long life.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 2,
+    "max_bonus": 4,
+    "duration": "3 hours",
+    "decay_start": "40 minutes"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_f_saisen",
+  "effect": [
+   {
+    "u_consume_item": "trl_yen",
+    "count": 100
+   },
+   {
+    "u_message": "You drop a coin in the box, ring the bell, bow twice, clap twice and bow once more.  You feel lighter somehow.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 4,
+    "max_bonus": 8,
+    "duration": "3 hours",
+    "decay_start": "40 minutes"
+   }
+  ],
+  "condition": {
+   "math": [
+    "u_item_count('trl_yen') >= 100"
+   ]
+  },
+  "false_effect": [
+   {
+    "u_message": "You do not have the coins to spare.",
+    "type": "info"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_f_chozuya",
+  "effect": [
+   {
+    "u_message": "You rinse your left hand, then your right, then your mouth.  The cold water clears your head.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 2,
+    "max_bonus": 4,
+    "duration": "3 hours",
+    "decay_start": "40 minutes"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_use_omamori",
+  "effect": [
+   {
+    "u_message": "You close your hand around the charm and make a wish.  It helps, a little.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "3 hours",
+    "decay_start": "40 minutes"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_use_icon",
+  "effect": [
+   {
+    "u_message": "You hold the icon and look into the painted face.  A quiet, steady calm settles over you.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "3 hours",
+    "decay_start": "40 minutes"
+   }
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_church_a_0_0",
+  "name": "Orthodox church",
+  "sym": "+",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_church_a_0_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "011111111111111111111110",
+    "010000000000000000000010",
+    "010200000000000000002010",
+    "010000000000000000000010",
+    "010000333333333333000010",
+    "010000344444444443000010",
+    "010000344444444443000010",
+    "010000544444444445000010",
+    "010000344444444443000010",
+    "010000344444444443000010",
+    "010000544444444445000010",
+    "010020344444444443020010",
+    "010000344444444443000010",
+    "010000344444444443000010",
+    "010000333536633333000010",
+    "010000000007700000000010",
+    "010000000007700000000010",
+    "010000000007700000000010",
+    "010000000007700000000010",
+    "010200000007700000002010",
+    "010000000007700000000010",
+    "011111111117711111111110",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "1": "t_trl_fence_iron",
+    "2": "t_tree_birch",
+    "0": "t_grass",
+    "6": "t_trl_door_church_c",
+    "3": "t_trl_wall_chapel",
+    "4": "t_trl_floor_church",
+    "7": "t_trl_pave",
+    "5": "t_trl_window_church"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 8,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 9,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 10,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 12,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 13,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 14,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 15,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_altar_table",
+     "x": 11,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_candle_stand",
+     "x": 8,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_candle_stand",
+     "x": 15,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_analoy",
+     "x": 8,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 7,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 16,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_church_bell",
+     "x": 4,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_worship_cross",
+     "x": 15,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 18,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 5,
+     "y": 19
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_orthodox",
+     "x": [
+      8,
+      15
+     ],
+     "y": [
+      6,
+      14
+     ],
+     "chance": 45,
+     "repeat": 3
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       20
+      ],
+      [
+       "null",
+       80
+      ]
+     ],
+     "x": 14,
+     "y": 11
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       25
+      ],
+      [
+       "null",
+       75
+      ]
+     ],
+     "x": 10,
+     "y": 13
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_priest_orth",
+     "x": 11,
+     "y": 8
+    }
+   ]
+  }
+ },
+ {
+  "type": "city_building",
+  "id": "trl_church_a",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_church_a_0_0_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_church_b_0_0",
+  "name": "Orthodox church",
+  "sym": "+",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_church_b_0_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "011111111111111111111111",
+    "010000000000000000000000",
+    "010200000000000000000000",
+    "010000000003333333333333",
+    "010000000003444444444444",
+    "010000000003444444444444",
+    "010000000005444444444444",
+    "010002000003444444444444",
+    "010000000003444444444444",
+    "010000000005444444444444",
+    "010000000003444444444444",
+    "010000002003444444444444",
+    "010000000005444444444444",
+    "010000000003444444444444",
+    "010000000003444444444444",
+    "010000000003335333533366",
+    "010000000000000000000007",
+    "010000200000000000000007",
+    "010000000000000000000007",
+    "010200000000000000000007",
+    "010000000000000000000007",
+    "011111111111111111111117",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "1": "t_trl_fence_iron",
+    "2": "t_tree_birch",
+    "0": "t_grass",
+    "6": "t_trl_door_church_c",
+    "3": "t_trl_wall_chapel",
+    "4": "t_trl_floor_church",
+    "7": "t_trl_pave",
+    "5": "t_trl_window_church"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 13,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 14,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 15,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 16,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 17,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 18,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 19,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 20,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 21,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 23,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_altar_table",
+     "x": 22,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_candle_stand",
+     "x": 13,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_analoy",
+     "x": 19,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 12,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 12,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_worship_cross",
+     "x": 7,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 17,
+     "y": 19
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_orthodox",
+     "x": [
+      12,
+      23
+     ],
+     "y": [
+      5,
+      15
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       45
+      ],
+      [
+       "null",
+       55
+      ]
+     ],
+     "x": 18,
+     "y": 9
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       25
+      ],
+      [
+       "null",
+       75
+      ]
+     ],
+     "x": 20,
+     "y": 13
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_priest_orth",
+     "x": 22,
+     "y": 7
+    }
+   ]
+  }
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_church_b_1_0",
+  "name": "Orthodox church",
+  "sym": "+",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_church_b_1_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "111111111111111111111110",
+    "000000000000000000000010",
+    "000000000000000000002010",
+    "333333333330000000000010",
+    "444444444430003333330010",
+    "444444444430003444430010",
+    "444444444450003444430010",
+    "444444444430005444450010",
+    "444444444430003444430010",
+    "444444444450003444430010",
+    "444444444430003363330010",
+    "444444444430000077000010",
+    "444444444450000077000010",
+    "444444444430000077000010",
+    "444444444430000077000010",
+    "335333533330000077000010",
+    "700000000000000077000010",
+    "700000000000000077000010",
+    "700000000000000077000010",
+    "700000000000200077002010",
+    "700000000000000077000010",
+    "711111111111111111111110",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "1": "t_trl_fence_iron",
+    "2": "t_tree_birch",
+    "0": "t_grass",
+    "6": "t_trl_door_church_c",
+    "3": "t_trl_wall_chapel",
+    "4": "t_trl_floor_church",
+    "7": "t_trl_pave",
+    "5": "t_trl_window_church"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 0,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 1,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 2,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 3,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 4,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 5,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 6,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 7,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 8,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_candle_stand",
+     "x": 8,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 9,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 9,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_church_bell",
+     "x": 16,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 3,
+     "y": 19
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_orthodox",
+     "x": [
+      0,
+      9
+     ],
+     "y": [
+      5,
+      15
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       30
+      ],
+      [
+       "null",
+       70
+      ]
+     ],
+     "x": 2,
+     "y": 12
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       15
+      ],
+      [
+       "null",
+       85
+      ]
+     ],
+     "x": 4,
+     "y": 9
+    }
+   ]
+  }
+ },
+ {
+  "type": "city_building",
+  "id": "trl_church_b",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_church_b_0_0_north"
+   },
+   {
+    "point": [
+     1,
+     0,
+     0
+    ],
+    "overmap": "trl_church_b_1_0_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_church_c_0_0",
+  "name": "Orthodox church",
+  "sym": "+",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_church_c_0_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "011111111111111111111111",
+    "010000000000000000000000",
+    "010200000000000000000033",
+    "010000033333333000000034",
+    "010000034444443000000034",
+    "010000034444443000000054",
+    "010000034444443000000034",
+    "010000054444445000200034",
+    "010000034444443000000054",
+    "010000034444443000000034",
+    "010000034444443000000034",
+    "010020033363333000000054",
+    "010000000077000000000034",
+    "010000000077000000000034",
+    "010000000077000000000034",
+    "010000000077000000000033",
+    "010000000077000000000000",
+    "010000000077000002000000",
+    "010000000077000000000000",
+    "010200000077000000000000",
+    "010000000077000000000000",
+    "011111111111111111111111",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "1": "t_trl_fence_iron",
+    "2": "t_tree_birch",
+    "0": "t_grass",
+    "6": "t_trl_door_church_c",
+    "3": "t_trl_wall_chapel",
+    "4": "t_trl_floor_church",
+    "7": "t_trl_pave",
+    "5": "t_trl_window_church"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_church_bench",
+     "x": 23,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 23,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_church_bell",
+     "x": 10,
+     "y": 7
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_orthodox",
+     "x": [
+      23,
+      23
+     ],
+     "y": [
+      4,
+      15
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ]
+  }
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_church_c_1_0",
+  "name": "Orthodox church",
+  "sym": "+",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_church_c_1_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "111111111111111111111111",
+    "000000000000000000000000",
+    "333333333333333333333333",
+    "444444444444444444444444",
+    "444444444444444444444444",
+    "444444444444444444444444",
+    "444444444444444444444444",
+    "444444444444444444444444",
+    "444444444444444444444444",
+    "444444444444444444444444",
+    "444444444444444444444444",
+    "444444444444444444444444",
+    "444444444444444444444444",
+    "444444444444444444444444",
+    "444444444444444444444444",
+    "353335333536633335333533",
+    "000000000007700000000000",
+    "000000000007700000000000",
+    "000000000007700000000000",
+    "000000000007700000000000",
+    "000000000007700000000000",
+    "111111111117711111111111",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "1": "t_trl_fence_iron",
+    "0": "t_grass",
+    "6": "t_trl_door_church_c",
+    "3": "t_trl_wall_chapel",
+    "4": "t_trl_floor_church",
+    "7": "t_trl_pave",
+    "5": "t_trl_window_church"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 0,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 1,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 2,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 3,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 4,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 5,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 6,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 7,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 8,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 9,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 10,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 12,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 13,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 14,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 15,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 16,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 17,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 18,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 19,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 20,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 21,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 22,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 23,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_altar_table",
+     "x": 11,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_candle_stand",
+     "x": 0,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_candle_stand",
+     "x": 23,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_analoy",
+     "x": 8,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_worship_cross",
+     "x": 5,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 16,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 7,
+     "y": 19
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_orthodox",
+     "x": [
+      0,
+      23
+     ],
+     "y": [
+      4,
+      15
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       45
+      ],
+      [
+       "null",
+       55
+      ]
+     ],
+     "x": 4,
+     "y": 10
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       35
+      ],
+      [
+       "null",
+       65
+      ]
+     ],
+     "x": 16,
+     "y": 12
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       25
+      ],
+      [
+       "null",
+       75
+      ]
+     ],
+     "x": 9,
+     "y": 13
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_priest_orth",
+     "x": 11,
+     "y": 7
+    }
+   ]
+  }
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_church_c_2_0",
+  "name": "Orthodox church",
+  "sym": "+",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_church_c_2_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "111111111111111111111110",
+    "000000000000000000000010",
+    "330000000000000000000210",
+    "430000333333833333300010",
+    "430000399999999999300010",
+    "450000399999999999300010",
+    "430000399999999999300010",
+    "430000899999999999800010",
+    "450000399999999999300010",
+    "430000399999999999300010",
+    "430000399999999999300010",
+    "450000399999999999300010",
+    "430000399999999999300010",
+    "430000399999999999300010",
+    "430000399999999999300010",
+    "330000333336333333300010",
+    "000000000007700000000010",
+    "000200000007700000000010",
+    "000000000007700000000010",
+    "000000000007700000000210",
+    "000000000007700000000010",
+    "111111111111111111111110",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "1": "t_trl_fence_iron",
+    "8": "t_trl_window",
+    "2": "t_tree_birch",
+    "0": "t_grass",
+    "9": "t_trl_floor_wood",
+    "3": "t_trl_wall_chapel",
+    "4": "t_trl_floor_church",
+    "6": "t_trl_door_church_c",
+    "7": "t_trl_pave",
+    "5": "t_trl_window_church"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_church_bench",
+     "x": 0,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 0,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_table_low",
+     "x": 9,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 9,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 9,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_table_low",
+     "x": 9,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 9,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 9,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_table_low",
+     "x": 12,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 12,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 12,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_table_low",
+     "x": 12,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 12,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 12,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_table_low",
+     "x": 15,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 15,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 15,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_table_low",
+     "x": 15,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 15,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 15,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_samovar",
+     "x": 8,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_reception",
+     "x": 16,
+     "y": 6
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_orthodox",
+     "x": [
+      0,
+      0
+     ],
+     "y": [
+      4,
+      15
+     ],
+     "chance": 40,
+     "repeat": 4
+    },
+    {
+     "item": "trl_loot_food",
+     "x": [
+      7,
+      17
+     ],
+     "y": [
+      5,
+      15
+     ],
+     "chance": 30,
+     "repeat": 2
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       40
+      ],
+      [
+       "null",
+       60
+      ]
+     ],
+     "x": 10,
+     "y": 10
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       20
+      ],
+      [
+       "null",
+       80
+      ]
+     ],
+     "x": 13,
+     "y": 12
+    }
+   ]
+  }
+ },
+ {
+  "type": "city_building",
+  "id": "trl_church_c",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_church_c_0_0_north"
+   },
+   {
+    "point": [
+     1,
+     0,
+     0
+    ],
+    "overmap": "trl_church_c_1_0_north"
+   },
+   {
+    "point": [
+     2,
+     0,
+     0
+    ],
+    "overmap": "trl_church_c_2_0_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_church_d_0_0",
+  "name": "Orthodox church",
+  "sym": "+",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_church_d_0_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "011111111111111111111111",
+    "010000000000000000000000",
+    "010200000000000000000000",
+    "010000000000333333333333",
+    "010000000000344444444444",
+    "010000200000344444444444",
+    "010000000000544444444444",
+    "010000000000344444444444",
+    "010000000000344444444444",
+    "010000000000544444444444",
+    "010000000000344444444444",
+    "010000000000344444444444",
+    "010000000000544444444444",
+    "010000333333333333333333",
+    "010000344444344444444444",
+    "010000344444444444444444",
+    "010000344444444444444444",
+    "010000344444444444444444",
+    "010000344444444444444444",
+    "010200344444444444444444",
+    "010000344444444444444444",
+    "010000344444444444444444",
+    "010000344444444444444444"
+   ],
+   "terrain": {
+    "1": "t_trl_fence_iron",
+    "2": "t_tree_birch",
+    "0": "t_grass",
+    "3": "t_trl_wall_chapel",
+    "4": "t_trl_floor_church",
+    "5": "t_trl_window_church"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 14,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 15,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 16,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 17,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 18,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 19,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 20,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 21,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 22,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_altar_table",
+     "x": 23,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_analoy",
+     "x": 20,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 13,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 13,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 13,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 13,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 13,
+     "y": 22
+    },
+    {
+     "furn": "f_trl_candle_stand",
+     "x": 8,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_analoy",
+     "x": 8,
+     "y": 16
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_orthodox",
+     "x": [
+      13,
+      23
+     ],
+     "y": [
+      5,
+      23
+     ],
+     "chance": 40,
+     "repeat": 6
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       45
+      ],
+      [
+       "null",
+       55
+      ]
+     ],
+     "x": 18,
+     "y": 10
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       30
+      ],
+      [
+       "null",
+       70
+      ]
+     ],
+     "x": 20,
+     "y": 18
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_priest_orth",
+     "x": 23,
+     "y": 7
+    }
+   ]
+  }
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_church_d_1_0",
+  "name": "Orthodox church",
+  "sym": "+",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_church_d_1_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "111111111111111111111110",
+    "000000000000000000000010",
+    "000000000000000000002010",
+    "333333333333000000000010",
+    "444444444443000000000010",
+    "444444444443000000000010",
+    "444444444445000000000010",
+    "444444444443000000000010",
+    "444444444443000000000010",
+    "444444444445000000000010",
+    "444444444443000000000010",
+    "444444444443000000002010",
+    "444444444445000000000010",
+    "333333333333333333000010",
+    "444444444443444443000010",
+    "444444444444444443000010",
+    "444444444444444443000010",
+    "444444444444444443000010",
+    "444444444444444443000010",
+    "444444444444444443000010",
+    "444444444444444443000010",
+    "444444444444444443000010",
+    "444444444444444443000010"
+   ],
+   "terrain": {
+    "1": "t_trl_fence_iron",
+    "2": "t_tree_birch",
+    "0": "t_grass",
+    "3": "t_trl_wall_chapel",
+    "4": "t_trl_floor_church",
+    "5": "t_trl_window_church"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 0,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 1,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 2,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 3,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 4,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 5,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 6,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 7,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 8,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_iconostasis",
+     "x": 9,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 10,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 10,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 10,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 10,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 10,
+     "y": 22
+    },
+    {
+     "furn": "f_trl_candle_stand",
+     "x": 15,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_baptismal_font",
+     "x": 15,
+     "y": 22
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_orthodox",
+     "x": [
+      0,
+      10
+     ],
+     "y": [
+      5,
+      23
+     ],
+     "chance": 40,
+     "repeat": 6
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       35
+      ],
+      [
+       "null",
+       65
+      ]
+     ],
+     "x": 4,
+     "y": 12
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_enforcer",
+       25
+      ],
+      [
+       "null",
+       75
+      ]
+     ],
+     "x": 6,
+     "y": 20
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       35
+      ],
+      [
+       "null",
+       65
+      ]
+     ],
+     "x": 10,
+     "y": 14
+    }
+   ]
+  }
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_church_d_0_1",
+  "name": "Orthodox church",
+  "sym": "+",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_church_d_0_1"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "010000333333333333333333",
+    "010000000000544444444444",
+    "010000000000344444444444",
+    "010000000000344444444444",
+    "010000000000544444444444",
+    "010000000000344444444444",
+    "010000000000333533353336",
+    "010000000000000000000007",
+    "010000000000000000000007",
+    "010000000000000000000007",
+    "010000002000000000000007",
+    "010000000000000000000007",
+    "010000000000000000000007",
+    "010000000000000000000007",
+    "010000000000002000000007",
+    "010000000000000000000007",
+    "010000002000000000000007",
+    "010000000000000000000007",
+    "010000000000000000000007",
+    "010000000000000000000007",
+    "010200000000000000000007",
+    "010000000000000000000007",
+    "011111111111111111111117",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "1": "t_trl_fence_iron",
+    "2": "t_tree_birch",
+    "0": "t_grass",
+    "6": "t_trl_door_church_c",
+    "3": "t_trl_wall_chapel",
+    "4": "t_trl_floor_church",
+    "7": "t_trl_pave",
+    "5": "t_trl_window_church"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_candle_stand",
+     "x": 14,
+     "y": 3
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 13,
+     "y": 1
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 13,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_worship_cross",
+     "x": 18,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 18,
+     "y": 18
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_orthodox",
+     "x": [
+      13,
+      23
+     ],
+     "y": [
+      0,
+      5
+     ],
+     "chance": 40,
+     "repeat": 6
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_bratva_thug",
+       40
+      ],
+      [
+       "null",
+       60
+      ]
+     ],
+     "x": 20,
+     "y": 2
+    }
+   ]
+  }
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_church_d_1_1",
+  "name": "Orthodox church",
+  "sym": "+",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_church_d_1_1"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "333333333333333333000010",
+    "444444444445000000002010",
+    "444444444443000000000010",
+    "444444444443000000000010",
+    "444444444445000000000010",
+    "444444444443000000000010",
+    "633533353333000000000010",
+    "700000000000000000000010",
+    "700000000000000000000010",
+    "700000000000003333333010",
+    "700000000000003444443010",
+    "700000000000003444443010",
+    "700000000000005444445010",
+    "700000000000003444443010",
+    "700000002000003444443010",
+    "700000000000003336333010",
+    "700000000000000007700010",
+    "700000000000000007700010",
+    "700000000000000007700010",
+    "700000000000000007700010",
+    "700000000000000007700010",
+    "700000000000000007700010",
+    "711111111111111111111110",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "1": "t_trl_fence_iron",
+    "2": "t_tree_birch",
+    "0": "t_grass",
+    "6": "t_trl_door_church_c",
+    "3": "t_trl_wall_chapel",
+    "4": "t_trl_floor_church",
+    "7": "t_trl_pave",
+    "5": "t_trl_window_church"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_candle_stand",
+     "x": 9,
+     "y": 3
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 10,
+     "y": 1
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 10,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_church_bell",
+     "x": 17,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 6,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_church_bench",
+     "x": 3,
+     "y": 10
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_orthodox",
+     "x": [
+      0,
+      10
+     ],
+     "y": [
+      0,
+      5
+     ],
+     "chance": 40,
+     "repeat": 6
+    }
+   ]
+  }
+ },
+ {
+  "type": "city_building",
+  "id": "trl_church_d",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_church_d_0_0_north"
+   },
+   {
+    "point": [
+     1,
+     0,
+     0
+    ],
+    "overmap": "trl_church_d_1_0_north"
+   },
+   {
+    "point": [
+     0,
+     1,
+     0
+    ],
+    "overmap": "trl_church_d_0_1_north"
+   },
+   {
+    "point": [
+     1,
+     1,
+     0
+    ],
+    "overmap": "trl_church_d_1_1_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_shrine_a_0_0",
+  "name": "Shinto shrine",
+  "sym": "^",
+  "color": "light_red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_shrine_a_0_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "0@@@@@@@@@@@@@@@@@@@@@@0",
+    "0@####################@0",
+    "0@####################@0",
+    "0@####################@0",
+    "0@####################@0",
+    "0@####################@0",
+    "0@#########77#########@0",
+    "0@#########77#########@0",
+    "0@#########77#########@0",
+    "0@#########77#########@0",
+    "0@#########77#########@0",
+    "0@#########77#########@0",
+    "0@#########77#########@0",
+    "0@#########77#########@0",
+    "0@#########77#########@0",
+    "0@#########77#########@0",
+    "0@#########77#########@0",
+    "0@#########77#########@0",
+    "0@#########77#########@0",
+    "0@#########77#########@0",
+    "0@#########77#########@0",
+    "0@@@@@@@@@@77@@@@@@@@@@0",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "@": "t_trl_fence_wood",
+    "7": "t_trl_pave",
+    "#": "t_trl_gravel",
+    "0": "t_grass"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_shinto_torii",
+     "x": 11,
+     "y": 21
+    },
+    {
+     "furn": "f_trl_shinto_torii",
+     "x": 12,
+     "y": 21
+    },
+    {
+     "furn": "f_trl_hokora",
+     "x": 11,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_hokora",
+     "x": 12,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_komainu",
+     "x": 9,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_komainu",
+     "x": 14,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 9,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 14,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 9,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 14,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 9,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 14,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 9,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 14,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 9,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 14,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_saisen_box",
+     "x": 11,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_saisen_box",
+     "x": 12,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_shimenawa_pole",
+     "x": 10,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_shimenawa_pole",
+     "x": 13,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_chozuya",
+     "x": 5,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_ema_rack",
+     "x": 18,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_ema_rack",
+     "x": 18,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_offering_table",
+     "x": 15,
+     "y": 8
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_shinto",
+     "x": [
+      8,
+      15
+     ],
+     "y": [
+      6,
+      13
+     ],
+     "chance": 40,
+     "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_priest_shinto",
+     "x": 13,
+     "y": 14
+    }
+   ]
+  }
+ },
+ {
+  "type": "city_building",
+  "id": "trl_shrine_a",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_shrine_a_0_0_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_shrine_b_0_0",
+  "name": "Shinto shrine",
+  "sym": "^",
+  "color": "light_red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_shrine_b_0_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "0@@@@@@@@@@@@@@@@@@@@@@@",
+    "0@######################",
+    "0@######################",
+    "0@#############$$$$$$$$$",
+    "0@#############$%%%%%%%%",
+    "0@#############$%%%%%%%%",
+    "0@#############$%%%%%%%%",
+    "0@#############$%%%%%%%%",
+    "0@#############$%%%%%%%%",
+    "0@#############$%%%%%%%%",
+    "0@#############$%%%%%%%%",
+    "0@#############$%%%%%%%%",
+    "0@#############$$$^$$$$^",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@@@@@@@@@@@@@@@@@@@@@@7",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "^": "t_trl_door_shrine_c",
+    "$": "t_trl_wall_vermilion",
+    "#": "t_trl_gravel",
+    "%": "t_trl_floor_hinoki",
+    "0": "t_grass",
+    "7": "t_trl_pave",
+    "@": "t_trl_fence_wood"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_shinto_torii",
+     "x": 23,
+     "y": 21
+    },
+    {
+     "furn": "f_trl_hokora",
+     "x": 23,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_saisen_box",
+     "x": 23,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_offering_table",
+     "x": 20,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_hall_lamp",
+     "x": 17,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 19,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 20,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 20,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 20,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_komainu",
+     "x": 21,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_chozuya",
+     "x": 8,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_ema_rack",
+     "x": 8,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_shimenawa_pole",
+     "x": 21,
+     "y": 3
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_shinto",
+     "x": [
+      16,
+      23
+     ],
+     "y": [
+      5,
+      12
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ]
+  }
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_shrine_b_1_0",
+  "name": "Shinto shrine",
+  "sym": "^",
+  "color": "light_red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_shrine_b_1_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "@@@@@@@@@@@@@@@@@@@@@@@0",
+    "######################@0",
+    "######################@0",
+    "$$$$$$$$$#############@0",
+    "%%%%%%%%$#############@0",
+    "%%%%%%%%$#############@0",
+    "%%%%%%%%$#############@0",
+    "%%%%%%%%$#############@0",
+    "%%%%%%%%$#############@0",
+    "%%%%%%%%$#############@0",
+    "%%%%%%%%$#############@0",
+    "%%%%%%%%$#############@0",
+    "^$$$^$$$$#############@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7@@@@@@@@@@@@@@@@@@@@@@0",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "^": "t_trl_door_shrine_c",
+    "$": "t_trl_wall_vermilion",
+    "#": "t_trl_gravel",
+    "%": "t_trl_floor_hinoki",
+    "0": "t_grass",
+    "7": "t_trl_pave",
+    "@": "t_trl_fence_wood"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_shinto_torii",
+     "x": 0,
+     "y": 21
+    },
+    {
+     "furn": "f_trl_hokora",
+     "x": 0,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_saisen_box",
+     "x": 0,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_offering_table",
+     "x": 3,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_hall_lamp",
+     "x": 6,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 4,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 3,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 3,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 3,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_komainu",
+     "x": 2,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_chozuya",
+     "x": 15,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_ema_rack",
+     "x": 15,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_shimenawa_pole",
+     "x": 2,
+     "y": 3
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_shinto",
+     "x": [
+      0,
+      7
+     ],
+     "y": [
+      5,
+      12
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_priest_shinto",
+     "x": 0,
+     "y": 11
+    }
+   ]
+  }
+ },
+ {
+  "type": "city_building",
+  "id": "trl_shrine_b",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_shrine_b_0_0_north"
+   },
+   {
+    "point": [
+     1,
+     0,
+     0
+    ],
+    "overmap": "trl_shrine_b_1_0_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_shrine_c_0_0",
+  "name": "Shinto shrine",
+  "sym": "^",
+  "color": "light_red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_shrine_c_0_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "0@@@@@@@@@@@@@@@@@@@@@@@",
+    "0@######################",
+    "0@######################",
+    "0@####@$$$$$$$$$$$$$$@##",
+    "0@####@%%%%%%%%%%%%%%@##",
+    "0@####@%%%%%%%%%%%%%%@##",
+    "0@####@%%%%%%%%%%%%%%@##",
+    "0@####@%%%%%%%%%%%%%%@##",
+    "0@####@%%%%%%%%%%%%%%@##",
+    "0@####@%%%%%%%%%%%%%%@##",
+    "0@####@%%%%%%%%%%%%%%@##",
+    "0@####@%%%%%%%%%%%%%%@##",
+    "0@####@@@@@@@##@@@@@@@##",
+    "0@######################",
+    "0@######################",
+    "0@######################",
+    "0@######################",
+    "0@######################",
+    "0@######################",
+    "0@######################",
+    "0@######################",
+    "0@@@@@@@@@@@@@@@@@@@@@@@",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "$": "t_trl_wall_vermilion",
+    "#": "t_trl_gravel",
+    "%": "t_trl_floor_hinoki",
+    "0": "t_grass",
+    "@": "t_trl_fence_wood"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_hall_lamp",
+     "x": 9,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_hall_lamp",
+     "x": 18,
+     "y": 6
+    }
+   ]
+  }
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_shrine_c_1_0",
+  "name": "Shinto shrine",
+  "sym": "^",
+  "color": "light_red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_shrine_c_1_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "@@@@@@@@@@@@@@@@@@@@@@@@",
+    "########################",
+    "########################",
+    "##$$$$$$$$$$$$$$$$$$$$##",
+    "##$%%%%%%%%%%%%%%%%%%$##",
+    "##$%%%%%%%%%%%%%%%%%%$##",
+    "##$%%%%%%%%%%%%%%%%%%$##",
+    "##$%%%%%%%%%%%%%%%%%%$##",
+    "##$%%%%%%%%%%%%%%%%%%$##",
+    "##$%%%%%%%%%%%%%%%%%%$##",
+    "##$%%%%%%%%%%%%%%%%%%$##",
+    "##$%%%%%%%%%%%%%%%%%%$##",
+    "##$$$$$$$$$^^$$$$$$$$$##",
+    "###########77###########",
+    "###########77###########",
+    "###########77###########",
+    "###########77###########",
+    "###########77###########",
+    "###########77###########",
+    "###########77###########",
+    "###########77###########",
+    "@@@@@@@@@@@77@@@@@@@@@@@",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "^": "t_trl_door_shrine_c",
+    "$": "t_trl_wall_vermilion",
+    "#": "t_trl_gravel",
+    "%": "t_trl_floor_hinoki",
+    "0": "t_grass",
+    "7": "t_trl_pave",
+    "@": "t_trl_fence_wood"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_shinto_torii",
+     "x": 11,
+     "y": 21
+    },
+    {
+     "furn": "f_trl_shinto_torii",
+     "x": 12,
+     "y": 21
+    },
+    {
+     "furn": "f_trl_hokora",
+     "x": 11,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_hokora",
+     "x": 12,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_saisen_box",
+     "x": 11,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_saisen_box",
+     "x": 12,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_offering_table",
+     "x": 6,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_offering_table",
+     "x": 17,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_hall_lamp",
+     "x": 4,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_hall_lamp",
+     "x": 19,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 7,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 16,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 7,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 16,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 7,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 16,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_komainu",
+     "x": 8,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_komainu",
+     "x": 15,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_shinto_torii",
+     "x": 11,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_shinto_torii",
+     "x": 12,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_chozuya",
+     "x": 4,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_ema_rack",
+     "x": 20,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_ema_rack",
+     "x": 22,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_shimenawa_pole",
+     "x": 9,
+     "y": 3
+    },
+    {
+     "furn": "f_trl_shimenawa_pole",
+     "x": 14,
+     "y": 3
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_shinto",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      5,
+      12
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_priest_shinto",
+     "x": 12,
+     "y": 11
+    }
+   ]
+  }
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_shrine_c_2_0",
+  "name": "Shinto shrine",
+  "sym": "^",
+  "color": "light_red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_shrine_c_2_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "@@@@@@@@@@@@@@@@@@@@@@@0",
+    "######################@0",
+    "######################@0",
+    "######################@0",
+    "####&&&&&&&&&&&&&&&###@0",
+    "####&%%%%%%%%%%%%%&###@0",
+    "####&%%%%%%%%%%%%%&###@0",
+    "####&%%%%%%%%%%%%%&###@0",
+    "####8%%%%%%%%%%%%%&###@0",
+    "####&%%%%%%%%%%%%%&###@0",
+    "####&%%%%%%%%%%%%%&###@0",
+    "####&%%%%%%%%%%%%%&###@0",
+    "####&&&&&&^^&&&&&&&###@0",
+    "######################@0",
+    "######################@0",
+    "######################@0",
+    "######################@0",
+    "######################@0",
+    "######################@0",
+    "######################@0",
+    "######################@0",
+    "@@@@@@@@@@@@@@@@@@@@@@@0",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "^": "t_trl_door_shrine_c",
+    "#": "t_trl_gravel",
+    "8": "t_trl_window",
+    "%": "t_trl_floor_hinoki",
+    "0": "t_grass",
+    "@": "t_trl_fence_wood",
+    "&": "t_trl_wall_cypress"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_charm_counter",
+     "x": 8,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_charm_counter",
+     "x": 9,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_charm_counter",
+     "x": 10,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_charm_counter",
+     "x": 11,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_shelf_clean",
+     "x": 6,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_shelf_clean",
+     "x": 16,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_hall_lamp",
+     "x": 14,
+     "y": 6
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_shinto",
+     "x": [
+      5,
+      17
+     ],
+     "y": [
+      6,
+      12
+     ],
+     "chance": 60,
+     "repeat": 4
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_priest_shinto",
+     "x": 10,
+     "y": 10
+    }
+   ]
+  }
+ },
+ {
+  "type": "city_building",
+  "id": "trl_shrine_c",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_shrine_c_0_0_north"
+   },
+   {
+    "point": [
+     1,
+     0,
+     0
+    ],
+    "overmap": "trl_shrine_c_1_0_north"
+   },
+   {
+    "point": [
+     2,
+     0,
+     0
+    ],
+    "overmap": "trl_shrine_c_2_0_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_shrine_d_0_0",
+  "name": "Shinto shrine",
+  "sym": "^",
+  "color": "light_red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_shrine_d_0_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "0@@@@@@@@@@@@@@@@@@@@@@@",
+    "0@######################",
+    "0@######################",
+    "0@#################&&&&&",
+    "0@#################&%%%%",
+    "0@#################&%%%%",
+    "0@#################&%%%%",
+    "0@#################&%%%%",
+    "0@#################&%%%%",
+    "0@#################&&&&^",
+    "0@#####################7",
+    "0@#####################7",
+    "0@############$$$$$$$$$$",
+    "0@############$%%%%%%%%%",
+    "0@############$%%%%%%%%%",
+    "0@############$%%%%%%%%%",
+    "0@############$%%%%%%%%%",
+    "0@############$%%%%%%%%%",
+    "0@############$%%%%%%%%%",
+    "0@############$%%%%%%%%%",
+    "0@############$%%%%%%%%%",
+    "0@############$$$$$$$$$^",
+    "0@######################"
+   ],
+   "terrain": {
+    "^": "t_trl_door_shrine_c",
+    "$": "t_trl_wall_vermilion",
+    "#": "t_trl_gravel",
+    "%": "t_trl_floor_hinoki",
+    "0": "t_grass",
+    "7": "t_trl_pave",
+    "@": "t_trl_fence_wood",
+    "&": "t_trl_wall_cypress"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_saisen_box",
+     "x": 23,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_offering_table",
+     "x": 18,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_hall_lamp",
+     "x": 16,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 19,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_hokora",
+     "x": 23,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_offering_table",
+     "x": 21,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_shimenawa_pole",
+     "x": 21,
+     "y": 12
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_shinto",
+     "x": [
+      15,
+      23
+     ],
+     "y": [
+      14,
+      21
+     ],
+     "chance": 40,
+     "repeat": 4
+    },
+    {
+     "item": "trl_loot_shinto",
+     "x": [
+      20,
+      23
+     ],
+     "y": [
+      5,
+      9
+     ],
+     "chance": 40,
+     "repeat": 3
+    }
+   ]
+  }
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_shrine_d_1_0",
+  "name": "Shinto shrine",
+  "sym": "^",
+  "color": "light_red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_shrine_d_1_0"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "000000000000000000000000",
+    "@@@@@@@@@@@@@@@@@@@@@@@0",
+    "######################@0",
+    "######################@0",
+    "&&&&&#################@0",
+    "%%%%&#################@0",
+    "%%%%&#################@0",
+    "%%%%&#################@0",
+    "%%%%&#################@0",
+    "%%%%&#################@0",
+    "^&&&&#################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "$$$$$$$$$$############@0",
+    "%%%%%%%%%$############@0",
+    "%%%%%%%%%$############@0",
+    "%%%%%%%%%$############@0",
+    "%%%%%%%%%$############@0",
+    "%%%%%%%%%$############@0",
+    "%%%%%%%%%$############@0",
+    "%%%%%%%%%$############@0",
+    "%%%%%%%%%$############@0",
+    "^$$$$$$$$$############@0",
+    "######################@0"
+   ],
+   "terrain": {
+    "^": "t_trl_door_shrine_c",
+    "$": "t_trl_wall_vermilion",
+    "#": "t_trl_gravel",
+    "%": "t_trl_floor_hinoki",
+    "0": "t_grass",
+    "7": "t_trl_pave",
+    "@": "t_trl_fence_wood",
+    "&": "t_trl_wall_cypress"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_saisen_box",
+     "x": 0,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_offering_table",
+     "x": 5,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_hall_lamp",
+     "x": 7,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_cushion",
+     "x": 4,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_hokora",
+     "x": 0,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_offering_table",
+     "x": 2,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_shimenawa_pole",
+     "x": 2,
+     "y": 12
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_shinto",
+     "x": [
+      0,
+      8
+     ],
+     "y": [
+      14,
+      21
+     ],
+     "chance": 40,
+     "repeat": 4
+    },
+    {
+     "item": "trl_loot_shinto",
+     "x": [
+      0,
+      3
+     ],
+     "y": [
+      5,
+      9
+     ],
+     "chance": 40,
+     "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_priest_shinto",
+     "x": 0,
+     "y": 20
+    },
+    {
+     "class": "trl_nc_priest_shinto",
+     "x": 0,
+     "y": 8
+    }
+   ]
+  }
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_shrine_d_0_1",
+  "name": "Shinto shrine",
+  "sym": "^",
+  "color": "light_red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_shrine_d_0_1"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "0@######@@@@@@@@@@@@@@@#",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@#####################7",
+    "0@@@@@@@@@@@@@@@@@@@@@@7",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "@": "t_trl_fence_wood",
+    "7": "t_trl_pave",
+    "#": "t_trl_gravel",
+    "0": "t_grass"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_shinto_torii",
+     "x": 23,
+     "y": 21
+    },
+    {
+     "furn": "f_trl_shinto_torii",
+     "x": 23,
+     "y": 1
+    },
+    {
+     "furn": "f_trl_shinto_torii",
+     "x": 23,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 20,
+     "y": 2
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 20,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 20,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 20,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 20,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 20,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_komainu",
+     "x": 21,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_chozuya",
+     "x": 12,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_ema_rack",
+     "x": 12,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_ema_rack",
+     "x": 14,
+     "y": 12
+    }
+   ]
+  }
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_shrine_d_1_1",
+  "name": "Shinto shrine",
+  "sym": "^",
+  "color": "light_red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_shrine_d_1_1"
+  ],
+  "object": {
+   "fill_ter": "t_grass",
+   "rows": [
+    "#@@@@@@@@@@@@@@@######@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#############&&&&&&&&@0",
+    "7#############&%%%%%%&@0",
+    "7#############&%%%%%%&@0",
+    "7#############&%%%%%%8@0",
+    "7#############^%%%%%%&@0",
+    "7#############&%%%%%%&@0",
+    "7#############&%%%%%%&@0",
+    "7#############&%%%%%%&@0",
+    "7#############&&&&&&&&@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7#####################@0",
+    "7@@@@@@@@@@@@@@@@@@@@@@0",
+    "000000000000000000000000"
+   ],
+   "terrain": {
+    "^": "t_trl_door_shrine_c",
+    "#": "t_trl_gravel",
+    "8": "t_trl_window",
+    "%": "t_trl_floor_hinoki",
+    "7": "t_trl_pave",
+    "0": "t_grass",
+    "@": "t_trl_fence_wood",
+    "&": "t_trl_wall_cypress"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_shinto_torii",
+     "x": 0,
+     "y": 21
+    },
+    {
+     "furn": "f_trl_shinto_torii",
+     "x": 0,
+     "y": 1
+    },
+    {
+     "furn": "f_trl_shinto_torii",
+     "x": 0,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 3,
+     "y": 2
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 3,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 3,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 3,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 3,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_lantern_stone",
+     "x": 3,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_komainu",
+     "x": 2,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_chozuya",
+     "x": 12,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_ema_rack",
+     "x": 12,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_ema_rack",
+     "x": 10,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_charm_counter",
+     "x": 17,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_charm_counter",
+     "x": 18,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_charm_counter",
+     "x": 19,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_shelf_clean",
+     "x": 16,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_shelf_clean",
+     "x": 19,
+     "y": 5
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_shinto",
+     "x": [
+      15,
+      20
+     ],
+     "y": [
+      5,
+      11
+     ],
+     "chance": 60,
+     "repeat": 4
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_priest_shinto",
+     "x": 17,
+     "y": 9
+    }
+   ]
+  }
+ },
+ {
+  "type": "city_building",
+  "id": "trl_shrine_d",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_shrine_d_0_0_north"
+   },
+   {
+    "point": [
+     1,
+     0,
+     0
+    ],
+    "overmap": "trl_shrine_d_1_0_north"
+   },
+   {
+    "point": [
+     0,
+     1,
+     0
+    ],
+    "overmap": "trl_shrine_d_0_1_north"
+   },
+   {
+    "point": [
+     1,
+     1,
+     0
+    ],
+    "overmap": "trl_shrine_d_1_1_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ }
+]

@@ -1,0 +1,1911 @@
+[
+ {
+  "type": "json_flag",
+  "id": "TRL_FISH",
+  "info": "This is a live fish, kept in water.  Put it in an aquarium."
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_clownfish",
+  "category": "other",
+  "name": {
+   "str": "ocellaris clownfish"
+  },
+  "description": "An orange fish with three white bands edged in black, and a habit of nosing every hand that comes near the glass.  (Amphiprion ocellaris, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "2400 USD",
+  "price_postapoc": "2400 USD",
+  "symbol": ";",
+  "color": "light_red",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_blue_tang",
+  "category": "other",
+  "name": {
+   "str": "regal blue tang"
+  },
+  "description": "A royal-blue disc with a black palette marking and a yellow tail.  Restless and graceful.  (Paracanthurus hepatus, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "5200 USD",
+  "price_postapoc": "5200 USD",
+  "symbol": ";",
+  "color": "light_blue",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_mandarinfish",
+  "category": "other",
+  "name": {
+   "str": "mandarinfish"
+  },
+  "description": "A small, slow bottom-dweller in swirls of blue, orange and green.  Very hard to feed, very beautiful.  (Synchiropus splendidus, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "9800 USD",
+  "price_postapoc": "9800 USD",
+  "symbol": ";",
+  "color": "light_cyan",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_yellow_tang",
+  "category": "other",
+  "name": {
+   "str": "yellow tang"
+  },
+  "description": "A flat, bright-yellow grazer that glows under tank lights and patrols the same stretch of glass all day.  (Zebrasoma flavescens, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "3600 USD",
+  "price_postapoc": "3600 USD",
+  "symbol": ";",
+  "color": "yellow",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_moorish_idol",
+  "category": "other",
+  "name": {
+   "str": "moorish idol"
+  },
+  "description": "A disc banded in black, white and yellow, with a long trailing dorsal fin.  Elegant and famously fragile.  (Zanclus cornutus, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "14000 USD",
+  "price_postapoc": "14000 USD",
+  "symbol": ";",
+  "color": "white",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_emperor_angel",
+  "category": "other",
+  "name": {
+   "str": "emperor angelfish"
+  },
+  "description": "An adult emperor in blue and yellow stripes, with a dark mask over the eyes.  A show piece.  (Pomacanthus imperator, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "28000 USD",
+  "price_postapoc": "28000 USD",
+  "symbol": ";",
+  "color": "light_blue",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_copperband",
+  "category": "other",
+  "name": {
+   "str": "copperband butterflyfish"
+  },
+  "description": "A silver-white fish with copper bands and a long snout for picking food from crevices.  (Chelmon rostratus, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "8400 USD",
+  "price_postapoc": "8400 USD",
+  "symbol": ";",
+  "color": "light_red",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_longnose_bf",
+  "category": "other",
+  "name": {
+   "str": "longnose butterflyfish"
+  },
+  "description": "A yellow butterflyfish with a very long, narrow snout and a black cap.  (Forcipiger flavissimus, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "6200 USD",
+  "price_postapoc": "6200 USD",
+  "symbol": ";",
+  "color": "yellow",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_lionfish",
+  "category": "other",
+  "name": {
+   "str": "red lionfish"
+  },
+  "description": "Banded in maroon and white, trailing venomous spines like feathers.  Handle only by the net.  (Pterois volitans, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "11500 USD",
+  "price_postapoc": "11500 USD",
+  "symbol": ";",
+  "color": "red",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_chromis",
+  "category": "other",
+  "name": {
+   "str": "blue-green chromis"
+  },
+  "description": "A shimmering, pale-green schooling fish that stays tight to the reef.  (Chromis viridis, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "1200 USD",
+  "price_postapoc": "1200 USD",
+  "symbol": ";",
+  "color": "light_green",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_blue_devil",
+  "category": "other",
+  "name": {
+   "str": "blue devil damselfish"
+  },
+  "description": "An electric-blue damselfish with a bold, territorial streak.  (Chrysiptera cyanea, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "1500 USD",
+  "price_postapoc": "1500 USD",
+  "symbol": ";",
+  "color": "blue",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_tuskfish",
+  "category": "other",
+  "name": {
+   "str": "harlequin tuskfish"
+  },
+  "description": "Orange-and-turquoise bands and bright blue teeth.  Intelligent, and prized by collectors.  (Choerodon fasciatus, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "36000 USD",
+  "price_postapoc": "36000 USD",
+  "symbol": ";",
+  "color": "light_red",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_pajama_cardinal",
+  "category": "other",
+  "name": {
+   "str": "pajama cardinalfish"
+  },
+  "description": "A silvery, spotted fish with a black band, like an old-fashioned pair of pyjamas.  (Sphaeramia nematoptera, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "2800 USD",
+  "price_postapoc": "2800 USD",
+  "symbol": ";",
+  "color": "yellow",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_banggai",
+  "category": "other",
+  "name": {
+   "str": "Banggai cardinalfish"
+  },
+  "description": "A silver fish with black stripes and a long, spined tail.  Gentle, and endangered in the wild.  (Pterapogon kauderni, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "4600 USD",
+  "price_postapoc": "4600 USD",
+  "symbol": ";",
+  "color": "white",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_flame_angel",
+  "category": "other",
+  "name": {
+   "str": "flame angelfish"
+  },
+  "description": "A small flame-red dwarf angelfish barred in black, with blue edging on the fins.  (Centropyge loricula, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "9200 USD",
+  "price_postapoc": "9200 USD",
+  "symbol": ";",
+  "color": "light_red",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_lemonpeel",
+  "category": "other",
+  "name": {
+   "str": "lemonpeel angelfish"
+  },
+  "description": "A little, lemon-yellow angelfish with a blue ring around each eye.  (Centropyge flavissima, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "5600 USD",
+  "price_postapoc": "5600 USD",
+  "symbol": ";",
+  "color": "yellow",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_bicolor_angel",
+  "category": "other",
+  "name": {
+   "str": "bicolor angelfish"
+  },
+  "description": "A dwarf angelfish with a blue back half and a yellow front.  (Centropyge bicolor, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "3900 USD",
+  "price_postapoc": "3900 USD",
+  "symbol": ";",
+  "color": "light_blue",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_hawkfish",
+  "category": "other",
+  "name": {
+   "str": "longnose hawkfish"
+  },
+  "description": "A slim, red-checked fish that perches on corals like a hawk on a branch.  (Oxycirrhites typus, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "13500 USD",
+  "price_postapoc": "13500 USD",
+  "symbol": ";",
+  "color": "light_red",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_clown_trigger",
+  "category": "other",
+  "name": {
+   "str": "clown triggerfish"
+  },
+  "description": "A bold black body spotted white, with a yellow mouth and orange lips.  Aggressive and magnificent.  (Balistoides conspicillum, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "32000 USD",
+  "price_postapoc": "32000 USD",
+  "symbol": ";",
+  "color": "light_gray",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_picasso_trigger",
+  "category": "other",
+  "name": {
+   "str": "Picasso triggerfish"
+  },
+  "description": "A painted-looking triggerfish in strokes of blue, black and gold.  (Rhinecanthus aculeatus, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "7600 USD",
+  "price_postapoc": "7600 USD",
+  "symbol": ";",
+  "color": "light_cyan",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_boxfish",
+  "category": "other",
+  "name": {
+   "str": "yellow boxfish"
+  },
+  "description": "A bright-yellow cube with black spots when young, fading to a calm blue-green in age.  (Ostracion cubicus, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "6900 USD",
+  "price_postapoc": "6900 USD",
+  "symbol": ";",
+  "color": "yellow",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_sixline_wrasse",
+  "category": "other",
+  "name": {
+   "str": "six-line wrasse"
+  },
+  "description": "A tiny orange wrasse with six blue-violet stripes, always darting between rocks.  (Pseudocheilinus hexataenia, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "2100 USD",
+  "price_postapoc": "2100 USD",
+  "symbol": ";",
+  "color": "light_green",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_ribbon_eel",
+  "category": "other",
+  "name": {
+   "str": "ribbon eel"
+  },
+  "description": "A long blue-and-yellow ribbon with flared nostrils.  It spends the day half out of its burrow.  (Rhinomuraena quaesita, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "26000 USD",
+  "price_postapoc": "26000 USD",
+  "symbol": ";",
+  "color": "light_blue",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_fish_seahorse",
+  "category": "other",
+  "name": {
+   "str": "spotted seahorse"
+  },
+  "description": "A slow, tail-gripping seahorse with a dotted body that holds on to anything in the tank.  (Hippocampus kuda, bagged in clean water.)  A live fish: put it in an aquarium.",
+  "weight": "80 g",
+  "volume": "250 ml",
+  "price": "18000 USD",
+  "price_postapoc": "18000 USD",
+  "symbol": ";",
+  "color": "brown",
+  "material": [
+   "water"
+  ],
+  "flags": [
+   "TRL_FISH",
+   "TRADER_AVOID"
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_tank_bowl",
+  "category": "tools",
+  "name": {
+   "str": "fish bowl"
+  },
+  "description": "A round glass bowl with a pebble floor and a tiny glowing plant.  Room for one fish.  Use it to watch the fish for a while; it calms the mind.",
+  "weight": "600 g",
+  "volume": "2 L",
+  "longest_side": "30 cm",
+  "price": "1800 USD",
+  "price_postapoc": "1800 USD",
+  "symbol": "A",
+  "color": "light_cyan",
+  "material": [
+   "glass"
+  ],
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "pocket_data": [
+   {
+    "pocket_type": "CONTAINER",
+    "description": "The water.",
+    "max_contains_volume": "250 ml",
+    "max_contains_weight": "100 g",
+    "watertight": true,
+    "flag_restriction": [
+     "TRL_FISH"
+    ],
+    "moves": 100
+   }
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Watch the fish",
+   "description": "Watch the fish swim for a while.",
+   "effect_on_conditions": [
+    "trl_tank_watch_item"
+   ]
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_tank_cube",
+  "category": "tools",
+  "name": {
+   "str": "cube aquarium"
+  },
+  "description": "A neat glass cube with a built-in blue light and filter.  Room for two fish.  Use it to watch the fish for a while; it calms the mind.",
+  "weight": "1200 g",
+  "volume": "8 L",
+  "longest_side": "30 cm",
+  "price": "6500 USD",
+  "price_postapoc": "6500 USD",
+  "symbol": "A",
+  "color": "light_cyan",
+  "material": [
+   "glass"
+  ],
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "pocket_data": [
+   {
+    "pocket_type": "CONTAINER",
+    "description": "The water.",
+    "max_contains_volume": "500 ml",
+    "max_contains_weight": "200 g",
+    "watertight": true,
+    "flag_restriction": [
+     "TRL_FISH"
+    ],
+    "moves": 100
+   }
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Watch the fish",
+   "description": "Watch the fish swim for a while.",
+   "effect_on_conditions": [
+    "trl_tank_watch_item"
+   ]
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_tank_long",
+  "category": "tools",
+  "name": {
+   "str": "reef aquarium"
+  },
+  "description": "A slim reef aquarium with a coral rock and a glowing cyan light strip.  Room for three fish.  Use it to watch the fish for a while; it calms the mind.",
+  "weight": "1800 g",
+  "volume": "20 L",
+  "longest_side": "30 cm",
+  "price": "19000 USD",
+  "price_postapoc": "19000 USD",
+  "symbol": "A",
+  "color": "light_cyan",
+  "material": [
+   "glass"
+  ],
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "pocket_data": [
+   {
+    "pocket_type": "CONTAINER",
+    "description": "The water.",
+    "max_contains_volume": "750 ml",
+    "max_contains_weight": "300 g",
+    "watertight": true,
+    "flag_restriction": [
+     "TRL_FISH"
+    ],
+    "moves": 100
+   }
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Watch the fish",
+   "description": "Watch the fish swim for a while.",
+   "effect_on_conditions": [
+    "trl_tank_watch_item"
+   ]
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_tank_watch_item",
+  "effect": [
+   {
+    "u_message": "You settle down and watch the fish drift and turn.  The slow light on the water is calming.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "2 hours",
+    "decay_start": "30 minutes"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_tank_watch_s_reef",
+  "effect": [
+   {
+    "u_message": "You stop at the reef nano aquarium.  Inside: ocellaris clownfish and blue-green chromis.  You watch them drift through the glowing water for a while.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "2 hours",
+    "decay_start": "30 minutes"
+   }
+  ]
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_s_reef",
+  "name": "reef nano aquarium",
+  "description": "A glowing glass tank on a lacquered stand.  Inside: ocellaris clownfish and blue-green chromis.  Examine it to watch the fish.",
+  "symbol": "A",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_s_reef"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_tank_watch_s_mandarin",
+  "effect": [
+   {
+    "u_message": "You stop at the mandarinfish aquarium.  Inside: mandarinfish.  You watch them drift through the glowing water for a while.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "2 hours",
+    "decay_start": "30 minutes"
+   }
+  ]
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_s_mandarin",
+  "name": "mandarinfish aquarium",
+  "description": "A glowing glass tank on a lacquered stand.  Inside: mandarinfish.  Examine it to watch the fish.",
+  "symbol": "A",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_s_mandarin"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_tank_watch_s_hawk",
+  "effect": [
+   {
+    "u_message": "You stop at the rock-pool aquarium.  Inside: longnose hawkfish and six-line wrasse.  You watch them drift through the glowing water for a while.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "2 hours",
+    "decay_start": "30 minutes"
+   }
+  ]
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_s_hawk",
+  "name": "rock-pool aquarium",
+  "description": "A glowing glass tank on a lacquered stand.  Inside: longnose hawkfish and six-line wrasse.  Examine it to watch the fish.",
+  "symbol": "A",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_s_hawk"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_tank_watch_s_horse",
+  "effect": [
+   {
+    "u_message": "You stop at the seahorse aquarium.  Inside: spotted seahorse and pajama cardinalfish.  You watch them drift through the glowing water for a while.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "2 hours",
+    "decay_start": "30 minutes"
+   }
+  ]
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_s_horse",
+  "name": "seahorse aquarium",
+  "description": "A glowing glass tank on a lacquered stand.  Inside: spotted seahorse and pajama cardinalfish.  Examine it to watch the fish.",
+  "symbol": "A",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_s_horse"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_tank_watch_s_cardinal",
+  "effect": [
+   {
+    "u_message": "You stop at the cardinalfish aquarium.  Inside: Banggai cardinalfish, blue devil damselfish and ocellaris clownfish.  You watch them drift through the glowing water for a while.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "2 hours",
+    "decay_start": "30 minutes"
+   }
+  ]
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_s_cardinal",
+  "name": "cardinalfish aquarium",
+  "description": "A glowing glass tank on a lacquered stand.  Inside: Banggai cardinalfish, blue devil damselfish and ocellaris clownfish.  Examine it to watch the fish.",
+  "symbol": "A",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_s_cardinal"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_tank_watch_s_lemon",
+  "effect": [
+   {
+    "u_message": "You stop at the angelfish aquarium.  Inside: lemonpeel angelfish.  You watch them drift through the glowing water for a while.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "2 hours",
+    "decay_start": "30 minutes"
+   }
+  ]
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_s_lemon",
+  "name": "angelfish aquarium",
+  "description": "A glowing glass tank on a lacquered stand.  Inside: lemonpeel angelfish.  Examine it to watch the fish.",
+  "symbol": "A",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_s_lemon"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_tank_watch_w_tang",
+  "effect": [
+   {
+    "u_message": "You stop at the tang aquarium.  Inside: regal blue tang, yellow tang and ocellaris clownfish.  You watch them drift through the glowing water for a while.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "2 hours",
+    "decay_start": "30 minutes"
+   }
+  ]
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_w_tang_l",
+  "name": "tang aquarium",
+  "description": "A long glass aquarium that spans two tiles, lit from above.  Inside: regal blue tang, yellow tang and ocellaris clownfish.  Examine it to watch the fish.",
+  "symbol": "A",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_w_tang"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_w_tang_r",
+  "name": "tang aquarium",
+  "description": "A long glass aquarium that spans two tiles, lit from above.  Inside: regal blue tang, yellow tang and ocellaris clownfish.  Examine it to watch the fish.",
+  "symbol": "B",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_w_tang"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_tank_watch_w_emperor",
+  "effect": [
+   {
+    "u_message": "You stop at the angelfish aquarium.  Inside: emperor angelfish, copperband butterflyfish and moorish idol.  You watch them drift through the glowing water for a while.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "2 hours",
+    "decay_start": "30 minutes"
+   }
+  ]
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_w_emperor_l",
+  "name": "angelfish aquarium",
+  "description": "A long glass aquarium that spans two tiles, lit from above.  Inside: emperor angelfish, copperband butterflyfish and moorish idol.  Examine it to watch the fish.",
+  "symbol": "A",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_w_emperor"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_w_emperor_r",
+  "name": "angelfish aquarium",
+  "description": "A long glass aquarium that spans two tiles, lit from above.  Inside: emperor angelfish, copperband butterflyfish and moorish idol.  Examine it to watch the fish.",
+  "symbol": "B",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_w_emperor"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_tank_watch_w_lion",
+  "effect": [
+   {
+    "u_message": "You stop at the lionfish aquarium.  Inside: red lionfish.  You watch them drift through the glowing water for a while.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "2 hours",
+    "decay_start": "30 minutes"
+   }
+  ]
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_w_lion_l",
+  "name": "lionfish aquarium",
+  "description": "A long glass aquarium that spans two tiles, lit from above.  Inside: red lionfish.  Examine it to watch the fish.",
+  "symbol": "A",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_w_lion"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_w_lion_r",
+  "name": "lionfish aquarium",
+  "description": "A long glass aquarium that spans two tiles, lit from above.  Inside: red lionfish.  Examine it to watch the fish.",
+  "symbol": "B",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_w_lion"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_tank_watch_w_trigger",
+  "effect": [
+   {
+    "u_message": "You stop at the triggerfish aquarium.  Inside: clown triggerfish, Picasso triggerfish and yellow boxfish.  You watch them drift through the glowing water for a while.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "2 hours",
+    "decay_start": "30 minutes"
+   }
+  ]
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_w_trigger_l",
+  "name": "triggerfish aquarium",
+  "description": "A long glass aquarium that spans two tiles, lit from above.  Inside: clown triggerfish, Picasso triggerfish and yellow boxfish.  Examine it to watch the fish.",
+  "symbol": "A",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_w_trigger"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_w_trigger_r",
+  "name": "triggerfish aquarium",
+  "description": "A long glass aquarium that spans two tiles, lit from above.  Inside: clown triggerfish, Picasso triggerfish and yellow boxfish.  Examine it to watch the fish.",
+  "symbol": "B",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_w_trigger"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_tank_watch_w_dwarf",
+  "effect": [
+   {
+    "u_message": "You stop at the dwarf angelfish aquarium.  Inside: flame angelfish, bicolor angelfish and lemonpeel angelfish.  You watch them drift through the glowing water for a while.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "2 hours",
+    "decay_start": "30 minutes"
+   }
+  ]
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_w_dwarf_l",
+  "name": "dwarf angelfish aquarium",
+  "description": "A long glass aquarium that spans two tiles, lit from above.  Inside: flame angelfish, bicolor angelfish and lemonpeel angelfish.  Examine it to watch the fish.",
+  "symbol": "A",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_w_dwarf"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_w_dwarf_r",
+  "name": "dwarf angelfish aquarium",
+  "description": "A long glass aquarium that spans two tiles, lit from above.  Inside: flame angelfish, bicolor angelfish and lemonpeel angelfish.  Examine it to watch the fish.",
+  "symbol": "B",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_w_dwarf"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_tank_watch_w_tusk",
+  "effect": [
+   {
+    "u_message": "You stop at the deep reef aquarium.  Inside: harlequin tuskfish, ribbon eel and longnose butterflyfish.  You watch them drift through the glowing water for a while.",
+    "type": "good"
+   },
+   {
+    "u_add_morale": "morale_feeling_good",
+    "bonus": 3,
+    "max_bonus": 6,
+    "duration": "2 hours",
+    "decay_start": "30 minutes"
+   }
+  ]
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_w_tusk_l",
+  "name": "deep reef aquarium",
+  "description": "A long glass aquarium that spans two tiles, lit from above.  Inside: harlequin tuskfish, ribbon eel and longnose butterflyfish.  Examine it to watch the fish.",
+  "symbol": "A",
+  "color": "light_cyan",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_w_tusk"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "furniture",
+  "id": "f_trl_tank_w_tusk_r",
+  "name": "deep reef aquarium",
+  "description": "A long glass aquarium that spans two tiles, lit from above.  Inside: harlequin tuskfish, ribbon eel and longnose butterflyfish.  Examine it to watch the fish.",
+  "symbol": "B",
+  "color": "light_blue",
+  "move_cost_mod": -1,
+  "coverage": 40,
+  "required_str": -1,
+  "light_emitted": 9,
+  "flags": [
+   "TRANSPARENT"
+  ],
+  "examine_action": {
+   "type": "effect_on_condition",
+   "effect_on_conditions": [
+    "trl_tank_watch_w_tusk"
+   ]
+  },
+  "bash": {
+   "str_min": 6,
+   "str_max": 30,
+   "sound": "glass breaking!",
+   "sound_fail": "whump."
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_tank_s_reef",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "A"
+   ],
+   "furniture": {
+    "A": "f_trl_tank_s_reef"
+   }
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_tank_s_mandarin",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "A"
+   ],
+   "furniture": {
+    "A": "f_trl_tank_s_mandarin"
+   }
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_tank_s_hawk",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "A"
+   ],
+   "furniture": {
+    "A": "f_trl_tank_s_hawk"
+   }
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_tank_s_horse",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "A"
+   ],
+   "furniture": {
+    "A": "f_trl_tank_s_horse"
+   }
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_tank_s_cardinal",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "A"
+   ],
+   "furniture": {
+    "A": "f_trl_tank_s_cardinal"
+   }
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_tank_s_lemon",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "A"
+   ],
+   "furniture": {
+    "A": "f_trl_tank_s_lemon"
+   }
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_tank_w_tang",
+  "object": {
+   "mapgensize": [
+    2,
+    2
+   ],
+   "rows": [
+    "AB",
+    ".."
+   ],
+   "furniture": {
+    "A": "f_trl_tank_w_tang_l",
+    "B": "f_trl_tank_w_tang_r"
+   }
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_tank_w_emperor",
+  "object": {
+   "mapgensize": [
+    2,
+    2
+   ],
+   "rows": [
+    "AB",
+    ".."
+   ],
+   "furniture": {
+    "A": "f_trl_tank_w_emperor_l",
+    "B": "f_trl_tank_w_emperor_r"
+   }
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_tank_w_lion",
+  "object": {
+   "mapgensize": [
+    2,
+    2
+   ],
+   "rows": [
+    "AB",
+    ".."
+   ],
+   "furniture": {
+    "A": "f_trl_tank_w_lion_l",
+    "B": "f_trl_tank_w_lion_r"
+   }
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_tank_w_trigger",
+  "object": {
+   "mapgensize": [
+    2,
+    2
+   ],
+   "rows": [
+    "AB",
+    ".."
+   ],
+   "furniture": {
+    "A": "f_trl_tank_w_trigger_l",
+    "B": "f_trl_tank_w_trigger_r"
+   }
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_tank_w_dwarf",
+  "object": {
+   "mapgensize": [
+    2,
+    2
+   ],
+   "rows": [
+    "AB",
+    ".."
+   ],
+   "furniture": {
+    "A": "f_trl_tank_w_dwarf_l",
+    "B": "f_trl_tank_w_dwarf_r"
+   }
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_tank_w_tusk",
+  "object": {
+   "mapgensize": [
+    2,
+    2
+   ],
+   "rows": [
+    "AB",
+    ".."
+   ],
+   "furniture": {
+    "A": "f_trl_tank_w_tusk_l",
+    "B": "f_trl_tank_w_tusk_r"
+   }
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_tank_1",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "."
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_tank_s_reef",
+       10
+      ],
+      [
+       "trl_tank_s_mandarin",
+       10
+      ],
+      [
+       "trl_tank_s_hawk",
+       10
+      ],
+      [
+       "trl_tank_s_horse",
+       10
+      ],
+      [
+       "trl_tank_s_cardinal",
+       10
+      ],
+      [
+       "trl_tank_s_lemon",
+       10
+      ]
+     ],
+     "x": 0,
+     "y": 0
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_tank_2",
+  "object": {
+   "mapgensize": [
+    2,
+    2
+   ],
+   "rows": [
+    "..",
+    ".."
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_tank_w_tang",
+       10
+      ],
+      [
+       "trl_tank_w_emperor",
+       10
+      ],
+      [
+       "trl_tank_w_lion",
+       10
+      ],
+      [
+       "trl_tank_w_trigger",
+       10
+      ],
+      [
+       "trl_tank_w_dwarf",
+       10
+      ],
+      [
+       "trl_tank_w_tusk",
+       10
+      ]
+     ],
+     "x": 0,
+     "y": 0
+    }
+   ]
+  }
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_rabbit",
+  "copy-from": "mon_rabbit",
+  "name": {
+   "str": "house rabbit"
+  },
+  "description": "A soft, well-fed pet rabbit that nibbles at whatever you hold out and tolerates being patted.",
+  "categories": [],
+  "aggression": -99,
+  "morale": 40,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_ATTACKED"
+  ],
+  "placate_triggers": [
+   "PLAYER_CLOSE",
+   "PLAYER_WEAK"
+  ],
+  "color": "white"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_pet_dog",
+  "category": "other",
+  "name": {
+   "str": "adoption ticket (dog)",
+   "str_pl": "adoption tickets (dog)"
+  },
+  "description": "A well-bred, collared house dog with its papers.  A sealed adoption ticket: use it where there is room and the animal is brought out to you.",
+  "weight": "5 g",
+  "volume": "5 ml",
+  "symbol": "?",
+  "color": "light_gray",
+  "material": [
+   "paper"
+  ],
+  "price": "36000 USD",
+  "price_postapoc": "36000 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Take the dog home",
+   "description": "The dog is brought out to you.",
+   "effect_on_conditions": [
+    "trl_pet_use_dog"
+   ]
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_pet_use_dog",
+  "effect": [
+   {
+    "u_spawn_monster": "mon_trl_dog",
+    "real_count": 1,
+    "min_radius": 1,
+    "max_radius": 2,
+    "friendly": true,
+    "spawn_message": "A pet-shop attendant brings a dog out and sets it down beside you.  It sniffs at you, then settles in."
+   }
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_pet_cat",
+  "category": "other",
+  "name": {
+   "str": "adoption ticket (cat)",
+   "str_pl": "adoption tickets (cat)"
+  },
+  "description": "A sleek, vaccinated house cat with its papers.  A sealed adoption ticket: use it where there is room and the animal is brought out to you.",
+  "weight": "5 g",
+  "volume": "5 ml",
+  "symbol": "?",
+  "color": "light_gray",
+  "material": [
+   "paper"
+  ],
+  "price": "24000 USD",
+  "price_postapoc": "24000 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Take the cat home",
+   "description": "The cat is brought out to you.",
+   "effect_on_conditions": [
+    "trl_pet_use_cat"
+   ]
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_pet_use_cat",
+  "effect": [
+   {
+    "u_spawn_monster": "mon_trl_cat",
+    "real_count": 1,
+    "min_radius": 1,
+    "max_radius": 2,
+    "friendly": true,
+    "spawn_message": "A pet-shop attendant brings a cat out and sets it down beside you.  It sniffs at you, then settles in."
+   }
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_pet_rabbit",
+  "category": "other",
+  "name": {
+   "str": "adoption ticket (rabbit)",
+   "str_pl": "adoption tickets (rabbit)"
+  },
+  "description": "A soft, quiet house rabbit with its papers.  A sealed adoption ticket: use it where there is room and the animal is brought out to you.",
+  "weight": "5 g",
+  "volume": "5 ml",
+  "symbol": "?",
+  "color": "white",
+  "material": [
+   "paper"
+  ],
+  "price": "9000 USD",
+  "price_postapoc": "9000 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Take the rabbit home",
+   "description": "The rabbit is brought out to you.",
+   "effect_on_conditions": [
+    "trl_pet_use_rabbit"
+   ]
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_pet_use_rabbit",
+  "effect": [
+   {
+    "u_spawn_monster": "mon_trl_rabbit",
+    "real_count": 1,
+    "min_radius": 1,
+    "max_radius": 2,
+    "friendly": true,
+    "spawn_message": "A pet-shop attendant brings a rabbit out and sets it down beside you.  It sniffs at you, then settles in."
+   }
+  ]
+ }
+]

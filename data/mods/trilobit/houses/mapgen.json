@@ -212,6 +212,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -611,6 +624,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -921,6 +947,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -1243,6 +1282,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -1582,6 +1634,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -1983,6 +2048,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -2368,6 +2446,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -2717,6 +2808,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -3091,6 +3195,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -3415,6 +3532,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -3811,6 +3941,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -4197,6 +4340,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -4571,6 +4727,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -4880,6 +5049,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -5239,6 +5421,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -5625,6 +5820,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -5969,6 +6177,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -6263,6 +6484,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -6555,6 +6789,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -6903,6 +7150,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -7278,6 +7538,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -7649,6 +7922,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -7974,6 +8260,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -8288,6 +8587,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -8596,6 +8908,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -8960,6 +9285,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -9319,6 +9657,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -9641,6 +9992,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -9949,6 +10313,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -10271,6 +10648,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -10717,6 +11107,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -11122,6 +11525,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -11475,6 +11891,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -11834,6 +12263,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -12152,6 +12594,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -12534,6 +12989,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -12912,6 +13380,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -13247,6 +13728,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -13590,6 +14084,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -13934,6 +14441,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -14314,6 +14834,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -14698,6 +15231,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -15012,6 +15558,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -15361,6 +15920,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -15730,6 +16302,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -16145,6 +16730,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -16524,6 +17122,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -16897,6 +17508,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -17241,6 +17865,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -17574,6 +18211,19 @@
      ],
      "chance": 40,
      "repeat": 3
+    },
+    {
+     "item": "trl_loot_street_drugs",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      4,
+      19
+     ],
+     "chance": 8,
+     "repeat": 1
     }
    ],
    "place_npcs": [
@@ -18065,7 +18715,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -18608,7 +19258,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -19137,7 +19787,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -19514,7 +20164,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -20156,7 +20806,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -20768,7 +21418,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -21101,7 +21751,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -21653,7 +22303,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -22220,7 +22870,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -22666,7 +23316,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -23256,7 +23906,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -23817,7 +24467,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -24189,7 +24839,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -24717,7 +25367,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -25200,7 +25850,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -25597,7 +26247,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -26175,7 +26825,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -26752,7 +27402,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -27156,7 +27806,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -27707,7 +28357,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -28349,7 +28999,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -28766,7 +29416,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -29315,7 +29965,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -29860,7 +30510,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -30255,7 +30905,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -30807,7 +31457,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -31300,7 +31950,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -31676,7 +32326,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -32213,7 +32863,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -32779,7 +33429,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -33103,7 +33753,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -33645,7 +34295,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -34272,7 +34922,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -34684,7 +35334,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -35233,7 +35883,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        3
       ],
       [
@@ -35848,7 +36498,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -35862,7 +36512,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -36175,7 +36825,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -36189,7 +36839,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -36938,7 +37588,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -36952,7 +37602,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -37004,6 +37654,16 @@
      ],
      "x": 10,
      "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 23,
+     "y": 16
     }
    ]
   }
@@ -37194,7 +37854,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -37208,7 +37868,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -38253,7 +38913,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -38267,7 +38927,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -38319,6 +38979,16 @@
      ],
      "x": 1,
      "y": 9
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 12,
+     "y": 13
     }
    ]
   }
@@ -38462,7 +39132,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -38476,7 +39146,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -38528,6 +39198,16 @@
      ],
      "x": 10,
      "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 1,
+     "y": 15
     }
    ]
   }
@@ -39323,7 +40003,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -39337,7 +40017,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -39389,6 +40069,16 @@
      ],
      "x": 20,
      "y": 20
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 21,
+     "y": 16
     }
    ]
   }
@@ -39685,7 +40375,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -39699,7 +40389,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -40574,7 +41264,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -40588,7 +41278,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -40986,7 +41676,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -41000,7 +41690,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -41052,6 +41742,16 @@
      ],
      "x": 6,
      "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_2",
+       100
+      ]
+     ],
+     "x": 12,
+     "y": 11
     }
    ]
   }
@@ -41269,7 +41969,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -41283,7 +41983,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -41335,6 +42035,16 @@
      ],
      "x": 1,
      "y": 4
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 8,
+     "y": 11
     }
    ]
   }
@@ -42121,7 +42831,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -42135,7 +42845,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -42187,6 +42897,16 @@
      ],
      "x": 9,
      "y": 14
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 5,
+     "y": 15
     }
    ]
   }
@@ -42783,7 +43503,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -42797,7 +43517,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -42849,6 +43569,16 @@
      ],
      "x": 11,
      "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 22,
+     "y": 19
     }
    ]
   }
@@ -43143,7 +43873,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -43157,7 +43887,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -44008,7 +44738,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -44022,7 +44752,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -44655,7 +45385,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -44669,7 +45399,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -44887,7 +45617,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -44901,7 +45631,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -45400,7 +46130,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -45414,7 +46144,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -45466,6 +46196,16 @@
      ],
      "x": 9,
      "y": 22
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 5,
+     "y": 15
     }
    ]
   }
@@ -45879,7 +46619,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -45893,7 +46633,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -45945,6 +46685,16 @@
      ],
      "x": 1,
      "y": 11
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_2",
+       100
+      ]
+     ],
+     "x": 22,
+     "y": 13
     }
    ]
   }
@@ -46229,7 +46979,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -46243,7 +46993,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -47058,7 +47808,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -47072,7 +47822,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -47124,6 +47874,16 @@
      ],
      "x": 22,
      "y": 18
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 17,
+     "y": 14
     }
    ]
   }
@@ -47631,7 +48391,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -47645,7 +48405,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -47930,7 +48690,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -47944,7 +48704,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [
@@ -47996,6 +48756,16 @@
      ],
      "x": 10,
      "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 6,
+     "y": 11
     }
    ]
   }
@@ -48865,7 +49635,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_patrol",
+       "trl_pres_nap_patrol",
        10
       ],
       [
@@ -48879,7 +49649,7 @@
     {
      "chunks": [
       [
-       "trl_pres_jsdf_tactical",
+       "trl_pres_nap_tactical",
        3
       ],
       [

@@ -12,18 +12,32 @@ import limbdata as L
 import fooddata as FD
 
 VARIANTS = 5
-TIERS = {"implant": "pmr", "nano": "pmr", "grocery": "pmr", "android": "mr"}
+TIERS = {"implant": "pmr", "nano": "pmr", "grocery": "pmr", "android": "mr", "pet": "mr"}
 NAME = {
     ("implant", "p"): "back-alley implant shop", ("implant", "m"): "cybernetics clinic", ("implant", "r"): "premier implant atelier",
     ("nano", "p"): "back-room hack shop", ("nano", "m"): "nanohack outlet", ("nano", "r"): "nanohack boutique",
     ("grocery", "p"): "corner grocery", ("grocery", "m"): "supermarket", ("grocery", "r"): "gourmet market",
     ("android", "m"): "android showroom", ("android", "r"): "android atelier",
+    ("pet", "m"): "pet shop", ("pet", "r"): "exotic pet boutique",
 }
-SYM = {"implant": "+", "nano": "n", "grocery": "g", "android": "a"}
+SYM = {"implant": "+", "nano": "n", "grocery": "g", "android": "a", "pet": "f"}
 COLOR = {"p": "brown", "m": "light_cyan", "r": "light_green"}
-WORKER = {"implant": "implant dealer", "nano": "nanohack dealer", "grocery": "grocer", "android": "android dealer"}
+WORKER = {"implant": "implant dealer", "nano": "nanohack dealer", "grocery": "grocer", "android": "android dealer", "pet": "pet seller"}
 CHAT = {"implant": "Implants, grafts, repairs.  Buy a part, then lie down in the bay.", "nano": "Chips, brains, and no questions.",
-        "grocery": "Fresh in this morning.  What can I get you?", "android": "Every model has a warranty.  Take your time."}
+        "grocery": "Fresh in this morning.  What can I get you?", "android": "Every model has a warranty.  Take your time.", "pet": "Fish, cats, dogs, rabbits.  Everything is healthy and papered.  Take your time."}
+
+
+# ---------------------------------------------------------------- restaurants: each of the 36 is its own shop kind (restp01_p ...)
+import gen_rest_data as RD
+REST = {}                      # kind -> record
+for _k, _t, _n, _rec in RD.kinds():
+    REST[_k] = _rec
+    TIERS[_k] = _t
+    NAME[(_k, _t)] = _rec[1]
+    SYM[_k] = "r"
+    WORKER[_k] = _rec[7]
+    CHAT[_k] = _rec[8]
+GROCERY_PRICE = {i: y for i, y, _ in FD.STAPLES}
 
 
 def pid(kind, tier):
@@ -82,6 +96,32 @@ def stock(kind, tier, v):
         for cid in r.sample(cyb, min(len(cyb), r.choice([2, 3, 4]))):
             item = f"trl_cf_{cid}"
             rows.append((item, 1, 4)); price[item] = next(c[7] for c in FD.CYBER if c[0] == cid)
+    elif kind == "pet":
+        import gen_fish_data as FS
+        fish = [f for f in FS.FISH if (f[4] <= 15000 if tier == "m" else True)]
+        for f in r.sample(fish, min(len(fish), r.choice([8, 9, 10] if tier == "m" else [12, 14, 16]))):
+            item = f"trl_fish_{f[0]}"
+            rows.append((item, 1, 3)); price[item] = f[4]
+        for tid, _n, cap, yen, _v, _d in FS.TANKS:
+            if tier == "r" or cap < 3:
+                item = f"trl_tank_{tid}"
+                rows.append((item, 1, 2)); price[item] = yen
+        for pid, _m, _n, yen, _d, _c in FS.PETS:
+            item = f"trl_pet_{pid}"
+            rows.append((item, 1, 2)); price[item] = yen
+        for item, yen, _ in FD.STAPLES:
+            if item in ("dogfood", "catfood", "birdfood"):
+                rows.append((item, 3, 8)); price[item] = yen
+    elif kind in REST:
+        rec = REST[kind]
+        dishes, soft, booze = rec[4], rec[5], rec[6]
+        # each variant drops a dish or two so two restaurants of one kind differ a little
+        drop = set(r.sample(dishes, r.choice([0, 1, 1, 2]))) if len(dishes) > 6 else set()
+        for i in dishes:
+            if i not in drop:
+                rows.append((i, 2, 6)); price[i] = RD.price(i, tier, GROCERY_PRICE)
+        for i in soft + booze:
+            rows.append((i, 3, 8)); price[i] = RD.price(i, tier, GROCERY_PRICE)
     elif kind == "android":
         pool = ANDROID_TIER[tier]
         for key in r.sample(pool, min(len(pool), r.choice([2, 3] if tier == "m" else [2, 3, 4]))):

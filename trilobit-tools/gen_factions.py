@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Generate Trilobit factions: Bratva, JSDF, Nasim.  usage: gen_factions.py <mod dir>
+"""Generate Trilobit factions: Bratva, NAP, Nasim.  usage: gen_factions.py <mod dir>
 Writes <mod>/factions.json.  Imported by gen_places.py for BAR_NPCS."""
 import json, os, sys
 
 FAC = {
     "trl_bratva": ("Bratva", "A criminal syndicate that taxes the poor districts."),
-    "trl_jsdf":   ("JSDF", "City police and military.  Placeholder name."),
+    "trl_nap":   ("NAP", "The Nippon Autonomous Protectorate: city police and military."),
     "trl_nasim":  ("Nasim", "Cyberterrorists who hate implanted people.  Placeholder name."),
 }
-SHORT = {"trl_bratva": "bratva", "trl_jsdf": "jsdf", "trl_nasim": "nasim"}
-ENEMIES = {"trl_bratva": ["trl_jsdf", "trl_nasim"], "trl_jsdf": ["trl_bratva", "trl_nasim"], "trl_nasim": ["trl_jsdf", "trl_bratva"]}
+SHORT = {"trl_bratva": "bratva", "trl_nap": "nap", "trl_nasim": "nasim"}
+ENEMIES = {"trl_bratva": ["trl_nap", "trl_nasim"], "trl_nap": ["trl_bratva", "trl_nasim"], "trl_nasim": ["trl_nap", "trl_bratva"]}
 # (class id suffix, title, worn[], weapons[(item, prob)], carry extras, skills)
 MEMBERS = {
     "trl_bratva": [
@@ -17,7 +17,7 @@ MEMBERS = {
         ("enforcer", "Enforcer", ["trenchcoat_leather", "ballistic_vest_light", "pants_cargo", "boots_combat", "gloves_light"], [("trl_gun_va7", 40), ("tec9", 40), ("machete", 20)], {"smg": 4, "melee": 3}),
         ("fixer", "Fixer", ["suit", "tie_necktie", "dress_shoes", "trenchcoat"], [("trl_gun_gr44", 40)], {"speech": 6, "pistol": 3}),
     ],
-    "trl_jsdf": [
+    "trl_nap": [
         ("patrol", "Patrol officer", ["leather_police_jacket", "pants_cargo", "boots_combat", "ballistic_vest_light"], [("trl_gun_hp9", 60), ("baton-extended", 40)], {"pistol": 3, "melee": 2}),
         ("riot", "Riot trooper", ["armor_riot", "helmet_riot", "boots_combat", "gloves_light"], [("trl_gun_hs12", 60), ("baton-extended", 40)], {"shotgun": 4, "melee": 3}),
         ("tactical", "Tactical operator", ["trl_kp_vest", "trl_kp_helmet", "pants_army", "boots_combat", "gloves_light"], [("trl_gun_ga5", 50), ("trl_gun_gs300", 30), ("katana", 20), ("trl_gun_w2011", 4)], {"smg": 6, "rifle": 5, "melee": 4}),
@@ -32,7 +32,7 @@ NH = {"hacker": ["trl_nh_overload", "trl_nh_blind"], "zealot": ["trl_nh_shock_fi
 CYBER = {"zealot": 100, "tactical": 60, "hacker": 70, "enforcer": 30}
 # bar npcs: place id -> faction, [(class suffix or 'contact', x, y)]
 BARS = {
-    "trl_pl_izakaya":     ("trl_jsdf",   [("contact", 9, 11), ("patrol", 14, 11), ("patrol", 4, 17)]),
+    "trl_pl_izakaya":     ("trl_nap",   [("contact", 9, 11), ("patrol", 14, 11), ("patrol", 4, 17)]),
     "trl_pl_neon_lounge": ("trl_bratva", [("contact", 8, 12), ("thug", 14, 12), ("enforcer", 8, 16)]),
     "trl_pl_tea_house":   ("trl_nasim",  [("contact", 8, 11), ("hacker", 14, 11), ("zealot", 9, 16)]),
 }
@@ -64,12 +64,12 @@ def build():
                     "fac_food_supply": [[0, {"calories": 0, "vitamins": {}}]], "wealth": 5000000, "currency": "trl_yen",
                     "price_rules": [], "relations": rel})
     # alignment traits and hobbies
-    for key, nm in (("jsdf", "JSDF-aligned"), ("bratva", "Bratva-aligned")):
+    for key, nm in (("nap", "NAP-aligned"), ("bratva", "Bratva-aligned")):
         out.append({"type": "mutation", "id": f"trl_align_{key}", "name": {"str": nm}, "points": 0, "visibility": 0, "ugliness": 0,
                     "description": "Starting faction alignment.", "valid": False, "purifiable": False})
         out.append({"type": "profession", "subtype": "hobby", "id": f"trl_hobby_{key}", "name": nm,
-                    "description": {"JSDF-aligned": "You have friends in the JSDF.  Bratva wants you dead; the JSDF will deal with you.",
-                                    "Bratva-aligned": "You have friends in the Bratva.  The JSDF hunts you."}[nm],
+                    "description": {"NAP-aligned": "You have friends in the NAP.  Bratva wants you dead; the NAP will deal with you.",
+                                    "Bratva-aligned": "You have friends in the Bratva.  The NAP hunts you."}[nm],
                     "points": 0, "traits": [f"trl_align_{key}"]})
     # member groups, classes, templates
     for fid, mem in MEMBERS.items():
@@ -117,7 +117,7 @@ def build():
                          "condition": {"math": [f"{r} > -4"]}},
                         {"text": "Where do I stand with you?", "topic": f"TRL_CONTACT_{s.upper()}_STAND"},
                         {"text": "Never mind.", "topic": "TALK_DONE"}]})
-        facn = {"bratva": 1, "jsdf": 2, "nasim": 3}[s]
+        facn = {"bratva": 1, "nap": 2, "nasim": 3}[s]
         def acc(state, mid, npc_cls, uid, place):
             eff = [{"math": ["trl_t_fac", "=", str(facn)]}, {"math": ["trl_t_state", "=", str(state)]}, {"math": ["trl_t_dead", "=", "0"]},
                    {"math": ["trl_spy_progress", "=", "0"]}, {"u_location_variable": {"global_val": "trl_t_term_loc"}}]
@@ -176,9 +176,9 @@ def build():
         {"type": "effect_on_condition", "id": "trl_fac_start",
          "effect": [
              {"set_string_var": "none", "target_var": {"global_val": "trl_victim_faction"}},
-             {"math": ["trl_rank_bratva = -6"]}, {"math": ["trl_rank_jsdf = 0"]}, {"math": ["trl_rank_nasim = 0"]},
-             {"if": {"u_has_trait": "trl_align_jsdf"}, "then": [{"math": ["trl_rank_bratva = -8"]}, {"math": ["trl_rank_jsdf = 4"]}]},
-             {"if": {"u_has_trait": "trl_align_bratva"}, "then": [{"math": ["trl_rank_bratva = 4"]}, {"math": ["trl_rank_jsdf = -8"]}]},
+             {"math": ["trl_rank_bratva = -6"]}, {"math": ["trl_rank_nap = 0"]}, {"math": ["trl_rank_nasim = 0"]},
+             {"if": {"u_has_trait": "trl_align_nap"}, "then": [{"math": ["trl_rank_bratva = -8"]}, {"math": ["trl_rank_nap = 4"]}]},
+             {"if": {"u_has_trait": "trl_align_bratva"}, "then": [{"math": ["trl_rank_bratva = 4"]}, {"math": ["trl_rank_nap = -8"]}]},
              {"run_eocs": ["trl_fac_sync"]}]},
         {"type": "effect_on_condition", "id": "trl_fac_sync", "recurrence": ["30 seconds", "30 seconds"], "global": True,
          "effect": sync},
@@ -186,13 +186,13 @@ def build():
         {"type": "effect_on_condition", "id": "trl_fac_kill", "eoc_type": "EVENT", "required_event": "character_kills_character",
          "effect": [
              {"if": {"compare_string": ["trl_bratva", {"global_val": "trl_victim_faction"}]},
-              "then": [{"math": ["trl_rank_bratva = trl_rank_bratva - 2"]}, {"math": ["trl_rank_jsdf = trl_rank_jsdf + 1"]},
+              "then": [{"math": ["trl_rank_bratva = trl_rank_bratva - 2"]}, {"math": ["trl_rank_nap = trl_rank_nap + 1"]},
                        {"math": ["trl_rank_nasim = trl_rank_nasim + 1"]}]},
-             {"if": {"compare_string": ["trl_jsdf", {"global_val": "trl_victim_faction"}]},
-              "then": [{"math": ["trl_rank_jsdf = trl_rank_jsdf - 2"]}, {"math": ["trl_rank_bratva = trl_rank_bratva + 1"]},
+             {"if": {"compare_string": ["trl_nap", {"global_val": "trl_victim_faction"}]},
+              "then": [{"math": ["trl_rank_nap = trl_rank_nap - 2"]}, {"math": ["trl_rank_bratva = trl_rank_bratva + 1"]},
                        {"math": ["trl_rank_nasim = trl_rank_nasim + 1"]}]},
              {"if": {"compare_string": ["trl_nasim", {"global_val": "trl_victim_faction"}]},
-              "then": [{"math": ["trl_rank_nasim = trl_rank_nasim - 2"]}, {"math": ["trl_rank_jsdf = trl_rank_jsdf + 1"]},
+              "then": [{"math": ["trl_rank_nasim = trl_rank_nasim - 2"]}, {"math": ["trl_rank_nap = trl_rank_nap + 1"]},
                        {"math": ["trl_rank_bratva = trl_rank_bratva + 1"]}]},
              {"set_string_var": "none", "target_var": {"global_val": "trl_victim_faction"}},
              {"run_eocs": ["trl_fac_sync"]}]},

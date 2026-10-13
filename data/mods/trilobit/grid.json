@@ -2128,7 +2128,7 @@
    ],
    "place_npcs": [
     {
-     "class": "trl_nc_jsdf_patrol",
+     "class": "trl_nc_nap_patrol",
      "x": 22,
      "y": 16
     }
@@ -2258,7 +2258,7 @@
    ],
    "place_npcs": [
     {
-     "class": "trl_nc_jsdf_tactical",
+     "class": "trl_nc_nap_tactical",
      "x": 20,
      "y": 12
     }
@@ -2378,7 +2378,7 @@
    ],
    "place_npcs": [
     {
-     "class": "trl_nc_jsdf_tactical",
+     "class": "trl_nc_nap_tactical",
      "x": 2,
      "y": 22
     }
@@ -2865,7 +2865,7 @@
    ],
    "place_npcs": [
     {
-     "class": "trl_nc_jsdf_patrol",
+     "class": "trl_nc_nap_patrol",
      "x": 22,
      "y": 18
     }
@@ -3213,17 +3213,17 @@
    ],
    "place_npcs": [
     {
-     "class": "trl_nc_jsdf_patrol",
+     "class": "trl_nc_nap_patrol",
      "x": 1,
      "y": 18
     },
     {
-     "class": "trl_nc_jsdf_patrol",
+     "class": "trl_nc_nap_patrol",
      "x": 7,
      "y": 13
     },
     {
-     "class": "trl_nc_jsdf_riot",
+     "class": "trl_nc_nap_riot",
      "x": 0,
      "y": 12
     }

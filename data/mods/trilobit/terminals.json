@@ -1391,7 +1391,7 @@
               },
               {
                 "math": [
-                  "trl_rank_jsdf -= 1"
+                  "trl_rank_nap -= 1"
                 ]
               }
             ]
@@ -1405,7 +1405,7 @@
             "then": [
               {
                 "math": [
-                  "trl_rank_jsdf += 1"
+                  "trl_rank_nap += 1"
                 ]
               },
               {
@@ -1434,7 +1434,7 @@
               },
               {
                 "math": [
-                  "trl_rank_jsdf -= 1"
+                  "trl_rank_nap -= 1"
                 ]
               }
             ]
