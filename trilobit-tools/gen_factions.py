@@ -28,6 +28,7 @@ MEMBERS = {
         ("zealot", "Zealot", ["jumpsuit", "trenchcoat", "boots_combat"], [("katana", 40), ("tanto", 20), ("machete", 20), ("trl_kusarigama", 20)], {"melee": 7, "cutting": 6, "dodge": 4}),
     ],
 }
+NH = {"hacker": ["trl_nh_overload", "trl_nh_blind"], "zealot": ["trl_nh_shock_field", "trl_nh_siphon"], "tactical": ["trl_nh_lock_on"]}
 CYBER = {"zealot": 100, "tactical": 60, "hacker": 70, "enforcer": 30}
 # bar npcs: place id -> faction, [(class suffix or 'contact', x, y)]
 BARS = {
@@ -88,7 +89,9 @@ def build():
             cl["bonus_aggression"] = {"constant": 8}
             cl["bonus_bravery"] = {"constant": 10}
             if suf in CYBER:
-                cl["bionics"] = [{"id": "trl_bio_cyberbrain", "chance": CYBER[suf]}]
+                cl["bionics"] = [{"id": "trl_bio_cyberbrain", "chance": CYBER[suf]}, {"id": "bio_power_storage_mkII", "chance": CYBER[suf]}]
+            if suf in NH:
+                cl["spells"] = [{"id": sp, "level": 1} for sp in NH[suf]]
             out.append(cl)
             out.append({"type": "npc", "id": cid, "class": cid, "attitude": 0, "mission": 7, "faction": fid,
                         "chat": "TRL_FACTION_MEMBER", "temp_suffix": title})

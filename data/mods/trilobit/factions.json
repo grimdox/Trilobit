@@ -406,6 +406,10 @@
    {
     "id": "trl_bio_cyberbrain",
     "chance": 30
+   },
+   {
+    "id": "bio_power_storage_mkII",
+    "chance": 30
    }
   ]
  },
@@ -970,6 +974,16 @@
    {
     "id": "trl_bio_cyberbrain",
     "chance": 60
+   },
+   {
+    "id": "bio_power_storage_mkII",
+    "chance": 60
+   }
+  ],
+  "spells": [
+   {
+    "id": "trl_nh_lock_on",
+    "level": 1
    }
   ]
  },
@@ -1243,6 +1257,20 @@
    {
     "id": "trl_bio_cyberbrain",
     "chance": 70
+   },
+   {
+    "id": "bio_power_storage_mkII",
+    "chance": 70
+   }
+  ],
+  "spells": [
+   {
+    "id": "trl_nh_overload",
+    "level": 1
+   },
+   {
+    "id": "trl_nh_blind",
+    "level": 1
    }
   ]
  },
@@ -1458,6 +1486,20 @@
    {
     "id": "trl_bio_cyberbrain",
     "chance": 100
+   },
+   {
+    "id": "bio_power_storage_mkII",
+    "chance": 100
+   }
+  ],
+  "spells": [
+   {
+    "id": "trl_nh_shock_field",
+    "level": 1
+   },
+   {
+    "id": "trl_nh_siphon",
+    "level": 1
    }
   ]
  },
