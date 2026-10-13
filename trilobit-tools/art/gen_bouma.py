@@ -9,6 +9,7 @@ import json, os, re, sys, math, random
 from PIL import Image, ImageDraw, ImageFont
 sys.path.insert(0, os.path.dirname(__file__))
 import defs
+import items as itm
 from iso import Canvas, box, face, sides, diamond, shade, mix, W, DH
 
 PAL = {
@@ -18,10 +19,10 @@ PAL = {
     "pink": (232, 134, 182), "light_cyan": (122, 220, 232), "white": (226, 230, 238),
 }
 NEON = {"cyan": (60, 235, 255), "magenta": (255, 70, 200), "green": (90, 255, 140), "amber": (255, 170, 50), "red": (255, 70, 80)}
-SHEETS = ["flat", "half", "full", "high", "chars"]
-SIZE = {"flat": (48, 36), "half": (48, 48), "full": (48, 72), "high": (48, 96), "chars": (32, 36)}
-OFFS = {"flat": (0, -12), "half": (0, -24), "full": (0, -48), "high": (0, -72), "chars": (8, -19)}
-COLS = {"flat": 16, "half": 16, "full": 16, "high": 16, "chars": 24}
+SHEETS = ["flat", "half", "full", "high", "chars", "items"]
+SIZE = {"flat": (48, 36), "half": (48, 48), "full": (48, 72), "high": (48, 96), "chars": (32, 36), "items": (32, 32)}
+OFFS = {"flat": (0, -12), "half": (0, -24), "full": (0, -48), "high": (0, -72), "chars": (8, -19), "items": (8, -15)}
+COLS = {"flat": 16, "half": 16, "full": 16, "high": 16, "chars": 24, "items": 24}
 Hh = {k: v[1] for k, v in SIZE.items()}
 
 
@@ -640,6 +641,23 @@ def main(stock, repo):
             tgt = want(key, "chars", lambda shape=shape, col=col, key=key: p_machine(shape, col, seed_of(key)))
         else:
             tgt = want(key, "chars", lambda shape=shape, col=col, key=key: p_mon(shape, col, seed_of(key), False))
+        entries.setdefault(tgt, []).append(i)
+
+    # items, vehicle parts and fields
+    for i, o in sorted(D["item"].items()):
+        kind, col = itm.classify_item(i, o)
+        key = ("i", kind, col)
+        tgt = want(key, "items", lambda kind=kind, col=col, key=key: itm.p_item(kind, col, seed_of(key)))
+        entries.setdefault(tgt, []).append(i)
+    for i, o in sorted(D["vpart"].items()):
+        kind, col = itm.classify_vpart(i, o)
+        key = ("v", kind, col)
+        tgt = want(key, "half", lambda kind=kind, col=col, key=key: itm.p_vpart(kind, col, seed_of(key)))
+        entries.setdefault(tgt, []).append("vp_" + i)
+    for i, o in sorted(D["field"].items()):
+        kind, col = itm.classify_field(i, o)
+        key = ("fd", kind, col)
+        tgt = want(key, "flat", lambda kind=kind, col=col, key=key: itm.p_field(kind, col, seed_of(key)))
         entries.setdefault(tgt, []).append(i)
 
     # people

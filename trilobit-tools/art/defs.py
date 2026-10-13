@@ -2,7 +2,9 @@
 import json, glob, os, re
 
 def load(stock_dir, mod_dir):
-    raw = {"terrain": {}, "furniture": {}, "monster": {}}
+    raw = {"terrain": {}, "furniture": {}, "monster": {}, "field": {}, "vpart": {}, "item": {}}
+    ITEM_TYPES = {"ARMOR", "GUN", "TOOL", "GENERIC", "AMMO", "COMESTIBLE", "TOOL_ARMOR", "MAGAZINE", "BOOK", "CONTAINER", "PET_ARMOR", "BIONIC_ITEM", "ITEM",
+                  "GUNMOD", "BATTERY", "ENGINE", "WHEEL", "TOOLMOD"}
     files = glob.glob(os.path.join(stock_dir, "data/json/**/*.json"), recursive=True) + glob.glob(os.path.join(mod_dir, "**/*.json"), recursive=True)
     for f in files:
         try:
@@ -15,7 +17,9 @@ def load(stock_dir, mod_dir):
             if not isinstance(o, dict):
                 continue
             t = o.get("type")
-            key = {"terrain": "terrain", "furniture": "furniture", "MONSTER": "monster"}.get(t)
+            key = {"terrain": "terrain", "furniture": "furniture", "MONSTER": "monster", "field_type": "field", "vehicle_part": "vpart"}.get(t)
+            if t in ITEM_TYPES:
+                key = "item"
             if not key:
                 continue
             ids = o.get("id")
