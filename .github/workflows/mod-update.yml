@@ -12,6 +12,7 @@ on:
       - 'data/title/**'
       - 'gfx/splash/**'
       - 'gfx/Bouma/**'
+      - 'gfx/Mokuhanga/**'
 
 permissions:
   contents: write
@@ -28,6 +29,7 @@ jobs:
           cp -r data/title out/trilobit/data/
           cp -r gfx/splash out/trilobit/gfx/
           cp -r gfx/Bouma out/trilobit/gfx/
+          cp -r gfx/Mokuhanga out/trilobit/gfx/
           echo "Built from commit $GITHUB_SHA" > out/trilobit/MOD_VERSION.txt
           cd out && zip -qr ../trilobit-mod.zip trilobit
           ls -la ../trilobit-mod.zip
