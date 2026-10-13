@@ -9702,84 +9702,236 @@
     ]
    },
    {
-    "run_eoc_selector": [
-     "trl_nh_rem_repair",
-     "trl_nh_rem_purge",
-     "trl_nh_rem_plating",
-     "trl_nh_rem_reactive",
-     "trl_nh_rem_overclock",
-     "trl_nh_rem_afterimage",
-     "trl_nh_rem_lock_on",
-     "trl_nh_rem_shock_field",
-     "trl_nh_rem_cloak",
-     "trl_nh_rem_dampener",
-     "trl_nh_rem_pulse_scan",
-     "trl_nh_rem_night_eye",
-     "trl_nh_rem_overload",
-     "trl_nh_rem_blind",
-     "trl_nh_rem_lock",
-     "trl_nh_rem_print_ammo",
-     "trl_nh_rem_print_kit",
-     "trl_nh_rem_blink",
-     "trl_nh_rem_hop",
-     "trl_nh_rem_siphon",
-     "trl_nh_rem_probe",
-     "trl_nh_rem_disrupt",
-     "trl_nh_rem_takeover"
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_repair"
+      },
+      {
+       "u_has_trait": "trl_nhq_repair"
+      },
+      {
+       "u_has_trait": "trl_nh_purge"
+      },
+      {
+       "u_has_trait": "trl_nhq_purge"
+      },
+      {
+       "u_has_trait": "trl_nh_plating"
+      },
+      {
+       "u_has_trait": "trl_nhq_plating"
+      },
+      {
+       "u_has_trait": "trl_nh_reactive"
+      },
+      {
+       "u_has_trait": "trl_nhq_reactive"
+      },
+      {
+       "u_has_trait": "trl_nh_overclock"
+      },
+      {
+       "u_has_trait": "trl_nhq_overclock"
+      },
+      {
+       "u_has_trait": "trl_nh_afterimage"
+      },
+      {
+       "u_has_trait": "trl_nhq_afterimage"
+      },
+      {
+       "u_has_trait": "trl_nh_lock_on"
+      },
+      {
+       "u_has_trait": "trl_nhq_lock_on"
+      },
+      {
+       "u_has_trait": "trl_nh_shock_field"
+      },
+      {
+       "u_has_trait": "trl_nhq_shock_field"
+      },
+      {
+       "u_has_trait": "trl_nh_cloak"
+      },
+      {
+       "u_has_trait": "trl_nhq_cloak"
+      },
+      {
+       "u_has_trait": "trl_nh_dampener"
+      },
+      {
+       "u_has_trait": "trl_nhq_dampener"
+      },
+      {
+       "u_has_trait": "trl_nh_pulse_scan"
+      },
+      {
+       "u_has_trait": "trl_nhq_pulse_scan"
+      },
+      {
+       "u_has_trait": "trl_nh_night_eye"
+      },
+      {
+       "u_has_trait": "trl_nhq_night_eye"
+      },
+      {
+       "u_has_trait": "trl_nh_overload"
+      },
+      {
+       "u_has_trait": "trl_nhq_overload"
+      },
+      {
+       "u_has_trait": "trl_nh_blind"
+      },
+      {
+       "u_has_trait": "trl_nhq_blind"
+      },
+      {
+       "u_has_trait": "trl_nh_lock"
+      },
+      {
+       "u_has_trait": "trl_nhq_lock"
+      },
+      {
+       "u_has_trait": "trl_nh_print_ammo"
+      },
+      {
+       "u_has_trait": "trl_nhq_print_ammo"
+      },
+      {
+       "u_has_trait": "trl_nh_print_kit"
+      },
+      {
+       "u_has_trait": "trl_nhq_print_kit"
+      },
+      {
+       "u_has_trait": "trl_nh_blink"
+      },
+      {
+       "u_has_trait": "trl_nhq_blink"
+      },
+      {
+       "u_has_trait": "trl_nh_hop"
+      },
+      {
+       "u_has_trait": "trl_nhq_hop"
+      },
+      {
+       "u_has_trait": "trl_nh_siphon"
+      },
+      {
+       "u_has_trait": "trl_nhq_siphon"
+      },
+      {
+       "u_has_trait": "trl_nh_probe"
+      },
+      {
+       "u_has_trait": "trl_nhq_probe"
+      },
+      {
+       "u_has_trait": "trl_nh_disrupt"
+      },
+      {
+       "u_has_trait": "trl_nhq_disrupt"
+      },
+      {
+       "u_has_trait": "trl_nh_takeover"
+      },
+      {
+       "u_has_trait": "trl_nhq_takeover"
+      }
+     ]
+    },
+    "then": [
+     {
+      "run_eoc_selector": [
+       "trl_nh_rem_repair",
+       "trl_nh_rem_purge",
+       "trl_nh_rem_plating",
+       "trl_nh_rem_reactive",
+       "trl_nh_rem_overclock",
+       "trl_nh_rem_afterimage",
+       "trl_nh_rem_lock_on",
+       "trl_nh_rem_shock_field",
+       "trl_nh_rem_cloak",
+       "trl_nh_rem_dampener",
+       "trl_nh_rem_pulse_scan",
+       "trl_nh_rem_night_eye",
+       "trl_nh_rem_overload",
+       "trl_nh_rem_blind",
+       "trl_nh_rem_lock",
+       "trl_nh_rem_print_ammo",
+       "trl_nh_rem_print_kit",
+       "trl_nh_rem_blink",
+       "trl_nh_rem_hop",
+       "trl_nh_rem_siphon",
+       "trl_nh_rem_probe",
+       "trl_nh_rem_disrupt",
+       "trl_nh_rem_takeover"
+      ],
+      "names": [
+       "Remove Mend: Repair (CV 2)",
+       "Remove Mend: Purge (CV 1)",
+       "Remove Shell: Plating (CV 3)",
+       "Remove Shell: Reactive Shell (CV 3)",
+       "Remove Reflex: Overclock (CV 4)",
+       "Remove Reflex: Afterimage (CV 2)",
+       "Remove Strike: Lock-On (CV 3)",
+       "Remove Strike: Shock Field (CV 4)",
+       "Remove Ghost: Thermal Cloak (CV 5)",
+       "Remove Ghost: Noise Dampener (CV 2)",
+       "Remove Sense: Pulse Scan (CV 2)",
+       "Remove Sense: Night Eye (CV 1)",
+       "Remove Intrude: Overload (CV 3)",
+       "Remove Intrude: Blind (CV 2)",
+       "Remove Intrude: Lockdown (CV 3)",
+       "Remove Fabricate: Print Ammo (CV 3)",
+       "Remove Fabricate: Print Bandages (CV 2)",
+       "Remove Phase: Blink (CV 5)",
+       "Remove Phase: Hop (CV 3)",
+       "Remove Drain: Siphon (CV 4)",
+       "Remove Intrude: Probe (CV 1)",
+       "Remove Intrude: Disrupt (CV 2)",
+       "Remove Intrude: Take Over (CV 4)"
+      ],
+      "keys": [
+       "a",
+       "b",
+       "c",
+       "d",
+       "e",
+       "f",
+       "g",
+       "h",
+       "i",
+       "j",
+       "k",
+       "l",
+       "m",
+       "n",
+       "o",
+       "p",
+       "q",
+       "r",
+       "s",
+       "t",
+       "u",
+       "v",
+       "w"
+      ],
+      "hide_failing": true,
+      "allow_cancel": true,
+      "title": "Nanohacks: Control Value <u_val:nh_used> of <u_val:nh_limit> in use"
+     }
     ],
-    "names": [
-     "Remove Mend: Repair (CV 2)",
-     "Remove Mend: Purge (CV 1)",
-     "Remove Shell: Plating (CV 3)",
-     "Remove Shell: Reactive Shell (CV 3)",
-     "Remove Reflex: Overclock (CV 4)",
-     "Remove Reflex: Afterimage (CV 2)",
-     "Remove Strike: Lock-On (CV 3)",
-     "Remove Strike: Shock Field (CV 4)",
-     "Remove Ghost: Thermal Cloak (CV 5)",
-     "Remove Ghost: Noise Dampener (CV 2)",
-     "Remove Sense: Pulse Scan (CV 2)",
-     "Remove Sense: Night Eye (CV 1)",
-     "Remove Intrude: Overload (CV 3)",
-     "Remove Intrude: Blind (CV 2)",
-     "Remove Intrude: Lockdown (CV 3)",
-     "Remove Fabricate: Print Ammo (CV 3)",
-     "Remove Fabricate: Print Bandages (CV 2)",
-     "Remove Phase: Blink (CV 5)",
-     "Remove Phase: Hop (CV 3)",
-     "Remove Drain: Siphon (CV 4)",
-     "Remove Intrude: Probe (CV 1)",
-     "Remove Intrude: Disrupt (CV 2)",
-     "Remove Intrude: Take Over (CV 4)"
-    ],
-    "keys": [
-     "a",
-     "b",
-     "c",
-     "d",
-     "e",
-     "f",
-     "g",
-     "h",
-     "i",
-     "j",
-     "k",
-     "l",
-     "m",
-     "n",
-     "o",
-     "p",
-     "q",
-     "r",
-     "s",
-     "t",
-     "u",
-     "v",
-     "w"
-    ],
-    "hide_failing": true,
-    "allow_cancel": true,
-    "title": "Nanohacks: Control Value <u_val:nh_used> of <u_val:nh_limit> in use"
+    "else": [
+     {
+      "u_message": "No nanohacks installed.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.",
+      "type": "info"
+     }
+    ]
    }
   ]
  },

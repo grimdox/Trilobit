@@ -199,8 +199,9 @@ menu = [{"run_eocs": ["trl_nh_recalc"]}]
 for sid in sids:
     menu.append({"if": has(sid), "then": [{"u_message": f"  {names[sid]} (CV {COST[sid]}): active", "type": "neutral"}]})
     menu.append({"if": hasq(sid), "then": [{"u_message": f"  {names[sid]} (CV {COST[sid]}): SUSPENDED", "type": "bad"}]})
-menu.append({"run_eoc_selector": ["trl_nh_rem_" + short(s) for s in sids], "names": [f"Remove {names[s]} (CV {COST[s]})" for s in sids],
-             "keys": list(keys)[:len(sids)], "hide_failing": True, "allow_cancel": True, "title": "Nanohacks: Control Value <u_val:nh_used> of <u_val:nh_limit> in use"})
+anyins = {"or": [c for sid in sids for c in (has(sid), hasq(sid))]}
+menu.append({"if": anyins, "then": [{"run_eoc_selector": ["trl_nh_rem_" + short(s) for s in sids], "names": [f"Remove {names[s]} (CV {COST[s]})" for s in sids],
+             "keys": list(keys)[:len(sids)], "hide_failing": True, "allow_cancel": True, "title": "Nanohacks: Control Value <u_val:nh_used> of <u_val:nh_limit> in use"}], "else": [{"u_message": "No nanohacks installed.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.", "type": "info"}]})
 cvx.append(eoc("trl_nh_menu", menu))
 cvx.append(eoc("trl_nh_start", [{"math": ["u_nh_seq", "=", "1"]}, {"u_spawn_item": "trl_nh_console"}, {"run_eocs": ["trl_nh_recalc"]}]))
 
