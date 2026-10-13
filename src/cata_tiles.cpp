@@ -1,5 +1,6 @@
 #if defined(TILES)
 #include "cata_tiles.h"
+#include "trl_aware.h"
 
 #include <algorithm>
 #include <array>
@@ -3232,6 +3233,40 @@ void cata_tiles::draw_facing_arrow( const Creature &critter, const tripoint_bub_
     const int cy = screen.y + tile_height / 2;
     SDL_Color col = critter.is_avatar() ? SDL_Color{ 80, 255, 255, 255 } :
                     critter.is_npc() ? SDL_Color{ 120, 255, 120, 255 } : SDL_Color{ 255, 90, 90, 255 };
+    // Trilobit: show how aware an Alert-Aware creature is of the player
+    const int aw = trl_aware::level( critter );
+    if( aw >= 0 ) {
+        static const SDL_Color aw_col[5] = { { 90, 200, 90, 255 }, { 255, 220, 0, 255 }, { 255, 150, 0, 255 },
+            { 255, 40, 40, 255 }, { 150, 150, 150, 255 }
+        };
+        col = aw_col[aw];
+        static const char *const glyph_q[7] = { " ### ", "#   #", "    #", "  ## ", "  #  ", "     ", "  #  " };
+        static const char *const glyph_e[7] = { "  #  ", "  #  ", "  #  ", "  #  ", "  #  ", "     ", "  #  " };
+        if( aw == trl_aware::SUSPICIOUS || aw == trl_aware::SEARCHING || aw == trl_aware::HUNTING ) {
+            const char *const *gl = aw == trl_aware::HUNTING ? glyph_e : glyph_q;
+            const int px = std::max( 2, tile_width / 24 );
+            const int gx = screen.x + tile_width / 2 - ( 5 * px ) / 2;
+            const int gy = screen.y + tile_height / 2 - ( is_isometric() ? tile_width * 9 / 10 : tile_height * 6 / 10 ) -
+                           ( 7 * px ) / 2;
+            const SDL_Color black{ 0, 0, 0, 255 };
+            for( int r = 0; r < 7; ++r ) {
+                for( int cidx = 0; cidx < 5; ++cidx ) {
+                    if( gl[r][cidx] == '#' ) {
+                        SDL_Rect o{ gx + cidx * px - 1, gy + r * px - 1, px + 2, px + 2 };
+                        geometry->rect( renderer, o, black );
+                    }
+                }
+            }
+            for( int r = 0; r < 7; ++r ) {
+                for( int cidx = 0; cidx < 5; ++cidx ) {
+                    if( gl[r][cidx] == '#' ) {
+                        SDL_Rect rr{ gx + cidx * px, gy + r * px, px, px };
+                        geometry->rect( renderer, rr, col );
+                    }
+                }
+            }
+        }
+    }
     const SDL_Color black{ 0, 0, 0, 255 };
     const bool diag = f.x != 0 && f.y != 0;
     const int step = std::max( 2, ( tile_width * ( diag ? 7 : 10 ) ) / 100 );

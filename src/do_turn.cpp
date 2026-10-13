@@ -28,6 +28,7 @@
 #include "cata_variant.h"
 #include "clzones.h"
 #include "coordinates.h"
+#include "creature_tracker.h"
 #include "debug.h"
 #include "enums.h"
 #include "event.h"
@@ -72,6 +73,8 @@
 #include "string_formatter.h"
 #include "timed_event.h"
 #include "translations.h"
+#include "trl_aware.h"
+#include "effect.h"
 #include "type_id.h"
 #include "uilist.h"
 #include "ui_manager.h"
@@ -456,6 +459,8 @@ void overmap_npc_move()
 // MAIN GAME LOOP
 // Returns true if game is over (death, saved, quit, etc)
 // Trilobit dev-only test hook, enabled by env TRL_TEST (see TODO.md "testing")
+static const efftype_id effect_invisibility( "invisibility" );
+
 static void trl_test_hook()
 {
     static const char *env = std::getenv( "TRL_TEST" );
@@ -480,6 +485,142 @@ static void trl_test_hook()
         u.assign_activity( act );
     }
     const int t = to_turns<int>( calendar::turn - calendar::turn_zero );
+    if( teleported && std::getenv( "TRL_TEST_AWARE_NPC" ) != nullptr ) {
+        // Scripted awareness test for an NPC class (e.g. trl_nc_bratva_thug)
+        static int t0 = -1;
+        static npc *sub = nullptr;
+        static int last_t = -1;
+        map &m = get_map();
+        std::ofstream out( "/tmp/claude-0/awdump_npc.txt", std::ios::app );
+        if( t0 < 0 ) {
+            t0 = t;
+            for( npc &guy : g->all_npcs() ) {
+                guy.die( &m, nullptr );
+            }
+            for( int d = 14; d >= 5 && sub == nullptr; --d ) {
+                for( const point &dir : { point( 1, 0 ), point( -1, 0 ), point( 0, 1 ), point( 0, -1 ) } ) {
+                    const tripoint_bub_ms p = u.pos_bub() + tripoint( dir.x * d, dir.y * d, 0 );
+                    if( m.inbounds( p ) && m.passable( p ) && m.sees( p, u.pos_bub(), 40 ) &&
+                        get_creature_tracker().creature_at( p ) == nullptr ) {
+                        shared_ptr_fast<npc> temp = make_shared_fast<npc>();
+                        temp->normalize();
+                        temp->randomize( npc_class_id( std::getenv( "TRL_TEST_AWARE_NPC" ) ) );
+                        temp->spawn_at_precise( m.get_abs( p ) );
+                        temp->set_fac( faction_id( "trl_bratva" ) );
+                        overmap_buffer.insert_npc( temp );
+                        temp->form_opinion( u );
+                        temp->mission = NPC_MISSION_NULL;
+                        g->load_npcs();
+                        sub = g->find_npc( temp->getID() );
+                        if( sub ) {
+                            sub->trl_face_toward( u.pos_abs() );
+                            if( !sub->guaranteed_hostile() ) {
+                                sub->set_attitude( NPCATT_KILL );
+                            }
+                            out << "npc spawned at dist " << d << " dir " << dir.x << "," << dir.y << " aware "
+                                << trl_aware::enabled( *sub ) << " gh " << sub->guaranteed_hostile() << "\n";
+                            break;
+                        }
+                    }
+                }
+            }
+            if( !sub ) {
+                out << "NO SPAWN\n";
+            }
+        }
+        if( sub && t != last_t ) {
+            last_t = t;
+            u.healall( 1000 );
+            const int rel = t - t0;
+            out << "t+" << rel << " lvl " << trl_aware::level( *sub ) << " dist " << rl_dist( sub->pos_abs(), u.pos_abs() )
+                << " sees " << sub->sees( m, u ) << " face " << sub->trl_facing.x << "," << sub->trl_facing.y
+                << " att " << static_cast<int>( sub->get_attitude() ) << " enemy " << sub->is_enemy();
+            if( const std::optional<tripoint_abs_ms> lk = trl_aware::last_known( *sub ) ) {
+                out << " lastknown " << lk->x() - sub->pos_abs().x() << "," << lk->y() - sub->pos_abs().y();
+            }
+            out << " pos " << sub->pos_abs().x() << "," << sub->pos_abs().y() << " goto " << sub->goto_to_this_pos.has_value()
+                << " path " << sub->path.size() << " mv " << sub->get_moves() << " stat " << sub->is_stationary( true )
+                << " mis " << static_cast<int>( sub->mission ) << " act " << sub->activity.id().str()
+                << "\n";
+            if( rel == 14 ) {
+                u.add_effect( effect_invisibility, 300_turns );
+                out << "-- player invisible --\n";
+            }
+        }
+    }
+    if( teleported && std::getenv( "TRL_TEST_AWARE" ) != nullptr ) {
+        // Scripted awareness test: spawn a soldier in view, watch it notice us, then vanish.
+        static int t0 = -1;
+        static monster *soldier = nullptr;
+        static int last_t = -1;
+        map &m = get_map();
+        std::ofstream out( "/tmp/claude-0/awdump.txt", std::ios::app );
+        if( t0 < 0 ) {
+            t0 = t;
+            // keep the test clean: the soldier's faction also fights NPCs, so clear them out
+            for( npc &guy : g->all_npcs() ) {
+                guy.die( &m, nullptr );
+            }
+            for( int d = 14; d >= 5 && soldier == nullptr; --d ) {
+                for( const point &dir : { point( 1, 0 ), point( -1, 0 ), point( 0, 1 ), point( 0, -1 ) } ) {
+                    const tripoint_bub_ms p = u.pos_bub() + tripoint( dir.x * d, dir.y * d, 0 );
+                    if( m.inbounds( p ) && m.passable( p ) && m.sees( p, u.pos_bub(), 40 ) &&
+                        get_creature_tracker().creature_at( p ) == nullptr ) {
+                        soldier = g->place_critter_at( mtype_id( std::getenv( "TRL_TEST_AWARE" ) ), p );
+                        if( soldier ) {
+                            soldier->trl_face_toward( u.pos_abs() );
+                            out << "spawned at dist " << d << " dir " << dir.x << "," << dir.y << "\n";
+                            break;
+                        }
+                    }
+                }
+            }
+            if( !soldier ) {
+                out << "NO SPAWN SPOT\n";
+            }
+        }
+        if( soldier && t != last_t ) {
+            last_t = t;
+            u.healall( 1000 );
+            const int rel = t - t0;
+            out << "t+" << rel << " lvl " << trl_aware::level( *soldier ) << " dist "
+                << rl_dist( soldier->pos_abs(), u.pos_abs() ) << " sees " << soldier->sees( m, u )
+                << " face " << soldier->trl_facing.x << "," << soldier->trl_facing.y
+                << " hp " << soldier->get_hp() << " dest " << ( soldier->has_dest() ? "y" : "n" );
+            if( soldier->has_dest() ) {
+                const tripoint_abs_ms d = soldier->get_dest();
+                out << " destrel " << d.x() - soldier->pos_abs().x() << "," << d.y() - soldier->pos_abs().y();
+            }
+            if( const std::optional<tripoint_abs_ms> lk = trl_aware::last_known( *soldier ) ) {
+                out << " lastknown " << lk->x() - soldier->pos_abs().x() << "," << lk->y() - soldier->pos_abs().y();
+            }
+            out << " wandf " << soldier->wandf << "\n";
+            if( rel == 12 ) {
+                // vanish: unseen for a while, and moved to a spot the soldier cannot see
+                u.add_effect( effect_invisibility, 300_turns );
+                bool moved = false;
+                for( int r = 3; r <= 14 && !moved; ++r ) {
+                    for( int dx = -r; dx <= r && !moved; ++dx ) {
+                        for( int dy = -r; dy <= r && !moved; ++dy ) {
+                            if( std::max( std::abs( dx ), std::abs( dy ) ) != r ) {
+                                continue;
+                            }
+                            const tripoint_bub_ms p = u.pos_bub() + tripoint( dx, dy, 0 );
+                            if( m.inbounds( p ) && m.passable( p ) && !m.sees( soldier->pos_bub(), p, 60 ) &&
+                                get_creature_tracker().creature_at( p ) == nullptr ) {
+                                g->place_player( p );
+                                moved = true;
+                                out << "-- player moved out of sight by " << dx << "," << dy << " --\n";
+                            }
+                        }
+                    }
+                }
+                if( !moved ) {
+                    out << "-- no hiding spot found --\n";
+                }
+            }
+        }
+    }
     if( t % 600 == 0 && t != last ) {
         last = t;
         std::ofstream out( "/tmp/claude-0/npcdump.txt", std::ios::app );

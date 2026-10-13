@@ -1,5 +1,6 @@
 // Monster movement code; essentially, the AI
 #include "monster.h" // IWYU pragma: associated
+#include "trl_aware.h"
 
 #include <algorithm>
 #include <cfloat>
@@ -482,9 +483,18 @@ void monster::plan()
     std::bitset<OVERMAP_LAYERS> seen_levels = here.get_inter_level_visibility( posz() );
     monster_attitude mood = attitude();
     Character &player_character = get_player_character();
+    // Trilobit: Alert-Aware monsters notice the player gradually (see trl_aware.h).
+    const bool trl_aw = friendly == 0 && trl_aware::enabled( *this );
+    bool trl_sees_pc = friendly == 0 && seen_levels.test( player_character.posz() + OVERMAP_DEPTH ) &&
+                       sees( here, player_character );
+    if( trl_aw ) {
+        trl_sees_pc = trl_aware::gate( *this, player_character, trl_sees_pc );
+        if( trl_aware::level( *this ) == trl_aware::UNAWARE && !has_dest() && wandf <= 0 ) {
+            trl_aware::sweep( *this );
+        }
+    }
     // If we can see the player, move toward them or flee.
-    if( friendly == 0 && seen_levels.test( player_character.posz() + OVERMAP_DEPTH ) &&
-        sees( here, player_character ) ) {
+    if( trl_sees_pc ) {
         mon_plan.dist = rate_target( player_character, mon_plan.dist, mon_plan.smart_planning );
         mon_plan.fleeing = mon_plan.fleeing || is_fleeing( player_character );
         mon_plan.target = &player_character;
@@ -529,6 +539,10 @@ void monster::plan()
 
     int valid_targets = ( mon_plan.target == nullptr ) ? 0 : 1;
     for( npc &who : g->all_npcs() ) {
+        // Trilobit: Alert-Aware enemies hunt the player and the player's followers, not the city's civilians.
+        if( trl_aw && !who.is_player_ally() ) {
+            continue;
+        }
         mf_attitude faction_att = faction.obj().attitude( who.get_monster_faction() );
         if( faction_att == MFA_NEUTRAL || faction_att == MFA_FRIENDLY ) {
             continue;
@@ -686,6 +700,14 @@ void monster::plan()
         }
     }
 
+    trl_aware::drive_result trl_drv;
+    if( trl_aw && mon_plan.target == nullptr ) {
+        trl_drv = trl_aware::drive( *this );
+        if( trl_drv.finished ) {
+            unset_dest();
+        }
+    }
+
     if( has_effect( effect_dragging ) ) {
 
         if( type->has_special_attack( "OPERATE" ) ) {
@@ -712,6 +734,9 @@ void monster::plan()
             }
         }
 
+    } else if( trl_drv.active && trl_drv.dest ) {
+        // Trilobit: investigating, searching or returning to post
+        set_dest( *trl_drv.dest );
     } else if( mon_plan.target != nullptr ) {
 
         const tripoint_abs_ms dest = mon_plan.target->pos_abs();

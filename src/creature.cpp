@@ -1,4 +1,5 @@
 #include "creature.h"
+#include "trl_aware.h"
 
 #include <algorithm>
 #include <array>
@@ -539,7 +540,12 @@ bool Creature::sees( const map &here, const Creature &critter ) const
     // Trilobit: monsters only see within a 180 degree cone in front of them.
     // Adjacent targets are always noticed.
     if( ( as_monster() != nullptr || as_npc() != nullptr || is_avatar() ) && !trl_in_front_cone( critter.pos_abs() ) ) {
-        return false;
+        // An adjacent target is felt even behind us, except by an Alert-Aware creature that has not
+        // noticed anyone yet (so you can stand right behind an unaware guard).
+        const int aw = trl_aware::level( *this );
+        if( target_range > 1 || aw == trl_aware::UNAWARE || aw == trl_aware::SUSPICIOUS ) {
+            return false;
+        }
     }
 
     if( this->has_flag( mon_flag_ALL_SEEING ) ) {
@@ -1407,6 +1413,14 @@ void Creature::deal_projectile_attack( map *here, Creature *source, dealt_projec
     }
 
     impact.mult_damage( hit_selection.damage_mult );
+    // Trilobit: a shot at an enemy that has not noticed you hits much harder
+    if( source != nullptr ) {
+        const float trl_sneak = trl_aware::sneak_mult( *this, *source );
+        if( trl_sneak > 1.0f ) {
+            impact.mult_damage( trl_sneak );
+            add_msg( m_good, _( "You catch %s off guard!" ), disp_name() );
+        }
+    }
 
     if( proj_effects.count( ammo_effect_NOGIB ) > 0 ) {
         float dmg_ratio = static_cast<float>( impact.total_damage() ) / get_hp_max( hit_selection.bp_hit );

@@ -75,6 +75,7 @@
 #include "monster.h"
 #include "mtype.h"
 #include "npc.h"
+#include "trl_aware.h"
 #include "npc_attack.h"
 #include "npc_opinion.h"
 #include "npctalk.h"
@@ -754,6 +755,11 @@ void npc::assess_danger()
 
     Character &player_character = get_player_character();
     bool sees_player = sees( here, player_character.pos_bub( here ) );
+    // Trilobit: Alert-Aware hostile NPCs notice the player gradually and can lose track of them.
+    if( trl_aware::enabled( *this ) && ( is_enemy() || guaranteed_hostile() ) ) {
+        sees_player = trl_aware::gate( *this, player_character,
+                                       sees_player && sees( here, player_character ) );
+    }
     const bool self_defense_only = rules.engagement == combat_engagement::NO_MOVE ||
                                    rules.engagement == combat_engagement::NONE;
     const bool no_fighting = rules.has_flag( ally_rule::forbid_engage );
@@ -1351,6 +1357,18 @@ void npc::move()
     }
     act_on_danger_assessment();
     npc_action action = npc_undecided;
+    trl_aware::drive_result trl_drv;
+
+    // Trilobit: civilians run from trouble instead of fighting.
+    if( trl_aware::noncombatant( *this ) && !is_player_ally() ) {
+        if( attitude == NPCATT_KILL || attitude == NPCATT_MUG || attitude == NPCATT_WAIT_FOR_LEAVE ) {
+            set_attitude( NPCATT_FLEE_TEMP );
+            add_effect( effect_npc_flee_player, 30_turns );
+        }
+        if( !ai_cache.hostile_guys.empty() ) {
+            add_effect( effect_npc_run_away, 8_turns );
+        }
+    }
 
     const item_location weapon = get_wielded_item();
     static const std::string no_target_str = "none";
@@ -1364,7 +1382,10 @@ void npc::move()
 
     Character &player_character = get_player_character();
     //faction opinion determines if it should consider you hostile
-    if( !is_enemy() && guaranteed_hostile() && sees( here, player_character ) ) {
+    const bool trl_noticed = trl_aware::enabled( *this ) ?
+                             trl_aware::level( *this ) == trl_aware::HUNTING && sees( here, player_character ) :
+                             sees( here, player_character );
+    if( !is_enemy() && guaranteed_hostile() && trl_noticed ) {
         if( is_player_ally() ) {
             mutiny();
         }
@@ -1422,6 +1443,11 @@ void npc::move()
         action = npc_heal;
     } else if( target != nullptr && ai_cache.danger > 0 && !has_flag( json_flag_CANNOT_ATTACK ) ) {
         action = method_of_attack();
+    } else if( trl_aware::enabled( *this ) && !is_walking_with() && !has_flag( json_flag_CANNOT_MOVE ) &&
+               ( trl_drv = trl_aware::drive( *this ) ).active && trl_drv.dest ) {
+        // Trilobit: investigating, searching around the last known position, or walking back to post
+        goto_to_this_pos = *trl_drv.dest;
+        action = npc_goto_to_this_pos;
     } else if( !ai_cache.sound_alerts.empty() && !is_walking_with() &&
                !has_flag( json_flag_CANNOT_MOVE ) ) {
         tripoint_abs_ms cur_s_abs_pos = ai_cache.s_abs_pos;
@@ -4799,6 +4825,17 @@ void npc::mug_player( Character &mark )
 void npc::look_for_player( const Character &sought )
 {
     complain_about( "look_for_player", 5_minutes, chat_snippets().snip_wait.translated(), false );
+    if( trl_aware::enabled( *this ) && is_enemy() ) {
+        // Trilobit: head for where we last knew the player to be, not where they really are.
+        const std::optional<tripoint_abs_ms> lk = trl_aware::last_known( *this );
+        if( lk ) {
+            update_path( get_map().get_bub( *lk ) );
+            move_to_next();
+        } else {
+            move_pause();
+        }
+        return;
+    }
     update_path( sought.pos_bub() );
     move_to_next();
     // The part below is not implemented properly

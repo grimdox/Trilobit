@@ -273,6 +273,11 @@
   "worn_override": "trl_nc_bratva_thug_worn",
   "weapon_override": "trl_nc_bratva_thug_weapon",
   "carry_override": "trl_nc_bratva_thug_carry",
+  "traits": [
+   {
+    "trait": "trl_alert_aware"
+   }
+  ],
   "skills": [
    {
     "skill": "ALL",
@@ -376,6 +381,11 @@
   "worn_override": "trl_nc_bratva_enforcer_worn",
   "weapon_override": "trl_nc_bratva_enforcer_weapon",
   "carry_override": "trl_nc_bratva_enforcer_carry",
+  "traits": [
+   {
+    "trait": "trl_alert_aware"
+   }
+  ],
   "skills": [
    {
     "skill": "ALL",
@@ -478,6 +488,11 @@
   "worn_override": "trl_nc_bratva_fixer_worn",
   "weapon_override": "trl_nc_bratva_fixer_weapon",
   "carry_override": "trl_nc_bratva_fixer_carry",
+  "traits": [
+   {
+    "trait": "trl_alert_aware"
+   }
+  ],
   "skills": [
    {
     "skill": "ALL",
@@ -1084,6 +1099,11 @@
   "worn_override": "trl_nc_jsdf_patrol_worn",
   "weapon_override": "trl_nc_jsdf_patrol_weapon",
   "carry_override": "trl_nc_jsdf_patrol_carry",
+  "traits": [
+   {
+    "trait": "trl_alert_aware"
+   }
+  ],
   "skills": [
    {
     "skill": "ALL",
@@ -1180,6 +1200,11 @@
   "worn_override": "trl_nc_jsdf_riot_worn",
   "weapon_override": "trl_nc_jsdf_riot_weapon",
   "carry_override": "trl_nc_jsdf_riot_carry",
+  "traits": [
+   {
+    "trait": "trl_alert_aware"
+   }
+  ],
   "skills": [
    {
     "skill": "ALL",
@@ -1283,6 +1308,11 @@
   "worn_override": "trl_nc_jsdf_tactical_worn",
   "weapon_override": "trl_nc_jsdf_tactical_weapon",
   "carry_override": "trl_nc_jsdf_tactical_carry",
+  "traits": [
+   {
+    "trait": "trl_alert_aware"
+   }
+  ],
   "skills": [
    {
     "skill": "ALL",
@@ -1911,6 +1941,11 @@
   "worn_override": "trl_nc_nasim_hacker_worn",
   "weapon_override": "trl_nc_nasim_hacker_weapon",
   "carry_override": "trl_nc_nasim_hacker_carry",
+  "traits": [
+   {
+    "trait": "trl_alert_aware"
+   }
+  ],
   "skills": [
    {
     "skill": "ALL",
@@ -2033,6 +2068,11 @@
   "worn_override": "trl_nc_nasim_saboteur_worn",
   "weapon_override": "trl_nc_nasim_saboteur_weapon",
   "carry_override": "trl_nc_nasim_saboteur_carry",
+  "traits": [
+   {
+    "trait": "trl_alert_aware"
+   }
+  ],
   "skills": [
    {
     "skill": "ALL",
@@ -2140,6 +2180,11 @@
   "worn_override": "trl_nc_nasim_zealot_worn",
   "weapon_override": "trl_nc_nasim_zealot_weapon",
   "carry_override": "trl_nc_nasim_zealot_carry",
+  "traits": [
+   {
+    "trait": "trl_alert_aware"
+   }
+  ],
   "skills": [
    {
     "skill": "ALL",

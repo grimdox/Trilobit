@@ -23,7 +23,10 @@
   "ugliness": 0,
   "description": "Wealth tier: poor.  Hidden marker used by the resident routine.",
   "valid": false,
-  "purifiable": false
+  "purifiable": false,
+  "flags": [
+   "TRL_NONCOMBATANT"
+  ]
  },
  {
   "type": "mutation",
@@ -49,7 +52,10 @@
   "ugliness": 0,
   "description": "Wealth tier: rich.  Hidden marker used by the resident routine.",
   "valid": false,
-  "purifiable": false
+  "purifiable": false,
+  "flags": [
+   "TRL_NONCOMBATANT"
+  ]
  },
  {
   "type": "item_group",

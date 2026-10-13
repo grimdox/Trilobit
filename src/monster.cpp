@@ -1,4 +1,5 @@
 #include "monster.h"
+#include "trl_aware.h"
 
 #include <algorithm>
 #include <cmath>
@@ -2387,6 +2388,9 @@ void monster::apply_damage( Creature *source, bodypart_id /*bp*/, int dam,
     // Ensure we can try to get at what hit us.
     reset_pathfinding_cd();
     hp -= dam;
+    if( source != nullptr && dam > 0 && trl_aware::enabled( *this ) ) {
+        trl_aware::alerted( *this, source->pos_abs() );
+    }
 
     cata::event e = cata::event::make<event_type::monster_takes_damage>( dam, hp < 1 );
     if( source ) {
@@ -3940,6 +3944,10 @@ void monster::hear_sound( const tripoint_bub_ms &source, const int vol, const in
     // Error is based on volume, louder sound = less error
     if( volume <= 0 ) {
         return;
+    }
+    // Trilobit: Alert-Aware monsters turn to the noise and go to look
+    if( friendly == 0 && trl_aware::enabled( *this ) ) {
+        trl_aware::heard( *this, get_map().get_abs( source ), volume );
     }
 
     int tmp_provocative = provocative || volume >= normal_roll( 30, 5 );

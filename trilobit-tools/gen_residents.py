@@ -74,7 +74,8 @@ def build():
                        ("trl_res_poor", "Poor", "Wealth tier: poor."), ("trl_res_mid", "Middle class", "Wealth tier: middle."),
                        ("trl_res_rich", "Rich", "Wealth tier: rich.")):
         out.append({"type": "mutation", "id": tid, "name": {"str": nm}, "points": 0, "visibility": 0, "ugliness": 0,
-                    "description": d + "  Hidden marker used by the resident routine.", "valid": False, "purifiable": False})
+                    "description": d + "  Hidden marker used by the resident routine.", "valid": False, "purifiable": False,
+                    **({"flags": ["TRL_NONCOMBATANT"]} if tid in ("trl_res_poor", "trl_res_rich") else {})})
     eocs_init = []
     for tier, job in all_jobs():
         title, work, extra, weapons, skills = JOBS[tier][job]

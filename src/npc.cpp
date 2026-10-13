@@ -1,4 +1,5 @@
 #include "npc.h"
+#include "trl_aware.h"
 
 #include <algorithm>
 #include <climits>
@@ -1818,6 +1819,9 @@ void npc::make_angry()
 void npc::on_attacked( const Creature &attacker )
 {
     map &here = get_map();
+    if( trl_aware::enabled( *this ) ) {
+        trl_aware::alerted( *this, attacker.pos_abs() );
+    }
 
     if( is_hallucination() ) {
         die( &here, nullptr );

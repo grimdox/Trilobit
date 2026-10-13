@@ -111,7 +111,8 @@
       "PATH_AVOID_DANGER",
       "BASHES",
       "DROPS_AMMO",
-      "WIELDED_WEAPON"
+      "WIELDED_WEAPON",
+      "TRL_ALERT_AWARE"
     ]
   },
   {
@@ -241,7 +242,8 @@
       "HUMAN",
       "CAN_OPEN_DOORS",
       "PATH_AVOID_DANGER",
-      "BASHES"
+      "BASHES",
+      "TRL_ALERT_AWARE"
     ]
   },
   {

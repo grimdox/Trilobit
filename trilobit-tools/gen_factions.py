@@ -85,7 +85,7 @@ def build():
                   "common": False, "worn_override": cid + "_worn", "weapon_override": cid + "_weapon", "carry_override": cid + "_carry",
                   "traits": [{"trait": "trl_resident", "prob": 0}],
                   "skills": [{"skill": "ALL", "level": {"constant": 2}}] + [{"skill": k, "level": {"constant": v}} for k, v in skills.items()]}
-            del cl["traits"]
+            cl["traits"] = [{"trait": "trl_alert_aware"}]
             cl["bonus_aggression"] = {"constant": 8}
             cl["bonus_bravery"] = {"constant": 10}
             if suf in CYBER:

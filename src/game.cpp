@@ -1,4 +1,5 @@
 #include "game.h"
+#include "trl_aware.h"
 
 #include <algorithm>
 #include <bitset>
@@ -4320,6 +4321,14 @@ void game::draw_critter( const Creature &critter, const tripoint_bub_ms &center 
     }
     if( u.sees( here, critter ) || &critter == &u ) {
         critter.draw( w_terrain, point_bub_ms( center.xy() ), false );
+        {
+            // Trilobit: colour an Alert-Aware creature's glyph by how aware it is of you
+            const int aw = trl_aware::level( critter );
+            if( aw >= 1 && aw != trl_aware::RETURNING ) {
+                const nc_color awc = aw == trl_aware::HUNTING ? c_light_red : aw == trl_aware::SEARCHING ? c_magenta : c_yellow;
+                mvwprintz( w_terrain, point( mx, my ), awc, "%s", critter.symbol().c_str() );
+            }
+        }
         if( getenv( "TRL_FACING" ) != nullptr && critter.trl_facing != point::zero ) {
             // Trilobit debug: show facing arrow in place of the glyph (curses build)
             static const char *const arrows[3][3] = { { "\\", "^", "/" }, { "<", "o", ">" }, { "/", "v", "\\" } };

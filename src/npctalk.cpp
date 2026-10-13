@@ -101,6 +101,7 @@
 #include "npc_class.h"
 #include "npc_opinion.h"
 #include "npctalk.h"
+#include "trl_aware.h"
 #include "npctalk_rules.h"
 #include "npctrade.h"
 #include "output.h"
@@ -1512,6 +1513,11 @@ void npc::handle_sound( const sounds::sound_t spriority, const std::string &desc
 
     if( sees( here, spos ) || is_hallucination() ) {
         return;
+    }
+    // Trilobit: Alert-Aware hostile NPCs turn to noises that are not from their own side
+    if( trl_aware::enabled( *this ) && ( is_enemy() || guaranteed_hostile() ) && !npc_ally &&
+        !player_ally ) {
+        trl_aware::heard( *this, s_abs_pos, heard_volume );
     }
     // ignore low priority sounds if the NPC "knows" it came from a friend.
     // TODO: NPC will need to respond to talking noise eventually

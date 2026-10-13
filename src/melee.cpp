@@ -1,4 +1,5 @@
 #include "melee.h"
+#include "trl_aware.h"
 
 #include <algorithm>
 #include <array>
@@ -778,6 +779,12 @@ bool Character::melee_attack_abstract( Creature &t, bool allow_special,
 
         damage_instance d;
         roll_all_damage( critical_hit, d, false, cur_weap, vector_id, contact_area, &t, target_bp );
+        // Trilobit: striking an enemy that has not noticed you hits much harder
+        const float trl_sneak = trl_aware::sneak_mult( t, *this );
+        if( trl_sneak > 1.0f ) {
+            d.mult_damage( trl_sneak );
+            add_msg( m_good, _( "You catch %s off guard!" ), t.disp_name() );
+        }
 
         // polearms and pikes (but not spears) do less damage to adjacent targets
         // In the case of a weapon like a glaive or a naginata, the wielder
