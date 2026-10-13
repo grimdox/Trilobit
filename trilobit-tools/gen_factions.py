@@ -117,10 +117,38 @@ def build():
                          "condition": {"math": [f"{r} > -4"]}},
                         {"text": "Where do I stand with you?", "topic": f"TRL_CONTACT_{s.upper()}_STAND"},
                         {"text": "Never mind.", "topic": "TALK_DONE"}]})
+        facn = {"bratva": 1, "jsdf": 2, "nasim": 3}[s]
+        def acc(state, mid, npc_cls, uid, place):
+            eff = [{"math": ["trl_t_fac", "=", str(facn)]}, {"math": ["trl_t_state", "=", str(state)]}, {"math": ["trl_t_dead", "=", "0"]},
+                   {"math": ["trl_spy_progress", "=", "0"]}, {"u_location_variable": {"global_val": "trl_t_term_loc"}}]
+            if npc_cls:
+                eff += [{"set_string_var": npc_cls, "target_var": {"global_val": "trl_t_npc"}}, {"set_string_var": uid, "target_var": {"global_val": "trl_t_uid"}}]
+            return eff + [{"run_eocs": place}, {"assign_mission": mid}]
+        def rep(label, mid, extra=None):
+            c = {"u_has_mission": mid}
+            if extra: c = {"and": [c, extra]}
+            return {"text": label, "topic": f"TRL_CONTACT_{s.upper()}_PAID", "condition": c, "effect": [{"finish_mission": mid, "success": True}]}
+        idle = {"math": ["trl_t_state == 0"]}
         out.append({"type": "talk_topic", "id": f"TRL_CONTACT_{s.upper()}_WORK",
                     "dynamic_line": {"math": [f"{r} <= 0"], "yes": "Nothing for strangers.  Do something useful first.",
-                                     "no": "Nothing right now.  Come back when the city's quiet."},
-                    "responses": [{"text": "Alright.", "topic": "TALK_DONE"}]})
+                                     "no": {"math": ["trl_t_state == 0"], "yes": "I have a few things that need doing.  Pays 1500 yen and a good word.",
+                                            "no": "You are already carrying a job.  Finish it or drop it first."}},
+                    "responses": [
+                        rep("[Report] Here is the data core.", "TRL_T_R2", {"u_has_item": "trl_data_core"}),
+                        rep("[Report] The target is dead.", "TRL_T_A3"),
+                        rep("[Report] I watched the subject, as asked.", "TRL_T_S2"),
+                        {"text": "[Retrieval] Recover a package and bring it back.", "topic": "TALK_DONE", "condition": {"and": [{"math": [f"{r} > 0"]}, idle]},
+                         "effect": acc(1, "TRL_T_R1", None, None, "trl_t_place_item")},
+                        {"text": "[Removal] Find a target and deal with him.", "topic": "TALK_DONE", "condition": {"and": [{"math": [f"{r} > 0"]}, idle]},
+                         "effect": acc(2, "TRL_T_A1", "trl_t_target", "trl_t_uid_target", "trl_t_place_npc")},
+                        {"text": "[Surveillance] Watch somebody for me.", "topic": "TALK_DONE", "condition": {"and": [{"math": [f"{r} > 0"]}, idle]},
+                         "effect": acc(3, "TRL_T_S1", "trl_t_subject", "trl_t_uid_subject", "trl_t_place_npc")},
+                        {"text": "Drop the job I am carrying.", "topic": "TALK_DONE", "condition": {"math": ["trl_t_state > 0"]},
+                         "effect": [{"if": {"u_has_mission": m}, "then": {"finish_mission": m, "success": False}} for m in
+                                    ("TRL_T_R1", "TRL_T_R2", "TRL_T_A1", "TRL_T_A2", "TRL_T_A3", "TRL_T_S1", "TRL_T_S2")] + [{"run_eocs": "trl_t_cleanup"}]},
+                        {"text": "Alright.", "topic": "TALK_DONE"}]})
+        out.append({"type": "talk_topic", "id": f"TRL_CONTACT_{s.upper()}_PAID", "dynamic_line": "Good.  That is how this works.  Your pay is in your hand.",
+                    "responses": [{"text": "Anything else?", "topic": f"TRL_CONTACT_{s.upper()}_WORK"}, {"text": "Later.", "topic": "TALK_DONE"}]})
         out.append({"type": "talk_topic", "id": f"TRL_CONTACT_{s.upper()}_STAND",
                     "dynamic_line": {"math": [f"{r} <= -7"], "yes": "Enemy.",
                         "no": {"math": [f"{r} <= -4"], "yes": "Hostile.  Don't push it.",

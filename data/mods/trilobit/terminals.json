@@ -1344,6 +1344,13 @@
       },
       {
         "math": [
+          "trl_t_fac",
+          "=",
+          "0"
+        ]
+      },
+      {
+        "math": [
           "trl_spy_progress",
           "=",
           "0"
@@ -1356,12 +1363,96 @@
     "id": "trl_t_reward",
     "effect": [
       {
-        "u_spawn_item": "trl_yen",
-        "count": 1000
-      },
-      {
-        "u_message": "[Trilobit] Contract complete.  1000 yen credited.",
-        "type": "good"
+        "if": {
+          "math": [
+            "trl_t_fac > 0"
+          ]
+        },
+        "then": [
+          {
+            "u_spawn_item": "trl_yen",
+            "count": 1500
+          },
+          {
+            "u_message": "[Trilobit] Contract complete.  1500 yen paid, and your standing improves.",
+            "type": "good"
+          },
+          {
+            "if": {
+              "math": [
+                "trl_t_fac == 1"
+              ]
+            },
+            "then": [
+              {
+                "math": [
+                  "trl_rank_bratva += 1"
+                ]
+              },
+              {
+                "math": [
+                  "trl_rank_jsdf -= 1"
+                ]
+              }
+            ]
+          },
+          {
+            "if": {
+              "math": [
+                "trl_t_fac == 2"
+              ]
+            },
+            "then": [
+              {
+                "math": [
+                  "trl_rank_jsdf += 1"
+                ]
+              },
+              {
+                "math": [
+                  "trl_rank_bratva -= 1"
+                ]
+              },
+              {
+                "math": [
+                  "trl_rank_nasim -= 1"
+                ]
+              }
+            ]
+          },
+          {
+            "if": {
+              "math": [
+                "trl_t_fac == 3"
+              ]
+            },
+            "then": [
+              {
+                "math": [
+                  "trl_rank_nasim += 1"
+                ]
+              },
+              {
+                "math": [
+                  "trl_rank_jsdf -= 1"
+                ]
+              }
+            ]
+          },
+          {
+            "run_eocs": "trl_fac_sync"
+          }
+        ],
+        "else": [
+          {
+            "u_spawn_item": "trl_yen",
+            "count": 1000
+          },
+          {
+            "u_message": "[Trilobit] Contract complete.  1000 yen credited.",
+            "type": "good"
+          }
+        ]
       },
       {
         "run_eocs": "trl_t_cleanup"
@@ -1411,7 +1502,7 @@
     "name": {
       "str": "Retrieval (2/2): return the core to the terminal"
     },
-    "description": "Bring the data core back to the mission terminal in the testing mid-rise.  1000 yen on delivery.",
+    "description": "Bring the data core back to whoever gave you the contract (the mission terminal or a faction contact).  Paid on delivery.",
     "goal": "MGOAL_CONDITION",
     "difficulty": 1,
     "value": 0,
@@ -1528,7 +1619,7 @@
     "name": {
       "str": "Assassination (3/3): report to the terminal"
     },
-    "description": "Return to the mission terminal in the testing mid-rise.  1000 yen on completion.",
+    "description": "Return to whoever gave you the contract (the mission terminal or a faction contact).  Paid on completion.",
     "goal": "MGOAL_CONDITION",
     "difficulty": 1,
     "value": 0,
@@ -1602,7 +1693,7 @@
     "name": {
       "str": "Spying (2/2): return to the terminal"
     },
-    "description": "Return to the mission terminal in the testing mid-rise.  1000 yen on completion.",
+    "description": "Return to whoever gave you the contract (the mission terminal or a faction contact).  Paid on completion.",
     "goal": "MGOAL_CONDITION",
     "difficulty": 1,
     "value": 0,
@@ -1859,6 +1950,13 @@
         "effect": [
           {
             "math": [
+              "trl_t_fac",
+              "=",
+              "0"
+            ]
+          },
+          {
+            "math": [
               "trl_t_state",
               "=",
               "1"
@@ -1900,6 +1998,13 @@
           ]
         },
         "effect": [
+          {
+            "math": [
+              "trl_t_fac",
+              "=",
+              "0"
+            ]
+          },
           {
             "math": [
               "trl_t_state",
@@ -1955,6 +2060,13 @@
           ]
         },
         "effect": [
+          {
+            "math": [
+              "trl_t_fac",
+              "=",
+              "0"
+            ]
+          },
           {
             "math": [
               "trl_t_state",

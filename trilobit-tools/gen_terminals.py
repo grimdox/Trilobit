@@ -80,9 +80,15 @@ add({"type": "effect_on_condition", "id": "trl_t_place_item",
 cleanup = {"id": "trl_t_kill_one", "effect": [{"u_die": {"remove_corpse": True, "supress_message": True, "remove_from_creature_tracker": True}}]}
 add({"type": "effect_on_condition", "id": "trl_t_cleanup",
      "effect": [{"u_run_npc_eocs": [cleanup], "unique_ids": ["trl_t_uid_target", "trl_t_uid_subject"]},
-                {"math": ["trl_t_state", "=", "0"]}, {"math": ["trl_spy_progress", "=", "0"]}]})
+                {"math": ["trl_t_state", "=", "0"]}, {"math": ["trl_t_fac", "=", "0"]}, {"math": ["trl_spy_progress", "=", "0"]}]})
 add({"type": "effect_on_condition", "id": "trl_t_reward",
-     "effect": [{"u_spawn_item": "trl_yen", "count": 1000}, {"u_message": "[Trilobit] Contract complete.  1000 yen credited.", "type": "good"},
+     "effect": [{"if": {"math": ["trl_t_fac > 0"]},
+                 "then": [{"u_spawn_item": "trl_yen", "count": 1500}, {"u_message": "[Trilobit] Contract complete.  1500 yen paid, and your standing improves.", "type": "good"},
+                          {"if": {"math": ["trl_t_fac == 1"]}, "then": [{"math": ["trl_rank_bratva += 1"]}, {"math": ["trl_rank_jsdf -= 1"]}]},
+                          {"if": {"math": ["trl_t_fac == 2"]}, "then": [{"math": ["trl_rank_jsdf += 1"]}, {"math": ["trl_rank_bratva -= 1"]}, {"math": ["trl_rank_nasim -= 1"]}]},
+                          {"if": {"math": ["trl_t_fac == 3"]}, "then": [{"math": ["trl_rank_nasim += 1"]}, {"math": ["trl_rank_jsdf -= 1"]}]},
+                          {"run_eocs": "trl_fac_sync"}],
+                 "else": [{"u_spawn_item": "trl_yen", "count": 1000}, {"u_message": "[Trilobit] Contract complete.  1000 yen credited.", "type": "good"}]},
                 {"run_eocs": "trl_t_cleanup"}]})
 
 # ------------------------------------------------------------------ missions
@@ -102,7 +108,7 @@ mission("TRL_T_R1", "Retrieval (1/2): recover the data core",
         {"u_has_item": "trl_data_core"}, "trl_t_loc",
         [{"assign_mission": "TRL_T_R2"}, {"u_message": "You have the core.  Return to the mission terminal.", "type": "good"}])
 mission("TRL_T_R2", "Retrieval (2/2): return the core to the terminal",
-        "Bring the data core back to the mission terminal in the testing mid-rise.  1000 yen on delivery.",
+        "Bring the data core back to whoever gave you the contract (the mission terminal or a faction contact).  Paid on delivery.",
         AT_TERM, "trl_t_term_loc",
         [{"u_consume_item": "trl_data_core", "count": 1}, {"run_eocs": "trl_t_reward"}])
 # assassination
@@ -113,7 +119,7 @@ mission("TRL_T_A2", "Assassination (2/3): kill the target",
         "The target is somewhere in this building.  Kill him.", {"math": ["trl_t_dead == 1"]}, "trl_t_loc",
         [{"assign_mission": "TRL_T_A3"}, {"u_message": "The target is dead.  Return to the mission terminal.", "type": "good"}])
 mission("TRL_T_A3", "Assassination (3/3): report to the terminal",
-        "Return to the mission terminal in the testing mid-rise.  1000 yen on completion.", AT_TERM, "trl_t_term_loc",
+        "Return to whoever gave you the contract (the mission terminal or a faction contact).  Paid on completion.", AT_TERM, "trl_t_term_loc",
         [{"run_eocs": "trl_t_reward"}])
 # spying
 mission("TRL_T_S1", "Spying (1/2): observe the subject",
@@ -121,7 +127,7 @@ mission("TRL_T_S1", "Spying (1/2): observe the subject",
         {"math": ["trl_spy_progress >= 10"]}, "trl_t_loc",
         [{"assign_mission": "TRL_T_S2"}, {"u_message": "Observation complete.  Return to the mission terminal.", "type": "good"}])
 mission("TRL_T_S2", "Spying (2/2): return to the terminal",
-        "Return to the mission terminal in the testing mid-rise.  1000 yen on completion.", AT_TERM, "trl_t_term_loc",
+        "Return to whoever gave you the contract (the mission terminal or a faction contact).  Paid on completion.", AT_TERM, "trl_t_term_loc",
         [{"run_eocs": "trl_t_reward"}])
 
 # spying tick: runs every turn while a spying contract is open
@@ -143,7 +149,7 @@ add({"type": "effect_on_condition", "id": "trl_spy_tick", "eoc_type": "RECURRING
 add({"type": "effect_on_condition", "id": "trl_term_mission_examine", "global": True,
      "effect": [{"open_dialogue": {"topic": "TRL_TERM_MAIN"}}]})
 def accept(kind_text, state, mid, npc_cls, uid, place):
-    eff = [{"math": ["trl_t_state", "=", str(state)]}, {"math": ["trl_t_dead", "=", "0"]}, {"math": ["trl_spy_progress", "=", "0"]},
+    eff = [{"math": ["trl_t_fac", "=", "0"]}, {"math": ["trl_t_state", "=", str(state)]}, {"math": ["trl_t_dead", "=", "0"]}, {"math": ["trl_spy_progress", "=", "0"]},
            {"u_location_variable": {"global_val": "trl_t_term_loc"}}]
     if npc_cls:
         eff += [{"set_string_var": npc_cls, "target_var": {"global_val": "trl_t_npc"}}, {"set_string_var": uid, "target_var": {"global_val": "trl_t_uid"}}]

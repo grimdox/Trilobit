@@ -618,11 +618,356 @@
     "trl_rank_bratva <= 0"
    ],
    "yes": "Nothing for strangers.  Do something useful first.",
-   "no": "Nothing right now.  Come back when the city's quiet."
+   "no": {
+    "math": [
+     "trl_t_state == 0"
+    ],
+    "yes": "I have a few things that need doing.  Pays 1500 yen and a good word.",
+    "no": "You are already carrying a job.  Finish it or drop it first."
+   }
   },
   "responses": [
    {
+    "text": "[Report] Here is the data core.",
+    "topic": "TRL_CONTACT_BRATVA_PAID",
+    "condition": {
+     "and": [
+      {
+       "u_has_mission": "TRL_T_R2"
+      },
+      {
+       "u_has_item": "trl_data_core"
+      }
+     ]
+    },
+    "effect": [
+     {
+      "finish_mission": "TRL_T_R2",
+      "success": true
+     }
+    ]
+   },
+   {
+    "text": "[Report] The target is dead.",
+    "topic": "TRL_CONTACT_BRATVA_PAID",
+    "condition": {
+     "u_has_mission": "TRL_T_A3"
+    },
+    "effect": [
+     {
+      "finish_mission": "TRL_T_A3",
+      "success": true
+     }
+    ]
+   },
+   {
+    "text": "[Report] I watched the subject, as asked.",
+    "topic": "TRL_CONTACT_BRATVA_PAID",
+    "condition": {
+     "u_has_mission": "TRL_T_S2"
+    },
+    "effect": [
+     {
+      "finish_mission": "TRL_T_S2",
+      "success": true
+     }
+    ]
+   },
+   {
+    "text": "[Retrieval] Recover a package and bring it back.",
+    "topic": "TALK_DONE",
+    "condition": {
+     "and": [
+      {
+       "math": [
+        "trl_rank_bratva > 0"
+       ]
+      },
+      {
+       "math": [
+        "trl_t_state == 0"
+       ]
+      }
+     ]
+    },
+    "effect": [
+     {
+      "math": [
+       "trl_t_fac",
+       "=",
+       "1"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_state",
+       "=",
+       "1"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_dead",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "math": [
+       "trl_spy_progress",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "u_location_variable": {
+       "global_val": "trl_t_term_loc"
+      }
+     },
+     {
+      "run_eocs": "trl_t_place_item"
+     },
+     {
+      "assign_mission": "TRL_T_R1"
+     }
+    ]
+   },
+   {
+    "text": "[Removal] Find a target and deal with him.",
+    "topic": "TALK_DONE",
+    "condition": {
+     "and": [
+      {
+       "math": [
+        "trl_rank_bratva > 0"
+       ]
+      },
+      {
+       "math": [
+        "trl_t_state == 0"
+       ]
+      }
+     ]
+    },
+    "effect": [
+     {
+      "math": [
+       "trl_t_fac",
+       "=",
+       "1"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_state",
+       "=",
+       "2"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_dead",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "math": [
+       "trl_spy_progress",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "u_location_variable": {
+       "global_val": "trl_t_term_loc"
+      }
+     },
+     {
+      "set_string_var": "trl_t_target",
+      "target_var": {
+       "global_val": "trl_t_npc"
+      }
+     },
+     {
+      "set_string_var": "trl_t_uid_target",
+      "target_var": {
+       "global_val": "trl_t_uid"
+      }
+     },
+     {
+      "run_eocs": "trl_t_place_npc"
+     },
+     {
+      "assign_mission": "TRL_T_A1"
+     }
+    ]
+   },
+   {
+    "text": "[Surveillance] Watch somebody for me.",
+    "topic": "TALK_DONE",
+    "condition": {
+     "and": [
+      {
+       "math": [
+        "trl_rank_bratva > 0"
+       ]
+      },
+      {
+       "math": [
+        "trl_t_state == 0"
+       ]
+      }
+     ]
+    },
+    "effect": [
+     {
+      "math": [
+       "trl_t_fac",
+       "=",
+       "1"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_state",
+       "=",
+       "3"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_dead",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "math": [
+       "trl_spy_progress",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "u_location_variable": {
+       "global_val": "trl_t_term_loc"
+      }
+     },
+     {
+      "set_string_var": "trl_t_subject",
+      "target_var": {
+       "global_val": "trl_t_npc"
+      }
+     },
+     {
+      "set_string_var": "trl_t_uid_subject",
+      "target_var": {
+       "global_val": "trl_t_uid"
+      }
+     },
+     {
+      "run_eocs": "trl_t_place_npc"
+     },
+     {
+      "assign_mission": "TRL_T_S1"
+     }
+    ]
+   },
+   {
+    "text": "Drop the job I am carrying.",
+    "topic": "TALK_DONE",
+    "condition": {
+     "math": [
+      "trl_t_state > 0"
+     ]
+    },
+    "effect": [
+     {
+      "if": {
+       "u_has_mission": "TRL_T_R1"
+      },
+      "then": {
+       "finish_mission": "TRL_T_R1",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_R2"
+      },
+      "then": {
+       "finish_mission": "TRL_T_R2",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_A1"
+      },
+      "then": {
+       "finish_mission": "TRL_T_A1",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_A2"
+      },
+      "then": {
+       "finish_mission": "TRL_T_A2",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_A3"
+      },
+      "then": {
+       "finish_mission": "TRL_T_A3",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_S1"
+      },
+      "then": {
+       "finish_mission": "TRL_T_S1",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_S2"
+      },
+      "then": {
+       "finish_mission": "TRL_T_S2",
+       "success": false
+      }
+     },
+     {
+      "run_eocs": "trl_t_cleanup"
+     }
+    ]
+   },
+   {
     "text": "Alright.",
+    "topic": "TALK_DONE"
+   }
+  ]
+ },
+ {
+  "type": "talk_topic",
+  "id": "TRL_CONTACT_BRATVA_PAID",
+  "dynamic_line": "Good.  That is how this works.  Your pay is in your hand.",
+  "responses": [
+   {
+    "text": "Anything else?",
+    "topic": "TRL_CONTACT_BRATVA_WORK"
+   },
+   {
+    "text": "Later.",
     "topic": "TALK_DONE"
    }
   ]
@@ -1100,11 +1445,356 @@
     "trl_rank_jsdf <= 0"
    ],
    "yes": "Nothing for strangers.  Do something useful first.",
-   "no": "Nothing right now.  Come back when the city's quiet."
+   "no": {
+    "math": [
+     "trl_t_state == 0"
+    ],
+    "yes": "I have a few things that need doing.  Pays 1500 yen and a good word.",
+    "no": "You are already carrying a job.  Finish it or drop it first."
+   }
   },
   "responses": [
    {
+    "text": "[Report] Here is the data core.",
+    "topic": "TRL_CONTACT_JSDF_PAID",
+    "condition": {
+     "and": [
+      {
+       "u_has_mission": "TRL_T_R2"
+      },
+      {
+       "u_has_item": "trl_data_core"
+      }
+     ]
+    },
+    "effect": [
+     {
+      "finish_mission": "TRL_T_R2",
+      "success": true
+     }
+    ]
+   },
+   {
+    "text": "[Report] The target is dead.",
+    "topic": "TRL_CONTACT_JSDF_PAID",
+    "condition": {
+     "u_has_mission": "TRL_T_A3"
+    },
+    "effect": [
+     {
+      "finish_mission": "TRL_T_A3",
+      "success": true
+     }
+    ]
+   },
+   {
+    "text": "[Report] I watched the subject, as asked.",
+    "topic": "TRL_CONTACT_JSDF_PAID",
+    "condition": {
+     "u_has_mission": "TRL_T_S2"
+    },
+    "effect": [
+     {
+      "finish_mission": "TRL_T_S2",
+      "success": true
+     }
+    ]
+   },
+   {
+    "text": "[Retrieval] Recover a package and bring it back.",
+    "topic": "TALK_DONE",
+    "condition": {
+     "and": [
+      {
+       "math": [
+        "trl_rank_jsdf > 0"
+       ]
+      },
+      {
+       "math": [
+        "trl_t_state == 0"
+       ]
+      }
+     ]
+    },
+    "effect": [
+     {
+      "math": [
+       "trl_t_fac",
+       "=",
+       "2"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_state",
+       "=",
+       "1"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_dead",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "math": [
+       "trl_spy_progress",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "u_location_variable": {
+       "global_val": "trl_t_term_loc"
+      }
+     },
+     {
+      "run_eocs": "trl_t_place_item"
+     },
+     {
+      "assign_mission": "TRL_T_R1"
+     }
+    ]
+   },
+   {
+    "text": "[Removal] Find a target and deal with him.",
+    "topic": "TALK_DONE",
+    "condition": {
+     "and": [
+      {
+       "math": [
+        "trl_rank_jsdf > 0"
+       ]
+      },
+      {
+       "math": [
+        "trl_t_state == 0"
+       ]
+      }
+     ]
+    },
+    "effect": [
+     {
+      "math": [
+       "trl_t_fac",
+       "=",
+       "2"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_state",
+       "=",
+       "2"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_dead",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "math": [
+       "trl_spy_progress",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "u_location_variable": {
+       "global_val": "trl_t_term_loc"
+      }
+     },
+     {
+      "set_string_var": "trl_t_target",
+      "target_var": {
+       "global_val": "trl_t_npc"
+      }
+     },
+     {
+      "set_string_var": "trl_t_uid_target",
+      "target_var": {
+       "global_val": "trl_t_uid"
+      }
+     },
+     {
+      "run_eocs": "trl_t_place_npc"
+     },
+     {
+      "assign_mission": "TRL_T_A1"
+     }
+    ]
+   },
+   {
+    "text": "[Surveillance] Watch somebody for me.",
+    "topic": "TALK_DONE",
+    "condition": {
+     "and": [
+      {
+       "math": [
+        "trl_rank_jsdf > 0"
+       ]
+      },
+      {
+       "math": [
+        "trl_t_state == 0"
+       ]
+      }
+     ]
+    },
+    "effect": [
+     {
+      "math": [
+       "trl_t_fac",
+       "=",
+       "2"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_state",
+       "=",
+       "3"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_dead",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "math": [
+       "trl_spy_progress",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "u_location_variable": {
+       "global_val": "trl_t_term_loc"
+      }
+     },
+     {
+      "set_string_var": "trl_t_subject",
+      "target_var": {
+       "global_val": "trl_t_npc"
+      }
+     },
+     {
+      "set_string_var": "trl_t_uid_subject",
+      "target_var": {
+       "global_val": "trl_t_uid"
+      }
+     },
+     {
+      "run_eocs": "trl_t_place_npc"
+     },
+     {
+      "assign_mission": "TRL_T_S1"
+     }
+    ]
+   },
+   {
+    "text": "Drop the job I am carrying.",
+    "topic": "TALK_DONE",
+    "condition": {
+     "math": [
+      "trl_t_state > 0"
+     ]
+    },
+    "effect": [
+     {
+      "if": {
+       "u_has_mission": "TRL_T_R1"
+      },
+      "then": {
+       "finish_mission": "TRL_T_R1",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_R2"
+      },
+      "then": {
+       "finish_mission": "TRL_T_R2",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_A1"
+      },
+      "then": {
+       "finish_mission": "TRL_T_A1",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_A2"
+      },
+      "then": {
+       "finish_mission": "TRL_T_A2",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_A3"
+      },
+      "then": {
+       "finish_mission": "TRL_T_A3",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_S1"
+      },
+      "then": {
+       "finish_mission": "TRL_T_S1",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_S2"
+      },
+      "then": {
+       "finish_mission": "TRL_T_S2",
+       "success": false
+      }
+     },
+     {
+      "run_eocs": "trl_t_cleanup"
+     }
+    ]
+   },
+   {
     "text": "Alright.",
+    "topic": "TALK_DONE"
+   }
+  ]
+ },
+ {
+  "type": "talk_topic",
+  "id": "TRL_CONTACT_JSDF_PAID",
+  "dynamic_line": "Good.  That is how this works.  Your pay is in your hand.",
+  "responses": [
+   {
+    "text": "Anything else?",
+    "topic": "TRL_CONTACT_JSDF_WORK"
+   },
+   {
+    "text": "Later.",
     "topic": "TALK_DONE"
    }
   ]
@@ -1616,11 +2306,356 @@
     "trl_rank_nasim <= 0"
    ],
    "yes": "Nothing for strangers.  Do something useful first.",
-   "no": "Nothing right now.  Come back when the city's quiet."
+   "no": {
+    "math": [
+     "trl_t_state == 0"
+    ],
+    "yes": "I have a few things that need doing.  Pays 1500 yen and a good word.",
+    "no": "You are already carrying a job.  Finish it or drop it first."
+   }
   },
   "responses": [
    {
+    "text": "[Report] Here is the data core.",
+    "topic": "TRL_CONTACT_NASIM_PAID",
+    "condition": {
+     "and": [
+      {
+       "u_has_mission": "TRL_T_R2"
+      },
+      {
+       "u_has_item": "trl_data_core"
+      }
+     ]
+    },
+    "effect": [
+     {
+      "finish_mission": "TRL_T_R2",
+      "success": true
+     }
+    ]
+   },
+   {
+    "text": "[Report] The target is dead.",
+    "topic": "TRL_CONTACT_NASIM_PAID",
+    "condition": {
+     "u_has_mission": "TRL_T_A3"
+    },
+    "effect": [
+     {
+      "finish_mission": "TRL_T_A3",
+      "success": true
+     }
+    ]
+   },
+   {
+    "text": "[Report] I watched the subject, as asked.",
+    "topic": "TRL_CONTACT_NASIM_PAID",
+    "condition": {
+     "u_has_mission": "TRL_T_S2"
+    },
+    "effect": [
+     {
+      "finish_mission": "TRL_T_S2",
+      "success": true
+     }
+    ]
+   },
+   {
+    "text": "[Retrieval] Recover a package and bring it back.",
+    "topic": "TALK_DONE",
+    "condition": {
+     "and": [
+      {
+       "math": [
+        "trl_rank_nasim > 0"
+       ]
+      },
+      {
+       "math": [
+        "trl_t_state == 0"
+       ]
+      }
+     ]
+    },
+    "effect": [
+     {
+      "math": [
+       "trl_t_fac",
+       "=",
+       "3"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_state",
+       "=",
+       "1"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_dead",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "math": [
+       "trl_spy_progress",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "u_location_variable": {
+       "global_val": "trl_t_term_loc"
+      }
+     },
+     {
+      "run_eocs": "trl_t_place_item"
+     },
+     {
+      "assign_mission": "TRL_T_R1"
+     }
+    ]
+   },
+   {
+    "text": "[Removal] Find a target and deal with him.",
+    "topic": "TALK_DONE",
+    "condition": {
+     "and": [
+      {
+       "math": [
+        "trl_rank_nasim > 0"
+       ]
+      },
+      {
+       "math": [
+        "trl_t_state == 0"
+       ]
+      }
+     ]
+    },
+    "effect": [
+     {
+      "math": [
+       "trl_t_fac",
+       "=",
+       "3"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_state",
+       "=",
+       "2"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_dead",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "math": [
+       "trl_spy_progress",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "u_location_variable": {
+       "global_val": "trl_t_term_loc"
+      }
+     },
+     {
+      "set_string_var": "trl_t_target",
+      "target_var": {
+       "global_val": "trl_t_npc"
+      }
+     },
+     {
+      "set_string_var": "trl_t_uid_target",
+      "target_var": {
+       "global_val": "trl_t_uid"
+      }
+     },
+     {
+      "run_eocs": "trl_t_place_npc"
+     },
+     {
+      "assign_mission": "TRL_T_A1"
+     }
+    ]
+   },
+   {
+    "text": "[Surveillance] Watch somebody for me.",
+    "topic": "TALK_DONE",
+    "condition": {
+     "and": [
+      {
+       "math": [
+        "trl_rank_nasim > 0"
+       ]
+      },
+      {
+       "math": [
+        "trl_t_state == 0"
+       ]
+      }
+     ]
+    },
+    "effect": [
+     {
+      "math": [
+       "trl_t_fac",
+       "=",
+       "3"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_state",
+       "=",
+       "3"
+      ]
+     },
+     {
+      "math": [
+       "trl_t_dead",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "math": [
+       "trl_spy_progress",
+       "=",
+       "0"
+      ]
+     },
+     {
+      "u_location_variable": {
+       "global_val": "trl_t_term_loc"
+      }
+     },
+     {
+      "set_string_var": "trl_t_subject",
+      "target_var": {
+       "global_val": "trl_t_npc"
+      }
+     },
+     {
+      "set_string_var": "trl_t_uid_subject",
+      "target_var": {
+       "global_val": "trl_t_uid"
+      }
+     },
+     {
+      "run_eocs": "trl_t_place_npc"
+     },
+     {
+      "assign_mission": "TRL_T_S1"
+     }
+    ]
+   },
+   {
+    "text": "Drop the job I am carrying.",
+    "topic": "TALK_DONE",
+    "condition": {
+     "math": [
+      "trl_t_state > 0"
+     ]
+    },
+    "effect": [
+     {
+      "if": {
+       "u_has_mission": "TRL_T_R1"
+      },
+      "then": {
+       "finish_mission": "TRL_T_R1",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_R2"
+      },
+      "then": {
+       "finish_mission": "TRL_T_R2",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_A1"
+      },
+      "then": {
+       "finish_mission": "TRL_T_A1",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_A2"
+      },
+      "then": {
+       "finish_mission": "TRL_T_A2",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_A3"
+      },
+      "then": {
+       "finish_mission": "TRL_T_A3",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_S1"
+      },
+      "then": {
+       "finish_mission": "TRL_T_S1",
+       "success": false
+      }
+     },
+     {
+      "if": {
+       "u_has_mission": "TRL_T_S2"
+      },
+      "then": {
+       "finish_mission": "TRL_T_S2",
+       "success": false
+      }
+     },
+     {
+      "run_eocs": "trl_t_cleanup"
+     }
+    ]
+   },
+   {
     "text": "Alright.",
+    "topic": "TALK_DONE"
+   }
+  ]
+ },
+ {
+  "type": "talk_topic",
+  "id": "TRL_CONTACT_NASIM_PAID",
+  "dynamic_line": "Good.  That is how this works.  Your pay is in your hand.",
+  "responses": [
+   {
+    "text": "Anything else?",
+    "topic": "TRL_CONTACT_NASIM_WORK"
+   },
+   {
+    "text": "Later.",
     "topic": "TALK_DONE"
    }
   ]
