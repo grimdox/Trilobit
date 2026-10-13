@@ -5010,6 +5010,48 @@ talk_effect_fun_t::func f_npc_goal( const JsonObject &jo, std::string_view membe
     };
 }
 
+talk_effect_fun_t::func f_npc_go_to_loc( const JsonObject &jo, std::string_view member,
+        std::string_view src, bool is_npc )
+{
+    // Trilobit: send an NPC to a stored location.  Same overmap tile: walk to the exact spot and
+    // stay (guard).  Different tile: travel across the overmap (also off-screen), then guard.
+    var_info target_var = read_var_info( jo.get_object( member ) );
+    std::vector<effect_on_condition_id> true_eocs = load_eoc_vector( jo, "true_eocs", src );
+    std::vector<effect_on_condition_id> false_eocs = load_eoc_vector( jo, "false_eocs", src );
+    return [target_var, true_eocs, false_eocs, is_npc]( dialogue & d ) {
+        npc *guy = d.actor( is_npc )->get_npc();
+        if( !guy ) {
+            run_eoc_vector( false_eocs, d );
+            return;
+        }
+        const tripoint_abs_ms loc = read_var_value( target_var, d ).tripoint();
+        if( loc == tripoint_abs_ms() ) {
+            run_eoc_vector( false_eocs, d );
+            return;
+        }
+        const tripoint_abs_omt destination = project_to<coords::omt>( loc );
+        if( destination.xy() == guy->pos_abs_omt().xy() ) {
+            guy->omt_path.clear();
+            guy->goal = guy->pos_abs_omt();
+            guy->guard_pos = loc;
+            guy->set_mission( NPC_MISSION_GUARD );
+            run_eoc_vector( true_eocs, d );
+            return;
+        }
+        guy->goal = destination;
+        guy->omt_path = overmap_buffer.get_travel_path( guy->pos_abs_omt(), guy->goal,
+                        overmap_path_params::for_npc() ).points;
+        if( guy->omt_path.empty() ) {
+            guy->goal = npc::no_goal_point;
+            run_eoc_vector( false_eocs, d );
+            return;
+        }
+        guy->set_mission( NPC_MISSION_TRAVELLING );
+        guy->guard_pos = std::nullopt;
+        run_eoc_vector( true_eocs, d );
+    };
+}
+
 talk_effect_fun_t::func f_guard_pos( const JsonObject &jo, std::string_view member,
                                      std::string_view, bool is_npc )
 {
@@ -6585,6 +6627,23 @@ talk_effect_fun_t::func f_run_npc_eocs( const JsonObject &jo,
         unique_ids.emplace_back( get_str_or_var( jv, "unique_ids" ) );
     }
 
+    if( jo.get_bool( "overmap", false ) ) {
+        // Trilobit: run on every NPC the overmap buffer knows within "overmap_radius" submaps (default 480),
+        // loaded or not.  Used by the resident routine so off-screen commuters keep their schedule.
+        const int radius_sm = jo.get_int( "overmap_radius", 480 );
+        return [eocs, radius_sm]( dialogue const & d ) {
+            for( const shared_ptr_fast<npc> &guy : overmap_buffer.get_npcs_near_player( radius_sm ) ) {
+                if( guy->is_dead() ) {
+                    continue;
+                }
+                for( const effect_on_condition_id &eoc : eocs ) {
+                    dialogue newDialog( get_talker_for( guy.get() ), nullptr, d.get_conditionals(), d.get_context() );
+                    eoc->activate( newDialog );
+                }
+            }
+        };
+    }
+
     bool local = jo.get_bool( "local", false );
     std::optional<int> npc_range;
     if( jo.has_int( "npc_range" ) ) {
@@ -8058,6 +8117,7 @@ parsers = {
     { "u_choose_adjacent_highlight", "npc_choose_adjacent_highlight", jarg::member, &talk_effect_fun::f_choose_adjacent_highlight },
     { "u_set_goal", "npc_set_goal", jarg::member, &talk_effect_fun::f_npc_goal },
     { "u_set_guard_pos", "npc_set_guard_pos", jarg::member, &talk_effect_fun::f_guard_pos },
+    { "u_go_to_loc", "npc_go_to_loc", jarg::member, &talk_effect_fun::f_npc_go_to_loc },
     { "u_level_spell_class", "npc_level_spell_class", jarg::member, &talk_effect_fun::f_level_spell_class },
     { "u_learn_recipe", "npc_learn_recipe", jarg::member, &talk_effect_fun::f_learn_recipe },
     { "u_forget_recipe", "npc_forget_recipe", jarg::member, &talk_effect_fun::f_forget_recipe },

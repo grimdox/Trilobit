@@ -337,7 +337,9 @@
       "trl_test_human",
       "trl_test_cyborg",
       "trl_test_combat",
-      "trl_no_hobby"
+      "trl_no_hobby",
+      "trl_hobby_jsdf",
+      "trl_hobby_bratva"
     ]
   },
   {

@@ -40,6 +40,7 @@
 #include "flat_set.h"
 #include "flexbuffer_json.h"
 #include "game.h"
+#include "global_vars.h"
 #include "game_constants.h"
 #include "game_inventory.h"
 #include "gates.h"
@@ -3030,6 +3031,10 @@ void npc::die( map *here, Creature *nkiller )
         add_msg_if_player_sees( *this, _( "%s dies!" ), get_name() );
     }
 
+    if( killer == &get_player_character() && my_fac ) {
+        // Trilobit: lets faction-rank EOCs know whose member the player just killed
+        get_globals().set_global_value( "trl_victim_faction", my_fac->id.str() );
+    }
     if( Character *ch = dynamic_cast<Character *>( killer ) ) {
         get_event_bus().send<event_type::character_kills_character>( ch->getID(), getID(), get_name() );
     }

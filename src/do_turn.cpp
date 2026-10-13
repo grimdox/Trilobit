@@ -5,6 +5,8 @@
 #endif
 
 #include <algorithm>
+#include <fstream>
+#include <cstdlib>
 #include <chrono>
 #include <map>
 #include <memory>
@@ -32,6 +34,7 @@
 #include "event_bus.h"
 #include "explosion.h"
 #include "field.h"
+#include "faction.h"
 #include "game.h"
 #include "game_constants.h"
 #include "gamemode.h"
@@ -452,8 +455,52 @@ void overmap_npc_move()
 
 // MAIN GAME LOOP
 // Returns true if game is over (death, saved, quit, etc)
+// Trilobit dev-only test hook, enabled by env TRL_TEST (see TODO.md "testing")
+static void trl_test_hook()
+{
+    static const char *env = std::getenv( "TRL_TEST" );
+    if( !env ) {
+        return;
+    }
+    static bool teleported = false;
+    static int last = -1;
+    avatar &u = get_avatar();
+    const char *go = std::getenv( "TRL_TEST_GOTO" );
+    if( go && !teleported ) {
+        teleported = true;
+        const tripoint_abs_omt p = overmap_buffer.find_closest( u.pos_abs_omt(), go, 0, false,
+                                   ot_match_type::prefix );
+        if( !p.is_invalid() ) {
+            g->place_player_overmap( p );
+        }
+    }
+    const char *wait = std::getenv( "TRL_TEST_WAIT" );
+    if( wait && teleported && u.activity.is_null() ) {
+        player_activity act( activity_id( "ACT_WAIT" ), 100 * to_turns<int>( 1_hours ), 0 );
+        u.assign_activity( act );
+    }
+    const int t = to_turns<int>( calendar::turn - calendar::turn_zero );
+    if( t % 600 == 0 && t != last ) {
+        last = t;
+        std::ofstream out( "/tmp/claude-0/npcdump.txt", std::ios::app );
+        out << "== turn " << t << " hour " << to_hours<int>( time_past_midnight( calendar::turn ) )
+            << " player omt " << u.pos_abs_omt().to_string() << "\n";
+        for( const char *f : { "trl_bratva", "trl_jsdf", "trl_nasim" } ) {
+            out << f << " likes_u " << g->faction_manager_ptr->get( faction_id( f ) )->likes_u << "\n";
+        }
+        for( const shared_ptr_fast<npc> &guy : overmap_buffer.get_npcs_near_player( 480 ) ) {
+            out << guy->get_name() << " | " << guy->myclass.str() << " | " << guy->get_faction()->id.str()
+                << " | omt " << guy->pos_abs_omt().to_string() << " | mission " << static_cast<int>( guy->mission )
+                << " | att " << static_cast<int>( guy->get_attitude() ) << " | goal "
+                << ( guy->goal == npc::no_goal_point ? std::string( "-" ) : guy->goal.to_string() )
+                << " | path " << guy->omt_path.size() << "\n";
+        }
+    }
+}
+
 bool do_turn()
 {
+    trl_test_hook();
     if( g->is_game_over() ) {
         return turn_handler::cleanup_at_end();
     }

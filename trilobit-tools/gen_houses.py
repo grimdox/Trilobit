@@ -7,6 +7,7 @@ STOCK = sys.argv[2] if len(sys.argv) > 2 else None
 sys.argv = [sys.argv[0], MOD]
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import gen_midrise as mr
+import gen_residents as gr
 from gen_midrise import gp, T, F, FLOORS, WALLS, nfur, nter, exist, POOL
 from gen_places import SOLID, SURF
 
@@ -530,6 +531,21 @@ def tile_json(S, levels, info, d_loot):
                         its.append({"item": f"trl_loot_house_{info['loot']}" if info["loot"] in ("mid", "rich") else f"trl_loot_{info['loot']}",
                                     "x": [a, b], "y": [y0, y1], "chance": 40, "repeat": 3})
                 obj["place_items"] = its
+                npcs = []
+                for slot, (rx0, ry0, rx1, ry1) in enumerate(info.get("res_rects") or info["loot_rects"]):
+                    pick = gr.job_for(S["id"], slot)
+                    cells = [(x, y) for y in range(ry0 + 1, ry1) for x in range(rx0 + 1, rx1)
+                             if lv.free(x, y) and 24 * t <= x < 24 * t + 24]
+                    if not cells: continue
+                    cx, cy = random.Random(S["id"] + str(slot)).choice(cells)
+                    npcs.append({"class": gr.template_id(pick[0], pick[1]), "x": cx - 24 * t, "y": cy})
+                    if S["kind"] == "mid" and slot == 0 and len(info.get("res_rects") or info["loot_rects"]) == 1:
+                        pick2 = gr.job_for(S["id"], 1)
+                        cells2 = [c for c in cells if c != (cx, cy)]
+                        if cells2:
+                            c2 = random.Random(S["id"] + "b").choice(cells2)
+                            npcs.append({"class": gr.template_id(pick2[0], pick2[1]), "x": c2[0] - 24 * t, "y": c2[1]})
+                if npcs: obj["place_npcs"] = npcs
                 veh = [{"vehicle": random.Random(x * 31 + y).choice(("car", "car", "suv", "car_sports", "electric_car", "pickup") if info.get("rich") else ("car", "car_mini", "motorcycle", "scooter", "car")),
                         "x": x - 24 * t, "y": y, "chance": 55, "status": 60, "rotation": r}
                        for x, y, r in lv.cars if 24 * t <= x < 24 * t + 24]

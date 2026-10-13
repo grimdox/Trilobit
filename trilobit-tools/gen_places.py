@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Generate Trilobit places: new terrain, furniture (with light), 30 one-tile locations, loot groups.
 usage: gen_places.py <mod dir>"""
+import gen_factions as gfac
 import json, os, random, sys
 MOD = sys.argv[1]
 W = H = 24
@@ -513,6 +514,8 @@ def mapgen_json():
         obj = {"fill_ter": "t_pavement", "rows": rows, "terrain": terr,
                "place_furniture": [{"furn": F[k]["id"], "x": x, "y": y} for k, x, y in g.f],
                "place_items": [{"item": gr, "x": [x0, x1], "y": [y0, y1], "chance": ch, "repeat": rep} for gr, x0, y0, x1, y1, ch, rep in g.items]}
+        bn = gfac.bar_npcs(p["id"])
+        if bn: obj["place_npcs"] = [{"class": c, "x": x, "y": y} for c, x, y in bn]
         out.append({"type": "mapgen", "om_terrain": [p["id"]], "object": obj})
         p["lights"] = g.lights(); p["rows"] = rows; p["nf"] = len(g.f)
     return out

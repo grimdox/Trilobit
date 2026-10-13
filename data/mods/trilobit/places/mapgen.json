@@ -33,12 +33,12 @@
     ",,,,,,,,,,,,,,,,,,,,,,,,"
    ],
    "terrain": {
-    ",": "t_sidewalk",
-    "G": "t_trl_window",
-    "F": "t_trl_floor_wood",
-    "M": "t_trl_wall_mural",
     "W": "t_trl_wall_concrete",
-    ":": "t_trl_pave"
+    "M": "t_trl_wall_mural",
+    ":": "t_trl_pave",
+    "F": "t_trl_floor_wood",
+    ",": "t_sidewalk",
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -348,8 +348,8 @@
     ",,,,,,,,,,,,,,,,,,,,,,,,"
    ],
    "terrain": {
-    ",": "t_sidewalk",
-    ":": "t_trl_pave"
+    ":": "t_trl_pave",
+    ",": "t_sidewalk"
    },
    "place_furniture": [
     {
@@ -798,12 +798,12 @@
    ],
    "terrain": {
     "d": "t_trl_door_c",
-    ",": "t_sidewalk",
-    "B": "t_trl_wall_neon",
-    "k": "t_trl_slab",
-    "G": "t_trl_window",
+    ":": "t_trl_pave",
     "p": "t_trl_neon_pink",
-    ":": "t_trl_pave"
+    "B": "t_trl_wall_neon",
+    ",": "t_sidewalk",
+    "k": "t_trl_slab",
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -1043,11 +1043,11 @@
     ",,,,,,,,,,,,,,,,,,,,,,,,"
    ],
    "terrain": {
-    ",": "t_sidewalk",
-    "e": "t_trl_screen_c",
     "S": "t_trl_wall_shoji",
-    "t": "t_trl_tatami",
-    ":": "t_trl_pave"
+    ":": "t_trl_pave",
+    "e": "t_trl_screen_c",
+    ",": "t_sidewalk",
+    "t": "t_trl_tatami"
    },
    "place_furniture": [
     {
@@ -1225,6 +1225,23 @@
      "chance": 50,
      "repeat": 2
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_nasim_contact",
+     "x": 8,
+     "y": 11
+    },
+    {
+     "class": "trl_nc_nasim_hacker",
+     "x": 14,
+     "y": 11
+    },
+    {
+     "class": "trl_nc_nasim_zealot",
+     "x": 9,
+     "y": 16
+    }
    ]
   }
  },
@@ -1263,11 +1280,11 @@
    ],
    "terrain": {
     "d": "t_trl_door_c",
-    ",": "t_sidewalk",
     "Y": "t_trl_wall_slat",
-    "G": "t_trl_window",
+    ":": "t_trl_pave",
     "F": "t_trl_floor_wood",
-    ":": "t_trl_pave"
+    ",": "t_sidewalk",
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -1508,6 +1525,23 @@
      "chance": 40,
      "repeat": 2
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_jsdf_contact",
+     "x": 9,
+     "y": 11
+    },
+    {
+     "class": "trl_nc_jsdf_patrol",
+     "x": 14,
+     "y": 11
+    },
+    {
+     "class": "trl_nc_jsdf_patrol",
+     "x": 4,
+     "y": 17
+    }
    ]
   }
  },
@@ -1546,12 +1580,12 @@
    ],
    "terrain": {
     "d": "t_trl_door_c",
-    ",": "t_sidewalk",
-    "B": "t_trl_wall_neon",
-    "G": "t_trl_window",
+    ":": "t_trl_pave",
     "F": "t_trl_floor_wood",
     "n": "t_trl_neon_cyan",
-    ":": "t_trl_pave"
+    "B": "t_trl_wall_neon",
+    ",": "t_sidewalk",
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -1774,6 +1808,23 @@
      "chance": 70,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_bratva_contact",
+     "x": 8,
+     "y": 12
+    },
+    {
+     "class": "trl_nc_bratva_thug",
+     "x": 14,
+     "y": 12
+    },
+    {
+     "class": "trl_nc_bratva_enforcer",
+     "x": 8,
+     "y": 16
+    }
    ]
   }
  },
@@ -1812,11 +1863,11 @@
    ],
    "terrain": {
     "d": "t_trl_door_c",
-    ",": "t_sidewalk",
+    ":": "t_trl_pave",
     "X": "t_trl_wall_corp",
+    ",": "t_sidewalk",
     "f": "t_trl_floor_corp",
-    "G": "t_trl_window",
-    ":": "t_trl_pave"
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -2202,11 +2253,11 @@
    ],
    "terrain": {
     "d": "t_trl_door_c",
-    ",": "t_sidewalk",
+    ":": "t_trl_pave",
     "X": "t_trl_wall_corp",
+    ",": "t_sidewalk",
     "f": "t_trl_floor_corp",
-    "G": "t_trl_window",
-    ":": "t_trl_pave"
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -2470,11 +2521,11 @@
    ],
    "terrain": {
     "d": "t_trl_door_c",
+    ":": "t_trl_pave",
+    "E": "t_trl_wall_screens",
     ",": "t_sidewalk",
     "k": "t_trl_slab",
-    "G": "t_trl_window",
-    "E": "t_trl_wall_screens",
-    ":": "t_trl_pave"
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -2723,11 +2774,11 @@
    ],
    "terrain": {
     "d": "t_trl_door_c",
-    ",": "t_sidewalk",
+    ":": "t_trl_pave",
     "X": "t_trl_wall_corp",
+    ",": "t_sidewalk",
     "f": "t_trl_floor_corp",
-    "G": "t_trl_window",
-    ":": "t_trl_pave"
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -2901,11 +2952,11 @@
    ],
    "terrain": {
     "d": "t_trl_door_c",
-    "c": "t_trl_checker",
-    ",": "t_sidewalk",
+    ":": "t_trl_pave",
     "X": "t_trl_wall_corp",
+    ",": "t_sidewalk",
     "G": "t_trl_window",
-    ":": "t_trl_pave"
+    "c": "t_trl_checker"
    },
    "place_furniture": [
     {
@@ -3139,11 +3190,11 @@
    ],
    "terrain": {
     "d": "t_trl_door_c",
+    "W": "t_trl_wall_concrete",
+    ":": "t_trl_pave",
     ",": "t_sidewalk",
     "k": "t_trl_slab",
-    "G": "t_trl_window",
-    "W": "t_trl_wall_concrete",
-    ":": "t_trl_pave"
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -3568,12 +3619,12 @@
     ",,,,,,,,,,,,,,,,,,,,,,,,"
    ],
    "terrain": {
-    "g": "t_trl_grating",
     "d": "t_trl_door_c",
-    ",": "t_sidewalk",
-    "G": "t_trl_window",
+    "g": "t_trl_grating",
+    ":": "t_trl_pave",
     "P": "t_trl_wall_pipes",
-    ":": "t_trl_pave"
+    ",": "t_sidewalk",
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -3916,14 +3967,14 @@
     ",,,,,,,,,,,,,,,,,,,,,,,,"
    ],
    "terrain": {
-    "g": "t_trl_grating",
-    "d": "t_trl_door_c",
-    ",": "t_sidewalk",
     "y": "t_trl_hazard",
-    "k": "t_trl_slab",
-    "G": "t_trl_window",
+    "d": "t_trl_door_c",
     "W": "t_trl_wall_concrete",
-    ":": "t_trl_pave"
+    "g": "t_trl_grating",
+    ":": "t_trl_pave",
+    ",": "t_sidewalk",
+    "k": "t_trl_slab",
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -4059,9 +4110,9 @@
    ],
    "terrain": {
     "y": "t_trl_hazard",
-    "k": "t_trl_slab",
+    ":": "t_trl_pave",
     ",": "t_sidewalk",
-    ":": "t_trl_pave"
+    "k": "t_trl_slab"
    },
    "place_furniture": [
     {
@@ -4201,12 +4252,12 @@
     ",,,,,,,,,,,,,,,,,,,,,,,,"
    ],
    "terrain": {
+    ":": "t_trl_pave",
     "r": "t_trl_shutter_c",
+    "R": "t_trl_wall_rust",
     ",": "t_sidewalk",
     "k": "t_trl_slab",
-    "G": "t_trl_window",
-    ":": "t_trl_pave",
-    "R": "t_trl_wall_rust"
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -4357,11 +4408,11 @@
    ],
    "terrain": {
     "d": "t_trl_door_c",
-    ",": "t_sidewalk",
-    "X": "t_trl_wall_corp",
-    "G": "t_trl_window",
+    ":": "t_trl_pave",
     "F": "t_trl_floor_wood",
-    ":": "t_trl_pave"
+    "X": "t_trl_wall_corp",
+    ",": "t_sidewalk",
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -4481,11 +4532,11 @@
     ",,,,,,,,,,,,,,,,,,,,,,,,"
    ],
    "terrain": {
+    "W": "t_trl_wall_concrete",
+    ":": "t_trl_pave",
     "r": "t_trl_shutter_c",
     ",": "t_sidewalk",
-    "k": "t_trl_slab",
-    "W": "t_trl_wall_concrete",
-    ":": "t_trl_pave"
+    "k": "t_trl_slab"
    },
    "place_furniture": [
     {
@@ -4619,11 +4670,11 @@
    ],
    "terrain": {
     "d": "t_trl_door_c",
-    ",": "t_sidewalk",
-    "X": "t_trl_wall_corp",
-    "G": "t_trl_window",
+    ":": "t_trl_pave",
     "F": "t_trl_floor_wood",
-    ":": "t_trl_pave"
+    "X": "t_trl_wall_corp",
+    ",": "t_sidewalk",
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -4788,10 +4839,10 @@
     ",,,,,,,,,,,,,,,,,,,,,,,,"
    ],
    "terrain": {
-    "m": "t_grass",
-    "a": "t_trl_gravel",
+    ":": "t_trl_pave",
     ",": "t_sidewalk",
-    ":": "t_trl_pave"
+    "m": "t_grass",
+    "a": "t_trl_gravel"
    },
    "place_furniture": [
     {
@@ -4976,9 +5027,9 @@
     ",,,,,,,,,,,,,,,,,,,,,,,,"
    ],
    "terrain": {
-    "a": "t_trl_gravel",
+    ":": "t_trl_pave",
     ",": "t_sidewalk",
-    ":": "t_trl_pave"
+    "a": "t_trl_gravel"
    },
    "place_furniture": [
     {
@@ -5148,11 +5199,11 @@
     ",,,,,,,,,,,,,,,,,,,,,,,,"
    ],
    "terrain": {
-    ",": "t_sidewalk",
-    ":": "t_trl_pave",
+    "w": "t_water_dp",
     "v": "t_water_sh",
-    "m": "t_grass",
-    "w": "t_water_dp"
+    ":": "t_trl_pave",
+    ",": "t_sidewalk",
+    "m": "t_grass"
    },
    "place_furniture": [
     {
@@ -5308,11 +5359,11 @@
    ],
    "terrain": {
     "d": "t_trl_door_c",
-    "c": "t_trl_checker",
+    "M": "t_trl_wall_mural",
+    ":": "t_trl_pave",
     ",": "t_sidewalk",
     "G": "t_trl_window",
-    "M": "t_trl_wall_mural",
-    ":": "t_trl_pave"
+    "c": "t_trl_checker"
    },
    "place_furniture": [
     {
@@ -5483,11 +5534,11 @@
    ],
    "terrain": {
     "d": "t_trl_door_c",
-    ",": "t_sidewalk",
+    ":": "t_trl_pave",
     "X": "t_trl_wall_corp",
+    ",": "t_sidewalk",
     "f": "t_trl_floor_corp",
-    "G": "t_trl_window",
-    ":": "t_trl_pave"
+    "G": "t_trl_window"
    },
    "place_furniture": [
     {
@@ -5880,12 +5931,12 @@
     ",,,,,,,,,,,,,,,,,,,,,,,,"
    ],
    "terrain": {
-    "r": "t_trl_shutter_c",
-    ",": "t_sidewalk",
     "y": "t_trl_hazard",
-    "k": "t_trl_slab",
     ":": "t_trl_pave",
-    "R": "t_trl_wall_rust"
+    "r": "t_trl_shutter_c",
+    "R": "t_trl_wall_rust",
+    ",": "t_sidewalk",
+    "k": "t_trl_slab"
    },
    "place_furniture": [
     {
@@ -6135,10 +6186,10 @@
     ",,,,,,,,,,,,,,,,,,,,,,,,"
    ],
    "terrain": {
-    "r": "t_trl_shutter_c",
-    "k": "t_trl_slab",
+    "R": "t_trl_wall_rust",
     ",": "t_sidewalk",
-    "R": "t_trl_wall_rust"
+    "k": "t_trl_slab",
+    "r": "t_trl_shutter_c"
    },
    "place_furniture": [
     {
@@ -6299,9 +6350,9 @@
    ],
    "terrain": {
     "z": "t_trl_crystal",
-    "k": "t_trl_slab",
+    "w": "t_water_dp",
     ",": "t_sidewalk",
-    "w": "t_water_dp"
+    "k": "t_trl_slab"
    },
    "place_furniture": [
     {
@@ -6640,9 +6691,9 @@
    ],
    "terrain": {
     "v": "t_water_sh",
-    "w": "t_water_dp",
+    ":": "t_trl_pave",
     ",": "t_sidewalk",
-    ":": "t_trl_pave"
+    "w": "t_water_dp"
    },
    "place_furniture": [
     {
@@ -6815,11 +6866,11 @@
     ",,,,,,,,,,,,,,,,,,,,,,,,"
    ],
    "terrain": {
+    ":": "t_trl_pave",
+    "P": "t_trl_wall_pipes",
     "r": "t_trl_shutter_c",
     ",": "t_sidewalk",
-    "k": "t_trl_slab",
-    "P": "t_trl_wall_pipes",
-    ":": "t_trl_pave"
+    "k": "t_trl_slab"
    },
    "place_furniture": [
     {
@@ -7134,12 +7185,12 @@
     ",,,,,,,,,,,,,,,,,,,,,,,,"
    ],
    "terrain": {
-    ",": "t_sidewalk",
     "Y": "t_trl_wall_slat",
+    ":": "t_trl_pave",
     "e": "t_trl_screen_c",
     "F": "t_trl_floor_wood",
-    "t": "t_trl_tatami",
-    ":": "t_trl_pave"
+    ",": "t_sidewalk",
+    "t": "t_trl_tatami"
    },
    "place_furniture": [
     {

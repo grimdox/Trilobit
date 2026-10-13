@@ -213,6 +213,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 5,
+     "y": 16
+    },
+    {
+     "class": "trl_nc_res_poor_scrapper",
+     "x": 20,
+     "y": 17
+    }
    ]
   }
  },
@@ -489,6 +501,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_street_vendor",
+     "x": 7,
+     "y": 17
+    },
+    {
+     "class": "trl_nc_res_poor_day_laborer",
+     "x": 18,
+     "y": 17
+    }
    ]
   }
  },
@@ -680,6 +704,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_day_laborer",
+     "x": 13,
+     "y": 13
     }
    ]
   }
@@ -896,6 +927,13 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 15,
+     "y": 14
+    }
    ]
   }
  },
@@ -1091,6 +1129,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_day_laborer",
+     "x": 13,
+     "y": 15
     }
    ]
   }
@@ -1349,6 +1394,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 6,
+     "y": 15
+    },
+    {
+     "class": "trl_nc_res_poor_dishwasher",
+     "x": 20,
+     "y": 15
     }
    ]
   }
@@ -1612,6 +1669,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 6,
+     "y": 16
+    },
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 19,
+     "y": 17
+    }
    ]
   }
  },
@@ -1817,6 +1886,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_dishwasher",
+     "x": 17,
+     "y": 14
     }
    ]
   }
@@ -2034,6 +2110,13 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_scrapper",
+     "x": 18,
+     "y": 12
+    }
    ]
   }
  },
@@ -2244,6 +2327,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_day_laborer",
+     "x": 10,
+     "y": 16
     }
    ]
   }
@@ -2492,6 +2582,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_day_laborer",
+     "x": 6,
+     "y": 15
+    },
+    {
+     "class": "trl_nc_res_poor_dishwasher",
+     "x": 19,
+     "y": 15
     }
    ]
   }
@@ -2751,6 +2853,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_scrapper",
+     "x": 5,
+     "y": 18
+    },
+    {
+     "class": "trl_nc_res_poor_scrapper",
+     "x": 18,
+     "y": 15
+    }
    ]
   }
  },
@@ -2967,6 +3081,13 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 6,
+     "y": 15
+    }
    ]
   }
  },
@@ -3162,6 +3283,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 17,
+     "y": 15
     }
    ]
   }
@@ -3378,6 +3506,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_day_laborer",
+     "x": 15,
+     "y": 14
     }
    ]
   }
@@ -3637,6 +3772,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 4,
+     "y": 16
+    },
+    {
+     "class": "trl_nc_res_poor_scrapper",
+     "x": 18,
+     "y": 16
+    }
    ]
   }
  },
@@ -3869,6 +4016,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_dishwasher",
+     "x": 7,
+     "y": 16
+    },
+    {
+     "class": "trl_nc_res_poor_day_laborer",
+     "x": 19,
+     "y": 17
+    }
    ]
   }
  },
@@ -4050,6 +4209,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 6,
+     "y": 14
     }
    ]
   }
@@ -4235,6 +4401,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 18,
+     "y": 13
     }
    ]
   }
@@ -4435,6 +4608,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 14,
+     "y": 16
     }
    ]
   }
@@ -4682,6 +4862,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_scrapper",
+     "x": 6,
+     "y": 17
+    },
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 20,
+     "y": 16
     }
    ]
   }
@@ -4931,6 +5123,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 5,
+     "y": 17
+    },
+    {
+     "class": "trl_nc_res_poor_street_vendor",
+     "x": 17,
+     "y": 15
+    }
    ]
   }
  },
@@ -5133,6 +5337,13 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_dishwasher",
+     "x": 7,
+     "y": 15
+    }
    ]
   }
  },
@@ -5298,6 +5509,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 12,
+     "y": 15
     }
    ]
   }
@@ -5499,6 +5717,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 16,
+     "y": 14
     }
    ]
   }
@@ -5735,6 +5960,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_street_vendor",
+     "x": 3,
+     "y": 17
+    },
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 16,
+     "y": 12
     }
    ]
   }
@@ -5983,6 +6220,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 6,
+     "y": 18
+    },
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 18,
+     "y": 18
+    }
    ]
   }
  },
@@ -6193,6 +6442,13 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_day_laborer",
+     "x": 14,
+     "y": 18
+    }
    ]
   }
  },
@@ -6382,6 +6638,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 4,
+     "y": 12
     }
    ]
   }
@@ -6597,6 +6860,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 7,
+     "y": 15
     }
    ]
   }
@@ -6846,6 +7116,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 7,
+     "y": 15
+    },
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 16,
+     "y": 12
+    }
    ]
   }
  },
@@ -7093,6 +7375,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_street_vendor",
+     "x": 6,
+     "y": 15
+    },
+    {
+     "class": "trl_nc_res_poor_day_laborer",
+     "x": 19,
+     "y": 14
+    }
    ]
   }
  },
@@ -7298,6 +7592,13 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 17,
+     "y": 14
+    }
    ]
   }
  },
@@ -7499,6 +7800,13 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_street_vendor",
+     "x": 10,
+     "y": 18
+    }
    ]
   }
  },
@@ -7698,6 +8006,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_dishwasher",
+     "x": 14,
+     "y": 15
     }
    ]
   }
@@ -7974,6 +8289,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 6,
+     "y": 18
+    },
+    {
+     "class": "trl_nc_res_poor_scrapper",
+     "x": 19,
+     "y": 17
+    }
    ]
   }
  },
@@ -8219,6 +8546,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 4,
+     "y": 15
+    },
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 19,
+     "y": 13
+    }
    ]
   }
  },
@@ -8430,6 +8769,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_dishwasher",
+     "x": 15,
+     "y": 16
     }
    ]
   }
@@ -8646,6 +8992,13 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 15,
+     "y": 15
+    }
    ]
   }
  },
@@ -8846,6 +9199,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_day_laborer",
+     "x": 11,
+     "y": 17
     }
    ]
   }
@@ -9104,6 +9464,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 6,
+     "y": 14
+    },
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 17,
+     "y": 16
+    }
    ]
   }
  },
@@ -9360,6 +9732,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_day_laborer",
+     "x": 3,
+     "y": 15
+    },
+    {
+     "class": "trl_nc_res_poor_dishwasher",
+     "x": 15,
+     "y": 12
+    }
    ]
   }
  },
@@ -9550,6 +9934,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 6,
+     "y": 15
     }
    ]
   }
@@ -9756,6 +10147,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 14,
+     "y": 15
     }
    ]
   }
@@ -9967,6 +10365,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 4,
+     "y": 16
     }
    ]
   }
@@ -10204,6 +10609,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 5,
+     "y": 17
+    },
+    {
+     "class": "trl_nc_res_poor_street_vendor",
+     "x": 19,
+     "y": 12
     }
    ]
   }
@@ -10472,6 +10889,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 6,
+     "y": 16
+    },
+    {
+     "class": "trl_nc_res_poor_dishwasher",
+     "x": 17,
+     "y": 15
+    }
    ]
   }
  },
@@ -10697,6 +11126,13 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 13,
+     "y": 16
+    }
    ]
   }
  },
@@ -10907,6 +11343,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 17,
+     "y": 15
     }
    ]
   }
@@ -11122,6 +11565,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_janitor",
+     "x": 13,
+     "y": 16
     }
    ]
   }
@@ -11419,6 +11869,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_technician",
+     "x": 11,
+     "y": 17
+    },
+    {
+     "class": "trl_nc_res_mid_police_clerk",
+     "x": 8,
+     "y": 17
     }
    ],
    "place_vehicles": [
@@ -11865,6 +12327,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_clerk",
+     "x": 14,
+     "y": 14
+    },
+    {
+     "class": "trl_nc_res_mid_shop_assistant",
+     "x": 19,
+     "y": 17
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "scooter",
@@ -12294,6 +12768,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_driver",
+     "x": 18,
+     "y": 12
+    },
+    {
+     "class": "trl_nc_res_mid_police_clerk",
+     "x": 18,
+     "y": 17
+    }
    ]
   }
  },
@@ -12556,6 +13042,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_engineer",
+     "x": 11,
+     "y": 14
+    },
+    {
+     "class": "trl_nc_res_mid_police_clerk",
+     "x": 15,
+     "y": 13
     }
    ],
    "place_vehicles": [
@@ -13066,6 +13564,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_driver",
+     "x": 9,
+     "y": 18
+    },
+    {
+     "class": "trl_nc_res_mid_driver",
+     "x": 5,
+     "y": 19
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car",
@@ -13574,6 +14084,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_driver",
+     "x": 6,
+     "y": 13
+    },
+    {
+     "class": "trl_nc_res_mid_engineer",
+     "x": 11,
+     "y": 18
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car_mini",
@@ -13826,6 +14348,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_clerk",
+     "x": 14,
+     "y": 14
+    },
+    {
+     "class": "trl_nc_res_mid_police_clerk",
+     "x": 16,
+     "y": 15
     }
    ]
   }
@@ -14286,6 +14820,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_shop_assistant",
+     "x": 16,
+     "y": 19
+    },
+    {
+     "class": "trl_nc_res_mid_teacher",
+     "x": 19,
+     "y": 13
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car",
@@ -14709,6 +15255,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_technician",
+     "x": 16,
+     "y": 17
+    },
+    {
+     "class": "trl_nc_res_mid_driver",
+     "x": 12,
+     "y": 15
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car",
@@ -15029,6 +15587,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_shop_assistant",
+     "x": 17,
+     "y": 16
+    },
+    {
+     "class": "trl_nc_res_mid_engineer",
+     "x": 13,
+     "y": 12
     }
    ],
    "place_vehicles": [
@@ -15435,6 +16005,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_engineer",
+     "x": 13,
+     "y": 17
+    },
+    {
+     "class": "trl_nc_res_mid_nurse",
+     "x": 9,
+     "y": 16
     }
    ]
   }
@@ -15849,6 +16431,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_clerk",
+     "x": 16,
+     "y": 13
+    },
+    {
+     "class": "trl_nc_res_mid_clerk",
+     "x": 13,
+     "y": 19
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car_mini",
@@ -16115,6 +16709,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_engineer",
+     "x": 9,
+     "y": 14
+    },
+    {
+     "class": "trl_nc_res_mid_driver",
+     "x": 8,
+     "y": 15
     }
    ],
    "place_vehicles": [
@@ -16551,6 +17157,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_police_clerk",
+     "x": 16,
+     "y": 13
+    },
+    {
+     "class": "trl_nc_res_mid_technician",
+     "x": 16,
+     "y": 14
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car",
@@ -16949,6 +17567,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_shop_assistant",
+     "x": 11,
+     "y": 16
+    },
+    {
+     "class": "trl_nc_res_mid_engineer",
+     "x": 14,
+     "y": 19
+    }
    ]
   }
  },
@@ -17231,6 +17861,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_teacher",
+     "x": 10,
+     "y": 17
+    },
+    {
+     "class": "trl_nc_res_mid_technician",
+     "x": 8,
+     "y": 12
     }
    ],
    "place_vehicles": [
@@ -17660,6 +18302,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_police_clerk",
+     "x": 11,
+     "y": 16
+    },
+    {
+     "class": "trl_nc_res_mid_shop_assistant",
+     "x": 8,
+     "y": 18
     }
    ],
    "place_vehicles": [
@@ -18110,6 +18764,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_shop_assistant",
+     "x": 5,
+     "y": 14
+    },
+    {
+     "class": "trl_nc_res_mid_teacher",
+     "x": 13,
+     "y": 17
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car_mini",
@@ -18393,6 +19059,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_shop_assistant",
+     "x": 13,
+     "y": 18
+    },
+    {
+     "class": "trl_nc_res_mid_nurse",
+     "x": 9,
+     "y": 17
     }
    ]
   }
@@ -18852,6 +19530,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_technician",
+     "x": 14,
+     "y": 19
+    },
+    {
+     "class": "trl_nc_res_mid_police_clerk",
+     "x": 15,
+     "y": 12
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car_mini",
@@ -19300,6 +19990,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_engineer",
+     "x": 6,
+     "y": 17
+    },
+    {
+     "class": "trl_nc_res_mid_engineer",
+     "x": 6,
+     "y": 14
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "scooter",
@@ -19621,6 +20323,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_engineer",
+     "x": 13,
+     "y": 13
+    },
+    {
+     "class": "trl_nc_res_mid_technician",
+     "x": 15,
+     "y": 17
     }
    ],
    "place_vehicles": [
@@ -20057,6 +20771,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_clerk",
+     "x": 8,
+     "y": 19
+    },
+    {
+     "class": "trl_nc_res_mid_shop_assistant",
+     "x": 14,
+     "y": 16
+    }
    ]
   }
  },
@@ -20484,6 +21210,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_police_clerk",
+     "x": 15,
+     "y": 13
+    },
+    {
+     "class": "trl_nc_res_mid_engineer",
+     "x": 16,
+     "y": 17
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "scooter",
@@ -20763,6 +21501,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_driver",
+     "x": 15,
+     "y": 18
+    },
+    {
+     "class": "trl_nc_res_mid_nurse",
+     "x": 10,
+     "y": 19
     }
    ],
    "place_vehicles": [
@@ -21188,6 +21938,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_shop_assistant",
+     "x": 10,
+     "y": 17
+    },
+    {
+     "class": "trl_nc_res_mid_nurse",
+     "x": 11,
+     "y": 17
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car",
@@ -21556,6 +22318,18 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_clerk",
+     "x": 14,
+     "y": 14
+    },
+    {
+     "class": "trl_nc_res_mid_teacher",
+     "x": 14,
+     "y": 18
+    }
    ]
   }
  },
@@ -21827,6 +22601,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_engineer",
+     "x": 14,
+     "y": 15
+    },
+    {
+     "class": "trl_nc_res_mid_technician",
+     "x": 18,
+     "y": 13
     }
    ],
    "place_vehicles": [
@@ -22240,6 +23026,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_driver",
+     "x": 7,
+     "y": 14
+    },
+    {
+     "class": "trl_nc_res_mid_teacher",
+     "x": 6,
+     "y": 14
     }
    ],
    "place_vehicles": [
@@ -22679,6 +23477,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_clerk",
+     "x": 12,
+     "y": 17
+    },
+    {
+     "class": "trl_nc_res_mid_technician",
+     "x": 13,
+     "y": 14
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car",
@@ -22927,6 +23737,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_teacher",
+     "x": 12,
+     "y": 12
+    },
+    {
+     "class": "trl_nc_res_mid_nurse",
+     "x": 15,
+     "y": 18
     }
    ]
   }
@@ -23362,6 +24184,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_police_clerk",
+     "x": 15,
+     "y": 15
+    },
+    {
+     "class": "trl_nc_res_mid_shop_assistant",
+     "x": 12,
+     "y": 14
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car",
@@ -23795,6 +24629,18 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_driver",
+     "x": 9,
+     "y": 16
+    },
+    {
+     "class": "trl_nc_res_mid_engineer",
+     "x": 11,
+     "y": 14
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car",
@@ -24091,6 +24937,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_police_clerk",
+     "x": 13,
+     "y": 19
+    },
+    {
+     "class": "trl_nc_res_mid_clerk",
+     "x": 16,
+     "y": 19
     }
    ],
    "place_vehicles": [
@@ -24526,6 +25384,18 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_teacher",
+     "x": 11,
+     "y": 13
+    },
+    {
+     "class": "trl_nc_res_mid_driver",
+     "x": 10,
+     "y": 16
     }
    ]
   }
@@ -25061,6 +25931,13 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_owner",
+     "x": 23,
+     "y": 11
+    }
    ]
   }
  },
@@ -25290,6 +26167,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_owner",
+     "x": 6,
+     "y": 11
     }
    ],
    "place_vehicles": [
@@ -25825,6 +26709,13 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_investor",
+     "x": 19,
+     "y": 18
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "pickup",
@@ -26018,6 +26909,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_investor",
+     "x": 6,
+     "y": 13
     }
    ]
   }
@@ -26856,6 +27754,13 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_surgeon",
+     "x": 18,
+     "y": 13
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "suv",
@@ -27002,6 +27907,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_surgeon",
+     "x": 0,
+     "y": 16
     }
    ]
   }
@@ -27719,6 +28631,13 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_surgeon",
+     "x": 22,
+     "y": 16
+    }
    ]
   }
  },
@@ -27983,6 +28902,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_surgeon",
+     "x": 9,
+     "y": 14
     }
    ],
    "place_vehicles": [
@@ -28652,6 +29578,13 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_owner",
+     "x": 8,
+     "y": 15
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car",
@@ -28907,6 +29840,13 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_executive",
+     "x": 20,
+     "y": 18
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "electric_car",
@@ -29127,6 +30067,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_executive",
+     "x": 2,
+     "y": 16
     }
    ]
   }
@@ -29836,6 +30783,13 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_owner",
+     "x": 6,
+     "y": 14
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car",
@@ -30383,6 +31337,13 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_surgeon",
+     "x": 23,
+     "y": 16
+    }
    ]
   }
  },
@@ -30645,6 +31606,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_surgeon",
+     "x": 6,
+     "y": 17
     }
    ],
    "place_vehicles": [
@@ -31365,6 +32333,13 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_investor",
+     "x": 13,
+     "y": 17
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car_sports",
@@ -31860,6 +32835,13 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_owner",
+     "x": 15,
+     "y": 16
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "suv",
@@ -32029,6 +33011,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_owner",
+     "x": 1,
+     "y": 19
     }
    ]
   }
@@ -32444,6 +33433,13 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_official",
+     "x": 11,
+     "y": 17
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "car",
@@ -32843,6 +33839,13 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_official",
+     "x": 23,
+     "y": 12
+    }
    ]
   }
  },
@@ -33095,6 +34098,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_official",
+     "x": 8,
+     "y": 12
     }
    ],
    "place_vehicles": [
@@ -33794,6 +34804,13 @@
      "repeat": 3
     }
    ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_owner",
+     "x": 15,
+     "y": 15
+    }
+   ],
    "place_vehicles": [
     {
      "vehicle": "pickup",
@@ -34217,6 +35234,13 @@
      "chance": 40,
      "repeat": 3
     }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_owner",
+     "x": 16,
+     "y": 16
+    }
    ]
   }
  },
@@ -34418,6 +35442,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_owner",
+     "x": 0,
+     "y": 12
     }
    ],
    "place_vehicles": [
@@ -35157,6 +36188,13 @@
      ],
      "chance": 40,
      "repeat": 3
+    }
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_rich_owner",
+     "x": 12,
+     "y": 17
     }
    ],
    "place_vehicles": [

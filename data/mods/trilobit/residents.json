@@ -1,0 +1,3179 @@
+[
+ {
+  "type": "mutation",
+  "id": "trl_resident",
+  "name": {
+   "str": "Resident"
+  },
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "description": "A resident of the city: has a home and a job.  Hidden marker used by the resident routine.",
+  "valid": false,
+  "purifiable": false
+ },
+ {
+  "type": "mutation",
+  "id": "trl_res_poor",
+  "name": {
+   "str": "Poor"
+  },
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "description": "Wealth tier: poor.  Hidden marker used by the resident routine.",
+  "valid": false,
+  "purifiable": false
+ },
+ {
+  "type": "mutation",
+  "id": "trl_res_mid",
+  "name": {
+   "str": "Middle class"
+  },
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "description": "Wealth tier: middle.  Hidden marker used by the resident routine.",
+  "valid": false,
+  "purifiable": false
+ },
+ {
+  "type": "mutation",
+  "id": "trl_res_rich",
+  "name": {
+   "str": "Rich"
+  },
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "description": "Wealth tier: rich.  Hidden marker used by the resident routine.",
+  "valid": false,
+  "purifiable": false
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_day_laborer_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "tshirt",
+    "prob": 60
+   },
+   {
+    "item": "tank_top",
+    "prob": 40
+   },
+   {
+    "item": "jeans",
+    "prob": 50
+   },
+   {
+    "item": "pants_cargo",
+    "prob": 50
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "sneakers",
+    "prob": 60
+   },
+   {
+    "item": "boots_rubber",
+    "prob": 40
+   },
+   {
+    "item": "hoodie",
+    "prob": 40
+   },
+   {
+    "item": "gloves_work"
+   },
+   {
+    "item": "jacket_light"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_day_laborer_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     0,
+     300
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_day_laborer_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "crowbar",
+    "prob": 10
+   },
+   {
+    "item": "hammer",
+    "prob": 10
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_poor_day_laborer",
+  "name": {
+   "str": "Day laborer"
+  },
+  "job_description": "I work as a day laborer.",
+  "common": false,
+  "worn_override": "trl_res_poor_day_laborer_worn",
+  "carry_override": "trl_res_poor_day_laborer_carry",
+  "weapon_override": "trl_res_poor_day_laborer_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_poor"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "melee",
+    "level": {
+     "constant": 1
+    }
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_poor_day_laborer",
+  "class": "trl_nc_res_poor_day_laborer",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Day laborer"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_poor_day_laborer",
+  "condition": {
+   "u_has_class": "trl_nc_res_poor_day_laborer"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_pl_cargo_warehouse",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_street_vendor_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "tshirt",
+    "prob": 60
+   },
+   {
+    "item": "tank_top",
+    "prob": 40
+   },
+   {
+    "item": "jeans",
+    "prob": 50
+   },
+   {
+    "item": "pants_cargo",
+    "prob": 50
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "sneakers",
+    "prob": 60
+   },
+   {
+    "item": "boots_rubber",
+    "prob": 40
+   },
+   {
+    "item": "hoodie",
+    "prob": 40
+   },
+   {
+    "item": "apron_cotton"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_street_vendor_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     0,
+     300
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_street_vendor_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "knife_folding",
+    "prob": 15
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_poor_street_vendor",
+  "name": {
+   "str": "Street vendor"
+  },
+  "job_description": "I work as a street vendor.",
+  "common": false,
+  "worn_override": "trl_res_poor_street_vendor_worn",
+  "carry_override": "trl_res_poor_street_vendor_carry",
+  "weapon_override": "trl_res_poor_street_vendor_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_poor"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "speech",
+    "level": {
+     "constant": 2
+    }
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_poor_street_vendor",
+  "class": "trl_nc_res_poor_street_vendor",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Street vendor"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_poor_street_vendor",
+  "condition": {
+   "u_has_class": "trl_nc_res_poor_street_vendor"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_pl_night_market",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_scrapper_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "tshirt",
+    "prob": 60
+   },
+   {
+    "item": "tank_top",
+    "prob": 40
+   },
+   {
+    "item": "jeans",
+    "prob": 50
+   },
+   {
+    "item": "pants_cargo",
+    "prob": 50
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "sneakers",
+    "prob": 60
+   },
+   {
+    "item": "boots_rubber",
+    "prob": 40
+   },
+   {
+    "item": "hoodie",
+    "prob": 40
+   },
+   {
+    "item": "gloves_work"
+   },
+   {
+    "item": "mask_dust"
+   },
+   {
+    "item": "boots_rubber"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_scrapper_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     0,
+     300
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_scrapper_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "crowbar",
+    "prob": 40
+   },
+   {
+    "item": "pipe",
+    "prob": 20
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_poor_scrapper",
+  "name": {
+   "str": "Scrapper"
+  },
+  "job_description": "I work as a scrapper.",
+  "common": false,
+  "worn_override": "trl_res_poor_scrapper_worn",
+  "carry_override": "trl_res_poor_scrapper_carry",
+  "weapon_override": "trl_res_poor_scrapper_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_poor"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "melee",
+    "level": {
+     "constant": 2
+    }
+   },
+   {
+    "skill": "mechanics",
+    "level": {
+     "constant": 1
+    }
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_poor_scrapper",
+  "class": "trl_nc_res_poor_scrapper",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Scrapper"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_poor_scrapper",
+  "condition": {
+   "u_has_class": "trl_nc_res_poor_scrapper"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_lot_scrapyard",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_courier_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "tshirt",
+    "prob": 60
+   },
+   {
+    "item": "tank_top",
+    "prob": 40
+   },
+   {
+    "item": "jeans",
+    "prob": 50
+   },
+   {
+    "item": "pants_cargo",
+    "prob": 50
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "sneakers",
+    "prob": 60
+   },
+   {
+    "item": "boots_rubber",
+    "prob": 40
+   },
+   {
+    "item": "hoodie",
+    "prob": 40
+   },
+   {
+    "item": "jacket_windbreaker"
+   },
+   {
+    "item": "sneakers"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_courier_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     0,
+     300
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_courier_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "knife_folding",
+    "prob": 15
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_poor_courier",
+  "name": {
+   "str": "Courier"
+  },
+  "job_description": "I work as a courier.",
+  "common": false,
+  "worn_override": "trl_res_poor_courier_worn",
+  "carry_override": "trl_res_poor_courier_carry",
+  "weapon_override": "trl_res_poor_courier_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_poor"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "dodge",
+    "level": {
+     "constant": 2
+    }
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_poor_courier",
+  "class": "trl_nc_res_poor_courier",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Courier"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_poor_courier",
+  "condition": {
+   "u_has_class": "trl_nc_res_poor_courier"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn07_transit_hub",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_dishwasher_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "tshirt",
+    "prob": 60
+   },
+   {
+    "item": "tank_top",
+    "prob": 40
+   },
+   {
+    "item": "jeans",
+    "prob": 50
+   },
+   {
+    "item": "pants_cargo",
+    "prob": 50
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "sneakers",
+    "prob": 60
+   },
+   {
+    "item": "boots_rubber",
+    "prob": 40
+   },
+   {
+    "item": "hoodie",
+    "prob": 40
+   },
+   {
+    "item": "apron_cotton"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_dishwasher_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     0,
+     300
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_dishwasher_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "knife_cleaver",
+    "prob": 10
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_poor_dishwasher",
+  "name": {
+   "str": "Dishwasher"
+  },
+  "job_description": "I work as a dishwasher.",
+  "common": false,
+  "worn_override": "trl_res_poor_dishwasher_worn",
+  "carry_override": "trl_res_poor_dishwasher_carry",
+  "weapon_override": "trl_res_poor_dishwasher_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_poor"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "cooking",
+    "level": {
+     "constant": 1
+    }
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_poor_dishwasher",
+  "class": "trl_nc_res_poor_dishwasher",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Dishwasher"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_poor_dishwasher",
+  "condition": {
+   "u_has_class": "trl_nc_res_poor_dishwasher"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn14_food_court",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_janitor_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "tshirt",
+    "prob": 60
+   },
+   {
+    "item": "tank_top",
+    "prob": 40
+   },
+   {
+    "item": "jeans",
+    "prob": 50
+   },
+   {
+    "item": "pants_cargo",
+    "prob": 50
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "sneakers",
+    "prob": 60
+   },
+   {
+    "item": "boots_rubber",
+    "prob": 40
+   },
+   {
+    "item": "hoodie",
+    "prob": 40
+   },
+   {
+    "item": "technician_coveralls"
+   },
+   {
+    "item": "gloves_work"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_janitor_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     0,
+     300
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_janitor_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "pipe",
+    "prob": 10
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_poor_janitor",
+  "name": {
+   "str": "Janitor"
+  },
+  "job_description": "I work as a janitor.",
+  "common": false,
+  "worn_override": "trl_res_poor_janitor_worn",
+  "carry_override": "trl_res_poor_janitor_carry",
+  "weapon_override": "trl_res_poor_janitor_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_poor"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "mechanics",
+    "level": {
+     "constant": 1
+    }
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_poor_janitor",
+  "class": "trl_nc_res_poor_janitor",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Janitor"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_poor_janitor",
+  "condition": {
+   "u_has_class": "trl_nc_res_poor_janitor"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn08_corp_office",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_clerk_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "dress_shirt",
+    "prob": 40
+   },
+   {
+    "item": "polo_shirt",
+    "prob": 30
+   },
+   {
+    "item": "buttonshirt",
+    "prob": 30
+   },
+   {
+    "item": "jeans",
+    "prob": 40
+   },
+   {
+    "item": "pants_checkered",
+    "prob": 20
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "dress_shoes",
+    "prob": 60
+   },
+   {
+    "item": "sneakers",
+    "prob": 40
+   },
+   {
+    "item": "tie_necktie"
+   },
+   {
+    "item": "buttonshirt"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_clerk_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     200,
+     2000
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_clerk_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 1
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_mid_clerk",
+  "name": {
+   "str": "Clerk"
+  },
+  "job_description": "I work as a clerk.",
+  "common": false,
+  "worn_override": "trl_res_mid_clerk_worn",
+  "carry_override": "trl_res_mid_clerk_carry",
+  "weapon_override": "trl_res_mid_clerk_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_mid"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "speech",
+    "level": {
+     "constant": 2
+    }
+   }
+  ],
+  "bionics": [
+   {
+    "id": "trl_bio_cyberbrain",
+    "chance": 20
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_mid_clerk",
+  "class": "trl_nc_res_mid_clerk",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Clerk"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_mid_clerk",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_clerk"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn12_department_store",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_technician_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "dress_shirt",
+    "prob": 40
+   },
+   {
+    "item": "polo_shirt",
+    "prob": 30
+   },
+   {
+    "item": "buttonshirt",
+    "prob": 30
+   },
+   {
+    "item": "jeans",
+    "prob": 40
+   },
+   {
+    "item": "pants_checkered",
+    "prob": 20
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "dress_shoes",
+    "prob": 60
+   },
+   {
+    "item": "sneakers",
+    "prob": 40
+   },
+   {
+    "item": "technician_shirt_gray"
+   },
+   {
+    "item": "technician_pants_gray"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_technician_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     200,
+     2000
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_technician_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 1
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_mid_technician",
+  "name": {
+   "str": "Technician"
+  },
+  "job_description": "I work as a technician.",
+  "common": false,
+  "worn_override": "trl_res_mid_technician_worn",
+  "carry_override": "trl_res_mid_technician_carry",
+  "weapon_override": "trl_res_mid_technician_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_mid"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "electronics",
+    "level": {
+     "constant": 3
+    }
+   },
+   {
+    "skill": "computer",
+    "level": {
+     "constant": 2
+    }
+   }
+  ],
+  "bionics": [
+   {
+    "id": "trl_bio_cyberbrain",
+    "chance": 20
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_mid_technician",
+  "class": "trl_nc_res_mid_technician",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Technician"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_mid_technician",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_technician"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn09_telecom",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_nurse_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "dress_shirt",
+    "prob": 40
+   },
+   {
+    "item": "polo_shirt",
+    "prob": 30
+   },
+   {
+    "item": "buttonshirt",
+    "prob": 30
+   },
+   {
+    "item": "jeans",
+    "prob": 40
+   },
+   {
+    "item": "pants_checkered",
+    "prob": 20
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "dress_shoes",
+    "prob": 60
+   },
+   {
+    "item": "sneakers",
+    "prob": 40
+   },
+   {
+    "item": "coat_lab"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_nurse_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     200,
+     2000
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_nurse_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 1
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_mid_nurse",
+  "name": {
+   "str": "Nurse"
+  },
+  "job_description": "I work as a nurse.",
+  "common": false,
+  "worn_override": "trl_res_mid_nurse_worn",
+  "carry_override": "trl_res_mid_nurse_carry",
+  "weapon_override": "trl_res_mid_nurse_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_mid"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "firstaid",
+    "level": {
+     "constant": 4
+    }
+   }
+  ],
+  "bionics": [
+   {
+    "id": "trl_bio_cyberbrain",
+    "chance": 20
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_mid_nurse",
+  "class": "trl_nc_res_mid_nurse",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Nurse"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_mid_nurse",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_nurse"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn24_hospital",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_teacher_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "dress_shirt",
+    "prob": 40
+   },
+   {
+    "item": "polo_shirt",
+    "prob": 30
+   },
+   {
+    "item": "buttonshirt",
+    "prob": 30
+   },
+   {
+    "item": "jeans",
+    "prob": 40
+   },
+   {
+    "item": "pants_checkered",
+    "prob": 20
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "dress_shoes",
+    "prob": 60
+   },
+   {
+    "item": "sneakers",
+    "prob": 40
+   },
+   {
+    "item": "sweater"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_teacher_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     200,
+     2000
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_teacher_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 1
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_mid_teacher",
+  "name": {
+   "str": "Teacher"
+  },
+  "job_description": "I work as a teacher.",
+  "common": false,
+  "worn_override": "trl_res_mid_teacher_worn",
+  "carry_override": "trl_res_mid_teacher_carry",
+  "weapon_override": "trl_res_mid_teacher_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_mid"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "speech",
+    "level": {
+     "constant": 3
+    }
+   }
+  ],
+  "bionics": [
+   {
+    "id": "trl_bio_cyberbrain",
+    "chance": 20
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_mid_teacher",
+  "class": "trl_nc_res_mid_teacher",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Teacher"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_mid_teacher",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_teacher"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn19_library_school",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_shop_assistant_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "dress_shirt",
+    "prob": 40
+   },
+   {
+    "item": "polo_shirt",
+    "prob": 30
+   },
+   {
+    "item": "buttonshirt",
+    "prob": 30
+   },
+   {
+    "item": "jeans",
+    "prob": 40
+   },
+   {
+    "item": "pants_checkered",
+    "prob": 20
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "dress_shoes",
+    "prob": 60
+   },
+   {
+    "item": "sneakers",
+    "prob": 40
+   },
+   {
+    "item": "apron_cotton"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_shop_assistant_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     200,
+     2000
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_shop_assistant_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 1
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_mid_shop_assistant",
+  "name": {
+   "str": "Shop assistant"
+  },
+  "job_description": "I work as a shop assistant.",
+  "common": false,
+  "worn_override": "trl_res_mid_shop_assistant_worn",
+  "carry_override": "trl_res_mid_shop_assistant_carry",
+  "weapon_override": "trl_res_mid_shop_assistant_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_mid"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "speech",
+    "level": {
+     "constant": 1
+    }
+   }
+  ],
+  "bionics": [
+   {
+    "id": "trl_bio_cyberbrain",
+    "chance": 20
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_mid_shop_assistant",
+  "class": "trl_nc_res_mid_shop_assistant",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Shop assistant"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_mid_shop_assistant",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_shop_assistant"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn13_supermarket",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_police_clerk_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "dress_shirt",
+    "prob": 40
+   },
+   {
+    "item": "polo_shirt",
+    "prob": 30
+   },
+   {
+    "item": "buttonshirt",
+    "prob": 30
+   },
+   {
+    "item": "jeans",
+    "prob": 40
+   },
+   {
+    "item": "pants_checkered",
+    "prob": 20
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "dress_shoes",
+    "prob": 60
+   },
+   {
+    "item": "sneakers",
+    "prob": 40
+   },
+   {
+    "item": "leather_police_jacket"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_police_clerk_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     200,
+     2000
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_police_clerk_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "baton",
+    "prob": 25
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_mid_police_clerk",
+  "name": {
+   "str": "Police clerk"
+  },
+  "job_description": "I work as a police clerk.",
+  "common": false,
+  "worn_override": "trl_res_mid_police_clerk_worn",
+  "carry_override": "trl_res_mid_police_clerk_carry",
+  "weapon_override": "trl_res_mid_police_clerk_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_mid"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "computer",
+    "level": {
+     "constant": 2
+    }
+   },
+   {
+    "skill": "pistol",
+    "level": {
+     "constant": 1
+    }
+   }
+  ],
+  "bionics": [
+   {
+    "id": "trl_bio_cyberbrain",
+    "chance": 20
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_mid_police_clerk",
+  "class": "trl_nc_res_mid_police_clerk",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Police clerk"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_mid_police_clerk",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_police_clerk"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn02_precinct",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_driver_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "dress_shirt",
+    "prob": 40
+   },
+   {
+    "item": "polo_shirt",
+    "prob": 30
+   },
+   {
+    "item": "buttonshirt",
+    "prob": 30
+   },
+   {
+    "item": "jeans",
+    "prob": 40
+   },
+   {
+    "item": "pants_checkered",
+    "prob": 20
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "dress_shoes",
+    "prob": 60
+   },
+   {
+    "item": "sneakers",
+    "prob": 40
+   },
+   {
+    "item": "jacket_windbreaker"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_driver_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     200,
+     2000
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_driver_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 1
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_mid_driver",
+  "name": {
+   "str": "Driver"
+  },
+  "job_description": "I work as a driver.",
+  "common": false,
+  "worn_override": "trl_res_mid_driver_worn",
+  "carry_override": "trl_res_mid_driver_carry",
+  "weapon_override": "trl_res_mid_driver_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_mid"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "driving",
+    "level": {
+     "constant": 4
+    }
+   }
+  ],
+  "bionics": [
+   {
+    "id": "trl_bio_cyberbrain",
+    "chance": 20
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_mid_driver",
+  "class": "trl_nc_res_mid_driver",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Driver"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_mid_driver",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_driver"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn07_transit_hub",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_engineer_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "dress_shirt",
+    "prob": 40
+   },
+   {
+    "item": "polo_shirt",
+    "prob": 30
+   },
+   {
+    "item": "buttonshirt",
+    "prob": 30
+   },
+   {
+    "item": "jeans",
+    "prob": 40
+   },
+   {
+    "item": "pants_checkered",
+    "prob": 20
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "dress_shoes",
+    "prob": 60
+   },
+   {
+    "item": "sneakers",
+    "prob": 40
+   },
+   {
+    "item": "polo_shirt"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_engineer_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     200,
+     2000
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_engineer_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 1
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_mid_engineer",
+  "name": {
+   "str": "Engineer"
+  },
+  "job_description": "I work as a engineer.",
+  "common": false,
+  "worn_override": "trl_res_mid_engineer_worn",
+  "carry_override": "trl_res_mid_engineer_carry",
+  "weapon_override": "trl_res_mid_engineer_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_mid"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "electronics",
+    "level": {
+     "constant": 4
+    }
+   },
+   {
+    "skill": "mechanics",
+    "level": {
+     "constant": 3
+    }
+   },
+   {
+    "skill": "computer",
+    "level": {
+     "constant": 3
+    }
+   }
+  ],
+  "bionics": [
+   {
+    "id": "trl_bio_cyberbrain",
+    "chance": 20
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_mid_engineer",
+  "class": "trl_nc_res_mid_engineer",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Engineer"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_mid_engineer",
+  "condition": {
+   "u_has_class": "trl_nc_res_mid_engineer"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn08_corp_office",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_executive_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "dress_shirt",
+    "prob": 100
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "dress_shoes",
+    "prob": 100
+   },
+   {
+    "item": "suit"
+   },
+   {
+    "item": "tie_necktie"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_executive_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     3000,
+     12000
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_executive_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 1
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_rich_executive",
+  "name": {
+   "str": "Executive"
+  },
+  "job_description": "I work as a executive.",
+  "common": false,
+  "worn_override": "trl_res_rich_executive_worn",
+  "carry_override": "trl_res_rich_executive_carry",
+  "weapon_override": "trl_res_rich_executive_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_rich"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "speech",
+    "level": {
+     "constant": 5
+    }
+   }
+  ],
+  "bionics": [
+   {
+    "id": "trl_bio_cyberbrain",
+    "chance": 100
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_rich_executive",
+  "class": "trl_nc_res_rich_executive",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Executive"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_rich_executive",
+  "condition": {
+   "u_has_class": "trl_nc_res_rich_executive"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn08_corp_office",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_owner_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "dress_shirt",
+    "prob": 100
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "dress_shoes",
+    "prob": 100
+   },
+   {
+    "item": "blazer"
+   },
+   {
+    "item": "dress_shirt"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_owner_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     3000,
+     12000
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_owner_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 1
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_rich_owner",
+  "name": {
+   "str": "Business owner"
+  },
+  "job_description": "I work as a business owner.",
+  "common": false,
+  "worn_override": "trl_res_rich_owner_worn",
+  "carry_override": "trl_res_rich_owner_carry",
+  "weapon_override": "trl_res_rich_owner_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_rich"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "speech",
+    "level": {
+     "constant": 4
+    }
+   }
+  ],
+  "bionics": [
+   {
+    "id": "trl_bio_cyberbrain",
+    "chance": 100
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_rich_owner",
+  "class": "trl_nc_res_rich_owner",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Business owner"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_rich_owner",
+  "condition": {
+   "u_has_class": "trl_nc_res_rich_owner"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn10_hotel",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_investor_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "dress_shirt",
+    "prob": 100
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "dress_shoes",
+    "prob": 100
+   },
+   {
+    "item": "suit"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_investor_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     3000,
+     12000
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_investor_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 1
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_rich_investor",
+  "name": {
+   "str": "Investor"
+  },
+  "job_description": "I work as a investor.",
+  "common": false,
+  "worn_override": "trl_res_rich_investor_worn",
+  "carry_override": "trl_res_rich_investor_carry",
+  "weapon_override": "trl_res_rich_investor_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_rich"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "speech",
+    "level": {
+     "constant": 4
+    }
+   },
+   {
+    "skill": "computer",
+    "level": {
+     "constant": 2
+    }
+   }
+  ],
+  "bionics": [
+   {
+    "id": "trl_bio_cyberbrain",
+    "chance": 100
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_rich_investor",
+  "class": "trl_nc_res_rich_investor",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Investor"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_rich_investor",
+  "condition": {
+   "u_has_class": "trl_nc_res_rich_investor"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn06_bank",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_surgeon_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "dress_shirt",
+    "prob": 100
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "dress_shoes",
+    "prob": 100
+   },
+   {
+    "item": "coat_lab"
+   },
+   {
+    "item": "dress_shirt"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_surgeon_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     3000,
+     12000
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_surgeon_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 1
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_rich_surgeon",
+  "name": {
+   "str": "Surgeon"
+  },
+  "job_description": "I work as a surgeon.",
+  "common": false,
+  "worn_override": "trl_res_rich_surgeon_worn",
+  "carry_override": "trl_res_rich_surgeon_carry",
+  "weapon_override": "trl_res_rich_surgeon_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_rich"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "firstaid",
+    "level": {
+     "constant": 7
+    }
+   }
+  ],
+  "bionics": [
+   {
+    "id": "trl_bio_cyberbrain",
+    "chance": 100
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_rich_surgeon",
+  "class": "trl_nc_res_rich_surgeon",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Surgeon"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_rich_surgeon",
+  "condition": {
+   "u_has_class": "trl_nc_res_rich_surgeon"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn24_hospital",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_official_worn",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "dress_shirt",
+    "prob": 100
+   },
+   {
+    "item": "socks",
+    "prob": 100
+   },
+   {
+    "item": "dress_shoes",
+    "prob": 100
+   },
+   {
+    "item": "suit"
+   },
+   {
+    "item": "tie_necktie"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_official_carry",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 60
+   },
+   {
+    "item": "trl_yen",
+    "count": [
+     3000,
+     12000
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_official_weapon",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "wallet",
+    "prob": 1
+   }
+  ]
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_res_rich_official",
+  "name": {
+   "str": "Retired official"
+  },
+  "job_description": "I work as a retired official.",
+  "common": false,
+  "worn_override": "trl_res_rich_official_worn",
+  "carry_override": "trl_res_rich_official_carry",
+  "weapon_override": "trl_res_rich_official_weapon",
+  "traits": [
+   {
+    "trait": "trl_resident"
+   },
+   {
+    "trait": "trl_res_rich"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 1
+    }
+   },
+   {
+    "skill": "speech",
+    "level": {
+     "constant": 5
+    }
+   }
+  ],
+  "bionics": [
+   {
+    "id": "trl_bio_cyberbrain",
+    "chance": 100
+   }
+  ]
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_res_rich_official",
+  "class": "trl_nc_res_rich_official",
+  "attitude": 0,
+  "mission": 7,
+  "chat": "TRL_RESIDENT_TALK",
+  "faction": "no_faction",
+  "temp_suffix": "Retired official"
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_rich_official",
+  "condition": {
+   "u_has_class": "trl_nc_res_rich_official"
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_work"
+    },
+    "target_params": {
+     "om_terrain": "trl_fn01_district_office",
+     "om_terrain_match_type": "PREFIX",
+     "random": true,
+     "search_range": 15,
+     "z": 0
+    },
+    "x_adjust": 12,
+    "y_adjust": 12,
+    "false_eocs": [
+     "trl_res_nowork"
+    ],
+    "true_eocs": [
+     "trl_res_haswork"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_nowork",
+  "effect": [
+   {
+    "math": [
+     "u_trl_has_work = 0"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_haswork",
+  "effect": [
+   {
+    "math": [
+     "u_trl_has_work = 1"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_goto_spot",
+  "effect": [
+   {
+    "u_go_to_loc": {
+     "u_val": "trl_spot"
+    }
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_tick",
+  "recurrence": [
+   "15 minutes",
+   "20 minutes"
+  ],
+  "global": true,
+  "effect": [
+   {
+    "u_run_npc_eocs": [
+     "trl_res_step"
+    ],
+    "overmap": true
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_step",
+  "condition": {
+   "and": [
+    {
+     "u_has_trait": "trl_resident"
+    },
+    {
+     "not": "u_following"
+    },
+    {
+     "math": [
+      "u_trl_skip_until < time('now')"
+     ]
+    }
+   ]
+  },
+  "effect": [
+   {
+    "if": {
+     "or": [
+      {
+       "math": [
+        "u_npc_anger() > 0"
+       ]
+      },
+      {
+       "math": [
+        "u_npc_fear() > 0"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "u_trl_skip_until = time('now') + time('10 m')"
+      ]
+     }
+    ],
+    "else": [
+     {
+      "run_eocs": [
+       "trl_res_init_once"
+      ]
+     },
+     {
+      "if": {
+       "u_has_trait": "trl_res_rich"
+      },
+      "then": [
+       {
+        "run_eocs": [
+         "trl_res_do_rich"
+        ]
+       }
+      ],
+      "else": [
+       {
+        "run_eocs": [
+         "trl_res_do_commuter"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_init_once",
+  "condition": {
+   "math": [
+    "u_trl_inited == 0"
+   ]
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "trl_home"
+    }
+   },
+   {
+    "math": [
+     "u_trl_inited = 1"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_at = 0"
+    ]
+   },
+   {
+    "run_eocs": [
+     "trl_res_init_poor_day_laborer",
+     "trl_res_init_poor_street_vendor",
+     "trl_res_init_poor_scrapper",
+     "trl_res_init_poor_courier",
+     "trl_res_init_poor_dishwasher",
+     "trl_res_init_poor_janitor",
+     "trl_res_init_mid_clerk",
+     "trl_res_init_mid_technician",
+     "trl_res_init_mid_nurse",
+     "trl_res_init_mid_teacher",
+     "trl_res_init_mid_shop_assistant",
+     "trl_res_init_mid_police_clerk",
+     "trl_res_init_mid_driver",
+     "trl_res_init_mid_engineer",
+     "trl_res_init_rich_executive",
+     "trl_res_init_rich_owner",
+     "trl_res_init_rich_investor",
+     "trl_res_init_rich_surgeon",
+     "trl_res_init_rich_official"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_do_commuter",
+  "condition": {
+   "math": [
+    "u_trl_has_work == 1"
+   ]
+  },
+  "effect": [
+   {
+    "if": {
+     "and": [
+      {
+       "math": [
+        "time_since('midnight','unit':'hours') >= 7"
+       ]
+      },
+      {
+       "math": [
+        "time_since('midnight','unit':'hours') < 17"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "if": {
+       "math": [
+        "u_trl_at != 1"
+       ]
+      },
+      "then": [
+       {
+        "u_go_to_loc": {
+         "u_val": "trl_work"
+        }
+       },
+       {
+        "math": [
+         "u_trl_at = 1"
+        ]
+       }
+      ]
+     }
+    ],
+    "else": [
+     {
+      "if": {
+       "math": [
+        "u_trl_at != 0"
+       ]
+      },
+      "then": [
+       {
+        "u_go_to_loc": {
+         "u_val": "trl_home"
+        }
+       },
+       {
+        "math": [
+         "u_trl_at = 0"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_res_do_rich",
+  "effect": [
+   {
+    "if": {
+     "and": [
+      {
+       "math": [
+        "time_since('midnight','unit':'hours') >= 8"
+       ]
+      },
+      {
+       "math": [
+        "time_since('midnight','unit':'hours') < 22"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "if": {
+       "or": [
+        {
+         "math": [
+          "distance('u', u_trl_home) > 12"
+         ]
+        },
+        {
+         "math": [
+          "rand(3) == 0"
+         ]
+        }
+       ]
+      },
+      "then": [
+       {
+        "u_go_to_loc": {
+         "u_val": "trl_home"
+        }
+       }
+      ],
+      "else": [
+       {
+        "u_location_variable": {
+         "u_val": "trl_spot"
+        },
+        "max_radius": 6,
+        "passable_only": true,
+        "true_eocs": [
+         "trl_res_goto_spot"
+        ]
+       }
+      ]
+     },
+     {
+      "math": [
+       "u_trl_at = 2"
+      ]
+     }
+    ],
+    "else": [
+     {
+      "if": {
+       "math": [
+        "u_trl_at != 0"
+       ]
+      },
+      "then": [
+       {
+        "u_go_to_loc": {
+         "u_val": "trl_home"
+        }
+       },
+       {
+        "math": [
+         "u_trl_at = 0"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "talk_topic",
+  "id": "TRL_RESIDENT_TALK",
+  "dynamic_line": "Hm?  Can I help you?",
+  "responses": [
+   {
+    "text": "Just passing through.",
+    "topic": "TALK_DONE"
+   }
+  ]
+ }
+]
