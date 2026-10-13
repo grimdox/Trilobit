@@ -124,6 +124,8 @@ struct mission_fail {
 struct mission_target_params {
     str_or_var overmap_terrain;
     ot_match_type overmap_terrain_match_type = ot_match_type::type;
+    // Trilobit: when true a failed search is silent and never generates new overmaps
+    bool quiet = false;
     mission *mission_pointer = nullptr;
 
     bool origin_u = true;

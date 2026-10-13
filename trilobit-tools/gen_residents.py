@@ -107,7 +107,7 @@ def build():
         if tier != "rich" or True:
             init["effect"].append({"u_location_variable": {"u_val": "trl_work"},
                                    "target_params": {"om_terrain": wp, "om_terrain_match_type": "PREFIX", "random": True,
-                                                     "search_range": 15, "z": 0},
+                                                     "search_range": 15, "z": 0, "quiet": True},
                                    "x_adjust": 12, "y_adjust": 12,
                                    "false_eocs": ["trl_res_nowork"], "true_eocs": ["trl_res_haswork"]})
         out.append(init)

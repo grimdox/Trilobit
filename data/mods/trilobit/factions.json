@@ -239,7 +239,7 @@
     "prob": 30
    },
    {
-    "item": "glock_19",
+    "item": "makarov",
     "prob": 30
    }
   ]
@@ -288,7 +288,13 @@
      "constant": 2
     }
    }
-  ]
+  ],
+  "bonus_aggression": {
+   "constant": 8
+  },
+  "bonus_bravery": {
+   "constant": 10
+  }
  },
  {
   "type": "npc",
@@ -328,12 +334,12 @@
   "subtype": "distribution",
   "entries": [
    {
-    "item": "uzi",
-    "prob": 50
+    "item": "ak47",
+    "prob": 40
    },
    {
     "item": "tec9",
-    "prob": 30
+    "prob": 40
    },
    {
     "item": "machete",
@@ -386,6 +392,12 @@
     }
    }
   ],
+  "bonus_aggression": {
+   "constant": 8
+  },
+  "bonus_bravery": {
+   "constant": 10
+  },
   "bionics": [
    {
     "id": "trl_bio_cyberbrain",
@@ -477,7 +489,13 @@
      "constant": 3
     }
    }
-  ]
+  ],
+  "bonus_aggression": {
+   "constant": 8
+  },
+  "bonus_bravery": {
+   "constant": 10
+  }
  },
  {
   "type": "npc",
@@ -679,7 +697,7 @@
   "subtype": "distribution",
   "entries": [
    {
-    "item": "usp_9mm",
+    "item": "m1911",
     "prob": 60
    },
    {
@@ -732,7 +750,13 @@
      "constant": 2
     }
    }
-  ]
+  ],
+  "bonus_aggression": {
+   "constant": 8
+  },
+  "bonus_bravery": {
+   "constant": 10
+  }
  },
  {
   "type": "npc",
@@ -822,7 +846,13 @@
      "constant": 3
     }
    }
-  ]
+  ],
+  "bonus_aggression": {
+   "constant": 8
+  },
+  "bonus_bravery": {
+   "constant": 10
+  }
  },
  {
   "type": "npc",
@@ -862,11 +892,11 @@
   "subtype": "distribution",
   "entries": [
    {
-    "item": "hk_mp5",
+    "item": "modular_m4_carbine",
     "prob": 50
    },
    {
-    "item": "ak74_semi",
+    "item": "m14ebr",
     "prob": 30
    },
    {
@@ -926,6 +956,12 @@
     }
    }
   ],
+  "bonus_aggression": {
+   "constant": 8
+  },
+  "bonus_bravery": {
+   "constant": 10
+  },
   "bionics": [
    {
     "id": "trl_bio_cyberbrain",
@@ -1193,6 +1229,12 @@
     }
    }
   ],
+  "bonus_aggression": {
+   "constant": 8
+  },
+  "bonus_bravery": {
+   "constant": 10
+  },
   "bionics": [
    {
     "id": "trl_bio_cyberbrain",
@@ -1239,7 +1281,7 @@
     "prob": 40
    },
    {
-    "item": "glock_19",
+    "item": "mac_10",
     "prob": 40
    }
   ]
@@ -1294,7 +1336,13 @@
      "constant": 3
     }
    }
-  ]
+  ],
+  "bonus_aggression": {
+   "constant": 8
+  },
+  "bonus_bravery": {
+   "constant": 10
+  }
  },
  {
   "type": "npc",
@@ -1392,6 +1440,12 @@
     }
    }
   ],
+  "bonus_aggression": {
+   "constant": 8
+  },
+  "bonus_bravery": {
+   "constant": 10
+  },
   "bionics": [
    {
     "id": "trl_bio_cyberbrain",

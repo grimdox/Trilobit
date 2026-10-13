@@ -255,7 +255,7 @@ static std::optional<tripoint_abs_omt> find_or_create_om_terrain(
     // First try to get the position where we only allow existing overmaps.
     get_target_position();
 
-    if( target_pos.is_invalid() ) {
+    if( target_pos.is_invalid() && !params.quiet ) {
         // If it's invalid, then that means we couldn't find it or create it (if allowed) on
         // our current overmap. We'll now go ahead and try again but allow it to create new overmaps.
         find_params.existing_only = false;
@@ -264,6 +264,9 @@ static std::optional<tripoint_abs_omt> find_or_create_om_terrain(
 
     // If we got here and this is still invalid, it means that we couldn't find it nor create it
     // on any overmap (new or existing) within the allowed search range.
+    if( target_pos.is_invalid() && params.quiet ) {
+        return std::nullopt;
+    }
     if( target_pos.is_invalid() ) {
         debugmsg( "Unable to find and assign mission target %s within %d tiles.",
                   params.overmap_terrain.evaluate( d ), find_params.search_range );
@@ -419,6 +422,7 @@ mission_target_params mission_util::parse_mission_om_target( const JsonObject &j
     if( jo.has_member( "exclude_seen" ) ) {
         p.random = jo.get_bool( "exclude" );
     }
+    p.quiet = jo.get_bool( "quiet", false );
     if( jo.has_member( "random" ) ) {
         p.random = jo.get_bool( "random" );
     }

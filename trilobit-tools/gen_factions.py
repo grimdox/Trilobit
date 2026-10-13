@@ -13,18 +13,18 @@ ENEMIES = {"trl_bratva": ["trl_jsdf", "trl_nasim"], "trl_jsdf": ["trl_bratva", "
 # (class id suffix, title, worn[], weapons[(item, prob)], carry extras, skills)
 MEMBERS = {
     "trl_bratva": [
-        ("thug", "Street thug", ["jacket_leather", "jeans", "boots_hiking", "tshirt"], [("pipe", 40), ("knife_combat", 30), ("glock_19", 30)], {"melee": 3, "pistol": 2}),
-        ("enforcer", "Enforcer", ["trenchcoat_leather", "ballistic_vest_light", "pants_cargo", "boots_combat", "gloves_light"], [("uzi", 50), ("tec9", 30), ("machete", 20)], {"smg": 4, "melee": 3}),
+        ("thug", "Street thug", ["jacket_leather", "jeans", "boots_hiking", "tshirt"], [("pipe", 40), ("knife_combat", 30), ("makarov", 30)], {"melee": 3, "pistol": 2}),
+        ("enforcer", "Enforcer", ["trenchcoat_leather", "ballistic_vest_light", "pants_cargo", "boots_combat", "gloves_light"], [("ak47", 40), ("tec9", 40), ("machete", 20)], {"smg": 4, "melee": 3}),
         ("fixer", "Fixer", ["suit", "tie_necktie", "dress_shoes", "trenchcoat"], [("colt_python", 40)], {"speech": 6, "pistol": 3}),
     ],
     "trl_jsdf": [
-        ("patrol", "Patrol officer", ["leather_police_jacket", "pants_cargo", "boots_combat", "ballistic_vest_light"], [("usp_9mm", 60), ("baton-extended", 40)], {"pistol": 3, "melee": 2}),
+        ("patrol", "Patrol officer", ["leather_police_jacket", "pants_cargo", "boots_combat", "ballistic_vest_light"], [("m1911", 60), ("baton-extended", 40)], {"pistol": 3, "melee": 2}),
         ("riot", "Riot trooper", ["armor_riot", "helmet_riot", "boots_combat", "gloves_light"], [("remington_870", 60), ("baton-extended", 40)], {"shotgun": 4, "melee": 3}),
-        ("tactical", "Tactical operator", ["ballistic_vest_esapi", "tac_helmet", "pants_army", "boots_combat", "gloves_light"], [("hk_mp5", 50), ("ak74_semi", 30), ("katana", 20)], {"smg": 6, "rifle": 5, "melee": 4}),
+        ("tactical", "Tactical operator", ["ballistic_vest_esapi", "tac_helmet", "pants_army", "boots_combat", "gloves_light"], [("modular_m4_carbine", 50), ("m14ebr", 30), ("katana", 20)], {"smg": 6, "rifle": 5, "melee": 4}),
     ],
     "trl_nasim": [
         ("hacker", "Script-hacker", ["hoodie", "jeans", "sneakers", "gloves_light"], [("tec9", 30), ("knife_folding", 30)], {"computer": 7, "electronics": 5, "pistol": 2}),
-        ("saboteur", "Saboteur", ["jacket_windbreaker", "pants_cargo", "boots_rubber", "mask_dust"], [("grenade", 40), ("glock_19", 40)], {"traps": 5, "launcher": 2, "pistol": 3}),
+        ("saboteur", "Saboteur", ["jacket_windbreaker", "pants_cargo", "boots_rubber", "mask_dust"], [("grenade", 40), ("mac_10", 40)], {"traps": 5, "launcher": 2, "pistol": 3}),
         ("zealot", "Zealot", ["jumpsuit", "trenchcoat", "boots_combat"], [("katana", 40), ("tanto", 30), ("machete", 30)], {"melee": 7, "cutting": 6, "dodge": 4}),
     ],
 }
@@ -85,6 +85,8 @@ def build():
                   "traits": [{"trait": "trl_resident", "prob": 0}],
                   "skills": [{"skill": "ALL", "level": {"constant": 2}}] + [{"skill": k, "level": {"constant": v}} for k, v in skills.items()]}
             del cl["traits"]
+            cl["bonus_aggression"] = {"constant": 8}
+            cl["bonus_bravery"] = {"constant": 10}
             if suf in CYBER:
                 cl["bionics"] = [{"id": "trl_bio_cyberbrain", "chance": CYBER[suf]}]
             out.append(cl)

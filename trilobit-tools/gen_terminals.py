@@ -163,14 +163,14 @@ add({"type": "faction", "id": "trl_terminal", "name": "Vending Terminal", "descr
      "fac_food_supply": [[0, {"calories": 0, "vitamins": {}}]],
      "wealth": 20000000, "currency": "trl_yen", "price_rules": [], "relations": {}})
 add({"type": "item_group", "id": "trl_shop_stock", "subtype": "collection",
-     "entries": [{"item": "9mm", "charges": 500}, {"item": "hat_hard", "count": 10}, {"item": "glock_19", "count": 5}]})
+     "entries": [{"item": "9mm", "charges": 500}, {"item": "hat_hard", "count": 10}, {"item": "m1911", "count": 5}]})
 add({"type": "item_group", "id": "trl_shop_none", "subtype": "collection", "entries": []})
 add({"type": "npc_class", "id": "trl_nc_shop", "worn_override": "trl_shop_none", "weapon_override": "trl_shop_none", "name": {"str": "Terminal"}, "job_description": "A vending terminal.",
      "common": False,
      "shopkeeper_item_group": [{"group": "trl_shop_stock", "rigid": True}],
      "shopkeeper_price_rules": [{"item": "9mm", "price": 10 * 100 * 50, "fixed_adj": 0},
                                 {"item": "hat_hard", "price": 100 * 100, "fixed_adj": 0},
-                                {"item": "glock_19", "price": 500 * 100, "fixed_adj": 0},
+                                {"item": "m1911", "price": 500 * 100, "fixed_adj": 0},
                                 {"item": "trl_yen", "fixed_adj": 0}]})
 
 json.dump(out, open(os.path.join(MOD, "terminals.json"), "w"), indent=2)

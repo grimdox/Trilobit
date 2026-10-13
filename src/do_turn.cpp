@@ -493,7 +493,10 @@ static void trl_test_hook()
                 << " | omt " << guy->pos_abs_omt().to_string() << " | mission " << static_cast<int>( guy->mission )
                 << " | att " << static_cast<int>( guy->get_attitude() ) << " | goal "
                 << ( guy->goal == npc::no_goal_point ? std::string( "-" ) : guy->goal.to_string() )
-                << " | path " << guy->omt_path.size() << "\n";
+                << " | path " << guy->omt_path.size() << " | dist " << rl_dist( guy->pos_abs(), u.pos_abs() )
+                << " | sees " << guy->sees( get_map(), u ) << " | gh " << guy->guaranteed_hostile() << " | mv " << guy->get_moves() << " sl " << guy->in_sleep_state()
+                << " fear " << guy->op_of_u.fear << " aggr " << static_cast<int>( guy->personality.aggression )
+                << " brav " << static_cast<int>( guy->personality.bravery ) << " act " << guy->activity.id().str() << " loaded " << ( g->find_npc( guy->getID() ) != nullptr ) << "\n";
         }
     }
 }
