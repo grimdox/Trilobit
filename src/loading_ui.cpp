@@ -111,11 +111,8 @@ static void update_state( const std::string &context, const std::string &step )
             }
         }
         if( gLUI->chosen_load_img == cata_path() ) {
-            if( imgs.empty() ) {
-                gLUI->chosen_load_img = PATH_INFO::gfxdir() / "cdda.png"; //default load screen
-            } else {
-                gLUI->chosen_load_img = random_entry( imgs );
-            }
+            // Trilobit: always the racing-cars splash picture
+            gLUI->chosen_load_img = PATH_INFO::gfxdir() / "splash" / "trilobit_splash_1_race.png";
         }
         SDL_Surface_Ptr surf = load_image( gLUI->chosen_load_img.get_unrelative_path().u8string().c_str() );
         // leave some space for the loading text...

@@ -71,9 +71,9 @@ def restyle(im, seed):
     return Image.fromarray(out.astype(np.uint8), "RGBA")
 
 
-def main(repo):
-    src = os.path.join(repo, "gfx/Bouma")
-    dst = os.path.join(repo, "gfx/Mokuhanga")
+def main(repo, sname="Bouma", dname="Mokuhanga"):
+    src = os.path.join(repo, "gfx/" + sname)
+    dst = os.path.join(repo, "gfx/" + dname)
     os.makedirs(dst, exist_ok=True)
     cfg = json.load(open(os.path.join(src, "tile_config.json")))
     for s in cfg["tiles-new"]:
@@ -98,9 +98,9 @@ def main(repo):
         out.save(os.path.join(dst, f.replace("bouma_", "moku_")))
         s["file"] = f.replace("bouma_", "moku_")
     json.dump(cfg, open(os.path.join(dst, "tile_config.json"), "w"), indent=1)
-    open(os.path.join(dst, "tileset.txt"), "w").write("NAME: Mokuhanga\nVIEW: Mokuhanga\nJSON: tile_config.json\nTILESET: tiles.png\n")
+    open(os.path.join(dst, "tileset.txt"), "w").write("NAME: %s\nVIEW: %s\nJSON: tile_config.json\nTILESET: tiles.png\n" % (dname.replace("_", " "), dname.replace("_", " ")))
     print("Mokuhanga written")
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main(*sys.argv[1:])

@@ -1,6 +1,25 @@
 [
   {
     "type": "playlist",
-    "playlists": [  ]
+    "playlists": [
+      {
+        "id": "title",
+        "shuffle": true,
+        "files": [
+          {
+            "file": "music/neon_rain.ogg",
+            "volume": 55
+          },
+          {
+            "file": "music/chrome_district.ogg",
+            "volume": 55
+          },
+          {
+            "file": "music/last_train.ogg",
+            "volume": 55
+          }
+        ]
+      }
+    ]
   }
 ]

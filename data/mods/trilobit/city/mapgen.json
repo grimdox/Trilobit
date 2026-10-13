@@ -734,7 +734,7 @@
    "trl_sky01_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWGGWGGWGGDGGWGGWGGWGG",
@@ -815,7 +815,7 @@
    "trl_sky01_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "WGGWGGWGGWGGDGGWGGWGGWGG",
@@ -896,7 +896,7 @@
    "trl_sky01_20z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "WGGWGGWGGWGGDGGWGGWGWWW,",
@@ -977,7 +977,7 @@
    "trl_sky01_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Wffffffffffffffffffffff",
     ",Gffffffffffffffffffffff",
@@ -1058,7 +1058,7 @@
    "trl_sky01_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "ffffffffffffffffffffffff",
@@ -1139,7 +1139,7 @@
    "trl_sky01_21z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffW,",
     "ffffffffffffffffffffffG,",
@@ -1220,7 +1220,7 @@
    "trl_sky01_02z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Wffffffffffffffffffffff",
     ",Gffffffffffffffffffffff",
@@ -1301,7 +1301,7 @@
    "trl_sky01_12z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "ffffffffffffffffffffffff",
@@ -1382,7 +1382,7 @@
    "trl_sky01_22z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffW,",
     "ffffffffffffffffffffffG,",
@@ -3551,7 +3551,7 @@
    "trl_sky02_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWWGGGWGGGDGGGWGGGWGGG",
@@ -3632,7 +3632,7 @@
    "trl_sky02_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "WGGGWGGGWGGGDGGGWGGGWGGG",
@@ -3713,7 +3713,7 @@
    "trl_sky02_20z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "WGGGWGGGWGGGDGGGWGGGWWW,",
@@ -3794,7 +3794,7 @@
    "trl_sky02_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Wffffffffffffffffffffff",
     ",Gffffffffffffffffffffff",
@@ -3875,7 +3875,7 @@
    "trl_sky02_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "ffffffffffffffffffffffff",
@@ -3956,7 +3956,7 @@
    "trl_sky02_21z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffW,",
     "ffffffffffffffffffffffG,",
@@ -4037,7 +4037,7 @@
    "trl_sky02_02z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Wffffffffffffffffffffff",
     ",Gffffffffffffffffffffff",
@@ -4118,7 +4118,7 @@
    "trl_sky02_12z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "ffffffffffffffffffffffff",
@@ -4199,7 +4199,7 @@
    "trl_sky02_22z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffW,",
     "ffffffffffffffffffffffG,",
@@ -6469,7 +6469,7 @@
    "trl_sky03_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWGWGGGGWGDGGWGGGGWGGG",
@@ -6550,7 +6550,7 @@
    "trl_sky03_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "GWGGGGWGGGGWDGGGWGGGGWGG",
@@ -6631,7 +6631,7 @@
    "trl_sky03_20z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "GGWGGGGWGGGGDGGGGWGGWWW,",
@@ -6712,7 +6712,7 @@
    "trl_sky03_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Gffffffffffffffffffffff",
     ",Wffffffffffffffffffffff",
@@ -6793,7 +6793,7 @@
    "trl_sky03_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "ffffffffffffffffffffffff",
@@ -6874,7 +6874,7 @@
    "trl_sky03_21z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffG,",
     "ffffffffffffffffffffffW,",
@@ -6955,7 +6955,7 @@
    "trl_sky03_02z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Gffffffffffffffffffffff",
     ",Gffffffffffffffffffffff",
@@ -7036,7 +7036,7 @@
    "trl_sky03_12z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "ffffffffffffffffffffffff",
@@ -7117,7 +7117,7 @@
    "trl_sky03_22z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffG,",
     "ffffffffffffffffffffffG,",
@@ -9378,7 +9378,7 @@
    "trl_sky04_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWGGWGGWGGDGGWGGWGGWGG",
@@ -9459,7 +9459,7 @@
    "trl_sky04_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "WGGWGGWGGWGGDGGWGGWGGWGG",
@@ -9540,7 +9540,7 @@
    "trl_sky04_20z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "WGGWGGWGGWGGDGGWGGWGWWW,",
@@ -9621,7 +9621,7 @@
    "trl_sky04_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Wffffffffffffffffffffff",
     ",Gffffffffffffffffffffff",
@@ -9702,7 +9702,7 @@
    "trl_sky04_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "ffffffffffffffffffffffff",
@@ -9783,7 +9783,7 @@
    "trl_sky04_21z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffW,",
     "ffffffffffffffffffffffG,",
@@ -9864,7 +9864,7 @@
    "trl_sky04_02z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Wffffffffffffffffffffff",
     ",Gffffffffffffffffffffff",
@@ -9945,7 +9945,7 @@
    "trl_sky04_12z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "ffffffffffffffffffffffff",
@@ -10026,7 +10026,7 @@
    "trl_sky04_22z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffW,",
     "ffffffffffffffffffffffG,",
@@ -12361,7 +12361,7 @@
    "trl_sky05_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWWGGGWGGGDGGGWGGGWGGG",
@@ -12442,7 +12442,7 @@
    "trl_sky05_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "WGGGWGGGWGGGDGGGWGGGWGGG",
@@ -12523,7 +12523,7 @@
    "trl_sky05_20z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "WGGGWGGGWGGGDGGGWGGGWWW,",
@@ -12604,7 +12604,7 @@
    "trl_sky05_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Wffffffffffffffffffffff",
     ",Gffffffffffffffffffffff",
@@ -12685,7 +12685,7 @@
    "trl_sky05_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "ffffffffffffffffffffffff",
@@ -12766,7 +12766,7 @@
    "trl_sky05_21z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffW,",
     "ffffffffffffffffffffffG,",
@@ -12847,7 +12847,7 @@
    "trl_sky05_02z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Wffffffffffffffffffffff",
     ",Gffffffffffffffffffffff",
@@ -12928,7 +12928,7 @@
    "trl_sky05_12z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "ffffffffffffffffffffffff",
@@ -13009,7 +13009,7 @@
    "trl_sky05_22z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffW,",
     "ffffffffffffffffffffffG,",
@@ -14827,7 +14827,7 @@
    "trl_sky06_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWGWGGGGWGDGGWGGGGWGGG",
@@ -14908,7 +14908,7 @@
    "trl_sky06_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "GWGGGGWGGGGWDGGGWGGGWWW,",
@@ -14989,7 +14989,7 @@
    "trl_sky06_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Gffffffffffffffffffffff",
     ",Wffffffffffffffffffffff",
@@ -15070,7 +15070,7 @@
    "trl_sky06_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffG,",
     "ffffffffffffffffffffffW,",
@@ -16242,7 +16242,7 @@
    "trl_sky07_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWGGWGGWGGDGGWGGWGGWGG",
@@ -16323,7 +16323,7 @@
    "trl_sky07_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "WGGWGGWGGWGGDGGWGGWGWWW,",
@@ -16404,7 +16404,7 @@
    "trl_sky07_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Wffffffffffffffffffffff",
     ",Gffffffffffffffffffffff",
@@ -16485,7 +16485,7 @@
    "trl_sky07_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffW,",
     "ffffffffffffffffffffffG,",
@@ -17632,7 +17632,7 @@
    "trl_sky08_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWWGGGWGGGDGGGWGGGWGGG",
@@ -17713,7 +17713,7 @@
    "trl_sky08_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "WGGGWGGGWGGGDGGGWGGGWWW,",
@@ -17794,7 +17794,7 @@
    "trl_sky08_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Wffffffffffffffffffffff",
     ",Gffffffffffffffffffffff",
@@ -17875,7 +17875,7 @@
    "trl_sky08_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffW,",
     "ffffffffffffffffffffffG,",
@@ -19148,7 +19148,7 @@
    "trl_sky09_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWGWGGGGWGDGGWGGGGWGGG",
@@ -19229,7 +19229,7 @@
    "trl_sky09_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "GWGGGGWGGGGWDGGGWGGGWWW,",
@@ -19310,7 +19310,7 @@
    "trl_sky09_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Gffffffffffffffffffffff",
     ",Wffffffffffffffffffffff",
@@ -19391,7 +19391,7 @@
    "trl_sky09_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffG,",
     "ffffffffffffffffffffffW,",
@@ -20524,7 +20524,7 @@
    "trl_sky10_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWGGWGGWGGDGGWGGWGGWGG",
@@ -20605,7 +20605,7 @@
    "trl_sky10_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "WGGWGGWGGWGGDGGWGGWGWWW,",
@@ -20686,7 +20686,7 @@
    "trl_sky10_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Wffffffffffffffffffffff",
     ",Gffffffffffffffffffffff",
@@ -20767,7 +20767,7 @@
    "trl_sky10_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffW,",
     "ffffffffffffffffffffffG,",
@@ -21498,7 +21498,7 @@
    "trl_mid01_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWWGGGWGGGDGGGWGGGWWW,",
@@ -21696,7 +21696,7 @@
    "trl_mid02_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWWGGGWGGGDGGGWGGGWWW,",
@@ -22037,7 +22037,7 @@
    "trl_mid03_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWWGGGWGGGDGGGWGGGWGGG",
@@ -22118,7 +22118,7 @@
    "trl_mid03_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "WGGGWGGGWGGGDGGGWGGGWWW,",
@@ -22663,7 +22663,7 @@
    "trl_mid04_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWWGGGWGGGDGGGWGGGWWW,",
@@ -22744,7 +22744,7 @@
    "trl_mid04_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",WffffffffffffffffffffW,",
     ",GffffffffffffffffffffG,",
@@ -23168,7 +23168,7 @@
    "trl_mid05_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWWGGGWGGGDGGGWGGGWGGG",
@@ -23249,7 +23249,7 @@
    "trl_mid05_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "WGGGWGGGWGGGDGGGWGGGWWW,",
@@ -23330,7 +23330,7 @@
    "trl_mid05_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Wffffffffffffffffffffff",
     ",Gffffffffffffffffffffff",
@@ -23411,7 +23411,7 @@
    "trl_mid05_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffW,",
     "ffffffffffffffffffffffG,",
@@ -24130,7 +24130,7 @@
    "trl_mid06_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     ",WWWWGGGWGGGDGGGWGGGWGGG",
@@ -24211,7 +24211,7 @@
    "trl_mid06_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",,,,,,,,,,,,,,,,,,,,,,,,",
     "WGGGWGGGWGGGDGGGWGGGWWW,",
@@ -24292,7 +24292,7 @@
    "trl_mid06_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     ",Wffffffffffffffffffffff",
     ",Gffffffffffffffffffffff",
@@ -24373,7 +24373,7 @@
    "trl_mid06_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffW,",
     "ffffffffffffffffffffffG,",
@@ -25189,6 +25189,246 @@
     }
    ],
    "place_furniture": []
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_pres_ped_mid_clerk",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "."
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_clerk",
+     "x": 0,
+     "y": 0
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_pres_ped_mid_technician",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "."
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_technician",
+     "x": 0,
+     "y": 0
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_pres_ped_mid_nurse",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "."
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_nurse",
+     "x": 0,
+     "y": 0
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_pres_ped_mid_teacher",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "."
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_teacher",
+     "x": 0,
+     "y": 0
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_pres_ped_mid_shop_assistant",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "."
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_shop_assistant",
+     "x": 0,
+     "y": 0
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_pres_ped_mid_police_clerk",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "."
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_police_clerk",
+     "x": 0,
+     "y": 0
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_pres_ped_mid_driver",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "."
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_driver",
+     "x": 0,
+     "y": 0
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_pres_ped_mid_engineer",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "."
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_mid_engineer",
+     "x": 0,
+     "y": 0
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_pres_ped_poor_day_laborer",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "."
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_day_laborer",
+     "x": 0,
+     "y": 0
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_pres_ped_poor_street_vendor",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "."
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_street_vendor",
+     "x": 0,
+     "y": 0
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_pres_ped_poor_scrapper",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "."
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_scrapper",
+     "x": 0,
+     "y": 0
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "nested_mapgen_id": "trl_pres_ped_poor_courier",
+  "object": {
+   "mapgensize": [
+    1,
+    1
+   ],
+   "rows": [
+    "."
+   ],
+   "place_npcs": [
+    {
+     "class": "trl_nc_res_poor_courier",
+     "x": 0,
+     "y": 0
+    }
+   ]
   }
  },
  {

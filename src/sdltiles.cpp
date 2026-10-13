@@ -542,7 +542,9 @@ static bool trl_splash_tried = false;
 
 void trl_set_menu_splash( bool on )
 {
-    trl_splash_on = on;
+    // Trilobit: the racing-cars picture now belongs to the loading screen; the main menu shows the neon title art instead
+    static_cast<void>( on );
+    trl_splash_on = false;
 }
 
 static void trl_draw_splash_row( const point &dst, int w, int h )

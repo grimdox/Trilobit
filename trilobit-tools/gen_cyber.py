@@ -88,20 +88,21 @@ dm.append({"run_eocs": ["trl_cyber_bars"]})
 out.append({"type": "effect_on_condition", "id": "trl_cyber_on_damage", "eoc_type": "EVENT",
             "required_event": "character_takes_damage", "effect": dm})
 
-# 4. bars: at most six |, colour by how much of the part is implant (green natural -> grey fully cyberized)
-COLORS = ["light_green", "light_cyan", "cyan", "light_blue", "light_gray"]
+# 4. bars: at most five | (the sidebar column is five wide; a sixth bar is cut off with an ellipsis).  Green bars are your own flesh, grey bars are implant integrity (so a natural part is all green, a fully cyberized one all grey)
 bars = []
 for p in PARTS:
     bars += [
         {"math": [f"u_trl_f_{p}", "=", f"(u_hp('{p}') + u_trl_ihp_{p}) / max(u_hp_max('{p}') + u_trl_imax_{p}, 1)"]},
-        {"math": [f"u_trl_bn_{p}", "=", f"clamp(ceil(6 * u_trl_f_{p} - 0.001), 0, 6)"]},
+        {"math": [f"u_trl_bn_{p}", "=", f"clamp(ceil(5 * u_trl_f_{p} - 0.001), 0, 5)"]},
+        {"math": [f"u_trl_fg_{p}", "=", f"u_hp('{p}') / max(u_hp_max('{p}') + u_trl_imax_{p}, 1)"]},
+        {"math": [f"u_trl_gn_{p}", "=", f"min(clamp(ceil(5 * u_trl_fg_{p} - 0.001), 0, 5), u_trl_bn_{p})"]},
+        {"math": [f"u_trl_in_{p}", "=", f"u_trl_bn_{p} - u_trl_gn_{p}"]},
     ]
-    for k in range(7):
-        bars.append({"if": {"math": [f"u_trl_bn_{p}", "==", str(k)]},
-                     "then": [{"set_string_var": "|" * k if k else " ", "target_var": {"u_val": f"trl_barn_{p}"}}]})
-    conds = [f"u_trl_s_{p} <= 0", f"u_trl_s_{p} < 0.34", f"u_trl_s_{p} < 0.67", f"u_trl_s_{p} < 0.999", f"u_trl_s_{p} >= 0.999"]
-    for c, col in zip(conds, COLORS):
-        bars.append({"if": {"math": [c]}, "then": [{"set_string_var": f"<color_{col}>", "target_var": {"u_val": f"trl_barc_{p}"}}]})
+    for k in range(6):
+        bars.append({"if": {"math": [f"u_trl_gn_{p}", "==", str(k)]},
+                     "then": [{"set_string_var": "|" * k, "target_var": {"u_val": f"trl_barg_{p}"}}]})
+        bars.append({"if": {"math": [f"u_trl_in_{p}", "==", str(k)]},
+                     "then": [{"set_string_var": "|" * k, "target_var": {"u_val": f"trl_bari_{p}"}}]})
 out.append({"type": "effect_on_condition", "id": "trl_cyber_bars", "effect": bars})
 
 # 5. a fully cyberized part (every point used) never heals by itself: only an implant shop can repair it
@@ -122,7 +123,7 @@ out.append({"type": "effect_on_condition", "id": "trl_cyber_tick", "recurrence":
 for wid, p in (("head", "head"), ("torso", "torso"), ("left_arm", "arm_l"), ("right_arm", "arm_r"), ("left_leg", "leg_l"), ("right_leg", "leg_r")):
     for suffix, flags in (("", []), ("_no_label", ["W_LABEL_NONE", "W_NO_PADDING"])):
         w = {"id": f"hp_{wid}_graph{suffix}", "type": "widget", "style": "text", "label": LABEL[p],
-             "clauses": [{"id": "bar", "text": f"<u_val:trl_barc_{p}><u_val:trl_barn_{p}></color>", "parse_tags": True}]}
+             "clauses": [{"id": "bar", "text": f"<color_light_green><u_val:trl_barg_{p}></color><color_light_gray><u_val:trl_bari_{p}></color>", "parse_tags": True}]}
         if flags: w["flags"] = flags
         out.append(w)
 json.dump(out, open(os.path.join(MOD, "cyber.json"), "w"), indent=1)

@@ -11652,22 +11652,43 @@
     "math": [
      "u_trl_bn_head",
      "=",
-     "clamp(ceil(6 * u_trl_f_head - 0.001), 0, 6)"
+     "clamp(ceil(5 * u_trl_f_head - 0.001), 0, 5)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_fg_head",
+     "=",
+     "u_hp('head') / max(u_hp_max('head') + u_trl_imax_head, 1)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_gn_head",
+     "=",
+     "min(clamp(ceil(5 * u_trl_fg_head - 0.001), 0, 5), u_trl_bn_head)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_in_head",
+     "=",
+     "u_trl_bn_head - u_trl_gn_head"
     ]
    },
    {
     "if": {
      "math": [
-      "u_trl_bn_head",
+      "u_trl_gn_head",
       "==",
       "0"
      ]
     },
     "then": [
      {
-      "set_string_var": " ",
+      "set_string_var": "",
       "target_var": {
-       "u_val": "trl_barn_head"
+       "u_val": "trl_barg_head"
       }
      }
     ]
@@ -11675,7 +11696,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_head",
+      "u_trl_in_head",
+      "==",
+      "0"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "",
+      "target_var": {
+       "u_val": "trl_bari_head"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_head",
       "==",
       "1"
      ]
@@ -11684,7 +11722,7 @@
      {
       "set_string_var": "|",
       "target_var": {
-       "u_val": "trl_barn_head"
+       "u_val": "trl_barg_head"
       }
      }
     ]
@@ -11692,7 +11730,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_head",
+      "u_trl_in_head",
+      "==",
+      "1"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "|",
+      "target_var": {
+       "u_val": "trl_bari_head"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_head",
       "==",
       "2"
      ]
@@ -11701,7 +11756,7 @@
      {
       "set_string_var": "||",
       "target_var": {
-       "u_val": "trl_barn_head"
+       "u_val": "trl_barg_head"
       }
      }
     ]
@@ -11709,7 +11764,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_head",
+      "u_trl_in_head",
+      "==",
+      "2"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "||",
+      "target_var": {
+       "u_val": "trl_bari_head"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_head",
       "==",
       "3"
      ]
@@ -11718,7 +11790,7 @@
      {
       "set_string_var": "|||",
       "target_var": {
-       "u_val": "trl_barn_head"
+       "u_val": "trl_barg_head"
       }
      }
     ]
@@ -11726,7 +11798,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_head",
+      "u_trl_in_head",
+      "==",
+      "3"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "|||",
+      "target_var": {
+       "u_val": "trl_bari_head"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_head",
       "==",
       "4"
      ]
@@ -11735,7 +11824,7 @@
      {
       "set_string_var": "||||",
       "target_var": {
-       "u_val": "trl_barn_head"
+       "u_val": "trl_barg_head"
       }
      }
     ]
@@ -11743,7 +11832,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_head",
+      "u_trl_in_head",
+      "==",
+      "4"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "||||",
+      "target_var": {
+       "u_val": "trl_bari_head"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_head",
       "==",
       "5"
      ]
@@ -11752,7 +11858,7 @@
      {
       "set_string_var": "|||||",
       "target_var": {
-       "u_val": "trl_barn_head"
+       "u_val": "trl_barg_head"
       }
      }
     ]
@@ -11760,91 +11866,16 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_head",
+      "u_trl_in_head",
       "==",
-      "6"
+      "5"
      ]
     },
     "then": [
      {
-      "set_string_var": "||||||",
+      "set_string_var": "|||||",
       "target_var": {
-       "u_val": "trl_barn_head"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_head <= 0"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_green>",
-      "target_var": {
-       "u_val": "trl_barc_head"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_head < 0.34"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_cyan>",
-      "target_var": {
-       "u_val": "trl_barc_head"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_head < 0.67"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_cyan>",
-      "target_var": {
-       "u_val": "trl_barc_head"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_head < 0.999"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_blue>",
-      "target_var": {
-       "u_val": "trl_barc_head"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_head >= 0.999"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_gray>",
-      "target_var": {
-       "u_val": "trl_barc_head"
+       "u_val": "trl_bari_head"
       }
      }
     ]
@@ -11860,22 +11891,43 @@
     "math": [
      "u_trl_bn_torso",
      "=",
-     "clamp(ceil(6 * u_trl_f_torso - 0.001), 0, 6)"
+     "clamp(ceil(5 * u_trl_f_torso - 0.001), 0, 5)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_fg_torso",
+     "=",
+     "u_hp('torso') / max(u_hp_max('torso') + u_trl_imax_torso, 1)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_gn_torso",
+     "=",
+     "min(clamp(ceil(5 * u_trl_fg_torso - 0.001), 0, 5), u_trl_bn_torso)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_in_torso",
+     "=",
+     "u_trl_bn_torso - u_trl_gn_torso"
     ]
    },
    {
     "if": {
      "math": [
-      "u_trl_bn_torso",
+      "u_trl_gn_torso",
       "==",
       "0"
      ]
     },
     "then": [
      {
-      "set_string_var": " ",
+      "set_string_var": "",
       "target_var": {
-       "u_val": "trl_barn_torso"
+       "u_val": "trl_barg_torso"
       }
      }
     ]
@@ -11883,7 +11935,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_torso",
+      "u_trl_in_torso",
+      "==",
+      "0"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "",
+      "target_var": {
+       "u_val": "trl_bari_torso"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_torso",
       "==",
       "1"
      ]
@@ -11892,7 +11961,7 @@
      {
       "set_string_var": "|",
       "target_var": {
-       "u_val": "trl_barn_torso"
+       "u_val": "trl_barg_torso"
       }
      }
     ]
@@ -11900,7 +11969,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_torso",
+      "u_trl_in_torso",
+      "==",
+      "1"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "|",
+      "target_var": {
+       "u_val": "trl_bari_torso"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_torso",
       "==",
       "2"
      ]
@@ -11909,7 +11995,7 @@
      {
       "set_string_var": "||",
       "target_var": {
-       "u_val": "trl_barn_torso"
+       "u_val": "trl_barg_torso"
       }
      }
     ]
@@ -11917,7 +12003,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_torso",
+      "u_trl_in_torso",
+      "==",
+      "2"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "||",
+      "target_var": {
+       "u_val": "trl_bari_torso"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_torso",
       "==",
       "3"
      ]
@@ -11926,7 +12029,7 @@
      {
       "set_string_var": "|||",
       "target_var": {
-       "u_val": "trl_barn_torso"
+       "u_val": "trl_barg_torso"
       }
      }
     ]
@@ -11934,7 +12037,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_torso",
+      "u_trl_in_torso",
+      "==",
+      "3"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "|||",
+      "target_var": {
+       "u_val": "trl_bari_torso"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_torso",
       "==",
       "4"
      ]
@@ -11943,7 +12063,7 @@
      {
       "set_string_var": "||||",
       "target_var": {
-       "u_val": "trl_barn_torso"
+       "u_val": "trl_barg_torso"
       }
      }
     ]
@@ -11951,7 +12071,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_torso",
+      "u_trl_in_torso",
+      "==",
+      "4"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "||||",
+      "target_var": {
+       "u_val": "trl_bari_torso"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_torso",
       "==",
       "5"
      ]
@@ -11960,7 +12097,7 @@
      {
       "set_string_var": "|||||",
       "target_var": {
-       "u_val": "trl_barn_torso"
+       "u_val": "trl_barg_torso"
       }
      }
     ]
@@ -11968,91 +12105,16 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_torso",
+      "u_trl_in_torso",
       "==",
-      "6"
+      "5"
      ]
     },
     "then": [
      {
-      "set_string_var": "||||||",
+      "set_string_var": "|||||",
       "target_var": {
-       "u_val": "trl_barn_torso"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_torso <= 0"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_green>",
-      "target_var": {
-       "u_val": "trl_barc_torso"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_torso < 0.34"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_cyan>",
-      "target_var": {
-       "u_val": "trl_barc_torso"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_torso < 0.67"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_cyan>",
-      "target_var": {
-       "u_val": "trl_barc_torso"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_torso < 0.999"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_blue>",
-      "target_var": {
-       "u_val": "trl_barc_torso"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_torso >= 0.999"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_gray>",
-      "target_var": {
-       "u_val": "trl_barc_torso"
+       "u_val": "trl_bari_torso"
       }
      }
     ]
@@ -12068,22 +12130,43 @@
     "math": [
      "u_trl_bn_arm_l",
      "=",
-     "clamp(ceil(6 * u_trl_f_arm_l - 0.001), 0, 6)"
+     "clamp(ceil(5 * u_trl_f_arm_l - 0.001), 0, 5)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_fg_arm_l",
+     "=",
+     "u_hp('arm_l') / max(u_hp_max('arm_l') + u_trl_imax_arm_l, 1)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_gn_arm_l",
+     "=",
+     "min(clamp(ceil(5 * u_trl_fg_arm_l - 0.001), 0, 5), u_trl_bn_arm_l)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_in_arm_l",
+     "=",
+     "u_trl_bn_arm_l - u_trl_gn_arm_l"
     ]
    },
    {
     "if": {
      "math": [
-      "u_trl_bn_arm_l",
+      "u_trl_gn_arm_l",
       "==",
       "0"
      ]
     },
     "then": [
      {
-      "set_string_var": " ",
+      "set_string_var": "",
       "target_var": {
-       "u_val": "trl_barn_arm_l"
+       "u_val": "trl_barg_arm_l"
       }
      }
     ]
@@ -12091,7 +12174,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_arm_l",
+      "u_trl_in_arm_l",
+      "==",
+      "0"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "",
+      "target_var": {
+       "u_val": "trl_bari_arm_l"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_arm_l",
       "==",
       "1"
      ]
@@ -12100,7 +12200,7 @@
      {
       "set_string_var": "|",
       "target_var": {
-       "u_val": "trl_barn_arm_l"
+       "u_val": "trl_barg_arm_l"
       }
      }
     ]
@@ -12108,7 +12208,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_arm_l",
+      "u_trl_in_arm_l",
+      "==",
+      "1"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "|",
+      "target_var": {
+       "u_val": "trl_bari_arm_l"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_arm_l",
       "==",
       "2"
      ]
@@ -12117,7 +12234,7 @@
      {
       "set_string_var": "||",
       "target_var": {
-       "u_val": "trl_barn_arm_l"
+       "u_val": "trl_barg_arm_l"
       }
      }
     ]
@@ -12125,7 +12242,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_arm_l",
+      "u_trl_in_arm_l",
+      "==",
+      "2"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "||",
+      "target_var": {
+       "u_val": "trl_bari_arm_l"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_arm_l",
       "==",
       "3"
      ]
@@ -12134,7 +12268,7 @@
      {
       "set_string_var": "|||",
       "target_var": {
-       "u_val": "trl_barn_arm_l"
+       "u_val": "trl_barg_arm_l"
       }
      }
     ]
@@ -12142,7 +12276,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_arm_l",
+      "u_trl_in_arm_l",
+      "==",
+      "3"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "|||",
+      "target_var": {
+       "u_val": "trl_bari_arm_l"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_arm_l",
       "==",
       "4"
      ]
@@ -12151,7 +12302,7 @@
      {
       "set_string_var": "||||",
       "target_var": {
-       "u_val": "trl_barn_arm_l"
+       "u_val": "trl_barg_arm_l"
       }
      }
     ]
@@ -12159,7 +12310,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_arm_l",
+      "u_trl_in_arm_l",
+      "==",
+      "4"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "||||",
+      "target_var": {
+       "u_val": "trl_bari_arm_l"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_arm_l",
       "==",
       "5"
      ]
@@ -12168,7 +12336,7 @@
      {
       "set_string_var": "|||||",
       "target_var": {
-       "u_val": "trl_barn_arm_l"
+       "u_val": "trl_barg_arm_l"
       }
      }
     ]
@@ -12176,91 +12344,16 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_arm_l",
+      "u_trl_in_arm_l",
       "==",
-      "6"
+      "5"
      ]
     },
     "then": [
      {
-      "set_string_var": "||||||",
+      "set_string_var": "|||||",
       "target_var": {
-       "u_val": "trl_barn_arm_l"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_arm_l <= 0"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_green>",
-      "target_var": {
-       "u_val": "trl_barc_arm_l"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_arm_l < 0.34"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_cyan>",
-      "target_var": {
-       "u_val": "trl_barc_arm_l"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_arm_l < 0.67"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_cyan>",
-      "target_var": {
-       "u_val": "trl_barc_arm_l"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_arm_l < 0.999"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_blue>",
-      "target_var": {
-       "u_val": "trl_barc_arm_l"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_arm_l >= 0.999"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_gray>",
-      "target_var": {
-       "u_val": "trl_barc_arm_l"
+       "u_val": "trl_bari_arm_l"
       }
      }
     ]
@@ -12276,22 +12369,43 @@
     "math": [
      "u_trl_bn_arm_r",
      "=",
-     "clamp(ceil(6 * u_trl_f_arm_r - 0.001), 0, 6)"
+     "clamp(ceil(5 * u_trl_f_arm_r - 0.001), 0, 5)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_fg_arm_r",
+     "=",
+     "u_hp('arm_r') / max(u_hp_max('arm_r') + u_trl_imax_arm_r, 1)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_gn_arm_r",
+     "=",
+     "min(clamp(ceil(5 * u_trl_fg_arm_r - 0.001), 0, 5), u_trl_bn_arm_r)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_in_arm_r",
+     "=",
+     "u_trl_bn_arm_r - u_trl_gn_arm_r"
     ]
    },
    {
     "if": {
      "math": [
-      "u_trl_bn_arm_r",
+      "u_trl_gn_arm_r",
       "==",
       "0"
      ]
     },
     "then": [
      {
-      "set_string_var": " ",
+      "set_string_var": "",
       "target_var": {
-       "u_val": "trl_barn_arm_r"
+       "u_val": "trl_barg_arm_r"
       }
      }
     ]
@@ -12299,7 +12413,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_arm_r",
+      "u_trl_in_arm_r",
+      "==",
+      "0"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "",
+      "target_var": {
+       "u_val": "trl_bari_arm_r"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_arm_r",
       "==",
       "1"
      ]
@@ -12308,7 +12439,7 @@
      {
       "set_string_var": "|",
       "target_var": {
-       "u_val": "trl_barn_arm_r"
+       "u_val": "trl_barg_arm_r"
       }
      }
     ]
@@ -12316,7 +12447,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_arm_r",
+      "u_trl_in_arm_r",
+      "==",
+      "1"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "|",
+      "target_var": {
+       "u_val": "trl_bari_arm_r"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_arm_r",
       "==",
       "2"
      ]
@@ -12325,7 +12473,7 @@
      {
       "set_string_var": "||",
       "target_var": {
-       "u_val": "trl_barn_arm_r"
+       "u_val": "trl_barg_arm_r"
       }
      }
     ]
@@ -12333,7 +12481,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_arm_r",
+      "u_trl_in_arm_r",
+      "==",
+      "2"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "||",
+      "target_var": {
+       "u_val": "trl_bari_arm_r"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_arm_r",
       "==",
       "3"
      ]
@@ -12342,7 +12507,7 @@
      {
       "set_string_var": "|||",
       "target_var": {
-       "u_val": "trl_barn_arm_r"
+       "u_val": "trl_barg_arm_r"
       }
      }
     ]
@@ -12350,7 +12515,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_arm_r",
+      "u_trl_in_arm_r",
+      "==",
+      "3"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "|||",
+      "target_var": {
+       "u_val": "trl_bari_arm_r"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_arm_r",
       "==",
       "4"
      ]
@@ -12359,7 +12541,7 @@
      {
       "set_string_var": "||||",
       "target_var": {
-       "u_val": "trl_barn_arm_r"
+       "u_val": "trl_barg_arm_r"
       }
      }
     ]
@@ -12367,7 +12549,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_arm_r",
+      "u_trl_in_arm_r",
+      "==",
+      "4"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "||||",
+      "target_var": {
+       "u_val": "trl_bari_arm_r"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_arm_r",
       "==",
       "5"
      ]
@@ -12376,7 +12575,7 @@
      {
       "set_string_var": "|||||",
       "target_var": {
-       "u_val": "trl_barn_arm_r"
+       "u_val": "trl_barg_arm_r"
       }
      }
     ]
@@ -12384,91 +12583,16 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_arm_r",
+      "u_trl_in_arm_r",
       "==",
-      "6"
+      "5"
      ]
     },
     "then": [
      {
-      "set_string_var": "||||||",
+      "set_string_var": "|||||",
       "target_var": {
-       "u_val": "trl_barn_arm_r"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_arm_r <= 0"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_green>",
-      "target_var": {
-       "u_val": "trl_barc_arm_r"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_arm_r < 0.34"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_cyan>",
-      "target_var": {
-       "u_val": "trl_barc_arm_r"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_arm_r < 0.67"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_cyan>",
-      "target_var": {
-       "u_val": "trl_barc_arm_r"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_arm_r < 0.999"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_blue>",
-      "target_var": {
-       "u_val": "trl_barc_arm_r"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_arm_r >= 0.999"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_gray>",
-      "target_var": {
-       "u_val": "trl_barc_arm_r"
+       "u_val": "trl_bari_arm_r"
       }
      }
     ]
@@ -12484,22 +12608,43 @@
     "math": [
      "u_trl_bn_leg_l",
      "=",
-     "clamp(ceil(6 * u_trl_f_leg_l - 0.001), 0, 6)"
+     "clamp(ceil(5 * u_trl_f_leg_l - 0.001), 0, 5)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_fg_leg_l",
+     "=",
+     "u_hp('leg_l') / max(u_hp_max('leg_l') + u_trl_imax_leg_l, 1)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_gn_leg_l",
+     "=",
+     "min(clamp(ceil(5 * u_trl_fg_leg_l - 0.001), 0, 5), u_trl_bn_leg_l)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_in_leg_l",
+     "=",
+     "u_trl_bn_leg_l - u_trl_gn_leg_l"
     ]
    },
    {
     "if": {
      "math": [
-      "u_trl_bn_leg_l",
+      "u_trl_gn_leg_l",
       "==",
       "0"
      ]
     },
     "then": [
      {
-      "set_string_var": " ",
+      "set_string_var": "",
       "target_var": {
-       "u_val": "trl_barn_leg_l"
+       "u_val": "trl_barg_leg_l"
       }
      }
     ]
@@ -12507,7 +12652,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_leg_l",
+      "u_trl_in_leg_l",
+      "==",
+      "0"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "",
+      "target_var": {
+       "u_val": "trl_bari_leg_l"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_leg_l",
       "==",
       "1"
      ]
@@ -12516,7 +12678,7 @@
      {
       "set_string_var": "|",
       "target_var": {
-       "u_val": "trl_barn_leg_l"
+       "u_val": "trl_barg_leg_l"
       }
      }
     ]
@@ -12524,7 +12686,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_leg_l",
+      "u_trl_in_leg_l",
+      "==",
+      "1"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "|",
+      "target_var": {
+       "u_val": "trl_bari_leg_l"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_leg_l",
       "==",
       "2"
      ]
@@ -12533,7 +12712,7 @@
      {
       "set_string_var": "||",
       "target_var": {
-       "u_val": "trl_barn_leg_l"
+       "u_val": "trl_barg_leg_l"
       }
      }
     ]
@@ -12541,7 +12720,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_leg_l",
+      "u_trl_in_leg_l",
+      "==",
+      "2"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "||",
+      "target_var": {
+       "u_val": "trl_bari_leg_l"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_leg_l",
       "==",
       "3"
      ]
@@ -12550,7 +12746,7 @@
      {
       "set_string_var": "|||",
       "target_var": {
-       "u_val": "trl_barn_leg_l"
+       "u_val": "trl_barg_leg_l"
       }
      }
     ]
@@ -12558,7 +12754,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_leg_l",
+      "u_trl_in_leg_l",
+      "==",
+      "3"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "|||",
+      "target_var": {
+       "u_val": "trl_bari_leg_l"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_leg_l",
       "==",
       "4"
      ]
@@ -12567,7 +12780,7 @@
      {
       "set_string_var": "||||",
       "target_var": {
-       "u_val": "trl_barn_leg_l"
+       "u_val": "trl_barg_leg_l"
       }
      }
     ]
@@ -12575,7 +12788,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_leg_l",
+      "u_trl_in_leg_l",
+      "==",
+      "4"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "||||",
+      "target_var": {
+       "u_val": "trl_bari_leg_l"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_leg_l",
       "==",
       "5"
      ]
@@ -12584,7 +12814,7 @@
      {
       "set_string_var": "|||||",
       "target_var": {
-       "u_val": "trl_barn_leg_l"
+       "u_val": "trl_barg_leg_l"
       }
      }
     ]
@@ -12592,91 +12822,16 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_leg_l",
+      "u_trl_in_leg_l",
       "==",
-      "6"
+      "5"
      ]
     },
     "then": [
      {
-      "set_string_var": "||||||",
+      "set_string_var": "|||||",
       "target_var": {
-       "u_val": "trl_barn_leg_l"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_leg_l <= 0"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_green>",
-      "target_var": {
-       "u_val": "trl_barc_leg_l"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_leg_l < 0.34"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_cyan>",
-      "target_var": {
-       "u_val": "trl_barc_leg_l"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_leg_l < 0.67"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_cyan>",
-      "target_var": {
-       "u_val": "trl_barc_leg_l"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_leg_l < 0.999"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_blue>",
-      "target_var": {
-       "u_val": "trl_barc_leg_l"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_leg_l >= 0.999"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_gray>",
-      "target_var": {
-       "u_val": "trl_barc_leg_l"
+       "u_val": "trl_bari_leg_l"
       }
      }
     ]
@@ -12692,22 +12847,43 @@
     "math": [
      "u_trl_bn_leg_r",
      "=",
-     "clamp(ceil(6 * u_trl_f_leg_r - 0.001), 0, 6)"
+     "clamp(ceil(5 * u_trl_f_leg_r - 0.001), 0, 5)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_fg_leg_r",
+     "=",
+     "u_hp('leg_r') / max(u_hp_max('leg_r') + u_trl_imax_leg_r, 1)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_gn_leg_r",
+     "=",
+     "min(clamp(ceil(5 * u_trl_fg_leg_r - 0.001), 0, 5), u_trl_bn_leg_r)"
+    ]
+   },
+   {
+    "math": [
+     "u_trl_in_leg_r",
+     "=",
+     "u_trl_bn_leg_r - u_trl_gn_leg_r"
     ]
    },
    {
     "if": {
      "math": [
-      "u_trl_bn_leg_r",
+      "u_trl_gn_leg_r",
       "==",
       "0"
      ]
     },
     "then": [
      {
-      "set_string_var": " ",
+      "set_string_var": "",
       "target_var": {
-       "u_val": "trl_barn_leg_r"
+       "u_val": "trl_barg_leg_r"
       }
      }
     ]
@@ -12715,7 +12891,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_leg_r",
+      "u_trl_in_leg_r",
+      "==",
+      "0"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "",
+      "target_var": {
+       "u_val": "trl_bari_leg_r"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_leg_r",
       "==",
       "1"
      ]
@@ -12724,7 +12917,7 @@
      {
       "set_string_var": "|",
       "target_var": {
-       "u_val": "trl_barn_leg_r"
+       "u_val": "trl_barg_leg_r"
       }
      }
     ]
@@ -12732,7 +12925,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_leg_r",
+      "u_trl_in_leg_r",
+      "==",
+      "1"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "|",
+      "target_var": {
+       "u_val": "trl_bari_leg_r"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_leg_r",
       "==",
       "2"
      ]
@@ -12741,7 +12951,7 @@
      {
       "set_string_var": "||",
       "target_var": {
-       "u_val": "trl_barn_leg_r"
+       "u_val": "trl_barg_leg_r"
       }
      }
     ]
@@ -12749,7 +12959,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_leg_r",
+      "u_trl_in_leg_r",
+      "==",
+      "2"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "||",
+      "target_var": {
+       "u_val": "trl_bari_leg_r"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_leg_r",
       "==",
       "3"
      ]
@@ -12758,7 +12985,7 @@
      {
       "set_string_var": "|||",
       "target_var": {
-       "u_val": "trl_barn_leg_r"
+       "u_val": "trl_barg_leg_r"
       }
      }
     ]
@@ -12766,7 +12993,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_leg_r",
+      "u_trl_in_leg_r",
+      "==",
+      "3"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "|||",
+      "target_var": {
+       "u_val": "trl_bari_leg_r"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_leg_r",
       "==",
       "4"
      ]
@@ -12775,7 +13019,7 @@
      {
       "set_string_var": "||||",
       "target_var": {
-       "u_val": "trl_barn_leg_r"
+       "u_val": "trl_barg_leg_r"
       }
      }
     ]
@@ -12783,7 +13027,24 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_leg_r",
+      "u_trl_in_leg_r",
+      "==",
+      "4"
+     ]
+    },
+    "then": [
+     {
+      "set_string_var": "||||",
+      "target_var": {
+       "u_val": "trl_bari_leg_r"
+      }
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_trl_gn_leg_r",
       "==",
       "5"
      ]
@@ -12792,7 +13053,7 @@
      {
       "set_string_var": "|||||",
       "target_var": {
-       "u_val": "trl_barn_leg_r"
+       "u_val": "trl_barg_leg_r"
       }
      }
     ]
@@ -12800,91 +13061,16 @@
    {
     "if": {
      "math": [
-      "u_trl_bn_leg_r",
+      "u_trl_in_leg_r",
       "==",
-      "6"
+      "5"
      ]
     },
     "then": [
      {
-      "set_string_var": "||||||",
+      "set_string_var": "|||||",
       "target_var": {
-       "u_val": "trl_barn_leg_r"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_leg_r <= 0"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_green>",
-      "target_var": {
-       "u_val": "trl_barc_leg_r"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_leg_r < 0.34"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_cyan>",
-      "target_var": {
-       "u_val": "trl_barc_leg_r"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_leg_r < 0.67"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_cyan>",
-      "target_var": {
-       "u_val": "trl_barc_leg_r"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_leg_r < 0.999"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_blue>",
-      "target_var": {
-       "u_val": "trl_barc_leg_r"
-      }
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_leg_r >= 0.999"
-     ]
-    },
-    "then": [
-     {
-      "set_string_var": "<color_light_gray>",
-      "target_var": {
-       "u_val": "trl_barc_leg_r"
+       "u_val": "trl_bari_leg_r"
       }
      }
     ]
@@ -13351,7 +13537,7 @@
   "clauses": [
    {
     "id": "bar",
-    "text": "<u_val:trl_barc_head><u_val:trl_barn_head></color>",
+    "text": "<color_light_green><u_val:trl_barg_head></color><color_light_gray><u_val:trl_bari_head></color>",
     "parse_tags": true
    }
   ]
@@ -13364,7 +13550,7 @@
   "clauses": [
    {
     "id": "bar",
-    "text": "<u_val:trl_barc_head><u_val:trl_barn_head></color>",
+    "text": "<color_light_green><u_val:trl_barg_head></color><color_light_gray><u_val:trl_bari_head></color>",
     "parse_tags": true
    }
   ],
@@ -13381,7 +13567,7 @@
   "clauses": [
    {
     "id": "bar",
-    "text": "<u_val:trl_barc_torso><u_val:trl_barn_torso></color>",
+    "text": "<color_light_green><u_val:trl_barg_torso></color><color_light_gray><u_val:trl_bari_torso></color>",
     "parse_tags": true
    }
   ]
@@ -13394,7 +13580,7 @@
   "clauses": [
    {
     "id": "bar",
-    "text": "<u_val:trl_barc_torso><u_val:trl_barn_torso></color>",
+    "text": "<color_light_green><u_val:trl_barg_torso></color><color_light_gray><u_val:trl_bari_torso></color>",
     "parse_tags": true
    }
   ],
@@ -13411,7 +13597,7 @@
   "clauses": [
    {
     "id": "bar",
-    "text": "<u_val:trl_barc_arm_l><u_val:trl_barn_arm_l></color>",
+    "text": "<color_light_green><u_val:trl_barg_arm_l></color><color_light_gray><u_val:trl_bari_arm_l></color>",
     "parse_tags": true
    }
   ]
@@ -13424,7 +13610,7 @@
   "clauses": [
    {
     "id": "bar",
-    "text": "<u_val:trl_barc_arm_l><u_val:trl_barn_arm_l></color>",
+    "text": "<color_light_green><u_val:trl_barg_arm_l></color><color_light_gray><u_val:trl_bari_arm_l></color>",
     "parse_tags": true
    }
   ],
@@ -13441,7 +13627,7 @@
   "clauses": [
    {
     "id": "bar",
-    "text": "<u_val:trl_barc_arm_r><u_val:trl_barn_arm_r></color>",
+    "text": "<color_light_green><u_val:trl_barg_arm_r></color><color_light_gray><u_val:trl_bari_arm_r></color>",
     "parse_tags": true
    }
   ]
@@ -13454,7 +13640,7 @@
   "clauses": [
    {
     "id": "bar",
-    "text": "<u_val:trl_barc_arm_r><u_val:trl_barn_arm_r></color>",
+    "text": "<color_light_green><u_val:trl_barg_arm_r></color><color_light_gray><u_val:trl_bari_arm_r></color>",
     "parse_tags": true
    }
   ],
@@ -13471,7 +13657,7 @@
   "clauses": [
    {
     "id": "bar",
-    "text": "<u_val:trl_barc_leg_l><u_val:trl_barn_leg_l></color>",
+    "text": "<color_light_green><u_val:trl_barg_leg_l></color><color_light_gray><u_val:trl_bari_leg_l></color>",
     "parse_tags": true
    }
   ]
@@ -13484,7 +13670,7 @@
   "clauses": [
    {
     "id": "bar",
-    "text": "<u_val:trl_barc_leg_l><u_val:trl_barn_leg_l></color>",
+    "text": "<color_light_green><u_val:trl_barg_leg_l></color><color_light_gray><u_val:trl_bari_leg_l></color>",
     "parse_tags": true
    }
   ],
@@ -13501,7 +13687,7 @@
   "clauses": [
    {
     "id": "bar",
-    "text": "<u_val:trl_barc_leg_r><u_val:trl_barn_leg_r></color>",
+    "text": "<color_light_green><u_val:trl_barg_leg_r></color><color_light_gray><u_val:trl_bari_leg_r></color>",
     "parse_tags": true
    }
   ]
@@ -13514,7 +13700,7 @@
   "clauses": [
    {
     "id": "bar",
-    "text": "<u_val:trl_barc_leg_r><u_val:trl_barn_leg_r></color>",
+    "text": "<color_light_green><u_val:trl_barg_leg_r></color><color_light_gray><u_val:trl_bari_leg_r></color>",
     "parse_tags": true
    }
   ],

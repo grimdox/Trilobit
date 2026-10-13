@@ -429,7 +429,21 @@
     "trl_fn27_rooftop_shanty": 1296,
     "trl_fn28_syndicate_front": 1296,
     "trl_fn29_chop_clinic": 1296,
-    "trl_fn30_gambling_den": 1296
+    "trl_fn30_gambling_den": 1296,
+    "trl_apt01_tenement_tower": 2592,
+    "trl_apt02_rusted_stack": 2592,
+    "trl_apt03_family_tower": 2592,
+    "trl_apt04_salaried_tower": 2592,
+    "trl_apt05_luxury_residences": 2592,
+    "trl_apt06_skyline_condos": 2592,
+    "trl_lot_park_a": 0,
+    "trl_lot_park_b": 0,
+    "trl_lot_park_c": 0,
+    "trl_lot_park_d": 0,
+    "trl_lot_build_a": 0,
+    "trl_lot_build_b": 0,
+    "trl_lot_build_c": 0,
+    "trl_lot_build_d": 0
    },
    "houses": {
     "2storyModern01": 1,

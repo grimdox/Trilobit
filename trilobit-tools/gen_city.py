@@ -155,7 +155,7 @@ def make_building(b, out_ter, out_map, out_cb):
                     seen[key] = oid
                     ids_all.append((oid, z))
                     obj = {
-                        "fill_ter": "t_open_air" if z > 0 else ("t_rock" if z < 0 else "t_grass"),
+                        "fill_ter": "t_open_air" if z > 0 else ("t_rock" if z < 0 else "t_pavement"),
                         "rows": grid,
                         "palettes": [],
                         "terrain": {k: v for k, v in pal.items() if v}

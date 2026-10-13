@@ -4,6 +4,7 @@ import re, random
 import numpy as np
 from PIL import Image
 from iso import Canvas, box, face, sides, diamond, shade, mix
+import icons2
 
 PAL = {
     "black": (30, 30, 40), "red": (170, 56, 66), "green": (62, 140, 86), "brown": (132, 94, 62), "blue": (66, 90, 170),
@@ -191,6 +192,10 @@ def classify_item(i, o):
             return ("limb_leg", col)
         if has(s, "eye", "optic", "retina", "vision"):
             return ("implant_eye", col)
+    if not (i.startswith("trl_") and ("GUN" in st or t == "GUN")) and t not in ("GUN", "ARMOR", "TOOL_ARMOR", "MAGAZINE", "BOOK", "BIONIC_ITEM", "COMESTIBLE", "AMMO", "GUNMOD"):
+        nk = icons2.named_kind(n)
+        if nk:
+            return ("named_" + nk[0], nk[1] or (col if nk[0] not in icons2.BASE else icons2.BASE[nk[0]]))
     if "GUN" in st or t == "GUN":
         sk = str(o.get("skill") or "")
         if "archery" in sk or has(s, "bow", "crossbow"):
@@ -308,14 +313,14 @@ def _arcrifle(cv):
 
 
 def p_wield_arcrifle():
-    """The W-2011 as held by a person: a 32x36 overlay for the chars sheet.  It is drawn slanted across the whole body,
-    nearly as long as the person is tall, to read as huge and unwieldy."""
+    """The W-2011 as held by a person: a 32x36 overlay for the chars sheet.  It is still the biggest weapon on the sheet but now sits
+    low across the body (about 60% of its old size) so the person underneath stays visible."""
     tmp = Canvas(32, 32)
     _arcrifle(tmp)
     g = tmp.done()
-    g = g.resize((36, 36), Image.LANCZOS).rotate(28, resample=Image.BICUBIC, center=(18, 18))
+    g = g.resize((22, 22), Image.LANCZOS).rotate(24, resample=Image.BICUBIC, center=(11, 11))
     out = Image.new("RGBA", (32, 36), (0, 0, 0, 0))
-    out.alpha_composite(g, (-2, 2))
+    out.alpha_composite(g, (8, 14))
     return out
 
 
@@ -347,6 +352,9 @@ def p_item(kind, col, seed):
     l = shade(c, 1.25)
     rnd = random.Random(seed)
     steel = (176, 182, 196)
+    if kind.startswith("named_"):
+        icons2.draw(kind[6:], c, d, l, cv, PAL)
+        return cv.done()
     if kind == "arcrifle":
         _arcrifle(cv)
     elif kind == "charm":

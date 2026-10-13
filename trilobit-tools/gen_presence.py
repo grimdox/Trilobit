@@ -6,6 +6,7 @@
   mid-rise and tower sections:    NAP, more on the ground floor
 usage: gen_presence.py <mod dir>   (run after the building generators: it edits their mapgen files)"""
 import json, os, random, re, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 MOD = sys.argv[1]
 NPC = "trl_nc_"
 BAD_TER = re.compile(r"wall|window|door|rock|air|sky|water|pavement|sidewalk|grass|dirt|road|open|roof|stair|ladder|pit|glass", re.I)
@@ -41,7 +42,23 @@ def ruleset(oid):
     if re.match(r"^trl_(sky\d+|mid\d+|mr\d+|fn\d+|mt\d+)_", oid):
         ground = bool(re.search(r"z0$", oid)) and not oid.startswith("trl_mt")
         return [("nap_patrol", 12 if ground else 5), ("nap_riot", 3 if ground else 2)]
+    if re.match(r"^trl_apt\d+_.*_z0$", oid):
+        return [("nap_patrol", 6)]
+    if oid.startswith("trl_lot_build_"):
+        return [("nap_patrol", 35), ("nap_patrol", 20)]
+    if oid.startswith("trl_lot_park_"):
+        return [("nap_patrol", 8)]
     return []
+
+
+def ped_cells(oid, obj):
+    """sidewalk cells on the ground floor of mid-rises and apartment towers where a pedestrian may stand"""
+    if not re.match(r"^trl_(mr\d+|fn\d+|apt\d+|mid\d+)_.*z0$", oid):
+        return []
+    terr = obj.get("terrain", {})
+    sw = {k for k, v in terr.items() if v == "t_sidewalk"}
+    furn = {(f["x"], f["y"]) for f in obj.get("place_furniture", []) if isinstance(f.get("x"), int) and isinstance(f.get("y"), int)}
+    return [(x, y) for y, row in enumerate(obj.get("rows", [])) for x, ch in enumerate(row) if ch in sw and (x, y) not in furn]
 
 
 def petrules(oid):
@@ -55,8 +72,10 @@ def petrules(oid):
     return []
 
 
+import gen_residents as _gr
+PED_JOBS = [f"mid_{j}" for j in _gr.JOBS["mid"]] + [f"poor_{j}" for j in list(_gr.JOBS["poor"])[:4]]
 total = 0
-for sub in ("houses", "midrise", "midrise2", "towers", "city"):
+for sub in ("houses", "midrise", "midrise2", "midrise3", "lots", "towers", "city"):
     path = os.path.join(MOD, sub, "mapgen.json")
     if not os.path.exists(path):
         continue
@@ -78,6 +97,14 @@ for sub in ("houses", "midrise", "midrise2", "towers", "city"):
             for (cls, chance), (x, y) in zip(rules, cells):
                 nest.append({"chunks": [["trl_pres_" + cls, chance], ["null", 100 - chance]], "x": x, "y": y})
                 total += 1
+        pcells = ped_cells(m["om_terrain"][0], obj)
+        if pcells:
+            rp = random.Random("ped-" + m["om_terrain"][0])
+            rp.shuffle(pcells)
+            for (x, y) in pcells[:3]:
+                chunks = [[f"trl_pres_ped_{j}", 1] for j in PED_JOBS] + [["null", 56]]
+                nest.append({"chunks": chunks, "x": x, "y": y})
+                total += 1
         keep = [n for n in obj.get("place_nested", []) if not str(n.get("chunks", [["", 0]])[0][0]).startswith("trl_pres_")]
         if keep + nest:
             obj["place_nested"] = keep + nest
@@ -89,6 +116,10 @@ for sub in ("houses", "midrise", "midrise2", "towers", "city"):
             del obj["place_npcs"]
     data = [m for m in data if not str(m.get("nested_mapgen_id", "")).startswith("trl_pres_")]
     if sub == "city":
+        for j in PED_JOBS:
+            tier, job = j.split("_", 1)
+            data.append({"type": "mapgen", "nested_mapgen_id": "trl_pres_ped_" + j,
+                         "object": {"mapgensize": [1, 1], "rows": ["."], "place_npcs": [{"class": _gr.template_id(tier, job), "x": 0, "y": 0}]}})
         for cls in ("bratva_thug", "bratva_enforcer", "nasim_hacker", "nap_patrol", "nap_tactical", "nap_riot"):
             data.append({"type": "mapgen", "nested_mapgen_id": "trl_pres_" + cls,
                          "object": {"mapgensize": [1, 1], "rows": ["."], "place_npcs": [{"class": NPC + cls, "x": 0, "y": 0}]}})

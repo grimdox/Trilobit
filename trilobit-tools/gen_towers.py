@@ -181,7 +181,7 @@ def mt06(L):
     strips = ((2, 11, 45, 14), (2, 33, 45, 36), (11, 15, 14, 32), (33, 15, 36, 32))
     for (a, b_, c, d) in strips: L.fill(a, b_, c, d, "pave" if z == 0 else "carpet_grey")
     if z == 0:
-        L.fill(15, 15, 32, 32, "grass")
+        L.fill(15, 15, 32, 32, "pave")
         L.fill(19, 19, 28, 28, "water"); L.fill(23, 19, 24, 28, "floor_wood"); L.fill(19, 23, 28, 24, "floor_wood")
         for (x, y) in ((17, 17), (30, 17), (17, 30), (30, 30), (22, 16), (25, 31), (16, 22), (31, 25)): L.f_("bonsai", x, y)
         for (x, y) in ((18, 18), (29, 18), (18, 29), (29, 29)): L.f_("lantern_stone", x, y)
@@ -325,7 +325,7 @@ def cell_object(L, cx, cy, z):
     keys = sorted({L.t[y0 + y][x0 + x] for y in range(24) for x in range(24)})
     cm = {k: CHARPOOL[i] for i, k in enumerate(keys)}
     rows = ["".join(cm[L.t[y0 + y][x0 + x]] for x in range(24)) for y in range(24)]
-    obj = {"fill_ter": "t_open_air" if z > 0 else "t_grass", "rows": rows, "terrain": {cm[k]: T[k]["id"] for k in keys}}
+    obj = {"fill_ter": "t_open_air" if z > 0 else "t_pavement", "rows": rows, "terrain": {cm[k]: T[k]["id"] for k in keys}}
     fur = [{"furn": F[k]["id"], "x": x - x0, "y": y - y0} for k, x, y in L.f if x0 <= x < x0 + 24 and y0 <= y < y0 + 24]
     if fur: obj["place_furniture"] = fur
     it = []

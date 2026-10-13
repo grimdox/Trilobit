@@ -1181,7 +1181,11 @@ std::string format_volume( const units::volume &volume, int width, bool *out_tru
 
 inline std::string format_money( int cents )
 {
-    return string_format( _( "$%.2f" ), cents / 100.0 );
+    // Trilobit: the currency is the yen; whole amounts print without decimals
+    if( cents % 100 == 0 ) {
+        return string_format( _( "¥%d" ), cents / 100 );
+    }
+    return string_format( _( "¥%.2f" ), cents / 100.0 );
 }
 
 /** Get the width in font glyphs of the drawing screen.

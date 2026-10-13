@@ -1603,6 +1603,11 @@ void options_manager::add_options_general()
     add_option_group( "general", Group( "safe_mode_opts", to_translation( "Safe mode options" ),
                                         to_translation( "Options regarding safe mode." ) ),
     [&]( const std::string & page_id ) {
+        add( "TRL_NPC_FAREWELLS", page_id, to_translation( "NPC farewell lines" ),
+             to_translation( "If true, NPCs say a goodbye line (such as \"See ya!\") when you end a conversation.  Off by default in Trilobit." ),
+             false
+           );
+
         add( "SAFEMODE", page_id, to_translation( "Safe mode" ),
              to_translation( "If true, will hold the game and display a warning if a hostile monster/NPC is approaching." ),
              true
@@ -2331,13 +2336,13 @@ void options_manager::add_options_graphics()
 
         add( "SEASONAL_TITLE", page_id, to_translation( "Use seasonal title screen" ),
              to_translation( "If true, the title screen will use the art appropriate for the season." ),
-             true
+             false
            );
 
         get_option( "SEASONAL_TITLE" ).setPrerequisite( "ENABLE_ASCII_TITLE" );
 
         add( "ALT_TITLE", page_id, to_translation( "Alternative title screen frequency" ),
-             to_translation( "Set the probability of the alternate title screen appearing." ), 0, 100, 10
+             to_translation( "Set the probability of the alternate title screen appearing." ), 0, 100, 0
            );
 
         get_option( "ALT_TITLE" ).setPrerequisite( "ENABLE_ASCII_TITLE" );
@@ -2447,7 +2452,7 @@ void options_manager::add_options_graphics()
 
         add( "TILES", page_id, to_translation( "Choose tileset" ),
              to_translation( "Choose the tileset you want to use." ),
-             build_tilesets_list(), "Bouma", COPT_CURSES_HIDE
+             build_tilesets_list(), "Bouma TopDown", COPT_CURSES_HIDE
            ); // populate the options dynamically
 
         add( "USE_DISTANT_TILES", page_id, to_translation( "Use separate tileset for far" ),
@@ -2494,7 +2499,7 @@ void options_manager::add_options_graphics()
 
         add( "OVERMAP_TILES", page_id, to_translation( "Choose overmap tileset" ),
              to_translation( "Choose the overmap tileset you want to use." ),
-             om_tilesets, "Larwick Overmap", COPT_CURSES_HIDE
+             om_tilesets, "Bouma Overmap", COPT_CURSES_HIDE
            ); // populate the options dynamically
 
         get_option( "OVERMAP_TILES" ).setPrerequisite( "USE_OVERMAP_TILES" );

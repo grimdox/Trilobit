@@ -1,0 +1,1154 @@
+[
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt01_tenement_tower_z0",
+  "name": "tenement tower (cheap flats)",
+  "sym": "A",
+  "color": "brown",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt01_tenement_tower_z1",
+  "name": "tenement tower (cheap flats)",
+  "sym": "A",
+  "color": "brown",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt01_tenement_tower_z2",
+  "name": "tenement tower (cheap flats)",
+  "sym": "A",
+  "color": "brown",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt01_tenement_tower_z3",
+  "name": "tenement tower (cheap flats)",
+  "sym": "A",
+  "color": "brown",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt01_tenement_tower_z4",
+  "name": "tenement tower (cheap flats)",
+  "sym": "A",
+  "color": "brown",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt01_tenement_tower_z5",
+  "name": "tenement tower (cheap flats)",
+  "sym": "A",
+  "color": "brown",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt01_tenement_tower_z6",
+  "name": "tenement tower (cheap flats)",
+  "sym": "A",
+  "color": "brown",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt01_tenement_tower_z7",
+  "name": "tenement tower (cheap flats)",
+  "sym": "A",
+  "color": "brown",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt01_tenement_tower_z8",
+  "name": "tenement tower (cheap flats) roof",
+  "sym": "A",
+  "color": "brown",
+  "see_cost": "none",
+  "vision_levels": "roof_or_air",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt02_rusted_stack_z0",
+  "name": "rusted housing stack",
+  "sym": "A",
+  "color": "red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt02_rusted_stack_z1",
+  "name": "rusted housing stack",
+  "sym": "A",
+  "color": "red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt02_rusted_stack_z2",
+  "name": "rusted housing stack",
+  "sym": "A",
+  "color": "red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt02_rusted_stack_z3",
+  "name": "rusted housing stack",
+  "sym": "A",
+  "color": "red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt02_rusted_stack_z4",
+  "name": "rusted housing stack",
+  "sym": "A",
+  "color": "red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt02_rusted_stack_z5",
+  "name": "rusted housing stack",
+  "sym": "A",
+  "color": "red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt02_rusted_stack_z6",
+  "name": "rusted housing stack",
+  "sym": "A",
+  "color": "red",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt02_rusted_stack_z7",
+  "name": "rusted housing stack roof",
+  "sym": "A",
+  "color": "red",
+  "see_cost": "none",
+  "vision_levels": "roof_or_air",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt03_family_tower_z0",
+  "name": "family apartment tower",
+  "sym": "A",
+  "color": "light_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt03_family_tower_z1",
+  "name": "family apartment tower",
+  "sym": "A",
+  "color": "light_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt03_family_tower_z2",
+  "name": "family apartment tower",
+  "sym": "A",
+  "color": "light_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt03_family_tower_z3",
+  "name": "family apartment tower",
+  "sym": "A",
+  "color": "light_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt03_family_tower_z4",
+  "name": "family apartment tower",
+  "sym": "A",
+  "color": "light_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt03_family_tower_z5",
+  "name": "family apartment tower",
+  "sym": "A",
+  "color": "light_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt03_family_tower_z6",
+  "name": "family apartment tower",
+  "sym": "A",
+  "color": "light_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt03_family_tower_z7",
+  "name": "family apartment tower",
+  "sym": "A",
+  "color": "light_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt03_family_tower_z8",
+  "name": "family apartment tower",
+  "sym": "A",
+  "color": "light_gray",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt03_family_tower_z9",
+  "name": "family apartment tower roof",
+  "sym": "A",
+  "color": "light_gray",
+  "see_cost": "none",
+  "vision_levels": "roof_or_air",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt04_salaried_tower_z0",
+  "name": "salaried residence tower",
+  "sym": "A",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt04_salaried_tower_z1",
+  "name": "salaried residence tower",
+  "sym": "A",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt04_salaried_tower_z2",
+  "name": "salaried residence tower",
+  "sym": "A",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt04_salaried_tower_z3",
+  "name": "salaried residence tower",
+  "sym": "A",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt04_salaried_tower_z4",
+  "name": "salaried residence tower",
+  "sym": "A",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt04_salaried_tower_z5",
+  "name": "salaried residence tower",
+  "sym": "A",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt04_salaried_tower_z6",
+  "name": "salaried residence tower",
+  "sym": "A",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt04_salaried_tower_z7",
+  "name": "salaried residence tower",
+  "sym": "A",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt04_salaried_tower_z8",
+  "name": "salaried residence tower",
+  "sym": "A",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt04_salaried_tower_z9",
+  "name": "salaried residence tower",
+  "sym": "A",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt04_salaried_tower_z10",
+  "name": "salaried residence tower roof",
+  "sym": "A",
+  "color": "light_blue",
+  "see_cost": "none",
+  "vision_levels": "roof_or_air",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt05_luxury_residences_z0",
+  "name": "luxury residence tower",
+  "sym": "A",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt05_luxury_residences_z1",
+  "name": "luxury residence tower",
+  "sym": "A",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt05_luxury_residences_z2",
+  "name": "luxury residence tower",
+  "sym": "A",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt05_luxury_residences_z3",
+  "name": "luxury residence tower",
+  "sym": "A",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt05_luxury_residences_z4",
+  "name": "luxury residence tower",
+  "sym": "A",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt05_luxury_residences_z5",
+  "name": "luxury residence tower",
+  "sym": "A",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt05_luxury_residences_z6",
+  "name": "luxury residence tower",
+  "sym": "A",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt05_luxury_residences_z7",
+  "name": "luxury residence tower",
+  "sym": "A",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt05_luxury_residences_z8",
+  "name": "luxury residence tower",
+  "sym": "A",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt05_luxury_residences_z9",
+  "name": "luxury residence tower",
+  "sym": "A",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt05_luxury_residences_z10",
+  "name": "luxury residence tower roof",
+  "sym": "A",
+  "color": "light_green",
+  "see_cost": "none",
+  "vision_levels": "roof_or_air",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt06_skyline_condos_z0",
+  "name": "skyline condominiums",
+  "sym": "A",
+  "color": "white",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt06_skyline_condos_z1",
+  "name": "skyline condominiums",
+  "sym": "A",
+  "color": "white",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt06_skyline_condos_z2",
+  "name": "skyline condominiums",
+  "sym": "A",
+  "color": "white",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt06_skyline_condos_z3",
+  "name": "skyline condominiums",
+  "sym": "A",
+  "color": "white",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt06_skyline_condos_z4",
+  "name": "skyline condominiums",
+  "sym": "A",
+  "color": "white",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt06_skyline_condos_z5",
+  "name": "skyline condominiums",
+  "sym": "A",
+  "color": "white",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt06_skyline_condos_z6",
+  "name": "skyline condominiums",
+  "sym": "A",
+  "color": "white",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt06_skyline_condos_z7",
+  "name": "skyline condominiums",
+  "sym": "A",
+  "color": "white",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt06_skyline_condos_z8",
+  "name": "skyline condominiums",
+  "sym": "A",
+  "color": "white",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_apt06_skyline_condos_z9",
+  "name": "skyline condominiums roof",
+  "sym": "A",
+  "color": "white",
+  "see_cost": "none",
+  "vision_levels": "roof_or_air",
+  "flags": []
+ },
+ {
+  "type": "city_building",
+  "id": "trl_apt01_tenement_tower",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_apt01_tenement_tower_z0_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     1
+    ],
+    "overmap": "trl_apt01_tenement_tower_z1_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     2
+    ],
+    "overmap": "trl_apt01_tenement_tower_z2_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     3
+    ],
+    "overmap": "trl_apt01_tenement_tower_z3_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     4
+    ],
+    "overmap": "trl_apt01_tenement_tower_z4_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     5
+    ],
+    "overmap": "trl_apt01_tenement_tower_z5_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     6
+    ],
+    "overmap": "trl_apt01_tenement_tower_z6_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     7
+    ],
+    "overmap": "trl_apt01_tenement_tower_z7_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     8
+    ],
+    "overmap": "trl_apt01_tenement_tower_z8_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_apt02_rusted_stack",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_apt02_rusted_stack_z0_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     1
+    ],
+    "overmap": "trl_apt02_rusted_stack_z1_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     2
+    ],
+    "overmap": "trl_apt02_rusted_stack_z2_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     3
+    ],
+    "overmap": "trl_apt02_rusted_stack_z3_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     4
+    ],
+    "overmap": "trl_apt02_rusted_stack_z4_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     5
+    ],
+    "overmap": "trl_apt02_rusted_stack_z5_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     6
+    ],
+    "overmap": "trl_apt02_rusted_stack_z6_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     7
+    ],
+    "overmap": "trl_apt02_rusted_stack_z7_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_apt03_family_tower",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_apt03_family_tower_z0_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     1
+    ],
+    "overmap": "trl_apt03_family_tower_z1_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     2
+    ],
+    "overmap": "trl_apt03_family_tower_z2_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     3
+    ],
+    "overmap": "trl_apt03_family_tower_z3_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     4
+    ],
+    "overmap": "trl_apt03_family_tower_z4_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     5
+    ],
+    "overmap": "trl_apt03_family_tower_z5_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     6
+    ],
+    "overmap": "trl_apt03_family_tower_z6_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     7
+    ],
+    "overmap": "trl_apt03_family_tower_z7_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     8
+    ],
+    "overmap": "trl_apt03_family_tower_z8_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     9
+    ],
+    "overmap": "trl_apt03_family_tower_z9_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_apt04_salaried_tower",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_apt04_salaried_tower_z0_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     1
+    ],
+    "overmap": "trl_apt04_salaried_tower_z1_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     2
+    ],
+    "overmap": "trl_apt04_salaried_tower_z2_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     3
+    ],
+    "overmap": "trl_apt04_salaried_tower_z3_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     4
+    ],
+    "overmap": "trl_apt04_salaried_tower_z4_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     5
+    ],
+    "overmap": "trl_apt04_salaried_tower_z5_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     6
+    ],
+    "overmap": "trl_apt04_salaried_tower_z6_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     7
+    ],
+    "overmap": "trl_apt04_salaried_tower_z7_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     8
+    ],
+    "overmap": "trl_apt04_salaried_tower_z8_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     9
+    ],
+    "overmap": "trl_apt04_salaried_tower_z9_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     10
+    ],
+    "overmap": "trl_apt04_salaried_tower_z10_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_apt05_luxury_residences",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_apt05_luxury_residences_z0_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     1
+    ],
+    "overmap": "trl_apt05_luxury_residences_z1_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     2
+    ],
+    "overmap": "trl_apt05_luxury_residences_z2_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     3
+    ],
+    "overmap": "trl_apt05_luxury_residences_z3_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     4
+    ],
+    "overmap": "trl_apt05_luxury_residences_z4_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     5
+    ],
+    "overmap": "trl_apt05_luxury_residences_z5_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     6
+    ],
+    "overmap": "trl_apt05_luxury_residences_z6_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     7
+    ],
+    "overmap": "trl_apt05_luxury_residences_z7_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     8
+    ],
+    "overmap": "trl_apt05_luxury_residences_z8_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     9
+    ],
+    "overmap": "trl_apt05_luxury_residences_z9_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     10
+    ],
+    "overmap": "trl_apt05_luxury_residences_z10_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_apt06_skyline_condos",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_apt06_skyline_condos_z0_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     1
+    ],
+    "overmap": "trl_apt06_skyline_condos_z1_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     2
+    ],
+    "overmap": "trl_apt06_skyline_condos_z2_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     3
+    ],
+    "overmap": "trl_apt06_skyline_condos_z3_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     4
+    ],
+    "overmap": "trl_apt06_skyline_condos_z4_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     5
+    ],
+    "overmap": "trl_apt06_skyline_condos_z5_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     6
+    ],
+    "overmap": "trl_apt06_skyline_condos_z6_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     7
+    ],
+    "overmap": "trl_apt06_skyline_condos_z7_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     8
+    ],
+    "overmap": "trl_apt06_skyline_condos_z8_north"
+   },
+   {
+    "point": [
+     0,
+     0,
+     9
+    ],
+    "overmap": "trl_apt06_skyline_condos_z9_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ }
+]

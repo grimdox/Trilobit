@@ -5,7 +5,7 @@
    "trl_mt01_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "gggggggggggggggggggggggg",
     "ghhhhkkhhhkhhkhhhkkhhhhg",
@@ -586,34 +586,6 @@
     {
      "chunks": [
       [
-       "trl_pres_nap_patrol",
-       5
-      ],
-      [
-       "null",
-       95
-      ]
-     ],
-     "x": 12,
-     "y": 16
-    },
-    {
-     "chunks": [
-      [
-       "trl_pres_nap_riot",
-       2
-      ],
-      [
-       "null",
-       98
-      ]
-     ],
-     "x": 16,
-     "y": 16
-    },
-    {
-     "chunks": [
-      [
        "trl_tank_1",
        100
       ]
@@ -640,6 +612,34 @@
      ],
      "x": 14,
      "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       5
+      ],
+      [
+       "null",
+       95
+      ]
+     ],
+     "x": 12,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_riot",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 16,
+     "y": 16
     }
    ]
   }
@@ -2454,7 +2454,7 @@
    "trl_mt02_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "gggggggggggggggggggggggg",
     "giiililliilillillilliiig",
@@ -3021,6 +3021,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 4,
+     "y": 11
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 9,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -3045,26 +3065,6 @@
      ],
      "x": 7,
      "y": 14
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 4,
-     "y": 11
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 9,
-     "y": 21
     }
    ]
   }
@@ -5474,7 +5474,7 @@
    "trl_mt08_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "hhhhhhhhhhhhhhhhhhhhhhhh",
     "hjjjjjmmjjjmmjjjmmjjjjjh",
@@ -5972,6 +5972,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 13,
+     "y": 3
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 16,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -5996,26 +6016,6 @@
      ],
      "x": 11,
      "y": 4
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 13,
-     "y": 3
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 16,
-     "y": 13
     }
    ]
   }
@@ -7712,7 +7712,7 @@
    "trl_mt03_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "hhhhhhhhhhhhhhhhhhhhhhhh",
     "hkkkkkmmkkkmmkkkmmkkkmmk",
@@ -8169,6 +8169,16 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 13,
+     "y": 11
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -8193,16 +8203,6 @@
      ],
      "x": 2,
      "y": 19
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 13,
-     "y": 11
     }
    ]
   }
@@ -8213,7 +8213,7 @@
    "trl_mt03_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "iijjiiijjiiijiiiijjiiiif",
@@ -8692,6 +8692,16 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 15,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -8716,16 +8726,6 @@
      ],
      "x": 11,
      "y": 3
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 15,
-     "y": 21
     }
    ]
   }
@@ -12577,7 +12577,7 @@
    "trl_mt04_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "hhhhhhhhhhhhhhhhhhhhhhhh",
     "hkkkkllkkklkkkkllkkkllkk",
@@ -13148,34 +13148,6 @@
     {
      "chunks": [
       [
-       "trl_pres_nap_patrol",
-       5
-      ],
-      [
-       "null",
-       95
-      ]
-     ],
-     "x": 22,
-     "y": 14
-    },
-    {
-     "chunks": [
-      [
-       "trl_pres_nap_riot",
-       2
-      ],
-      [
-       "null",
-       98
-      ]
-     ],
-     "x": 14,
-     "y": 20
-    },
-    {
-     "chunks": [
-      [
        "trl_tank_1",
        100
       ]
@@ -13202,6 +13174,34 @@
      ],
      "x": 20,
      "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       5
+      ],
+      [
+       "null",
+       95
+      ]
+     ],
+     "x": 22,
+     "y": 14
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_riot",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 14,
+     "y": 20
     }
    ]
   }
@@ -13212,7 +13212,7 @@
    "trl_mt04_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "iiiiiiiiiiiiiiiiiiiiiiii",
     "lnnlllnnlllnllllnnllllli",
@@ -13795,34 +13795,6 @@
     {
      "chunks": [
       [
-       "trl_pres_nap_patrol",
-       5
-      ],
-      [
-       "null",
-       95
-      ]
-     ],
-     "x": 8,
-     "y": 19
-    },
-    {
-     "chunks": [
-      [
-       "trl_pres_nap_riot",
-       2
-      ],
-      [
-       "null",
-       98
-      ]
-     ],
-     "x": 15,
-     "y": 8
-    },
-    {
-     "chunks": [
-      [
        "trl_tank_2",
        100
       ]
@@ -13849,6 +13821,34 @@
      ],
      "x": 6,
      "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       5
+      ],
+      [
+       "null",
+       95
+      ]
+     ],
+     "x": 8,
+     "y": 19
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_riot",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 15,
+     "y": 8
     }
    ]
   }
@@ -17633,7 +17633,7 @@
    "trl_mt07_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "gggggggggggggggggggggggg",
     "giiiiilliiilliiilliiilli",
@@ -18094,6 +18094,16 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 3,
+     "y": 11
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -18118,16 +18128,6 @@
      ],
      "x": 18,
      "y": 21
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 3,
-     "y": 11
     }
    ]
   }
@@ -18138,7 +18138,7 @@
    "trl_mt07_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "gggggggggggggggggggggggg",
     "iikkiiikkiiikiiiikkiiiig",
@@ -18628,6 +18628,16 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 11,
+     "y": 9
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -18652,16 +18662,6 @@
      ],
      "x": 2,
      "y": 14
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 11,
-     "y": 9
     }
    ]
   }
@@ -23962,7 +23962,7 @@
    "trl_mt05_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "fgggggkkgggkagggkkgggggf",
@@ -24472,6 +24472,16 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 5,
+     "y": 2
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -24496,16 +24506,6 @@
      ],
      "x": 9,
      "y": 9
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 5,
-     "y": 2
     }
    ]
   }
@@ -24516,7 +24516,7 @@
    "trl_mt05_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ghiccieeeeedddeeeeeeeehg",
     "ghiccieeeeedddeeeeeeeehg",
@@ -24996,6 +24996,16 @@
     {
      "chunks": [
       [
+       "trl_tank_2",
+       100
+      ]
+     ],
+     "x": 4,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -25020,16 +25030,6 @@
      ],
      "x": 8,
      "y": 12
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_2",
-       100
-      ]
-     ],
-     "x": 4,
-     "y": 21
     }
    ]
   }
@@ -28796,7 +28796,7 @@
    "trl_mt10_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "fiiiiikkiiikbiiikkiiiiif",
@@ -29341,6 +29341,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 6,
+     "y": 2
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 4,
+     "y": 19
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -29365,26 +29385,6 @@
      ],
      "x": 9,
      "y": 8
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 6,
-     "y": 2
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 4,
-     "y": 19
     }
    ]
   }
@@ -29395,7 +29395,7 @@
    "trl_mt10_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "gjhfbhccccceeeccccccccag",
     "gkhhhhccccceeecccccccckg",
@@ -29931,6 +29931,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 7,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 6,
+     "y": 4
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -29955,26 +29975,6 @@
      ],
      "x": 5,
      "y": 5
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 7,
-     "y": 21
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 6,
-     "y": 4
     }
    ]
   }
@@ -34963,7 +34963,7 @@
    "trl_mt06_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "jjjjjjjjjjjjjjjjjjjjjjjj",
     "jllllloollloollloolllool",
@@ -34994,7 +34994,7 @@
     "a": "t_trl_door_c",
     "b": "t_trl_floor_corp",
     "c": "t_trl_floor_wood",
-    "d": "t_grass",
+    "d": "t_pavement",
     "e": "t_trl_marble",
     "f": "t_trl_pave",
     "g": "t_trl_slab",
@@ -35349,6 +35349,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 3,
+     "y": 14
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_2",
+       100
+      ]
+     ],
+     "x": 3,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -35373,26 +35393,6 @@
      ],
      "x": 8,
      "y": 17
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 3,
-     "y": 14
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_2",
-       100
-      ]
-     ],
-     "x": 3,
-     "y": 16
     }
    ]
   }
@@ -35403,7 +35403,7 @@
    "trl_mt06_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "hhhhhhhhhhhhhhhhhhhhhhhh",
     "jjlljjjlljjjljjjjlljjjjh",
@@ -35435,7 +35435,7 @@
     "b": "t_trl_door_c",
     "c": "t_trl_floor_corp",
     "d": "t_trl_floor_wood",
-    "e": "t_grass",
+    "e": "t_pavement",
     "f": "t_trl_marble",
     "g": "t_trl_pave",
     "h": "t_sidewalk",
@@ -35806,6 +35806,16 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 6,
+     "y": 11
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -35830,16 +35840,6 @@
      ],
      "x": 18,
      "y": 13
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 6,
-     "y": 11
     }
    ]
   }
@@ -35850,7 +35850,7 @@
    "trl_mt06_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "hiaaaaaaaaiffffddddccccc",
     "hiaaaaaaaaiffffddddjjjjc",
@@ -35881,7 +35881,7 @@
     "a": "t_trl_checker",
     "b": "t_trl_door_c",
     "c": "t_trl_floor_wood",
-    "d": "t_grass",
+    "d": "t_pavement",
     "e": "t_trl_marble",
     "f": "t_trl_pave",
     "g": "t_trl_slab",
@@ -36197,6 +36197,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 9,
+     "y": 7
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 5,
+     "y": 7
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -36221,26 +36241,6 @@
      ],
      "x": 7,
      "y": 19
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 9,
-     "y": 7
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 5,
-     "y": 7
     }
    ]
   }
@@ -36251,7 +36251,7 @@
    "trl_mt06_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "cccccddddffffhaaaaaaaahg",
     "ciiiiddddffffhaaaaaaaahg",
@@ -36282,7 +36282,7 @@
     "a": "t_trl_carpet_red",
     "b": "t_trl_door_c",
     "c": "t_trl_floor_wood",
-    "d": "t_grass",
+    "d": "t_pavement",
     "e": "t_trl_marble",
     "f": "t_trl_pave",
     "g": "t_sidewalk",
@@ -36727,34 +36727,6 @@
     {
      "chunks": [
       [
-       "trl_pres_nap_patrol",
-       5
-      ],
-      [
-       "null",
-       95
-      ]
-     ],
-     "x": 3,
-     "y": 16
-    },
-    {
-     "chunks": [
-      [
-       "trl_pres_nap_riot",
-       2
-      ],
-      [
-       "null",
-       98
-      ]
-     ],
-     "x": 17,
-     "y": 6
-    },
-    {
-     "chunks": [
-      [
        "trl_tank_1",
        100
       ]
@@ -36781,6 +36753,34 @@
      ],
      "x": 15,
      "y": 14
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       5
+      ],
+      [
+       "null",
+       95
+      ]
+     ],
+     "x": 3,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_riot",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 17,
+     "y": 6
     }
    ]
   }
@@ -42671,7 +42671,7 @@
    "trl_mt09_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "hhhhhhhhhhhhhhhhhhhhhhhh",
     "hjjjjjlljjjlljjjlljjjllj",
@@ -43192,6 +43192,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 11,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 9,
+     "y": 15
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -43216,26 +43236,6 @@
      ],
      "x": 13,
      "y": 21
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 11,
-     "y": 13
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 9,
-     "y": 15
     }
    ]
   }
@@ -43246,7 +43246,7 @@
    "trl_mt09_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "gggggggggggggggggggggggg",
     "iikkiiikkiiikiiiikkiiiig",
@@ -43797,6 +43797,16 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 20,
+     "y": 11
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -43821,16 +43831,6 @@
      ],
      "x": 3,
      "y": 18
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 20,
-     "y": 11
     }
    ]
   }
@@ -43841,7 +43841,7 @@
    "trl_mt09_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "deeeeeeeeeeeeeeeeeeecccc",
     "deaaaaaaaaaaaaaaaaaecccc",
@@ -44463,6 +44463,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 14,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 6,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -44487,26 +44507,6 @@
      ],
      "x": 22,
      "y": 12
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 14,
-     "y": 21
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 6,
-     "y": 21
     }
    ]
   }
@@ -44517,7 +44517,7 @@
    "trl_mt09_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "bbbbeeeeeeeeeeeeeeeeeeed",
     "bbbbeccccccccccccccccced",
@@ -44919,6 +44919,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 15,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_2",
+       100
+      ]
+     ],
+     "x": 6,
+     "y": 1
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -44943,26 +44963,6 @@
      ],
      "x": 3,
      "y": 10
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 15,
-     "y": 1
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_2",
-       100
-      ]
-     ],
-     "x": 6,
-     "y": 1
     }
    ]
   }
@@ -50291,7 +50291,7 @@
    "trl_mt11_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "jjjjjjjjjjjjjjjjjjjjjjjj",
     "jlllllpplllpplllppllmppm",
@@ -50321,7 +50321,7 @@
    "terrain": {
     "a": "t_trl_floor_corp",
     "b": "t_trl_floor_wood",
-    "c": "t_grass",
+    "c": "t_pavement",
     "d": "t_trl_marble",
     "e": "t_trl_pave",
     "f": "t_water_sh",
@@ -50645,34 +50645,6 @@
     {
      "chunks": [
       [
-       "trl_pres_nap_patrol",
-       5
-      ],
-      [
-       "null",
-       95
-      ]
-     ],
-     "x": 2,
-     "y": 7
-    },
-    {
-     "chunks": [
-      [
-       "trl_pres_nap_riot",
-       2
-      ],
-      [
-       "null",
-       98
-      ]
-     ],
-     "x": 21,
-     "y": 23
-    },
-    {
-     "chunks": [
-      [
        "trl_tank_2",
        100
       ]
@@ -50699,6 +50671,34 @@
      ],
      "x": 17,
      "y": 9
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       5
+      ],
+      [
+       "null",
+       95
+      ]
+     ],
+     "x": 2,
+     "y": 7
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_riot",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 21,
+     "y": 23
     }
    ]
   }
@@ -50709,7 +50709,7 @@
    "trl_mt11_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "iillhhhllhhhllhhhllhhhhf",
@@ -50739,7 +50739,7 @@
    "terrain": {
     "a": "t_trl_floor_corp",
     "b": "t_trl_floor_wood",
-    "c": "t_grass",
+    "c": "t_pavement",
     "d": "t_trl_marble",
     "e": "t_trl_pave",
     "f": "t_sidewalk",
@@ -51037,6 +51037,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 20,
+     "y": 14
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 7,
+     "y": 9
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -51061,26 +51081,6 @@
      ],
      "x": 15,
      "y": 17
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 20,
-     "y": 14
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 7,
-     "y": 9
     }
    ]
   }
@@ -51091,7 +51091,7 @@
    "trl_mt11_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ghbbbbbbbbheeeeeeccbbbbb",
     "ghbbbbbbbbheeeeeecciiiib",
@@ -51121,7 +51121,7 @@
    "terrain": {
     "a": "t_trl_door_c",
     "b": "t_trl_floor_wood",
-    "c": "t_grass",
+    "c": "t_pavement",
     "d": "t_trl_marble",
     "e": "t_trl_pave",
     "f": "t_trl_slab",
@@ -51373,6 +51373,16 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 15,
+     "y": 14
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -51397,16 +51407,6 @@
      ],
      "x": 22,
      "y": 16
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 15,
-     "y": 14
     }
    ]
   }
@@ -51417,7 +51417,7 @@
    "trl_mt11_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "cccccddffffffiggggggggih",
     "cjjjjddffffffiggggggggih",
@@ -51448,7 +51448,7 @@
     "a": "t_trl_checker",
     "b": "t_trl_door_c",
     "c": "t_trl_floor_wood",
-    "d": "t_grass",
+    "d": "t_pavement",
     "e": "t_trl_marble",
     "f": "t_trl_pave",
     "g": "t_trl_tatami",
@@ -51840,6 +51840,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 20,
+     "y": 12
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_2",
+       100
+      ]
+     ],
+     "x": 18,
+     "y": 9
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -51864,26 +51884,6 @@
      ],
      "x": 2,
      "y": 0
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 20,
-     "y": 12
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_2",
-       100
-      ]
-     ],
-     "x": 18,
-     "y": 9
     }
    ]
   }
@@ -57240,7 +57240,7 @@
    "trl_mt12_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "fggggggiiggggiiggggiiggg",
@@ -57718,6 +57718,26 @@
     {
      "chunks": [
       [
+       "trl_tank_2",
+       100
+      ]
+     ],
+     "x": 19,
+     "y": 10
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_2",
+       100
+      ]
+     ],
+     "x": 11,
+     "y": 10
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -57742,26 +57762,6 @@
      ],
      "x": 21,
      "y": 14
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_2",
-       100
-      ]
-     ],
-     "x": 19,
-     "y": 10
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_2",
-       100
-      ]
-     ],
-     "x": 11,
-     "y": 10
     }
    ]
   }
@@ -57772,7 +57772,7 @@
    "trl_mt12_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "iiiiiiiiiiiiiiiiiiiiiiii",
     "jlljjjjlljjjclljjjjjjjji",
@@ -58220,6 +58220,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 19,
+     "y": 4
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 2,
+     "y": 12
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -58244,26 +58264,6 @@
      ],
      "x": 14,
      "y": 3
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 19,
-     "y": 4
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 2,
-     "y": 12
     }
    ]
   }
@@ -58274,7 +58274,7 @@
    "trl_mt12_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "deaaaaaaaaaaaaaaaaaaaaaa",
     "dfbbbbbbbbbbbbbbbbbbbbbb",
@@ -58825,6 +58825,16 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 18,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -58849,16 +58859,6 @@
      ],
      "x": 23,
      "y": 6
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 18,
-     "y": 21
     }
    ]
   }
@@ -58869,7 +58869,7 @@
    "trl_mt12_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "aaaaeaabaabaabaabaabaaed",
     "bbbbeaabaabaabaabaabaafd",
@@ -59446,34 +59446,6 @@
     {
      "chunks": [
       [
-       "trl_pres_nap_patrol",
-       5
-      ],
-      [
-       "null",
-       95
-      ]
-     ],
-     "x": 5,
-     "y": 19
-    },
-    {
-     "chunks": [
-      [
-       "trl_pres_nap_riot",
-       2
-      ],
-      [
-       "null",
-       98
-      ]
-     ],
-     "x": 9,
-     "y": 20
-    },
-    {
-     "chunks": [
-      [
        "trl_tank_2",
        100
       ]
@@ -59500,6 +59472,34 @@
      ],
      "x": 3,
      "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       5
+      ],
+      [
+       "null",
+       95
+      ]
+     ],
+     "x": 5,
+     "y": 19
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_riot",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 9,
+     "y": 20
     }
    ]
   }
@@ -65280,7 +65280,7 @@
    "trl_mt13_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "dddddddddddddddddddddddd",
     "deeeeeeggeeeegeeeeeggeee",
@@ -65792,6 +65792,16 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 3,
+     "y": 14
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -65816,16 +65826,6 @@
      ],
      "x": 10,
      "y": 22
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 3,
-     "y": 14
     }
    ]
   }
@@ -65836,7 +65836,7 @@
    "trl_mt13_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "giiggggiiggggiiggggigggf",
@@ -66487,6 +66487,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 3,
+     "y": 12
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 8,
+     "y": 2
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -66511,26 +66531,6 @@
      ],
      "x": 2,
      "y": 17
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 3,
-     "y": 12
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 8,
-     "y": 2
     }
    ]
   }
@@ -66541,7 +66541,7 @@
    "trl_mt13_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "lmffffffffffffmbbbbbbbbb",
     "lmmmmmmmmmmmmmmmmmmmmmmm",
@@ -66953,34 +66953,6 @@
     {
      "chunks": [
       [
-       "trl_pres_nap_patrol",
-       5
-      ],
-      [
-       "null",
-       95
-      ]
-     ],
-     "x": 5,
-     "y": 16
-    },
-    {
-     "chunks": [
-      [
-       "trl_pres_nap_riot",
-       2
-      ],
-      [
-       "null",
-       98
-      ]
-     ],
-     "x": 16,
-     "y": 4
-    },
-    {
-     "chunks": [
-      [
        "trl_tank_2",
        100
       ]
@@ -67007,6 +66979,34 @@
      ],
      "x": 16,
      "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       5
+      ],
+      [
+       "null",
+       95
+      ]
+     ],
+     "x": 5,
+     "y": 16
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_riot",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 16,
+     "y": 4
     }
    ]
   }
@@ -67017,7 +67017,7 @@
    "trl_mt13_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "aaaaaaaaaaigggggggggggih",
     "jiiiiiiiiiiiiiiiiiiiiiih",
@@ -67390,6 +67390,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 19,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 18,
+     "y": 14
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -67414,26 +67434,6 @@
      ],
      "x": 18,
      "y": 15
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 19,
-     "y": 21
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 18,
-     "y": 14
     }
    ]
   }
@@ -72025,7 +72025,7 @@
    "trl_mt14_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "ffffffffffffffffffffffff",
     "fgggggggiigggggiiggggggg",
@@ -72630,34 +72630,6 @@
     {
      "chunks": [
       [
-       "trl_pres_nap_patrol",
-       5
-      ],
-      [
-       "null",
-       95
-      ]
-     ],
-     "x": 10,
-     "y": 21
-    },
-    {
-     "chunks": [
-      [
-       "trl_pres_nap_riot",
-       2
-      ],
-      [
-       "null",
-       98
-      ]
-     ],
-     "x": 9,
-     "y": 3
-    },
-    {
-     "chunks": [
-      [
        "trl_tank_1",
        100
       ]
@@ -72684,6 +72656,34 @@
      ],
      "x": 19,
      "y": 6
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       5
+      ],
+      [
+       "null",
+       95
+      ]
+     ],
+     "x": 10,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_riot",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 9,
+     "y": 3
     }
    ]
   }
@@ -72694,7 +72694,7 @@
    "trl_mt14_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "eeeeeeeeeeeeeeeeeeeeeeee",
     "fffbfhhfffffhhfffffhfffe",
@@ -73298,34 +73298,6 @@
     {
      "chunks": [
       [
-       "trl_pres_nap_patrol",
-       5
-      ],
-      [
-       "null",
-       95
-      ]
-     ],
-     "x": 14,
-     "y": 10
-    },
-    {
-     "chunks": [
-      [
-       "trl_pres_nap_riot",
-       2
-      ],
-      [
-       "null",
-       98
-      ]
-     ],
-     "x": 6,
-     "y": 10
-    },
-    {
-     "chunks": [
-      [
        "trl_tank_1",
        100
       ]
@@ -73352,6 +73324,34 @@
      ],
      "x": 8,
      "y": 15
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       5
+      ],
+      [
+       "null",
+       95
+      ]
+     ],
+     "x": 14,
+     "y": 10
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_riot",
+       2
+      ],
+      [
+       "null",
+       98
+      ]
+     ],
+     "x": 6,
+     "y": 10
     }
    ]
   }
@@ -73362,7 +73362,7 @@
    "trl_mt14_01z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "efbbbbbbbbbbbbbbbbbbbbbb",
     "efbbbbbbbbbbbbbbbbbbbbbb",
@@ -73890,6 +73890,26 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 10,
+     "y": 8
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_2",
+       100
+      ]
+     ],
+     "x": 19,
+     "y": 6
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -73914,26 +73934,6 @@
      ],
      "x": 14,
      "y": 2
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 10,
-     "y": 8
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_2",
-       100
-      ]
-     ],
-     "x": 19,
-     "y": 6
     }
    ]
   }
@@ -73944,7 +73944,7 @@
    "trl_mt14_11z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "bbbbbbbbbbbbbbbbbbbbbbfe",
     "bbbbbbbbbbbbbbbbbbbbbbfe",
@@ -74472,6 +74472,26 @@
     {
      "chunks": [
       [
+       "trl_tank_2",
+       100
+      ]
+     ],
+     "x": 4,
+     "y": 21
+    },
+    {
+     "chunks": [
+      [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 8,
+     "y": 6
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -74496,26 +74516,6 @@
      ],
      "x": 7,
      "y": 21
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_2",
-       100
-      ]
-     ],
-     "x": 4,
-     "y": 21
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 8,
-     "y": 6
     }
    ]
   }
@@ -79126,7 +79126,7 @@
    "trl_mt15_00z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "jjjjjjjjjjjjjjjjjjjjjjjj",
     "jkkkkkkmmkkkkmmkkkkkmkkk",
@@ -79478,6 +79478,16 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 13,
+     "y": 11
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -79502,16 +79512,6 @@
      ],
      "x": 8,
      "y": 18
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 13,
-     "y": 11
     }
    ]
   }
@@ -79522,7 +79522,7 @@
    "trl_mt15_10z1"
   ],
   "object": {
-   "fill_ter": "t_grass",
+   "fill_ter": "t_pavement",
    "rows": [
     "hhhhhhhhhhhhhhhhhhhhhhhh",
     "ikkbiiikkiiiiikiiiikiiih",
@@ -79902,6 +79902,16 @@
     {
      "chunks": [
       [
+       "trl_tank_1",
+       100
+      ]
+     ],
+     "x": 9,
+     "y": 22
+    },
+    {
+     "chunks": [
+      [
        "trl_pres_nap_patrol",
        5
       ],
@@ -79926,16 +79936,6 @@
      ],
      "x": 2,
      "y": 20
-    },
-    {
-     "chunks": [
-      [
-       "trl_tank_1",
-       100
-      ]
-     ],
-     "x": 9,
-     "y": 22
     }
    ]
   }

@@ -1,9 +1,13 @@
-# TRILOBIT title art (keep to 80 columns)
-<color_light_cyan> _____  ____   ___  _       ___   ____   ___  _____ </color>
-<color_light_cyan>|_   _||  _ \ |_ _|| |     / _ \ | __ ) |_ _||_   _|</color>
-<color_light_cyan>  | |  | |_) | | | | |    | | | ||  _ \  | |   | |  </color>
-<color_light_cyan>  | |  |  _ &lt;  | | | |___ | |_| || |_) | | |   | |  </color>
-<color_light_cyan>  |_|  |_| \_\|___||_____| \___/ |____/ |___|  |_|  </color>
-<color_light_cyan>                                                    </color>
+# TRILOBIT title art: hiragana to-ri-ro-bi-tsu in neon block letters (keep to 80 columns)
+<color_pink>    ##        </color>  <color_light_cyan>    ##    ##  </color>  <color_magenta>  ##########  </color>  <color_pink>      ##  ####</color>  <color_light_cyan>##          ##</color>
+<color_pink>    ##        </color>  <color_light_cyan>    ##    ##  </color>  <color_magenta>        ##    </color>  <color_pink>##    ##  ####</color>  <color_light_cyan>    ##    ##  </color>
+<color_pink>    ##  ####  </color>  <color_light_cyan>    ##    ##  </color>  <color_magenta>      ##      </color>  <color_pink>##    ######  </color>  <color_light_cyan>              </color>
+<color_pink>    ######    </color>  <color_light_cyan>    ##    ##  </color>  <color_magenta>    ######    </color>  <color_pink>##  ##    ##  </color>  <color_light_cyan>    ######    </color>
+<color_pink>    ##        </color>  <color_light_cyan>    ##    ##  </color>  <color_magenta>  ##      ##  </color>  <color_pink>##  ##    ##  </color>  <color_light_cyan>  ##      ####</color>
+<color_pink>    ##        </color>  <color_light_cyan>    ##    ##  </color>  <color_magenta>          ##  </color>  <color_pink>##  ##    ##  </color>  <color_light_cyan>            ##</color>
+<color_pink>    ##      ##</color>  <color_light_cyan>    ##  ##    </color>  <color_magenta>          ##  </color>  <color_pink>##  ##    ##  </color>  <color_light_cyan>            ##</color>
+<color_pink>      ##  ##  </color>  <color_light_cyan>      ####    </color>  <color_magenta>    ##  ##    </color>  <color_pink>##    ####    </color>  <color_light_cyan>    ##    ##  </color>
+<color_pink>        ##    </color>  <color_light_cyan>              </color>  <color_magenta>      ##      </color>  <color_pink>              </color>  <color_light_cyan>      ####    </color>
 
-<color_light_blue>        N E O N   /   S T E E L   /   Y E N         </color>
+<color_light_cyan>                          T  R  I  L  O  B  I  T                          </color>
+<color_light_blue>                   N E O N   /   S T E E L   /   Y E N                    </color>

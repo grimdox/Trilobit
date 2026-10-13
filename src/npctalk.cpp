@@ -101,6 +101,7 @@
 #include "npc_class.h"
 #include "npc_opinion.h"
 #include "npctalk.h"
+#include "options.h"
 #include "trl_aware.h"
 #include "npctalk_rules.h"
 #include "npctrade.h"
@@ -1637,7 +1638,7 @@ void avatar::talk_to( std::unique_ptr<talker> talk_with, bool radio_contact,
         }
         if( next.id == "TALK_DONE" || d.topic_stack.empty() ) {
             npc *npc_actor = d.actor( true )->get_npc();
-            if( npc_actor ) {
+            if( npc_actor && get_option<bool>( "TRL_NPC_FAREWELLS" ) ) {
                 if( npc_actor->myclass->bye_message_override.empty() ) {
                     d.actor( true )->say( npc_actor->chat_snippets().snip_bye.translated() );
                 } else {

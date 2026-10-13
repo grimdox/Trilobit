@@ -1877,5 +1877,1662 @@
     }
    ]
   }
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_lot_park_a"
+  ],
+  "object": {
+   "fill_ter": "t_pavement",
+   "rows": [
+    "cccccccccccccccccccccccc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cccccccccccccccccccccccc"
+   ],
+   "terrain": {
+    "a": "t_trl_hazard",
+    "b": "t_trl_slab",
+    "c": "t_sidewalk"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_ticket_machine",
+     "x": 11,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_street_lamp",
+     "x": 3,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_street_lamp",
+     "x": 20,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_neon_cyan",
+     "x": 11,
+     "y": 2
+    },
+    {
+     "furn": "f_trl_trash",
+     "x": 21,
+     "y": 3
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 3,
+     "y": 21
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_tool",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      3,
+      20
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ],
+   "place_vehicles": [
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 5,
+     "y": 5,
+     "chance": 90,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 9,
+     "y": 6,
+     "chance": 90,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 13,
+     "y": 5,
+     "chance": 90,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 17,
+     "y": 6,
+     "chance": 90,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 5,
+     "y": 16,
+     "chance": 90,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 13,
+     "y": 16,
+     "chance": 90,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 17,
+     "y": 15,
+     "chance": 90,
+     "status": 60,
+     "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       8
+      ],
+      [
+       "null",
+       92
+      ]
+     ],
+     "x": 13,
+     "y": 8
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_lot_park_b"
+  ],
+  "object": {
+   "fill_ter": "t_pavement",
+   "rows": [
+    "eeeeeeeeeeeeeeeeeeeeeeee",
+    "edddddddddddddddddddddde",
+    "edddddddddddddddddddddde",
+    "eddddcdddcdddcdddcddddde",
+    "eddddcdddcdddcdddcddddde",
+    "eddddcdddcdddcdddcddddde",
+    "eddddcdddcdddcdddcddddde",
+    "eddddcdddcdddcdddcddddde",
+    "eddddcdddcdddcdddcddddde",
+    "edddddddddddddddddddddde",
+    "edddddddddddddddddffffde",
+    "edddddddddddddddddabbfde",
+    "edddddddddddddddddfbbfde",
+    "edddddddddddddddddffffde",
+    "edddddddddddddddddddddde",
+    "eddddcdddcdddcdddcddddde",
+    "eddddcdddcdddcdddcddddde",
+    "eddddcdddcdddcdddcddddde",
+    "eddddcdddcdddcdddcddddde",
+    "eddddcdddcdddcdddcddddde",
+    "eddddcdddcdddcdddcddddde",
+    "edddddddddddddddddddddde",
+    "edddddddddddddddddddddde",
+    "eeeeeeeeeeeeeeeeeeeeeeee"
+   ],
+   "terrain": {
+    "a": "t_trl_door_c",
+    "b": "t_trl_floor_corp",
+    "c": "t_trl_hazard",
+    "d": "t_trl_slab",
+    "e": "t_sidewalk",
+    "f": "t_trl_wall_corp"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_console",
+     "x": 20,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_chair_office",
+     "x": 19,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_neon_amber",
+     "x": 20,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_street_lamp",
+     "x": 3,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_street_lamp",
+     "x": 16,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_ticket_machine",
+     "x": 14,
+     "y": 11
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_tool",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      3,
+      20
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ],
+   "place_vehicles": [
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 6,
+     "y": 4,
+     "chance": 85,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 10,
+     "y": 5,
+     "chance": 85,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 14,
+     "y": 4,
+     "chance": 85,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 6,
+     "y": 17,
+     "chance": 85,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 10,
+     "y": 18,
+     "chance": 85,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 14,
+     "y": 17,
+     "chance": 85,
+     "status": 60,
+     "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       8
+      ],
+      [
+       "null",
+       92
+      ]
+     ],
+     "x": 19,
+     "y": 3
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_lot_park_c"
+  ],
+  "object": {
+   "fill_ter": "t_pavement",
+   "rows": [
+    "cccccccccccccccccccccccc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbabbbabbbabbbabbbabbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cbbbbbbbbbbbbbbbbbbbbbbc",
+    "cccccccccccccccccccccccc"
+   ],
+   "terrain": {
+    "a": "t_trl_hazard",
+    "b": "t_trl_slab",
+    "c": "t_sidewalk"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_charging_pod",
+     "x": 6,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_charging_pod",
+     "x": 6,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_charging_pod",
+     "x": 10,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_charging_pod",
+     "x": 10,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_charging_pod",
+     "x": 14,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_charging_pod",
+     "x": 14,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_charging_pod",
+     "x": 18,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_charging_pod",
+     "x": 18,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_street_lamp",
+     "x": 3,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_street_lamp",
+     "x": 20,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_neon_green",
+     "x": 11,
+     "y": 2
+    },
+    {
+     "furn": "f_trl_neon_green",
+     "x": 11,
+     "y": 21
+    },
+    {
+     "furn": "f_trl_ticket_machine",
+     "x": 11,
+     "y": 11
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_tech",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      3,
+      20
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ],
+   "place_vehicles": [
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 5,
+     "y": 5,
+     "chance": 80,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 9,
+     "y": 5,
+     "chance": 80,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 13,
+     "y": 6,
+     "chance": 80,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 17,
+     "y": 5,
+     "chance": 80,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 5,
+     "y": 16,
+     "chance": 80,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 9,
+     "y": 17,
+     "chance": 80,
+     "status": 60,
+     "rotation": 90
+    },
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 17,
+     "y": 16,
+     "chance": 80,
+     "status": 60,
+     "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       8
+      ],
+      [
+       "null",
+       92
+      ]
+     ],
+     "x": 19,
+     "y": 10
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_lot_park_d"
+  ],
+  "object": {
+   "fill_ter": "t_pavement",
+   "rows": [
+    "bbbbbbbbbbbbbbbbbbbbbbbb",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "baaaaaaaaaaaaaaaaaaaaaab",
+    "bbbbbbbbbbbbbbbbbbbbbbbb"
+   ],
+   "terrain": {
+    "a": "t_trl_slab",
+    "b": "t_sidewalk"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 4,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 5,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 6,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 7,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 14,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 15,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 16,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 17,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 4,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 5,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 6,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 7,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 14,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 15,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 16,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 17,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 4,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 5,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 6,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 7,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 14,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 15,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 16,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 17,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 4,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 5,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 6,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 7,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 14,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 15,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 16,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 17,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 4,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 5,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 6,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 7,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 14,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 15,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 16,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 17,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 4,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 5,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 6,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 7,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 14,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 15,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 16,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_bike_rack",
+     "x": 17,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_charging_pod",
+     "x": 11,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_charging_pod",
+     "x": 12,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_charging_pod",
+     "x": 11,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_charging_pod",
+     "x": 12,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_street_lamp",
+     "x": 3,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_street_lamp",
+     "x": 20,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_neon_cyan",
+     "x": 11,
+     "y": 2
+    },
+    {
+     "furn": "f_trl_ticket_machine",
+     "x": 12,
+     "y": 11
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_tool",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      3,
+      20
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ],
+   "place_vehicles": [
+    {
+     "vehicle": "trl_veh_mid",
+     "x": 10,
+     "y": 10,
+     "chance": 60,
+     "status": 60,
+     "rotation": 90
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       8
+      ],
+      [
+       "null",
+       92
+      ]
+     ],
+     "x": 14,
+     "y": 12
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_lot_build_a"
+  ],
+  "object": {
+   "fill_ter": "t_pavement",
+   "rows": [
+    "dddddddddddddddddddddddd",
+    "daaaaaaaaaaaaaaaaaaaaaad",
+    "daffffffffffffffffffffad",
+    "dafaaaaaaaaaaaaaaaaaafad",
+    "dafaaaaaaaaaaaaaaaaaafad",
+    "dafaaaaaaaaaaaaaaaaaafad",
+    "dafaaaeeeeeeeeeeeeaaafad",
+    "dafaaaecccceccccceaaafad",
+    "dafaaaecccceccccceaaafad",
+    "dafaaaecccceccccceaaafad",
+    "dafaaaecccceccccceaaafad",
+    "dafaaaecccceccccceaaafad",
+    "dafaaaecccceccccceaaafad",
+    "dafaaaccccccccccccaaafad",
+    "dafaaaccccccccccccaaafad",
+    "dafaaaaaaaaaaaaaaaaaafad",
+    "dafaaaaaaaaaaaaaaaaaafad",
+    "dafaaaaaaaaaaaaaaaaaafad",
+    "dafaaaaaaaaaaaaaaaaaafad",
+    "dafaaaaaaaaaaaaaaaaaafad",
+    "dafaaaaaaaaaaaaaaaaaafad",
+    "dafffffffffbffffffffffad",
+    "daaaaaaaaaaaaaaaaaaaaaad",
+    "dddddddddddddddddddddddd"
+   ],
+   "terrain": {
+    "a": "t_trl_gravel",
+    "b": "t_trl_shutter_c",
+    "c": "t_trl_slab",
+    "d": "t_sidewalk",
+    "e": "t_trl_wall_concrete",
+    "f": "t_trl_wall_rust"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_crate",
+     "x": 4,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 8,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 13,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 18,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 16,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 6,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 8,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 6,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 19,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_workbench",
+     "x": 4,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_workbench",
+     "x": 19,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_sentry_lamp",
+     "x": 3,
+     "y": 3
+    },
+    {
+     "furn": "f_trl_sentry_lamp",
+     "x": 20,
+     "y": 3
+    },
+    {
+     "furn": "f_trl_sentry_lamp",
+     "x": 3,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_sentry_lamp",
+     "x": 20,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_fire_drum",
+     "x": 10,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_neon_amber",
+     "x": 11,
+     "y": 1
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_tool",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      3,
+      20
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       35
+      ],
+      [
+       "null",
+       65
+      ]
+     ],
+     "x": 14,
+     "y": 14
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       20
+      ],
+      [
+       "null",
+       80
+      ]
+     ],
+     "x": 13,
+     "y": 11
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_lot_build_b"
+  ],
+  "object": {
+   "fill_ter": "t_pavement",
+   "rows": [
+    "ffffffffffffffffffffffff",
+    "fccccccccccccccccccccccf",
+    "fciiiiiiiiiiiiiiiiiiiicf",
+    "fcihhhhhhhcccccccccccicf",
+    "fcihbbbbbhcccccccccccicf",
+    "fcihbbbbbhccggggggggcicf",
+    "fcihbbbbbhcceeeeeeegcicf",
+    "fcihbbbbbhcceeeeeeegcicf",
+    "fcihhhahhhcceeeeeeegcicf",
+    "fciccccccccceeeeeeegcicf",
+    "fciccccccccceeeeeeegcicf",
+    "fciccccccccceeeeeeegcicf",
+    "fciccccccccceeeeeeegcicf",
+    "fciccccccccccccccccccicf",
+    "fciccccccccccccccccccicf",
+    "fciccccccccccccccccccicf",
+    "fciccccccccccccccccccicf",
+    "fciccccccccccccccccccicf",
+    "fciccccccccccccccccccicf",
+    "fciccccccccccccccccccicf",
+    "fciccccccccccccccccccicf",
+    "fciiiiiiiiidiiiiiiiiiicf",
+    "fccccccccccccccccccccccf",
+    "ffffffffffffffffffffffff"
+   ],
+   "terrain": {
+    "a": "t_trl_door_c",
+    "b": "t_trl_floor_corp",
+    "c": "t_trl_gravel",
+    "d": "t_trl_shutter_c",
+    "e": "t_trl_slab",
+    "f": "t_sidewalk",
+    "g": "t_trl_wall_concrete",
+    "h": "t_trl_wall_corp",
+    "i": "t_trl_wall_rust"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_desk_corp",
+     "x": 5,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_chair_office",
+     "x": 6,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_console",
+     "x": 8,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_floor_lamp",
+     "x": 4,
+     "y": 4
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 13,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 6,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 5,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 8,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 19,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 17,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 11,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 14,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 12,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 7,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 8,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 10,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_fire_drum",
+     "x": 11,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_fire_drum",
+     "x": 16,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_sentry_lamp",
+     "x": 3,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_sentry_lamp",
+     "x": 20,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_neon_amber",
+     "x": 11,
+     "y": 1
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_tool",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      3,
+      20
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       35
+      ],
+      [
+       "null",
+       65
+      ]
+     ],
+     "x": 6,
+     "y": 14
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       20
+      ],
+      [
+       "null",
+       80
+      ]
+     ],
+     "x": 5,
+     "y": 6
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_lot_build_c"
+  ],
+  "object": {
+   "fill_ter": "t_pavement",
+   "rows": [
+    "dddddddddddddddddddddddd",
+    "dccccccccccccccccccccccd",
+    "dcffffffffffffffffffffcd",
+    "dcfccccccccccccccccccfcd",
+    "dcfccccccccccccccccccfcd",
+    "dcfccccccccccccccccccfcd",
+    "dcfccceeeeeeeeeeeecccfcd",
+    "dcfccceccccccccccecccfcd",
+    "dcfccceccccccccccecccfcd",
+    "dcfccceccccccccccecccfcd",
+    "dcfccceccccccccccecccfcd",
+    "dcfccceccccccccccecccfcd",
+    "dcfccceccccccccccecccfcd",
+    "dcfccceccccccccccecccfcd",
+    "dcfccceccccccccccecccfcd",
+    "dcfccceccccccccccecccfcd",
+    "dcfccceeeeeaaeeeeecccfcd",
+    "dcfccccccccccccccccccfcd",
+    "dcfccccccccccccccccccfcd",
+    "dcfccccccccccccccccccfcd",
+    "dcfccccccccccccccccccfcd",
+    "dcfffffffffbffffffffffcd",
+    "dccccccccccccccccccccccd",
+    "dddddddddddddddddddddddd"
+   ],
+   "terrain": {
+    "a": "t_trl_floor_steel",
+    "b": "t_trl_shutter_c",
+    "c": "t_trl_slab",
+    "d": "t_sidewalk",
+    "e": "t_trl_wall_pipes",
+    "f": "t_trl_wall_rust"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_workbench",
+     "x": 8,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_workbench",
+     "x": 15,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 10,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 13,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 13,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 18,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 11,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 19,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 15,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 15,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 19,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 6,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 10,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_sentry_lamp",
+     "x": 3,
+     "y": 3
+    },
+    {
+     "furn": "f_trl_sentry_lamp",
+     "x": 20,
+     "y": 3
+    },
+    {
+     "furn": "f_trl_sentry_lamp",
+     "x": 3,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_sentry_lamp",
+     "x": 20,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_sentry_lamp",
+     "x": 11,
+     "y": 3
+    },
+    {
+     "furn": "f_trl_fire_drum",
+     "x": 5,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_fire_drum",
+     "x": 18,
+     "y": 12
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_tool",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      3,
+      20
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       35
+      ],
+      [
+       "null",
+       65
+      ]
+     ],
+     "x": 4,
+     "y": 5
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       20
+      ],
+      [
+       "null",
+       80
+      ]
+     ],
+     "x": 19,
+     "y": 18
+    }
+   ]
+  }
+ },
+ {
+  "type": "mapgen",
+  "om_terrain": [
+   "trl_lot_build_d"
+  ],
+  "object": {
+   "fill_ter": "t_pavement",
+   "rows": [
+    "cccccccccccccccccccccccc",
+    "caaaaaaaaaaaaaaaaaaaaaac",
+    "caeeeeeeeeeeeeeeeeeeeeac",
+    "caeaaaaaaaaaaaaaaaaaaeac",
+    "caeaddddddaaaaaaaaaaaeac",
+    "caeadaaaaaaaaaaaaaaaaeac",
+    "caeadaaaaaaaaaaaaaaaaeac",
+    "caeadaaaaaaaaaaaaaaaaeac",
+    "caeadaaaaaaaaaaaaaaadeac",
+    "caeadaaaaaaaaaaaaaaadeac",
+    "caeaaaaaaaaaaaaaaaaadeac",
+    "caeaaaaaaaaaaaaaaaaadeac",
+    "caeaaaaaaaaaaaaaaaaadeac",
+    "caeaaaaaaaaaaaaaaaaadeac",
+    "caeaaaaaaaaaaadddddddeac",
+    "caeaaaaaaaaaaaaaaaaaaeac",
+    "caeaaaaaaaaaaaaaaaaaaeac",
+    "caeaaaaaaaaaaaaaaaaaaeac",
+    "caeaaaaaaaaaaaaaaaaaaeac",
+    "caeaaaaaaaaaaaaaaaaaaeac",
+    "caeaaaaaaaaaaaaaaaaaaeac",
+    "caeeeeeeeeebeeeeeeeeeeac",
+    "caaaaaaaaaaaaaaaaaaaaaac",
+    "cccccccccccccccccccccccc"
+   ],
+   "terrain": {
+    "a": "t_trl_gravel",
+    "b": "t_trl_shutter_c",
+    "c": "t_sidewalk",
+    "d": "t_trl_wall_concrete",
+    "e": "t_trl_wall_rust"
+   },
+   "place_furniture": [
+    {
+     "furn": "f_trl_crate",
+     "x": 14,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 5,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 15,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 17,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 6,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 7,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 3,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 11,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 6,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_crate",
+     "x": 9,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 8,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 16,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 20,
+     "y": 6
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 20,
+     "y": 5
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 18,
+     "y": 8
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 11,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_pipes",
+     "x": 11,
+     "y": 3
+    },
+    {
+     "furn": "f_trl_trash",
+     "x": 11,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_trash",
+     "x": 6,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_trash",
+     "x": 14,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_workbench",
+     "x": 11,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_fire_drum",
+     "x": 11,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_fire_drum",
+     "x": 16,
+     "y": 7
+    },
+    {
+     "furn": "f_trl_sentry_lamp",
+     "x": 3,
+     "y": 3
+    },
+    {
+     "furn": "f_trl_sentry_lamp",
+     "x": 20,
+     "y": 3
+    },
+    {
+     "furn": "f_trl_sentry_lamp",
+     "x": 20,
+     "y": 20
+    }
+   ],
+   "place_items": [
+    {
+     "item": "trl_loot_tool",
+     "x": [
+      3,
+      20
+     ],
+     "y": [
+      3,
+      20
+     ],
+     "chance": 40,
+     "repeat": 4
+    }
+   ],
+   "place_nested": [
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       35
+      ],
+      [
+       "null",
+       65
+      ]
+     ],
+     "x": 5,
+     "y": 13
+    },
+    {
+     "chunks": [
+      [
+       "trl_pres_nap_patrol",
+       20
+      ],
+      [
+       "null",
+       80
+      ]
+     ],
+     "x": 15,
+     "y": 9
+    }
+   ]
+  }
  }
 ]

@@ -335,7 +335,7 @@ def register(bld, G):
         for (a, b_, c, d) in strips: L.fill(a, b_, c, d, sfl)
         if z == 0:
             L.fill(15, 15, 32, 32, "pave")
-            L.fill(17, 17, 30, 30, "grass"); L.fill(19, 19, 28, 28, "water"); L.fill(23, 19, 24, 28, "floor_wood"); L.fill(19, 23, 28, 24, "floor_wood")
+            L.fill(17, 17, 30, 30, "pave"); L.fill(19, 19, 28, 28, "water"); L.fill(23, 19, 24, 28, "floor_wood"); L.fill(19, 23, 28, 24, "floor_wood")
             for (x, y) in ((18, 18), (29, 18), (18, 29), (29, 29)): L.f_("koi_lantern", x, y)
             for (x, y) in ((16, 20), (31, 20), (16, 27), (31, 27), (22, 16), (25, 31)): L.f_("lantern_stone", x, y)
             for (x, y) in ((17, 17), (30, 17), (17, 30), (30, 30)): L.f_("bonsai", x, y)

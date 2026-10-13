@@ -1232,7 +1232,7 @@ std::string talker_character_const::skill_training_text( const_talker const &stu
     const int next_level_exercise = skill_level_obj.knowledgeExperience();
 
     //~Skill name: current level (experience) -> next level (experience) (cost in dollars)
-    return string_format( cost > 0 ?  _( "%s: %d (%d%%) -> %d (%d%%) (cost $%d)" ) :
+    return string_format( cost > 0 ?  _( "%s: %d (%d%%) -> %d (%d%%) (cost ¥%d)" ) :
                           _( "%s: %d (%d%%) -> %d (%d%%)" ), skill.obj().name(), cur_level,
                           cur_level_exercise, next_level, next_level_exercise, cost / 100 );
 }
@@ -1266,7 +1266,7 @@ std::string talker_character_const::proficiency_training_text( const_talker cons
 
     if( cost > 0 ) {
         //~ Proficiency name: (current_practice) -> (next_practice) (cost in dollars)
-        return string_format( _( "%s: (%2.0f%%) -> (%s) (cost $%d)" ), name, pct_before, after_str,
+        return string_format( _( "%s: (%2.0f%%) -> (%s) (cost ¥%d)" ), name, pct_before, after_str,
                               cost / 100 );
     }
     //~ Proficiency name: (current_practice) -> (next_practice)

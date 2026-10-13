@@ -100,6 +100,87 @@ def _(g):
     for x in range(4, 20, 3): g.f_("neon_red", x, 3); g.f_("bar_stool", x, 5)
     g.f_("fire_drum", 3, 20); g.f_("fire_drum", 20, 20); g.f_("vending", 2, 12); g.f_("tv_static", 21, 12)
 
+
+# ---- downtown fillers: any downtown spot that would be left empty becomes a parking lot or a construction site
+CARS = {}
+def cars(pid, spots):
+    CARS[f"trl_lot_{pid}"] = spots
+
+def bays(g, xs, y0, y1):
+    for x in xs: g.fill(x, y0, x, y1, "hazard")
+
+@lot("park_a", "surface parking lot", "p", "light_blue", "tool", base="slab")
+def _(g):
+    bays(g, (4, 8, 12, 16, 20), 4, 9); bays(g, (4, 8, 12, 16, 20), 14, 19)
+    g.f_("ticket_machine", 11, 11); g.f_("street_lamp", 3, 11); g.f_("street_lamp", 20, 11); g.f_("neon_cyan", 11, 2)
+    g.f_("trash", 21, 3); g.f_("bike_rack", 3, 21)
+cars("park_a", [(5, 5, 90), (9, 6, 90), (13, 5, 90), (17, 6, 90), (5, 16, 90), (13, 16, 90), (17, 15, 90)])
+@lot("park_b", "attendant parking lot", "p", "light_blue", "tool", base="slab")
+def _(g):
+    bays(g, (5, 9, 13, 17), 3, 8); bays(g, (5, 9, 13, 17), 15, 20)
+    g.box(18, 10, 21, 13, "wall_corp", "floor_corp"); g.door("door_c", 18, 11)
+    g.f_("console", 20, 11); g.f_("chair_office", 19, 12); g.f_("neon_amber", 20, 9)
+    g.f_("street_lamp", 3, 11); g.f_("street_lamp", 16, 11); g.f_("ticket_machine", 14, 11)
+cars("park_b", [(6, 4, 85), (10, 5, 85), (14, 4, 85), (6, 17, 85), (10, 18, 85), (14, 17, 85)])
+@lot("park_c", "charging lot", "p", "light_green", "tech", base="slab")
+def _(g):
+    bays(g, (4, 8, 12, 16, 20), 4, 8); bays(g, (4, 8, 12, 16, 20), 15, 19)
+    for x in (6, 10, 14, 18):
+        g.f_("charging_pod", x, 9); g.f_("charging_pod", x, 14)
+    g.f_("street_lamp", 3, 11); g.f_("street_lamp", 20, 11); g.f_("neon_green", 11, 2); g.f_("neon_green", 11, 21); g.f_("ticket_machine", 11, 11)
+cars("park_c", [(5, 5, 80), (9, 5, 80), (13, 6, 80), (17, 5, 80), (5, 16, 80), (9, 17, 80), (17, 16, 80)])
+@lot("park_d", "bike and scooter lot", "p", "cyan", "tool", base="slab")
+def _(g):
+    for y in range(4, 20, 3):
+        for x in (4, 5, 6, 7): g.f_("bike_rack", x, y)
+        for x in (14, 15, 16, 17): g.f_("bike_rack", x, y)
+    g.f_("charging_pod", 11, 6); g.f_("charging_pod", 12, 6); g.f_("charging_pod", 11, 17); g.f_("charging_pod", 12, 17)
+    g.f_("street_lamp", 3, 11); g.f_("street_lamp", 20, 11); g.f_("neon_cyan", 11, 2); g.f_("ticket_machine", 12, 11)
+cars("park_d", [(10, 10, 60)])
+
+@lot("build_a", "construction site", "c", "yellow", "tool", base="gravel")
+def _(g):
+    g.hwall(2, 21, 2, "wall_rust"); g.hwall(2, 21, 21, "wall_rust"); g.vwall(2, 2, 21, "wall_rust"); g.vwall(21, 2, 21, "wall_rust")
+    g.door("shutter_c", 11, 21)
+    g.fill(6, 6, 17, 14, "slab")
+    for x in (6, 11, 17): g.vwall(x, 6, 12, "wall_concrete")
+    g.hwall(6, 17, 6, "wall_concrete")
+    for x, y in ((4, 18), (8, 18), (13, 18), (18, 17)): g.f_("crate", x, y)
+    g.scatter("pipes", 3, 15, 20, 20, 5); g.f_("workbench", 4, 4); g.f_("workbench", 19, 4)
+    for x, y in ((3, 3), (20, 3), (3, 20), (20, 20)): g.f_("sentry_lamp", x, y)
+    g.f_("fire_drum", 10, 17); g.f_("neon_amber", 11, 1)
+@lot("build_b", "building site with site office", "c", "yellow", "tool", base="gravel")
+def _(g):
+    g.hwall(2, 21, 2, "wall_rust"); g.hwall(2, 21, 21, "wall_rust"); g.vwall(2, 2, 21, "wall_rust"); g.vwall(21, 2, 21, "wall_rust")
+    g.door("shutter_c", 11, 21)
+    g.box(3, 3, 9, 8, "wall_corp", "floor_corp"); g.door("door_c", 6, 8)
+    g.f_("desk_corp", 5, 5); g.f_("chair_office", 6, 5); g.f_("console", 8, 4); g.f_("floor_lamp", 4, 4)
+    g.fill(12, 5, 19, 12, "slab"); g.hwall(12, 19, 5, "wall_concrete"); g.vwall(19, 5, 12, "wall_concrete")
+    g.scatter("crate", 3, 10, 20, 20, 8); g.scatter("pipes", 3, 10, 20, 20, 4)
+    for x, y in ((11, 13), (16, 16)): g.f_("fire_drum", x, y)
+    g.f_("sentry_lamp", 3, 20); g.f_("sentry_lamp", 20, 20); g.f_("neon_amber", 11, 1)
+@lot("build_c", "scaffolded tower foundation", "c", "brown", "tool", base="slab")
+def _(g):
+    g.hwall(2, 21, 2, "wall_rust"); g.hwall(2, 21, 21, "wall_rust"); g.vwall(2, 2, 21, "wall_rust"); g.vwall(21, 2, 21, "wall_rust")
+    g.door("shutter_c", 11, 21)
+    g.box(6, 6, 17, 16, "wall_pipes", "slab")
+    g.door("door_steel", 11, 16) if False else None
+    g.put("floor_steel", 11, 16); g.put("floor_steel", 12, 16)
+    g.f_("workbench", 8, 9); g.f_("workbench", 15, 9); g.f_("crate", 10, 12); g.f_("crate", 13, 12)
+    g.scatter("crate", 3, 17, 20, 20, 5); g.scatter("pipes", 3, 17, 20, 20, 4)
+    for x, y in ((3, 3), (20, 3), (3, 20), (20, 20), (11, 3)): g.f_("sentry_lamp", x, y)
+    g.f_("fire_drum", 5, 12); g.f_("fire_drum", 18, 12)
+@lot("build_d", "excavation and materials yard", "c", "brown", "tool", base="gravel")
+def _(g):
+    g.hwall(2, 21, 2, "wall_rust"); g.hwall(2, 21, 21, "wall_rust"); g.vwall(2, 2, 21, "wall_rust"); g.vwall(21, 2, 21, "wall_rust")
+    g.door("shutter_c", 11, 21)
+    for (x0, y0, x1, y1) in ((4, 4, 9, 4), (4, 4, 4, 9), (14, 14, 20, 14), (20, 8, 20, 14)):
+        if x0 == x1: g.vwall(x0, y0, y1, "wall_concrete")
+        else: g.hwall(x0, x1, y0, "wall_concrete")
+    g.scatter("crate", 3, 3, 20, 20, 10); g.scatter("pipes", 3, 3, 20, 20, 7); g.scatter("trash", 3, 3, 20, 20, 3)
+    g.f_("workbench", 11, 16); g.f_("fire_drum", 11, 11); g.f_("fire_drum", 16, 7)
+    for x, y in ((3, 3), (20, 3), (3, 20), (20, 20)): g.f_("sentry_lamp", x, y)
+
 def emit():
     om, cb, mg = [], [], []
     for L in LOTS:
@@ -118,6 +199,8 @@ def emit():
         obj = {"fill_ter": "t_pavement", "rows": rows, "terrain": {ch[k]: T[k]["id"] for k in keys},
                "place_furniture": [{"furn": F[k]["id"], "x": x, "y": y} for k, x, y in g.f],
                "place_items": [{"item": f"trl_loot_{L['loot']}", "x": [3, 20], "y": [3, 20], "chance": 40, "repeat": 4}]}
+        if L["id"] in CARS:
+            obj["place_vehicles"] = [{"vehicle": "trl_veh_mid", "x": x, "y": y, "chance": ch, "status": 60, "rotation": 90} for x, y, ch in CARS[L["id"]]]
         mg.append({"type": "mapgen", "om_terrain": [L["id"]], "object": obj})
         om.append({"type": "overmap_terrain", "id": L["id"], "name": L["name"], "sym": L["sym"], "color": L["color"],
                    "see_cost": "full_high", "vision_levels": "large_city_building", "flags": ["SIDEWALK"]})
@@ -130,7 +213,7 @@ def emit():
     ro = json.load(open(ro_path))
     parks = ro[0]["city"]["parks"]
     w = 1296 * 2 // 5     # about a tenth of all city squares
-    for L in LOTS: parks[L["id"]] = max(1, w)
+    for L in LOTS: parks[L["id"]] = 0 if L["id"].startswith(("trl_lot_park_", "trl_lot_build_")) else max(1, w)
     json.dump(ro, open(ro_path, "w"), indent=1)
     print(len(LOTS), "lots")
 

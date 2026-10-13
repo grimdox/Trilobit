@@ -1,0 +1,19 @@
+[
+ {
+  "type": "effect_on_condition",
+  "id": "EOC_PORTAL_STORM_WARN_OR_CAUSE_RECURRING",
+  "//": "Trilobit: no portal storms.  This replaces the stock recurring event that starts them with one that never fires.",
+  "global": true,
+  "recurrence": [ "1000 days", "2000 days" ],
+  "condition": { "math": [ "1", "==", "0" ] },
+  "effect": [  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "EOC_PORTAL_EARLY_MESSAGES",
+  "global": true,
+  "recurrence": [ "1000 days", "2000 days" ],
+  "condition": { "math": [ "1", "==", "0" ] },
+  "effect": [  ]
+ }
+]

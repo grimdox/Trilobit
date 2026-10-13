@@ -6301,6 +6301,41 @@ void overmap::place_cities()
         }
     }
     flood_fill_city_tiles();
+
+    // Trilobit: no blank ground downtown.  Open land (field or forest) inside the mid-rise and tower
+    // districts (the inner 55% of a city) that borders a built tile becomes a parking lot or a construction site.
+    static const char *fillers[8] = { "trl_lot_park_a_north", "trl_lot_park_b_north", "trl_lot_park_c_north", "trl_lot_park_d_north",
+                                      "trl_lot_build_a_north", "trl_lot_build_b_north", "trl_lot_build_c_north", "trl_lot_build_d_north"
+                                    };
+    const auto is_open_land = [this]( const tripoint_om_omt & q ) {
+        const oter_id &o = ter( q );
+        return o == settings->default_oter[OVERMAP_DEPTH] || is_ot_match( "field", o, ot_match_type::contains ) ||
+               is_ot_match( "forest", o, ot_match_type::contains );
+    };
+    for( const city &c : cities ) {
+        const int r = c.size;
+        for( int dy = -r; dy <= r; ++dy ) {
+            for( int dx = -r; dx <= r; ++dx ) {
+                const tripoint_om_omt q( c.pos.x() + dx, c.pos.y() + dy, 0 );
+                if( !inbounds( q, 1 ) || ( trig_dist( q.xy(), c.pos ) * 100 ) / std::max( c.size, 1 ) >= 55 ||
+                    !is_open_land( q ) ) {
+                    continue;
+                }
+                const bool next_to_built = !is_open_land( tripoint_om_omt( q.x(), q.y() - 1, 0 ) ) ||
+                                           !is_open_land( tripoint_om_omt( q.x(), q.y() + 1, 0 ) ) ||
+                                           !is_open_land( tripoint_om_omt( q.x() + 1, q.y(), 0 ) ) ||
+                                           !is_open_land( tripoint_om_omt( q.x() - 1, q.y(), 0 ) );
+                if( !next_to_built ) {
+                    continue;
+                }
+                const oter_str_id lot_id( fillers[rng( 0, 7 )] );
+                if( lot_id.is_valid() ) {
+                    ter_set( q, lot_id.id() );
+                    city_tiles.insert( q.xy() );
+                }
+            }
+        }
+    }
 }
 
 overmap_special_id overmap::pick_random_building_to_place( int town_dist, int town_size,

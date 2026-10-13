@@ -416,6 +416,14 @@ def p_machine(kind, col, seed):
     return cv.done(seed, 2)
 
 
+def p_unknown():
+    cvu = Canvas(48, 36)
+    cvu.poly(diamond(36, 1.0), (60, 20, 80))
+    cvu.line([(18, 14), (30, 22)], (255, 80, 220), 1.2)
+    cvu.line([(30, 14), (18, 22)], (255, 80, 220), 1.2)
+    return cvu.done()
+
+
 def p_marker(kind):
     cv = Canvas(48, 36)
     d = diamond(36, 1.0)
@@ -585,7 +593,8 @@ ASCII_RGB = {"BLACK": (0, 0, 0), "WHITE": (200, 200, 205), "RED": (190, 40, 50),
 
 def make_fallback(repo, out):
     font = ImageFont.truetype(os.path.join(repo, "data/font/Terminus.ttf"), 22)
-    im = Image.new("RGBA", (16 * 48, 256 * 24), (0, 0, 0, 0))
+    cw, ch_ = CONF["cell"]
+    im = Image.new("RGBA", (16 * cw, 256 * ch_), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
     for ci, (off, bold, cname) in enumerate(ASCII):
         c = ASCII_RGB[cname]
@@ -595,19 +604,23 @@ def make_fallback(repo, out):
             c = (10, 10, 14)
         for g in range(256):
             idx = off + g
-            x, y = (idx % 16) * 48, (idx // 16) * 24
+            x, y = (idx % 16) * cw, (idx // 16) * ch_
             if g < 32 or g == 127:
                 continue
             ch = chr(g) if g < 127 else None
             if ch is None:
                 continue
-            d.text((x + 24, y + 12), ch, font=font, fill=c + (255,), anchor="mm")
+            d.text((x + cw // 2, y + ch_ // 2), ch, font=font, fill=c + (255,), anchor="mm")
     im.save(out)
+
+
+CONF = {"dir": "gfx/Bouma", "name": "Bouma", "cell": (48, 24),
+        "info": {"pixelscale": 1, "width": 48, "height": 24, "zlevel_height": 108, "iso": True, "retract_dist_min": 2.5, "retract_dist_max": 6.0}}
 
 
 def main(stock, repo):
     D = defs.load(stock, os.path.join(repo, "data/mods/trilobit"))
-    out = os.path.join(repo, "gfx/Bouma")
+    out = os.path.join(repo, CONF["dir"])
     os.makedirs(out, exist_ok=True)
     sheets = {n: Sheet(n) for n in SHEETS}
     sprite_of = {}   # key -> (sheet, local index)
@@ -731,11 +744,7 @@ def main(stock, repo):
         entries.setdefault(tgt, []).extend(ids)
     # unknown tile
     key = ("k", "unknown")
-    cvu = Canvas(48, 36)
-    cvu.poly(diamond(36, 1.0), (60, 20, 80))
-    cvu.line([(18, 14), (30, 22)], (255, 80, 220), 1.2)
-    cvu.line([(30, 14), (18, 22)], (255, 80, 220), 1.2)
-    sprite_of[key] = ("flat", sheets["flat"].add(cvu.done()))
+    sprite_of[key] = ("flat", sheets["flat"].add(p_unknown()))
     entries.setdefault(sprite_of[key], []).append("unknown")
 
     # write sheets and config
@@ -755,10 +764,10 @@ def main(stock, repo):
         base += sh.capacity()
     make_fallback(repo, os.path.join(out, "fallback.png"))
     cfg_sheets.append({"file": "fallback.png", "tiles": [], "ascii": [{"offset": o, "bold": b, "color": c} for o, b, c in ASCII]})
-    cfg = {"tile_info": [{"pixelscale": 1, "width": 48, "height": 24, "zlevel_height": 108, "iso": True, "retract_dist_min": 2.5, "retract_dist_max": 6.0}],
+    cfg = {"tile_info": [CONF["info"]],
            "tiles-new": cfg_sheets}
     json.dump(cfg, open(os.path.join(out, "tile_config.json"), "w"), indent=1)
-    open(os.path.join(out, "tileset.txt"), "w").write("NAME: Bouma\nVIEW: Bouma\nJSON: tile_config.json\nTILESET: tiles.png\n")
+    open(os.path.join(out, "tileset.txt"), "w").write("NAME: %s\nVIEW: %s\nJSON: tile_config.json\nTILESET: tiles.png\n" % (CONF["name"], CONF["name"]))
     n_ids = sum(len(v) for v in entries.values())
     print({n: len(sheets[n].sprites) for n in SHEETS}, "sprites;", n_ids, "ids covered")
     contact(sheets, out)

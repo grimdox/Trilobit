@@ -144,6 +144,102 @@
   ]
  },
  {
+  "type": "overmap_terrain",
+  "id": "trl_lot_park_a",
+  "name": "surface parking lot",
+  "sym": "p",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_park_b",
+  "name": "attendant parking lot",
+  "sym": "p",
+  "color": "light_blue",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_park_c",
+  "name": "charging lot",
+  "sym": "p",
+  "color": "light_green",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_park_d",
+  "name": "bike and scooter lot",
+  "sym": "p",
+  "color": "cyan",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_build_a",
+  "name": "construction site",
+  "sym": "c",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_build_b",
+  "name": "building site with site office",
+  "sym": "c",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_build_c",
+  "name": "scaffolded tower foundation",
+  "sym": "c",
+  "color": "brown",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
+  "type": "overmap_terrain",
+  "id": "trl_lot_build_d",
+  "name": "excavation and materials yard",
+  "sym": "c",
+  "color": "brown",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": [
+   "SIDEWALK"
+  ]
+ },
+ {
   "type": "city_building",
   "id": "trl_lot_plaza",
   "locations": [
@@ -388,6 +484,174 @@
      0
     ],
     "overmap": "trl_lot_fight_pit_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_park_a",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_park_a_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_park_b",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_park_b_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_park_c",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_park_c_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_park_d",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_park_d_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_build_a",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_build_a_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_build_b",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_build_b_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_build_c",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_build_c_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_lot_build_d",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_lot_build_d_north"
    }
   ],
   "city_sizes": [
