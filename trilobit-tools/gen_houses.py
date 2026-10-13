@@ -546,7 +546,7 @@ def tile_json(S, levels, info, d_loot):
                             c2 = random.Random(S["id"] + "b").choice(cells2)
                             npcs.append({"class": gr.template_id(pick2[0], pick2[1]), "x": c2[0] - 24 * t, "y": c2[1]})
                 if npcs: obj["place_npcs"] = npcs
-                veh = [{"vehicle": random.Random(x * 31 + y).choice(("car", "car", "suv", "car_sports", "electric_car", "pickup") if info.get("rich") else ("car", "car_mini", "motorcycle", "scooter", "car")),
+                veh = [{"vehicle": "trl_veh_rich" if info.get("rich") else ("trl_veh_mid" if S["kind"] == "mid" else "trl_veh_poor"),
                         "x": x - 24 * t, "y": y, "chance": 55, "status": 60, "rotation": r}
                        for x, y, r in lv.cars if 24 * t <= x < 24 * t + 24]
                 if veh: obj["place_vehicles"] = veh

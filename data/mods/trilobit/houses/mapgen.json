@@ -11885,7 +11885,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_mid",
      "x": 16,
      "y": 16,
      "chance": 55,
@@ -12341,7 +12341,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "scooter",
+     "vehicle": "trl_veh_mid",
      "x": 6,
      "y": 16,
      "chance": 55,
@@ -13058,7 +13058,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_mid",
      "x": 5,
      "y": 16,
      "chance": 55,
@@ -13578,7 +13578,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_mid",
      "x": 16,
      "y": 16,
      "chance": 55,
@@ -14098,7 +14098,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car_mini",
+     "vehicle": "trl_veh_mid",
      "x": 17,
      "y": 16,
      "chance": 55,
@@ -14834,7 +14834,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_mid",
      "x": 5,
      "y": 16,
      "chance": 55,
@@ -15269,7 +15269,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_mid",
      "x": 5,
      "y": 16,
      "chance": 55,
@@ -15603,7 +15603,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_mid",
      "x": 5,
      "y": 16,
      "chance": 55,
@@ -16445,7 +16445,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car_mini",
+     "vehicle": "trl_veh_mid",
      "x": 7,
      "y": 16,
      "chance": 55,
@@ -16725,7 +16725,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "scooter",
+     "vehicle": "trl_veh_mid",
      "x": 15,
      "y": 16,
      "chance": 55,
@@ -17171,7 +17171,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_mid",
      "x": 5,
      "y": 16,
      "chance": 55,
@@ -17877,7 +17877,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car_mini",
+     "vehicle": "trl_veh_mid",
      "x": 17,
      "y": 16,
      "chance": 55,
@@ -18318,7 +18318,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car_mini",
+     "vehicle": "trl_veh_mid",
      "x": 17,
      "y": 16,
      "chance": 55,
@@ -18778,7 +18778,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car_mini",
+     "vehicle": "trl_veh_mid",
      "x": 17,
      "y": 16,
      "chance": 55,
@@ -19544,7 +19544,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car_mini",
+     "vehicle": "trl_veh_mid",
      "x": 7,
      "y": 16,
      "chance": 55,
@@ -20004,7 +20004,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "scooter",
+     "vehicle": "trl_veh_mid",
      "x": 15,
      "y": 16,
      "chance": 55,
@@ -20339,7 +20339,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_mid",
      "x": 5,
      "y": 16,
      "chance": 55,
@@ -21224,7 +21224,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "scooter",
+     "vehicle": "trl_veh_mid",
      "x": 6,
      "y": 16,
      "chance": 55,
@@ -21517,7 +21517,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_mid",
      "x": 5,
      "y": 16,
      "chance": 55,
@@ -21952,7 +21952,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_mid",
      "x": 16,
      "y": 16,
      "chance": 55,
@@ -22617,7 +22617,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "scooter",
+     "vehicle": "trl_veh_mid",
      "x": 6,
      "y": 16,
      "chance": 55,
@@ -23042,7 +23042,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car_mini",
+     "vehicle": "trl_veh_mid",
      "x": 17,
      "y": 16,
      "chance": 55,
@@ -23491,7 +23491,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_mid",
      "x": 5,
      "y": 16,
      "chance": 55,
@@ -24198,7 +24198,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_mid",
      "x": 5,
      "y": 16,
      "chance": 55,
@@ -24643,7 +24643,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_mid",
      "x": 16,
      "y": 16,
      "chance": 55,
@@ -24953,7 +24953,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "scooter",
+     "vehicle": "trl_veh_mid",
      "x": 6,
      "y": 16,
      "chance": 55,
@@ -26178,7 +26178,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "electric_car",
+     "vehicle": "trl_veh_rich",
      "x": 13,
      "y": 14,
      "chance": 55,
@@ -26186,7 +26186,7 @@
      "rotation": 90
     },
     {
-     "vehicle": "car_sports",
+     "vehicle": "trl_veh_rich",
      "x": 16,
      "y": 14,
      "chance": 55,
@@ -26718,7 +26718,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "pickup",
+     "vehicle": "trl_veh_rich",
      "x": 11,
      "y": 15,
      "chance": 55,
@@ -26726,7 +26726,7 @@
      "rotation": 90
     },
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_rich",
      "x": 14,
      "y": 15,
      "chance": 55,
@@ -27763,7 +27763,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "suv",
+     "vehicle": "trl_veh_rich",
      "x": 5,
      "y": 15,
      "chance": 55,
@@ -27771,7 +27771,7 @@
      "rotation": 90
     },
     {
-     "vehicle": "pickup",
+     "vehicle": "trl_veh_rich",
      "x": 8,
      "y": 15,
      "chance": 55,
@@ -28913,7 +28913,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "suv",
+     "vehicle": "trl_veh_rich",
      "x": 14,
      "y": 15,
      "chance": 55,
@@ -28921,7 +28921,7 @@
      "rotation": 90
     },
     {
-     "vehicle": "suv",
+     "vehicle": "trl_veh_rich",
      "x": 17,
      "y": 15,
      "chance": 55,
@@ -29587,7 +29587,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_rich",
      "x": 16,
      "y": 16,
      "chance": 55,
@@ -29849,7 +29849,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "electric_car",
+     "vehicle": "trl_veh_rich",
      "x": 12,
      "y": 14,
      "chance": 55,
@@ -29857,7 +29857,7 @@
      "rotation": 90
     },
     {
-     "vehicle": "car_sports",
+     "vehicle": "trl_veh_rich",
      "x": 15,
      "y": 14,
      "chance": 55,
@@ -30792,7 +30792,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_rich",
      "x": 16,
      "y": 16,
      "chance": 55,
@@ -31617,7 +31617,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_rich",
      "x": 15,
      "y": 15,
      "chance": 55,
@@ -31625,7 +31625,7 @@
      "rotation": 90
     },
     {
-     "vehicle": "electric_car",
+     "vehicle": "trl_veh_rich",
      "x": 18,
      "y": 15,
      "chance": 55,
@@ -32342,7 +32342,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car_sports",
+     "vehicle": "trl_veh_rich",
      "x": 6,
      "y": 16,
      "chance": 55,
@@ -32844,7 +32844,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "suv",
+     "vehicle": "trl_veh_rich",
      "x": 5,
      "y": 15,
      "chance": 55,
@@ -32852,7 +32852,7 @@
      "rotation": 90
     },
     {
-     "vehicle": "pickup",
+     "vehicle": "trl_veh_rich",
      "x": 8,
      "y": 15,
      "chance": 55,
@@ -33442,7 +33442,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_rich",
      "x": 16,
      "y": 16,
      "chance": 55,
@@ -34109,7 +34109,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_rich",
      "x": 15,
      "y": 15,
      "chance": 55,
@@ -34117,7 +34117,7 @@
      "rotation": 90
     },
     {
-     "vehicle": "electric_car",
+     "vehicle": "trl_veh_rich",
      "x": 18,
      "y": 15,
      "chance": 55,
@@ -34813,7 +34813,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "pickup",
+     "vehicle": "trl_veh_rich",
      "x": 7,
      "y": 16,
      "chance": 55,
@@ -35453,7 +35453,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_rich",
      "x": 6,
      "y": 14,
      "chance": 55,
@@ -35461,7 +35461,7 @@
      "rotation": 90
     },
     {
-     "vehicle": "car",
+     "vehicle": "trl_veh_rich",
      "x": 9,
      "y": 14,
      "chance": 55,
@@ -36199,7 +36199,7 @@
    ],
    "place_vehicles": [
     {
-     "vehicle": "pickup",
+     "vehicle": "trl_veh_rich",
      "x": 7,
      "y": 16,
      "chance": 55,

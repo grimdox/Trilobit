@@ -1,0 +1,254 @@
+[
+ {
+  "type": "vehicle",
+  "id": "trl_veh_scooter",
+  "copy-from": "scooter_electric",
+  "name": "commuter scooter"
+ },
+ {
+  "type": "vehicle",
+  "id": "trl_veh_ebike",
+  "copy-from": "bicycle_electric",
+  "name": "electric bicycle"
+ },
+ {
+  "type": "vehicle",
+  "id": "trl_veh_cart",
+  "copy-from": "golf_cart",
+  "name": "utility cart"
+ },
+ {
+  "type": "vehicle",
+  "id": "trl_veh_micro",
+  "copy-from": "car_micro_electric",
+  "name": "micro runabout"
+ },
+ {
+  "type": "vehicle",
+  "id": "trl_veh_compact",
+  "copy-from": "scompact_electric",
+  "name": "compact commuter"
+ },
+ {
+  "type": "vehicle",
+  "id": "trl_veh_sedan",
+  "copy-from": "car_sedan_electric",
+  "name": "family sedan"
+ },
+ {
+  "type": "vehicle",
+  "id": "trl_veh_hatch",
+  "copy-from": "electric_car",
+  "name": "city hatchback"
+ },
+ {
+  "type": "vehicle",
+  "id": "trl_veh_coupe",
+  "copy-from": "car_coupe_electric",
+  "name": "sport coupe"
+ },
+ {
+  "type": "vehicle",
+  "id": "trl_veh_suv",
+  "copy-from": "suv_electric",
+  "name": "crossover"
+ },
+ {
+  "type": "vehicle",
+  "id": "trl_veh_lux_sedan",
+  "copy-from": "car_sedan_luxury_electric",
+  "name": "executive sedan"
+ },
+ {
+  "type": "vehicle",
+  "id": "trl_veh_lux_coupe",
+  "copy-from": "car_coupe_luxury_electric",
+  "name": "grand tourer"
+ },
+ {
+  "type": "vehicle",
+  "id": "trl_veh_super",
+  "copy-from": "car_super_electric",
+  "name": "hypercar"
+ },
+ {
+  "type": "vehicle_group",
+  "id": "trl_veh_poor",
+  "vehicles": [
+   [
+    "trl_veh_scooter",
+    30
+   ],
+   [
+    "trl_veh_ebike",
+    30
+   ],
+   [
+    "trl_veh_cart",
+    15
+   ],
+   [
+    "trl_veh_micro",
+    25
+   ]
+  ]
+ },
+ {
+  "type": "vehicle_group",
+  "id": "trl_veh_mid",
+  "vehicles": [
+   [
+    "trl_veh_scooter",
+    30
+   ],
+   [
+    "trl_veh_micro",
+    25
+   ],
+   [
+    "trl_veh_compact",
+    25
+   ],
+   [
+    "trl_veh_sedan",
+    30
+   ],
+   [
+    "trl_veh_hatch",
+    25
+   ],
+   [
+    "trl_veh_coupe",
+    15
+   ],
+   [
+    "trl_veh_suv",
+    15
+   ]
+  ]
+ },
+ {
+  "type": "vehicle_group",
+  "id": "trl_veh_rich",
+  "vehicles": [
+   [
+    "trl_veh_coupe",
+    15
+   ],
+   [
+    "trl_veh_suv",
+    15
+   ],
+   [
+    "trl_veh_lux_sedan",
+    30
+   ],
+   [
+    "trl_veh_lux_coupe",
+    20
+   ],
+   [
+    "trl_veh_super",
+    5
+   ]
+  ]
+ },
+ {
+  "type": "vehicle_group",
+  "id": "trl_veh_street",
+  "vehicles": [
+   [
+    "trl_veh_scooter",
+    30
+   ],
+   [
+    "trl_veh_ebike",
+    30
+   ],
+   [
+    "trl_veh_cart",
+    15
+   ],
+   [
+    "trl_veh_micro",
+    25
+   ],
+   [
+    "trl_veh_compact",
+    25
+   ],
+   [
+    "trl_veh_sedan",
+    30
+   ],
+   [
+    "trl_veh_hatch",
+    25
+   ],
+   [
+    "trl_veh_coupe",
+    15
+   ],
+   [
+    "trl_veh_suv",
+    15
+   ]
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_kumo",
+  "copy-from": "mon_mech_recon",
+  "name": {
+   "str": "Kumo spider-tank"
+  },
+  "description": "A four-legged walking tank the size of a small car, with a sensor turret and a chin-mounted laser.  Its owner's lock can be hacked to accept a new pilot.",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "color": "light_cyan",
+  "hp": 280,
+  "speed": 110,
+  "revert_to_itype": "trl_kumo_wreck",
+  "default_faction": "mech_bot"
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_daikumo",
+  "copy-from": "mon_mech_combat",
+  "name": {
+   "str": "Daikumo heavy walker"
+  },
+  "description": "A heavy two-legged combat walker, armored and loud.  Slow to turn, hard to stop.",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "color": "pink",
+  "revert_to_itype": "trl_kumo_wreck",
+  "default_faction": "mech_bot"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_kumo_wreck",
+  "name": {
+   "str": "walker wreck"
+  },
+  "description": "The burned-out frame of a walker, beyond repair.",
+  "weight": "300 kg",
+  "volume": "125 L",
+  "price": "10 USD",
+  "price_postapoc": "10 cent",
+  "material": [
+   "superalloy"
+  ],
+  "symbol": ";",
+  "color": "light_green",
+  "flags": [
+   "TRADER_AVOID",
+   "NO_REPAIR"
+  ]
+ }
+]
