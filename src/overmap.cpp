@@ -3749,6 +3749,7 @@ void overmap::generate( const std::vector<const overmap *> &neighbor_overmaps,
     if( has_option( "OVERMAP_PLACE_HIGHWAYS" ) && get_option<bool>( "OVERMAP_PLACE_HIGHWAYS" ) ) {
         place_trilobit_highways();
     }
+    place_trilobit_grid();
 
     polish_river( neighbor_overmaps );
 
@@ -5068,6 +5069,79 @@ void overmap::place_trilobit_highways()
     }
 }
 
+// Trilobit: the power grid.  Overmap (2, 0) holds the nuclear power station, well east of the central megacity.  A powerline leaves
+// its gate, drops to a fixed row beside the east-west highway and runs west through overmap (1, 0) to the east edge of overmap (0, 0),
+// where a substation stands.  Tiles that are not open land (roads, rivers, buildings) are skipped, so the cables pass over them.  Tidal
+// generators sit in rivers two tiles from some highway bridges.  All of this is placed once at generation; nothing runs afterwards.
+void overmap::place_trilobit_grid()
+{
+    constexpr int PLANT_X = 100;
+    constexpr int PLANT_Y = 70;
+    constexpr int ROW = 86;
+    static const overmap_special_id plant( "trl_nuclear_station" );
+    const int ox = pos().x();
+    const int oy = pos().y();
+    const auto is_land = [this]( const point_om_omt & p ) {
+        const std::string &s = ter( tripoint_om_omt( p, 0 ) ).id().str();
+        return string_starts_with( s, "field" ) || string_starts_with( s, "forest" ) || string_starts_with( s, "meadow" ) ||
+               string_starts_with( s, "swamp" );
+    };
+    const auto lay = [&]( const point_om_omt & p, const char *variant ) {
+        if( is_land( p ) ) {
+            ter_set( tripoint_om_omt( p, 0 ), oter_id( std::string( "trl_powerline_" ) + variant ) );
+        }
+    };
+    if( oy == 0 && ox == 2 && plant.is_valid() ) {
+        place_special_forced( plant, tripoint_om_omt( PLANT_X, PLANT_Y, 0 ), om_direction::type::north );
+        DebugLog( D_INFO, DC_ALL ) << "TRL_GRID nuclear station placed in overmap 2,0";
+        const int gx = PLANT_X + 1;
+        for( int y = PLANT_Y + 3; y < ROW; y++ ) {
+            lay( point_om_omt( gx, y ), "ns" );
+        }
+        lay( point_om_omt( gx, ROW ), "wn" );
+        for( int x = gx - 1; x >= 0; x-- ) {
+            lay( point_om_omt( x, ROW ), "ew" );
+        }
+    } else if( oy == 0 && ox == 1 ) {
+        for( int x = 0; x < OMAPX; x++ ) {
+            lay( point_om_omt( x, ROW ), "ew" );
+        }
+    } else if( oy == 0 && ox == 0 ) {
+        DebugLog( D_INFO, DC_ALL ) << "TRL_GRID powerline ends in overmap 0,0";
+        lay( point_om_omt( OMAPX - 1, ROW ), "ew" );
+        const point_om_omt sub( OMAPX - 2, ROW );
+        if( is_land( sub ) ) {
+            ter_set( tripoint_om_omt( sub, 0 ), oter_id( "trl_pl_substation_north" ) );
+        }
+    }
+    // tidal generators beside highway bridges
+    const int line_pos = 90;
+    const auto tidal_at = [&]( const point_om_omt & bridge, const point_om_omt & spot ) {
+        const std::string &b = ter( tripoint_om_omt( bridge, 0 ) ).id().str();
+        if( b.find( "bridge" ) == std::string::npos ) {
+            return;
+        }
+        if( !ter( tripoint_om_omt( spot, 0 ) )->is_river() ) {
+            return;
+        }
+        const uint32_t h = ( static_cast<uint32_t>( bridge.x() ) * 73856093u ) ^ ( static_cast<uint32_t>( bridge.y() ) * 19349663u ) ^
+                           ( static_cast<uint32_t>( ox + 50 ) * 83492791u ) ^ ( static_cast<uint32_t>( oy + 50 ) * 2654435u );
+        if( h % 3u == 0 ) {
+            ter_set( tripoint_om_omt( spot, 0 ), oter_id( "trl_tidal" ) );
+        }
+    };
+    if( oy % 2 == 0 ) {
+        for( int x = 0; x < OMAPX; x++ ) {
+            tidal_at( point_om_omt( x, line_pos ), point_om_omt( x, line_pos - 2 ) );
+        }
+    }
+    if( ox % 2 == 0 ) {
+        for( int y = 0; y < OMAPY; y++ ) {
+            tidal_at( point_om_omt( line_pos, y ), point_om_omt( line_pos - 2, y ) );
+        }
+    }
+}
+
 void overmap::place_forests()
 {
     const oter_id default_oter_id( settings->default_oter[OVERMAP_DEPTH] );
@@ -6304,6 +6378,7 @@ struct cell_info {
     int cy = 0;
     int tier = 1;
     uint32_t h = 0;
+    int dist = 100;
 };
 
 cell_info locate( const point_abs_om &om, const tripoint_om_omt &bp, const city &town )
@@ -6316,6 +6391,7 @@ cell_info locate( const point_abs_om &om, const tripoint_om_omt &bp, const city 
     const point_om_omt centre( bp.x() - ( ax - ci.cx * CELL ) + CELL / 2, bp.y() - ( ay - ci.cy * CELL ) + CELL / 2 );
     const int dist = ( trig_dist( centre, town.pos ) * 100 ) / std::max( town.size, 1 );
     const uint32_t seed = static_cast<uint32_t>( g->get_seed() );
+    ci.dist = dist;
     ci.h = mix( static_cast<uint32_t>( ci.cx ), static_cast<uint32_t>( ci.cy ), seed );
     const int roll = static_cast<int>( ci.h % 100u );
     int rich = 5;
@@ -6357,6 +6433,19 @@ std::set<std::tuple<int, int, uint32_t>> &hospital_served()
 {
     static std::set<std::tuple<int, int, uint32_t>> s;
     return s;
+}
+
+std::set<std::tuple<int, int, uint32_t>> &substation_served()
+{
+    static std::set<std::tuple<int, int, uint32_t>> s;
+    return s;
+}
+
+// a power substation for this district: dense downtown, thinner outwards
+bool wants_substation( const cell_info &ci )
+{
+    const int roll = static_cast<int>( ( ci.h >> 24 ) % 100u );
+    return roll < ( ci.dist < 25 ? 32 : ( ci.dist < 55 ? 14 : 5 ) );
 }
 
 // a hospital for this district, or an empty id: only middle and rich districts, about one in four
@@ -6413,6 +6502,16 @@ void overmap::place_building( const tripoint_om_omt &p, om_direction::type dir, 
                 hospital = true;
             }
         }
+        bool substation = false;
+        if( !service && trl_district::wants_substation( dist_info ) &&
+            trl_district::substation_served().count( served_key ) == 0 && one_in( 4 ) ) {
+            const overmap_special_id uid( "trl_pl_substation" );
+            if( uid.is_valid() ) {
+                building_tid = uid;
+                service = true;
+                substation = true;
+            }
+        }
         if( !service && trl_district::served().count( served_key ) == 0 && one_in( 4 ) ) {
             const overmap_special_id sid( trl_district::service_for( dist_info ) );
             if( sid.is_valid() ) {
@@ -6440,7 +6539,9 @@ void overmap::place_building( const tripoint_om_omt &p, om_direction::type dir, 
                 placed_unique_buildings.emplace( building_tid );
             }
             if( service ) {
-                if( hospital ) {
+                if( substation ) {
+                    trl_district::substation_served().insert( served_key );
+                } else if( hospital ) {
                     trl_district::hospital_served().insert( served_key );
                 } else {
                     trl_district::served().insert( served_key );

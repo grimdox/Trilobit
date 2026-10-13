@@ -671,6 +671,12 @@ def main(stock, repo):
     tgt = want(key, "chars", lambda: itm.outline(itm.p_wield_arcrifle()))
     entries.setdefault(tgt, []).append("overlay_wielded_trl_gun_w2011")
 
+    # worn armor: overlays over the body
+    for iid, akind in itm.ARMOR_KINDS.items():
+        key = ("o", akind)
+        tgt = want(key, "chars", lambda akind=akind: itm.outline(itm.p_worn(akind)))
+        entries.setdefault(tgt, []).append("overlay_worn_" + iid)
+
     # markers (drawn on the flat sheet)
     for mk, ids in (("cursor", ["cursor"]), ("highlight", ["highlight", "highlight_item", "highlight_item_static"]), ("line_target", ["line_target"]),
                     ("animation_line", ["animation_line", "line_trail"]), ("sees_hostile", ["overlay_hostile_sees_player"]),

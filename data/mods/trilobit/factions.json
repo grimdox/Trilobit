@@ -1248,10 +1248,10 @@
   "subtype": "collection",
   "entries": [
    {
-    "item": "ballistic_vest_esapi"
+    "item": "trl_kp_vest"
    },
    {
-    "item": "tac_helmet"
+    "item": "trl_kp_helmet"
    },
    {
     "item": "pants_army"

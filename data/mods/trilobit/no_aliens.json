@@ -103,6 +103,15 @@
  },
  {
   "type": "overmap_special",
+  "id": "nuclear power plant",
+  "copy-from": "nuclear power plant",
+  "occurrences": [
+   0,
+   0
+  ]
+ },
+ {
+  "type": "overmap_special",
   "id": "Bee Hive",
   "copy-from": "Bee Hive",
   "occurrences": [

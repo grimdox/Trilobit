@@ -365,7 +365,18 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 14
+    }
+   ]
   }
  },
  {
@@ -753,7 +764,13 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 8,
+     "y": 15
+    }
+   ]
   }
  },
  {
@@ -1374,7 +1391,43 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 15
+    }
+   ]
   }
  },
  {
@@ -1677,7 +1730,43 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 17
+    }
+   ]
   }
  },
  {
@@ -2047,7 +2136,18 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 16
+    }
+   ]
   }
  },
  {
@@ -2421,7 +2521,38 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 18
+    }
+   ]
   }
  },
  {
@@ -2734,7 +2865,58 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 17,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 17,
+     "y": 13
+    }
+   ]
   }
  },
  {
@@ -3057,7 +3239,13 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 11,
+     "y": 12
+    }
+   ]
   }
  },
  {
@@ -3375,7 +3563,48 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 17
+    }
+   ]
   }
  },
  {
@@ -3735,7 +3964,23 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 14
+    }
+   ]
   }
  },
  {
@@ -4105,7 +4350,53 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 20,
+     "y": 15
+    }
+   ]
   }
  },
  {
@@ -4428,7 +4719,13 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 12
+    }
+   ]
   }
  },
  {
@@ -4731,7 +5028,43 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 13
+    }
+   ]
   }
  },
  {
@@ -5054,7 +5387,28 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 14,
+     "y": 17
+    }
+   ]
   }
  },
  {
@@ -6349,7 +6703,48 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 14
+    }
+   ]
   }
  },
  {
@@ -6656,7 +7051,28 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 17
+    }
+   ]
   }
  },
  {
@@ -7015,7 +7431,18 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 18
+    }
+   ]
   }
  },
  {
@@ -7375,7 +7802,18 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 15
+    }
+   ]
   }
  },
  {
@@ -7684,7 +8122,48 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 18
+    }
+   ]
   }
  },
  {
@@ -8265,7 +8744,28 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 11
+    }
+   ]
   }
  },
  {
@@ -9289,7 +9789,18 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 14
+    }
+   ]
   }
  },
  {
@@ -9908,7 +10419,98 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 15
+    }
+   ]
   }
  },
  {
@@ -10268,7 +10870,53 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 10,
+     "y": 16
+    }
+   ]
   }
  },
  {
@@ -10627,7 +11275,43 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 14
+    }
+   ]
   }
  },
  {
@@ -10939,7 +11623,58 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 14
+    }
+   ]
   }
  },
  {
@@ -11247,7 +11982,18 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 17
+    }
+   ]
   }
  },
  {
@@ -11941,7 +12687,28 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 16
+    }
+   ]
   }
  },
  {
@@ -12298,7 +13065,18 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 13
+    }
+   ]
   }
  },
  {
@@ -12617,7 +13395,28 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 17,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 13,
+     "y": 14
+    }
+   ]
   }
  },
  {
@@ -12939,7 +13738,43 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 13
+    }
+   ]
   }
  },
  {
@@ -13247,7 +14082,23 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 16
+    }
+   ]
   }
  },
  {
@@ -13616,7 +14467,23 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 14
+    }
+   ]
   }
  },
  {
@@ -13984,7 +14851,18 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 19,
+     "y": 14
+    }
+   ]
   }
  },
  {
@@ -14282,7 +15160,43 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 4,
+     "y": 18
+    }
+   ]
   }
  },
  {
@@ -14595,7 +15509,58 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 15
+    }
+   ]
   }
  },
  {
@@ -14913,7 +15878,78 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 18
+    }
+   ]
   }
  },
  {
@@ -15641,7 +16677,43 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 18,
+     "y": 17
+    }
+   ]
   }
  },
  {
@@ -15973,7 +17045,33 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 12,
+     "y": 19
+    }
+   ]
   }
  },
  {
@@ -16291,7 +17389,18 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 13
+    }
+   ]
   }
  },
  {
@@ -16613,7 +17722,38 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 17
+    }
+   ]
   }
  },
  {
@@ -17160,6 +18300,21 @@
      "furn": "f_trl_floor_lamp",
      "x": 3,
      "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 7,
+     "y": 12
     }
    ]
   }
@@ -17622,6 +18777,21 @@
      "furn": "f_trl_red_lantern",
      "x": 18,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 18
     }
    ],
    "place_items": [
@@ -17683,6 +18853,16 @@
      "furn": "f_trl_floor_lamp",
      "x": 11,
      "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 15
     }
    ]
   }
@@ -18041,6 +19221,26 @@
      "furn": "f_trl_floor_lamp",
      "x": 12,
      "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 15
     }
    ]
   }
@@ -18478,6 +19678,56 @@
      "furn": "f_trl_red_lantern",
      "x": 15,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 2,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 2,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 16
     }
    ],
    "place_items": [
@@ -19080,6 +20330,16 @@
      "furn": "f_trl_samovar",
      "x": 12,
      "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 16
     }
    ],
    "place_items": [
@@ -19141,6 +20401,16 @@
      "furn": "f_trl_floor_lamp",
      "x": 3,
      "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 19
     }
    ]
   }
@@ -19582,6 +20852,11 @@
      "furn": "f_trl_floor_lamp",
      "x": 4,
      "y": 11
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 6,
+     "y": 18
     }
    ]
   }
@@ -20552,6 +21827,61 @@
      "furn": "f_trl_samovar",
      "x": 19,
      "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 2,
+     "y": 15
     }
    ],
    "place_items": [
@@ -20612,6 +21942,11 @@
     {
      "furn": "f_trl_floor_lamp",
      "x": 10,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
      "y": 11
     }
    ]
@@ -20969,6 +22304,46 @@
      "furn": "f_trl_floor_lamp",
      "x": 10,
      "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 19
     }
    ]
   }
@@ -21465,6 +22840,96 @@
      "furn": "f_trl_map_table",
      "x": 18,
      "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 2,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 2,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 16
     }
    ],
    "place_items": [
@@ -21525,6 +22990,26 @@
     {
      "furn": "f_trl_floor_lamp",
      "x": 10,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
      "y": 11
     }
    ]
@@ -22000,6 +23485,61 @@
      "furn": "f_trl_floor_lamp",
      "x": 6,
      "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 14
     }
    ]
   }
@@ -22361,6 +23901,26 @@
      "furn": "f_trl_floor_lamp",
      "x": 12,
      "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 14,
+     "y": 15
     }
    ]
   }
@@ -22854,6 +24414,16 @@
      "furn": "f_trl_floor_lamp",
      "x": 3,
      "y": 13
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 11,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 12,
+     "y": 19
     }
    ]
   }
@@ -23316,6 +24886,16 @@
      "furn": "f_trl_limb_bin",
      "x": 18,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 20
     }
    ],
    "place_items": [
@@ -23704,6 +25284,26 @@
      "furn": "f_trl_floor_lamp",
      "x": 8,
      "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 15,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 10,
+     "y": 15
     }
    ]
   }
@@ -24166,6 +25766,21 @@
      "furn": "f_trl_mirror_ball",
      "x": 10,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 17
     }
    ],
    "place_items": [
@@ -24227,6 +25842,56 @@
      "furn": "f_trl_floor_lamp",
      "x": 5,
      "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 17
     }
    ]
   }
@@ -24679,6 +26344,11 @@
      "furn": "f_trl_mirror_ball",
      "x": 13,
      "y": 16
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 15,
+     "y": 18
     }
    ],
    "place_items": [
@@ -24740,6 +26410,46 @@
      "furn": "f_trl_floor_lamp",
      "x": 6,
      "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 14
     }
    ]
   }
@@ -25126,6 +26836,51 @@
      "furn": "f_trl_floor_lamp",
      "x": 4,
      "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 20
     }
    ]
   }
@@ -26121,6 +27876,51 @@
      "furn": "f_trl_tea_table",
      "x": 17,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 14
     }
    ],
    "place_items": [
@@ -26182,6 +27982,71 @@
      "furn": "f_trl_floor_lamp",
      "x": 12,
      "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 14
     }
    ]
   }
@@ -26568,6 +28433,16 @@
      "furn": "f_trl_floor_lamp",
      "x": 4,
      "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 16
     }
    ]
   }
@@ -27065,6 +28940,46 @@
      "furn": "f_trl_tea_table",
      "x": 17,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 16
     }
    ],
    "place_items": [
@@ -27629,6 +29544,31 @@
      "furn": "f_trl_floor_lamp",
      "x": 7,
      "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 13
     }
    ]
   }
@@ -28004,6 +29944,36 @@
      "furn": "f_trl_floor_lamp",
      "x": 11,
      "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 19
     }
    ]
   }
@@ -28439,6 +30409,16 @@
      "furn": "f_trl_lantern",
      "x": 17,
      "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 17
     }
    ],
    "place_items": [
@@ -28499,6 +30479,41 @@
     {
      "furn": "f_trl_floor_lamp",
      "x": 10,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
      "y": 13
     }
    ]
@@ -28956,6 +30971,36 @@
      "furn": "f_trl_lantern",
      "x": 11,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 19
     }
    ],
    "place_items": [
@@ -29017,6 +31062,26 @@
      "furn": "f_trl_floor_lamp",
      "x": 4,
      "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 17
     }
    ]
   }
@@ -29319,6 +31384,16 @@
      "furn": "f_trl_floor_lamp",
      "x": 8,
      "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 14
     }
    ]
   }
@@ -29765,6 +31840,36 @@
      "furn": "f_trl_neon_amber",
      "x": 18,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 15
     }
    ],
    "place_items": [
@@ -29826,6 +31931,16 @@
      "furn": "f_trl_floor_lamp",
      "x": 11,
      "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 17
     }
    ]
   }
@@ -30262,6 +32377,16 @@
      "furn": "f_trl_neon_amber",
      "x": 13,
      "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 17
     }
    ],
    "place_items": [
@@ -30323,6 +32448,41 @@
      "furn": "f_trl_floor_lamp",
      "x": 5,
      "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 7,
+     "y": 20
     }
    ]
   }
@@ -31172,6 +33332,21 @@
      "furn": "f_trl_floor_lamp",
      "x": 11,
      "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 10,
+     "y": 17
     }
    ]
   }
@@ -31634,6 +33809,66 @@
      "furn": "f_trl_pipes",
      "x": 18,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 3,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 6,
+     "y": 12
     }
    ],
    "place_items": [
@@ -31695,6 +33930,56 @@
      "furn": "f_trl_floor_lamp",
      "x": 10,
      "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 14
     }
    ]
   }
@@ -32071,6 +34356,36 @@
      "furn": "f_trl_floor_lamp",
      "x": 5,
      "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 19
     }
    ]
   }
@@ -32533,6 +34848,36 @@
      "furn": "f_trl_red_lantern",
      "x": 20,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 3,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 4,
+     "y": 14
     }
    ],
    "place_items": [
@@ -32594,6 +34939,16 @@
      "furn": "f_trl_floor_lamp",
      "x": 11,
      "y": 13
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 18,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 20,
+     "y": 19
     }
    ]
   }
@@ -33107,6 +35462,36 @@
      "furn": "f_trl_floor_lamp",
      "x": 8,
      "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 15
     }
    ]
   }
@@ -34083,6 +36468,96 @@
      "furn": "f_trl_floor_lamp",
      "x": 8,
      "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 13,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 15,
+     "y": 12
     }
    ],
    "place_items": [
@@ -34144,6 +36619,26 @@
      "furn": "f_trl_floor_lamp",
      "x": 21,
      "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 16
     }
    ]
   }
@@ -34185,7 +36680,48 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 4,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 2,
+     "y": 11
+    }
+   ]
   }
  },
  {
@@ -34820,6 +37356,41 @@
      "furn": "f_bookcase",
      "x": 23,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 14
     }
    ],
    "place_items": [
@@ -35017,6 +37588,46 @@
      "furn": "f_trl_floor_lamp",
      "x": 18,
      "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 17
     }
    ]
   }
@@ -35058,7 +37669,58 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 20
+    }
+   ]
   }
  },
  {
@@ -36012,6 +38674,36 @@
      "furn": "f_trl_nightstand",
      "x": 22,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 11,
+     "y": 15
     }
    ],
    "place_items": [
@@ -36174,6 +38866,26 @@
      "furn": "f_trl_floor_lamp",
      "x": 12,
      "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 9
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 15
     }
    ]
   }
@@ -36215,7 +38927,23 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 2,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 2,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 2,
+     "y": 9
+    }
+   ]
   }
  },
  {
@@ -37265,6 +39993,91 @@
      "furn": "f_trl_floor_lamp",
      "x": 10,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 18,
+     "y": 17
     }
    ],
    "place_items": [
@@ -37367,7 +40180,73 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 20
+    }
+   ]
   }
  },
  {
@@ -37806,6 +40685,76 @@
     {
      "furn": "f_trl_floor_lamp",
      "x": 6,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 9,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 14,
      "y": 14
     }
    ]
@@ -38477,6 +41426,11 @@
      "furn": "f_trl_floor_lamp",
      "x": 22,
      "y": 18
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 18,
+     "y": 18
     }
    ],
    "place_items": [
@@ -38679,6 +41633,41 @@
      "furn": "f_trl_floor_lamp",
      "x": 19,
      "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 20,
+     "y": 13
     }
    ]
   }
@@ -38720,7 +41709,23 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 11
+    }
+   ]
   }
  },
  {
@@ -39359,6 +42364,51 @@
      "furn": "f_trl_floor_lamp",
      "x": 5,
      "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 9,
+     "y": 17
     }
    ]
   }
@@ -40406,6 +43456,46 @@
      "furn": "f_trl_floor_lamp",
      "x": 11,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 15,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 20
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 20
     }
    ],
    "place_items": [
@@ -40467,6 +43557,11 @@
      "furn": "f_trl_floor_lamp",
      "x": 22,
      "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 20
     }
    ]
   }
@@ -40508,7 +43603,38 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 10
+    }
+   ]
   }
  },
  {
@@ -41069,6 +44195,66 @@
      "furn": "f_trl_red_lantern",
      "x": 19,
      "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 6,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 7,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 16
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 7,
+     "y": 20
     }
    ],
    "place_items": [
@@ -41130,6 +44316,11 @@
      "furn": "f_trl_floor_lamp",
      "x": 11,
      "y": 14
+    },
+    {
+     "furn": "f_trl_wind_turbine",
+     "x": 18,
+     "y": 16
     }
    ]
   }
@@ -41849,7 +45040,18 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 2,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 2,
+     "y": 14
+    }
+   ]
   }
  },
  {
@@ -42436,6 +45638,16 @@
      "furn": "f_trl_floor_lamp",
      "x": 5,
      "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 15
     }
    ]
   }
@@ -43330,6 +46542,46 @@
      "furn": "f_trl_floor_lamp",
      "x": 11,
      "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 14,
+     "y": 19
     }
    ],
    "place_items": [
@@ -43391,6 +46643,16 @@
      "furn": "f_trl_floor_lamp",
      "x": 19,
      "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 19
     }
    ]
   }
@@ -43432,7 +46694,18 @@
     "a": "t_open_air",
     "b": "t_flat_roof"
    },
-   "place_furniture": []
+   "place_furniture": [
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 10
+    }
+   ]
   }
  },
  {
@@ -43977,6 +47250,26 @@
      "furn": "f_trl_neon_amber",
      "x": 19,
      "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 8,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 9,
+     "y": 13
     }
    ],
    "place_items": [
@@ -44038,6 +47331,66 @@
      "furn": "f_trl_floor_lamp",
      "x": 12,
      "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 17
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 12,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 13,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 15
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 15
     }
    ]
   }
@@ -44890,6 +48243,51 @@
      "furn": "f_trl_floor_lamp",
      "x": 2,
      "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 18
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 19
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 10,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 11,
+     "y": 12
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 3,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 4,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 5,
+     "y": 11
     }
    ],
    "place_items": [
@@ -44951,6 +48349,86 @@
      "furn": "f_trl_floor_lamp",
      "x": 13,
      "y": 9
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 10
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 16,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 17,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 11
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 13
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 18,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 19,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 20,
+     "y": 14
+    },
+    {
+     "furn": "f_trl_solar_panel",
+     "x": 21,
+     "y": 14
     }
    ]
   }

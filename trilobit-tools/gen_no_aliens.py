@@ -4,7 +4,7 @@ usage: gen_no_aliens.py <mod dir> <cdda data/json dir>   (occurrences [0,0] remo
 import json, glob, os, sys
 MOD, STOCK = sys.argv[1], sys.argv[2]
 BAN_FLAGS = {"FUNGAL", "TRIFFID", "ANT", "SPIDER", "SLIME", "BEE", "WASP", "DERMATIK", "MI-GO", "EXODII"}
-BAN_IDS = {"void_spider_lair", "labyrinthine_structure"}
+BAN_IDS = {"void_spider_lair", "labyrinthine_structure", "nuclear power plant"}   # the stock plant is replaced by trl_nuclear_station (gen_grid.py)
 out, seen = [], set()
 for f in sorted(glob.glob(os.path.join(STOCK, "overmap/**/*.json"), recursive=True)):
     try: d = json.load(open(f))

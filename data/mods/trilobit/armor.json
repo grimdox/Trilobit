@@ -1,0 +1,263 @@
+[
+ {
+  "type": "material",
+  "id": "trl_plasteel",
+  "copy-from": "steel",
+  "name": "plasteel",
+  "chip_resist": 40,
+  "dmg_adj": [
+   "scuffed",
+   "dented",
+   "cracked",
+   "shattered"
+  ],
+  "resist": {
+   "bash": 8,
+   "cut": 9,
+   "acid": 12,
+   "heat": 12,
+   "bullet": 9,
+   "electric": 8
+  }
+ },
+ {
+  "type": "material",
+  "id": "trl_kp_composite",
+  "copy-from": "kevlar_rigid",
+  "name": "kevlar-plasteel",
+  "chip_resist": 35,
+  "resist": {
+   "bash": 5,
+   "cut": 6,
+   "acid": 8,
+   "heat": 8,
+   "bullet": 8,
+   "electric": 5
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "ARMOR"
+  ],
+  "id": "trl_plasteel_armor",
+  "category": "armor",
+  "name": {
+   "str": "plasteel armor",
+   "str_pl": "plasteel armor"
+  },
+  "description": "A full suit of overlapping plasteel plates over a black underlayer: breastplate, pauldrons, bracers, cuisses and greaves, with a pale-cyan seam of light at every joint.  It stops bullets and energy bolts that would drop a person in a vest, and only the heaviest rounds get through, and then barely.  The price is bulk: it is very heavy, hard to move in, and you will not fit through a crowd.",
+  "weight": "17 kg",
+  "volume": "26 L",
+  "price": "90 kUSD",
+  "price_postapoc": "300 USD",
+  "symbol": "[",
+  "color": "light_cyan",
+  "warmth": 25,
+  "flags": [
+   "STURDY",
+   "OUTER",
+   "WATERPROOF",
+   "BLOCK_WHILE_WORN",
+   "VARSIZE"
+  ],
+  "armor": [
+   {
+    "encumbrance": 32,
+    "coverage": 95,
+    "covers": [
+     "torso"
+    ],
+    "volume_encumber_modifier": 0.2,
+    "material": [
+     {
+      "type": "trl_plasteel",
+      "covered_by_mat": 100,
+      "thickness": 6
+     }
+    ]
+   },
+   {
+    "encumbrance": 20,
+    "coverage": 90,
+    "covers": [
+     "arm_l",
+     "arm_r"
+    ],
+    "material": [
+     {
+      "type": "trl_plasteel",
+      "covered_by_mat": 100,
+      "thickness": 5
+     }
+    ]
+   },
+   {
+    "encumbrance": 26,
+    "coverage": 90,
+    "covers": [
+     "leg_l",
+     "leg_r"
+    ],
+    "material": [
+     {
+      "type": "trl_plasteel",
+      "covered_by_mat": 100,
+      "thickness": 5
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "ARMOR"
+  ],
+  "id": "trl_plasteel_helm",
+  "category": "armor",
+  "name": {
+   "str": "plasteel helm",
+   "str_pl": "plasteel helm"
+  },
+  "description": "A full plasteel helm with a rounded crown, a narrow glowing visor slit and a sealed gorget.  Heavy and bulky, and it narrows your view, but almost nothing gets through it.",
+  "weight": "3600 g",
+  "volume": "5 L",
+  "price": "30 kUSD",
+  "price_postapoc": "300 USD",
+  "symbol": "[",
+  "color": "light_cyan",
+  "warmth": 25,
+  "flags": [
+   "STURDY",
+   "OUTER",
+   "WATERPROOF",
+   "VARSIZE"
+  ],
+  "armor": [
+   {
+    "encumbrance": 18,
+    "coverage": 100,
+    "covers": [
+     "head",
+     "eyes",
+     "mouth"
+    ],
+    "material": [
+     {
+      "type": "trl_plasteel",
+      "covered_by_mat": 100,
+      "thickness": 6
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "ARMOR"
+  ],
+  "id": "trl_kp_vest",
+  "category": "armor",
+  "name": {
+   "str": "kevlar-plasteel chest armor",
+   "str_pl": "kevlar-plasteel chest armor"
+  },
+  "description": "A chest rig of kevlar layers with plasteel plates sewn into the front, back and sides.  It protects almost as well as full plasteel against bullets and energy but weighs a fraction as much, and lets you move.",
+  "weight": "5200 g",
+  "volume": "9 L",
+  "price": "28 kUSD",
+  "price_postapoc": "300 USD",
+  "symbol": "[",
+  "color": "dark_gray",
+  "warmth": 25,
+  "flags": [
+   "STURDY",
+   "OUTER",
+   "WATERPROOF",
+   "VARSIZE"
+  ],
+  "armor": [
+   {
+    "encumbrance": 12,
+    "coverage": 90,
+    "covers": [
+     "torso"
+    ],
+    "material": [
+     {
+      "type": "trl_kp_composite",
+      "covered_by_mat": 100,
+      "thickness": 6
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "ARMOR"
+  ],
+  "id": "trl_kp_helmet",
+  "category": "armor",
+  "name": {
+   "str": "kevlar-plasteel helmet",
+   "str_pl": "kevlar-plasteel helmet"
+  },
+  "description": "An open-faced helmet of kevlar-plasteel composite: a rounded shell, cheek guards and a neck flare, with the face left clear so you can see and be seen.  Good protection against bullets and energy for its weight.",
+  "weight": "1500 g",
+  "volume": "3 L",
+  "price": "9 kUSD",
+  "price_postapoc": "300 USD",
+  "symbol": "[",
+  "color": "dark_gray",
+  "warmth": 25,
+  "flags": [
+   "STURDY",
+   "OUTER",
+   "WATERPROOF",
+   "VARSIZE"
+  ],
+  "armor": [
+   {
+    "encumbrance": 4,
+    "coverage": 100,
+    "covers": [
+     "head"
+    ],
+    "material": [
+     {
+      "type": "trl_kp_composite",
+      "covered_by_mat": 100,
+      "thickness": 6
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_loot_armor",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "trl_kp_vest",
+    "prob": 40
+   },
+   {
+    "item": "trl_kp_helmet",
+    "prob": 40
+   },
+   {
+    "item": "trl_plasteel_armor",
+    "prob": 8
+   },
+   {
+    "item": "trl_plasteel_helm",
+    "prob": 8
+   }
+  ]
+ }
+]

@@ -108,6 +108,19 @@ def register(env):
         decor(g, t)
         post(g, t); g.f_("street_lamp", 22, 14)
 
+    def substation(g):
+        """a fenced transformer yard (no staff): where the grid's feeder cables come up in the city"""
+        shell(g, 2, 3, 21, 20, "wall_concrete", "gravel", door="elock_c", win=False)
+        g.extra = getattr(g, "extra", [])
+        for y in (6, 10, 14, 18):
+            for x in (5, 9, 13, 17):
+                g.extra.append(("f_trl_transformer" if (x + y) % 8 else "f_trl_substation_unit", x, y)); g.occ.add((x, y))
+        for x, y in ((3, 4), (20, 4), (3, 19), (20, 19)):
+            g.extra.append(("f_trl_pylon", x, y)); g.occ.add((x, y))
+        for x, y in ((11, 4), (11, 19), (3, 12), (20, 12)):
+            g.f_("street_lamp", x, y)
+        g.f_("neon_cyan", 7, 20); g.f_("neon_cyan", 15, 20)
+
     FN = {"implant": implant, "nano": nano, "grocery": grocery, "android": android}
     for kind, tiers in SD.TIERS.items():
         for t in tiers:
@@ -118,6 +131,9 @@ def register(env):
                 wrapped(g)
                 post(g, t)
             PLACES.append(dict(id=SD.pid(kind, t), name=SD.NAME[(kind, t)], sym=SD.SYM[kind], color=SD.COLOR[t], fn=with_post, tag="shop", service=True))
+    def subst(g):
+        substation(g); ensure_lights(g)
+    PLACES.append(dict(id="trl_pl_substation", name="power substation", sym="S", color="yellow", fn=subst, tag="shop", service=True))
     for t in "mr":
         def hosp(g, t=t):
             hospital(g, t); ensure_lights(g)

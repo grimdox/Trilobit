@@ -48,6 +48,86 @@ def outline(img, col=(16, 16, 24)):
 
 
 # ------------------------------------------------------------------ items
+ARMOR_KINDS = {"trl_plasteel_armor": "plasteel_suit", "trl_plasteel_helm": "plasteel_helm", "trl_kp_vest": "kp_vest", "trl_kp_helmet": "kp_helmet"}
+PLATE, PLATE_D, PLATE_L = (176, 190, 212), (96, 110, 134), (226, 236, 250)
+GRAPH, GRAPH_D = (58, 62, 78), (34, 36, 48)
+SEAM = (80, 235, 255)
+
+
+def _armor_icon(cv, kind):
+    """Plasteel and kevlar-plasteel armor icons (original designs), drawn on a 32x32 canvas."""
+    if kind == "plasteel_suit":
+        cv.rect((9, 24, 23, 28), GRAPH_D)                       # waist and legs hint
+        cv.rect((10, 25, 15, 30), PLATE); cv.rect((17, 25, 22, 30), PLATE)
+        cv.rect((10, 25, 15, 26), PLATE_L); cv.rect((17, 25, 22, 26), PLATE_L)
+        cv.poly([(8, 6), (24, 6), (26, 22), (22, 25), (10, 25), (6, 22)], PLATE)   # breastplate
+        cv.poly([(8, 6), (16, 6), (16, 25), (10, 25), (6, 22)], PLATE_D)
+        cv.ellipse((2, 4, 10, 12), PLATE); cv.ellipse((22, 4, 30, 12), PLATE)       # pauldrons
+        cv.ellipse((3, 5, 9, 9), PLATE_L); cv.ellipse((23, 5, 29, 9), PLATE_L)
+        cv.line([(16, 8), (16, 24)], SEAM, 0.9)
+        cv.line([(9, 15), (23, 15)], SEAM, 0.7)
+        cv.rect((13, 5, 19, 7), GRAPH_D)
+    elif kind == "plasteel_helm":
+        cv.ellipse((7, 4, 25, 24), PLATE_D)
+        cv.ellipse((8, 4, 24, 20), PLATE)
+        cv.ellipse((11, 6, 19, 11), PLATE_L)
+        cv.rect((10, 15, 22, 17), GRAPH_D)
+        cv.rect((11, 15.5, 21, 16.5), SEAM)                 # visor slit
+        cv.rect((9, 22, 23, 27), PLATE_D)                   # gorget
+        cv.rect((10, 22, 22, 23), PLATE_L)
+    elif kind == "kp_vest":
+        cv.poly([(8, 5), (13, 5), (16, 8), (19, 5), (24, 5), (25, 24), (7, 24)], GRAPH)
+        cv.poly([(8, 5), (13, 5), (16, 8), (16, 24), (7, 24)], GRAPH_D)
+        cv.rect((9, 10, 15, 20), PLATE); cv.rect((17, 10, 23, 20), PLATE)
+        cv.rect((9, 10, 15, 11), PLATE_L); cv.rect((17, 10, 23, 11), PLATE_L)
+        cv.line([(8, 22), (24, 22)], SEAM, 0.8)
+        cv.rect((7, 22, 25, 25), GRAPH_D)
+    elif kind == "kp_helmet":
+        cv.ellipse((6, 5, 26, 24), GRAPH_D)
+        cv.ellipse((7, 5, 25, 20), GRAPH)
+        cv.rect((7, 15, 25, 17), PLATE)                         # rim
+        cv.poly([(7, 16), (12, 16), (12, 25), (8, 24)], GRAPH)   # cheek guards
+        cv.poly([(25, 16), (20, 16), (20, 25), (24, 24)], GRAPH)
+        cv.ellipse((11, 7, 21, 12), PLATE_D)
+        cv.line([(9, 17), (23, 17)], SEAM, 0.6)
+        cv.poly([(8, 24), (24, 24), (22, 28), (10, 28)], GRAPH_D)   # neck flare
+
+
+def p_worn(kind):
+    """On-body overlays (32x36, aligned to the character sprite): the armor drawn over the body."""
+    cv = Canvas(32, 36)
+    if kind == "plasteel_suit":
+        cv.rect((11, 21, 16, 31), PLATE); cv.rect((16, 21, 21, 31), PLATE)       # leg plates
+        cv.rect((11, 21, 16, 22), PLATE_L); cv.rect((16, 21, 21, 22), PLATE_L)
+        cv.rect((11, 26, 16, 27), SEAM); cv.rect((16, 26, 21, 27), SEAM)         # knees
+        cv.rect((10, 29, 16, 32), GRAPH_D); cv.rect((16, 29, 22, 32), GRAPH_D)   # boots
+        cv.rect((7, 13, 10, 22), PLATE); cv.rect((22, 13, 25, 22), PLATE)        # arm plates
+        cv.rect((7, 19, 10, 20), SEAM); cv.rect((22, 19, 25, 20), SEAM)
+        cv.rect((9, 11, 23, 23), PLATE)                                          # breastplate
+        cv.rect((9, 11, 16, 23), PLATE_D)
+        cv.rect((9, 11, 23, 12), PLATE_L)
+        cv.line([(16, 12), (16, 22)], SEAM, 0.8)
+        cv.ellipse((5, 10, 11, 16), PLATE_L); cv.ellipse((21, 10, 27, 16), PLATE_L)   # pauldrons
+    elif kind == "plasteel_helm":
+        cv.ellipse((10.5, 1.5, 21.5, 13), PLATE)
+        cv.ellipse((11, 1.5, 21, 7), PLATE_L)
+        cv.rect((12, 6, 20, 8.5), GRAPH_D)
+        cv.rect((12.5, 6.8, 19.5, 7.8), SEAM)
+        cv.rect((11, 11, 21, 14), PLATE_D)
+    elif kind == "kp_vest":
+        cv.rect((9.5, 12, 22.5, 22.5), GRAPH)
+        cv.rect((11, 13, 15, 21), PLATE); cv.rect((17, 13, 21, 21), PLATE)
+        cv.rect((11, 13, 15, 14), PLATE_L); cv.rect((17, 13, 21, 14), PLATE_L)
+        cv.rect((9.5, 21, 22.5, 23), GRAPH_D)
+        cv.line([(10, 22), (22, 22)], SEAM, 0.6)
+    elif kind == "kp_helmet":
+        cv.ellipse((10.5, 1.5, 21.5, 9), GRAPH)
+        cv.rect((10.5, 6, 21.5, 7.4), PLATE)
+        cv.rect((10.5, 6, 12.5, 11), GRAPH); cv.rect((19.5, 6, 21.5, 11), GRAPH)
+        cv.rect((10.5, 10.5, 12.5, 11.5), SEAM); cv.rect((19.5, 10.5, 21.5, 11.5), SEAM)
+    return cv.done()
+
+
 def classify_item(i, o):
     n = (o.get("name") or {})
     n = (n.get("str") or n.get("str_sp") or "") if isinstance(n, dict) else str(n)
@@ -57,6 +137,8 @@ def classify_item(i, o):
     col = pal(o.get("color"))
     if i == "trl_gun_w2011":
         return ("arcrifle", "light_green")
+    if i in ARMOR_KINDS:
+        return (ARMOR_KINDS[i], "light_cyan")
     if "GUN" in st or t == "GUN":
         sk = str(o.get("skill") or "")
         if "archery" in sk or has(s, "bow", "crossbow"):
@@ -194,6 +276,8 @@ def p_item(kind, col, seed):
     steel = (176, 182, 196)
     if kind == "arcrifle":
         _arcrifle(cv)
+    elif kind in ("plasteel_suit", "plasteel_helm", "kp_vest", "kp_helmet"):
+        _armor_icon(cv, kind)
     elif kind in ("pistol", "smg", "shotgun", "rifle", "laser", "launcher"):
         L = {"pistol": 12, "smg": 16, "shotgun": 22, "rifle": 22, "laser": 16, "launcher": 22}[kind]
         x0 = 16 - L // 2

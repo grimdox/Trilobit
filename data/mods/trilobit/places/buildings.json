@@ -411,6 +411,16 @@
  },
  {
   "type": "overmap_terrain",
+  "id": "trl_pl_substation",
+  "name": "power substation",
+  "sym": "S",
+  "color": "yellow",
+  "see_cost": "full_high",
+  "vision_levels": "large_city_building",
+  "flags": []
+ },
+ {
+  "type": "overmap_terrain",
   "id": "trl_pl_hospital_m",
   "name": "hospital",
   "sym": "H",
@@ -1283,6 +1293,27 @@
      0
     ],
     "overmap": "trl_pl_android_r_north"
+   }
+  ],
+  "city_sizes": [
+   1,
+   -1
+  ]
+ },
+ {
+  "type": "city_building",
+  "id": "trl_pl_substation",
+  "locations": [
+   "land"
+  ],
+  "overmaps": [
+   {
+    "point": [
+     0,
+     0,
+     0
+    ],
+    "overmap": "trl_pl_substation_north"
    }
   ],
   "city_sizes": [

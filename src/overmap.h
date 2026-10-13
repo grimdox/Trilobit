@@ -535,6 +535,7 @@ class overmap
 
         void place_roads( const std::vector<const overmap *> &neighbor_overmaps );
         void place_trilobit_highways();
+        void place_trilobit_grid();
 
         void place_railroads( const std::vector<const overmap *> &neighbor_overmaps );
 
