@@ -137,7 +137,7 @@
   },
   "effect": [
    {
-    "u_message": "Basic Cyber Brain - passive implant.  Uses slots: head 8.  A basic machine brain interfaced with your nervous system.  Machine-brain class.  Required to run hacks and nano-programs.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
+    "u_message": "Cyberbrain Mk I - passive implant.  Uses slots: head 8.  A cyberbrain interfaced with your nervous system.  Control Value limit 4.  Required to run nanohacks.  Status: installed.  Use the bionics screen (})  to switch it on or off.",
     "type": "neutral"
    }
   ]
@@ -6852,7 +6852,7 @@
        "Artificial Night Generator",
        "AudioVox",
        "Autonomous Surgical Scalpels",
-       "Basic Cyber Brain",
+       "Cyberbrain Mk I",
        "Battery System",
        "Bionic Claws",
        "Bionic Nostril",
@@ -6986,7 +6986,7 @@
        "Artificial Night Generator - toggled implant.  Power: activation cost 9 kJ.  Power: running cost 9 kJ.  Uses slots: torso 16.  When active, this bionic eliminates all light within a 2 tile radius through destructive interference.",
        "AudioVox - passive implant.  Uses slots: torso 3, mouth 2.  Hailing from a world choked with neon smog, and appreciated by Exodii artists, the AudioVox implant allows you to change, remodulate, and even autotune your voice.  It also causes vocalizations /(such as shouts and singing/) to be much louder.  It consists of an electronic voice box, synthetic larynx and multiple speakers implanted throughout your throat.",
        "Autonomous Surgical Scalpels - toggled implant.  Uses slots: arm_r 2, arm_l 2.  A system of surgical grade scalpels is implanted in your forearms, extending from just above your wrists.  They allow you to make automated precise cuts and can also be used as a high-quality butchering tool.",
-       "Basic Cyber Brain - passive implant.  Uses slots: head 8.  A basic machine brain interfaced with your nervous system.  Machine-brain class.  Required to run hacks and nano-programs.",
+       "Cyberbrain Mk I - passive implant.  Uses slots: head 8.  A cyberbrain interfaced with your nervous system.  Control Value limit 4.  Required to run nanohacks.",
        "Battery System - toggled implant.  Uses slots: torso 20.  You have a battery draining attachment, and thus can make use of the energy contained in normal, everyday batteries.  Use bionic menu to drain charge from a battery.  Can be toggled on and off at will.",
        "Bionic Claws - toggled implant.  Power: activation cost 25 J.  Uses slots: hand_l 4, hand_r 4.  Vicious claws have been surgically installed inside your fingers, allowing you to extend and retract them at the cost of a small amount of power.  These do considerable cutting damage, but prevent you from holding anything else while extended.",
        "Bionic Nostril - passive implant.  Uses slots: head 2, mouth 1.  You're really not sure how the CBM ended up in your nose, but no matter how it got there this badly misplaced bionic makes it difficult to breathe.  Increases mouth encumbrance by ten.",

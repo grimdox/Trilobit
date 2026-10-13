@@ -193,7 +193,7 @@
     "type": "profession",
     "id": "trl_test_combat",
     "name": "Combat Test",
-    "description": "Combat sandbox: three Trilobit guns with ammo, three hacks, three nano-programs, dodge implants and a large power store.",
+    "description": "Combat sandbox: three Trilobit guns with ammo, six installed nanohacks, a Mk V cyberbrain and a chip of every other nanohack, dodge implants and a large power store.",
     "points": 0,
     "skills": [
       {
@@ -298,16 +298,20 @@
     },
     "traits": [
       "trl_sure_surgery",
-      "trl_hack_suite",
-      "trl_nano_suite",
-      "trl_trained_aim"
+      "trl_trained_aim",
+      "trl_nh_repair",
+      "trl_nh_plating",
+      "trl_nh_overclock",
+      "trl_nh_overload",
+      "trl_nh_blind",
+      "trl_nh_lock"
     ],
     "CBMs": [
       "bio_power_storage_mkII",
       "bio_power_storage_mkII",
       "trl_bio_reflex",
       "trl_bio_threat_sense",
-      "trl_bio_cyberbrain"
+      "trl_bio_cyberbrain_5"
     ],
     "effect_on_conditions": [
       "trl_combat_start"

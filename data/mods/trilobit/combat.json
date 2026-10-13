@@ -52,7 +52,7 @@
   },
   {
     "type": "SPELL",
-    "id": "trl_hack_overload",
+    "id": "trl_nh_overload",
     "name": "Intrude: Overload",
     "description": "Burns out a target's circuits with a surge of current.  Requires a cyber brain.",
     "spell_class": "NONE",
@@ -86,7 +86,7 @@
   },
   {
     "type": "SPELL",
-    "id": "trl_hack_blind",
+    "id": "trl_nh_blind",
     "name": "Intrude: Blind",
     "description": "Floods a target's optic nerve with noise.  Requires a cyber brain.",
     "spell_class": "NONE",
@@ -124,7 +124,7 @@
   },
   {
     "type": "SPELL",
-    "id": "trl_hack_lock",
+    "id": "trl_nh_lock",
     "name": "Intrude: Lockdown",
     "description": "Seizes a target's motor control for a few seconds.  Requires a cyber brain.",
     "spell_class": "NONE",
@@ -162,7 +162,7 @@
   },
   {
     "type": "SPELL",
-    "id": "trl_nano_repair",
+    "id": "trl_nh_repair",
     "name": "Mend: Repair",
     "description": "Nanites knit your wounds.  Requires a cyber brain.",
     "spell_class": "NONE",
@@ -197,7 +197,7 @@
   },
   {
     "type": "SPELL",
-    "id": "trl_nano_plating",
+    "id": "trl_nh_plating",
     "name": "Shell: Plating",
     "description": "Nanites harden your skin into plating for a minute.  Requires a cyber brain.",
     "spell_class": "NONE",
@@ -216,7 +216,7 @@
     "max_damage": 1,
     "damage_increment": 0,
     "effect": "attack",
-    "effect_str": "trl_nano_plating",
+    "effect_str": "trl_nh_plating",
     "shape": "blast",
     "valid_targets": [
       "self"
@@ -235,7 +235,7 @@
   },
   {
     "type": "SPELL",
-    "id": "trl_nano_overclock",
+    "id": "trl_nh_overclock",
     "name": "Reflex: Overclock",
     "description": "Nanites overclock your nervous system for a minute.  Requires a cyber brain.",
     "spell_class": "NONE",
@@ -254,7 +254,7 @@
     "max_damage": 1,
     "damage_increment": 0,
     "effect": "attack",
-    "effect_str": "trl_nano_overclock",
+    "effect_str": "trl_nh_overclock",
     "shape": "blast",
     "valid_targets": [
       "self"
@@ -273,7 +273,7 @@
   },
   {
     "type": "effect_type",
-    "id": "trl_nano_plating",
+    "id": "trl_nh_plating",
     "name": [
       "Shell Plating"
     ],
@@ -297,7 +297,7 @@
   },
   {
     "type": "effect_type",
-    "id": "trl_nano_overclock",
+    "id": "trl_nh_overclock",
     "name": [
       "Overclocked"
     ],
@@ -321,60 +321,6 @@
           }
         ]
       }
-    ]
-  },
-  {
-    "type": "mutation",
-    "id": "trl_hack_suite",
-    "name": {
-      "str": "Hack Suite"
-    },
-    "points": 0,
-    "visibility": 0,
-    "ugliness": 0,
-    "description": "Test trait: grants three hacks (Overload, Blind, Lockdown).",
-    "valid": false,
-    "purifiable": false,
-    "spells_learned": [
-      [
-        "trl_hack_overload",
-        1
-      ],
-      [
-        "trl_hack_blind",
-        1
-      ],
-      [
-        "trl_hack_lock",
-        1
-      ]
-    ]
-  },
-  {
-    "type": "mutation",
-    "id": "trl_nano_suite",
-    "name": {
-      "str": "Nano Suite"
-    },
-    "points": 0,
-    "visibility": 0,
-    "ugliness": 0,
-    "description": "Test trait: grants three nano-programs (Repair, Plating, Overclock).",
-    "valid": false,
-    "purifiable": false,
-    "spells_learned": [
-      [
-        "trl_nano_repair",
-        1
-      ],
-      [
-        "trl_nano_plating",
-        1
-      ],
-      [
-        "trl_nano_overclock",
-        1
-      ]
     ]
   },
   {
@@ -566,15 +512,15 @@
   {
     "type": "json_flag",
     "id": "MACHINE_BRAIN",
-    "info": "This implant is a <info>machine brain</info>; hacks and nano-programs need one to run."
+    "info": "This implant is a <info>machine brain</info>; nanohacks need one to run."
   },
   {
     "type": "bionic",
     "id": "trl_bio_cyberbrain",
     "name": {
-      "str": "Basic Cyber Brain"
+      "str": "Cyberbrain Mk I"
     },
-    "description": "A basic machine brain interfaced with your nervous system.  Machine-brain class.  Required to run hacks and nano-programs.",
+    "description": "A cyberbrain interfaced with your nervous system.  Control Value limit 4.  Required to run nanohacks.",
     "occupied_bodyparts": [
       [
         "head",
@@ -605,10 +551,10 @@
       "BIONIC_ITEM"
     ],
     "name": {
-      "str": "Basic Cyber Brain CBM"
+      "str": "Cyberbrain Mk I CBM"
     },
     "looks_like": "bio_int_enhancer",
-    "description": "A basic machine brain.  Machine-brain class.  Required to run hacks and nano-programs.",
+    "description": "Cyberbrain Mk I: Control Value limit 4.  Required to run nanohacks.",
     "price": "20 kUSD",
     "price_postapoc": "100 USD",
     "weight": "500 g",
