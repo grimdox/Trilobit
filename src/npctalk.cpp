@@ -5052,6 +5052,45 @@ talk_effect_fun_t::func f_npc_go_to_loc( const JsonObject &jo, std::string_view 
     };
 }
 
+talk_effect_fun_t::func f_npc_recruit( const JsonObject &jo, std::string_view member,
+                                       std::string_view, bool is_npc )
+{
+    jo.get_bool( member, true );
+    // Trilobit: make this NPC (e.g. a hacked android) a follower of the avatar, without cash transfer.
+    return [is_npc]( dialogue const & d ) {
+        npc *guy = d.actor( is_npc )->get_npc();
+        if( !guy ) {
+            return;
+        }
+        g->add_npc_follower( guy->getID() );
+        guy->set_attitude( NPCATT_FOLLOW );
+        guy->set_fac( faction_id( "your_followers" ) );
+        guy->set_mission( NPC_MISSION_NULL );
+        guy->guard_pos = std::nullopt;
+        guy->goal = npc::no_goal_point;
+        guy->omt_path.clear();
+    };
+}
+
+talk_effect_fun_t::func f_npc_dismiss( const JsonObject &jo, std::string_view member,
+                                       std::string_view, bool is_npc )
+{
+    jo.get_bool( member, true );
+    // Trilobit: release a follower back to a faction (jo "faction", default no_faction) and make it guard here.
+    const std::string fac = jo.get_string( "faction", "no_faction" );
+    return [is_npc, fac]( dialogue const & d ) {
+        npc *guy = d.actor( is_npc )->get_npc();
+        if( !guy ) {
+            return;
+        }
+        g->remove_npc_follower( guy->getID() );
+        guy->set_fac( faction_id( fac ) );
+        guy->set_attitude( NPCATT_NULL );
+        guy->set_mission( NPC_MISSION_GUARD );
+        guy->guard_pos = guy->pos_abs();
+    };
+}
+
 talk_effect_fun_t::func f_guard_pos( const JsonObject &jo, std::string_view member,
                                      std::string_view, bool is_npc )
 {
@@ -8118,6 +8157,8 @@ parsers = {
     { "u_set_goal", "npc_set_goal", jarg::member, &talk_effect_fun::f_npc_goal },
     { "u_set_guard_pos", "npc_set_guard_pos", jarg::member, &talk_effect_fun::f_guard_pos },
     { "u_go_to_loc", "npc_go_to_loc", jarg::member, &talk_effect_fun::f_npc_go_to_loc },
+    { "u_recruit_npc", "npc_recruit_npc", jarg::member | jarg::object, &talk_effect_fun::f_npc_recruit },
+    { "u_dismiss_npc", "npc_dismiss_npc", jarg::member | jarg::object, &talk_effect_fun::f_npc_dismiss },
     { "u_level_spell_class", "npc_level_spell_class", jarg::member, &talk_effect_fun::f_level_spell_class },
     { "u_learn_recipe", "npc_learn_recipe", jarg::member, &talk_effect_fun::f_learn_recipe },
     { "u_forget_recipe", "npc_forget_recipe", jarg::member, &talk_effect_fun::f_forget_recipe },

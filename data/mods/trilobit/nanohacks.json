@@ -509,6 +509,114 @@
   "spell_class": "NONE",
   "difficulty": 0,
   "max_level": 1,
+  "energy_source": "BIONIC",
+  "base_casting_time": 50,
+  "flags": [
+   "NO_LEGS",
+   "NO_HANDS",
+   "NO_FAIL",
+   "SILENT",
+   "NO_PROJECTILE"
+  ],
+  "min_damage": 0,
+  "max_damage": 0,
+  "damage_increment": 0,
+  "condition": {
+   "u_has_flag": "MACHINE_BRAIN"
+  },
+  "id": "trl_nh_probe",
+  "name": "Intrude: Probe",
+  "description": "Reads an android's frame, role, firmware, battery and owner from range.  Requires a cyber brain.",
+  "effect": "effect_on_condition",
+  "effect_str": "trl_andr_hk_probe",
+  "base_energy_cost": 5,
+  "shape": "blast",
+  "valid_targets": [
+   "hostile",
+   "ally"
+  ],
+  "min_range": 10,
+  "max_range": 10,
+  "min_aoe": 0,
+  "max_aoe": 0
+ },
+ {
+  "type": "SPELL",
+  "spell_class": "NONE",
+  "difficulty": 0,
+  "max_level": 1,
+  "energy_source": "BIONIC",
+  "base_casting_time": 50,
+  "flags": [
+   "NO_LEGS",
+   "NO_HANDS",
+   "NO_FAIL",
+   "SILENT",
+   "NO_PROJECTILE"
+  ],
+  "min_damage": 0,
+  "max_damage": 0,
+  "damage_increment": 0,
+  "condition": {
+   "u_has_flag": "MACHINE_BRAIN"
+  },
+  "id": "trl_nh_disrupt",
+  "name": "Intrude: Disrupt",
+  "description": "Crashes an android's work program for a few seconds.  Hardened firmware fights back.  Requires a cyber brain.",
+  "effect": "effect_on_condition",
+  "effect_str": "trl_andr_hk_disrupt",
+  "base_energy_cost": 15,
+  "shape": "blast",
+  "valid_targets": [
+   "hostile",
+   "ally"
+  ],
+  "min_range": 10,
+  "max_range": 10,
+  "min_aoe": 0,
+  "max_aoe": 0
+ },
+ {
+  "type": "SPELL",
+  "spell_class": "NONE",
+  "difficulty": 0,
+  "max_level": 1,
+  "energy_source": "BIONIC",
+  "base_casting_time": 50,
+  "flags": [
+   "NO_LEGS",
+   "NO_HANDS",
+   "NO_FAIL",
+   "SILENT",
+   "NO_PROJECTILE"
+  ],
+  "min_damage": 0,
+  "max_damage": 0,
+  "damage_increment": 0,
+  "condition": {
+   "u_has_flag": "MACHINE_BRAIN"
+  },
+  "id": "trl_nh_takeover",
+  "name": "Intrude: Take Over",
+  "description": "Rewrites a stock-firmware android's ownership; it follows you until released.  Hardened firmware fights back.  Requires a cyber brain.",
+  "effect": "effect_on_condition",
+  "effect_str": "trl_andr_hk_takeover",
+  "base_energy_cost": 30,
+  "shape": "blast",
+  "valid_targets": [
+   "hostile",
+   "ally"
+  ],
+  "min_range": 10,
+  "max_range": 10,
+  "min_aoe": 0,
+  "max_aoe": 0
+ },
+ {
+  "type": "SPELL",
+  "spell_class": "NONE",
+  "difficulty": 0,
+  "max_level": 1,
   "energy_source": "NONE",
   "base_casting_time": 50,
   "flags": [
@@ -1336,6 +1444,102 @@
   }
  },
  {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_chip_nh_probe",
+  "name": {
+   "str": "nanohack chip (Intrude: Probe)",
+   "str_pl": "nanohack chips (Intrude: Probe)"
+  },
+  "description": "A data chip holding the Intrude: Probe nanohack (Control Value cost 1).  Use it to install the nanohack in your cyberbrain; remove it again from a nanohack console to get the chip back.",
+  "weight": "5 g",
+  "volume": "5 ml",
+  "symbol": "=",
+  "color": "light_blue",
+  "material": [
+   "plastic"
+  ],
+  "price": "600 USD",
+  "price_postapoc": "50 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Install nanohack",
+   "description": "Install this nanohack in your cyberbrain.",
+   "effect_on_conditions": [
+    "trl_nh_inst_probe"
+   ]
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_chip_nh_disrupt",
+  "name": {
+   "str": "nanohack chip (Intrude: Disrupt)",
+   "str_pl": "nanohack chips (Intrude: Disrupt)"
+  },
+  "description": "A data chip holding the Intrude: Disrupt nanohack (Control Value cost 2).  Use it to install the nanohack in your cyberbrain; remove it again from a nanohack console to get the chip back.",
+  "weight": "5 g",
+  "volume": "5 ml",
+  "symbol": "=",
+  "color": "light_blue",
+  "material": [
+   "plastic"
+  ],
+  "price": "600 USD",
+  "price_postapoc": "50 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Install nanohack",
+   "description": "Install this nanohack in your cyberbrain.",
+   "effect_on_conditions": [
+    "trl_nh_inst_disrupt"
+   ]
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_chip_nh_takeover",
+  "name": {
+   "str": "nanohack chip (Intrude: Take Over)",
+   "str_pl": "nanohack chips (Intrude: Take Over)"
+  },
+  "description": "A data chip holding the Intrude: Take Over nanohack (Control Value cost 4).  Use it to install the nanohack in your cyberbrain; remove it again from a nanohack console to get the chip back.",
+  "weight": "5 g",
+  "volume": "5 ml",
+  "symbol": "=",
+  "color": "light_blue",
+  "material": [
+   "plastic"
+  ],
+  "price": "600 USD",
+  "price_postapoc": "50 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Install nanohack",
+   "description": "Install this nanohack in your cyberbrain.",
+   "effect_on_conditions": [
+    "trl_nh_inst_takeover"
+   ]
+  }
+ },
+ {
   "type": "item_group",
   "id": "trl_loot_chips",
   "subtype": "distribution",
@@ -1399,6 +1603,15 @@
    },
    {
     "item": "trl_chip_nh_siphon"
+   },
+   {
+    "item": "trl_chip_nh_probe"
+   },
+   {
+    "item": "trl_chip_nh_disrupt"
+   },
+   {
+    "item": "trl_chip_nh_takeover"
    }
   ]
  },
@@ -1448,6 +1661,15 @@
    },
    {
     "item": "trl_chip_nh_siphon"
+   },
+   {
+    "item": "trl_chip_nh_probe"
+   },
+   {
+    "item": "trl_chip_nh_disrupt"
+   },
+   {
+    "item": "trl_chip_nh_takeover"
    }
   ]
  },
@@ -2132,6 +2354,108 @@
   "description": "Installed nanohack, Control Value cost 4.  Suspended: your Control Value limit is too low.  It wakes when there is room."
  },
  {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": true,
+  "id": "trl_nh_probe",
+  "name": {
+   "str": "Intrude: Probe (nanohack)"
+  },
+  "description": "Installed nanohack, Control Value cost 1.  Active.",
+  "spells_learned": [
+   [
+    "trl_nh_probe",
+    1
+   ]
+  ]
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": true,
+  "id": "trl_nhq_probe",
+  "name": {
+   "str": "Intrude: Probe (suspended)"
+  },
+  "description": "Installed nanohack, Control Value cost 1.  Suspended: your Control Value limit is too low.  It wakes when there is room."
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": true,
+  "id": "trl_nh_disrupt",
+  "name": {
+   "str": "Intrude: Disrupt (nanohack)"
+  },
+  "description": "Installed nanohack, Control Value cost 2.  Active.",
+  "spells_learned": [
+   [
+    "trl_nh_disrupt",
+    1
+   ]
+  ]
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": true,
+  "id": "trl_nhq_disrupt",
+  "name": {
+   "str": "Intrude: Disrupt (suspended)"
+  },
+  "description": "Installed nanohack, Control Value cost 2.  Suspended: your Control Value limit is too low.  It wakes when there is room."
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": true,
+  "id": "trl_nh_takeover",
+  "name": {
+   "str": "Intrude: Take Over (nanohack)"
+  },
+  "description": "Installed nanohack, Control Value cost 4.  Active.",
+  "spells_learned": [
+   [
+    "trl_nh_takeover",
+    1
+   ]
+  ]
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": true,
+  "id": "trl_nhq_takeover",
+  "name": {
+   "str": "Intrude: Take Over (suspended)"
+  },
+  "description": "Installed nanohack, Control Value cost 4.  Suspended: your Control Value limit is too low.  It wakes when there is room."
+ },
+ {
   "type": "bionic",
   "id": "trl_bio_cyberbrain_2",
   "name": {
@@ -2712,6 +3036,48 @@
     ]
    },
    {
+    "if": {
+     "u_has_trait": "trl_nh_probe"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_used",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nh_disrupt"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_used",
+       "+=",
+       "2"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nh_takeover"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_used",
+       "+=",
+       "4"
+      ]
+     }
+    ]
+   },
+   {
     "run_eocs": [
      "trl_nh_shed"
     ]
@@ -3026,6 +3392,48 @@
        "u_nh_m",
        "=",
        "max(u_nh_m, u_nh_ord_siphon + 1)"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nh_probe"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "max(u_nh_m, u_nh_ord_probe + 1)"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nh_disrupt"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "max(u_nh_m, u_nh_ord_disrupt + 1)"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nh_takeover"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "max(u_nh_m, u_nh_ord_takeover + 1)"
       ]
      }
     ]
@@ -3872,6 +4280,132 @@
    },
    {
     "if": {
+     "and": [
+      {
+       "u_has_trait": "trl_nh_probe"
+      },
+      {
+       "math": [
+        "u_nh_ord_probe + 1",
+        "==",
+        "u_nh_m"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_lose_trait": "trl_nh_probe"
+     },
+     {
+      "u_add_trait": "trl_nhq_probe"
+     },
+     {
+      "math": [
+       "u_nh_used",
+       "-=",
+       "1"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "-1"
+      ]
+     },
+     {
+      "u_message": "Over your Control Value limit: Intrude: Probe is suspended.",
+      "type": "bad"
+     }
+    ]
+   },
+   {
+    "if": {
+     "and": [
+      {
+       "u_has_trait": "trl_nh_disrupt"
+      },
+      {
+       "math": [
+        "u_nh_ord_disrupt + 1",
+        "==",
+        "u_nh_m"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_lose_trait": "trl_nh_disrupt"
+     },
+     {
+      "u_add_trait": "trl_nhq_disrupt"
+     },
+     {
+      "math": [
+       "u_nh_used",
+       "-=",
+       "2"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "-1"
+      ]
+     },
+     {
+      "u_message": "Over your Control Value limit: Intrude: Disrupt is suspended.",
+      "type": "bad"
+     }
+    ]
+   },
+   {
+    "if": {
+     "and": [
+      {
+       "u_has_trait": "trl_nh_takeover"
+      },
+      {
+       "math": [
+        "u_nh_ord_takeover + 1",
+        "==",
+        "u_nh_m"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_lose_trait": "trl_nh_takeover"
+     },
+     {
+      "u_add_trait": "trl_nhq_takeover"
+     },
+     {
+      "math": [
+       "u_nh_used",
+       "-=",
+       "4"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "-1"
+      ]
+     },
+     {
+      "u_message": "Over your Control Value limit: Intrude: Take Over is suspended.",
+      "type": "bad"
+     }
+    ]
+   },
+   {
+    "if": {
      "math": [
       "u_nh_used",
       ">",
@@ -4200,6 +4734,48 @@
        "u_nh_m",
        "=",
        "min(u_nh_m, u_nh_ord_siphon)"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nhq_probe"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "min(u_nh_m, u_nh_ord_probe)"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nhq_disrupt"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "min(u_nh_m, u_nh_ord_disrupt)"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nhq_takeover"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "min(u_nh_m, u_nh_ord_takeover)"
       ]
      }
     ]
@@ -5320,6 +5896,174 @@
      },
      {
       "u_message": "Drain: Siphon is active again.",
+      "type": "good"
+     }
+    ]
+   },
+   {
+    "if": {
+     "and": [
+      {
+       "u_has_trait": "trl_nhq_probe"
+      },
+      {
+       "math": [
+        "u_nh_ord_probe",
+        "==",
+        "u_nh_m"
+       ]
+      },
+      {
+       "math": [
+        "u_nh_used + 1",
+        "<=",
+        "u_nh_limit"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_lose_trait": "trl_nhq_probe"
+     },
+     {
+      "u_add_trait": "trl_nh_probe"
+     },
+     {
+      "math": [
+       "u_nh_used",
+       "+=",
+       "1"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "1000000"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_woke",
+       "=",
+       "1"
+      ]
+     },
+     {
+      "u_message": "Intrude: Probe is active again.",
+      "type": "good"
+     }
+    ]
+   },
+   {
+    "if": {
+     "and": [
+      {
+       "u_has_trait": "trl_nhq_disrupt"
+      },
+      {
+       "math": [
+        "u_nh_ord_disrupt",
+        "==",
+        "u_nh_m"
+       ]
+      },
+      {
+       "math": [
+        "u_nh_used + 2",
+        "<=",
+        "u_nh_limit"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_lose_trait": "trl_nhq_disrupt"
+     },
+     {
+      "u_add_trait": "trl_nh_disrupt"
+     },
+     {
+      "math": [
+       "u_nh_used",
+       "+=",
+       "2"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "1000000"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_woke",
+       "=",
+       "1"
+      ]
+     },
+     {
+      "u_message": "Intrude: Disrupt is active again.",
+      "type": "good"
+     }
+    ]
+   },
+   {
+    "if": {
+     "and": [
+      {
+       "u_has_trait": "trl_nhq_takeover"
+      },
+      {
+       "math": [
+        "u_nh_ord_takeover",
+        "==",
+        "u_nh_m"
+       ]
+      },
+      {
+       "math": [
+        "u_nh_used + 4",
+        "<=",
+        "u_nh_limit"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_lose_trait": "trl_nhq_takeover"
+     },
+     {
+      "u_add_trait": "trl_nh_takeover"
+     },
+     {
+      "math": [
+       "u_nh_used",
+       "+=",
+       "4"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "1000000"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_woke",
+       "=",
+       "1"
+      ]
+     },
+     {
+      "u_message": "Intrude: Take Over is active again.",
       "type": "good"
      }
     ]
@@ -8042,6 +8786,408 @@
  },
  {
   "type": "effect_on_condition",
+  "id": "trl_nh_inst_probe",
+  "effect": [
+   {
+    "run_eocs": [
+     "trl_nh_recalc"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_probe"
+      },
+      {
+       "u_has_trait": "trl_nhq_probe"
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_message": "Intrude: Probe is already installed.",
+      "type": "info"
+     },
+     {
+      "u_spawn_item": "trl_chip_nh_probe"
+     }
+    ],
+    "else": [
+     {
+      "if": {
+       "not": {
+        "u_has_flag": "MACHINE_BRAIN"
+       }
+      },
+      "then": [
+       {
+        "u_message": "You need a cyberbrain to install a nanohack.",
+        "type": "bad"
+       },
+       {
+        "u_spawn_item": "trl_chip_nh_probe"
+       }
+      ],
+      "else": [
+       {
+        "if": {
+         "math": [
+          "u_nh_used + 1",
+          ">",
+          "u_nh_limit"
+         ]
+        },
+        "then": [
+         {
+          "u_message": "Not enough Control Value: Intrude: Probe needs 1; you have <u_val:nh_used> of <u_val:nh_limit> in use.  Remove a nanohack first.",
+          "type": "bad"
+         },
+         {
+          "u_spawn_item": "trl_chip_nh_probe"
+         }
+        ],
+        "else": [
+         {
+          "u_add_trait": "trl_nh_probe"
+         },
+         {
+          "math": [
+           "u_nh_ord_probe",
+           "=",
+           "u_nh_seq"
+          ]
+         },
+         {
+          "math": [
+           "u_nh_seq",
+           "+=",
+           "1"
+          ]
+         },
+         {
+          "math": [
+           "u_nh_used",
+           "+=",
+           "1"
+          ]
+         },
+         {
+          "u_message": "Intrude: Probe installed.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.",
+          "type": "good"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_nh_rem_probe",
+  "effect": [
+   {
+    "u_lose_trait": "trl_nh_probe"
+   },
+   {
+    "u_lose_trait": "trl_nhq_probe"
+   },
+   {
+    "u_spawn_item": "trl_chip_nh_probe"
+   },
+   {
+    "run_eocs": [
+     "trl_nh_recalc"
+    ]
+   },
+   {
+    "u_message": "Intrude: Probe removed; the chip is back in your inventory.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.",
+    "type": "info"
+   }
+  ],
+  "condition": {
+   "or": [
+    {
+     "u_has_trait": "trl_nh_probe"
+    },
+    {
+     "u_has_trait": "trl_nhq_probe"
+    }
+   ]
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_nh_inst_disrupt",
+  "effect": [
+   {
+    "run_eocs": [
+     "trl_nh_recalc"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_disrupt"
+      },
+      {
+       "u_has_trait": "trl_nhq_disrupt"
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_message": "Intrude: Disrupt is already installed.",
+      "type": "info"
+     },
+     {
+      "u_spawn_item": "trl_chip_nh_disrupt"
+     }
+    ],
+    "else": [
+     {
+      "if": {
+       "not": {
+        "u_has_flag": "MACHINE_BRAIN"
+       }
+      },
+      "then": [
+       {
+        "u_message": "You need a cyberbrain to install a nanohack.",
+        "type": "bad"
+       },
+       {
+        "u_spawn_item": "trl_chip_nh_disrupt"
+       }
+      ],
+      "else": [
+       {
+        "if": {
+         "math": [
+          "u_nh_used + 2",
+          ">",
+          "u_nh_limit"
+         ]
+        },
+        "then": [
+         {
+          "u_message": "Not enough Control Value: Intrude: Disrupt needs 2; you have <u_val:nh_used> of <u_val:nh_limit> in use.  Remove a nanohack first.",
+          "type": "bad"
+         },
+         {
+          "u_spawn_item": "trl_chip_nh_disrupt"
+         }
+        ],
+        "else": [
+         {
+          "u_add_trait": "trl_nh_disrupt"
+         },
+         {
+          "math": [
+           "u_nh_ord_disrupt",
+           "=",
+           "u_nh_seq"
+          ]
+         },
+         {
+          "math": [
+           "u_nh_seq",
+           "+=",
+           "1"
+          ]
+         },
+         {
+          "math": [
+           "u_nh_used",
+           "+=",
+           "2"
+          ]
+         },
+         {
+          "u_message": "Intrude: Disrupt installed.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.",
+          "type": "good"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_nh_rem_disrupt",
+  "effect": [
+   {
+    "u_lose_trait": "trl_nh_disrupt"
+   },
+   {
+    "u_lose_trait": "trl_nhq_disrupt"
+   },
+   {
+    "u_spawn_item": "trl_chip_nh_disrupt"
+   },
+   {
+    "run_eocs": [
+     "trl_nh_recalc"
+    ]
+   },
+   {
+    "u_message": "Intrude: Disrupt removed; the chip is back in your inventory.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.",
+    "type": "info"
+   }
+  ],
+  "condition": {
+   "or": [
+    {
+     "u_has_trait": "trl_nh_disrupt"
+    },
+    {
+     "u_has_trait": "trl_nhq_disrupt"
+    }
+   ]
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_nh_inst_takeover",
+  "effect": [
+   {
+    "run_eocs": [
+     "trl_nh_recalc"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_takeover"
+      },
+      {
+       "u_has_trait": "trl_nhq_takeover"
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_message": "Intrude: Take Over is already installed.",
+      "type": "info"
+     },
+     {
+      "u_spawn_item": "trl_chip_nh_takeover"
+     }
+    ],
+    "else": [
+     {
+      "if": {
+       "not": {
+        "u_has_flag": "MACHINE_BRAIN"
+       }
+      },
+      "then": [
+       {
+        "u_message": "You need a cyberbrain to install a nanohack.",
+        "type": "bad"
+       },
+       {
+        "u_spawn_item": "trl_chip_nh_takeover"
+       }
+      ],
+      "else": [
+       {
+        "if": {
+         "math": [
+          "u_nh_used + 4",
+          ">",
+          "u_nh_limit"
+         ]
+        },
+        "then": [
+         {
+          "u_message": "Not enough Control Value: Intrude: Take Over needs 4; you have <u_val:nh_used> of <u_val:nh_limit> in use.  Remove a nanohack first.",
+          "type": "bad"
+         },
+         {
+          "u_spawn_item": "trl_chip_nh_takeover"
+         }
+        ],
+        "else": [
+         {
+          "u_add_trait": "trl_nh_takeover"
+         },
+         {
+          "math": [
+           "u_nh_ord_takeover",
+           "=",
+           "u_nh_seq"
+          ]
+         },
+         {
+          "math": [
+           "u_nh_seq",
+           "+=",
+           "1"
+          ]
+         },
+         {
+          "math": [
+           "u_nh_used",
+           "+=",
+           "4"
+          ]
+         },
+         {
+          "u_message": "Intrude: Take Over installed.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.",
+          "type": "good"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_nh_rem_takeover",
+  "effect": [
+   {
+    "u_lose_trait": "trl_nh_takeover"
+   },
+   {
+    "u_lose_trait": "trl_nhq_takeover"
+   },
+   {
+    "u_spawn_item": "trl_chip_nh_takeover"
+   },
+   {
+    "run_eocs": [
+     "trl_nh_recalc"
+    ]
+   },
+   {
+    "u_message": "Intrude: Take Over removed; the chip is back in your inventory.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.",
+    "type": "info"
+   }
+  ],
+  "condition": {
+   "or": [
+    {
+     "u_has_trait": "trl_nh_takeover"
+    },
+    {
+     "u_has_trait": "trl_nhq_takeover"
+    }
+   ]
+  }
+ },
+ {
+  "type": "effect_on_condition",
   "id": "trl_nh_menu",
   "effect": [
    {
@@ -8490,6 +9636,72 @@
     ]
    },
    {
+    "if": {
+     "u_has_trait": "trl_nh_probe"
+    },
+    "then": [
+     {
+      "u_message": "  Intrude: Probe (CV 1): active",
+      "type": "neutral"
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nhq_probe"
+    },
+    "then": [
+     {
+      "u_message": "  Intrude: Probe (CV 1): SUSPENDED",
+      "type": "bad"
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nh_disrupt"
+    },
+    "then": [
+     {
+      "u_message": "  Intrude: Disrupt (CV 2): active",
+      "type": "neutral"
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nhq_disrupt"
+    },
+    "then": [
+     {
+      "u_message": "  Intrude: Disrupt (CV 2): SUSPENDED",
+      "type": "bad"
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nh_takeover"
+    },
+    "then": [
+     {
+      "u_message": "  Intrude: Take Over (CV 4): active",
+      "type": "neutral"
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nhq_takeover"
+    },
+    "then": [
+     {
+      "u_message": "  Intrude: Take Over (CV 4): SUSPENDED",
+      "type": "bad"
+     }
+    ]
+   },
+   {
     "run_eoc_selector": [
      "trl_nh_rem_repair",
      "trl_nh_rem_purge",
@@ -8510,7 +9722,10 @@
      "trl_nh_rem_print_kit",
      "trl_nh_rem_blink",
      "trl_nh_rem_hop",
-     "trl_nh_rem_siphon"
+     "trl_nh_rem_siphon",
+     "trl_nh_rem_probe",
+     "trl_nh_rem_disrupt",
+     "trl_nh_rem_takeover"
     ],
     "names": [
      "Remove Mend: Repair (CV 2)",
@@ -8532,7 +9747,10 @@
      "Remove Fabricate: Print Bandages (CV 2)",
      "Remove Phase: Blink (CV 5)",
      "Remove Phase: Hop (CV 3)",
-     "Remove Drain: Siphon (CV 4)"
+     "Remove Drain: Siphon (CV 4)",
+     "Remove Intrude: Probe (CV 1)",
+     "Remove Intrude: Disrupt (CV 2)",
+     "Remove Intrude: Take Over (CV 4)"
     ],
     "keys": [
      "a",
@@ -8554,7 +9772,10 @@
      "q",
      "r",
      "s",
-     "t"
+     "t",
+     "u",
+     "v",
+     "w"
     ],
     "hide_failing": true,
     "allow_cancel": true,

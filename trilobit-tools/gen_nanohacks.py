@@ -16,6 +16,8 @@ def spell(id, tree, name, desc, **kw):
     s = dict(BASE); s.update(id=id, name=f"{tree}: {name}", description=desc + REQ); s.update(kw); return s
 SELF = dict(shape="blast", valid_targets=["self"], min_range=0, max_range=0, min_aoe=0, max_aoe=0)
 FOE = dict(shape="blast", valid_targets=["hostile"], min_range=10, max_range=10, min_aoe=0, max_aoe=0)
+ANDR = dict(shape="blast", valid_targets=["hostile", "ally"], min_range=10, max_range=10, min_aoe=0, max_aoe=0,
+            flags=["NO_LEGS", "NO_HANDS", "NO_FAIL", "SILENT", "NO_PROJECTILE"])
 def sdur(sec): return dict(min_duration=sec * 100, max_duration=sec * 100)
 def selfeff(eid, **kw): return dict(effect="attack", effect_str=eid, damage_type="biological", min_damage=1, max_damage=1, **SELF, **kw)
 
@@ -44,6 +46,12 @@ NEW = [
  spell("trl_nh_siphon", "Drain", "Siphon", "Burns an enemy's circuits and takes some of the power back.", effect="attack", damage_type="electric",
        min_damage=12, max_damage=12, base_energy_cost=10, extra_effects=[{"id": "trl_nh_siphon_gain", "hit_self": True}], **FOE,
        flags=["NO_LEGS", "NO_HANDS", "NO_FAIL", "NO_PROJECTILE"]),
+ spell("trl_nh_probe", "Intrude", "Probe", "Reads an android's frame, role, firmware, battery and owner from range.", effect="effect_on_condition", effect_str="trl_andr_hk_probe",
+       base_energy_cost=5, **ANDR),
+ spell("trl_nh_disrupt", "Intrude", "Disrupt", "Crashes an android's work program for a few seconds.  Hardened firmware fights back.", effect="effect_on_condition",
+       effect_str="trl_andr_hk_disrupt", base_energy_cost=15, **ANDR),
+ spell("trl_nh_takeover", "Intrude", "Take Over", "Rewrites a stock-firmware android's ownership; it follows you until released.  Hardened firmware fights back.",
+       effect="effect_on_condition", effect_str="trl_andr_hk_takeover", base_energy_cost=30, **ANDR),
  dict(BASE, id="trl_nh_siphon_gain", name="Siphon gain", description="Returns power from a Siphon.", effect="recover_energy", effect_str="BIONIC",
       energy_source="NONE", base_energy_cost=0, min_damage=22, max_damage=22, **SELF),
 ]
@@ -70,8 +78,9 @@ ALL = {
  "trl_nh_print_ammo": "Fabricate", "trl_nh_print_kit": "Fabricate",
  "trl_nh_blink": "Phase", "trl_nh_hop": "Phase",
  "trl_nh_siphon": "Drain",
+ "trl_nh_probe": "Intrude", "trl_nh_disrupt": "Intrude", "trl_nh_takeover": "Intrude",
 }
-assert len(ALL) == 20 and len(set(ALL.values())) == 10
+assert len(ALL) == 23 and len(set(ALL.values())) == 10
 RENAME = {"trl_nh_repair": "Mend: Repair", "trl_nh_plating": "Shell: Plating", "trl_nh_overclock": "Reflex: Overclock",
           "trl_nh_overload": "Intrude: Overload", "trl_nh_blind": "Intrude: Blind", "trl_nh_lock": "Intrude: Lockdown"}
 cp = os.path.join(MOD, "combat.json")
@@ -86,7 +95,7 @@ TREECOLOR = {"Mend": "light_green", "Shell": "light_gray", "Reflex": "yellow", "
 COST = {"trl_nh_repair": 2, "trl_nh_purge": 1, "trl_nh_plating": 3, "trl_nh_reactive": 3, "trl_nh_overclock": 4, "trl_nh_afterimage": 2,
         "trl_nh_lock_on": 3, "trl_nh_shock_field": 4, "trl_nh_cloak": 5, "trl_nh_dampener": 2, "trl_nh_pulse_scan": 2, "trl_nh_night_eye": 1,
         "trl_nh_overload": 3, "trl_nh_blind": 2, "trl_nh_lock": 3, "trl_nh_print_ammo": 3, "trl_nh_print_kit": 2, "trl_nh_blink": 5,
-        "trl_nh_hop": 3, "trl_nh_siphon": 4}
+        "trl_nh_hop": 3, "trl_nh_siphon": 4, "trl_nh_probe": 1, "trl_nh_disrupt": 2, "trl_nh_takeover": 4}
 assert set(COST) == set(ALL)
 GRADES = [("trl_bio_cyberbrain", "Cyberbrain Mk I", 4), ("trl_bio_cyberbrain_2", "Cyberbrain Mk II", 8), ("trl_bio_cyberbrain_3", "Cyberbrain Mk III", 14),
           ("trl_bio_cyberbrain_4", "Cyberbrain Mk IV", 22), ("trl_bio_cyberbrain_5", "Cyberbrain Mk V", 32)]
@@ -185,13 +194,13 @@ for sid in sids:
         {"run_eocs": ["trl_nh_recalc"]},
         {"u_message": f"{names[sid]} removed; the chip is back in your inventory.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.", "type": "info"}],
         condition=both))
-keys = "abcdefghijklmnopqrst"
+keys = "abcdefghijklmnopqrstuvwxyz"
 menu = [{"run_eocs": ["trl_nh_recalc"]}]
 for sid in sids:
     menu.append({"if": has(sid), "then": [{"u_message": f"  {names[sid]} (CV {COST[sid]}): active", "type": "neutral"}]})
     menu.append({"if": hasq(sid), "then": [{"u_message": f"  {names[sid]} (CV {COST[sid]}): SUSPENDED", "type": "bad"}]})
 menu.append({"run_eoc_selector": ["trl_nh_rem_" + short(s) for s in sids], "names": [f"Remove {names[s]} (CV {COST[s]})" for s in sids],
-             "keys": list(keys), "hide_failing": True, "allow_cancel": True, "title": "Nanohacks: Control Value <u_val:nh_used> of <u_val:nh_limit> in use"})
+             "keys": list(keys)[:len(sids)], "hide_failing": True, "allow_cancel": True, "title": "Nanohacks: Control Value <u_val:nh_used> of <u_val:nh_limit> in use"})
 cvx.append(eoc("trl_nh_menu", menu))
 cvx.append(eoc("trl_nh_start", [{"math": ["u_nh_seq", "=", "1"]}, {"u_spawn_item": "trl_nh_console"}, {"run_eocs": ["trl_nh_recalc"]}]))
 

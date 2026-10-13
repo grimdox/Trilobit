@@ -53,7 +53,10 @@
   "programs": [
    "Intrude: Overload",
    "Intrude: Blind",
-   "Intrude: Lockdown"
+   "Intrude: Lockdown",
+   "Intrude: Probe",
+   "Intrude: Disrupt",
+   "Intrude: Take Over"
   ]
  },
  {

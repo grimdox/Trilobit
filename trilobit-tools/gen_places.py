@@ -2,6 +2,7 @@
 """Generate Trilobit places: new terrain, furniture (with light), 30 one-tile locations, loot groups.
 usage: gen_places.py <mod dir>"""
 import gen_factions as gfac
+import gen_androids as gand
 import json, os, random, sys
 MOD = sys.argv[1]
 W = H = 24
@@ -516,6 +517,15 @@ def mapgen_json():
                "place_items": [{"item": gr, "x": [x0, x1], "y": [y0, y1], "chance": ch, "repeat": rep} for gr, x0, y0, x1, y1, ch, rep in g.items]}
         bn = gfac.bar_npcs(p["id"])
         if bn: obj["place_npcs"] = [{"class": c, "x": x, "y": y} for c, x, y in bn]
+        an = gand.android_npcs(p["id"])
+        if an:
+            taken = {(x, y) for _, x, y in bn} | {(x, y) for _, x, y in [(k, fx, fy) for k, fx, fy in g.f]}
+            cx = cy = 11
+            cells = sorted(((x, y) for y in range(2, 22) for x in range(2, 22)), key=lambda c: (c[0] - cx) ** 2 + (c[1] - cy) ** 2)
+            ok = [c for c in cells if g.t[c[1]][c[0]] in FLOORS and c not in taken]
+            indoor = [c for c in ok if g.t[c[1]][c[0]] not in ("walk", "road", "grass", "pave", "gravel")]
+            pool = indoor if len(indoor) >= len(an) else ok
+            obj.setdefault("place_npcs", []).extend({"class": c, "x": xy[0], "y": xy[1]} for c, xy in zip(an, pool))
         out.append({"type": "mapgen", "om_terrain": [p["id"]], "object": obj})
         p["lights"] = g.lights(); p["rows"] = rows; p["nf"] = len(g.f)
     return out

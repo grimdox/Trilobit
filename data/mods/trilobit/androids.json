@@ -1,0 +1,1452 @@
+[
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": false,
+  "id": "trl_android",
+  "name": {
+   "str": "Android"
+  },
+  "description": "A synthetic body running a work program.  It carries a networked controller, so it can be probed and hacked."
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": false,
+  "id": "trl_andr_frame_civ",
+  "name": {
+   "str": "Civilian frame"
+  },
+  "description": "A light, human-like frame for service work."
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": false,
+  "id": "trl_andr_frame_labor",
+  "name": {
+   "str": "Labor frame"
+  },
+  "description": "A strong, slow frame built for lifting and hauling.",
+  "enchantments": [
+   {
+    "values": [
+     {
+      "value": "MAX_HP",
+      "multiply": 0.3
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": false,
+  "id": "trl_andr_frame_sec",
+  "name": {
+   "str": "Security frame"
+  },
+  "description": "An armored frame with reinforced limbs and fast reflexes.",
+  "enchantments": [
+   {
+    "values": [
+     {
+      "value": "MAX_HP",
+      "multiply": 0.5
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": false,
+  "id": "trl_andr_role_porter",
+  "name": {
+   "str": "Porter"
+  },
+  "description": "Work program: porter."
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": false,
+  "id": "trl_andr_role_clerk",
+  "name": {
+   "str": "Attendant"
+  },
+  "description": "Work program: attendant."
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": false,
+  "id": "trl_andr_role_guard",
+  "name": {
+   "str": "Guard"
+  },
+  "description": "Work program: guard."
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": false,
+  "id": "trl_andr_fw_stock",
+  "name": {
+   "str": "Stock firmware"
+  },
+  "description": "Owner-locked work program with minimal security."
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": false,
+  "id": "trl_andr_fw_hardened",
+  "name": {
+   "str": "Hardened firmware"
+  },
+  "description": "Corporate-grade work program that counter-hacks and raises alarms."
+ },
+ {
+  "type": "item_group",
+  "id": "trl_andr_worn_porter",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "jumpsuit"
+   },
+   {
+    "item": "boots_combat"
+   },
+   {
+    "item": "gloves_light"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_andr_weapon_porter",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "pipe",
+    "prob": 50
+   },
+   {
+    "item": "crowbar",
+    "prob": 50
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_andr_carry_porter",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "crowbar",
+    "prob": 40
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_andr_worn_clerk",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "suit"
+   },
+   {
+    "item": "dress_shoes"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_andr_weapon_clerk",
+  "subtype": "distribution",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "trl_andr_carry_clerk",
+  "subtype": "distribution",
+  "entries": []
+ },
+ {
+  "type": "item_group",
+  "id": "trl_andr_worn_guard",
+  "subtype": "collection",
+  "entries": [
+   {
+    "item": "ballistic_vest_light"
+   },
+   {
+    "item": "pants_cargo"
+   },
+   {
+    "item": "boots_combat"
+   },
+   {
+    "item": "gloves_light"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_andr_weapon_guard",
+  "subtype": "distribution",
+  "entries": [
+   {
+    "item": "baton-extended",
+    "prob": 50
+   },
+   {
+    "item": "trl_gun_vp9",
+    "prob": 50
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_andr_carry_guard",
+  "subtype": "distribution",
+  "entries": []
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_andr_labor_porter_stock",
+  "name": {
+   "str": "Porter android"
+  },
+  "job_description": "I'm a porter android.",
+  "common": false,
+  "worn_override": "trl_andr_worn_porter",
+  "weapon_override": "trl_andr_weapon_porter",
+  "carry_override": "trl_andr_carry_porter",
+  "traits": [
+   {
+    "trait": "trl_android"
+   },
+   {
+    "trait": "trl_andr_frame_labor"
+   },
+   {
+    "trait": "trl_andr_role_porter"
+   },
+   {
+    "trait": "trl_andr_fw_stock"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 2
+    }
+   },
+   {
+    "skill": "melee",
+    "level": {
+     "constant": 3
+    }
+   },
+   {
+    "skill": "dodge",
+    "level": {
+     "constant": 2
+    }
+   }
+  ],
+  "bonus_str": {
+   "constant": 5
+  },
+  "bonus_dex": {
+   "constant": -1
+  }
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_andr_labor_porter_stock",
+  "class": "trl_nc_andr_labor_porter_stock",
+  "attitude": 0,
+  "mission": 7,
+  "faction": "no_faction",
+  "chat": "TRL_ANDROID_TALK",
+  "temp_suffix": "porter android"
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_andr_civ_porter_stock",
+  "name": {
+   "str": "Porter android"
+  },
+  "job_description": "I'm a porter android.",
+  "common": false,
+  "worn_override": "trl_andr_worn_porter",
+  "weapon_override": "trl_andr_weapon_porter",
+  "carry_override": "trl_andr_carry_porter",
+  "traits": [
+   {
+    "trait": "trl_android"
+   },
+   {
+    "trait": "trl_andr_frame_civ"
+   },
+   {
+    "trait": "trl_andr_role_porter"
+   },
+   {
+    "trait": "trl_andr_fw_stock"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 2
+    }
+   },
+   {
+    "skill": "melee",
+    "level": {
+     "constant": 3
+    }
+   },
+   {
+    "skill": "dodge",
+    "level": {
+     "constant": 2
+    }
+   }
+  ],
+  "bonus_dex": {
+   "constant": 1
+  },
+  "bonus_per": {
+   "constant": 1
+  }
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_andr_civ_porter_stock",
+  "class": "trl_nc_andr_civ_porter_stock",
+  "attitude": 0,
+  "mission": 7,
+  "faction": "no_faction",
+  "chat": "TRL_ANDROID_TALK",
+  "temp_suffix": "porter android"
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_andr_civ_clerk_stock",
+  "name": {
+   "str": "Attendant android"
+  },
+  "job_description": "I'm a attendant android.",
+  "common": false,
+  "worn_override": "trl_andr_worn_clerk",
+  "weapon_override": "trl_andr_weapon_clerk",
+  "carry_override": "trl_andr_carry_clerk",
+  "traits": [
+   {
+    "trait": "trl_android"
+   },
+   {
+    "trait": "trl_andr_frame_civ"
+   },
+   {
+    "trait": "trl_andr_role_clerk"
+   },
+   {
+    "trait": "trl_andr_fw_stock"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 2
+    }
+   },
+   {
+    "skill": "speech",
+    "level": {
+     "constant": 5
+    }
+   }
+  ],
+  "bonus_dex": {
+   "constant": 1
+  },
+  "bonus_per": {
+   "constant": 1
+  }
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_andr_civ_clerk_stock",
+  "class": "trl_nc_andr_civ_clerk_stock",
+  "attitude": 0,
+  "mission": 7,
+  "faction": "no_faction",
+  "chat": "TRL_ANDROID_TALK",
+  "temp_suffix": "attendant android"
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_andr_sec_guard_stock",
+  "name": {
+   "str": "Guard android"
+  },
+  "job_description": "I'm a guard android.",
+  "common": false,
+  "worn_override": "trl_andr_worn_guard",
+  "weapon_override": "trl_andr_weapon_guard",
+  "carry_override": "trl_andr_carry_guard",
+  "traits": [
+   {
+    "trait": "trl_android"
+   },
+   {
+    "trait": "trl_andr_frame_sec"
+   },
+   {
+    "trait": "trl_andr_role_guard"
+   },
+   {
+    "trait": "trl_andr_fw_stock"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 2
+    }
+   },
+   {
+    "skill": "melee",
+    "level": {
+     "constant": 4
+    }
+   },
+   {
+    "skill": "pistol",
+    "level": {
+     "constant": 3
+    }
+   },
+   {
+    "skill": "dodge",
+    "level": {
+     "constant": 3
+    }
+   }
+  ],
+  "bonus_str": {
+   "constant": 3
+  },
+  "bonus_dex": {
+   "constant": 2
+  },
+  "bonus_per": {
+   "constant": 2
+  }
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_andr_sec_guard_stock",
+  "class": "trl_nc_andr_sec_guard_stock",
+  "attitude": 0,
+  "mission": 7,
+  "faction": "no_faction",
+  "chat": "TRL_ANDROID_TALK",
+  "temp_suffix": "guard android"
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_andr_civ_guard_stock",
+  "name": {
+   "str": "Guard android"
+  },
+  "job_description": "I'm a guard android.",
+  "common": false,
+  "worn_override": "trl_andr_worn_guard",
+  "weapon_override": "trl_andr_weapon_guard",
+  "carry_override": "trl_andr_carry_guard",
+  "traits": [
+   {
+    "trait": "trl_android"
+   },
+   {
+    "trait": "trl_andr_frame_civ"
+   },
+   {
+    "trait": "trl_andr_role_guard"
+   },
+   {
+    "trait": "trl_andr_fw_stock"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 2
+    }
+   },
+   {
+    "skill": "melee",
+    "level": {
+     "constant": 4
+    }
+   },
+   {
+    "skill": "pistol",
+    "level": {
+     "constant": 3
+    }
+   },
+   {
+    "skill": "dodge",
+    "level": {
+     "constant": 3
+    }
+   }
+  ],
+  "bonus_dex": {
+   "constant": 1
+  },
+  "bonus_per": {
+   "constant": 1
+  }
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_andr_civ_guard_stock",
+  "class": "trl_nc_andr_civ_guard_stock",
+  "attitude": 0,
+  "mission": 7,
+  "faction": "no_faction",
+  "chat": "TRL_ANDROID_TALK",
+  "temp_suffix": "guard android"
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_andr_labor_porter_hardened",
+  "name": {
+   "str": "Porter android"
+  },
+  "job_description": "I'm a porter android.",
+  "common": false,
+  "worn_override": "trl_andr_worn_porter",
+  "weapon_override": "trl_andr_weapon_porter",
+  "carry_override": "trl_andr_carry_porter",
+  "traits": [
+   {
+    "trait": "trl_android"
+   },
+   {
+    "trait": "trl_andr_frame_labor"
+   },
+   {
+    "trait": "trl_andr_role_porter"
+   },
+   {
+    "trait": "trl_andr_fw_hardened"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 2
+    }
+   },
+   {
+    "skill": "melee",
+    "level": {
+     "constant": 3
+    }
+   },
+   {
+    "skill": "dodge",
+    "level": {
+     "constant": 2
+    }
+   }
+  ],
+  "bonus_str": {
+   "constant": 5
+  },
+  "bonus_dex": {
+   "constant": -1
+  }
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_andr_labor_porter_hardened",
+  "class": "trl_nc_andr_labor_porter_hardened",
+  "attitude": 0,
+  "mission": 7,
+  "faction": "no_faction",
+  "chat": "TRL_ANDROID_TALK",
+  "temp_suffix": "porter android"
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_andr_civ_porter_hardened",
+  "name": {
+   "str": "Porter android"
+  },
+  "job_description": "I'm a porter android.",
+  "common": false,
+  "worn_override": "trl_andr_worn_porter",
+  "weapon_override": "trl_andr_weapon_porter",
+  "carry_override": "trl_andr_carry_porter",
+  "traits": [
+   {
+    "trait": "trl_android"
+   },
+   {
+    "trait": "trl_andr_frame_civ"
+   },
+   {
+    "trait": "trl_andr_role_porter"
+   },
+   {
+    "trait": "trl_andr_fw_hardened"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 2
+    }
+   },
+   {
+    "skill": "melee",
+    "level": {
+     "constant": 3
+    }
+   },
+   {
+    "skill": "dodge",
+    "level": {
+     "constant": 2
+    }
+   }
+  ],
+  "bonus_dex": {
+   "constant": 1
+  },
+  "bonus_per": {
+   "constant": 1
+  }
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_andr_civ_porter_hardened",
+  "class": "trl_nc_andr_civ_porter_hardened",
+  "attitude": 0,
+  "mission": 7,
+  "faction": "no_faction",
+  "chat": "TRL_ANDROID_TALK",
+  "temp_suffix": "porter android"
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_andr_civ_clerk_hardened",
+  "name": {
+   "str": "Attendant android"
+  },
+  "job_description": "I'm a attendant android.",
+  "common": false,
+  "worn_override": "trl_andr_worn_clerk",
+  "weapon_override": "trl_andr_weapon_clerk",
+  "carry_override": "trl_andr_carry_clerk",
+  "traits": [
+   {
+    "trait": "trl_android"
+   },
+   {
+    "trait": "trl_andr_frame_civ"
+   },
+   {
+    "trait": "trl_andr_role_clerk"
+   },
+   {
+    "trait": "trl_andr_fw_hardened"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 2
+    }
+   },
+   {
+    "skill": "speech",
+    "level": {
+     "constant": 5
+    }
+   }
+  ],
+  "bonus_dex": {
+   "constant": 1
+  },
+  "bonus_per": {
+   "constant": 1
+  }
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_andr_civ_clerk_hardened",
+  "class": "trl_nc_andr_civ_clerk_hardened",
+  "attitude": 0,
+  "mission": 7,
+  "faction": "no_faction",
+  "chat": "TRL_ANDROID_TALK",
+  "temp_suffix": "attendant android"
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_andr_sec_guard_hardened",
+  "name": {
+   "str": "Guard android"
+  },
+  "job_description": "I'm a guard android.",
+  "common": false,
+  "worn_override": "trl_andr_worn_guard",
+  "weapon_override": "trl_andr_weapon_guard",
+  "carry_override": "trl_andr_carry_guard",
+  "traits": [
+   {
+    "trait": "trl_android"
+   },
+   {
+    "trait": "trl_andr_frame_sec"
+   },
+   {
+    "trait": "trl_andr_role_guard"
+   },
+   {
+    "trait": "trl_andr_fw_hardened"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 2
+    }
+   },
+   {
+    "skill": "melee",
+    "level": {
+     "constant": 4
+    }
+   },
+   {
+    "skill": "pistol",
+    "level": {
+     "constant": 3
+    }
+   },
+   {
+    "skill": "dodge",
+    "level": {
+     "constant": 3
+    }
+   }
+  ],
+  "bonus_str": {
+   "constant": 3
+  },
+  "bonus_dex": {
+   "constant": 2
+  },
+  "bonus_per": {
+   "constant": 2
+  }
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_andr_sec_guard_hardened",
+  "class": "trl_nc_andr_sec_guard_hardened",
+  "attitude": 0,
+  "mission": 7,
+  "faction": "no_faction",
+  "chat": "TRL_ANDROID_TALK",
+  "temp_suffix": "guard android"
+ },
+ {
+  "type": "npc_class",
+  "id": "trl_nc_andr_civ_guard_hardened",
+  "name": {
+   "str": "Guard android"
+  },
+  "job_description": "I'm a guard android.",
+  "common": false,
+  "worn_override": "trl_andr_worn_guard",
+  "weapon_override": "trl_andr_weapon_guard",
+  "carry_override": "trl_andr_carry_guard",
+  "traits": [
+   {
+    "trait": "trl_android"
+   },
+   {
+    "trait": "trl_andr_frame_civ"
+   },
+   {
+    "trait": "trl_andr_role_guard"
+   },
+   {
+    "trait": "trl_andr_fw_hardened"
+   }
+  ],
+  "skills": [
+   {
+    "skill": "ALL",
+    "level": {
+     "constant": 2
+    }
+   },
+   {
+    "skill": "melee",
+    "level": {
+     "constant": 4
+    }
+   },
+   {
+    "skill": "pistol",
+    "level": {
+     "constant": 3
+    }
+   },
+   {
+    "skill": "dodge",
+    "level": {
+     "constant": 3
+    }
+   }
+  ],
+  "bonus_dex": {
+   "constant": 1
+  },
+  "bonus_per": {
+   "constant": 1
+  }
+ },
+ {
+  "type": "npc",
+  "id": "trl_nc_andr_civ_guard_hardened",
+  "class": "trl_nc_andr_civ_guard_hardened",
+  "attitude": 0,
+  "mission": 7,
+  "faction": "no_faction",
+  "chat": "TRL_ANDROID_TALK",
+  "temp_suffix": "guard android"
+ },
+ {
+  "type": "talk_topic",
+  "id": "TRL_ANDROID_TALK",
+  "dynamic_line": {
+   "u_has_trait": "trl_andr_role_guard",
+   "yes": "Move along.  This area is monitored.",
+   "no": {
+    "u_has_trait": "trl_andr_role_porter",
+    "yes": "Cargo goes where the list says.  Please keep clear.",
+    "no": "Welcome.  How may I help you?"
+   }
+  },
+  "responses": [
+   {
+    "text": "Never mind.",
+    "topic": "TALK_DONE"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_tick",
+  "recurrence": [
+   "15 minutes",
+   "20 minutes"
+  ],
+  "global": true,
+  "effect": [
+   {
+    "u_run_npc_eocs": [
+     "trl_andr_step"
+    ],
+    "overmap": true
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_step",
+  "condition": {
+   "and": [
+    {
+     "u_has_trait": "trl_android"
+    },
+    {
+     "not": "u_following"
+    },
+    {
+     "math": [
+      "u_trl_skip_until < time('now')"
+     ]
+    }
+   ]
+  },
+  "effect": [
+   {
+    "run_eocs": [
+     "trl_andr_init_once"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "math": [
+        "u_npc_anger() > 0"
+       ]
+      },
+      {
+       "math": [
+        "u_npc_fear() > 0"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "u_trl_skip_until = time('now') + time('10 m')"
+      ]
+     }
+    ],
+    "else": [
+     {
+      "run_eocs": [
+       "trl_andr_battery"
+      ]
+     },
+     {
+      "if": {
+       "math": [
+        "u_andr_battery <= 0"
+       ]
+      },
+      "then": [
+       {
+        "u_add_effect": "stunned",
+        "duration": "20 minutes"
+       }
+      ],
+      "else": [
+       {
+        "if": {
+         "math": [
+          "u_andr_charging == 1"
+         ]
+        },
+        "then": [
+         {
+          "run_eocs": [
+           "trl_andr_charge"
+          ]
+         }
+        ],
+        "else": [
+         {
+          "if": {
+           "u_has_trait": "trl_andr_role_porter"
+          },
+          "then": [
+           {
+            "run_eocs": [
+             "trl_andr_roam"
+            ]
+           }
+          ],
+          "else": [
+           {
+            "run_eocs": [
+             "trl_andr_post"
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_init_once",
+  "condition": {
+   "math": [
+    "u_andr_inited == 0"
+   ]
+  },
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "andr_dock"
+    }
+   },
+   {
+    "math": [
+     "u_andr_inited = 1"
+    ]
+   },
+   {
+    "math": [
+     "u_andr_battery = 100"
+    ]
+   },
+   {
+    "math": [
+     "u_andr_charging = 0"
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_battery",
+  "effect": [
+   {
+    "if": {
+     "math": [
+      "u_andr_charging == 0"
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "u_andr_battery = max(0, u_andr_battery - 2)"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "and": [
+      {
+       "math": [
+        "u_andr_charging == 0"
+       ]
+      },
+      {
+       "math": [
+        "u_andr_battery <= 15"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "u_andr_charging = 1"
+      ]
+     },
+     {
+      "u_go_to_loc": {
+       "u_val": "andr_dock"
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_charge",
+  "effect": [
+   {
+    "if": {
+     "math": [
+      "distance('u', u_andr_dock) > 2"
+     ]
+    },
+    "then": [
+     {
+      "u_go_to_loc": {
+       "u_val": "andr_dock"
+      }
+     }
+    ],
+    "else": [
+     {
+      "math": [
+       "u_andr_battery = min(100, u_andr_battery + 12)"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "u_andr_battery >= 95"
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "u_andr_charging = 0"
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_post",
+  "effect": [
+   {
+    "if": {
+     "math": [
+      "distance('u', u_andr_dock) > 3"
+     ]
+    },
+    "then": [
+     {
+      "u_go_to_loc": {
+       "u_val": "andr_dock"
+      }
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_goto_spot",
+  "effect": [
+   {
+    "u_go_to_loc": {
+     "u_val": "andr_spot"
+    }
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_roam",
+  "effect": [
+   {
+    "if": {
+     "or": [
+      {
+       "math": [
+        "distance('u', u_andr_dock) > 12"
+       ]
+      },
+      {
+       "math": [
+        "rand(4) == 0"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_go_to_loc": {
+       "u_val": "andr_dock"
+      }
+     }
+    ],
+    "else": [
+     {
+      "u_location_variable": {
+       "u_val": "andr_spot"
+      },
+      "max_radius": 8,
+      "passable_only": true,
+      "true_eocs": [
+       "trl_andr_goto_spot"
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_hk_probe",
+  "effect": [
+   {
+    "if": {
+     "u_has_trait": "trl_android"
+    },
+    "then": [
+     {
+      "npc_message": "Probe: <u_name>.  Battery <u_val:andr_battery>%.",
+      "type": "info"
+     },
+     {
+      "if": {
+       "u_has_trait": "trl_andr_frame_civ"
+      },
+      "then": [
+       {
+        "npc_message": "  Frame: civilian frame.",
+        "type": "info"
+       }
+      ]
+     },
+     {
+      "if": {
+       "u_has_trait": "trl_andr_frame_labor"
+      },
+      "then": [
+       {
+        "npc_message": "  Frame: labor frame.",
+        "type": "info"
+       }
+      ]
+     },
+     {
+      "if": {
+       "u_has_trait": "trl_andr_frame_sec"
+      },
+      "then": [
+       {
+        "npc_message": "  Frame: security frame.",
+        "type": "info"
+       }
+      ]
+     },
+     {
+      "if": {
+       "u_has_trait": "trl_andr_role_porter"
+      },
+      "then": [
+       {
+        "npc_message": "  Role: porter.",
+        "type": "info"
+       }
+      ]
+     },
+     {
+      "if": {
+       "u_has_trait": "trl_andr_role_clerk"
+      },
+      "then": [
+       {
+        "npc_message": "  Role: attendant.",
+        "type": "info"
+       }
+      ]
+     },
+     {
+      "if": {
+       "u_has_trait": "trl_andr_role_guard"
+      },
+      "then": [
+       {
+        "npc_message": "  Role: guard.",
+        "type": "info"
+       }
+      ]
+     },
+     {
+      "if": {
+       "u_has_trait": "trl_andr_fw_stock"
+      },
+      "then": [
+       {
+        "npc_message": "  Firmware: stock firmware (security 1).",
+        "type": "info"
+       }
+      ]
+     },
+     {
+      "if": {
+       "u_has_trait": "trl_andr_fw_hardened"
+      },
+      "then": [
+       {
+        "npc_message": "  Firmware: hardened firmware (security 3).",
+        "type": "info"
+       }
+      ]
+     },
+     {
+      "if": "u_following",
+      "then": [
+       {
+        "npc_message": "  Owner: you.",
+        "type": "info"
+       }
+      ],
+      "else": [
+       {
+        "npc_message": "  Owner: someone else.",
+        "type": "info"
+       }
+      ]
+     }
+    ],
+    "else": [
+     {
+      "npc_message": "That is not an android; nothing answers the probe.",
+      "type": "info"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_hk_disrupt",
+  "effect": [
+   {
+    "if": {
+     "u_has_trait": "trl_android"
+    },
+    "then": [
+     {
+      "if": {
+       "u_has_trait": "trl_andr_fw_hardened"
+      },
+      "then": [
+       {
+        "npc_message": "The hardened firmware shrugs it off and raises an alarm.",
+        "type": "bad"
+       },
+       {
+        "math": [
+         "u_npc_anger() = max(u_npc_anger(), 5)"
+        ]
+       }
+      ],
+      "else": [
+       {
+        "u_add_effect": "stunned",
+        "duration": "30 seconds"
+       },
+       {
+        "npc_message": "The android's routine crashes; it freezes for a moment.",
+        "type": "good"
+       }
+      ]
+     }
+    ],
+    "else": [
+     {
+      "npc_message": "That is not an android; nothing answers the probe.",
+      "type": "info"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_hk_takeover",
+  "effect": [
+   {
+    "if": {
+     "u_has_trait": "trl_android"
+    },
+    "then": [
+     {
+      "if": {
+       "u_has_trait": "trl_andr_fw_hardened"
+      },
+      "then": [
+       {
+        "npc_message": "Its firmware is hardened; the takeover fails and it turns on you.",
+        "type": "bad"
+       },
+       {
+        "math": [
+         "u_npc_anger() = max(u_npc_anger(), 5)"
+        ]
+       }
+      ],
+      "else": [
+       {
+        "u_recruit_npc": true
+       },
+       {
+        "npc_message": "You rewrite its ownership.  It falls in behind you.",
+        "type": "good"
+       }
+      ]
+     }
+    ],
+    "else": [
+     {
+      "npc_message": "That is not an android; nothing answers the probe.",
+      "type": "info"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_release",
+  "effect": [
+   {
+    "u_dismiss_npc": true,
+    "faction": "no_faction"
+   }
+  ]
+ }
+]
