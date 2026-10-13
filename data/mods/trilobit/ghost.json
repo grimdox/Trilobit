@@ -873,6 +873,90 @@
     ]
    },
    {
+    "math": [
+     "trl_gh_n_override",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_override"
+      },
+      {
+       "u_has_trait": "trl_nhq_override"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_override",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_seal",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_seal"
+      },
+      {
+       "u_has_trait": "trl_nhq_seal"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_seal",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "math": [
+     "trl_gh_n_command",
+     "=",
+     "0"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_command"
+      },
+      {
+       "u_has_trait": "trl_nhq_command"
+      }
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "trl_gh_n_command",
+       "=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
     "u_add_trait": "trl_ghost_left"
    },
    {
@@ -1719,6 +1803,84 @@
      {
       "math": [
        "u_nh_ord_takeover",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_override == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_override"
+     },
+     {
+      "math": [
+       "u_nh_ord_override",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_seal == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_seal"
+     },
+     {
+      "math": [
+       "u_nh_ord_seal",
+       "=",
+       "u_nh_seq"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_seq",
+       "+=",
+       "1"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "math": [
+      "trl_gh_n_command == 1"
+     ]
+    },
+    "then": [
+     {
+      "u_add_trait": "trl_nhq_command"
+     },
+     {
+      "math": [
+       "u_nh_ord_command",
        "=",
        "u_nh_seq"
       ]

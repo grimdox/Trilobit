@@ -48,7 +48,14 @@ ter("screen_c", "e", "paper screen door", "A sliding screen door of wood and pap
 ter("screen_o", "E2", "open paper screen door", "A sliding screen door, pushed open.", "'", "light_green", "t_door_o")
 ter("shutter_c", "r", "rust shutter", "A rolling shutter patched with sheet metal.", "+", "red", "t_door_c")
 ter("shutter_o", "R2", "open rust shutter", "A rolling shutter, rattled up.", "'", "red", "t_door_o")
-OPEN = {"door_c": "door_o", "screen_c": "screen_o", "shutter_c": "shutter_o"}
+# electronic security doors: sealed (locked), unlocked-closed, open.  Nanohacks and release panels switch them (see gen_doors.py).
+ter("elock_l", "L2", "sealed security door", "A steel security door with a red status light.  An electronic lock holds it shut; it opens to a hack or a release panel.", "+", "light_red", "t_door_metal_locked",
+    extend={"flags": ["ELECTRONIC", "NETWORKED"]}, bash={"str_min": 40, "str_max": 120, "sound": "metal screeching!", "sound_fail": "clang!", "ter_set": "t_mdoor_frame"}, light_emitted=2)
+ter("elock_c", "l2", "security door", "A steel security door with a green status light.  It is unlocked; it will seal itself if its owner tells it to.", "+", "light_green", "t_door_metal_c",
+    extend={"flags": ["ELECTRONIC", "NETWORKED"]})
+ter("elock_o", "L3", "open security door", "A security door, slid back into the wall.", "'", "light_green", "t_door_metal_o",
+    extend={"flags": ["ELECTRONIC", "NETWORKED"]})
+OPEN = {"door_c": "door_o", "screen_c": "screen_o", "shutter_c": "shutter_o", "elock_c": "elock_o"}
 CLOSE = {v: k for k, v in OPEN.items()}
 # open variants get internal chars (not used in layouts); closed doors and open variants are paired in JSON
 FLOORS = {"pave", "gravel", "floor_corp", "floor_wood", "tatami", "slab", "checker", "grating", "hazard", "neon_cyan",
@@ -254,7 +261,7 @@ def _(g):
     g.loot("trl_loot_drink", 5, 6, 18, 17, 50, 2)
 @place("izakaya", "izakaya", "I", "yellow", "drink")
 def _(g):
-    shell(g, 2, 4, 21, 19, "wall_slat", "floor_wood")
+    shell(g, 2, 4, 21, 19, "wall_slat", "floor_wood", door="elock_c")
     g.line("counter_noodle", 5, 8, 18, 8)
     for x in range(5, 19, 2): g.f_("bar_stool", x, 9)
     for x in (5, 10, 15): g.f_("table_low", x, 14); g.f_("cushion", x, 13); g.f_("cushion", x, 15)
@@ -264,7 +271,7 @@ def _(g):
     g.loot("trl_loot_drink", 5, 5, 19, 7, 70, 3); g.loot("trl_loot_food", 4, 13, 18, 16, 40, 2)
 @place("neon_lounge", "neon lounge", "L", "pink", "drink")
 def _(g):
-    shell(g, 3, 4, 20, 19, "wall_neon", "floor_wood")
+    shell(g, 3, 4, 20, 19, "wall_neon", "floor_wood", door="elock_c")
     for y in (9, 14, 18): g.hwall(4, 19, y, "neon_cyan")
     g.line("counter_noodle", 5, 6, 14, 6)
     for x in range(5, 15, 2): g.f_("bar_stool", x, 7)
@@ -284,7 +291,7 @@ def _(g):
     g.loot("trl_loot_tech", 4, 18, 20, 20, 40, 1)
 @place("convenience_store", "convenience store", "C", "light_cyan", "food")
 def _(g):
-    shell(g, 3, 5, 20, 19, "wall_corp", "floor_corp")
+    shell(g, 3, 5, 20, 19, "wall_corp", "floor_corp", door="elock_c")
     for x in (6, 9, 12, 15): 
         g.line("shelf_clean", x, 8, x, 14)
     g.line("lightbox", 5, 17, 10, 17); g.f_("vending", 18, 7); g.f_("vending", 18, 9); g.f_("neon_cyan", 7, 6); g.f_("neon_green", 14, 6)
@@ -292,7 +299,7 @@ def _(g):
     g.loot("trl_loot_food", 6, 8, 15, 14, 80, 5); g.loot("trl_loot_drink", 17, 7, 19, 12, 60, 2)
 @place("electronics_bazaar", "electronics bazaar", "E", "light_cyan", "tech")
 def _(g):
-    shell(g, 2, 3, 21, 20, "wall_screens", "slab")
+    shell(g, 2, 3, 21, 20, "wall_screens", "slab", door="elock_c")
     for x in range(4, 20, 4):
         for y in (7, 12):
             g.f_("table_plastic", x, y); g.f_("table_plastic", x + 1, y); g.f_("desk_lamp", x, y - 1); g.f_("console", x + 1, y - 1)
@@ -300,7 +307,7 @@ def _(g):
     g.loot("trl_loot_tech", 3, 6, 20, 13, 80, 6); g.loot("trl_loot_chips", 3, 6, 20, 13, 25, 1)
 @place("implant_clinic", "implant clinic", "+", "white", "med")
 def _(g):
-    shell(g, 3, 3, 20, 20, "wall_corp", "floor_corp")
+    shell(g, 3, 3, 20, 20, "wall_corp", "floor_corp", door="elock_c")
     g.hwall(4, 19, 12, "wall_corp"); g.put("door_c", 11, 12)
     for x in (5, 8, 11): g.f_("chair_office", x, 16); g.f_("fern", 18, 18)
     g.f_("reception", 14, 17); g.f_("holo_ad", 7, 18); g.f_("neon_cyan", 10, 4); g.f_("neon_green", 16, 4)
@@ -308,7 +315,7 @@ def _(g):
     g.loot("trl_loot_med", 4, 5, 19, 10, 60, 4); g.loot("trl_loot_chips", 4, 5, 19, 10, 20, 1)
 @place("corp_lobby", "corporate lobby", "L", "white", "decor")
 def _(g):
-    shell(g, 2, 3, 21, 20, "wall_corp", "checker", door="door_c")
+    shell(g, 2, 3, 21, 20, "wall_corp", "checker", door="elock_c")
     g.line("reception", 6, 8, 17, 8); g.f_("chair_office", 8, 9); g.f_("chair_office", 12, 9); g.f_("chair_office", 15, 9)
     for x in (4, 19): g.f_("fern", x, 5); g.f_("vase_white", x, 17); g.f_("vase_tall", x, 11)
     for y in (13, 16): g.f_("chair_lounge", 8, y); g.f_("chair_lounge", 15, y)
@@ -316,7 +323,7 @@ def _(g):
     g.loot("trl_loot_decor", 4, 5, 19, 18, 40, 2); g.loot("trl_loot_chips", 6, 7, 17, 9, 30, 1)
 @place("govt_office", "government office", "G", "light_gray", "tech")
 def _(g):
-    shell(g, 2, 3, 21, 20, "wall_concrete", "slab")
+    shell(g, 2, 3, 21, 20, "wall_concrete", "slab", door="elock_c")
     for y in (6, 9, 12, 15):
         for x in range(4, 20, 3): g.f_("desk_corp", x, y); g.f_("chair_office", x, y + 1)
     g.line("shelf_clean", 3, 18, 20, 18); g.f_("floor_lamp", 4, 19); g.f_("floor_lamp", 19, 19); g.f_("desk_lamp", 10, 6)
@@ -324,7 +331,7 @@ def _(g):
     g.loot("trl_loot_tech", 4, 6, 20, 16, 40, 4)
 @place("server_hall", "server hall", "S", "light_cyan", "tech")
 def _(g):
-    shell(g, 2, 2, 21, 21, "wall_pipes", "grating")
+    shell(g, 2, 2, 21, 21, "wall_pipes", "grating", door="elock_l")
     for x in range(5, 20, 3):
         g.line("server_rack", x, 5, x, 9); g.line("server_rack", x, 13, x, 17)
     g.f_("console", 3, 19); g.f_("console", 20, 19); g.f_("neon_cyan", 11, 3); g.f_("neon_cyan", 11, 20); g.f_("chair_office", 3, 20)
@@ -408,7 +415,7 @@ def _(g):
     g.loot("trl_loot_decor", 4, 6, 19, 17, 40, 3)
 @place("archive_library", "data archive", "l", "light_cyan", "tech")
 def _(g):
-    shell(g, 3, 3, 20, 20, "wall_corp", "floor_corp")
+    shell(g, 3, 3, 20, 20, "wall_corp", "floor_corp", door="elock_l")
     for x in range(5, 19, 3): g.line("shelf_clean", x, 5, x, 10); g.line("shelf_clean", x, 13, x, 17)
     g.f_("console", 4, 19); g.f_("console", 19, 19); g.f_("chair_office", 4, 18); g.f_("desk_lamp", 11, 19); g.f_("neon_cyan", 11, 4); g.f_("neon_cyan", 12, 19)
     g.f_("fern", 19, 4)
@@ -542,6 +549,17 @@ def mapgen_json():
             cand = [(x, y) for y in range(2, 22) for x in range(2, 22) if g.t[y][x] in FLOORS and g.t[y][x] not in ("walk", "road", "grass", "pave", "gravel") and (x, y) not in taken2]
             if cand:
                 obj["place_furniture"].append({"furn": "f_trl_atm", "x": cand[len(cand) // 3][0], "y": cand[len(cand) // 3][1]})
+        # release panel just inside the first security door
+        done = False
+        for yy, row in enumerate(g.t):
+            for xx, k in enumerate(row):
+                if k in ("elock_c", "elock_l") and not done:
+                    for dx, dy in ((1, -1), (-1, -1), (0, -1), (1, 1), (-1, 1), (0, 1)):
+                        px, py = xx + dx, yy + dy
+                        if 0 < px < W - 1 and 0 < py < H - 1 and g.t[py][px] in FLOORS and g.t[py][px] not in ("walk", "road", "grass", "pave", "gravel") and \
+                           all(f["x"] != px or f["y"] != py for f in obj["place_furniture"]) and \
+                           all(a["x"] != px or a["y"] != py for a in obj.get("place_npcs", [])):
+                            obj["place_furniture"].append({"furn": "f_trl_door_panel", "x": px, "y": py}); done = True; break
         out.append({"type": "mapgen", "om_terrain": [p["id"]], "object": obj})
         p["lights"] = g.lights(); p["rows"] = rows; p["nf"] = len(g.f)
     return out

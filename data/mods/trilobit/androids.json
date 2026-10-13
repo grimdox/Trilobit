@@ -2312,6 +2312,11 @@
     ]
    },
    {
+    "run_eocs": [
+     "trl_andr_hours"
+    ]
+   },
+   {
     "if": {
      "or": [
       {
@@ -2587,6 +2592,347 @@
  },
  {
   "type": "effect_on_condition",
+  "id": "trl_andr_hours",
+  "effect": [
+   {
+    "if": {
+     "u_has_trait": "trl_andr_role_clerk"
+    },
+    "then": [
+     {
+      "if": {
+       "and": [
+        {
+         "math": [
+          "time_since('midnight','unit':'hours') >= 7"
+         ]
+        },
+        {
+         "math": [
+          "time_since('midnight','unit':'hours') < 22"
+         ]
+        }
+       ]
+      },
+      "then": [
+       {
+        "u_transform_radius": 10,
+        "ter_furn_transform": "trl_elock_unlock"
+       }
+      ],
+      "else": [
+       {
+        "u_transform_radius": 10,
+        "ter_furn_transform": "trl_elock_seal"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_andr_role_techclerk"
+    },
+    "then": [
+     {
+      "if": {
+       "and": [
+        {
+         "math": [
+          "time_since('midnight','unit':'hours') >= 7"
+         ]
+        },
+        {
+         "math": [
+          "time_since('midnight','unit':'hours') < 22"
+         ]
+        }
+       ]
+      },
+      "then": [
+       {
+        "u_transform_radius": 10,
+        "ter_furn_transform": "trl_elock_unlock"
+       }
+      ],
+      "else": [
+       {
+        "u_transform_radius": 10,
+        "ter_furn_transform": "trl_elock_seal"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_andr_role_medclerk"
+    },
+    "then": [
+     {
+      "if": {
+       "and": [
+        {
+         "math": [
+          "time_since('midnight','unit':'hours') >= 7"
+         ]
+        },
+        {
+         "math": [
+          "time_since('midnight','unit':'hours') < 22"
+         ]
+        }
+       ]
+      },
+      "then": [
+       {
+        "u_transform_radius": 10,
+        "ter_furn_transform": "trl_elock_unlock"
+       }
+      ],
+      "else": [
+       {
+        "u_transform_radius": 10,
+        "ter_furn_transform": "trl_elock_seal"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_andr_role_reception"
+    },
+    "then": [
+     {
+      "if": {
+       "and": [
+        {
+         "math": [
+          "time_since('midnight','unit':'hours') >= 7"
+         ]
+        },
+        {
+         "math": [
+          "time_since('midnight','unit':'hours') < 22"
+         ]
+        }
+       ]
+      },
+      "then": [
+       {
+        "u_transform_radius": 10,
+        "ter_furn_transform": "trl_elock_unlock"
+       }
+      ],
+      "else": [
+       {
+        "u_transform_radius": 10,
+        "ter_furn_transform": "trl_elock_seal"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_andr_role_bartender"
+    },
+    "then": [
+     {
+      "if": {
+       "or": [
+        {
+         "math": [
+          "time_since('midnight','unit':'hours') >= 12"
+         ]
+        },
+        {
+         "math": [
+          "time_since('midnight','unit':'hours') < 3"
+         ]
+        }
+       ]
+      },
+      "then": [
+       {
+        "u_transform_radius": 10,
+        "ter_furn_transform": "trl_elock_unlock"
+       }
+      ],
+      "else": [
+       {
+        "u_transform_radius": 10,
+        "ter_furn_transform": "trl_elock_seal"
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_ord_follow",
+  "effect": [
+   {
+    "u_recruit_npc": true
+   },
+   {
+    "npc_message": "It falls in behind you.",
+    "type": "good"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_ord_hold",
+  "effect": [
+   {
+    "u_dismiss_npc": true,
+    "faction": "your_followers"
+   },
+   {
+    "npc_message": "It stands its ground here.",
+    "type": "good"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_ord_post",
+  "effect": [
+   {
+    "u_location_variable": {
+     "u_val": "andr_dock"
+    }
+   },
+   {
+    "math": [
+     "u_andr_charging = 0"
+    ]
+   },
+   {
+    "u_dismiss_npc": true,
+    "faction": "no_faction"
+   },
+   {
+    "npc_message": "It takes up a post here and goes back to its work.",
+    "type": "good"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_ord_door",
+  "effect": [
+   {
+    "u_transform_radius": 6,
+    "ter_furn_transform": "trl_elock_override"
+   },
+   {
+    "npc_message": "It slides the nearby security doors open.",
+    "type": "good"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_ord_seal",
+  "effect": [
+   {
+    "u_transform_radius": 6,
+    "ter_furn_transform": "trl_elock_seal"
+   },
+   {
+    "npc_message": "It seals the nearby security doors.",
+    "type": "good"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_ord_release",
+  "effect": [
+   {
+    "math": [
+     "u_andr_owned = 0"
+    ]
+   },
+   {
+    "u_dismiss_npc": true,
+    "faction": "no_faction"
+   },
+   {
+    "npc_message": "It drops your orders and returns to its own routine.",
+    "type": "good"
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_andr_hk_command",
+  "effect": [
+   {
+    "if": {
+     "u_has_trait": "trl_android"
+    },
+    "then": [
+     {
+      "if": {
+       "math": [
+        "u_andr_owned == 1"
+       ]
+      },
+      "then": [
+       {
+        "run_eoc_selector": [
+         "trl_andr_ord_follow",
+         "trl_andr_ord_hold",
+         "trl_andr_ord_post",
+         "trl_andr_ord_door",
+         "trl_andr_ord_seal",
+         "trl_andr_ord_release"
+        ],
+        "names": [
+         "Follow me",
+         "Hold this position",
+         "Work a post here",
+         "Open the doors around you",
+         "Seal the doors around you",
+         "Release it"
+        ],
+        "keys": [
+         "a",
+         "b",
+         "c",
+         "d",
+         "e",
+         "f"
+        ],
+        "allow_cancel": true,
+        "title": "Command <u_name>"
+       }
+      ],
+      "else": [
+       {
+        "npc_message": "You do not own this android.  Take it over first.",
+        "type": "bad"
+       }
+      ]
+     }
+    ],
+    "else": [
+     {
+      "npc_message": "That is not an android; nothing answers the order.",
+      "type": "info"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
   "id": "trl_andr_hk_probe",
   "effect": [
    {
@@ -2838,6 +3184,11 @@
       "else": [
        {
         "u_recruit_npc": true
+       },
+       {
+        "math": [
+         "u_andr_owned = 1"
+        ]
        },
        {
         "npc_message": "You rewrite its ownership.  It falls in behind you.",

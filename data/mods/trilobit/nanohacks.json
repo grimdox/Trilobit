@@ -617,6 +617,112 @@
   "spell_class": "NONE",
   "difficulty": 0,
   "max_level": 1,
+  "energy_source": "BIONIC",
+  "base_casting_time": 50,
+  "flags": [
+   "NO_LEGS",
+   "NO_HANDS",
+   "NO_FAIL",
+   "SILENT",
+   "NO_PROJECTILE"
+  ],
+  "min_damage": 1,
+  "max_damage": 1,
+  "damage_increment": 0,
+  "condition": {
+   "u_has_flag": "MACHINE_BRAIN"
+  },
+  "id": "trl_nh_override",
+  "name": "Intrude: Door Override",
+  "description": "Commands an electronic security door within twelve tiles to unlock and open.  Requires a cyber brain.",
+  "effect": "ter_transform",
+  "effect_str": "trl_elock_override",
+  "shape": "blast",
+  "valid_targets": [
+   "ground"
+  ],
+  "min_range": 12,
+  "max_range": 12,
+  "min_aoe": 1,
+  "max_aoe": 1,
+  "base_energy_cost": 10
+ },
+ {
+  "type": "SPELL",
+  "spell_class": "NONE",
+  "difficulty": 0,
+  "max_level": 1,
+  "energy_source": "BIONIC",
+  "base_casting_time": 50,
+  "flags": [
+   "NO_LEGS",
+   "NO_HANDS",
+   "NO_FAIL",
+   "SILENT",
+   "NO_PROJECTILE"
+  ],
+  "min_damage": 1,
+  "max_damage": 1,
+  "damage_increment": 0,
+  "condition": {
+   "u_has_flag": "MACHINE_BRAIN"
+  },
+  "id": "trl_nh_seal",
+  "name": "Intrude: Door Seal",
+  "description": "Commands an electronic security door within twelve tiles to close and lock.  Requires a cyber brain.",
+  "effect": "ter_transform",
+  "effect_str": "trl_elock_seal",
+  "shape": "blast",
+  "valid_targets": [
+   "ground"
+  ],
+  "min_range": 12,
+  "max_range": 12,
+  "min_aoe": 1,
+  "max_aoe": 1,
+  "base_energy_cost": 10
+ },
+ {
+  "type": "SPELL",
+  "spell_class": "NONE",
+  "difficulty": 0,
+  "max_level": 1,
+  "energy_source": "BIONIC",
+  "base_casting_time": 50,
+  "flags": [
+   "NO_LEGS",
+   "NO_HANDS",
+   "NO_FAIL",
+   "SILENT",
+   "NO_PROJECTILE"
+  ],
+  "min_damage": 0,
+  "max_damage": 0,
+  "damage_increment": 0,
+  "condition": {
+   "u_has_flag": "MACHINE_BRAIN"
+  },
+  "id": "trl_nh_command",
+  "name": "Intrude: Command",
+  "description": "Gives an order to an android you own: follow, hold here, work this post, open doors, or release it.  Requires a cyber brain.",
+  "effect": "effect_on_condition",
+  "effect_str": "trl_andr_hk_command",
+  "base_energy_cost": 10,
+  "shape": "blast",
+  "valid_targets": [
+   "hostile",
+   "ally"
+  ],
+  "min_range": 10,
+  "max_range": 10,
+  "min_aoe": 0,
+  "max_aoe": 0
+ },
+ {
+  "type": "SPELL",
+  "spell_class": "NONE",
+  "difficulty": 0,
+  "max_level": 1,
   "energy_source": "NONE",
   "base_casting_time": 50,
   "flags": [
@@ -1540,6 +1646,102 @@
   }
  },
  {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_chip_nh_override",
+  "name": {
+   "str": "nanohack chip (Intrude: Door Override)",
+   "str_pl": "nanohack chips (Intrude: Door Override)"
+  },
+  "description": "A data chip holding the Intrude: Door Override nanohack (Control Value cost 2).  Use it to install the nanohack in your cyberbrain; remove it again from a nanohack console to get the chip back.",
+  "weight": "5 g",
+  "volume": "5 ml",
+  "symbol": "=",
+  "color": "light_blue",
+  "material": [
+   "plastic"
+  ],
+  "price": "600 USD",
+  "price_postapoc": "50 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Install nanohack",
+   "description": "Install this nanohack in your cyberbrain.",
+   "effect_on_conditions": [
+    "trl_nh_inst_override"
+   ]
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_chip_nh_seal",
+  "name": {
+   "str": "nanohack chip (Intrude: Door Seal)",
+   "str_pl": "nanohack chips (Intrude: Door Seal)"
+  },
+  "description": "A data chip holding the Intrude: Door Seal nanohack (Control Value cost 2).  Use it to install the nanohack in your cyberbrain; remove it again from a nanohack console to get the chip back.",
+  "weight": "5 g",
+  "volume": "5 ml",
+  "symbol": "=",
+  "color": "light_blue",
+  "material": [
+   "plastic"
+  ],
+  "price": "600 USD",
+  "price_postapoc": "50 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Install nanohack",
+   "description": "Install this nanohack in your cyberbrain.",
+   "effect_on_conditions": [
+    "trl_nh_inst_seal"
+   ]
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GENERIC"
+  ],
+  "id": "trl_chip_nh_command",
+  "name": {
+   "str": "nanohack chip (Intrude: Command)",
+   "str_pl": "nanohack chips (Intrude: Command)"
+  },
+  "description": "A data chip holding the Intrude: Command nanohack (Control Value cost 3).  Use it to install the nanohack in your cyberbrain; remove it again from a nanohack console to get the chip back.",
+  "weight": "5 g",
+  "volume": "5 ml",
+  "symbol": "=",
+  "color": "light_blue",
+  "material": [
+   "plastic"
+  ],
+  "price": "600 USD",
+  "price_postapoc": "50 USD",
+  "flags": [
+   "TRADER_AVOID"
+  ],
+  "use_action": {
+   "type": "effect_on_conditions",
+   "menu_text": "Install nanohack",
+   "description": "Install this nanohack in your cyberbrain.",
+   "effect_on_conditions": [
+    "trl_nh_inst_command"
+   ]
+  }
+ },
+ {
   "type": "item_group",
   "id": "trl_loot_chips",
   "subtype": "distribution",
@@ -1612,6 +1814,15 @@
    },
    {
     "item": "trl_chip_nh_takeover"
+   },
+   {
+    "item": "trl_chip_nh_override"
+   },
+   {
+    "item": "trl_chip_nh_seal"
+   },
+   {
+    "item": "trl_chip_nh_command"
    }
   ]
  },
@@ -1670,6 +1881,15 @@
    },
    {
     "item": "trl_chip_nh_takeover"
+   },
+   {
+    "item": "trl_chip_nh_override"
+   },
+   {
+    "item": "trl_chip_nh_seal"
+   },
+   {
+    "item": "trl_chip_nh_command"
    }
   ]
  },
@@ -2456,6 +2676,108 @@
   "description": "Installed nanohack, Control Value cost 4.  Suspended: your Control Value limit is too low.  It wakes when there is room."
  },
  {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": true,
+  "id": "trl_nh_override",
+  "name": {
+   "str": "Intrude: Door Override (nanohack)"
+  },
+  "description": "Installed nanohack, Control Value cost 2.  Active.",
+  "spells_learned": [
+   [
+    "trl_nh_override",
+    1
+   ]
+  ]
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": true,
+  "id": "trl_nhq_override",
+  "name": {
+   "str": "Intrude: Door Override (suspended)"
+  },
+  "description": "Installed nanohack, Control Value cost 2.  Suspended: your Control Value limit is too low.  It wakes when there is room."
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": true,
+  "id": "trl_nh_seal",
+  "name": {
+   "str": "Intrude: Door Seal (nanohack)"
+  },
+  "description": "Installed nanohack, Control Value cost 2.  Active.",
+  "spells_learned": [
+   [
+    "trl_nh_seal",
+    1
+   ]
+  ]
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": true,
+  "id": "trl_nhq_seal",
+  "name": {
+   "str": "Intrude: Door Seal (suspended)"
+  },
+  "description": "Installed nanohack, Control Value cost 2.  Suspended: your Control Value limit is too low.  It wakes when there is room."
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": true,
+  "id": "trl_nh_command",
+  "name": {
+   "str": "Intrude: Command (nanohack)"
+  },
+  "description": "Installed nanohack, Control Value cost 3.  Active.",
+  "spells_learned": [
+   [
+    "trl_nh_command",
+    1
+   ]
+  ]
+ },
+ {
+  "type": "mutation",
+  "points": 0,
+  "visibility": 0,
+  "ugliness": 0,
+  "valid": false,
+  "purifiable": false,
+  "player_display": true,
+  "id": "trl_nhq_command",
+  "name": {
+   "str": "Intrude: Command (suspended)"
+  },
+  "description": "Installed nanohack, Control Value cost 3.  Suspended: your Control Value limit is too low.  It wakes when there is room."
+ },
+ {
   "type": "bionic",
   "id": "trl_bio_cyberbrain_2",
   "name": {
@@ -3078,6 +3400,48 @@
     ]
    },
    {
+    "if": {
+     "u_has_trait": "trl_nh_override"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_used",
+       "+=",
+       "2"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nh_seal"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_used",
+       "+=",
+       "2"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nh_command"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_used",
+       "+=",
+       "3"
+      ]
+     }
+    ]
+   },
+   {
     "run_eocs": [
      "trl_nh_shed"
     ]
@@ -3434,6 +3798,48 @@
        "u_nh_m",
        "=",
        "max(u_nh_m, u_nh_ord_takeover + 1)"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nh_override"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "max(u_nh_m, u_nh_ord_override + 1)"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nh_seal"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "max(u_nh_m, u_nh_ord_seal + 1)"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nh_command"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "max(u_nh_m, u_nh_ord_command + 1)"
       ]
      }
     ]
@@ -4406,6 +4812,132 @@
    },
    {
     "if": {
+     "and": [
+      {
+       "u_has_trait": "trl_nh_override"
+      },
+      {
+       "math": [
+        "u_nh_ord_override + 1",
+        "==",
+        "u_nh_m"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_lose_trait": "trl_nh_override"
+     },
+     {
+      "u_add_trait": "trl_nhq_override"
+     },
+     {
+      "math": [
+       "u_nh_used",
+       "-=",
+       "2"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "-1"
+      ]
+     },
+     {
+      "u_message": "Over your Control Value limit: Intrude: Door Override is suspended.",
+      "type": "bad"
+     }
+    ]
+   },
+   {
+    "if": {
+     "and": [
+      {
+       "u_has_trait": "trl_nh_seal"
+      },
+      {
+       "math": [
+        "u_nh_ord_seal + 1",
+        "==",
+        "u_nh_m"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_lose_trait": "trl_nh_seal"
+     },
+     {
+      "u_add_trait": "trl_nhq_seal"
+     },
+     {
+      "math": [
+       "u_nh_used",
+       "-=",
+       "2"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "-1"
+      ]
+     },
+     {
+      "u_message": "Over your Control Value limit: Intrude: Door Seal is suspended.",
+      "type": "bad"
+     }
+    ]
+   },
+   {
+    "if": {
+     "and": [
+      {
+       "u_has_trait": "trl_nh_command"
+      },
+      {
+       "math": [
+        "u_nh_ord_command + 1",
+        "==",
+        "u_nh_m"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_lose_trait": "trl_nh_command"
+     },
+     {
+      "u_add_trait": "trl_nhq_command"
+     },
+     {
+      "math": [
+       "u_nh_used",
+       "-=",
+       "3"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "-1"
+      ]
+     },
+     {
+      "u_message": "Over your Control Value limit: Intrude: Command is suspended.",
+      "type": "bad"
+     }
+    ]
+   },
+   {
+    "if": {
      "math": [
       "u_nh_used",
       ">",
@@ -4776,6 +5308,48 @@
        "u_nh_m",
        "=",
        "min(u_nh_m, u_nh_ord_takeover)"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nhq_override"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "min(u_nh_m, u_nh_ord_override)"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nhq_seal"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "min(u_nh_m, u_nh_ord_seal)"
+      ]
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nhq_command"
+    },
+    "then": [
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "min(u_nh_m, u_nh_ord_command)"
       ]
      }
     ]
@@ -6064,6 +6638,174 @@
      },
      {
       "u_message": "Intrude: Take Over is active again.",
+      "type": "good"
+     }
+    ]
+   },
+   {
+    "if": {
+     "and": [
+      {
+       "u_has_trait": "trl_nhq_override"
+      },
+      {
+       "math": [
+        "u_nh_ord_override",
+        "==",
+        "u_nh_m"
+       ]
+      },
+      {
+       "math": [
+        "u_nh_used + 2",
+        "<=",
+        "u_nh_limit"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_lose_trait": "trl_nhq_override"
+     },
+     {
+      "u_add_trait": "trl_nh_override"
+     },
+     {
+      "math": [
+       "u_nh_used",
+       "+=",
+       "2"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "1000000"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_woke",
+       "=",
+       "1"
+      ]
+     },
+     {
+      "u_message": "Intrude: Door Override is active again.",
+      "type": "good"
+     }
+    ]
+   },
+   {
+    "if": {
+     "and": [
+      {
+       "u_has_trait": "trl_nhq_seal"
+      },
+      {
+       "math": [
+        "u_nh_ord_seal",
+        "==",
+        "u_nh_m"
+       ]
+      },
+      {
+       "math": [
+        "u_nh_used + 2",
+        "<=",
+        "u_nh_limit"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_lose_trait": "trl_nhq_seal"
+     },
+     {
+      "u_add_trait": "trl_nh_seal"
+     },
+     {
+      "math": [
+       "u_nh_used",
+       "+=",
+       "2"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "1000000"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_woke",
+       "=",
+       "1"
+      ]
+     },
+     {
+      "u_message": "Intrude: Door Seal is active again.",
+      "type": "good"
+     }
+    ]
+   },
+   {
+    "if": {
+     "and": [
+      {
+       "u_has_trait": "trl_nhq_command"
+      },
+      {
+       "math": [
+        "u_nh_ord_command",
+        "==",
+        "u_nh_m"
+       ]
+      },
+      {
+       "math": [
+        "u_nh_used + 3",
+        "<=",
+        "u_nh_limit"
+       ]
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_lose_trait": "trl_nhq_command"
+     },
+     {
+      "u_add_trait": "trl_nh_command"
+     },
+     {
+      "math": [
+       "u_nh_used",
+       "+=",
+       "3"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_m",
+       "=",
+       "1000000"
+      ]
+     },
+     {
+      "math": [
+       "u_nh_woke",
+       "=",
+       "1"
+      ]
+     },
+     {
+      "u_message": "Intrude: Command is active again.",
       "type": "good"
      }
     ]
@@ -9188,6 +9930,408 @@
  },
  {
   "type": "effect_on_condition",
+  "id": "trl_nh_inst_override",
+  "effect": [
+   {
+    "run_eocs": [
+     "trl_nh_recalc"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_override"
+      },
+      {
+       "u_has_trait": "trl_nhq_override"
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_message": "Intrude: Door Override is already installed.",
+      "type": "info"
+     },
+     {
+      "u_spawn_item": "trl_chip_nh_override"
+     }
+    ],
+    "else": [
+     {
+      "if": {
+       "not": {
+        "u_has_flag": "MACHINE_BRAIN"
+       }
+      },
+      "then": [
+       {
+        "u_message": "You need a cyberbrain to install a nanohack.",
+        "type": "bad"
+       },
+       {
+        "u_spawn_item": "trl_chip_nh_override"
+       }
+      ],
+      "else": [
+       {
+        "if": {
+         "math": [
+          "u_nh_used + 2",
+          ">",
+          "u_nh_limit"
+         ]
+        },
+        "then": [
+         {
+          "u_message": "Not enough Control Value: Intrude: Door Override needs 2; you have <u_val:nh_used> of <u_val:nh_limit> in use.  Remove a nanohack first.",
+          "type": "bad"
+         },
+         {
+          "u_spawn_item": "trl_chip_nh_override"
+         }
+        ],
+        "else": [
+         {
+          "u_add_trait": "trl_nh_override"
+         },
+         {
+          "math": [
+           "u_nh_ord_override",
+           "=",
+           "u_nh_seq"
+          ]
+         },
+         {
+          "math": [
+           "u_nh_seq",
+           "+=",
+           "1"
+          ]
+         },
+         {
+          "math": [
+           "u_nh_used",
+           "+=",
+           "2"
+          ]
+         },
+         {
+          "u_message": "Intrude: Door Override installed.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.",
+          "type": "good"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_nh_rem_override",
+  "effect": [
+   {
+    "u_lose_trait": "trl_nh_override"
+   },
+   {
+    "u_lose_trait": "trl_nhq_override"
+   },
+   {
+    "u_spawn_item": "trl_chip_nh_override"
+   },
+   {
+    "run_eocs": [
+     "trl_nh_recalc"
+    ]
+   },
+   {
+    "u_message": "Intrude: Door Override removed; the chip is back in your inventory.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.",
+    "type": "info"
+   }
+  ],
+  "condition": {
+   "or": [
+    {
+     "u_has_trait": "trl_nh_override"
+    },
+    {
+     "u_has_trait": "trl_nhq_override"
+    }
+   ]
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_nh_inst_seal",
+  "effect": [
+   {
+    "run_eocs": [
+     "trl_nh_recalc"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_seal"
+      },
+      {
+       "u_has_trait": "trl_nhq_seal"
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_message": "Intrude: Door Seal is already installed.",
+      "type": "info"
+     },
+     {
+      "u_spawn_item": "trl_chip_nh_seal"
+     }
+    ],
+    "else": [
+     {
+      "if": {
+       "not": {
+        "u_has_flag": "MACHINE_BRAIN"
+       }
+      },
+      "then": [
+       {
+        "u_message": "You need a cyberbrain to install a nanohack.",
+        "type": "bad"
+       },
+       {
+        "u_spawn_item": "trl_chip_nh_seal"
+       }
+      ],
+      "else": [
+       {
+        "if": {
+         "math": [
+          "u_nh_used + 2",
+          ">",
+          "u_nh_limit"
+         ]
+        },
+        "then": [
+         {
+          "u_message": "Not enough Control Value: Intrude: Door Seal needs 2; you have <u_val:nh_used> of <u_val:nh_limit> in use.  Remove a nanohack first.",
+          "type": "bad"
+         },
+         {
+          "u_spawn_item": "trl_chip_nh_seal"
+         }
+        ],
+        "else": [
+         {
+          "u_add_trait": "trl_nh_seal"
+         },
+         {
+          "math": [
+           "u_nh_ord_seal",
+           "=",
+           "u_nh_seq"
+          ]
+         },
+         {
+          "math": [
+           "u_nh_seq",
+           "+=",
+           "1"
+          ]
+         },
+         {
+          "math": [
+           "u_nh_used",
+           "+=",
+           "2"
+          ]
+         },
+         {
+          "u_message": "Intrude: Door Seal installed.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.",
+          "type": "good"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_nh_rem_seal",
+  "effect": [
+   {
+    "u_lose_trait": "trl_nh_seal"
+   },
+   {
+    "u_lose_trait": "trl_nhq_seal"
+   },
+   {
+    "u_spawn_item": "trl_chip_nh_seal"
+   },
+   {
+    "run_eocs": [
+     "trl_nh_recalc"
+    ]
+   },
+   {
+    "u_message": "Intrude: Door Seal removed; the chip is back in your inventory.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.",
+    "type": "info"
+   }
+  ],
+  "condition": {
+   "or": [
+    {
+     "u_has_trait": "trl_nh_seal"
+    },
+    {
+     "u_has_trait": "trl_nhq_seal"
+    }
+   ]
+  }
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_nh_inst_command",
+  "effect": [
+   {
+    "run_eocs": [
+     "trl_nh_recalc"
+    ]
+   },
+   {
+    "if": {
+     "or": [
+      {
+       "u_has_trait": "trl_nh_command"
+      },
+      {
+       "u_has_trait": "trl_nhq_command"
+      }
+     ]
+    },
+    "then": [
+     {
+      "u_message": "Intrude: Command is already installed.",
+      "type": "info"
+     },
+     {
+      "u_spawn_item": "trl_chip_nh_command"
+     }
+    ],
+    "else": [
+     {
+      "if": {
+       "not": {
+        "u_has_flag": "MACHINE_BRAIN"
+       }
+      },
+      "then": [
+       {
+        "u_message": "You need a cyberbrain to install a nanohack.",
+        "type": "bad"
+       },
+       {
+        "u_spawn_item": "trl_chip_nh_command"
+       }
+      ],
+      "else": [
+       {
+        "if": {
+         "math": [
+          "u_nh_used + 3",
+          ">",
+          "u_nh_limit"
+         ]
+        },
+        "then": [
+         {
+          "u_message": "Not enough Control Value: Intrude: Command needs 3; you have <u_val:nh_used> of <u_val:nh_limit> in use.  Remove a nanohack first.",
+          "type": "bad"
+         },
+         {
+          "u_spawn_item": "trl_chip_nh_command"
+         }
+        ],
+        "else": [
+         {
+          "u_add_trait": "trl_nh_command"
+         },
+         {
+          "math": [
+           "u_nh_ord_command",
+           "=",
+           "u_nh_seq"
+          ]
+         },
+         {
+          "math": [
+           "u_nh_seq",
+           "+=",
+           "1"
+          ]
+         },
+         {
+          "math": [
+           "u_nh_used",
+           "+=",
+           "3"
+          ]
+         },
+         {
+          "u_message": "Intrude: Command installed.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.",
+          "type": "good"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_nh_rem_command",
+  "effect": [
+   {
+    "u_lose_trait": "trl_nh_command"
+   },
+   {
+    "u_lose_trait": "trl_nhq_command"
+   },
+   {
+    "u_spawn_item": "trl_chip_nh_command"
+   },
+   {
+    "run_eocs": [
+     "trl_nh_recalc"
+    ]
+   },
+   {
+    "u_message": "Intrude: Command removed; the chip is back in your inventory.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.",
+    "type": "info"
+   }
+  ],
+  "condition": {
+   "or": [
+    {
+     "u_has_trait": "trl_nh_command"
+    },
+    {
+     "u_has_trait": "trl_nhq_command"
+    }
+   ]
+  }
+ },
+ {
+  "type": "effect_on_condition",
   "id": "trl_nh_menu",
   "effect": [
    {
@@ -9703,6 +10847,72 @@
    },
    {
     "if": {
+     "u_has_trait": "trl_nh_override"
+    },
+    "then": [
+     {
+      "u_message": "  Intrude: Door Override (CV 2): active",
+      "type": "neutral"
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nhq_override"
+    },
+    "then": [
+     {
+      "u_message": "  Intrude: Door Override (CV 2): SUSPENDED",
+      "type": "bad"
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nh_seal"
+    },
+    "then": [
+     {
+      "u_message": "  Intrude: Door Seal (CV 2): active",
+      "type": "neutral"
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nhq_seal"
+    },
+    "then": [
+     {
+      "u_message": "  Intrude: Door Seal (CV 2): SUSPENDED",
+      "type": "bad"
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nh_command"
+    },
+    "then": [
+     {
+      "u_message": "  Intrude: Command (CV 3): active",
+      "type": "neutral"
+     }
+    ]
+   },
+   {
+    "if": {
+     "u_has_trait": "trl_nhq_command"
+    },
+    "then": [
+     {
+      "u_message": "  Intrude: Command (CV 3): SUSPENDED",
+      "type": "bad"
+     }
+    ]
+   },
+   {
+    "if": {
      "or": [
       {
        "u_has_trait": "trl_nh_repair"
@@ -9841,6 +11051,24 @@
       },
       {
        "u_has_trait": "trl_nhq_takeover"
+      },
+      {
+       "u_has_trait": "trl_nh_override"
+      },
+      {
+       "u_has_trait": "trl_nhq_override"
+      },
+      {
+       "u_has_trait": "trl_nh_seal"
+      },
+      {
+       "u_has_trait": "trl_nhq_seal"
+      },
+      {
+       "u_has_trait": "trl_nh_command"
+      },
+      {
+       "u_has_trait": "trl_nhq_command"
       }
      ]
     },
@@ -9869,7 +11097,10 @@
        "trl_nh_rem_siphon",
        "trl_nh_rem_probe",
        "trl_nh_rem_disrupt",
-       "trl_nh_rem_takeover"
+       "trl_nh_rem_takeover",
+       "trl_nh_rem_override",
+       "trl_nh_rem_seal",
+       "trl_nh_rem_command"
       ],
       "names": [
        "Remove Mend: Repair (CV 2)",
@@ -9894,7 +11125,10 @@
        "Remove Drain: Siphon (CV 4)",
        "Remove Intrude: Probe (CV 1)",
        "Remove Intrude: Disrupt (CV 2)",
-       "Remove Intrude: Take Over (CV 4)"
+       "Remove Intrude: Take Over (CV 4)",
+       "Remove Intrude: Door Override (CV 2)",
+       "Remove Intrude: Door Seal (CV 2)",
+       "Remove Intrude: Command (CV 3)"
       ],
       "keys": [
        "a",
@@ -9919,7 +11153,10 @@
        "t",
        "u",
        "v",
-       "w"
+       "w",
+       "x",
+       "y",
+       "z"
       ],
       "hide_failing": true,
       "allow_cancel": true,

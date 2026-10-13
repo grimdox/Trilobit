@@ -53,6 +53,7 @@ def cls(fr, ro, fw): return f"trl_nc_andr_{fr}_{ro}_{fw}"
 
 def build():
     out = []
+    probe_msg = [{"npc_message": "That is not an android; nothing answers the order.", "type": "info"}]
     # marker traits (hidden; "valid": false keeps them out of character creation)
     base = {"type": "mutation", "points": 0, "visibility": 0, "ugliness": 0, "valid": False, "purifiable": False, "player_display": False}
     out.append(dict(base, id="trl_android", name={"str": "Android"}, description="A synthetic body running a work program.  It carries a networked controller, so it can be probed and hacked."))
@@ -109,6 +110,7 @@ def build():
          "condition": {"and": [{"u_has_trait": "trl_android"}, {"not": "u_following"}, {"math": ["u_trl_skip_until < time('now')"]}]},
          "effect": [
              {"run_eocs": ["trl_andr_init_once"]},
+             {"run_eocs": ["trl_andr_hours"]},
              {"if": {"or": [{"math": ["u_npc_anger() > 0"]}, {"math": ["u_npc_fear() > 0"]}]},
               "then": [{"math": ["u_trl_skip_until = time('now') + time('10 m')"]}],
               "else": [{"run_eocs": ["trl_andr_battery"]},
@@ -139,6 +141,39 @@ def build():
                      "then": [{"u_go_to_loc": {"u_val": "andr_dock"}}],
                      "else": [{"u_location_variable": {"u_val": "andr_spot"}, "max_radius": 8, "passable_only": True, "true_eocs": ["trl_andr_goto_spot"]}]}]},
     ]
+    # ---- opening hours: attendants unlock their shop doors while open and seal them while closed
+    hnow = "time_since('midnight','unit':'hours')"
+    hrs = []
+    for role, (a, b) in HOURS.items():
+        if a < b:
+            openc = {"and": [{"math": [f"{hnow} >= {a}"]}, {"math": [f"{hnow} < {b}"]}]}
+        else:
+            openc = {"or": [{"math": [f"{hnow} >= {a}"]}, {"math": [f"{hnow} < {b}"]}]}
+        hrs.append({"if": {"u_has_trait": f"trl_andr_role_{role}"},
+                    "then": [{"if": openc, "then": [{"u_transform_radius": 10, "ter_furn_transform": "trl_elock_unlock"}],
+                              "else": [{"u_transform_radius": 10, "ter_furn_transform": "trl_elock_seal"}]}]})
+    out.append({"type": "effect_on_condition", "id": "trl_andr_hours", "effect": hrs})
+    # ---- Command: orders for an android you own (u = the android, npc = the caster)
+    owned = {"math": ["u_andr_owned == 1"]}
+    def order(oid, text, effect):
+        out.append({"type": "effect_on_condition", "id": "trl_andr_ord_" + oid, "effect": effect + [{"npc_message": text, "type": "good"}]})
+        return "trl_andr_ord_" + oid
+    ords = [
+        (order("follow", "It falls in behind you.", [{"u_recruit_npc": True}]), "Follow me"),
+        (order("hold", "It stands its ground here.", [{"u_dismiss_npc": True, "faction": "your_followers"}]), "Hold this position"),
+        (order("post", "It takes up a post here and goes back to its work.", [{"u_location_variable": {"u_val": "andr_dock"}}, {"math": ["u_andr_charging = 0"]},
+                                                                              {"u_dismiss_npc": True, "faction": "no_faction"}]), "Work a post here"),
+        (order("door", "It slides the nearby security doors open.", [{"u_transform_radius": 6, "ter_furn_transform": "trl_elock_override"}]), "Open the doors around you"),
+        (order("seal", "It seals the nearby security doors.", [{"u_transform_radius": 6, "ter_furn_transform": "trl_elock_seal"}]), "Seal the doors around you"),
+        (order("release", "It drops your orders and returns to its own routine.", [{"math": ["u_andr_owned = 0"]}, {"u_dismiss_npc": True, "faction": "no_faction"}]), "Release it"),
+    ]
+    out.append({"type": "effect_on_condition", "id": "trl_andr_hk_command",
+                "effect": [{"if": {"u_has_trait": "trl_android"},
+                            "then": [{"if": owned,
+                                      "then": [{"run_eoc_selector": [e for e, _ in ords], "names": [n for _, n in ords], "keys": list("abcdef"),
+                                                "allow_cancel": True, "title": "Command <u_name>"}],
+                                      "else": [{"npc_message": "You do not own this android.  Take it over first.", "type": "bad"}]}],
+                            "else": probe_msg}]})
     # ---- hacking effects (u = the target android, npc = the caster)
     def info():
         return "Android <u_name>: "
@@ -161,11 +196,13 @@ def build():
                 "effect": [{"if": {"u_has_trait": "trl_android"},
                             "then": [{"if": {"u_has_trait": "trl_andr_fw_hardened"},
                                       "then": [{"npc_message": "Its firmware is hardened; the takeover fails and it turns on you.", "type": "bad"}, {"math": ["u_npc_anger() = max(u_npc_anger(), 5)"]}],
-                                      "else": [{"u_recruit_npc": True}, {"npc_message": "You rewrite its ownership.  It falls in behind you.", "type": "good"}]}],
+                                      "else": [{"u_recruit_npc": True}, {"math": ["u_andr_owned = 1"]}, {"npc_message": "You rewrite its ownership.  It falls in behind you.", "type": "good"}]}],
                             "else": probe}]})
     out.append({"type": "effect_on_condition", "id": "trl_andr_release",
                 "effect": [{"u_dismiss_npc": True, "faction": "no_faction"}]})
     return out
+
+HOURS = {"clerk": (7, 22), "techclerk": (7, 22), "medclerk": (7, 22), "reception": (7, 22), "bartender": (12, 3)}  # role: (open hour, close hour)
 
 PLACEMENT = {  # place id -> list of (frame, role, firmware)
     "trl_pl_convenience_store": [("civ", "clerk", "stock")],

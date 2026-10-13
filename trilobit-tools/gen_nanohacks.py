@@ -52,6 +52,14 @@ NEW = [
        effect_str="trl_andr_hk_disrupt", base_energy_cost=15, **ANDR),
  spell("trl_nh_takeover", "Intrude", "Take Over", "Rewrites a stock-firmware android's ownership; it follows you until released.  Hardened firmware fights back.",
        effect="effect_on_condition", effect_str="trl_andr_hk_takeover", base_energy_cost=30, **ANDR),
+ spell("trl_nh_override", "Intrude", "Door Override", "Commands an electronic security door within twelve tiles to unlock and open.", effect="ter_transform",
+       effect_str="trl_elock_override", shape="blast", valid_targets=["ground"], min_range=12, max_range=12, min_aoe=1, max_aoe=1, min_damage=1, max_damage=1,
+       base_energy_cost=10, flags=["NO_LEGS", "NO_HANDS", "NO_FAIL", "SILENT", "NO_PROJECTILE"]),
+ spell("trl_nh_seal", "Intrude", "Door Seal", "Commands an electronic security door within twelve tiles to close and lock.", effect="ter_transform",
+       effect_str="trl_elock_seal", shape="blast", valid_targets=["ground"], min_range=12, max_range=12, min_aoe=1, max_aoe=1, min_damage=1, max_damage=1,
+       base_energy_cost=10, flags=["NO_LEGS", "NO_HANDS", "NO_FAIL", "SILENT", "NO_PROJECTILE"]),
+ spell("trl_nh_command", "Intrude", "Command", "Gives an order to an android you own: follow, hold here, work this post, open doors, or release it.", effect="effect_on_condition",
+       effect_str="trl_andr_hk_command", base_energy_cost=10, **ANDR),
  dict(BASE, id="trl_nh_siphon_gain", name="Siphon gain", description="Returns power from a Siphon.", effect="recover_energy", effect_str="BIONIC",
       energy_source="NONE", base_energy_cost=0, min_damage=22, max_damage=22, **SELF),
 ]
@@ -79,8 +87,9 @@ ALL = {
  "trl_nh_blink": "Phase", "trl_nh_hop": "Phase",
  "trl_nh_siphon": "Drain",
  "trl_nh_probe": "Intrude", "trl_nh_disrupt": "Intrude", "trl_nh_takeover": "Intrude",
+ "trl_nh_override": "Intrude", "trl_nh_seal": "Intrude", "trl_nh_command": "Intrude",
 }
-assert len(ALL) == 23 and len(set(ALL.values())) == 10
+assert len(ALL) == 26 and len(set(ALL.values())) == 10
 RENAME = {"trl_nh_repair": "Mend: Repair", "trl_nh_plating": "Shell: Plating", "trl_nh_overclock": "Reflex: Overclock",
           "trl_nh_overload": "Intrude: Overload", "trl_nh_blind": "Intrude: Blind", "trl_nh_lock": "Intrude: Lockdown"}
 cp = os.path.join(MOD, "combat.json")
@@ -95,7 +104,8 @@ TREECOLOR = {"Mend": "light_green", "Shell": "light_gray", "Reflex": "yellow", "
 COST = {"trl_nh_repair": 2, "trl_nh_purge": 1, "trl_nh_plating": 3, "trl_nh_reactive": 3, "trl_nh_overclock": 4, "trl_nh_afterimage": 2,
         "trl_nh_lock_on": 3, "trl_nh_shock_field": 4, "trl_nh_cloak": 5, "trl_nh_dampener": 2, "trl_nh_pulse_scan": 2, "trl_nh_night_eye": 1,
         "trl_nh_overload": 3, "trl_nh_blind": 2, "trl_nh_lock": 3, "trl_nh_print_ammo": 3, "trl_nh_print_kit": 2, "trl_nh_blink": 5,
-        "trl_nh_hop": 3, "trl_nh_siphon": 4, "trl_nh_probe": 1, "trl_nh_disrupt": 2, "trl_nh_takeover": 4}
+        "trl_nh_hop": 3, "trl_nh_siphon": 4, "trl_nh_probe": 1, "trl_nh_disrupt": 2, "trl_nh_takeover": 4,
+        "trl_nh_override": 2, "trl_nh_seal": 2, "trl_nh_command": 3}
 assert set(COST) == set(ALL)
 GRADES = [("trl_bio_cyberbrain", "Cyberbrain Mk I", 4), ("trl_bio_cyberbrain_2", "Cyberbrain Mk II", 8), ("trl_bio_cyberbrain_3", "Cyberbrain Mk III", 14),
           ("trl_bio_cyberbrain_4", "Cyberbrain Mk IV", 22), ("trl_bio_cyberbrain_5", "Cyberbrain Mk V", 32)]
@@ -194,7 +204,7 @@ for sid in sids:
         {"run_eocs": ["trl_nh_recalc"]},
         {"u_message": f"{names[sid]} removed; the chip is back in your inventory.  Control Value in use: <u_val:nh_used> of <u_val:nh_limit>.", "type": "info"}],
         condition=both))
-keys = "abcdefghijklmnopqrstuvwxyz"
+keys = "abcdefghijklmnopqrstuvwxyz0123456789"
 menu = [{"run_eocs": ["trl_nh_recalc"]}]
 for sid in sids:
     menu.append({"if": has(sid), "then": [{"u_message": f"  {names[sid]} (CV {COST[sid]}): active", "type": "neutral"}]})

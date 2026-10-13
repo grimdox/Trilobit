@@ -56,7 +56,10 @@
    "Intrude: Lockdown",
    "Intrude: Probe",
    "Intrude: Disrupt",
-   "Intrude: Take Over"
+   "Intrude: Take Over",
+   "Intrude: Door Override",
+   "Intrude: Door Seal",
+   "Intrude: Command"
   ]
  },
  {

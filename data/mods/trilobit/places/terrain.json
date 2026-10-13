@@ -272,5 +272,60 @@
   "symbol": "'",
   "color": "red",
   "close": "t_trl_shutter_c"
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_elock_l",
+  "copy-from": "t_door_metal_locked",
+  "name": "sealed security door",
+  "description": "A steel security door with a red status light.  An electronic lock holds it shut; it opens to a hack or a release panel.",
+  "symbol": "+",
+  "color": "light_red",
+  "extend": {
+   "flags": [
+    "ELECTRONIC",
+    "NETWORKED"
+   ]
+  },
+  "bash": {
+   "str_min": 40,
+   "str_max": 120,
+   "sound": "metal screeching!",
+   "sound_fail": "clang!",
+   "ter_set": "t_mdoor_frame"
+  },
+  "light_emitted": 2
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_elock_c",
+  "copy-from": "t_door_metal_c",
+  "name": "security door",
+  "description": "A steel security door with a green status light.  It is unlocked; it will seal itself if its owner tells it to.",
+  "symbol": "+",
+  "color": "light_green",
+  "open": "t_trl_elock_o",
+  "extend": {
+   "flags": [
+    "ELECTRONIC",
+    "NETWORKED"
+   ]
+  }
+ },
+ {
+  "type": "terrain",
+  "id": "t_trl_elock_o",
+  "copy-from": "t_door_metal_o",
+  "name": "open security door",
+  "description": "A security door, slid back into the wall.",
+  "symbol": "'",
+  "color": "light_green",
+  "close": "t_trl_elock_c",
+  "extend": {
+   "flags": [
+    "ELECTRONIC",
+    "NETWORKED"
+   ]
+  }
  }
 ]
