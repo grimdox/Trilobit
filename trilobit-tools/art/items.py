@@ -48,7 +48,8 @@ def outline(img, col=(16, 16, 24)):
 
 
 # ------------------------------------------------------------------ items
-ARMOR_KINDS = {"trl_plasteel_armor": "plasteel_suit", "trl_plasteel_helm": "plasteel_helm", "trl_kp_vest": "kp_vest", "trl_kp_helmet": "kp_helmet"}
+ARMOR_KINDS = {"trl_plasteel_armor": "plasteel_suit", "trl_plasteel_helm": "plasteel_helm", "trl_kp_vest": "kp_vest", "trl_kp_helmet": "kp_helmet",
+               "trl_plasteel_boots": "plasteel_boots", "trl_plasteel_gloves": "plasteel_gloves"}
 PLATE, PLATE_D, PLATE_L = (176, 190, 212), (96, 110, 134), (226, 236, 250)
 GRAPH, GRAPH_D = (58, 62, 78), (34, 36, 48)
 SEAM = (80, 235, 255)
@@ -93,6 +94,24 @@ def _armor_icon(cv, kind):
         cv.poly([(8, 24), (24, 24), (22, 28), (10, 28)], GRAPH_D)   # neck flare
 
 
+def _armor_icon2(cv, kind):
+    if kind == "plasteel_boots":
+        for dx in (0, 11):
+            cv.poly([(5 + dx, 8), (12 + dx, 8), (12 + dx, 20), (15 + dx, 24), (15 + dx, 27), (4 + dx, 27), (4 + dx, 20)], PLATE)
+            cv.poly([(5 + dx, 8), (8 + dx, 8), (8 + dx, 22), (4 + dx, 20)], PLATE_D)
+            cv.rect((5 + dx, 8, 12 + dx, 10), PLATE_L)
+            cv.rect((4 + dx, 14, 12 + dx, 15), SEAM)
+            cv.rect((4 + dx, 26, 15 + dx, 28), GRAPH_D)
+    elif kind == "plasteel_gloves":
+        for dx in (0, 12):
+            cv.poly([(6 + dx, 14), (14 + dx, 14), (15 + dx, 24), (5 + dx, 24)], PLATE)
+            cv.poly([(6 + dx, 14), (9 + dx, 14), (9 + dx, 24), (5 + dx, 24)], PLATE_D)
+            for fx in (6, 8.5, 11, 13):
+                cv.rect((fx + dx, 8, fx + 1.8 + dx, 14), PLATE_L)
+            cv.rect((5 + dx, 17, 15 + dx, 18), SEAM)
+            cv.rect((6 + dx, 24, 14 + dx, 27), GRAPH_D)
+
+
 def p_worn(kind):
     """On-body overlays (32x36, aligned to the character sprite): the armor drawn over the body."""
     cv = Canvas(32, 36)
@@ -120,6 +139,14 @@ def p_worn(kind):
         cv.rect((11, 13, 15, 14), PLATE_L); cv.rect((17, 13, 21, 14), PLATE_L)
         cv.rect((9.5, 21, 22.5, 23), GRAPH_D)
         cv.line([(10, 22), (22, 22)], SEAM, 0.6)
+    elif kind == "plasteel_boots":
+        for x0 in (10, 16):
+            cv.rect((x0, 27, x0 + 6, 33), PLATE); cv.rect((x0, 27, x0 + 6, 28), PLATE_L)
+            cv.rect((x0 - 1, 32, x0 + 6, 34.5), GRAPH_D); cv.rect((x0, 29, x0 + 6, 30), SEAM)
+    elif kind == "plasteel_gloves":
+        for x0 in (5, 23):
+            cv.rect((x0, 20, x0 + 4, 25), PLATE); cv.rect((x0, 20, x0 + 4, 21), PLATE_L)
+            cv.rect((x0, 22.5, x0 + 4, 23.3), SEAM)
     elif kind == "kp_helmet":
         cv.ellipse((10.5, 1.5, 21.5, 9), GRAPH)
         cv.rect((10.5, 6, 21.5, 7.4), PLATE)
@@ -276,8 +303,8 @@ def p_item(kind, col, seed):
     steel = (176, 182, 196)
     if kind == "arcrifle":
         _arcrifle(cv)
-    elif kind in ("plasteel_suit", "plasteel_helm", "kp_vest", "kp_helmet"):
-        _armor_icon(cv, kind)
+    elif kind in ("plasteel_suit", "plasteel_helm", "kp_vest", "kp_helmet", "plasteel_boots", "plasteel_gloves"):
+        _armor_icon(cv, kind); _armor_icon2(cv, kind)
     elif kind in ("pistol", "smg", "shotgun", "rifle", "laser", "launcher"):
         L = {"pistol": 12, "smg": 16, "shotgun": 22, "rifle": 22, "laser": 16, "launcher": 22}[kind]
         x0 = 16 - L // 2

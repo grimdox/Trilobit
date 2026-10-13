@@ -6743,6 +6743,14 @@
     {
      "id": "overlay_worn_trl_kp_helmet",
      "fg": 721
+    },
+    {
+     "id": "overlay_worn_trl_plasteel_boots",
+     "fg": 722
+    },
+    {
+     "id": "overlay_worn_trl_plasteel_gloves",
+     "fg": 723
     }
    ]
   },
@@ -18649,35 +18657,43 @@
      "fg": 1121
     },
     {
-     "id": "trl_plasteel_helm",
+     "id": "trl_plasteel_boots",
      "fg": 1122
     },
     {
-     "id": "trousers_eod",
+     "id": "trl_plasteel_gloves",
      "fg": 1123
     },
     {
-     "id": "veggy_canned",
+     "id": "trl_plasteel_helm",
      "fg": 1124
+    },
+    {
+     "id": "trousers_eod",
+     "fg": 1125
+    },
+    {
+     "id": "veggy_canned",
+     "fg": 1126
     },
     {
      "id": [
       "water",
       "water_murky"
      ],
-     "fg": 1125
-    },
-    {
-     "id": "welder_crude",
-     "fg": 1126
-    },
-    {
-     "id": "workbench_with_recharger",
      "fg": 1127
     },
     {
-     "id": "wristrocket",
+     "id": "welder_crude",
      "fg": 1128
+    },
+    {
+     "id": "workbench_with_recharger",
+     "fg": 1129
+    },
+    {
+     "id": "wristrocket",
+     "fg": 1130
     }
    ]
   },

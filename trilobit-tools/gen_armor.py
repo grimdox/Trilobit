@@ -50,7 +50,19 @@ out.append(armor_item(
     "1500 g", "3 L", "9 kUSD", "dark_gray", [
         {"encumbrance": 4, "coverage": 100, "covers": ["head"], "material": [mat("trl_kp_composite", 100, 6)]}],
     ["STURDY", "OUTER", "WATERPROOF", "VARSIZE"]))
+out.append(armor_item(
+    "trl_plasteel_boots", "plasteel boots",
+    "Heavy plasteel greaves and sabatons over an insulated sole, with a cyan seam at the ankle.  Bullets and energy slide off them, but each step lands like a hammer and they are clumsy on stairs.",
+    "3800 g", "6 L", "24 kUSD", "light_cyan", [
+        {"encumbrance": 22, "coverage": 100, "covers": ["foot_l", "foot_r"], "material": [mat("trl_plasteel", 100, 5)]}],
+    ["STURDY", "OUTER", "WATERPROOF", "VARSIZE"]))
+out.append(armor_item(
+    "trl_plasteel_gloves", "plasteel gauntlets",
+    "Articulated plasteel gauntlets over a thin graphite-weave glove, finger plates with a pale-cyan seam at the knuckles.  Very hard to damage, and the plates make fine work with your hands clumsy.",
+    "1400 g", "2 L", "16 kUSD", "light_cyan", [
+        {"encumbrance": 16, "coverage": 100, "covers": ["hand_l", "hand_r"], "material": [mat("trl_plasteel", 100, 4)]}],
+    ["STURDY", "OUTER", "WATERPROOF", "VARSIZE"]))
 out.append({"type": "item_group", "id": "trl_loot_armor", "subtype": "distribution",
-            "entries": [{"item": "trl_kp_vest", "prob": 40}, {"item": "trl_kp_helmet", "prob": 40}, {"item": "trl_plasteel_armor", "prob": 8}, {"item": "trl_plasteel_helm", "prob": 8}]})
+            "entries": [{"item": "trl_kp_vest", "prob": 40}, {"item": "trl_kp_helmet", "prob": 40}, {"item": "trl_plasteel_armor", "prob": 8}, {"item": "trl_plasteel_helm", "prob": 8}, {"item": "trl_plasteel_boots", "prob": 8}, {"item": "trl_plasteel_gloves", "prob": 8}]})
 json.dump(out, open(os.path.join(MOD, "armor.json"), "w"), indent=1)
-print("armor: 4 items, 2 materials")
+print("armor: 6 items, 2 materials")
