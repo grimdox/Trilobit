@@ -1,0 +1,5702 @@
+{
+ "tile_info": [
+  {
+   "pixelscale": 1,
+   "width": 48,
+   "height": 24,
+   "zlevel_height": 108,
+   "iso": true,
+   "retract_dist_min": 2.5,
+   "retract_dist_max": 6.0
+  }
+ ],
+ "tiles-new": [
+  {
+   "file": "bouma_flat.png",
+   "sprite_width": 48,
+   "sprite_height": 36,
+   "sprite_offset_x": 0,
+   "sprite_offset_y": -12,
+   "tiles": [
+    {
+     "id": [
+      "t_LIXA_laser",
+      "t_apiary",
+      "t_beehive_natural",
+      "t_brick_oven_base",
+      "t_brick_oven_struct",
+      "t_card_science_maintenance_yellow",
+      "t_card_science_security_yellow",
+      "t_den_large",
+      "t_den_small",
+      "t_nl_obelisk_2",
+      "t_pit_BEM_human_sample",
+      "t_pit_shallow",
+      "t_pit_straw",
+      "t_switch_rg"
+     ],
+     "fg": 1
+    },
+    {
+     "id": [
+      "t_LIXA_thconc_floor",
+      "t_carpet_base_concrete",
+      "t_carpet_base_strconcrete",
+      "t_carpet_concrete_green",
+      "t_carpet_concrete_green_olight",
+      "t_carpet_concrete_purple",
+      "t_carpet_concrete_red",
+      "t_carpet_concrete_yellow",
+      "t_carpet_strconcrete_green",
+      "t_carpet_strconcrete_purple",
+      "t_carpet_strconcrete_red",
+      "t_carpet_strconcrete_yellow",
+      "t_concrete",
+      "t_concrete_ramp_down_high",
+      "t_concrete_ramp_down_low",
+      "t_concrete_ramp_up_high",
+      "t_concrete_ramp_up_low",
+      "t_concrete_roof",
+      "t_concrete_y",
+      "t_sidewalk",
+      "t_sidewalk_bg_dp",
+      "t_sidewalk_hw_air",
+      "t_sidewalk_ramp_down_high",
+      "t_sidewalk_ramp_down_low",
+      "t_sidewalk_ramp_up_high",
+      "t_sidewalk_ramp_up_low",
+      "t_sidewalk_roof_canvas",
+      "t_strconc_floor",
+      "t_strconc_floor_glimmer",
+      "t_strconc_floor_halfway",
+      "t_strconc_floor_no_roof",
+      "t_strconc_floor_olight",
+      "t_thconc_floor",
+      "t_thconc_floor_no_roof",
+      "t_thconc_floor_olight",
+      "t_thconc_r",
+      "t_thconc_warning",
+      "t_thconc_y",
+      "t_thconc_y_olight",
+      "t_trl_floor_olive",
+      "t_trl_slab"
+     ],
+     "fg": 2
+    },
+    {
+     "id": [
+      "t_LIXA_tube",
+      "t_LIXA_unfolded_tube",
+      "t_LIXA_unfolded_tube_broken",
+      "t_apiary_empty",
+      "t_card_reader_broken",
+      "t_elevator_control_off",
+      "t_fungus",
+      "t_fungus_mound",
+      "t_intercom",
+      "t_intercom_balthazar",
+      "t_milking_machine",
+      "t_missile_exploded",
+      "t_radio_tower",
+      "t_resin_hole",
+      "t_resin_hole_o",
+      "t_sewage_pipe",
+      "t_sewage_pump",
+      "t_vitrified_downspout"
+     ],
+     "fg": 3
+    },
+    {
+     "id": [
+      "t_avgas_pump",
+      "t_brick_oven",
+      "t_gas_pump",
+      "t_jp8_pump",
+      "t_lava",
+      "t_nl_obelisk_3",
+      "t_trl_shutter_o"
+     ],
+     "fg": 4
+    },
+    {
+     "id": [
+      "t_avgas_pump_smashed",
+      "t_card_science_mutagen_green",
+      "t_diesel_pump_smashed",
+      "t_jp8_pump_smashed",
+      "t_nuclear_reactor",
+      "t_trl_screen_o"
+     ],
+     "fg": 5
+    },
+    {
+     "id": [
+      "t_bamboo",
+      "t_bamboo_harvested",
+      "t_bamboo_long",
+      "t_bamboo_tall",
+      "t_card_science_maintenance_green",
+      "t_diesel_pump",
+      "t_grave",
+      "t_nl_obelisk_0",
+      "t_pit_corpsed",
+      "t_radio_controls",
+      "t_rootcellar",
+      "t_slime",
+      "t_slot_machine",
+      "t_triffid_leaves"
+     ],
+     "fg": 6
+    },
+    {
+     "id": [
+      "t_bamboo_dead",
+      "t_buffer_stop",
+      "t_conveyor",
+      "t_dock",
+      "t_dock_deep",
+      "t_dock_deep_frame",
+      "t_earth_ramp_down_high",
+      "t_earth_ramp_down_low",
+      "t_earth_ramp_up_high",
+      "t_earth_ramp_up_low",
+      "t_grave_new",
+      "t_leanto",
+      "t_palisade_pulley",
+      "t_pit",
+      "t_stump"
+     ],
+     "fg": 7
+    },
+    {
+     "id": [
+      "t_barkfloor",
+      "t_floor_primitive",
+      "t_forestfloor"
+     ],
+     "fg": 8
+    },
+    {
+     "id": [
+      "t_barkfloor_noroof",
+      "t_brick_roof",
+      "t_canvas_roof",
+      "t_card_military",
+      "t_deck_coating_no_roof",
+      "t_deck_coating_no_roof_r",
+      "t_deck_coating_no_roof_w",
+      "t_deck_coating_no_roof_y",
+      "t_elevator_control_no_roof",
+      "t_elevator_control_off_no_roof",
+      "t_elevator_no_roof",
+      "t_flat_roof",
+      "t_floor_noroof",
+      "t_floor_paper_noroof",
+      "t_glass_roof",
+      "t_gutter",
+      "t_gutter_downspout",
+      "t_gutter_drop",
+      "t_linoleum_gray_no_roof",
+      "t_linoleum_white_no_roof",
+      "t_log_sod_roof",
+      "t_metal_flat_roof",
+      "t_metal_floor_no_roof",
+      "t_metal_roof",
+      "t_metal_roof_red",
+      "t_nl_roof",
+      "t_ov_reb_cage",
+      "t_ov_smreb_cage",
+      "t_resin_roof",
+      "t_rock_floor_no_roof",
+      "t_rock_roof",
+      "t_roof_paper",
+      "t_roof_paper_hard",
+      "t_shingle_flat_roof",
+      "t_tar_flat_roof",
+      "t_tarptent",
+      "t_thatch_roof",
+      "t_tile_flat_roof",
+      "t_vitrified_gutter_drop",
+      "t_vitrified_roof",
+      "t_warped_roof",
+      "t_wood_roof",
+      "t_wood_treated_roof"
+     ],
+     "fg": 9
+    },
+    {
+     "id": [
+      "t_boom_barrier_lowered",
+      "t_card_science_mutagen_pink",
+      "t_gas_pump_smashed",
+      "t_pit_covered",
+      "t_pit_spiked",
+      "t_pit_spiked_covered"
+     ],
+     "fg": 10
+    },
+    {
+     "id": [
+      "t_brick_floor",
+      "t_floor_waxed"
+     ],
+     "fg": 11
+    },
+    {
+     "id": [
+      "t_bridge",
+      "t_pontoon_dp",
+      "t_sh_bridge"
+     ],
+     "fg": 12
+    },
+    {
+     "id": [
+      "t_broken_metal_floor",
+      "t_crossbuck_metal",
+      "t_floor_metal_gangway",
+      "t_grate",
+      "t_junk_floor",
+      "t_m_frame",
+      "t_metal_dock",
+      "t_metal_dock_deep",
+      "t_metal_dock_deep_frame",
+      "t_metal_floor",
+      "t_metal_floor_olight",
+      "t_metal_pontoon_dp",
+      "t_nl_broken_metal_floor",
+      "t_nl_catwalk",
+      "t_nl_metal_floor",
+      "t_nl_scrap_floor",
+      "t_recycler",
+      "t_scrap_floor",
+      "t_trl_floor_steel",
+      "t_trl_grating"
+     ],
+     "fg": 13
+    },
+    {
+     "id": [
+      "t_bulkhead_floor",
+      "t_floor_paper_hard",
+      "t_fungus_floor_in",
+      "t_fungus_floor_out",
+      "t_fungus_floor_sup",
+      "t_platform_resin",
+      "t_rock_floor",
+      "t_stone_masonry_floor",
+      "t_stone_masonry_floor_balcony"
+     ],
+     "fg": 14
+    },
+    {
+     "id": [
+      "t_bullettrailer_brownfloor",
+      "t_bullettrailer_roof",
+      "t_clay",
+      "t_clay_underground",
+      "t_claymound",
+      "t_claymound_underground",
+      "t_dirt",
+      "t_dirt_isherwood_player_spawnpoint",
+      "t_dirt_underground",
+      "t_dirtfloor",
+      "t_dirtfloor_no_roof",
+      "t_dirtfloor_olight",
+      "t_dirtfloor_thatchroof",
+      "t_dirtmound",
+      "t_dirtmoundfloor",
+      "t_gelatinous_groundcover",
+      "t_mud",
+      "t_mud_underground",
+      "t_puddle_underground",
+      "t_quietfarm_border_ground",
+      "t_region_groundcover",
+      "t_region_groundcover_barren",
+      "t_region_groundcover_forest",
+      "t_region_groundcover_urban",
+      "t_region_soil",
+      "t_sand_underground",
+      "t_trl_crystal",
+      "t_trl_floor_dirty",
+      "t_trl_gravel",
+      "t_vitrified_dirt",
+      "t_vitrified_soil_talker"
+     ],
+     "fg": 15
+    },
+    {
+     "id": [
+      "t_card_LIXA",
+      "t_card_LIXA_2",
+      "t_card_LIXA_3",
+      "t_card_artisans",
+      "t_card_fp",
+      "t_card_industrial",
+      "t_card_robofac",
+      "t_card_science",
+      "t_trl_net_pink"
+     ],
+     "fg": 16
+    },
+    {
+     "id": [
+      "t_card_LIXA_mil",
+      "t_card_science_security_black",
+      "t_cattle_feeder",
+      "t_covered_well",
+      "t_drill_string",
+      "t_fungus_colony",
+      "t_manhole_cover",
+      "t_nanofab_body",
+      "t_nl_chasm",
+      "t_pedestal_wyrm",
+      "t_reb_cage",
+      "t_rubber_mulch"
+     ],
+     "fg": 17
+    },
+    {
+     "id": [
+      "t_card_science_maintenance_blue",
+      "t_nl_obelisk_1",
+      "t_ticket_machine",
+      "t_ticket_vendor"
+     ],
+     "fg": 18
+    },
+    {
+     "id": [
+      "t_card_science_medical_red",
+      "t_card_science_mutagen_cyan",
+      "t_card_science_transport_1",
+      "t_card_science_visitor",
+      "t_cvdmachine",
+      "t_open_air",
+      "t_open_air_rooved",
+      "t_open_air_rooved_outside",
+      "t_portcullis",
+      "t_switch_gb",
+      "t_trl_net_line"
+     ],
+     "fg": 19
+    },
+    {
+     "id": [
+      "t_card_science_security_magenta",
+      "t_elevator",
+      "t_switch_rb"
+     ],
+     "fg": 20
+    },
+    {
+     "id": [
+      "t_carpet_base",
+      "t_carpet_base_linoleum_gray",
+      "t_carpet_base_linoleum_white",
+      "t_carpet_base_metal",
+      "t_carpet_base_primitive",
+      "t_carpet_base_rock",
+      "t_carpet_base_wood",
+      "t_carpet_linoleum_gray_red",
+      "t_carpet_linoleum_white_red",
+      "t_carpet_metal_red",
+      "t_carpet_primitive_red",
+      "t_carpet_red",
+      "t_carpet_rock_red",
+      "t_carpet_wood_red",
+      "t_trl_carpet_red"
+     ],
+     "fg": 21
+    },
+    {
+     "id": [
+      "t_carpet_green",
+      "t_carpet_linoleum_gray_green",
+      "t_carpet_linoleum_white_green",
+      "t_carpet_metal_green",
+      "t_carpet_primitive_green",
+      "t_carpet_rock_green",
+      "t_carpet_wood_green"
+     ],
+     "fg": 22
+    },
+    {
+     "id": [
+      "t_carpet_linoleum_gray_purple",
+      "t_carpet_linoleum_white_purple",
+      "t_carpet_metal_purple",
+      "t_carpet_primitive_purple",
+      "t_carpet_purple",
+      "t_carpet_rock_purple",
+      "t_carpet_wood_purple"
+     ],
+     "fg": 23
+    },
+    {
+     "id": [
+      "t_carpet_linoleum_gray_yellow",
+      "t_carpet_linoleum_white_yellow",
+      "t_carpet_metal_yellow",
+      "t_carpet_primitive_yellow",
+      "t_carpet_rock_yellow",
+      "t_carpet_wood_yellow",
+      "t_carpet_yellow"
+     ],
+     "fg": 24
+    },
+    {
+     "id": [
+      "t_concrete_dock_deep_pile",
+      "t_dock_deep_pile",
+      "t_lake_bed"
+     ],
+     "fg": 25
+    },
+    {
+     "id": [
+      "t_covered_salt_water_well",
+      "t_nm_ichor_sh",
+      "t_region_groundcover_swamp",
+      "t_riverbridge_dp",
+      "t_salt_water_pump",
+      "t_saltwater_cube",
+      "t_sewage",
+      "t_sunkenhelicopter_floor",
+      "t_sunkenhelicopter_floor_rotator",
+      "t_sunkenhelicopter_frame",
+      "t_sunkenhelicopter_quarterpanel_n_left",
+      "t_sunkenhelicopter_quarterpanel_n_middle",
+      "t_sunkenhelicopter_quarterpanel_n_right",
+      "t_sunkenhelicopter_roof",
+      "t_sunkenhelicopter_rotor",
+      "t_swater_dp",
+      "t_swater_dp_underground",
+      "t_swater_sh",
+      "t_swater_sh_underground",
+      "t_swater_surf",
+      "t_tidepool",
+      "t_underwater_drill_string",
+      "t_vitrified_pool",
+      "t_vitrified_pool_talker",
+      "t_vitrified_water_pump",
+      "t_water_cube",
+      "t_water_dispenser",
+      "t_water_dp",
+      "t_water_dp_underground",
+      "t_water_hot",
+      "t_water_moving_dp",
+      "t_water_moving_dp_underground",
+      "t_water_moving_sh",
+      "t_water_moving_sh_underground",
+      "t_water_murky",
+      "t_water_pool",
+      "t_water_pool_shallow",
+      "t_water_pump",
+      "t_water_sh",
+      "t_water_sh_flood",
+      "t_water_sh_murky_underground",
+      "t_water_sh_underground"
+     ],
+     "fg": 26
+    },
+    {
+     "id": [
+      "t_crossbuck_wood",
+      "t_floor_olight",
+      "t_floor_wooden_gangway",
+      "t_palisade_pulley_wood",
+      "t_trl_balcony",
+      "t_trl_floor_wood",
+      "t_woodchips",
+      "t_wooden_well"
+     ],
+     "fg": 27
+    },
+    {
+     "id": [
+      "t_diesel_pump_a",
+      "t_gas_pump_a"
+     ],
+     "fg": 28
+    },
+    {
+     "id": [
+      "t_elevator_control",
+      "t_elevator_control_robofac_down",
+      "t_elevator_control_robofac_up",
+      "t_missile",
+      "t_puddle",
+      "t_rad_platform"
+     ],
+     "fg": 29
+    },
+    {
+     "id": [
+      "t_floor",
+      "t_floor_brood_fake"
+     ],
+     "fg": 30
+    },
+    {
+     "id": "t_floor_blue",
+     "fg": 31
+    },
+    {
+     "id": [
+      "t_floor_brood_wasp",
+      "t_floor_paper",
+      "t_trl_floor_clean"
+     ],
+     "fg": 32
+    },
+    {
+     "id": [
+      "t_floor_burnt",
+      "t_floor_resin",
+      "t_trl_epoxy"
+     ],
+     "fg": 33
+    },
+    {
+     "id": [
+      "t_floor_green",
+      "t_trl_net_floor"
+     ],
+     "fg": 34
+    },
+    {
+     "id": "t_floor_red",
+     "fg": 35
+    },
+    {
+     "id": "t_floor_warped",
+     "fg": 36
+    },
+    {
+     "id": [
+      "t_floor_wax",
+      "t_floor_waxed_y",
+      "t_trl_hazard",
+      "t_trl_neon_amber"
+     ],
+     "fg": 37
+    },
+    {
+     "id": [
+      "t_glassed_sand",
+      "t_sand",
+      "t_sandbox",
+      "t_sandmound",
+      "t_vitrified_sand"
+     ],
+     "fg": 38
+    },
+    {
+     "id": [
+      "t_golf_hole",
+      "t_nm_cartilage",
+      "t_pedestal_temple",
+      "t_switch_even",
+      "t_utility_light",
+      "t_zebra"
+     ],
+     "fg": 39
+    },
+    {
+     "id": [
+      "t_grass",
+      "t_grass_alien",
+      "t_grass_dead",
+      "t_grass_golf",
+      "t_grass_grazed",
+      "t_grass_long",
+      "t_grass_tall",
+      "t_grass_white",
+      "t_moss",
+      "t_moss_underground",
+      "t_region_grass",
+      "t_vitrified_grass"
+     ],
+     "fg": 40
+    },
+    {
+     "id": [
+      "t_improvised_shelter",
+      "t_improvised_shelter_filled"
+     ],
+     "fg": 41
+    },
+    {
+     "id": [
+      "t_linoleum_gray",
+      "t_marble_floor"
+     ],
+     "fg": 42
+    },
+    {
+     "id": [
+      "t_linoleum_gray_floor_olight",
+      "t_linoleum_white",
+      "t_linoleum_whitefloor_olight",
+      "t_trl_checker",
+      "t_trl_marble"
+     ],
+     "fg": 43
+    },
+    {
+     "id": "t_mega_fern",
+     "fg": 44
+    },
+    {
+     "id": [
+      "t_nether_glass_floor",
+      "t_nether_glass_floor_basalt",
+      "t_nether_glass_floor_clairvoyance",
+      "t_vitrified_floor"
+     ],
+     "fg": 45
+    },
+    {
+     "id": [
+      "t_nm_floor_bone",
+      "t_nm_floor_flesh"
+     ],
+     "fg": 46
+    },
+    {
+     "id": [
+      "t_pavement",
+      "t_pavement_bg_dp",
+      "t_pavement_hw_air",
+      "t_pavement_y",
+      "t_pavement_y_bg_dp",
+      "t_pavement_y_hw_air",
+      "t_railroad_crossing_signal",
+      "t_railroad_ramp_down_high",
+      "t_railroad_ramp_down_low",
+      "t_railroad_ramp_up_high",
+      "t_railroad_ramp_up_low",
+      "t_railroad_rubble",
+      "t_railroad_tie",
+      "t_railroad_tie_d",
+      "t_railroad_tie_d1",
+      "t_railroad_tie_d2",
+      "t_railroad_tie_h",
+      "t_railroad_tie_v",
+      "t_railroad_track",
+      "t_railroad_track_d",
+      "t_railroad_track_d1",
+      "t_railroad_track_d2",
+      "t_railroad_track_d_on_tie",
+      "t_railroad_track_h",
+      "t_railroad_track_h_on_tie",
+      "t_railroad_track_on_tie",
+      "t_railroad_track_recessed",
+      "t_railroad_track_small",
+      "t_railroad_track_small_d",
+      "t_railroad_track_v",
+      "t_railroad_track_v_on_tie",
+      "t_ramp_down_high",
+      "t_ramp_down_low",
+      "t_ramp_up_high",
+      "t_ramp_up_low"
+     ],
+     "fg": 47
+    },
+    {
+     "id": [
+      "t_pit_glass",
+      "t_pit_glass_covered",
+      "t_skylight_frame",
+      "t_slide"
+     ],
+     "fg": 48
+    },
+    {
+     "id": "t_thconc_floor_flesh",
+     "fg": 49
+    },
+    {
+     "id": "t_trl_carpet_grey",
+     "fg": 50
+    },
+    {
+     "id": "t_trl_carpet_teal",
+     "fg": 51
+    },
+    {
+     "id": "t_trl_floor_corp",
+     "fg": 52
+    },
+    {
+     "id": "t_trl_neon_cyan",
+     "fg": 53
+    },
+    {
+     "id": "t_trl_neon_pink",
+     "fg": 54
+    },
+    {
+     "id": "t_trl_tatami",
+     "fg": 55
+    },
+    {
+     "id": "t_trl_tile_bath",
+     "fg": 56
+    },
+    {
+     "id": "t_vitrified_tile",
+     "fg": 57
+    },
+    {
+     "id": "cursor",
+     "fg": 58
+    },
+    {
+     "id": [
+      "highlight",
+      "highlight_item",
+      "highlight_item_static"
+     ],
+     "fg": 59
+    },
+    {
+     "id": "line_target",
+     "fg": 60
+    },
+    {
+     "id": [
+      "animation_line",
+      "line_trail"
+     ],
+     "fg": 61
+    },
+    {
+     "id": "overlay_hostile_sees_player",
+     "fg": 62
+    },
+    {
+     "id": "overlay_neutral_sees_player",
+     "fg": 63
+    },
+    {
+     "id": "overlay_friendly_sees_player",
+     "fg": 64
+    },
+    {
+     "id": "overlay_other_sees_player",
+     "fg": 65
+    },
+    {
+     "id": "unknown",
+     "fg": 66
+    }
+   ]
+  },
+  {
+   "file": "bouma_half.png",
+   "sprite_width": 48,
+   "sprite_height": 48,
+   "sprite_offset_x": 0,
+   "sprite_offset_y": -24,
+   "tiles": [
+    {
+     "id": [
+      "t_chainfence",
+      "t_chainfence_posts",
+      "t_concrete_railing",
+      "t_glass_railing",
+      "t_quietfarm_border_fence",
+      "t_quietfarm_border_fence_open"
+     ],
+     "fg": 81
+    },
+    {
+     "id": [
+      "t_chickenwire_fence",
+      "t_chickenwire_fence_post",
+      "t_fence",
+      "t_fence_post",
+      "t_fence_rope",
+      "t_fencegate_c",
+      "t_fencegate_o",
+      "t_privacy_fence",
+      "t_privacy_fencegate_c",
+      "t_privacy_fencegate_o",
+      "t_splitrail_fence",
+      "t_splitrail_fencegate_c",
+      "t_splitrail_fencegate_o",
+      "t_wattle_fence",
+      "t_wattle_fence_posts"
+     ],
+     "fg": 82
+    },
+    {
+     "id": [
+      "t_fence_barbed",
+      "t_fence_wire"
+     ],
+     "fg": 83
+    },
+    {
+     "id": [
+      "t_fence_metal",
+      "t_guardrail",
+      "t_guardrail_bg_dp",
+      "t_guardrail_hw_air"
+     ],
+     "fg": 84
+    },
+    {
+     "id": [
+      "t_fern",
+      "t_shrub_peanut"
+     ],
+     "fg": 85
+    },
+    {
+     "id": [
+      "t_fern_harvested",
+      "t_shrub",
+      "t_shrub_abstract",
+      "t_underbrush_harvested_autumn",
+      "t_underbrush_harvested_spring",
+      "t_underbrush_harvested_summer",
+      "t_underbrush_harvested_winter"
+     ],
+     "fg": 86
+    },
+    {
+     "id": "t_marloss",
+     "fg": 87
+    },
+    {
+     "id": [
+      "t_metal_railing",
+      "t_vitrified_chickenwire_fence",
+      "t_vitrified_fence_barbed",
+      "t_vitrified_fence_post"
+     ],
+     "fg": 88
+    },
+    {
+     "id": "t_railing",
+     "fg": 89
+    },
+    {
+     "id": [
+      "t_region_shrub",
+      "t_region_shrub_decorative",
+      "t_region_shrub_forest",
+      "t_region_shrub_forest_dense",
+      "t_region_shrub_fruit",
+      "t_region_shrub_plains",
+      "t_region_shrub_swamp"
+     ],
+     "fg": 90
+    },
+    {
+     "id": [
+      "t_shrub_autumn_olive",
+      "t_shrub_blueberry",
+      "t_shrub_hobblebush",
+      "t_shrub_huckleberry"
+     ],
+     "fg": 91
+    },
+    {
+     "id": [
+      "t_shrub_autumn_olive_harvested",
+      "t_shrub_blueberry_harvested",
+      "t_shrub_hobblebush_harvested",
+      "t_shrub_huckleberry_harvested",
+      "t_shrub_hydrangea_harvested"
+     ],
+     "fg": 92
+    },
+    {
+     "id": "t_shrub_blackberry",
+     "fg": 93
+    },
+    {
+     "id": "t_shrub_blackberry_harvested",
+     "fg": 94
+    },
+    {
+     "id": [
+      "t_shrub_chokeberry",
+      "t_shrub_grape",
+      "t_shrub_spicebush"
+     ],
+     "fg": 95
+    },
+    {
+     "id": [
+      "t_shrub_chokeberry_harvested",
+      "t_shrub_grape_harvested",
+      "t_shrub_spicebush_harvested"
+     ],
+     "fg": 96
+    },
+    {
+     "id": [
+      "t_shrub_fungal",
+      "t_vitrified_bush"
+     ],
+     "fg": 97
+    },
+    {
+     "id": "t_shrub_hydrangea",
+     "fg": 98
+    },
+    {
+     "id": "t_shrub_lilac",
+     "fg": 99
+    },
+    {
+     "id": "t_shrub_lilac_harvested",
+     "fg": 100
+    },
+    {
+     "id": "t_shrub_peanut_harvested",
+     "fg": 101
+    },
+    {
+     "id": [
+      "t_shrub_raspberry",
+      "t_shrub_rose",
+      "t_shrub_strawberry"
+     ],
+     "fg": 102
+    },
+    {
+     "id": [
+      "t_shrub_raspberry_harvested",
+      "t_shrub_rose_harvested",
+      "t_shrub_strawberry_harvested"
+     ],
+     "fg": 103
+    },
+    {
+     "id": "t_underbrush",
+     "fg": 104
+    },
+    {
+     "id": [
+      "f_30gal_firebarrel",
+      "f_55gal_firebarrel",
+      "f_coffee_table",
+      "f_table",
+      "f_table_fancy",
+      "f_trl_table_low"
+     ],
+     "fg": 105
+    },
+    {
+     "id": [
+      "f_432gal_drum_rubber",
+      "f_beanbag",
+      "f_crate_c",
+      "f_crate_o",
+      "f_earthbag_wall",
+      "f_gravelbag_wall",
+      "f_mailbox",
+      "f_metal_crate_c",
+      "f_metal_crate_o",
+      "f_metal_crate_r",
+      "f_pallet_belted",
+      "f_pallet_belted_open",
+      "f_pallet_cement",
+      "f_roof_turbine_vent",
+      "f_sandbag_wall",
+      "f_trl_mailbox",
+      "f_trl_parts_bin",
+      "f_trl_vault_stack",
+      "f_vitrified_mailbox"
+     ],
+     "fg": 106
+    },
+    {
+     "id": "f_GC",
+     "fg": 107
+    },
+    {
+     "id": "f_HPLC",
+     "fg": 108
+    },
+    {
+     "id": [
+      "f_IV_pole",
+      "f_LIXA_electrical_conduit",
+      "f_MS",
+      "f_air_conditioner",
+      "f_air_filter",
+      "f_aluminum_stepladder",
+      "f_bigmirror_b",
+      "f_birdbath",
+      "f_bitts",
+      "f_board_map",
+      "f_board_map_b",
+      "f_board_map_o",
+      "f_boulder_large",
+      "f_boulder_medium",
+      "f_boulder_small",
+      "f_brambles",
+      "f_cleat",
+      "f_clothing_rail",
+      "f_coffin_c",
+      "f_coffin_o",
+      "f_curtain",
+      "f_curtain_open",
+      "f_dancing_pole",
+      "f_dive_block",
+      "f_electrical_conduit",
+      "f_electron_microscope",
+      "f_exodii_locator_antenna",
+      "f_exodii_portal_enclosure",
+      "f_exodii_printer_large",
+      "f_exodii_printer_small",
+      "f_exodii_pump",
+      "f_fiber_mat",
+      "f_firering",
+      "f_flagpole",
+      "f_fog",
+      "f_fungal_clump",
+      "f_fungal_mass",
+      "f_fungal_tangle",
+      "f_grave_head",
+      "f_grave_stone",
+      "f_gravel_mound_mid",
+      "f_gravel_mound_short",
+      "f_gravel_mound_tall",
+      "f_hanging_meathook",
+      "f_hay",
+      "f_hd_compressor_unit",
+      "f_indoor_flagpole",
+      "f_leather_tarp",
+      "f_midden",
+      "f_nuclear_fuel_cell",
+      "f_oxygen_concentrator",
+      "f_pebble_mound_mid",
+      "f_pebble_mound_short",
+      "f_pebble_mound_tall",
+      "f_pipe_stack_mid",
+      "f_pipe_stack_short",
+      "f_pipe_stack_tall",
+      "f_plastic_groundsheet",
+      "f_robotic_arm",
+      "f_room_divider",
+      "f_scutch_breaker",
+      "f_shackle",
+      "f_shredder",
+      "f_small_satellite_dish",
+      "f_spinwheel",
+      "f_spinwheel_cordage",
+      "f_spinwheel_leather",
+      "f_stack_plank",
+      "f_trl_ac_unit",
+      "f_trl_antenna",
+      "f_trl_assembly_line",
+      "f_trl_bunk_steel",
+      "f_trl_checkout",
+      "f_trl_cubicle_wall",
+      "f_trl_gurney",
+      "f_trl_lathe",
+      "f_trl_roof_dish",
+      "f_trl_statue_fox",
+      "f_trl_sun_lounger",
+      "f_trl_ticket_gate",
+      "f_trl_transformer",
+      "f_vitrified_birdbath",
+      "f_vitrified_water_heater",
+      "f_water_heater",
+      "f_water_heater_family",
+      "f_water_mill",
+      "f_water_mill_active",
+      "f_water_purifier",
+      "f_wind_mill",
+      "f_wind_mill_active"
+     ],
+     "fg": 109
+    },
+    {
+     "id": [
+      "f_LIXA_unfold_barrier",
+      "f_barricade_road",
+      "f_earthbag_half",
+      "f_gravelbag_half",
+      "f_metal_table",
+      "f_portable_stove",
+      "f_rebar_stack_mid",
+      "f_rebar_stack_short",
+      "f_rebar_stack_tall",
+      "f_sandbag_half",
+      "f_tourist_table",
+      "f_trl_interrogation_table",
+      "f_trl_minibar",
+      "f_trl_sewing_table",
+      "f_trl_shop_counter",
+      "f_trl_table_plastic",
+      "f_trl_teller_desk"
+     ],
+     "fg": 110
+    },
+    {
+     "id": "f_NMR",
+     "fg": 111
+    },
+    {
+     "id": [
+      "f_absence",
+      "f_clear",
+      "f_empty_spike",
+      "f_no_item",
+      "f_piano",
+      "f_region_forest",
+      "f_region_forest_dense",
+      "f_region_forest_water",
+      "f_region_plain"
+     ],
+     "fg": 112
+    },
+    {
+     "id": [
+      "f_adobe_stack_mid",
+      "f_adobe_stack_short",
+      "f_adobe_stack_tall",
+      "f_beaver_dam",
+      "f_brick_stack_mid",
+      "f_brick_stack_short",
+      "f_brick_stack_tall",
+      "f_cardboard_door",
+      "f_cardboard_door_o",
+      "f_cardboard_floor",
+      "f_cardboard_fort",
+      "f_cardboard_roof",
+      "f_cardboard_wall",
+      "f_cattails",
+      "f_clay_mound_mid",
+      "f_clay_mound_short",
+      "f_clay_mound_tall",
+      "f_compost_empty",
+      "f_dirtmound_shallow",
+      "f_dirtmound_shallow_seed",
+      "f_dirtmound_tall",
+      "f_entertainment_center",
+      "f_fvat_empty",
+      "f_fvat_wood_empty",
+      "f_impaled_soldier",
+      "f_kelp_sugar",
+      "f_ladder",
+      "f_lane",
+      "f_large_skin_door_o",
+      "f_large_skin_groundsheet",
+      "f_large_skin_wall",
+      "f_log_stack_mid",
+      "f_log_stack_short",
+      "f_log_stack_tall",
+      "f_mannequin",
+      "f_organ",
+      "f_plank_stack_mid",
+      "f_plank_stack_short",
+      "f_plank_stack_tall",
+      "f_sea_sponge",
+      "f_skin_center_groundsheet",
+      "f_skin_groundsheet",
+      "f_skin_wall",
+      "f_stick_long_stack_mid",
+      "f_stick_long_stack_short",
+      "f_stick_long_stack_tall",
+      "f_stick_stack_mid",
+      "f_stick_stack_short",
+      "f_stick_stack_tall",
+      "f_stook_full",
+      "f_tatami",
+      "f_torah_ark",
+      "f_training_dummy_heavy",
+      "f_trl_nightstand",
+      "f_trl_wall_pipes_f",
+      "f_utility_pole",
+      "f_wooden_flagpole"
+     ],
+     "fg": 113
+    },
+    {
+     "id": [
+      "f_air_compressor",
+      "f_fume_hood",
+      "f_manual_tire_changer"
+     ],
+     "fg": 114
+    },
+    {
+     "id": [
+      "f_algae_green",
+      "f_alien_gasper",
+      "f_alien_scar",
+      "f_center_groundsheet",
+      "f_fema_groundsheet",
+      "f_groundsheet",
+      "f_hedge_short",
+      "f_hedge_tall",
+      "f_large_groundsheet",
+      "f_lilypad",
+      "f_mutant_tree_sprout",
+      "f_nm_nether_lichen",
+      "f_nm_nether_patchwork",
+      "f_sea_lettuce",
+      "f_topiary_abstract",
+      "f_topiary_animal",
+      "f_topiary_dragon",
+      "f_trl_bonsai",
+      "f_vent_rad_leak",
+      "f_vent_toxic_belch",
+      "f_vent_toxic_leak",
+      "f_wintergreen"
+     ],
+     "fg": 115
+    },
+    {
+     "id": [
+      "f_algae_red",
+      "f_brazier",
+      "f_carrot_wild",
+      "f_chimney",
+      "f_impaled_officer",
+      "f_makeshift_brazier",
+      "f_nm_nether_lily",
+      "f_trl_bunk_rust",
+      "f_trl_cushion",
+      "f_trl_hot_plate",
+      "f_trl_torii",
+      "f_trl_vase_red",
+      "f_vent_hot_air2_blast",
+      "f_vent_hot_air2_stream"
+     ],
+     "fg": 116
+    },
+    {
+     "id": [
+      "f_alien_anemone",
+      "f_beach_log",
+      "f_bigmirror",
+      "f_broken_boat",
+      "f_canvas_floor",
+      "f_chamomile",
+      "f_drophammer",
+      "f_gazing_ball",
+      "f_ground_cable",
+      "f_hoist_pulley",
+      "f_large_skin_door",
+      "f_maianthemum_stellatum",
+      "f_pillow_fort",
+      "f_rope_up",
+      "f_showjump",
+      "f_showjump_end",
+      "f_skin_door",
+      "f_skin_door_o",
+      "f_styling_station",
+      "f_trl_chandelier",
+      "f_trl_clothesline",
+      "f_trl_iv_stand",
+      "f_trl_kitchen_island",
+      "f_trl_paper_stack",
+      "f_trl_scroll",
+      "f_trl_vase_white"
+     ],
+     "fg": 117
+    },
+    {
+     "id": [
+      "f_alien_pod",
+      "f_burdock",
+      "f_centrifuge",
+      "f_dahlia",
+      "f_nm_tube"
+     ],
+     "fg": 118
+    },
+    {
+     "id": [
+      "f_alien_pod_organ",
+      "f_archery_target_bale",
+      "f_control_station",
+      "f_dandelion",
+      "f_hoist_rope",
+      "f_lotus",
+      "f_mustard",
+      "f_sand_castle",
+      "f_sand_mound_mid",
+      "f_sand_mound_short",
+      "f_sand_mound_tall",
+      "f_trl_capacitor_bank",
+      "f_trl_fire_pole",
+      "f_trl_press",
+      "f_trl_robot_arm",
+      "f_trl_samovar",
+      "f_trl_statue_gilt"
+     ],
+     "fg": 119
+    },
+    {
+     "id": [
+      "f_alien_pod_resin",
+      "f_alien_zapper",
+      "f_capacitor",
+      "f_metal_detector",
+      "f_trl_android_pod",
+      "f_trl_bath_basin",
+      "f_trl_hot_tub",
+      "f_trl_laundry"
+     ],
+     "fg": 120
+    },
+    {
+     "id": "f_alien_table",
+     "fg": 121
+    },
+    {
+     "id": [
+      "f_alien_tendril",
+      "f_bluebell",
+      "f_bulletin",
+      "f_bulletin_evac",
+      "f_canvas_door",
+      "f_canvas_door_o",
+      "f_canvas_wall",
+      "f_large_canvas_door",
+      "f_large_canvas_door_o",
+      "f_large_canvas_wall",
+      "f_lixa_whiteboard",
+      "f_nm_nether_grass",
+      "f_nm_nether_grass_tall",
+      "f_swamp_gas",
+      "f_trl_solar_array",
+      "f_trl_vase_blue",
+      "f_vent_cold_air2_blast",
+      "f_vent_cold_air2_stream",
+      "f_ventilator"
+     ],
+     "fg": 122
+    },
+    {
+     "id": [
+      "f_anvil",
+      "f_anvil_bronze",
+      "f_anvil_crude",
+      "f_anvil_heavy",
+      "f_anvil_ingot",
+      "f_anvil_scavenged",
+      "f_salsify",
+      "f_screw_press",
+      "f_still",
+      "f_trl_antenna_mast",
+      "f_trl_beacon",
+      "f_trl_extruder",
+      "f_trl_flag_pole",
+      "f_trl_noodle_cart",
+      "f_trl_queue_post",
+      "f_trl_shrine"
+     ],
+     "fg": 123
+    },
+    {
+     "id": [
+      "f_archery_target_box",
+      "f_cardboard_box",
+      "f_cardboard_box_large_reinforced",
+      "f_pallet_brick",
+      "f_pallet_brick_adobe",
+      "f_trl_crate",
+      "f_trl_pallet",
+      "f_trl_sandbags",
+      "f_trl_witness_box",
+      "f_wood_keg"
+     ],
+     "fg": 124
+    },
+    {
+     "id": [
+      "f_armchair",
+      "f_sunkenhelicopter_seat_rotating",
+      "f_trl_bench_park"
+     ],
+     "fg": 125
+    },
+    {
+     "id": [
+      "f_ash",
+      "f_rubble",
+      "f_scrap_antenna",
+      "f_scrap_bridge"
+     ],
+     "fg": 126
+    },
+    {
+     "id": [
+      "f_autoclave",
+      "f_autoclave_full"
+     ],
+     "fg": 127
+    },
+    {
+     "id": [
+      "f_autodoc",
+      "f_butter_churn",
+      "f_exodii_portal_tower",
+      "f_glass_mound_mid",
+      "f_glass_mound_short",
+      "f_glass_mound_tall",
+      "f_trl_aquarium",
+      "f_trl_assembly_arm",
+      "f_trl_fume_hood",
+      "f_trl_holo_ad",
+      "f_trl_holo_wall",
+      "f_trl_koi_basin",
+      "f_trl_mirror_ball",
+      "f_trl_sheet_roll",
+      "f_trl_vr_rig",
+      "f_trl_wind_chime"
+     ],
+     "fg": 128
+    },
+    {
+     "id": [
+      "f_autodoc_couch",
+      "f_barstool",
+      "f_chair_black",
+      "f_chair_folding",
+      "f_exam_chair",
+      "f_lab_bench",
+      "f_metal_bench",
+      "f_seat_airplane",
+      "f_sofa",
+      "f_trl_bar_stool",
+      "f_trl_cell_bench",
+      "f_trl_chair_office",
+      "f_trl_exam_couch",
+      "f_trl_gym_bench"
+     ],
+     "fg": 129
+    },
+    {
+     "id": [
+      "f_bandsaw",
+      "f_mitresaw"
+     ],
+     "fg": 130
+    },
+    {
+     "id": [
+      "f_barber_chair",
+      "f_vitrified_armchair",
+      "f_vitrified_bench",
+      "f_vitrified_chair",
+      "f_vitrified_sofa"
+     ],
+     "fg": 131
+    },
+    {
+     "id": [
+      "f_battlefield_cross",
+      "f_bellows",
+      "f_ergometer",
+      "f_ergometer_mechanical",
+      "f_glassedbody_1",
+      "f_glassedbody_10",
+      "f_glassedbody_11",
+      "f_glassedbody_2",
+      "f_glassedbody_3",
+      "f_glassedbody_4",
+      "f_glassedbody_5",
+      "f_glassedbody_6",
+      "f_glassedbody_7",
+      "f_glassedbody_8",
+      "f_glassedbody_9",
+      "f_grave_stone_old",
+      "f_hoist_chain",
+      "f_m224_mortar",
+      "f_rock_large_mound_mid",
+      "f_rock_large_mound_short",
+      "f_rock_large_mound_tall",
+      "f_rock_mound_mid",
+      "f_rock_mound_short",
+      "f_rock_mound_tall",
+      "f_slab",
+      "f_statue",
+      "f_target",
+      "f_treadmill",
+      "f_treadmill_mechanical",
+      "f_trl_blackboard",
+      "f_trl_chop_lift",
+      "f_trl_pipes",
+      "f_trl_speaker",
+      "f_vent_pipe",
+      "f_vitrified_doll",
+      "f_vitrified_firering",
+      "f_wind_vane",
+      "f_xedra_antenna"
+     ],
+     "fg": 132
+    },
+    {
+     "id": [
+      "f_beach_seaweed",
+      "f_dirtmound_pile_mature",
+      "f_dirtmound_pile_seedling",
+      "f_dirtmound_shallow_mature",
+      "f_dirtmound_shallow_seedling",
+      "f_indoor_plant",
+      "f_mutant_tree_sapling",
+      "f_plant_mature",
+      "f_plant_seedling",
+      "f_planter",
+      "f_planter_mature",
+      "f_planter_seedling"
+     ],
+     "fg": 133
+    },
+    {
+     "id": [
+      "f_beaded_door",
+      "f_beaded_door_o",
+      "f_fog_breather",
+      "f_lily",
+      "f_sea_anemone",
+      "f_trl_net_exit"
+     ],
+     "fg": 134
+    },
+    {
+     "id": [
+      "f_bed",
+      "f_bed_down",
+      "f_bunkbed",
+      "f_bunkbed_down",
+      "f_down_mattress",
+      "f_floor_mattress",
+      "f_makeshift_bed",
+      "f_straw_bed",
+      "f_triple_bunkbed"
+     ],
+     "fg": 135
+    },
+    {
+     "id": [
+      "f_bed_frame",
+      "f_trl_mattress"
+     ],
+     "fg": 136
+    },
+    {
+     "id": [
+      "f_bench",
+      "f_bench_park",
+      "f_bench_wooden",
+      "f_camp_chair",
+      "f_chair",
+      "f_chair_plywood",
+      "f_deckchair",
+      "f_logstool",
+      "f_stool",
+      "f_trl_bench_scrap",
+      "f_trl_judge_bench",
+      "f_trl_workbench"
+     ],
+     "fg": 137
+    },
+    {
+     "id": [
+      "f_beverly_shear",
+      "f_drill_press"
+     ],
+     "fg": 138
+    },
+    {
+     "id": [
+      "f_black_eyed_susan",
+      "f_datura",
+      "f_decorative_tree",
+      "f_firefly_terrarium",
+      "f_mutant_tree_adult",
+      "f_trl_battery_bank",
+      "f_trl_charging_pod",
+      "f_trl_departure_board",
+      "f_trl_net_node",
+      "f_trl_polymer_vat",
+      "f_trl_status_panel",
+      "f_trl_vase_tall",
+      "f_winter_wreath"
+     ],
+     "fg": 139
+    },
+    {
+     "id": [
+      "f_bullettrailer_bed_foot",
+      "f_bullettrailer_bed_head",
+      "f_trl_cot",
+      "f_trl_garden_bed"
+     ],
+     "fg": 140
+    },
+    {
+     "id": [
+      "f_bullettrailer_desk",
+      "f_trl_ledger_desk",
+      "f_trl_school_desk",
+      "f_trl_tea_table"
+     ],
+     "fg": 141
+    },
+    {
+     "id": [
+      "f_bullettrailer_minisofa",
+      "f_fake_bench_hands",
+      "f_workbench"
+     ],
+     "fg": 142
+    },
+    {
+     "id": [
+      "f_bullettrailer_table_bottom",
+      "f_bullettrailer_table_middle",
+      "f_bullettrailer_table_top",
+      "f_solar_unit",
+      "f_trl_stall_awning"
+     ],
+     "fg": 143
+    },
+    {
+     "id": [
+      "f_chair_white",
+      "f_trl_cleanroom_bench"
+     ],
+     "fg": 144
+    },
+    {
+     "id": "f_chemical_mixer",
+     "fg": 145
+    },
+    {
+     "id": [
+      "f_chest",
+      "f_egg_sackbw",
+      "f_egg_sackcs",
+      "f_egg_sacke",
+      "f_trl_limb_bin"
+     ],
+     "fg": 146
+    },
+    {
+     "id": "f_chicory",
+     "fg": 147
+    },
+    {
+     "id": [
+      "f_compost_full",
+      "f_fvat_full",
+      "f_fvat_wood_full"
+     ],
+     "fg": 148
+    },
+    {
+     "id": [
+      "f_counter",
+      "f_counter_gate_c",
+      "f_counter_gate_o",
+      "f_kiln_portable_empty"
+     ],
+     "fg": 149
+    },
+    {
+     "id": [
+      "f_crystalline_flower",
+      "f_dirtmound_pile_harvest",
+      "f_dirtmound_shallow_harvest",
+      "f_plant_harvest",
+      "f_planter_harvest"
+     ],
+     "fg": 150
+    },
+    {
+     "id": [
+      "f_desk",
+      "f_trl_counter_noodle"
+     ],
+     "fg": 151
+    },
+    {
+     "id": [
+      "f_dirtmound_pile",
+      "f_dirtmound_pile_seed",
+      "f_leaves_pile",
+      "f_woodchips"
+     ],
+     "fg": 152
+    },
+    {
+     "id": [
+      "f_dogbane",
+      "f_purple_loosestrife",
+      "f_selfheal",
+      "f_thistle",
+      "f_wild_rice",
+      "f_wild_sarsaparilla"
+     ],
+     "fg": 153
+    },
+    {
+     "id": [
+      "f_dumpster",
+      "f_rubble_landfill",
+      "f_trl_ammo_crate"
+     ],
+     "fg": 154
+    },
+    {
+     "id": "f_egg_sackws",
+     "fg": 155
+    },
+    {
+     "id": "f_eyewash",
+     "fg": 156
+    },
+    {
+     "id": [
+      "f_fireweed",
+      "f_japanese_knotweed"
+     ],
+     "fg": 157
+    },
+    {
+     "id": [
+      "f_flower_fungal",
+      "f_vitrified_planter"
+     ],
+     "fg": 158
+    },
+    {
+     "id": "f_flower_marloss",
+     "fg": 159
+    },
+    {
+     "id": [
+      "f_flower_spurge",
+      "f_trl_fern",
+      "f_trl_planter",
+      "f_vine_up"
+     ],
+     "fg": 160
+    },
+    {
+     "id": "f_flower_tulip",
+     "fg": 161
+    },
+    {
+     "id": [
+      "f_glowingbulb",
+      "f_plant_seed",
+      "f_planter_seed",
+      "f_stook_empty"
+     ],
+     "fg": 162
+    },
+    {
+     "id": "f_grave_monument",
+     "fg": 163
+    },
+    {
+     "id": "f_ground_crafting_spot",
+     "fg": 164
+    },
+    {
+     "id": [
+      "f_hammock",
+      "f_hammock_net",
+      "f_trl_capsule",
+      "f_trl_hotel_bed"
+     ],
+     "fg": 165
+    },
+    {
+     "id": "f_heavy_lathe",
+     "fg": 166
+    },
+    {
+     "id": "f_hydraulic_press",
+     "fg": 167
+    },
+    {
+     "id": [
+      "f_indoor_plant_y",
+      "f_jerusalem_artichoke",
+      "f_sunflower"
+     ],
+     "fg": 168
+    },
+    {
+     "id": "f_jointer",
+     "fg": 169
+    },
+    {
+     "id": "f_kiln_portable_full",
+     "fg": 170
+    },
+    {
+     "id": [
+      "f_metal_trashcan",
+      "f_trashcan"
+     ],
+     "fg": 171
+    },
+    {
+     "id": "f_mutpoppy",
+     "fg": 172
+    },
+    {
+     "id": "f_nm_tube_emitter",
+     "fg": 173
+    },
+    {
+     "id": "f_parkour_bars",
+     "fg": 174
+    },
+    {
+     "id": [
+      "f_plane_wreckage",
+      "f_wreckage"
+     ],
+     "fg": 175
+    },
+    {
+     "id": "f_planer",
+     "fg": 176
+    },
+    {
+     "id": [
+      "f_plant_unharvested_overgrown",
+      "f_planter_unharvested_overgrown"
+     ],
+     "fg": 177
+    },
+    {
+     "id": [
+      "f_pool_table",
+      "f_roulette_table",
+      "f_trl_dice_table",
+      "f_trl_map_table",
+      "f_trl_table_card"
+     ],
+     "fg": 178
+    },
+    {
+     "id": "f_portable_generator",
+     "fg": 179
+    },
+    {
+     "id": [
+      "f_punching_bag",
+      "f_trl_cable_trunk",
+      "f_trl_trash",
+      "f_vitrified_box"
+     ],
+     "fg": 180
+    },
+    {
+     "id": [
+      "f_recycle_bin",
+      "f_trl_produce_bin"
+     ],
+     "fg": 181
+    },
+    {
+     "id": [
+      "f_region_flower",
+      "f_region_flower_decorative",
+      "f_region_water_plant",
+      "f_region_weed"
+     ],
+     "fg": 182
+    },
+    {
+     "id": [
+      "f_region_lake_bed",
+      "f_region_ocean_bed"
+     ],
+     "fg": 183
+    },
+    {
+     "id": "f_router",
+     "fg": 184
+    },
+    {
+     "id": "f_rubble_rock",
+     "fg": 185
+    },
+    {
+     "id": "f_satellite",
+     "fg": 186
+    },
+    {
+     "id": "f_shaker",
+     "fg": 187
+    },
+    {
+     "id": [
+      "f_solar_unit_v2",
+      "f_trl_water_barrel"
+     ],
+     "fg": 188
+    },
+    {
+     "id": "f_tablesaw",
+     "fg": 189
+    },
+    {
+     "id": [
+      "f_trl_banquet_table",
+      "f_trl_desk_corp"
+     ],
+     "fg": 190
+    },
+    {
+     "id": [
+      "f_trl_bbq",
+      "f_trl_cell_bars",
+      "f_vitrified_counter",
+      "f_vitrified_desk",
+      "f_vitrified_table"
+     ],
+     "fg": 191
+    },
+    {
+     "id": "f_trl_bench_waiting",
+     "fg": 192
+    },
+    {
+     "id": [
+      "f_trl_bunk_bed",
+      "f_trl_futon"
+     ],
+     "fg": 193
+    },
+    {
+     "id": "f_trl_chair_lounge",
+     "fg": 194
+    },
+    {
+     "id": [
+      "f_trl_chair_wicker",
+      "f_trl_throne"
+     ],
+     "fg": 195
+    },
+    {
+     "id": [
+      "f_trl_fire_drum",
+      "f_trl_hotplate"
+     ],
+     "fg": 196
+    },
+    {
+     "id": "f_trl_hospital_bed",
+     "fg": 197
+    },
+    {
+     "id": [
+      "f_trl_implant_chair",
+      "f_trl_test_bench"
+     ],
+     "fg": 198
+    },
+    {
+     "id": "f_trl_implant_printer",
+     "fg": 199
+    },
+    {
+     "id": "f_trl_karaoke",
+     "fg": 200
+    },
+    {
+     "id": [
+      "f_trl_reception",
+      "f_trl_surgical_table"
+     ],
+     "fg": 201
+    },
+    {
+     "id": "f_trl_silk_bed",
+     "fg": 202
+    },
+    {
+     "id": "f_trl_stool_plastic",
+     "fg": 203
+    },
+    {
+     "id": "f_vitrified_bed",
+     "fg": 204
+    },
+    {
+     "id": "f_vitrified_flower",
+     "fg": 205
+    },
+    {
+     "id": "f_web_up",
+     "fg": 206
+    }
+   ]
+  },
+  {
+   "file": "bouma_full.png",
+   "sprite_width": 48,
+   "sprite_height": 72,
+   "sprite_offset_x": 0,
+   "sprite_offset_y": -48,
+   "tiles": [
+    {
+     "id": [
+      "t_LIXA_portal_pulse",
+      "t_LIXA_strconc_wall",
+      "t_LIXA_unfolded_portal_pulse",
+      "t_bollard",
+      "t_bulk_tank",
+      "t_bullettrailer_ewall",
+      "t_bullettrailer_inner_T",
+      "t_bullettrailer_inner_eastcorner",
+      "t_bullettrailer_inner_westcorner",
+      "t_bullettrailer_nwall",
+      "t_bullettrailer_nwall_eastcorner",
+      "t_bullettrailer_nwall_westcorner",
+      "t_bullettrailer_swall",
+      "t_bullettrailer_swall_eastcorner",
+      "t_bullettrailer_swall_westcorner",
+      "t_bullettrailer_swall_wheels",
+      "t_bullettrailer_wwall",
+      "t_column",
+      "t_column_halfway",
+      "t_concrete_wall_gray",
+      "t_current_trans",
+      "t_drystone_wall",
+      "t_drystone_wall_half",
+      "t_embrasure_rock",
+      "t_embrasure_sconc",
+      "t_embrasure_strconcrete",
+      "t_lgtn_arrest",
+      "t_little_column",
+      "t_lixa_wall",
+      "t_metal_ventilation_shutter",
+      "t_oil_circ_brkr_l",
+      "t_oil_circ_brkr_s",
+      "t_pillar",
+      "t_ponywall",
+      "t_potential_trans",
+      "t_reinforced_glass_shutter",
+      "t_rock_wall",
+      "t_rock_wall_half",
+      "t_sai_box",
+      "t_sai_box_damaged",
+      "t_sconc_wall",
+      "t_sconc_wall_gray",
+      "t_sconc_wall_halfway",
+      "t_station_disc",
+      "t_stone_masonry_wall_whitewashed",
+      "t_strconc_wall",
+      "t_strconc_wall_gray",
+      "t_strconc_wall_halfway",
+      "t_support_l",
+      "t_support_s",
+      "t_switchgear_l",
+      "t_switchgear_s",
+      "t_trl_wall_concrete",
+      "t_trl_wall_steel",
+      "t_truss_pillar",
+      "t_vitrified_column",
+      "t_vitrified_wall_glass",
+      "t_wall",
+      "t_wall_bulkhead",
+      "t_wall_gray",
+      "t_wood_wall_gray"
+     ],
+     "fg": 209
+    },
+    {
+     "id": [
+      "t_adobe_brick_wall",
+      "t_adobe_brick_wall_halfway",
+      "t_bark_wall_broken",
+      "t_bark_wall_chipped",
+      "t_brick_wall",
+      "t_brick_wall_halfway",
+      "t_concrete_wall_brown",
+      "t_embrasure_adobe_brick",
+      "t_embrasure_brick",
+      "t_embrasure_log",
+      "t_palisade",
+      "t_palisade_embrasure",
+      "t_root_floor",
+      "t_root_wall",
+      "t_screened_porch_wall",
+      "t_soil",
+      "t_strconc_wall_brown",
+      "t_triffid_bark_wall",
+      "t_triffid_wood_wall",
+      "t_trl_wall_slat",
+      "t_trl_wall_tile",
+      "t_wall_brown",
+      "t_wall_dirt",
+      "t_wall_log",
+      "t_wall_log_broken",
+      "t_wall_log_chipped",
+      "t_wall_log_half",
+      "t_wall_log_widened",
+      "t_wall_rammed_earth",
+      "t_wood_wall_brown"
+     ],
+     "fg": 210
+    },
+    {
+     "id": [
+      "t_backboard",
+      "t_backboard_in",
+      "t_concrete_wall_r",
+      "t_nanofab",
+      "t_rock_red",
+      "t_sconc_wall_brown",
+      "t_sconc_wall_r",
+      "t_strconc_wall_r",
+      "t_trl_wall_brick",
+      "t_trl_wall_rust",
+      "t_wall_r",
+      "t_wood_wall_r"
+     ],
+     "fg": 211
+    },
+    {
+     "id": [
+      "t_ballistic_door_glass_c",
+      "t_door_glass_c",
+      "t_door_glass_gray_c",
+      "t_door_glass_green_c",
+      "t_door_glass_lab_c",
+      "t_door_glass_red_c",
+      "t_door_glass_white_c",
+      "t_door_lighthouse_lens_c",
+      "t_laminated_door_glass_c",
+      "t_reinforced_door_glass_c",
+      "t_reinforced_door_glass_lab_c",
+      "t_trl_door_c"
+     ],
+     "fg": 212
+    },
+    {
+     "id": [
+      "t_ballistic_door_glass_o",
+      "t_door_glass_gray_o",
+      "t_door_glass_green_o",
+      "t_door_glass_lab_o",
+      "t_door_glass_o",
+      "t_door_glass_red_o",
+      "t_door_glass_white_o",
+      "t_door_lighthouse_lens_o",
+      "t_laminated_door_glass_o",
+      "t_reinforced_door_glass_lab_o",
+      "t_reinforced_door_glass_o",
+      "t_trl_door_o"
+     ],
+     "fg": 213
+    },
+    {
+     "id": [
+      "t_ballistic_glass",
+      "t_concrete_wall_cyan",
+      "t_laminated_glass",
+      "t_nl_metal_wall",
+      "t_nl_metal_wall_edge",
+      "t_reinforced_glass",
+      "t_reinforced_glass_lab",
+      "t_sconc_wall_cyan",
+      "t_strconc_wall_cyan",
+      "t_wall_cyan",
+      "t_wall_glass",
+      "t_wall_glass_alarm",
+      "t_wall_glass_lab",
+      "t_wall_metal",
+      "t_wood_wall_cyan"
+     ],
+     "fg": 214
+    },
+    {
+     "id": [
+      "t_barndoor",
+      "t_bramble_door_c",
+      "t_chickenwire_gate_c",
+      "t_door_b",
+      "t_door_b_peep",
+      "t_door_boarded",
+      "t_door_boarded_damaged",
+      "t_door_boarded_damaged_peep",
+      "t_door_boarded_peep",
+      "t_door_c",
+      "t_door_c_peep",
+      "t_door_elocked",
+      "t_door_elocked_alarm",
+      "t_door_elocked_peep",
+      "t_door_gray_b",
+      "t_door_gray_c",
+      "t_door_green_b",
+      "t_door_green_c",
+      "t_door_lab_b",
+      "t_door_lab_c",
+      "t_door_locked",
+      "t_door_locked_alarm",
+      "t_door_locked_interior",
+      "t_door_locked_peep",
+      "t_door_makeshift_c",
+      "t_door_red_b",
+      "t_door_red_c",
+      "t_door_white_b",
+      "t_door_white_c",
+      "t_rdoor_boarded",
+      "t_rdoor_boarded_damaged",
+      "t_screen_door_c"
+     ],
+     "fg": 215
+    },
+    {
+     "id": [
+      "t_bars",
+      "t_vitrified_bars"
+     ],
+     "fg": 216
+    },
+    {
+     "id": [
+      "t_bramble_door_o",
+      "t_chickenwire_gate_o",
+      "t_door_frame",
+      "t_door_gray_frame",
+      "t_door_gray_o",
+      "t_door_green_frame",
+      "t_door_green_o",
+      "t_door_lab_frame",
+      "t_door_lab_o",
+      "t_door_makeshift_o",
+      "t_door_o",
+      "t_door_o_peep",
+      "t_door_red_frame",
+      "t_door_red_o",
+      "t_door_white_frame",
+      "t_door_white_o",
+      "t_palisade_gate_o",
+      "t_screen_door_o"
+     ],
+     "fg": 217
+    },
+    {
+     "id": [
+      "t_bulkhead_roof",
+      "t_vitrified_stairs_up"
+     ],
+     "fg": 218
+    },
+    {
+     "id": [
+      "t_bullettrailer_inner_door",
+      "t_bullettrailer_swall_door",
+      "t_door_metal_bulkhead_c",
+      "t_gate_metal_c",
+      "t_resin_hole_c",
+      "t_secretdoor_concrete_c"
+     ],
+     "fg": 219
+    },
+    {
+     "id": [
+      "t_bullettrailer_inner_door_o",
+      "t_door_metal_bulkhead_o",
+      "t_gate_metal_o",
+      "t_secretdoor_concrete_o"
+     ],
+     "fg": 220
+    },
+    {
+     "id": [
+      "t_bullettrailer_nwall_window",
+      "t_metal_grate_window",
+      "t_metal_grate_window_noglass",
+      "t_metal_grate_window_with_curtain",
+      "t_metal_grate_window_with_curtain_noglass",
+      "t_porthole",
+      "t_window_bars",
+      "t_window_bars_alarm",
+      "t_window_bars_curtains",
+      "t_window_bars_domestic",
+      "t_window_domestic",
+      "t_window_domestic_alarm"
+     ],
+     "fg": 221
+    },
+    {
+     "id": [
+      "t_bullettrailer_swall_door_o",
+      "t_door_curtain_o",
+      "t_door_grass_curtain_o",
+      "t_mdoor_frame",
+      "t_mdoor_lab_frame"
+     ],
+     "fg": 222
+    },
+    {
+     "id": [
+      "t_bullettrailer_swall_windows",
+      "t_plastic_window",
+      "t_plastic_window_with_curtain",
+      "t_reinforced_plastic_window",
+      "t_reinforced_plastic_window_with_curtain",
+      "t_window_stained_blue"
+     ],
+     "fg": 223
+    },
+    {
+     "id": [
+      "t_card_science_mu",
+      "t_trl_pave"
+     ],
+     "fg": 224
+    },
+    {
+     "id": [
+      "t_chaingate_c",
+      "t_chaingate_l",
+      "t_door_bar_c",
+      "t_door_bar_locked",
+      "t_door_metal_c",
+      "t_door_metal_c_peep",
+      "t_door_metal_corrugated_c",
+      "t_door_metal_elocked",
+      "t_door_metal_interior_locked",
+      "t_door_metal_lab_c",
+      "t_door_metal_locked",
+      "t_door_metal_pickable",
+      "t_quietfarm_border_fence_closed",
+      "t_retractable_gate_c",
+      "t_retractable_gate_l",
+      "t_secretdoor_metal_c",
+      "t_wall_metal_corrugated"
+     ],
+     "fg": 225
+    },
+    {
+     "id": [
+      "t_chaingate_o",
+      "t_door_bar_o",
+      "t_door_metal_corrugated_o",
+      "t_door_metal_lab_o",
+      "t_door_metal_o",
+      "t_door_metal_o_peep",
+      "t_retractable_gate_o",
+      "t_secretdoor_metal_o"
+     ],
+     "fg": 226
+    },
+    {
+     "id": "t_coast_rock_surf",
+     "fg": 227
+    },
+    {
+     "id": [
+      "t_concrete_wall",
+      "t_concrete_wall_black",
+      "t_concrete_wall_rope",
+      "t_cvdbody",
+      "t_drill_machinery",
+      "t_fungus_wall",
+      "t_fungus_wall_transformed",
+      "t_junk_palisade",
+      "t_junk_wall",
+      "t_nether_basalt",
+      "t_nl_scrap_wall",
+      "t_paper_hard",
+      "t_sconc_wall_black",
+      "t_scrap_wall",
+      "t_scrap_wall_halfway",
+      "t_strconc_wall_black",
+      "t_sunkenhelicopter_wall_e",
+      "t_sunkenhelicopter_wall_ne",
+      "t_sunkenhelicopter_wall_nw",
+      "t_sunkenhelicopter_wall_s",
+      "t_sunkenhelicopter_wall_se",
+      "t_sunkenhelicopter_wall_sw",
+      "t_sunkenhelicopter_wall_w",
+      "t_trl_wall_lacquer",
+      "t_trl_wall_pipes",
+      "t_vitrified_wall",
+      "t_wall_burnt",
+      "t_wall_resin",
+      "t_wall_resin_cage",
+      "t_wood_wall_black"
+     ],
+     "fg": 228
+    },
+    {
+     "id": [
+      "t_concrete_wall_P",
+      "t_sconc_wall_P",
+      "t_strconc_wall_P",
+      "t_trl_wall_neon",
+      "t_wall_P",
+      "t_wood_wall_P"
+     ],
+     "fg": 229
+    },
+    {
+     "id": [
+      "t_concrete_wall_b",
+      "t_rock_blue",
+      "t_sconc_wall_b",
+      "t_strconc_wall_b",
+      "t_wall_b",
+      "t_wood_wall_b"
+     ],
+     "fg": 230
+    },
+    {
+     "id": "t_concrete_wall_flesh",
+     "fg": 231
+    },
+    {
+     "id": [
+      "t_concrete_wall_g",
+      "t_nl_mist",
+      "t_orifice",
+      "t_rock_green",
+      "t_sconc_wall_g",
+      "t_strconc_wall_g",
+      "t_trl_wall_olive",
+      "t_wall_g",
+      "t_wood_wall_g"
+     ],
+     "fg": 232
+    },
+    {
+     "id": [
+      "t_concrete_wall_orange",
+      "t_embrasure_wood",
+      "t_sconc_wall_orange",
+      "t_strconc_wall_orange",
+      "t_wall_half",
+      "t_wall_orange",
+      "t_wall_wattle",
+      "t_wall_wattle_broken",
+      "t_wall_wattle_half",
+      "t_wall_wood",
+      "t_wall_wood_broken",
+      "t_wall_wood_chipped",
+      "t_wall_wood_widened",
+      "t_wood_wall_orange"
+     ],
+     "fg": 233
+    },
+    {
+     "id": [
+      "t_concrete_wall_p",
+      "t_fault",
+      "t_nm_wall_cartilage",
+      "t_sconc_wall_p",
+      "t_strconc_wall_p",
+      "t_wall_p",
+      "t_wall_warped",
+      "t_wood_wall_p"
+     ],
+     "fg": 234
+    },
+    {
+     "id": [
+      "t_concrete_wall_w",
+      "t_foam_wall",
+      "t_nm_wall_teeth",
+      "t_paper",
+      "t_paper_brood",
+      "t_rock",
+      "t_rock_smooth",
+      "t_sconc_wall_w",
+      "t_strconc_wall_w",
+      "t_trl_wall_clean",
+      "t_trl_wall_corp",
+      "t_wall_w",
+      "t_wood_wall_w"
+     ],
+     "fg": 235
+    },
+    {
+     "id": [
+      "t_concrete_wall_y",
+      "t_sconc_wall_y",
+      "t_strconc_wall_y",
+      "t_trl_wall_gilt",
+      "t_wall_black",
+      "t_wall_y",
+      "t_wax",
+      "t_wood_wall_y"
+     ],
+     "fg": 236
+    },
+    {
+     "id": [
+      "t_curtains",
+      "t_curtains_alarm",
+      "t_double_pane_glass_taped",
+      "t_quadruple_pane_glass_taped",
+      "t_reinforced_double_pane_glass_taped",
+      "t_reinforced_quadruple_pane_glass_taped",
+      "t_reinforced_single_pane_glass_taped",
+      "t_reinforced_triple_pane_glass_taped",
+      "t_single_pane_glass_taped",
+      "t_triple_pane_glass_taped",
+      "t_trl_window_bars",
+      "t_vitrified_curtains",
+      "t_window_alarm_taped",
+      "t_window_domestic_taped",
+      "t_window_no_curtains_taped",
+      "t_window_taped"
+     ],
+     "fg": 237
+    },
+    {
+     "id": [
+      "t_door_curtain_c",
+      "t_door_grass_curtain_c",
+      "t_vitrified_door"
+     ],
+     "fg": 238
+    },
+    {
+     "id": [
+      "t_door_glass_frosted_c",
+      "t_door_glass_frosted_lab_c",
+      "t_gates_control_metal",
+      "t_gates_control_metal_lab"
+     ],
+     "fg": 239
+    },
+    {
+     "id": [
+      "t_door_glass_frosted_lab_o",
+      "t_door_glass_frosted_o"
+     ],
+     "fg": 240
+    },
+    {
+     "id": [
+      "t_double_pane_glass",
+      "t_double_pane_glass_with_curtain",
+      "t_quadruple_pane_glass",
+      "t_quadruple_pane_glass_with_curtain",
+      "t_reinforced_double_pane_glass",
+      "t_reinforced_double_pane_glass_with_curtain",
+      "t_reinforced_quadruple_pane_glass",
+      "t_reinforced_quadruple_pane_glass_with_curtain",
+      "t_reinforced_single_pane_glass",
+      "t_reinforced_single_pane_glass_with_curtain",
+      "t_reinforced_triple_pane_glass",
+      "t_reinforced_triple_pane_glass_with_curtain",
+      "t_single_pane_glass",
+      "t_single_pane_glass_with_curtain",
+      "t_sunkenhelicopter_windshield_n",
+      "t_tempered_glass_window",
+      "t_tempered_glass_with_curtain",
+      "t_triple_pane_glass",
+      "t_triple_pane_glass_with_curtain",
+      "t_trl_wall_glass",
+      "t_window",
+      "t_window_alarm"
+     ],
+     "fg": 241
+    },
+    {
+     "id": [
+      "t_double_pane_glass_open",
+      "t_double_pane_glass_with_curtain_open",
+      "t_double_pane_glass_with_curtain_open_window_closed",
+      "t_quadruple_pane_glass_open",
+      "t_quadruple_pane_glass_with_curtain_open",
+      "t_quadruple_pane_glass_with_curtain_open_window_closed",
+      "t_reinforced_double_pane_glass_open",
+      "t_reinforced_double_pane_glass_with_curtain_open",
+      "t_reinforced_double_pane_glass_with_curtain_open_window_closed",
+      "t_reinforced_quadruple_double_pane_glass_with_curtain_open_window_closed",
+      "t_reinforced_quadruple_pane_glass_open",
+      "t_reinforced_quadruple_pane_glass_with_curtain_open",
+      "t_reinforced_single_pane_glass_open",
+      "t_reinforced_single_pane_glass_with_curtain_open",
+      "t_reinforced_single_pane_glass_with_curtain_open_window_closed",
+      "t_reinforced_triple_pane_glass_open",
+      "t_reinforced_triple_pane_glass_with_curtain_open",
+      "t_reinforced_triple_pane_glass_with_curtain_open_window_closed",
+      "t_single_pane_glass_open",
+      "t_single_pane_glass_with_curtain_open",
+      "t_single_pane_glass_with_curtain_open_window_closed",
+      "t_tempered_glass_open",
+      "t_tempered_glass_with_curtain_open",
+      "t_tempered_glass_with_curtain_open_window_closed",
+      "t_triple_pane_glass_open",
+      "t_triple_pane_glass_with_curtain_open",
+      "t_triple_pane_glass_with_curtain_open_window_closed",
+      "t_window_frame"
+     ],
+     "fg": 242
+    },
+    {
+     "id": "t_folded_wall",
+     "fg": 243
+    },
+    {
+     "id": [
+      "t_gates_boom_barrier",
+      "t_gates_control_brick",
+      "t_gates_control_brick_lab",
+      "t_gates_control_concrete",
+      "t_gates_control_concrete_lab",
+      "t_gates_mech_control",
+      "t_gates_mech_control_lab"
+     ],
+     "fg": 244
+    },
+    {
+     "id": [
+      "t_ladder_down",
+      "t_ladder_up_down",
+      "t_manhole",
+      "t_scaffolding_pipe_down",
+      "t_scaffolding_pipe_updown"
+     ],
+     "fg": 245
+    },
+    {
+     "id": [
+      "t_ladder_up",
+      "t_scaffolding_pipe_up"
+     ],
+     "fg": 246
+    },
+    {
+     "id": [
+      "t_lake_bed_concrete",
+      "t_rope_up"
+     ],
+     "fg": 247
+    },
+    {
+     "id": [
+      "t_lake_bed_concrete_yellow",
+      "t_stairs_up"
+     ],
+     "fg": 248
+    },
+    {
+     "id": "t_low_stairs_begin",
+     "fg": 249
+    },
+    {
+     "id": "t_low_stairs_end",
+     "fg": 250
+    },
+    {
+     "id": [
+      "t_metal_grate_window_with_curtain_open",
+      "t_metal_grate_window_with_curtain_open_noglass",
+      "t_window_bars_noglass",
+      "t_window_open",
+      "t_window_open_alarm"
+     ],
+     "fg": 251
+    },
+    {
+     "id": "t_monkey_bars",
+     "fg": 252
+    },
+    {
+     "id": [
+      "t_nether_glass_wall",
+      "t_vitrified_edge"
+     ],
+     "fg": 253
+    },
+    {
+     "id": [
+      "t_nl_door_c",
+      "t_nl_door_l"
+     ],
+     "fg": 254
+    },
+    {
+     "id": "t_nl_door_o",
+     "fg": 255
+    },
+    {
+     "id": [
+      "t_nm_brain",
+      "t_nm_wall_flesh"
+     ],
+     "fg": 256
+    },
+    {
+     "id": "t_nm_wall_bone",
+     "fg": 257
+    },
+    {
+     "id": "t_nm_wall_flesh_pupating",
+     "fg": 258
+    },
+    {
+     "id": "t_ocean_bed",
+     "fg": 259
+    },
+    {
+     "id": "t_palisade_gate",
+     "fg": 260
+    },
+    {
+     "id": [
+      "t_plastic_window_open",
+      "t_plastic_window_with_curtain_open",
+      "t_plastic_window_with_curtain_open_window_closed",
+      "t_reinforced_plastic_window_open",
+      "t_reinforced_plastic_window_with_curtain_open",
+      "t_reinforced_plastic_window_with_curtain_open_window_closed"
+     ],
+     "fg": 261
+    },
+    {
+     "id": [
+      "t_rdoor_b",
+      "t_rdoor_c",
+      "t_trl_shutter_c"
+     ],
+     "fg": 262
+    },
+    {
+     "id": "t_rdoor_o",
+     "fg": 263
+    },
+    {
+     "id": [
+      "t_reinforced_glass_shutter_open",
+      "t_trl_net_wall",
+      "t_trl_wall_screens",
+      "t_vat",
+      "t_wall_lighthouse_lens"
+     ],
+     "fg": 264
+    },
+    {
+     "id": "t_rockyobstacle",
+     "fg": 265
+    },
+    {
+     "id": [
+      "t_slope_down",
+      "t_triffid_slope_down"
+     ],
+     "fg": 266
+    },
+    {
+     "id": [
+      "t_slope_up",
+      "t_triffid_slope_up"
+     ],
+     "fg": 267
+    },
+    {
+     "id": [
+      "t_stairs_down",
+      "t_stairs_down_no_roof"
+     ],
+     "fg": 268
+    },
+    {
+     "id": "t_trl_screen_c",
+     "fg": 269
+    },
+    {
+     "id": "t_trl_wall_mural",
+     "fg": 270
+    },
+    {
+     "id": "t_trl_wall_shoji",
+     "fg": 271
+    },
+    {
+     "id": [
+      "t_trl_window",
+      "t_window_enhanced",
+      "t_window_enhanced_noglass"
+     ],
+     "fg": 272
+    },
+    {
+     "id": "t_unfolded_wall",
+     "fg": 273
+    },
+    {
+     "id": "t_vitrified_stairs_down",
+     "fg": 274
+    },
+    {
+     "id": "t_vitrified_window_frame",
+     "fg": 275
+    },
+    {
+     "id": [
+      "t_water_pool_outdoors",
+      "t_water_pool_shallow_outdoors"
+     ],
+     "fg": 276
+    },
+    {
+     "id": [
+      "t_window_boarded",
+      "t_window_boarded_noglass",
+      "t_window_boarded_shutters_closed"
+     ],
+     "fg": 277
+    },
+    {
+     "id": [
+      "t_window_boarded_shutters_open",
+      "t_window_boarded_shutters_open_fully"
+     ],
+     "fg": 278
+    },
+    {
+     "id": [
+      "t_window_empty",
+      "t_window_empty_curtains_closed",
+      "t_window_empty_curtains_open"
+     ],
+     "fg": 279
+    },
+    {
+     "id": [
+      "t_window_no_curtains",
+      "t_window_no_curtains_alarm"
+     ],
+     "fg": 280
+    },
+    {
+     "id": [
+      "t_window_no_curtains_open",
+      "t_window_no_curtains_open_alarm"
+     ],
+     "fg": 281
+    },
+    {
+     "id": [
+      "t_window_reinforced",
+      "t_window_reinforced_noglass"
+     ],
+     "fg": 282
+    },
+    {
+     "id": "t_window_stained_green",
+     "fg": 283
+    },
+    {
+     "id": "t_window_stained_red",
+     "fg": 284
+    },
+    {
+     "id": "t_wood_stairs_down",
+     "fg": 285
+    },
+    {
+     "id": [
+      "t_wood_stairs_up",
+      "t_wood_stairs_up_broken",
+      "t_wood_stairs_up_half"
+     ],
+     "fg": 286
+    },
+    {
+     "id": [
+      "f_12000_gasoline_generator",
+      "f_active_backup_generator",
+      "f_diesel_generator",
+      "f_military_generator"
+     ],
+     "fg": 287
+    },
+    {
+     "id": [
+      "f_CTscan",
+      "f_MRI",
+      "f_TV_antenna",
+      "f_atm",
+      "f_atm_off",
+      "f_console_broken",
+      "f_console_broken_table",
+      "f_dental_xray",
+      "f_dialysis",
+      "f_exodii_scanner",
+      "f_machinery_heavy",
+      "f_scan_bed",
+      "f_trl_tv_flat",
+      "f_trl_tv_static",
+      "f_washer",
+      "f_xray"
+     ],
+     "fg": 288
+    },
+    {
+     "id": [
+      "f_LIXA_machinery_electronic",
+      "f_balthazar_server",
+      "f_machinery_electronic",
+      "f_melchior_unit",
+      "f_trl_gilt_screen",
+      "f_trl_shop_terminal"
+     ],
+     "fg": 289
+    },
+    {
+     "id": "f_anesthetic",
+     "fg": 290
+    },
+    {
+     "id": [
+      "f_arcade_machine",
+      "f_pinball_machine"
+     ],
+     "fg": 291
+    },
+    {
+     "id": [
+      "f_arcfurnace_empty",
+      "f_chest_minifreezer",
+      "f_cupboard",
+      "f_display_freezer",
+      "f_freezer",
+      "f_glass_freezer",
+      "f_heavy_duty_freezer",
+      "f_kiln_metal_empty",
+      "f_minifreezer",
+      "f_speaker_cabinet"
+     ],
+     "fg": 292
+    },
+    {
+     "id": [
+      "f_arcfurnace_full",
+      "f_kiln_metal_full"
+     ],
+     "fg": 293
+    },
+    {
+     "id": [
+      "f_aut_gas_console",
+      "f_console"
+     ],
+     "fg": 294
+    },
+    {
+     "id": [
+      "f_aut_gas_console_o",
+      "f_ball_mach",
+      "f_exercise",
+      "f_machinery_light",
+      "f_trl_press_machine",
+      "f_vending_o"
+     ],
+     "fg": 295
+    },
+    {
+     "id": [
+      "f_bathtub",
+      "f_bullettrailer_toilet",
+      "f_exodii_generator_1",
+      "f_foot_locker_aluminum",
+      "f_rotary_clothesline",
+      "f_shower",
+      "f_sink",
+      "f_sink_gravity",
+      "f_toilet",
+      "f_trl_head_rack",
+      "f_trl_mannequin",
+      "f_trl_med_cabinet",
+      "f_trl_shelf_clean"
+     ],
+     "fg": 296
+    },
+    {
+     "id": [
+      "f_bike_rack",
+      "f_butcher_rack",
+      "f_dishwasher",
+      "f_displaycase_b",
+      "f_dryer",
+      "f_exodii_botrack",
+      "f_fireplace",
+      "f_fireplace_stone",
+      "f_foot_locker",
+      "f_generator_broken",
+      "f_glass_cabinet",
+      "f_gun_safe_el",
+      "f_gunsafe_c",
+      "f_gunsafe_mj",
+      "f_gunsafe_ml",
+      "f_gunsafe_o",
+      "f_home_furnace",
+      "f_locker",
+      "f_metal_butcher_rack",
+      "f_metal_smoking_rack",
+      "f_metal_smoking_rack_active",
+      "f_rack",
+      "f_rack_l",
+      "f_safe_c",
+      "f_safe_l",
+      "f_safe_o",
+      "f_sample_freezer",
+      "f_smoking_rack",
+      "f_smoking_rack_active",
+      "f_standing_tank",
+      "f_storage_tank",
+      "f_trl_bike_rack",
+      "f_trl_evidence_locker",
+      "f_trl_evidence_shelf",
+      "f_trl_locker_mil",
+      "f_trl_safe_big",
+      "f_trl_weight_rack",
+      "f_utility_shelf",
+      "f_vitrified_dishwasher",
+      "f_vitrified_rack",
+      "f_vitrified_washer",
+      "f_warehouse_shelf",
+      "f_woodstove"
+     ],
+     "fg": 297
+    },
+    {
+     "id": [
+      "f_bladderwrack",
+      "f_exodii_generator_3"
+     ],
+     "fg": 298
+    },
+    {
+     "id": [
+      "f_bookcase",
+      "f_bullettrailer_sink",
+      "f_clay_oven",
+      "f_dresser",
+      "f_exodii_kiln",
+      "f_kiln_empty",
+      "f_rack_coat",
+      "f_rack_wood",
+      "f_trl_library_shelf",
+      "f_trl_shelf_scrap",
+      "f_trl_shoe_rack",
+      "f_trl_tea_shelf",
+      "f_trl_water_tank",
+      "f_wardrobe"
+     ],
+     "fg": 299
+    },
+    {
+     "id": [
+      "f_bullettrailer_cabinet",
+      "f_trl_cash_cage"
+     ],
+     "fg": 300
+    },
+    {
+     "id": [
+      "f_bullettrailer_sign_danabakery",
+      "f_exodii_signpost",
+      "f_sign_stop",
+      "f_sign_warning"
+     ],
+     "fg": 301
+    },
+    {
+     "id": [
+      "f_catalytic_cracking_reactor",
+      "f_display_fridge",
+      "f_displaycase",
+      "f_displaycase_o",
+      "f_fridge",
+      "f_glass_fridge",
+      "f_glass_fridge_double",
+      "f_heavy_duty_fridge",
+      "f_minifridge"
+     ],
+     "fg": 302
+    },
+    {
+     "id": [
+      "f_cellphone_booster",
+      "f_trl_banner_unit"
+     ],
+     "fg": 303
+    },
+    {
+     "id": [
+      "f_clay_kiln",
+      "f_fireman_cabinet",
+      "f_fireman_cabinet_b",
+      "f_fireman_cabinet_o",
+      "f_forge",
+      "f_forge_artisan_0",
+      "f_forge_artisan_1",
+      "f_forge_rock",
+      "f_gas_tank_smashed",
+      "f_trl_hose_rack"
+     ],
+     "fg": 304
+    },
+    {
+     "id": "f_compact_ASRG_containment",
+     "fg": 305
+    },
+    {
+     "id": "f_diesel_tank",
+     "fg": 306
+    },
+    {
+     "id": [
+      "f_diesel_tank_smashed",
+      "f_trl_charge_rack"
+     ],
+     "fg": 307
+    },
+    {
+     "id": [
+      "f_exodii_charger",
+      "f_exodii_charger_cheap",
+      "f_reactor_meltdown",
+      "f_trl_atm",
+      "f_trl_car_charger",
+      "f_trl_jack",
+      "f_trl_radio_set"
+     ],
+     "fg": 308
+    },
+    {
+     "id": [
+      "f_exodii_generator_2",
+      "f_hobo_stove",
+      "f_trl_tool_cabinet"
+     ],
+     "fg": 309
+    },
+    {
+     "id": "f_exodii_generator_4",
+     "fg": 310
+    },
+    {
+     "id": [
+      "f_exodii_lamp",
+      "f_floor_lamp",
+      "f_lighthouse_light",
+      "f_street_light",
+      "f_trl_lantern_stone",
+      "f_vitrified_floor_lamp"
+     ],
+     "fg": 311
+    },
+    {
+     "id": [
+      "f_filing_cabinet",
+      "f_gas_oven",
+      "f_gas_oven_microwave_combo",
+      "f_oven",
+      "f_trl_gun_locker",
+      "f_trl_switchgear",
+      "f_trl_weapon_rack",
+      "f_vitrified_bathtub",
+      "f_vitrified_bookcase",
+      "f_vitrified_bookcase_talker",
+      "f_vitrified_cupboard",
+      "f_vitrified_dresser",
+      "f_vitrified_dryer",
+      "f_vitrified_fireplace",
+      "f_vitrified_fridge",
+      "f_vitrified_locker",
+      "f_vitrified_oven",
+      "f_vitrified_shower",
+      "f_vitrified_sink",
+      "f_vitrified_toilet"
+     ],
+     "fg": 312
+    },
+    {
+     "id": [
+      "f_gas_tank",
+      "f_kiln_full"
+     ],
+     "fg": 313
+    },
+    {
+     "id": "f_machinery_old",
+     "fg": 314
+    },
+    {
+     "id": "f_server",
+     "fg": 315
+    },
+    {
+     "id": "f_sign",
+     "fg": 316
+    },
+    {
+     "id": [
+      "f_traffic_light",
+      "f_trl_ceil_lamp",
+      "f_trl_desk_lamp",
+      "f_trl_floodlight",
+      "f_trl_lightbox",
+      "f_trl_sentry_lamp"
+     ],
+     "fg": 317
+    },
+    {
+     "id": "f_training_dummy_light",
+     "fg": 318
+    },
+    {
+     "id": [
+      "f_trl_arcade",
+      "f_trl_pachinko"
+     ],
+     "fg": 319
+    },
+    {
+     "id": [
+      "f_trl_banner_red",
+      "f_trl_neon_red"
+     ],
+     "fg": 320
+    },
+    {
+     "id": "f_trl_cabinet_lacquer",
+     "fg": 321
+    },
+    {
+     "id": [
+      "f_trl_console",
+      "f_trl_dispatch_desk",
+      "f_trl_mission_terminal",
+      "f_trl_server_rack",
+      "f_vending_c",
+      "f_vending_c_networked",
+      "f_vending_c_off"
+     ],
+     "fg": 322
+    },
+    {
+     "id": "f_trl_crystal_lamp",
+     "fg": 323
+    },
+    {
+     "id": [
+      "f_trl_floor_lamp",
+      "f_trl_garden_lamp",
+      "f_trl_icon_lamp",
+      "f_trl_lantern",
+      "f_trl_street_lamp",
+      "f_trl_warm_lamp"
+     ],
+     "fg": 324
+    },
+    {
+     "id": [
+      "f_trl_fountain",
+      "f_trl_freezer_case",
+      "f_trl_generator",
+      "f_trl_locker_gym",
+      "f_trl_tiled_stove",
+      "f_trl_washer_row",
+      "f_trl_water_cooler"
+     ],
+     "fg": 325
+    },
+    {
+     "id": [
+      "f_trl_koi_lantern",
+      "f_trl_strip_light"
+     ],
+     "fg": 326
+    },
+    {
+     "id": "f_trl_neon_amber",
+     "fg": 327
+    },
+    {
+     "id": "f_trl_neon_cyan",
+     "fg": 328
+    },
+    {
+     "id": "f_trl_neon_green",
+     "fg": 329
+    },
+    {
+     "id": [
+      "f_trl_neon_pink",
+      "f_trl_neon_pink_big"
+     ],
+     "fg": 330
+    },
+    {
+     "id": "f_trl_neon_violet",
+     "fg": 331
+    },
+    {
+     "id": "f_trl_red_lantern",
+     "fg": 332
+    },
+    {
+     "id": [
+      "f_trl_scanner",
+      "f_trl_ticket_machine",
+      "f_trl_vending"
+     ],
+     "fg": 333
+    },
+    {
+     "id": [
+      "f_vending_reinforced",
+      "f_vending_reinforced_networked",
+      "f_vending_reinforced_off"
+     ],
+     "fg": 334
+    }
+   ]
+  },
+  {
+   "file": "bouma_high.png",
+   "sprite_width": 48,
+   "sprite_height": 96,
+   "sprite_offset_x": 0,
+   "sprite_offset_y": -72,
+   "tiles": [
+    {
+     "id": "t_marloss_tree",
+     "fg": 337
+    },
+    {
+     "id": "t_region_tree",
+     "fg": 338
+    },
+    {
+     "id": "t_region_tree_dead",
+     "fg": 339
+    },
+    {
+     "id": "t_region_tree_evergreen",
+     "fg": 340
+    },
+    {
+     "id": "t_region_tree_forest",
+     "fg": 341
+    },
+    {
+     "id": "t_region_tree_forest_dense",
+     "fg": 342
+    },
+    {
+     "id": "t_region_tree_forest_other",
+     "fg": 343
+    },
+    {
+     "id": "t_region_tree_fruit",
+     "fg": 344
+    },
+    {
+     "id": "t_region_tree_nut",
+     "fg": 345
+    },
+    {
+     "id": "t_region_tree_shade",
+     "fg": 346
+    },
+    {
+     "id": "t_tree",
+     "fg": 347
+    },
+    {
+     "id": "t_tree_abstract",
+     "fg": 348
+    },
+    {
+     "id": "t_tree_alder",
+     "fg": 349
+    },
+    {
+     "id": "t_tree_alder_harvested",
+     "fg": 350
+    },
+    {
+     "id": "t_tree_almond",
+     "fg": 351
+    },
+    {
+     "id": "t_tree_almond_harvested",
+     "fg": 352
+    },
+    {
+     "id": "t_tree_apple",
+     "fg": 353
+    },
+    {
+     "id": "t_tree_apple_harvested",
+     "fg": 354
+    },
+    {
+     "id": "t_tree_apple_vitrified",
+     "fg": 355
+    },
+    {
+     "id": "t_tree_apricot",
+     "fg": 356
+    },
+    {
+     "id": "t_tree_apricot_harvested",
+     "fg": 357
+    },
+    {
+     "id": "t_tree_basswood",
+     "fg": 358
+    },
+    {
+     "id": "t_tree_basswood_harvested",
+     "fg": 359
+    },
+    {
+     "id": "t_tree_beech",
+     "fg": 360
+    },
+    {
+     "id": "t_tree_beech_harvested",
+     "fg": 361
+    },
+    {
+     "id": "t_tree_birch",
+     "fg": 362
+    },
+    {
+     "id": "t_tree_birch_harvested",
+     "fg": 363
+    },
+    {
+     "id": "t_tree_blackjack",
+     "fg": 364
+    },
+    {
+     "id": "t_tree_blackjack_harvested",
+     "fg": 365
+    },
+    {
+     "id": "t_tree_butternut",
+     "fg": 366
+    },
+    {
+     "id": "t_tree_butternut_harvested",
+     "fg": 367
+    },
+    {
+     "id": "t_tree_cherry",
+     "fg": 368
+    },
+    {
+     "id": "t_tree_cherry_harvested",
+     "fg": 369
+    },
+    {
+     "id": "t_tree_chestnut",
+     "fg": 370
+    },
+    {
+     "id": "t_tree_chestnut_harvested",
+     "fg": 371
+    },
+    {
+     "id": "t_tree_coffee",
+     "fg": 372
+    },
+    {
+     "id": "t_tree_coffee_harvested",
+     "fg": 373
+    },
+    {
+     "id": "t_tree_cottonwood",
+     "fg": 374
+    },
+    {
+     "id": "t_tree_cottonwood_harvested",
+     "fg": 375
+    },
+    {
+     "id": "t_tree_crabapple",
+     "fg": 376
+    },
+    {
+     "id": "t_tree_crabapple_harvested",
+     "fg": 377
+    },
+    {
+     "id": "t_tree_dead",
+     "fg": 378
+    },
+    {
+     "id": "t_tree_dead_warped",
+     "fg": 379
+    },
+    {
+     "id": "t_tree_deadpine",
+     "fg": 380
+    },
+    {
+     "id": "t_tree_deadpine_warped",
+     "fg": 381
+    },
+    {
+     "id": "t_tree_elderberry",
+     "fg": 382
+    },
+    {
+     "id": "t_tree_elderberry_harvested",
+     "fg": 383
+    },
+    {
+     "id": "t_tree_elm",
+     "fg": 384
+    },
+    {
+     "id": "t_tree_fungal",
+     "fg": 385
+    },
+    {
+     "id": "t_tree_fungal_young",
+     "fg": 386
+    },
+    {
+     "id": "t_tree_harvested",
+     "fg": 387
+    },
+    {
+     "id": "t_tree_hazelnut",
+     "fg": 388
+    },
+    {
+     "id": "t_tree_hazelnut_harvested",
+     "fg": 389
+    },
+    {
+     "id": "t_tree_hickory",
+     "fg": 390
+    },
+    {
+     "id": "t_tree_hickory_dead",
+     "fg": 391
+    },
+    {
+     "id": "t_tree_hickory_harvested",
+     "fg": 392
+    },
+    {
+     "id": "t_tree_juniper",
+     "fg": 393
+    },
+    {
+     "id": "t_tree_juniper_harvested",
+     "fg": 394
+    },
+    {
+     "id": "t_tree_maple",
+     "fg": 395
+    },
+    {
+     "id": "t_tree_maple_tapped",
+     "fg": 396
+    },
+    {
+     "id": "t_tree_mulberry",
+     "fg": 397
+    },
+    {
+     "id": "t_tree_mulberry_harvested",
+     "fg": 398
+    },
+    {
+     "id": "t_tree_nannyberry",
+     "fg": 399
+    },
+    {
+     "id": "t_tree_nannyberry_harvested",
+     "fg": 400
+    },
+    {
+     "id": "t_tree_peach",
+     "fg": 401
+    },
+    {
+     "id": "t_tree_peach_harvested",
+     "fg": 402
+    },
+    {
+     "id": "t_tree_pear",
+     "fg": 403
+    },
+    {
+     "id": "t_tree_pear_harvested",
+     "fg": 404
+    },
+    {
+     "id": "t_tree_pecan",
+     "fg": 405
+    },
+    {
+     "id": "t_tree_pecan_harvested",
+     "fg": 406
+    },
+    {
+     "id": "t_tree_pine",
+     "fg": 407
+    },
+    {
+     "id": "t_tree_pine_harvested",
+     "fg": 408
+    },
+    {
+     "id": "t_tree_pistachio",
+     "fg": 409
+    },
+    {
+     "id": "t_tree_pistachio_harvested",
+     "fg": 410
+    },
+    {
+     "id": "t_tree_plum",
+     "fg": 411
+    },
+    {
+     "id": "t_tree_plum_harvested",
+     "fg": 412
+    },
+    {
+     "id": "t_tree_sassafras",
+     "fg": 413
+    },
+    {
+     "id": "t_tree_sassafras_harvested",
+     "fg": 414
+    },
+    {
+     "id": "t_tree_tupelo",
+     "fg": 415
+    },
+    {
+     "id": "t_tree_tupelo_harvested",
+     "fg": 416
+    },
+    {
+     "id": "t_tree_very_dead",
+     "fg": 417
+    },
+    {
+     "id": "t_tree_walnut",
+     "fg": 418
+    },
+    {
+     "id": "t_tree_walnut_harvested",
+     "fg": 419
+    },
+    {
+     "id": "t_tree_willow",
+     "fg": 420
+    },
+    {
+     "id": "t_tree_willow_harvested",
+     "fg": 421
+    },
+    {
+     "id": "t_tree_young",
+     "fg": 422
+    },
+    {
+     "id": "t_treetop",
+     "fg": 423
+    },
+    {
+     "id": "t_treetop_dead",
+     "fg": 424
+    },
+    {
+     "id": "t_treetop_evergreen",
+     "fg": 425
+    },
+    {
+     "id": "t_treetop_giant_fern",
+     "fg": 426
+    },
+    {
+     "id": "t_trunk",
+     "fg": 427
+    },
+    {
+     "id": "t_vitrified_tree",
+     "fg": 428
+    }
+   ]
+  },
+  {
+   "file": "bouma_chars.png",
+   "sprite_width": 32,
+   "sprite_height": 36,
+   "sprite_offset_x": 8,
+   "sprite_offset_y": -19,
+   "tiles": [
+    {
+     "id": [
+      "mon_EMP_hack",
+      "mon_tazer_hack"
+     ],
+     "fg": 433
+    },
+    {
+     "id": [
+      "mon_XEDRA_officer",
+      "mon_zombie_master",
+      "mon_zombie_medical_regenerating",
+      "mon_zombie_regenerating",
+      "mon_zombie_regenerating_final",
+      "mon_zombie_regenerating_hunter"
+     ],
+     "fg": 434
+    },
+    {
+     "id": [
+      "mon_XEDRA_soldier",
+      "mon_zombie_marine",
+      "mon_zombie_milbase_personnel",
+      "mon_zombie_military_pilot",
+      "mon_zombie_officer",
+      "mon_zombie_sailor",
+      "mon_zombie_soldier",
+      "mon_zombie_soldier_acid_1",
+      "mon_zombie_soldier_acid_2",
+      "mon_zombie_soldier_blackops_1",
+      "mon_zombie_soldier_blackops_2",
+      "mon_zombie_soldier_lixa_police",
+      "mon_zombie_soldier_no_weakpoints"
+     ],
+     "fg": 435
+    },
+    {
+     "id": [
+      "mon_absence",
+      "mon_better_half",
+      "mon_big_rat",
+      "mon_black_rat",
+      "mon_black_ratkin",
+      "mon_blob",
+      "mon_dark_reflection",
+      "mon_dog_wad",
+      "mon_headless_dog_thing",
+      "mon_memory",
+      "mon_mink",
+      "mon_mutant_mollusk",
+      "mon_pale_reflection",
+      "mon_spider_widow_giant_s",
+      "mon_twisted_reflection"
+     ],
+     "fg": 436
+    },
+    {
+     "id": "mon_afs_headless_horror",
+     "fg": 437
+    },
+    {
+     "id": [
+      "mon_albino_penguin",
+      "mon_amalgamation_spotter",
+      "mon_chicken",
+      "mon_duck_domestic",
+      "mon_fish_bluefin_tuna",
+      "mon_fish_brown_trout",
+      "mon_fish_cod",
+      "mon_fish_grass_carp",
+      "mon_fish_halibut",
+      "mon_fish_lake_trout",
+      "mon_fish_muskellunge",
+      "mon_fish_rainbow_trout",
+      "mon_fish_salmon",
+      "mon_fish_sturgeon_lake",
+      "mon_flatlander",
+      "mon_generator",
+      "mon_turkey_domestic",
+      "mon_vortex"
+     ],
+     "fg": 438
+    },
+    {
+     "id": [
+      "mon_alpha_razorclaw",
+      "mon_dog_zombie_brute",
+      "mon_dragon_dummy",
+      "mon_fish_crayfish",
+      "mon_fish_lobster",
+      "mon_fox_red",
+      "mon_zoose_brute"
+     ],
+     "fg": 439
+    },
+    {
+     "id": [
+      "mon_amalgamation_breather",
+      "mon_boomer",
+      "mon_boomer_glutton",
+      "mon_breather",
+      "mon_fungal_wretch",
+      "mon_mi_go",
+      "mon_mi_go_guard",
+      "mon_mi_go_slaver",
+      "mon_pig",
+      "mon_pig_piglet",
+      "mon_zombie_snotgobbler",
+      "mon_zombie_wretch",
+      "mon_zombie_wretch_dusted",
+      "mon_zombie_wretch_fungalize"
+     ],
+     "fg": 440
+    },
+    {
+     "id": [
+      "mon_amalgamation_breather_hub",
+      "mon_breather_hub"
+     ],
+     "fg": 441
+    },
+    {
+     "id": "mon_amalgamation_corroder",
+     "fg": 442
+    },
+    {
+     "id": [
+      "mon_amalgamation_jumper",
+      "mon_amalgamation_zapper"
+     ],
+     "fg": 443
+    },
+    {
+     "id": [
+      "mon_amalgamation_soldier",
+      "mon_centipede_mega",
+      "mon_shadow",
+      "mon_silverfish_nymph"
+     ],
+     "fg": 444
+    },
+    {
+     "id": [
+      "mon_amalgamation_swarmer",
+      "mon_ant_larva",
+      "mon_dermatik_larva",
+      "mon_giant_appendage",
+      "mon_wasp_larva"
+     ],
+     "fg": 445
+    },
+    {
+     "id": [
+      "mon_amigara_horror",
+      "mon_blank",
+      "mon_chud",
+      "mon_civilian_icu",
+      "mon_civilian_panic",
+      "mon_civilian_parent",
+      "mon_civilian_police",
+      "mon_civilian_police_rifle",
+      "mon_civilian_stationary",
+      "mon_civilian_zombiefighter",
+      "mon_civilian_zombiegunner",
+      "mon_debug_dragger",
+      "mon_debug_grabber",
+      "mon_debug_grabber_left",
+      "mon_debug_grabber_mid",
+      "mon_debug_grabber_right",
+      "mon_debug_grabber_strong",
+      "mon_debug_puller_incompetent",
+      "mon_debug_puller_strong",
+      "mon_debug_puller_weak",
+      "mon_fungal_raptor",
+      "mon_goat",
+      "mon_goat_kid",
+      "mon_gozu",
+      "mon_hallu_mom",
+      "mon_hallucinator",
+      "mon_impossible_shape",
+      "mon_leech_pod_cluster",
+      "mon_living_vector",
+      "mon_opossum",
+      "mon_skeleton",
+      "mon_skeleton_brute",
+      "mon_skeleton_brute_fungus",
+      "mon_skeleton_executioner",
+      "mon_skeleton_fungus",
+      "mon_skeleton_hulk",
+      "mon_skeleton_hulk_fungus",
+      "mon_skeleton_medical",
+      "mon_skeleton_reaper",
+      "mon_skeleton_slasher",
+      "mon_spawn_raptor",
+      "mon_zombie_brute_winged",
+      "mon_zombie_horse_pale",
+      "mon_zombie_static",
+      "mon_zombie_waif",
+      "pseudo_debug_mon",
+      "pseudo_weakpoint_mon"
+     ],
+     "fg": 446
+    },
+    {
+     "id": [
+      "mon_ant",
+      "mon_ant_acid_soldier",
+      "mon_ant_acid_soldier_mega",
+      "mon_ant_small",
+      "mon_centipede_house_larva",
+      "mon_giant_cockroach",
+      "mon_giant_cockroach_nymph",
+      "mon_large_cockroach",
+      "mon_plague_nymph",
+      "mon_plague_vector",
+      "mon_pregnant_giant_cockroach",
+      "mon_skink_fivelined",
+      "mon_skink_fivelined_baby",
+      "mon_skittering_plague"
+     ],
+     "fg": 447
+    },
+    {
+     "id": [
+      "mon_ant_acid",
+      "mon_ant_acid_queen",
+      "mon_ant_acid_small",
+      "mon_centipede_mom",
+      "mon_slime_ocularium"
+     ],
+     "fg": 448
+    },
+    {
+     "id": [
+      "mon_ant_acid_larva",
+      "mon_bee",
+      "mon_bee_fungus",
+      "mon_bee_mega",
+      "mon_bee_mega_fungus",
+      "mon_bee_small",
+      "mon_bee_small_fungus",
+      "mon_wasp",
+      "mon_wasp_fungus",
+      "mon_wasp_guard",
+      "mon_wasp_guard_fungus",
+      "mon_wasp_mega",
+      "mon_wasp_mega_fungus",
+      "mon_wasp_queen",
+      "mon_wasp_queen_fungus",
+      "mon_wasp_small",
+      "mon_wasp_small_fungus",
+      "mon_wasp_small_guard",
+      "mon_wasp_small_guard_fungus"
+     ],
+     "fg": 449
+    },
+    {
+     "id": [
+      "mon_ant_fungus",
+      "mon_whisper_fungus"
+     ],
+     "fg": 450
+    },
+    {
+     "id": [
+      "mon_ant_queen",
+      "mon_kraken_guard"
+     ],
+     "fg": 451
+    },
+    {
+     "id": [
+      "mon_ant_soldier",
+      "mon_ant_soldier_mega",
+      "mon_dermatik",
+      "mon_dermatik_midwife",
+      "mon_kraken_queen",
+      "mon_moth_fly_larva"
+     ],
+     "fg": 452
+    },
+    {
+     "id": [
+      "mon_antlion_giant",
+      "mon_bluejay_chick",
+      "mon_cardinal_chick",
+      "mon_chickadee_chick",
+      "mon_chicken_chick",
+      "mon_coot_chick",
+      "mon_cormorant_chick",
+      "mon_crow_chick",
+      "mon_duck_chick",
+      "mon_duck_domestic_chick",
+      "mon_firefly",
+      "mon_firefly_larva",
+      "mon_goose_canadian_chick",
+      "mon_goose_chick",
+      "mon_grebe_chick",
+      "mon_grouse_chick",
+      "mon_guinea_fowl_chick",
+      "mon_hummingbird_chick",
+      "mon_moorhen_chick",
+      "mon_pheasant_chick",
+      "mon_pigeon_chick",
+      "mon_raven_chick",
+      "mon_robin_chick",
+      "mon_sparrow_chick",
+      "mon_turkey_chick",
+      "mon_turkey_domestic_chick",
+      "mon_waxwing_chick",
+      "mon_woodpecker_chick"
+     ],
+     "fg": 453
+    },
+    {
+     "id": [
+      "mon_antlion_larva",
+      "mon_butterfly_titan",
+      "mon_dog_zombie_rot",
+      "mon_spider_web_s"
+     ],
+     "fg": 454
+    },
+    {
+     "id": [
+      "mon_aphid",
+      "mon_aphid_small",
+      "mon_centipede_giant",
+      "mon_centipede_larva",
+      "mon_centipede_small",
+      "mon_fly",
+      "mon_fly_larva",
+      "mon_fly_mega",
+      "mon_fly_small"
+     ],
+     "fg": 455
+    },
+    {
+     "id": [
+      "mon_archunk_medium",
+      "mon_archunk_strong",
+      "mon_blob_small",
+      "mon_fungal_wall",
+      "mon_leo_tadpole",
+      "mon_peeper_tadpole",
+      "mon_shoggoth",
+      "mon_skeleton_necro",
+      "mon_tainted_shadow",
+      "mon_thing",
+      "mon_zombie_creepy",
+      "mon_zombie_necro",
+      "mon_zombie_necro_boomer",
+      "mon_zombie_smoker"
+     ],
+     "fg": 456
+    },
+    {
+     "id": [
+      "mon_archunk_weak",
+      "mon_beekeeper_dusted",
+      "mon_beekeeper_fungal",
+      "mon_beekeeper_fungalize",
+      "mon_dementia",
+      "mon_fungal_hedgerow",
+      "mon_fungaloid_queen",
+      "mon_mannequin_decoy",
+      "mon_mi_go_captured",
+      "mon_mi_go_myrmidon",
+      "mon_shift_bigfrog",
+      "mon_skeleton_brute_dusted",
+      "mon_skeleton_brute_fungalize",
+      "mon_skeleton_dusted",
+      "mon_skeleton_fungalize",
+      "mon_skeleton_hulk_dusted",
+      "mon_skeleton_hulk_fungalize",
+      "mon_smoker_brute",
+      "mon_spawn_raptor_dusted",
+      "mon_spawn_raptor_fungalize",
+      "mon_spawn_raptor_shady",
+      "mon_spore",
+      "mon_ziger_fungus",
+      "mon_zombie_brute_dusted",
+      "mon_zombie_brute_fungal",
+      "mon_zombie_brute_fungalize",
+      "mon_zombie_child_dusted",
+      "mon_zombie_child_fungalize",
+      "mon_zombie_child_fungus",
+      "mon_zombie_crawler_dusted",
+      "mon_zombie_crawler_fungal",
+      "mon_zombie_crawler_fungalize",
+      "mon_zombie_dusted",
+      "mon_zombie_fat_dusted",
+      "mon_zombie_fat_fungalize",
+      "mon_zombie_fat_fungus",
+      "mon_zombie_fungalize",
+      "mon_zombie_fungus",
+      "mon_zombie_horse_fungus",
+      "mon_zombie_hulk_dusted",
+      "mon_zombie_hulk_fungal",
+      "mon_zombie_hulk_fungalize",
+      "mon_zombie_rot_dusted",
+      "mon_zombie_rot_fungal",
+      "mon_zombie_rot_fungalize",
+      "mon_zombie_runner_dusted",
+      "mon_zombie_runner_fungal",
+      "mon_zombie_runner_fungalize",
+      "mon_zombie_shady",
+      "mon_zombie_skull",
+      "mon_zombie_smoker_dusted",
+      "mon_zombie_smoker_fungalize",
+      "mon_zombie_smoker_fungus",
+      "mon_zombie_sproglodyte",
+      "mon_zombie_tough_dusted",
+      "mon_zombie_tough_fungal",
+      "mon_zombie_tough_fungalize",
+      "mon_zomborg",
+      "mon_zomborg_devourer"
+     ],
+     "fg": 457
+    },
+    {
+     "id": [
+      "mon_bat",
+      "mon_woodlouse"
+     ],
+     "fg": 458
+    },
+    {
+     "id": [
+      "mon_bear",
+      "mon_bear_cub",
+      "mon_bear_mutant_3headed",
+      "mon_twisting_blade"
+     ],
+     "fg": 459
+    },
+    {
+     "id": [
+      "mon_beaver",
+      "mon_beaver_kit",
+      "mon_beaver_mutant_avian_kit",
+      "mon_beaver_mutant_huge",
+      "mon_beaver_mutant_huge_kit",
+      "mon_bobcat",
+      "mon_cougar",
+      "mon_cougar_kitten",
+      "mon_coyote",
+      "mon_coyote_mutant_shark",
+      "mon_coyote_mutant_venom",
+      "mon_coyote_pup",
+      "mon_coyote_pup_mutant_shark",
+      "mon_coyote_pup_mutant_venom",
+      "mon_deer",
+      "mon_deer_fawn",
+      "mon_deer_mutant_spider",
+      "mon_deer_mutant_spider_fawn",
+      "mon_dermatik_incubator_deer",
+      "mon_dog_scorched",
+      "mon_dog_scorched_hulk",
+      "mon_hare",
+      "mon_hare_baby",
+      "mon_mole_cricket",
+      "mon_mole_cricket_nymph",
+      "mon_moose",
+      "mon_muskrat",
+      "mon_mutant_antler",
+      "mon_mutant_evolved",
+      "mon_mutant_experimental",
+      "mon_odd_bigfrog",
+      "mon_odd_giganfrog",
+      "mon_otter",
+      "mon_rabbit",
+      "mon_rabbit_baby",
+      "mon_reindeer",
+      "mon_reindeer_fawn",
+      "mon_squirrel_red",
+      "mon_weasel",
+      "mon_wild_rabbit",
+      "mon_wild_rabbit_baby",
+      "mon_zougar_hunter"
+     ],
+     "fg": 460
+    },
+    {
+     "id": [
+      "mon_beaver_mutant_avian",
+      "mon_dog_zombie_cop",
+      "mon_leech_root_runner",
+      "mon_mutant_camouflaged"
+     ],
+     "fg": 461
+    },
+    {
+     "id": [
+      "mon_beekeeper",
+      "mon_blood_sacrifice",
+      "mon_gracke",
+      "mon_twisted_body",
+      "mon_zombie_prisoner_tough",
+      "mon_zombie_resort_bouncer",
+      "mon_zombie_tough"
+     ],
+     "fg": 462
+    },
+    {
+     "id": [
+      "mon_bestial_stalker",
+      "mon_zombie_armored",
+      "mon_zombie_marine_upgrade"
+     ],
+     "fg": 463
+    },
+    {
+     "id": [
+      "mon_biollante",
+      "mon_biollante_sprig",
+      "mon_biollante_sprout",
+      "mon_star_vampire",
+      "mon_triffid_flower"
+     ],
+     "fg": 464
+    },
+    {
+     "id": [
+      "mon_blob_brain",
+      "mon_gastro_bufo",
+      "mon_toad_bloat",
+      "mon_zombullfrog"
+     ],
+     "fg": 465
+    },
+    {
+     "id": [
+      "mon_blob_large",
+      "mon_cat",
+      "mon_cat_bengal",
+      "mon_cat_bengal_kitten",
+      "mon_cat_black",
+      "mon_cat_black_kitten",
+      "mon_cat_calico",
+      "mon_cat_calico_kitten",
+      "mon_cat_chonker",
+      "mon_cat_chonker_kitten",
+      "mon_cat_devon_rex",
+      "mon_cat_devon_rex_kitten",
+      "mon_cat_isherwood",
+      "mon_cat_kitten",
+      "mon_cat_liquid",
+      "mon_cat_longhair",
+      "mon_cat_longhair_kitten",
+      "mon_cat_maine_coon",
+      "mon_cat_maine_coon_kitten",
+      "mon_cat_mutant_prism",
+      "mon_cat_persian",
+      "mon_cat_persian_kitten",
+      "mon_cat_siamese",
+      "mon_cat_siamese_kitten",
+      "mon_cat_sphynx",
+      "mon_cat_sphynx_kitten",
+      "mon_cat_tabby",
+      "mon_cat_tabby_kitten",
+      "mon_cat_void",
+      "mon_cicada",
+      "mon_cow",
+      "mon_cow_calf",
+      "mon_dermatik_incubator_dog",
+      "mon_dog",
+      "mon_dog_antimemetic",
+      "mon_dog_auscattle",
+      "mon_dog_auscattle_pup",
+      "mon_dog_bcollie",
+      "mon_dog_bcollie_pup",
+      "mon_dog_beagle",
+      "mon_dog_beagle_pup",
+      "mon_dog_boxer",
+      "mon_dog_boxer_pup",
+      "mon_dog_bull",
+      "mon_dog_bull_pup",
+      "mon_dog_chihuahua",
+      "mon_dog_chihuahua_pup",
+      "mon_dog_dachshund",
+      "mon_dog_dachshund_pup",
+      "mon_dog_gpyrenees",
+      "mon_dog_gpyrenees_pup",
+      "mon_dog_gshepherd",
+      "mon_dog_gshepherd_pup",
+      "mon_dog_mutant_loper",
+      "mon_dog_mutant_loper_pup",
+      "mon_dog_mutant_mauler",
+      "mon_dog_mutant_mauler_pup",
+      "mon_dog_mutant_mongrel",
+      "mon_dog_mutant_thrasher",
+      "mon_dog_mutant_thrasher_pup",
+      "mon_dog_pitbullmix",
+      "mon_dog_pitbullmix_pup",
+      "mon_dog_pup",
+      "mon_dog_rottweiler",
+      "mon_dog_rottweiler_pup",
+      "mon_dog_samoyed",
+      "mon_dog_samoyed_pup",
+      "mon_dog_telekenetic",
+      "mon_dog_wad_pup",
+      "mon_exodii_quad",
+      "mon_ferret",
+      "mon_ferret_kit",
+      "mon_fox_gray",
+      "mon_gelatin",
+      "mon_groundhog",
+      "mon_moose_calf",
+      "mon_moth",
+      "mon_moth_giant",
+      "mon_nether_huntsman",
+      "mon_raccoon",
+      "mon_sewer_rat",
+      "mon_squirrel",
+      "mon_tusked_moose_calf",
+      "mon_zeer_fungus",
+      "mon_zeindeer_fungus",
+      "mon_zombie_dog_fungus",
+      "mon_zoose_fungus",
+      "mon_zougar_fungus",
+      "mon_zougar_shady"
+     ],
+     "fg": 466
+    },
+    {
+     "id": [
+      "mon_blob_sewer",
+      "mon_caterpillar_moth",
+      "mon_mausketeer",
+      "mon_zeer",
+      "mon_zeindeer",
+      "mon_zllama",
+      "mon_zombeaver",
+      "mon_zoose",
+      "mon_zougar",
+      "mon_zow"
+     ],
+     "fg": 467
+    },
+    {
+     "id": [
+      "mon_bluejay",
+      "mon_flaming_eye",
+      "mon_leech_radio",
+      "mon_leech_stalk",
+      "mon_unseen_hunter"
+     ],
+     "fg": 468
+    },
+    {
+     "id": [
+      "mon_boar_wild",
+      "mon_boar_wild_piglet",
+      "mon_foul_megafrog",
+      "mon_foul_toad",
+      "mon_fowler_toad",
+      "mon_freedom_toad",
+      "mon_leo_frog",
+      "mon_leo_worm",
+      "mon_odd_toad",
+      "mon_pattern_frog",
+      "mon_peeper_frog",
+      "mon_pickerel_frog",
+      "mon_spade_frog",
+      "mon_vocal_frog",
+      "mon_wood_frog",
+      "mon_wood_worm"
+     ],
+     "fg": 469
+    },
+    {
+     "id": [
+      "mon_boomer_claymore",
+      "mon_brute_pupa",
+      "mon_brute_pupa_decoy",
+      "mon_crawler",
+      "mon_gray_tadpole",
+      "mon_hound_tindalos",
+      "mon_hound_tindalos_afterimage",
+      "mon_kreck",
+      "mon_mi_go_scout",
+      "mon_mi_go_surgeon",
+      "mon_spawn_raptor_unstable",
+      "mon_tindalos",
+      "mon_triffid_heart",
+      "mon_zombie_brute",
+      "mon_zombie_horse_red",
+      "mon_zombie_medical_brute",
+      "mon_zombie_pig_gas",
+      "mon_zombie_prisoner_brute",
+      "mon_zpig_brute"
+     ],
+     "fg": 470
+    },
+    {
+     "id": [
+      "mon_boomer_dusted",
+      "mon_boomer_fungalize",
+      "mon_boomer_fungus"
+     ],
+     "fg": 471
+    },
+    {
+     "id": "mon_boomer_huge",
+     "fg": 472
+    },
+    {
+     "id": [
+      "mon_broken_cyborg",
+      "mon_flashbang_hack",
+      "mon_gasbomb_hack",
+      "mon_grocerybot_busted",
+      "mon_molebot",
+      "mon_secubot",
+      "mon_secubot_balthazar",
+      "mon_shrapnel_swarm",
+      "mon_talon_m202a1"
+     ],
+     "fg": 473
+    },
+    {
+     "id": [
+      "mon_bullfrog_frog",
+      "mon_green_frog",
+      "mon_green_worm",
+      "mon_mink_frog",
+      "mon_strange_frog",
+      "mon_tail_frog",
+      "mon_zombear",
+      "mon_zombull"
+     ],
+     "fg": 474
+    },
+    {
+     "id": [
+      "mon_bullfrog_tadpole",
+      "mon_green_tadpole",
+      "mon_ziger",
+      "mon_zombie_fat",
+      "mon_zombie_goat",
+      "mon_zombie_horse",
+      "mon_zombie_medical_pupa",
+      "mon_zombie_pig",
+      "mon_zombie_prisoner",
+      "mon_zombie_prisoner_fat",
+      "mon_zombie_pupa",
+      "mon_zombie_pupa_decoy",
+      "mon_zombie_pupa_decoy_shady",
+      "mon_zombie_pupa_medical_decoy",
+      "mon_zombie_pupa_shady"
+     ],
+     "fg": 475
+    },
+    {
+     "id": [
+      "mon_butterfly",
+      "mon_butterfly_giant",
+      "mon_cicada_nymph",
+      "mon_dog_incorporeal",
+      "mon_dog_skeleton",
+      "mon_dog_skeleton_brute",
+      "mon_dog_thing",
+      "mon_fish_blackfish",
+      "mon_fish_bluefish",
+      "mon_fish_bluegill",
+      "mon_fish_bowfin",
+      "mon_fish_brook_trout",
+      "mon_fish_bullhead",
+      "mon_fish_bullhead_yellow",
+      "mon_fish_burbot",
+      "mon_fish_calico_bass",
+      "mon_fish_carp",
+      "mon_fish_channel_catfish",
+      "mon_fish_eel",
+      "mon_fish_fallfish",
+      "mon_fish_flounder",
+      "mon_fish_gar_longnose",
+      "mon_fish_goldfish",
+      "mon_fish_green_sunfish",
+      "mon_fish_haddock",
+      "mon_fish_kokanee_salmon",
+      "mon_fish_lbass",
+      "mon_fish_mackerel",
+      "mon_fish_pbass",
+      "mon_fish_perch",
+      "mon_fish_pickerel",
+      "mon_fish_pickerel_american",
+      "mon_fish_pike",
+      "mon_fish_pollock",
+      "mon_fish_porgy",
+      "mon_fish_pumpkinseed",
+      "mon_fish_redbreast",
+      "mon_fish_rock_bass",
+      "mon_fish_sbass",
+      "mon_fish_sturgeon_shortnose",
+      "mon_fish_sunfish",
+      "mon_fish_walleye",
+      "mon_fish_warmouth",
+      "mon_fish_white_catfish",
+      "mon_fish_white_sucker",
+      "mon_fish_whitefish",
+      "mon_fish_whitefish_round",
+      "mon_fry_blackfish",
+      "mon_fry_bluefin_tuna",
+      "mon_fry_bluefish",
+      "mon_fry_bluegill",
+      "mon_fry_bowfin",
+      "mon_fry_brook_trout",
+      "mon_fry_brown_trout",
+      "mon_fry_bullhead",
+      "mon_fry_bullhead_yellow",
+      "mon_fry_burbot",
+      "mon_fry_calico_bass",
+      "mon_fry_carp",
+      "mon_fry_channel_catfish",
+      "mon_fry_cod",
+      "mon_fry_crayfish",
+      "mon_fry_fallfish",
+      "mon_fry_flounder",
+      "mon_fry_gar_longnose",
+      "mon_fry_goldfish",
+      "mon_fry_grass_carp",
+      "mon_fry_green_sunfish",
+      "mon_fry_haddock",
+      "mon_fry_halibut",
+      "mon_fry_kokanee_salmon",
+      "mon_fry_lake_trout",
+      "mon_fry_lbass",
+      "mon_fry_mackerel",
+      "mon_fry_muskellunge",
+      "mon_fry_mutant_salmon",
+      "mon_fry_pbass",
+      "mon_fry_perch",
+      "mon_fry_pickerel",
+      "mon_fry_pickerel_american",
+      "mon_fry_pike",
+      "mon_fry_pollock",
+      "mon_fry_porgy",
+      "mon_fry_pumpkinseed",
+      "mon_fry_rainbow_trout",
+      "mon_fry_redbreast",
+      "mon_fry_rock_bass",
+      "mon_fry_salmon",
+      "mon_fry_sbass",
+      "mon_fry_sturgeon_lake",
+      "mon_fry_sturgeon_shortnose",
+      "mon_fry_sunfish",
+      "mon_fry_walleye",
+      "mon_fry_warmouth",
+      "mon_fry_white_catfish",
+      "mon_fry_white_sucker",
+      "mon_fry_whitefish",
+      "mon_fry_whitefish_round",
+      "mon_guilt",
+      "mon_lab_rat",
+      "mon_lab_ratkin",
+      "mon_llama",
+      "mon_llama_calf",
+      "mon_mutant_alpha",
+      "mon_mutant_alpha_boss",
+      "mon_raccoon_mutant",
+      "mon_shifting_mass",
+      "mon_sloth",
+      "mon_wolf_skeleton",
+      "mon_zap_rat"
+     ],
+     "fg": 476
+    },
+    {
+     "id": [
+      "mon_butterfly_cocoon",
+      "mon_dragonfly_naiad",
+      "mon_eigenspectre_1",
+      "mon_eigenspectre_2",
+      "mon_eigenspectre_3",
+      "mon_eigenspectre_3_echo",
+      "mon_eigenspectre_4",
+      "mon_exodii_worker",
+      "mon_fungal_tendril",
+      "mon_fungaloid",
+      "mon_fungaloid_shambler",
+      "mon_fungaloid_young",
+      "mon_lemming",
+      "mon_moth_cocoon",
+      "mon_moth_fly",
+      "mon_moth_fly_small",
+      "mon_nether_unviable_root",
+      "mon_void_spider_limb",
+      "mon_wasp_pupa"
+     ],
+     "fg": 477
+    },
+    {
+     "id": [
+      "mon_c4_hack",
+      "mon_fleshborg_1_1",
+      "mon_fleshborg_1_2",
+      "mon_nursebot_defective",
+      "mon_prototype_cyborg",
+      "mon_robofac_camspy",
+      "mon_secubot_america",
+      "mon_secubot_america_refurbished"
+     ],
+     "fg": 478
+    },
+    {
+     "id": [
+      "mon_cardinal",
+      "mon_crayfish_giant_larva",
+      "mon_crayfish_mega",
+      "mon_crayfish_small",
+      "mon_giant_crayfish",
+      "mon_hallu_multicooker",
+      "mon_shift_bigtad",
+      "mon_triffid_queen"
+     ],
+     "fg": 479
+    },
+    {
+     "id": [
+      "mon_carrion_grub",
+      "mon_chipmunk",
+      "mon_duck",
+      "mon_foul_bigtad",
+      "mon_grebe",
+      "mon_grouse",
+      "mon_mosquito_giant",
+      "mon_mosquito_larva",
+      "mon_mosquito_mega",
+      "mon_mosquito_small",
+      "mon_odd_bigtad",
+      "mon_odd_megafrog",
+      "mon_robin",
+      "mon_spider_cellar_leg",
+      "mon_turkey",
+      "mon_vocal_bigtad"
+     ],
+     "fg": 480
+    },
+    {
+     "id": [
+      "mon_caterpillar_butterfly",
+      "mon_dragonfly_mega",
+      "mon_mantis_giant",
+      "mon_mantis_nymph",
+      "mon_mantis_small",
+      "mon_player_blob",
+      "mon_strange_bigfrog",
+      "mon_strange_giganfrog",
+      "mon_zombie_dog",
+      "mon_zoose_thorny"
+     ],
+     "fg": 481
+    },
+    {
+     "id": [
+      "mon_centipede_house",
+      "mon_centipede_house_small",
+      "mon_foul_bigfrog",
+      "mon_foul_giganfrog",
+      "mon_fowler_tadpole",
+      "mon_freedom_tadpole",
+      "mon_hallu_mannequin",
+      "mon_horse",
+      "mon_horse_foal",
+      "mon_horse_police",
+      "mon_human_scorched",
+      "mon_jumbo_bigfrog",
+      "mon_locust",
+      "mon_locust_mega",
+      "mon_locust_nymph",
+      "mon_locust_small",
+      "mon_mink_tadpole",
+      "mon_spade_tadpole",
+      "mon_tiger",
+      "mon_turtle_painted",
+      "mon_turtle_painted_baby",
+      "mon_turtle_snapping_common",
+      "mon_turtle_snapping_common_baby",
+      "mon_vocal_bigfrog",
+      "mon_wood_tadpole",
+      "mon_zombie_anklebiter",
+      "mon_zombie_child_scorched",
+      "mon_zombie_fiend",
+      "mon_zombie_fiend_rust",
+      "mon_zombie_hammer_hands",
+      "mon_zombie_hunter",
+      "mon_zombie_plated",
+      "mon_zombie_rust",
+      "mon_zombie_scorched",
+      "mon_zombie_scorched_brute",
+      "mon_zombie_scorched_lasher",
+      "mon_zombie_scorched_rust",
+      "mon_zombie_shell",
+      "mon_zombie_urchin"
+     ],
+     "fg": 482
+    },
+    {
+     "id": [
+      "mon_chickadee",
+      "mon_coot",
+      "mon_cormorant",
+      "mon_crow",
+      "mon_crow_mutant",
+      "mon_crow_mutant_small",
+      "mon_flying_polyp",
+      "mon_goose",
+      "mon_goose_canadian",
+      "mon_guinea_fowl",
+      "mon_moorhen",
+      "mon_pattern_bigtad",
+      "mon_pheasant",
+      "mon_pigeon",
+      "mon_raven",
+      "mon_sparrow",
+      "mon_waxwing",
+      "mon_woodpecker"
+     ],
+     "fg": 483
+    },
+    {
+     "id": [
+      "mon_child",
+      "mon_grasshopper_giant",
+      "mon_grasshopper_nymph",
+      "mon_grasshopper_small",
+      "mon_human",
+      "mon_pseudo_dormant_zombie",
+      "mon_sewer_fish",
+      "mon_trl_soldier",
+      "mon_zombie",
+      "mon_zombie_brainless",
+      "mon_zombie_child",
+      "mon_zombie_child_base",
+      "mon_zombie_ears",
+      "mon_zombie_resort_dancer",
+      "mon_zombie_resort_staff",
+      "mon_zombie_thorny",
+      "mon_zombie_winged"
+     ],
+     "fg": 484
+    },
+    {
+     "id": [
+      "mon_creeper_hub",
+      "mon_creeper_vine",
+      "mon_fungal_fighter",
+      "mon_strange_bigtad",
+      "mon_strange_megafrog"
+     ],
+     "fg": 485
+    },
+    {
+     "id": [
+      "mon_crows_m240",
+      "mon_grenade_hack",
+      "mon_hazmatbot"
+     ],
+     "fg": 486
+    },
+    {
+     "id": [
+      "mon_dark_wyrm",
+      "mon_spider_trapdoor_giant",
+      "mon_spider_trapdoor_mega",
+      "mon_spider_trapdoor_s",
+      "mon_spider_trapdoor_small"
+     ],
+     "fg": 487
+    },
+    {
+     "id": [
+      "mon_darkman",
+      "mon_shadow_snake",
+      "mon_silverfish",
+      "mon_silverfish_small",
+      "mon_sludge_crawler",
+      "mon_spider_widow_giant",
+      "mon_spider_widow_mega",
+      "mon_spider_widow_small",
+      "mon_swarm_structure"
+     ],
+     "fg": 488
+    },
+    {
+     "id": [
+      "mon_dermatik_incubator_spider",
+      "mon_sewer_snake",
+      "mon_spider_web",
+      "mon_spider_web_mega",
+      "mon_spider_web_small"
+     ],
+     "fg": 489
+    },
+    {
+     "id": [
+      "mon_devourer",
+      "mon_zombie_wretched"
+     ],
+     "fg": 490
+    },
+    {
+     "id": [
+      "mon_devourer_lab_sec",
+      "mon_feral_cop",
+      "mon_feral_cop_fungal_infected",
+      "mon_zombie_cop",
+      "mon_zombie_labsecurity",
+      "mon_zombie_medical",
+      "mon_zombie_reenactor",
+      "mon_zombie_swat"
+     ],
+     "fg": 491
+    },
+    {
+     "id": "mon_dispatch",
+     "fg": 492
+    },
+    {
+     "id": "mon_dispatch_military",
+     "fg": 493
+    },
+    {
+     "id": [
+      "mon_diving_beetle_small",
+      "mon_diving_larva",
+      "mon_gray_frog",
+      "mon_shift_frog"
+     ],
+     "fg": 494
+    },
+    {
+     "id": "mon_dog_cuspated",
+     "fg": 495
+    },
+    {
+     "id": [
+      "mon_dog_howling",
+      "mon_razorclaw"
+     ],
+     "fg": 496
+    },
+    {
+     "id": [
+      "mon_dog_zombie_hulk",
+      "mon_mutant_carp",
+      "mon_octupus_stalker",
+      "mon_octupus_stalker_spawn"
+     ],
+     "fg": 497
+    },
+    {
+     "id": [
+      "mon_dragonfly_giant",
+      "mon_frog_dad",
+      "mon_hummingbird",
+      "mon_triffid",
+      "mon_triffid_sprig",
+      "mon_triffid_young",
+      "mon_vinebeast"
+     ],
+     "fg": 498
+    },
+    {
+     "id": [
+      "mon_exodii_turret",
+      "mon_labyrinth_turret_1_1",
+      "mon_turret"
+     ],
+     "fg": 499
+    },
+    {
+     "id": [
+      "mon_feral_armored_battleaxe",
+      "mon_feral_armored_mace",
+      "mon_feral_fancy_rapier",
+      "mon_feral_fancy_rapier_fake",
+      "mon_feral_human_axe",
+      "mon_feral_human_axe_fungal_corpse",
+      "mon_feral_human_axe_fungal_infected",
+      "mon_feral_human_crowbar",
+      "mon_feral_human_crowbar_fungal_corpse",
+      "mon_feral_human_crowbar_fungal_infected",
+      "mon_feral_human_pipe",
+      "mon_feral_human_pipe_fungal_corpse",
+      "mon_feral_human_pipe_fungal_infected",
+      "mon_feral_human_tool",
+      "mon_feral_jackboot",
+      "mon_feral_labsecurity_9mm",
+      "mon_feral_labsecurity_flashlight",
+      "mon_feral_maid_broom",
+      "mon_feral_maid_candlestick",
+      "mon_feral_maid_knife",
+      "mon_feral_marine_bayonet",
+      "mon_feral_militia",
+      "mon_feral_prepper_knife",
+      "mon_feral_prepper_mace",
+      "mon_feral_prisoner",
+      "mon_feral_sailor_axe",
+      "mon_feral_sailor_lug_wrench",
+      "mon_feral_sailor_mop",
+      "mon_feral_sailor_wrench",
+      "mon_feral_sapien_spear",
+      "mon_feral_scientist_scalpel",
+      "mon_feral_soldier",
+      "mon_feral_survivalist",
+      "mon_marloss_zealot_f",
+      "mon_marloss_zealot_m",
+      "mon_starer_axe",
+      "mon_starer_crowbar",
+      "mon_starer_pipe",
+      "mon_zombie_shrieker",
+      "mon_zombie_shriekling"
+     ],
+     "fg": 500
+    },
+    {
+     "id": [
+      "mon_feral_officer",
+      "mon_feral_swimmer_kickboard",
+      "mon_pattern_giganfrog",
+      "mon_zombie_nemesis",
+      "mon_zombie_swimmer",
+      "mon_zombie_swimmer_base"
+     ],
+     "fg": 501
+    },
+    {
+     "id": [
+      "mon_flesh_golem",
+      "mon_fleshy_shambler",
+      "mon_jabberwock"
+     ],
+     "fg": 502
+    },
+    {
+     "id": [
+      "mon_frog_husk",
+      "mon_frog_mummy",
+      "mon_frog_smoker_hulk",
+      "mon_zombie_predator",
+      "mon_zombtreefrog"
+     ],
+     "fg": 503
+    },
+    {
+     "id": "mon_frog_mother",
+     "fg": 504
+    },
+    {
+     "id": "mon_frog_shadow",
+     "fg": 505
+    },
+    {
+     "id": "mon_frog_shocker",
+     "fg": 506
+    },
+    {
+     "id": "mon_fungal_blossom",
+     "fg": 507
+    },
+    {
+     "id": [
+      "mon_fungaloid_seeder",
+      "mon_halloween_dragon",
+      "mon_halloween_ghost",
+      "mon_hologram",
+      "mon_zombie_grabber",
+      "mon_zombie_nullfield"
+     ],
+     "fg": 508
+    },
+    {
+     "id": [
+      "mon_fungaloid_tower",
+      "mon_pickerel_tadpole",
+      "mon_trl_thug",
+      "mon_zombie_fireman",
+      "mon_zombie_nomex",
+      "mon_zombie_tear_gasbag"
+     ],
+     "fg": 509
+    },
+    {
+     "id": [
+      "mon_gartersnake",
+      "mon_gartersnake_baby",
+      "mon_human_snail",
+      "mon_rattlesnake",
+      "mon_rattlesnake_big",
+      "mon_rattlesnake_big_s",
+      "mon_rattlesnake_giant",
+      "mon_rattlesnake_mega",
+      "mon_rattlesnake_s",
+      "mon_slug_forest",
+      "mon_slug_giant",
+      "mon_slug_larva",
+      "mon_slug_small",
+      "mon_snail_forest",
+      "mon_snail_giant",
+      "mon_snail_larva",
+      "mon_snail_river",
+      "mon_snail_small",
+      "mon_spider_cellar_giant",
+      "mon_spider_cellar_giant_s",
+      "mon_spider_cellar_mega",
+      "mon_spider_cellar_mom",
+      "mon_spider_cellar_small",
+      "mon_spider_wolf_giant",
+      "mon_spider_wolf_giant_s",
+      "mon_spider_wolf_mega",
+      "mon_spider_wolf_small",
+      "mon_stag_beetle_giant",
+      "mon_stag_beetle_mega",
+      "mon_stag_beetle_small",
+      "mon_wormsnake",
+      "mon_wormsnake_baby"
+     ],
+     "fg": 510
+    },
+    {
+     "id": [
+      "mon_gasbag_dusted",
+      "mon_gasbag_fungalize",
+      "mon_zombie_fireproof_grappler",
+      "mon_zombie_gasbag_fungus"
+     ],
+     "fg": 511
+    },
+    {
+     "id": [
+      "mon_golden_monolith",
+      "mon_yrax_apeirogon",
+      "mon_yrax_delta",
+      "mon_yrax_quadraphract",
+      "mon_yrax_quadraphract_leg",
+      "mon_yrax_sphenocorona",
+      "mon_yrax_triakis",
+      "mon_yrax_trifacet"
+     ],
+     "fg": 512
+    },
+    {
+     "id": [
+      "mon_graboid",
+      "mon_halfworm",
+      "mon_halfworm_graboid",
+      "mon_halfworm_small",
+      "mon_worm",
+      "mon_worm_small"
+     ],
+     "fg": 513
+    },
+    {
+     "id": [
+      "mon_grocerybot",
+      "mon_nursebot"
+     ],
+     "fg": 514
+    },
+    {
+     "id": [
+      "mon_hanging_roper",
+      "mon_nether_spearfisher",
+      "mon_nether_unviable_chunk",
+      "mon_star_vampire_coiling"
+     ],
+     "fg": 515
+    },
+    {
+     "id": [
+      "mon_hulk_pupa",
+      "mon_hulk_pupa_decoy",
+      "mon_zombie_hulk"
+     ],
+     "fg": 516
+    },
+    {
+     "id": [
+      "mon_hunting_horror",
+      "mon_nether_cucumber",
+      "mon_nether_leech"
+     ],
+     "fg": 517
+    },
+    {
+     "id": [
+      "mon_lab_security_drone_BM",
+      "mon_leech_root_drone"
+     ],
+     "fg": 518
+    },
+    {
+     "id": "mon_lab_security_drone_BM2",
+     "fg": 519
+    },
+    {
+     "id": "mon_lab_security_drone_BS",
+     "fg": 520
+    },
+    {
+     "id": [
+      "mon_lab_security_drone_GM",
+      "mon_lab_security_drone_GR"
+     ],
+     "fg": 521
+    },
+    {
+     "id": "mon_lab_security_drone_YM",
+     "fg": 522
+    },
+    {
+     "id": "mon_lady_bug",
+     "fg": 523
+    },
+    {
+     "id": [
+      "mon_lady_bug_giant",
+      "mon_lady_bug_larva"
+     ],
+     "fg": 524
+    },
+    {
+     "id": [
+      "mon_leech_blossom",
+      "mon_spawn_raptor_electric",
+      "mon_zombie_electric",
+      "mon_zombie_miner",
+      "mon_zombie_technician"
+     ],
+     "fg": 525
+    },
+    {
+     "id": "mon_lieutenant_shadow",
+     "fg": 526
+    },
+    {
+     "id": "mon_manhack",
+     "fg": 527
+    },
+    {
+     "id": "mon_mantis_mega",
+     "fg": 528
+    },
+    {
+     "id": [
+      "mon_meat_cocoon_large",
+      "mon_meat_cocoon_med",
+      "mon_meat_cocoon_small",
+      "mon_meat_cocoon_tiny"
+     ],
+     "fg": 529
+    },
+    {
+     "id": "mon_mech_combat",
+     "fg": 530
+    },
+    {
+     "id": "mon_mech_lifter",
+     "fg": 531
+    },
+    {
+     "id": "mon_mech_recon",
+     "fg": 532
+    },
+    {
+     "id": "mon_moth_titan",
+     "fg": 533
+    },
+    {
+     "id": "mon_mutant_arthropod",
+     "fg": 534
+    },
+    {
+     "id": [
+      "mon_mutant_salmon",
+      "mon_mutant_salmon_huge",
+      "mon_mutant_salmon_mega"
+     ],
+     "fg": 535
+    },
+    {
+     "id": [
+      "mon_nether_fish",
+      "mon_ocean_zhark",
+      "mon_zhark"
+     ],
+     "fg": 536
+    },
+    {
+     "id": "mon_nether_unviable_bug",
+     "fg": 537
+    },
+    {
+     "id": "mon_nether_unviable_butterfly",
+     "fg": 538
+    },
+    {
+     "id": "mon_nether_unviable_stomper",
+     "fg": 539
+    },
+    {
+     "id": [
+      "mon_pack_rat",
+      "mon_teke_mouse",
+      "mon_toad_wart",
+      "mon_toad_zombie",
+      "mon_tunnel_rat"
+     ],
+     "fg": 540
+    },
+    {
+     "id": "mon_palette_frog",
+     "fg": 541
+    },
+    {
+     "id": "mon_pattern_bigfrog",
+     "fg": 542
+    },
+    {
+     "id": "mon_robofac_laserturret_mk1",
+     "fg": 543
+    },
+    {
+     "id": "mon_robofac_prototype",
+     "fg": 544
+    },
+    {
+     "id": "mon_robofac_skittergun",
+     "fg": 545
+    },
+    {
+     "id": [
+      "mon_science_bot",
+      "mon_skitterbot"
+     ],
+     "fg": 546
+    },
+    {
+     "id": [
+      "mon_sheep",
+      "mon_sheep_lamb",
+      "mon_spider_jumping_giant",
+      "mon_spider_jumping_giant_s",
+      "mon_spider_jumping_mega",
+      "mon_spider_jumping_small",
+      "mon_stag_beetle_larva"
+     ],
+     "fg": 547
+    },
+    {
+     "id": [
+      "mon_skeleton_electric",
+      "mon_zombie_horse_black"
+     ],
+     "fg": 548
+    },
+    {
+     "id": [
+      "mon_skeleton_master",
+      "mon_zombie_bruiser",
+      "mon_zombie_brute_grappler"
+     ],
+     "fg": 549
+    },
+    {
+     "id": "mon_skunk",
+     "fg": 550
+    },
+    {
+     "id": [
+      "mon_spider_fungus",
+      "mon_strider_giant",
+      "mon_strider_nymph",
+      "mon_strider_small",
+      "mon_void_spider"
+     ],
+     "fg": 551
+    },
+    {
+     "id": [
+      "mon_stiltwalker_1_1",
+      "mon_void_spider_maw",
+      "mon_water_scorpion",
+      "mon_water_scorpion_larva",
+      "mon_wolf",
+      "mon_wolf_pup"
+     ],
+     "fg": 552
+    },
+    {
+     "id": "mon_structural_spur",
+     "fg": 553
+    },
+    {
+     "id": "mon_tadpole_grabber",
+     "fg": 554
+    },
+    {
+     "id": "mon_toad_bone",
+     "fg": 555
+    },
+    {
+     "id": "mon_trl_cyborg",
+     "fg": 556
+    },
+    {
+     "id": "mon_trl_daikumo",
+     "fg": 557
+    },
+    {
+     "id": "mon_trl_kumo",
+     "fg": 558
+    },
+    {
+     "id": [
+      "mon_turret_artisans",
+      "mon_turret_bmg",
+      "mon_turret_rifle",
+      "mon_turret_rifle_balthazar"
+     ],
+     "fg": 559
+    },
+    {
+     "id": "mon_turret_riot",
+     "fg": 560
+    },
+    {
+     "id": [
+      "mon_turret_searchlight",
+      "mon_turret_speaker"
+     ],
+     "fg": 561
+    },
+    {
+     "id": "mon_tusked_moose",
+     "fg": 562
+    },
+    {
+     "id": "mon_void_spider_spiderling",
+     "fg": 563
+    },
+    {
+     "id": "mon_void_spider_spiderling_skewered",
+     "fg": 564
+    },
+    {
+     "id": [
+      "mon_woodlouse_manca",
+      "mon_worm_larva",
+      "mon_yugg"
+     ],
+     "fg": 565
+    },
+    {
+     "id": "mon_zolf",
+     "fg": 566
+    },
+    {
+     "id": "mon_zombear_acidic",
+     "fg": 567
+    },
+    {
+     "id": "mon_zombear_skeleton",
+     "fg": 568
+    },
+    {
+     "id": [
+      "mon_zombie_acidic",
+      "mon_zombie_acidic_dusted",
+      "mon_zombie_acidic_fungalize",
+      "mon_zombie_fungus_acidic",
+      "mon_zombie_horse_white",
+      "mon_zombie_medical_acidic"
+     ],
+     "fg": 569
+    },
+    {
+     "id": "mon_zombie_biter",
+     "fg": 570
+    },
+    {
+     "id": [
+      "mon_zombie_brute_ninja",
+      "mon_zombie_grue"
+     ],
+     "fg": 571
+    },
+    {
+     "id": [
+      "mon_zombie_brute_shocker",
+      "mon_zombie_lashing",
+      "mon_zombie_scientist"
+     ],
+     "fg": 572
+    },
+    {
+     "id": "mon_zombie_corrosive",
+     "fg": 573
+    },
+    {
+     "id": [
+      "mon_zombie_crawler",
+      "mon_zombie_crawler_pupa",
+      "mon_zombie_crawler_pupa_decoy"
+     ],
+     "fg": 574
+    },
+    {
+     "id": "mon_zombie_crushed_giant",
+     "fg": 575
+    },
+    {
+     "id": "mon_zombie_dog_acidic",
+     "fg": 576
+    },
+    {
+     "id": "mon_zombie_dog_brute_acidic",
+     "fg": 577
+    },
+    {
+     "id": "mon_zombie_fireproof",
+     "fg": 578
+    },
+    {
+     "id": "mon_zombie_fireproof_brute",
+     "fg": 579
+    },
+    {
+     "id": [
+      "mon_zombie_fursuit",
+      "mon_zombie_hazmat"
+     ],
+     "fg": 580
+    },
+    {
+     "id": "mon_zombie_gasbag",
+     "fg": 581
+    },
+    {
+     "id": [
+      "mon_zombie_gasbag_crawler",
+      "mon_zombie_gasbag_impaler"
+     ],
+     "fg": 582
+    },
+    {
+     "id": "mon_zombie_gasbag_immobile",
+     "fg": 583
+    },
+    {
+     "id": [
+      "mon_zombie_giant_heart",
+      "mon_zombie_scissorlimbs"
+     ],
+     "fg": 584
+    },
+    {
+     "id": "mon_zombie_grappler",
+     "fg": 585
+    },
+    {
+     "id": "mon_zombie_hanging_innards",
+     "fg": 586
+    },
+    {
+     "id": "mon_zombie_hollow",
+     "fg": 587
+    },
+    {
+     "id": [
+      "mon_zombie_kevlar_0",
+      "mon_zombie_kevlar_1",
+      "mon_zombie_kevlar_2"
+     ],
+     "fg": 588
+    },
+    {
+     "id": "mon_zombie_living_wall",
+     "fg": 589
+    },
+    {
+     "id": "mon_zombie_mancroc",
+     "fg": 590
+    },
+    {
+     "id": "mon_zombie_ocular",
+     "fg": 591
+    },
+    {
+     "id": [
+      "mon_zombie_paramilitary",
+      "mon_zombie_survivor",
+      "mon_zombie_survivor_elite",
+      "mon_zombie_survivor_no_weakpoints"
+     ],
+     "fg": 592
+    },
+    {
+     "id": [
+      "mon_zombie_phase_shrike",
+      "mon_zombie_phase_skulker"
+     ],
+     "fg": 593
+    },
+    {
+     "id": [
+      "mon_zombie_relax_gasbag",
+      "mon_zombie_screecher"
+     ],
+     "fg": 594
+    },
+    {
+     "id": "mon_zombie_rot",
+     "fg": 595
+    },
+    {
+     "id": "mon_zombie_runner",
+     "fg": 596
+    },
+    {
+     "id": "mon_zombie_sheep",
+     "fg": 597
+    },
+    {
+     "id": "mon_zombie_spitter",
+     "fg": 598
+    },
+    {
+     "id": "mon_zombie_strider",
+     "fg": 599
+    },
+    {
+     "id": "mon_zombie_tentacle",
+     "fg": 600
+    },
+    {
+     "id": "player_male",
+     "fg": 601
+    },
+    {
+     "id": "player_female",
+     "fg": 602
+    },
+    {
+     "id": "npc_male",
+     "fg": 603
+    },
+    {
+     "id": "npc_female",
+     "fg": 604
+    }
+   ]
+  },
+  {
+   "file": "fallback.png",
+   "tiles": [],
+   "ascii": [
+    {
+     "offset": 0,
+     "bold": false,
+     "color": "BLACK"
+    },
+    {
+     "offset": 256,
+     "bold": true,
+     "color": "WHITE"
+    },
+    {
+     "offset": 512,
+     "bold": false,
+     "color": "WHITE"
+    },
+    {
+     "offset": 768,
+     "bold": true,
+     "color": "BLACK"
+    },
+    {
+     "offset": 1024,
+     "bold": false,
+     "color": "RED"
+    },
+    {
+     "offset": 1280,
+     "bold": false,
+     "color": "GREEN"
+    },
+    {
+     "offset": 1536,
+     "bold": false,
+     "color": "BLUE"
+    },
+    {
+     "offset": 1792,
+     "bold": false,
+     "color": "CYAN"
+    },
+    {
+     "offset": 2048,
+     "bold": false,
+     "color": "MAGENTA"
+    },
+    {
+     "offset": 2304,
+     "bold": false,
+     "color": "YELLOW"
+    },
+    {
+     "offset": 2560,
+     "bold": true,
+     "color": "RED"
+    },
+    {
+     "offset": 2816,
+     "bold": true,
+     "color": "GREEN"
+    },
+    {
+     "offset": 3072,
+     "bold": true,
+     "color": "BLUE"
+    },
+    {
+     "offset": 3328,
+     "bold": true,
+     "color": "CYAN"
+    },
+    {
+     "offset": 3584,
+     "bold": true,
+     "color": "MAGENTA"
+    },
+    {
+     "offset": 3840,
+     "bold": true,
+     "color": "YELLOW"
+    }
+   ]
+  }
+ ]
+}
