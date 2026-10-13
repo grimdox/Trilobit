@@ -526,6 +526,12 @@ def mapgen_json():
             indoor = [c for c in ok if g.t[c[1]][c[0]] not in ("walk", "road", "grass", "pave", "gravel")]
             pool = indoor if len(indoor) >= len(an) else ok
             obj.setdefault("place_npcs", []).extend({"class": c, "x": xy[0], "y": xy[1]} for c, xy in zip(an, pool))
+            taken |= set(pool[:len(an)])
+        if p["id"] in gand.ATM_PLACES:
+            taken2 = {(x, y) for _, x, y in bn} | {(fx, fy) for _, fx, fy in g.f} | {(a["x"], a["y"]) for a in obj.get("place_npcs", [])}
+            cand = [(x, y) for y in range(2, 22) for x in range(2, 22) if g.t[y][x] in FLOORS and g.t[y][x] not in ("walk", "road", "grass", "pave", "gravel") and (x, y) not in taken2]
+            if cand:
+                obj["place_furniture"].append({"furn": "f_trl_atm", "x": cand[len(cand) // 3][0], "y": cand[len(cand) // 3][1]})
         out.append({"type": "mapgen", "om_terrain": [p["id"]], "object": obj})
         p["lights"] = g.lights(); p["rows"] = rows; p["nf"] = len(g.f)
     return out

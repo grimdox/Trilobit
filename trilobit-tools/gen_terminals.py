@@ -29,6 +29,32 @@ for nid, nm, att, dth in (("trl_t_target", "trl_nc_mark", 10, True), ("trl_t_sub
     add(o)
 add({"type": "effect_on_condition", "id": "trl_t_target_death", "eoc_type": "NPC_DEATH", "effect": [{"math": ["trl_t_dead", "=", "1"]}]})
 
+
+# ------------------------------------------------------------------ bank: ATM furniture and account (world variable trl_bank)
+add(terminal("f_trl_atm", "cash machine", "A steel cash machine with a green display and a worn keypad.  Examine it to use your bank account.", "A", "light_green", "trl_atm_examine"))
+def atm_dep(n):
+    return {"type": "effect_on_condition", "id": f"trl_atm_dep_{n}", "condition": {"math": ["u_item_count('trl_yen')", ">=", str(n)]},
+            "effect": [{"u_consume_item": "trl_yen", "count": n}, {"math": ["trl_bank", "+=", str(n)]},
+                       {"u_message": f"[Bank] {n:,} yen deposited.  Balance: <global_val:trl_bank> yen.", "type": "good"}]}
+def atm_wd(n):
+    return {"type": "effect_on_condition", "id": f"trl_atm_wd_{n}", "condition": {"math": ["trl_bank", ">=", str(n)]},
+            "effect": [{"math": ["trl_bank", "-=", str(n)]}, {"u_spawn_item": "trl_yen", "count": n},
+                       {"u_message": f"[Bank] {n:,} yen withdrawn.  Balance: <global_val:trl_bank> yen.", "type": "good"}]}
+AMTS = [100, 1000, 10000]
+for n in AMTS: add(atm_dep(n)); add(atm_wd(n))
+add({"type": "effect_on_condition", "id": "trl_atm_dep_all", "condition": {"math": ["u_item_count('trl_yen')", ">", "0"]},
+     "effect": [{"math": ["u_atm_tmp", "=", "u_item_count('trl_yen')"]}, {"u_consume_item": "trl_yen", "count": {"math": ["u_atm_tmp"]}},
+                {"math": ["trl_bank", "+=", "u_atm_tmp"]}, {"u_message": "[Bank] <u_val:atm_tmp> yen deposited.  Balance: <global_val:trl_bank> yen.", "type": "good"}]})
+add({"type": "effect_on_condition", "id": "trl_atm_wd_all", "condition": {"math": ["trl_bank", ">", "0"]},
+     "effect": [{"math": ["u_atm_tmp", "=", "trl_bank"]}, {"math": ["trl_bank", "=", "0"]}, {"u_spawn_item": "trl_yen", "count": {"math": ["u_atm_tmp"]}},
+                {"u_message": "[Bank] <u_val:atm_tmp> yen withdrawn.  Balance: 0 yen.", "type": "good"}]})
+add({"type": "effect_on_condition", "id": "trl_atm_balance", "effect": [{"u_message": "[Bank] Balance: <global_val:trl_bank> yen.  Cash on hand: yen in your pack.", "type": "info"}]})
+ATM_OPTS = [("trl_atm_balance", "Check balance")] + [(f"trl_atm_dep_{n}", f"Deposit {n:,} yen") for n in AMTS] + [("trl_atm_dep_all", "Deposit all cash")] + \
+           [(f"trl_atm_wd_{n}", f"Withdraw {n:,} yen") for n in AMTS] + [("trl_atm_wd_all", "Withdraw everything")]
+add({"type": "effect_on_condition", "id": "trl_atm_examine",
+     "effect": [{"run_eoc_selector": [e for e, _ in ATM_OPTS], "names": [n for _, n in ATM_OPTS], "keys": list("abcdefghij")[:len(ATM_OPTS)],
+                 "hide_failing": True, "allow_cancel": True, "title": "Bank - balance <global_val:trl_bank> yen"}]})
+
 # ------------------------------------------------------------------ placement
 def rnd_loc(var):
     return [{"u_location_variable": {"global_val": var}, "x_adjust": {"math": ["(rand(1) * 2 - 1) * (24 + rand(24))"]},

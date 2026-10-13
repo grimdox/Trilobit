@@ -17,8 +17,18 @@ ROLES = {
     "porter": dict(name="porter", routine="roam", frames=["labor", "civ"], worn=["jumpsuit", "boots_combat", "gloves_light"],
                    carry=[("crowbar", 40)], weapon=[("pipe", 50), ("crowbar", 50)], chat="Cargo goes where the list says.  Please keep clear.",
                    skills={"melee": 3, "dodge": 2}),
-    "clerk":  dict(name="attendant", routine="post", frames=["civ"], worn=["suit", "dress_shoes"],
-                   carry=[], weapon=[], chat="Welcome.  How may I help you?", skills={"speech": 5}),
+    "clerk":  dict(name="shop attendant", routine="post", frames=["civ"], worn=["suit", "dress_shoes"], carry=[], weapon=[],
+                   chat="Welcome.  How may I help you?", skills={"speech": 5}, shop=["food", "tool", "decor"]),
+    "vendor": dict(name="food vendor", routine="post", frames=["civ"], worn=["tshirt", "jeans", "sneakers"], carry=[], weapon=[],
+                   chat="Hot food, cheap.  What'll it be?", skills={"speech": 4, "cooking": 5}, shop=["food"]),
+    "bartender": dict(name="bartender", routine="post", frames=["civ"], worn=["suit", "dress_shoes"], carry=[], weapon=[],
+                   chat="What can I pour for you?", skills={"speech": 5}, shop=["drink"]),
+    "techclerk": dict(name="electronics clerk", routine="post", frames=["civ"], worn=["suit", "dress_shoes"], carry=[], weapon=[],
+                   chat="Parts, chips, nanohacks.  Take a look.", skills={"speech": 4, "computer": 6}, shop=["tech", "chips"]),
+    "medclerk": dict(name="clinic attendant", routine="post", frames=["civ"], worn=["suit", "dress_shoes"], carry=[], weapon=[],
+                   chat="Medical supplies.  What do you need?", skills={"speech": 4, "firstaid": 6}, shop=["med"]),
+    "reception": dict(name="receptionist", routine="post", frames=["civ"], worn=["suit", "dress_shoes"], carry=[], weapon=[],
+                   chat="Welcome.  Please state your business.", skills={"speech": 5}),
     "guard":  dict(name="guard", routine="post", frames=["sec", "civ"], worn=["ballistic_vest_light", "pants_cargo", "boots_combat", "gloves_light"],
                    carry=[], weapon=[("baton-extended", 50), ("trl_gun_vp9", 50)], chat="Move along.  This area is monitored.",
                    skills={"melee": 4, "pistol": 3, "dodge": 3}),
@@ -27,6 +37,16 @@ ROLES = {
 FIRMWARE = {
     "stock":    dict(name="stock firmware", sec=1, desc="Owner-locked work program with minimal security."),
     "hardened": dict(name="hardened firmware", sec=3, desc="Corporate-grade work program that counter-hacks and raises alarms."),
+}
+
+SHOP = {  # tag -> [(item or group, min, max)]
+    "food": [("sake_filtered", 2, 6), ("tea_green", 2, 6), ("rice_cooked", 3, 8), ("sushi_fishroll", 2, 6), ("noodles_fast", 3, 8), ("cola", 3, 8), ("energy_drink", 2, 6), ("candy", 3, 9)],
+    "drink": [("sake_filtered", 4, 10), ("beer", 4, 10), ("cola", 3, 8), ("tea_green", 3, 8), ("energy_drink", 3, 6), ("water_clean", 4, 10), ("cigar", 2, 6), ("lighter", 1, 3)],
+    "tech": [("circuit", 2, 6), ("processor", 1, 4), ("RAM", 1, 4), ("cable", 3, 8), ("e_scrap", 3, 8), ("amplifier", 1, 3), ("small_lcd_screen", 1, 3), ("light_battery_cell", 2, 6), ("flashlight", 1, 3)],
+    "med": [("bandages", 3, 8), ("aspirin", 2, 6), ("vitamins", 2, 6), ("water_clean", 3, 8), ("disinfectant", 1, 3)],
+    "tool": [("wrench", 1, 2), ("screwdriver", 1, 3), ("hammer", 1, 2), ("crowbar", 1, 2), ("duct_tape", 1, 3), ("scrap", 3, 8), ("pipe", 1, 3), ("flashlight", 1, 3)],
+    "decor": [("kimono", 1, 2), ("umbrella", 1, 3), ("candle", 2, 6), ("tshirt", 2, 5), ("jacket_light", 1, 3), ("cash_card", 1, 2)],
+    "chips": [("trl_loot_chips", 2, 5)],
 }
 
 def cls(fr, ro, fw): return f"trl_nc_andr_{fr}_{ro}_{fw}"
@@ -44,6 +64,13 @@ def build():
         out.append(dict(base, id=f"trl_andr_role_{r}", name={"str": d["name"].capitalize()}, description=f"Work program: {d['name']}."))
     for w, d in FIRMWARE.items():
         out.append(dict(base, id=f"trl_andr_fw_{w}", name={"str": d["name"].capitalize()}, description=d["desc"]))
+    # shops: merchants use a faction that trades in yen
+    out.append({"type": "faction", "id": "trl_merchants", "name": "Merchants", "description": "Shopkeepers and their staff.", "mon_faction": "human",
+                "likes_u": 0, "respects_u": 0, "known_by_u": False, "size": 100, "power": 100,
+                "fac_food_supply": [[0, {"calories": 0, "vitamins": {}}]], "wealth": 20000000, "currency": "trl_yen", "price_rules": [], "relations": {}})
+    for tag, ents in SHOP.items():
+        out.append({"type": "item_group", "id": f"trl_shop_{tag}", "subtype": "collection",
+                    "entries": [({"group": i, "count": [a, b]} if i.startswith("trl_loot") else {"item": i, "count": [a, b]}) for i, a, b in ents]})
     # item groups, classes, templates
     for r, d in ROLES.items():
         out.append({"type": "item_group", "id": f"trl_andr_worn_{r}", "subtype": "collection", "entries": [{"item": i} for i in d["worn"]]})
@@ -60,18 +87,20 @@ def build():
                      "worn_override": f"trl_andr_worn_{r}", "weapon_override": f"trl_andr_weapon_{r}", "carry_override": f"trl_andr_carry_{r}",
                      "traits": [{"trait": t} for t in ("trl_android", f"trl_andr_frame_{f}", f"trl_andr_role_{r}", f"trl_andr_fw_{fw}")],
                      "skills": [{"skill": "ALL", "level": {"constant": 2}}] + [{"skill": k, "level": {"constant": v}} for k, v in rd["skills"].items()]}
+                if rd.get("shop"):
+                    c["shopkeeper_item_group"] = [{"group": f"trl_shop_{t}", "rigid": True} for t in rd["shop"]]
                 for k, v in fr["bonus"].items():
                     c["bonus_" + k] = {"constant": v}
                 out.append(c)
-                out.append({"type": "npc", "id": cls(f, r, fw), "class": cls(f, r, fw), "attitude": 0, "mission": 7, "faction": "no_faction",
-                            "chat": "TRL_ANDROID_TALK", "temp_suffix": f"{rd['name']} android"})
+                out.append({"type": "npc", "id": cls(f, r, fw), "class": cls(f, r, fw), "attitude": 0, "mission": 7, "faction": "trl_merchants" if rd.get("shop") else "no_faction",
+                            "chat": "TRL_ANDROID_TALK_" + r, "temp_suffix": f"{rd['name']} android"})
     # ---- talk
-    out.append({"type": "talk_topic", "id": "TRL_ANDROID_TALK",
-                "dynamic_line": {"u_has_trait": "trl_andr_role_guard",
-                                 "yes": "Move along.  This area is monitored.",
-                                 "no": {"u_has_trait": "trl_andr_role_porter", "yes": "Cargo goes where the list says.  Please keep clear.",
-                                        "no": "Welcome.  How may I help you?"}},
-                "responses": [{"text": "Never mind.", "topic": "TALK_DONE"}]})
+    for r, rd in ROLES.items():
+        resp = []
+        if rd.get("shop"):
+            resp.append({"text": "Let's trade.", "effect": "start_trade", "topic": "TALK_DONE"})
+        resp.append({"text": "Never mind.", "topic": "TALK_DONE"})
+        out.append({"type": "talk_topic", "id": "TRL_ANDROID_TALK_" + r, "dynamic_line": rd["chat"], "responses": resp})
     # ---- routine: battery, dock, roam or post
     out += [
         {"type": "effect_on_condition", "id": "trl_andr_tick", "recurrence": ["15 minutes", "20 minutes"], "global": True,
@@ -140,21 +169,23 @@ def build():
 
 PLACEMENT = {  # place id -> list of (frame, role, firmware)
     "trl_pl_convenience_store": [("civ", "clerk", "stock")],
-    "trl_pl_electronics_bazaar": [("civ", "clerk", "stock"), ("sec", "guard", "stock")],
-    "trl_pl_implant_clinic": [("civ", "clerk", "stock"), ("sec", "guard", "stock")],
-    "trl_pl_corp_lobby": [("sec", "guard", "hardened"), ("sec", "guard", "hardened"), ("civ", "clerk", "hardened")],
-    "trl_pl_govt_office": [("sec", "guard", "hardened"), ("civ", "clerk", "hardened")],
+    "trl_pl_electronics_bazaar": [("civ", "techclerk", "stock"), ("sec", "guard", "stock")],
+    "trl_pl_implant_clinic": [("civ", "medclerk", "stock"), ("sec", "guard", "stock")],
+    "trl_pl_corp_lobby": [("sec", "guard", "hardened"), ("sec", "guard", "hardened"), ("civ", "reception", "hardened")],
+    "trl_pl_govt_office": [("sec", "guard", "hardened"), ("civ", "reception", "hardened")],
     "trl_pl_server_hall": [("sec", "guard", "hardened")],
     "trl_pl_transit_station": [("sec", "guard", "stock")],
     "trl_pl_cargo_warehouse": [("labor", "porter", "stock"), ("labor", "porter", "stock")],
     "trl_pl_canal_dock": [("labor", "porter", "stock")],
     "trl_pl_mech_garage": [("labor", "porter", "stock")],
-    "trl_pl_izakaya": [("civ", "clerk", "stock")],
-    "trl_pl_neon_lounge": [("civ", "clerk", "stock")],
-    "trl_pl_tea_house": [("civ", "clerk", "stock")],
-    "trl_pl_noodle_alley": [("civ", "clerk", "stock")],
-    "trl_pl_night_market": [("civ", "clerk", "stock"), ("civ", "clerk", "stock")],
+    "trl_pl_izakaya": [("civ", "bartender", "stock")],
+    "trl_pl_neon_lounge": [("civ", "bartender", "stock")],
+    "trl_pl_tea_house": [("civ", "bartender", "stock")],
+    "trl_pl_noodle_alley": [("civ", "vendor", "stock")],
+    "trl_pl_night_market": [("civ", "vendor", "stock"), ("civ", "vendor", "stock")],
 }
+ATM_PLACES = ["trl_pl_convenience_store", "trl_pl_electronics_bazaar", "trl_pl_implant_clinic", "trl_pl_corp_lobby", "trl_pl_govt_office",
+              "trl_pl_transit_station", "trl_pl_capsule_hotel", "trl_pl_arcade_hall"]
 
 def android_npcs(place_id):
     return [cls(*t) for t in PLACEMENT.get(place_id, [])]

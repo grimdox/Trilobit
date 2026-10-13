@@ -119,6 +119,337 @@
     ]
   },
   {
+    "type": "furniture",
+    "id": "f_trl_atm",
+    "name": "cash machine",
+    "description": "A steel cash machine with a green display and a worn keypad.  Examine it to use your bank account.",
+    "symbol": "A",
+    "color": "light_green",
+    "move_cost_mod": -1,
+    "coverage": 40,
+    "required_str": -1,
+    "light_emitted": 8,
+    "flags": [
+      "TRANSPARENT",
+      "FLAT_SURF",
+      "CONTAINER",
+      "NOITEM",
+      "SEALED"
+    ],
+    "examine_action": {
+      "type": "effect_on_condition",
+      "effect_on_conditions": [
+        "trl_atm_examine"
+      ]
+    },
+    "bash": {
+      "str_min": 12,
+      "str_max": 40,
+      "sound": "smash!",
+      "sound_fail": "thump."
+    }
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_atm_dep_100",
+    "condition": {
+      "math": [
+        "u_item_count('trl_yen')",
+        ">=",
+        "100"
+      ]
+    },
+    "effect": [
+      {
+        "u_consume_item": "trl_yen",
+        "count": 100
+      },
+      {
+        "math": [
+          "trl_bank",
+          "+=",
+          "100"
+        ]
+      },
+      {
+        "u_message": "[Bank] 100 yen deposited.  Balance: <global_val:trl_bank> yen.",
+        "type": "good"
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_atm_wd_100",
+    "condition": {
+      "math": [
+        "trl_bank",
+        ">=",
+        "100"
+      ]
+    },
+    "effect": [
+      {
+        "math": [
+          "trl_bank",
+          "-=",
+          "100"
+        ]
+      },
+      {
+        "u_spawn_item": "trl_yen",
+        "count": 100
+      },
+      {
+        "u_message": "[Bank] 100 yen withdrawn.  Balance: <global_val:trl_bank> yen.",
+        "type": "good"
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_atm_dep_1000",
+    "condition": {
+      "math": [
+        "u_item_count('trl_yen')",
+        ">=",
+        "1000"
+      ]
+    },
+    "effect": [
+      {
+        "u_consume_item": "trl_yen",
+        "count": 1000
+      },
+      {
+        "math": [
+          "trl_bank",
+          "+=",
+          "1000"
+        ]
+      },
+      {
+        "u_message": "[Bank] 1,000 yen deposited.  Balance: <global_val:trl_bank> yen.",
+        "type": "good"
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_atm_wd_1000",
+    "condition": {
+      "math": [
+        "trl_bank",
+        ">=",
+        "1000"
+      ]
+    },
+    "effect": [
+      {
+        "math": [
+          "trl_bank",
+          "-=",
+          "1000"
+        ]
+      },
+      {
+        "u_spawn_item": "trl_yen",
+        "count": 1000
+      },
+      {
+        "u_message": "[Bank] 1,000 yen withdrawn.  Balance: <global_val:trl_bank> yen.",
+        "type": "good"
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_atm_dep_10000",
+    "condition": {
+      "math": [
+        "u_item_count('trl_yen')",
+        ">=",
+        "10000"
+      ]
+    },
+    "effect": [
+      {
+        "u_consume_item": "trl_yen",
+        "count": 10000
+      },
+      {
+        "math": [
+          "trl_bank",
+          "+=",
+          "10000"
+        ]
+      },
+      {
+        "u_message": "[Bank] 10,000 yen deposited.  Balance: <global_val:trl_bank> yen.",
+        "type": "good"
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_atm_wd_10000",
+    "condition": {
+      "math": [
+        "trl_bank",
+        ">=",
+        "10000"
+      ]
+    },
+    "effect": [
+      {
+        "math": [
+          "trl_bank",
+          "-=",
+          "10000"
+        ]
+      },
+      {
+        "u_spawn_item": "trl_yen",
+        "count": 10000
+      },
+      {
+        "u_message": "[Bank] 10,000 yen withdrawn.  Balance: <global_val:trl_bank> yen.",
+        "type": "good"
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_atm_dep_all",
+    "condition": {
+      "math": [
+        "u_item_count('trl_yen')",
+        ">",
+        "0"
+      ]
+    },
+    "effect": [
+      {
+        "math": [
+          "u_atm_tmp",
+          "=",
+          "u_item_count('trl_yen')"
+        ]
+      },
+      {
+        "u_consume_item": "trl_yen",
+        "count": {
+          "math": [
+            "u_atm_tmp"
+          ]
+        }
+      },
+      {
+        "math": [
+          "trl_bank",
+          "+=",
+          "u_atm_tmp"
+        ]
+      },
+      {
+        "u_message": "[Bank] <u_val:atm_tmp> yen deposited.  Balance: <global_val:trl_bank> yen.",
+        "type": "good"
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_atm_wd_all",
+    "condition": {
+      "math": [
+        "trl_bank",
+        ">",
+        "0"
+      ]
+    },
+    "effect": [
+      {
+        "math": [
+          "u_atm_tmp",
+          "=",
+          "trl_bank"
+        ]
+      },
+      {
+        "math": [
+          "trl_bank",
+          "=",
+          "0"
+        ]
+      },
+      {
+        "u_spawn_item": "trl_yen",
+        "count": {
+          "math": [
+            "u_atm_tmp"
+          ]
+        }
+      },
+      {
+        "u_message": "[Bank] <u_val:atm_tmp> yen withdrawn.  Balance: 0 yen.",
+        "type": "good"
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_atm_balance",
+    "effect": [
+      {
+        "u_message": "[Bank] Balance: <global_val:trl_bank> yen.  Cash on hand: yen in your pack.",
+        "type": "info"
+      }
+    ]
+  },
+  {
+    "type": "effect_on_condition",
+    "id": "trl_atm_examine",
+    "effect": [
+      {
+        "run_eoc_selector": [
+          "trl_atm_balance",
+          "trl_atm_dep_100",
+          "trl_atm_dep_1000",
+          "trl_atm_dep_10000",
+          "trl_atm_dep_all",
+          "trl_atm_wd_100",
+          "trl_atm_wd_1000",
+          "trl_atm_wd_10000",
+          "trl_atm_wd_all"
+        ],
+        "names": [
+          "Check balance",
+          "Deposit 100 yen",
+          "Deposit 1,000 yen",
+          "Deposit 10,000 yen",
+          "Deposit all cash",
+          "Withdraw 100 yen",
+          "Withdraw 1,000 yen",
+          "Withdraw 10,000 yen",
+          "Withdraw everything"
+        ],
+        "keys": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f",
+          "g",
+          "h",
+          "i"
+        ],
+        "hide_failing": true,
+        "allow_cancel": true,
+        "title": "Bank - balance <global_val:trl_bank> yen"
+      }
+    ]
+  },
+  {
     "type": "effect_on_condition",
     "id": "trl_t_record_loc",
     "effect": [
