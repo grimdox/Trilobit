@@ -67,7 +67,7 @@ for p in PARTS:
     ]
 rc.append({"run_eocs": ["trl_cyber_bars"]})
 out.append({"type": "effect_on_condition", "id": "trl_cyber_recount", "effect": rc})
-out.append({"type": "effect_on_condition", "id": "trl_cyber_recount_timer", "recurrence": "10 seconds", "global": True,
+out.append({"type": "effect_on_condition", "id": "trl_cyber_recount_timer", "recurrence": "2 minutes", "global": True,    # installs and removals trigger a recount themselves; this is only a safety net
             "condition": {"math": ["1", "==", "1"]}, "effect": [{"run_eocs": ["trl_cyber_recount"]}]})
 for ev, eid in (("installs_cbm", "trl_cyber_on_install"), ("removes_cbm", "trl_cyber_on_remove")):
     out.append({"type": "effect_on_condition", "id": eid, "eoc_type": "EVENT", "required_event": ev,
@@ -115,8 +115,12 @@ for p in PARTS:
                                      "else": [{"math": [f"u_trl_last_{p}", "=", f"u_hp('{p}')"]}]}]}],
                  "else": [{"math": [f"u_trl_lock_{p}", "=", "0"]}]})
 lock.append({"run_eocs": ["trl_cyber_bars"]})
+# only redo the lock logic and the bars when any body-part HP or implant integrity actually changed since the last tick
+sig = " + ".join(f"u_hp('{p}') + u_trl_ihp_{p}" for p in PARTS)
+tick = [{"math": ["_sig", "=", sig]},
+        {"if": {"math": ["_sig != u_trl_sig"]}, "then": [{"math": ["u_trl_sig", "=", "_sig"]}] + lock}]
 out.append({"type": "effect_on_condition", "id": "trl_cyber_tick", "recurrence": "1 seconds", "global": True,
-            "condition": {"math": ["1", "==", "1"]}, "effect": lock})
+            "condition": {"math": ["1", "==", "1"]}, "effect": tick})
 
 # 6. widgets overriding the stock HP bars
 for wid, p in (("head", "head"), ("torso", "torso"), ("left_arm", "arm_l"), ("right_arm", "arm_r"), ("left_leg", "leg_l"), ("right_leg", "leg_r")):

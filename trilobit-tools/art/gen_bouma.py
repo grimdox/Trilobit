@@ -676,6 +676,11 @@ def main(stock, repo):
     PETSHAPE = {"mon_trl_dog": "dog", "mon_trl_cat": "cat", "mon_trl_rabbit": "rabbit", "mon_trl_chicken": "chicken"}
     for i, o in sorted(D["monster"].items()):
         cls, shape, col = mkind(i, o)
+        if i.startswith("mon_trl_res_"):      # ambient pedestrians are drawn as ordinary people
+            key = ("h", "npc", False)
+            tgt = want(key, "chars", lambda: p_human("npc", 1, False))
+            entries.setdefault(tgt, []).append(i)
+            continue
         if i in PETSHAPE:
             key = ("m", "pet", PETSHAPE[i], col)
             tgt = want(key, "chars", lambda shape=PETSHAPE[i], col=col, key=key: ex.p_pet(shape, col, seed_of(key)))

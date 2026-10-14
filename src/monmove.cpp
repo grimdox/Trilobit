@@ -860,6 +860,10 @@ void monster::move()
     if( wandf > 0 ) {
         wandf--;
     }
+    // Trilobit: ambient pedestrians stroll about on their own (cheap random walk, no pathing to far goals)
+    if( has_flag( mon_flag_TRL_STROLL ) && wandf <= 0 && !has_dest() && one_in( 14 ) ) {
+        wander_to( pos_abs() + tripoint_rel_ms( rng( -7, 7 ), rng( -7, 7 ), 0 ), 10 );
+    }
 
     //Hallucinations have a chance of disappearing each turn
     if( is_hallucination() && one_in( 25 ) ) {

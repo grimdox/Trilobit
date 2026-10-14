@@ -69,6 +69,7 @@ mon_flag_id mon_flag_ACIDPROOF,
             mon_flag_COMBAT_MOUNT,
             mon_flag_CONSOLE_DESPAWN,
             mon_flag_CONVERSATION,
+            mon_flag_TRL_STROLL,
             mon_flag_COPY_SUMMONER_LOOK,
             mon_flag_COPY_AVATAR_LOOK,
             mon_flag_CORNERED_FIGHTER,
@@ -198,6 +199,7 @@ void set_mon_flag_ids()
     mon_flag_COMBAT_MOUNT = mon_flag_id( "COMBAT_MOUNT" );
     mon_flag_CONSOLE_DESPAWN = mon_flag_id( "CONSOLE_DESPAWN" );
     mon_flag_CONVERSATION = mon_flag_id( "CONVERSATION" );
+    mon_flag_TRL_STROLL = mon_flag_id( "TRL_STROLL" );
     mon_flag_COPY_AVATAR_LOOK = mon_flag_id( "COPY_AVATAR_LOOK" );
     mon_flag_COPY_SUMMONER_LOOK = mon_flag_id( "COPY_SUMMONER_LOOK" );
     mon_flag_CORNERED_FIGHTER = mon_flag_id( "CORNERED_FIGHTER" );

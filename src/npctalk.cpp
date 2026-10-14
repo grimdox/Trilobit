@@ -4282,7 +4282,18 @@ talk_effect_fun_t::func f_location_variable( const JsonObject &jo, std::string_v
         tripoint_abs_ms talker_pos = target->pos_abs();
         tripoint_abs_ms target_pos = talker_pos;
         if( target_params.has_value() ) {
-            const tripoint_abs_omt omt_pos = mission_util::get_om_terrain_pos( target_params.value(), d );
+            // Trilobit: search around the talker (an NPC), not the player, and report 'nothing found'
+            mission_target_params tp = target_params.value();
+            if( npc *who = target->get_npc() ) {
+                tp.guy = who;
+                tp.origin_u = false;
+            }
+            bool om_found = true;
+            const tripoint_abs_omt omt_pos = mission_util::get_om_terrain_pos( tp, d, &om_found );
+            if( !om_found ) {
+                run_eoc_vector( false_eocs, d );
+                return;
+            }
             target_pos = tripoint_abs_ms( project_to<coords::ms>( omt_pos ).x(),
                                           project_to<coords::ms>( omt_pos ).y(),
                                           project_to<coords::ms>( omt_pos ).z() );

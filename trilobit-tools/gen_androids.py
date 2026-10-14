@@ -128,7 +128,7 @@ def build():
     # ---- routine: battery, dock, roam or post
     out += [
         {"type": "effect_on_condition", "id": "trl_andr_tick", "recurrence": ["15 minutes", "20 minutes"], "global": True,
-         "effect": [{"u_run_npc_eocs": ["trl_andr_step"], "overmap": True}]},
+         "effect": [{"u_run_npc_eocs": ["trl_andr_step"], "local": True, "npc_range": 70}]},
         {"type": "effect_on_condition", "id": "trl_andr_step",
          "condition": {"and": [{"u_has_trait": "trl_android"}, {"not": "u_following"}, {"math": ["u_trl_skip_until < time('now')"]}]},
          "effect": [

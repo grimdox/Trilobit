@@ -78,7 +78,7 @@ out.append({"type": "mapgen", "nested_mapgen_id": "trl_tank_2",
 # ---------------------------------------------------------------- pets for sale: a tame animal appears beside you
 out.append({"type": "MONSTER", "id": "mon_trl_rabbit", "copy-from": "mon_rabbit", "name": {"str": "house rabbit"},
             "description": "A soft, well-fed pet rabbit that nibbles at whatever you hold out and tolerates being patted.",
-            "categories": [], "aggression": -99, "morale": 40, "anger_triggers": ["HURT"], "fear_triggers": ["FRIEND_ATTACKED"],
+            "categories": ["TRILOBIT"], "aggression": -99, "morale": 40, "anger_triggers": ["HURT"], "fear_triggers": ["FRIEND_ATTACKED"],
             "placate_triggers": ["PLAYER_CLOSE", "PLAYER_WEAK"], "color": "white"})
 for pid, mon, nm, price, desc, col in PETS:
     out.append({"type": "ITEM", "subtypes": ["GENERIC"], "id": f"trl_pet_{pid}", "category": "other",

@@ -2929,7 +2929,8 @@
     "u_run_npc_eocs": [
      "trl_res_step"
     ],
-    "overmap": true
+    "local": true,
+    "npc_range": 70
    }
   ]
  },
@@ -3679,6 +3680,2446 @@
     "snippet": true,
     "volume": 14,
     "type": "speech"
+   }
+  ]
+ },
+ {
+  "type": "monster_flag",
+  "id": "TRL_STROLL",
+  "//": "Trilobit: the monster wanders on its own: a short random stroll every so often."
+ },
+ {
+  "type": "talk_topic",
+  "id": "TRL_PED_TALK",
+  "dynamic_line": "<npc_name> glances at you and nods, then goes back to what they were doing.",
+  "responses": [
+   {
+    "text": "Nod back.",
+    "topic": "TALK_DONE"
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_day_laborer_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_poor_day_laborer_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_poor_day_laborer_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_poor_day_laborer",
+  "name": {
+   "str": "day laborer"
+  },
+  "description": "A day laborer going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 55,
+  "speed": 100,
+  "symbol": "@",
+  "color": "brown",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_poor_day_laborer_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_poor_day_laborer",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_poor_day_laborer",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_poor_day_laborer_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_street_vendor_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_poor_street_vendor_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_poor_street_vendor_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_poor_street_vendor",
+  "name": {
+   "str": "street vendor"
+  },
+  "description": "A street vendor going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 55,
+  "speed": 100,
+  "symbol": "@",
+  "color": "brown",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_poor_street_vendor_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_poor_street_vendor",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_poor_street_vendor",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_poor_street_vendor_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_scrapper_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_poor_scrapper_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_poor_scrapper_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_poor_scrapper",
+  "name": {
+   "str": "scrapper"
+  },
+  "description": "A scrapper going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 55,
+  "speed": 100,
+  "symbol": "@",
+  "color": "brown",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_poor_scrapper_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_poor_scrapper",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_poor_scrapper",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_poor_scrapper_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_courier_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_poor_courier_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_poor_courier_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_poor_courier",
+  "name": {
+   "str": "courier"
+  },
+  "description": "A courier going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 55,
+  "speed": 100,
+  "symbol": "@",
+  "color": "brown",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_poor_courier_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_poor_courier",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_poor_courier",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_poor_courier_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_dishwasher_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_poor_dishwasher_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_poor_dishwasher_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_poor_dishwasher",
+  "name": {
+   "str": "dishwasher"
+  },
+  "description": "A dishwasher going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 55,
+  "speed": 100,
+  "symbol": "@",
+  "color": "brown",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_poor_dishwasher_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_poor_dishwasher",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_poor_dishwasher",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_poor_dishwasher_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_poor_janitor_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_poor_janitor_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_poor_janitor_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_poor_janitor",
+  "name": {
+   "str": "janitor"
+  },
+  "description": "A janitor going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 55,
+  "speed": 100,
+  "symbol": "@",
+  "color": "brown",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_poor_janitor_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_poor_janitor",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_poor_janitor",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_poor_janitor_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_clerk_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_mid_clerk_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_mid_clerk_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_mid_clerk",
+  "name": {
+   "str": "clerk"
+  },
+  "description": "A clerk going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 60,
+  "speed": 100,
+  "symbol": "@",
+  "color": "light_gray",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_mid_clerk_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_mid_clerk",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_mid_clerk",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_mid_clerk_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_technician_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_mid_technician_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_mid_technician_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_mid_technician",
+  "name": {
+   "str": "technician"
+  },
+  "description": "A technician going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 60,
+  "speed": 100,
+  "symbol": "@",
+  "color": "light_gray",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_mid_technician_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_mid_technician",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_mid_technician",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_mid_technician_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_nurse_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_mid_nurse_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_mid_nurse_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_mid_nurse",
+  "name": {
+   "str": "nurse"
+  },
+  "description": "A nurse going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 60,
+  "speed": 100,
+  "symbol": "@",
+  "color": "light_gray",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_mid_nurse_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_mid_nurse",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_mid_nurse",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_mid_nurse_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_teacher_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_mid_teacher_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_mid_teacher_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_mid_teacher",
+  "name": {
+   "str": "teacher"
+  },
+  "description": "A teacher going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 60,
+  "speed": 100,
+  "symbol": "@",
+  "color": "light_gray",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_mid_teacher_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_mid_teacher",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_mid_teacher",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_mid_teacher_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_shop_assistant_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_mid_shop_assistant_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_mid_shop_assistant_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_mid_shop_assistant",
+  "name": {
+   "str": "shop assistant"
+  },
+  "description": "A shop assistant going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 60,
+  "speed": 100,
+  "symbol": "@",
+  "color": "light_gray",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_mid_shop_assistant_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_mid_shop_assistant",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_mid_shop_assistant",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_mid_shop_assistant_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_police_clerk_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_mid_police_clerk_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_mid_police_clerk_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_mid_police_clerk",
+  "name": {
+   "str": "police clerk"
+  },
+  "description": "A police clerk going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 60,
+  "speed": 100,
+  "symbol": "@",
+  "color": "light_gray",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_mid_police_clerk_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_mid_police_clerk",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_mid_police_clerk",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_mid_police_clerk_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_driver_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_mid_driver_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_mid_driver_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_mid_driver",
+  "name": {
+   "str": "driver"
+  },
+  "description": "A driver going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 60,
+  "speed": 100,
+  "symbol": "@",
+  "color": "light_gray",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_mid_driver_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_mid_driver",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_mid_driver",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_mid_driver_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_mid_engineer_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_mid_engineer_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_mid_engineer_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_mid_engineer",
+  "name": {
+   "str": "engineer"
+  },
+  "description": "A engineer going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 60,
+  "speed": 100,
+  "symbol": "@",
+  "color": "light_gray",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_mid_engineer_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_mid_engineer",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_mid_engineer",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_mid_engineer_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_executive_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_rich_executive_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_rich_executive_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_rich_executive",
+  "name": {
+   "str": "executive"
+  },
+  "description": "A executive going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 55,
+  "speed": 100,
+  "symbol": "@",
+  "color": "white",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_rich_executive_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_rich_executive",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_rich_executive",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_rich_executive_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_owner_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_rich_owner_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_rich_owner_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_rich_owner",
+  "name": {
+   "str": "business owner"
+  },
+  "description": "A business owner going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 55,
+  "speed": 100,
+  "symbol": "@",
+  "color": "white",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_rich_owner_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_rich_owner",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_rich_owner",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_rich_owner_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_investor_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_rich_investor_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_rich_investor_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_rich_investor",
+  "name": {
+   "str": "investor"
+  },
+  "description": "A investor going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 55,
+  "speed": 100,
+  "symbol": "@",
+  "color": "white",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_rich_investor_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_rich_investor",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_rich_investor",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_rich_investor_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_surgeon_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_rich_surgeon_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_rich_surgeon_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_rich_surgeon",
+  "name": {
+   "str": "surgeon"
+  },
+  "description": "A surgeon going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 55,
+  "speed": 100,
+  "symbol": "@",
+  "color": "white",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_rich_surgeon_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_rich_surgeon",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_rich_surgeon",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_rich_surgeon_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "item_group",
+  "id": "trl_res_rich_official_drop",
+  "subtype": "collection",
+  "entries": [
+   {
+    "group": "trl_res_rich_official_worn",
+    "prob": 100
+   },
+   {
+    "group": "trl_res_rich_official_carry",
+    "prob": 100
+   }
+  ]
+ },
+ {
+  "type": "MONSTER",
+  "id": "mon_trl_res_rich_official",
+  "name": {
+   "str": "retired official"
+  },
+  "description": "A retired official going about their day.  Just a person with a home, a job and somewhere to be.",
+  "looks_like": "npc_male",
+  "categories": [
+   "TRILOBIT"
+  ],
+  "default_faction": "human",
+  "bodytype": "human",
+  "species": [
+   "HUMAN"
+  ],
+  "material": [
+   "hflesh"
+  ],
+  "weakpoint_sets": [
+   "wps_humanoid_body"
+  ],
+  "chat_topics": [
+   "TRL_PED_TALK"
+  ],
+  "volume": "62500 ml",
+  "weight": "75000 g",
+  "hp": 55,
+  "speed": 100,
+  "symbol": "@",
+  "color": "white",
+  "diff": 1,
+  "aggression": -99,
+  "morale": 40,
+  "vision_day": 24,
+  "vision_night": 6,
+  "anger_triggers": [
+   "HURT"
+  ],
+  "fear_triggers": [
+   "FRIEND_DIED"
+  ],
+  "melee_skill": 2,
+  "melee_dice": 1,
+  "melee_dice_sides": 3,
+  "melee_damage": [
+   {
+    "damage_type": "bash",
+    "amount": 2
+   }
+  ],
+  "dodge": 1,
+  "families": [
+   "prof_gross_anatomy",
+   "prof_intro_biology",
+   "prof_physiology"
+  ],
+  "harvest": "human",
+  "dissect": "dissect_human_sample_single",
+  "death_drops": "trl_res_rich_official_drop",
+  "path_settings": {
+   "max_dist": 30,
+   "allow_open_doors": true,
+   "avoid_traps": true,
+   "avoid_sharp": true
+  },
+  "flags": [
+   "SEES",
+   "HEARS",
+   "WARM",
+   "HUMAN",
+   "CAN_OPEN_DOORS",
+   "PATH_AVOID_DANGER",
+   "CONVERSATION",
+   "TRL_STROLL"
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_swap_rich_official",
+  "effect": [
+   {
+    "u_spawn_npc": "trl_nc_res_rich_official",
+    "real_count": 1,
+    "min_radius": 0,
+    "max_radius": 2,
+    "true_eocs": [
+     {
+      "id": "trl_ped_swap_rich_official_ok",
+      "effect": [
+       {
+        "u_die": {
+         "remove_corpse": true,
+         "supress_message": true,
+         "remove_from_creature_tracker": true
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "type": "effect_on_condition",
+  "id": "trl_ped_tick",
+  "recurrence": [
+   "3 seconds",
+   "5 seconds"
+  ],
+  "global": true,
+  "effect": [
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_poor_day_laborer"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_poor_day_laborer"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_poor_street_vendor"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_poor_street_vendor"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_poor_scrapper"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_poor_scrapper"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_poor_courier"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_poor_courier"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_poor_dishwasher"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_poor_dishwasher"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_poor_janitor"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_poor_janitor"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_mid_clerk"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_mid_clerk"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_mid_technician"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_mid_technician"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_mid_nurse"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_mid_nurse"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_mid_teacher"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_mid_teacher"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_mid_shop_assistant"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_mid_shop_assistant"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_mid_police_clerk"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_mid_police_clerk"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_mid_driver"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_mid_driver"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_mid_engineer"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_mid_engineer"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_rich_executive"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_rich_executive"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_rich_owner"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_rich_owner"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_rich_investor"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_rich_investor"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_rich_surgeon"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_rich_surgeon"
+    ],
+    "monster_range": 5
+   },
+   {
+    "u_run_monster_eocs": [
+     "trl_ped_swap_rich_official"
+    ],
+    "mtype_ids": [
+     "mon_trl_res_rich_official"
+    ],
+    "monster_range": 5
    }
   ]
  }

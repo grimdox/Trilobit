@@ -25202,9 +25202,9 @@
    "rows": [
     "."
    ],
-   "place_npcs": [
+   "place_monster": [
     {
-     "class": "trl_nc_res_mid_clerk",
+     "monster": "mon_trl_res_mid_clerk",
      "x": 0,
      "y": 0
     }
@@ -25222,9 +25222,9 @@
    "rows": [
     "."
    ],
-   "place_npcs": [
+   "place_monster": [
     {
-     "class": "trl_nc_res_mid_technician",
+     "monster": "mon_trl_res_mid_technician",
      "x": 0,
      "y": 0
     }
@@ -25242,9 +25242,9 @@
    "rows": [
     "."
    ],
-   "place_npcs": [
+   "place_monster": [
     {
-     "class": "trl_nc_res_mid_nurse",
+     "monster": "mon_trl_res_mid_nurse",
      "x": 0,
      "y": 0
     }
@@ -25262,9 +25262,9 @@
    "rows": [
     "."
    ],
-   "place_npcs": [
+   "place_monster": [
     {
-     "class": "trl_nc_res_mid_teacher",
+     "monster": "mon_trl_res_mid_teacher",
      "x": 0,
      "y": 0
     }
@@ -25282,9 +25282,9 @@
    "rows": [
     "."
    ],
-   "place_npcs": [
+   "place_monster": [
     {
-     "class": "trl_nc_res_mid_shop_assistant",
+     "monster": "mon_trl_res_mid_shop_assistant",
      "x": 0,
      "y": 0
     }
@@ -25302,9 +25302,9 @@
    "rows": [
     "."
    ],
-   "place_npcs": [
+   "place_monster": [
     {
-     "class": "trl_nc_res_mid_police_clerk",
+     "monster": "mon_trl_res_mid_police_clerk",
      "x": 0,
      "y": 0
     }
@@ -25322,9 +25322,9 @@
    "rows": [
     "."
    ],
-   "place_npcs": [
+   "place_monster": [
     {
-     "class": "trl_nc_res_mid_driver",
+     "monster": "mon_trl_res_mid_driver",
      "x": 0,
      "y": 0
     }
@@ -25342,9 +25342,9 @@
    "rows": [
     "."
    ],
-   "place_npcs": [
+   "place_monster": [
     {
-     "class": "trl_nc_res_mid_engineer",
+     "monster": "mon_trl_res_mid_engineer",
      "x": 0,
      "y": 0
     }
@@ -25362,9 +25362,9 @@
    "rows": [
     "."
    ],
-   "place_npcs": [
+   "place_monster": [
     {
-     "class": "trl_nc_res_poor_day_laborer",
+     "monster": "mon_trl_res_poor_day_laborer",
      "x": 0,
      "y": 0
     }
@@ -25382,9 +25382,9 @@
    "rows": [
     "."
    ],
-   "place_npcs": [
+   "place_monster": [
     {
-     "class": "trl_nc_res_poor_street_vendor",
+     "monster": "mon_trl_res_poor_street_vendor",
      "x": 0,
      "y": 0
     }
@@ -25402,9 +25402,9 @@
    "rows": [
     "."
    ],
-   "place_npcs": [
+   "place_monster": [
     {
-     "class": "trl_nc_res_poor_scrapper",
+     "monster": "mon_trl_res_poor_scrapper",
      "x": 0,
      "y": 0
     }
@@ -25422,9 +25422,9 @@
    "rows": [
     "."
    ],
-   "place_npcs": [
+   "place_monster": [
     {
-     "class": "trl_nc_res_poor_courier",
+     "monster": "mon_trl_res_poor_courier",
      "x": 0,
      "y": 0
     }

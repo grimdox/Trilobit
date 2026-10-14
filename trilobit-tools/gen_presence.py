@@ -45,7 +45,7 @@ def ruleset(oid):
     if re.match(r"^trl_apt\d+_.*_z0$", oid):
         return [("nap_patrol", 6)]
     if oid.startswith("trl_lot_build_"):
-        return [("nap_patrol", 35), ("nap_patrol", 20)]
+        return [("nap_patrol", 18), ("nap_patrol", 10)]
     if oid.startswith("trl_lot_park_"):
         return [("nap_patrol", 8)]
     return []
@@ -89,6 +89,20 @@ for sub in ("houses", "midrise", "midrise2", "midrise3", "lots", "towers", "city
             c = n.get("class")
             return isinstance(c, dict) or (isinstance(c, str) and "chance" in n and c.startswith((NPC + "bratva_", NPC + "nap_", NPC + "nasim_")))
         npcs = [n for n in obj.get("place_npcs", []) if not _ours(n)]
+        # ordinary residents become cheap monsters (swapped for the real NPC when the player comes near)
+        mons = [n for n in obj.get("place_monster", []) if not str(n.get("monster", "")).startswith("mon_trl_res_")]
+        keep_npcs = []
+        for n in npcs:
+            c = str(n.get("class", ""))
+            if c.startswith("trl_nc_res_"):
+                mons.append({"monster": c.replace("trl_nc_res_", "mon_trl_res_", 1), "x": n["x"], "y": n["y"]})
+            else:
+                keep_npcs.append(n)
+        npcs = keep_npcs
+        if mons:
+            obj["place_monster"] = mons
+        elif "place_monster" in obj:
+            del obj["place_monster"]
         rules = ruleset(m["om_terrain"][0]) + petrules(m["om_terrain"][0])
         if rules:
             r = random.Random("presence-" + m["om_terrain"][0])
@@ -119,7 +133,7 @@ for sub in ("houses", "midrise", "midrise2", "midrise3", "lots", "towers", "city
         for j in PED_JOBS:
             tier, job = j.split("_", 1)
             data.append({"type": "mapgen", "nested_mapgen_id": "trl_pres_ped_" + j,
-                         "object": {"mapgensize": [1, 1], "rows": ["."], "place_npcs": [{"class": _gr.template_id(tier, job), "x": 0, "y": 0}]}})
+                         "object": {"mapgensize": [1, 1], "rows": ["."], "place_monster": [{"monster": _gr.mon_id(tier, job), "x": 0, "y": 0}]}})
         for cls in ("bratva_thug", "bratva_enforcer", "nasim_hacker", "nap_patrol", "nap_tactical", "nap_riot"):
             data.append({"type": "mapgen", "nested_mapgen_id": "trl_pres_" + cls,
                          "object": {"mapgensize": [1, 1], "rows": ["."], "place_npcs": [{"class": NPC + cls, "x": 0, "y": 0}]}})

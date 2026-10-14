@@ -68,6 +68,50 @@ def template_id(tier, job):
     return f"trl_nc_res_{tier}_{job}"
 
 
+def mon_id(tier, job):
+    return f"mon_trl_res_{tier}_{job}"
+
+
+TIER_COLOR = {"poor": "brown", "mid": "light_gray", "rich": "white"}
+TIER_HP = {"poor": 55, "mid": 60, "rich": 55}
+
+
+def monsters():
+    """Ambient residents as cheap monsters.  Within a few tiles of the player each one is swapped for the full
+    NPC (same job), so only the people you actually meet cost NPC processing."""
+    out = [{"type": "monster_flag", "id": "TRL_STROLL",
+            "//": "Trilobit: the monster wanders on its own: a short random stroll every so often."},
+           {"type": "talk_topic", "id": "TRL_PED_TALK",
+            "dynamic_line": "<npc_name> glances at you and nods, then goes back to what they were doing.",
+            "responses": [{"text": "Nod back.", "topic": "TALK_DONE"}]}]
+    swaps = []
+    for tier, job in all_jobs():
+        title, work, extra, weapons, skills = JOBS[tier][job]
+        wid = distribution_for(tier, job)
+        out.append({"type": "item_group", "id": wid + "_drop", "subtype": "collection",
+                    "entries": [{"group": wid + "_worn", "prob": 100}, {"group": wid + "_carry", "prob": 100}]})
+        out.append({"type": "MONSTER", "id": mon_id(tier, job), "name": {"str": title.lower()},
+                    "description": f"A {title.lower()} going about their day.  Just a person with a home, a job and somewhere to be.",
+                    "looks_like": "npc_male", "categories": ["TRILOBIT"], "default_faction": "human", "bodytype": "human", "species": ["HUMAN"],
+                    "material": ["hflesh"], "weakpoint_sets": ["wps_humanoid_body"], "chat_topics": ["TRL_PED_TALK"],
+                    "volume": "62500 ml", "weight": "75000 g", "hp": TIER_HP[tier], "speed": 100, "symbol": "@",
+                    "color": TIER_COLOR[tier], "diff": 1, "aggression": -99, "morale": 40, "vision_day": 24, "vision_night": 6,
+                    "anger_triggers": ["HURT"], "fear_triggers": ["FRIEND_DIED"], "melee_skill": 2, "melee_dice": 1,
+                    "melee_dice_sides": 3, "melee_damage": [{"damage_type": "bash", "amount": 2}], "dodge": 1,
+                    "families": ["prof_gross_anatomy", "prof_intro_biology", "prof_physiology"],
+                    "harvest": "human", "dissect": "dissect_human_sample_single", "death_drops": wid + "_drop",
+                    "path_settings": {"max_dist": 30, "allow_open_doors": True, "avoid_traps": True, "avoid_sharp": True},
+                    "flags": ["SEES", "HEARS", "WARM", "HUMAN", "CAN_OPEN_DOORS", "PATH_AVOID_DANGER", "CONVERSATION", "TRL_STROLL"]})
+        sid = f"trl_ped_swap_{tier}_{job}"
+        out.append({"type": "effect_on_condition", "id": sid,
+                    "effect": [{"u_spawn_npc": template_id(tier, job), "real_count": 1, "min_radius": 0, "max_radius": 2,
+                                "true_eocs": [{"id": sid + "_ok", "effect": [{"u_die": {"remove_corpse": True, "supress_message": True, "remove_from_creature_tracker": True}}]}]}]})
+        swaps.append((mon_id(tier, job), sid))
+    out.append({"type": "effect_on_condition", "id": "trl_ped_tick", "recurrence": ["3 seconds", "5 seconds"], "global": True,
+                "effect": [{"u_run_monster_eocs": [sid], "mtype_ids": [m], "monster_range": 5} for m, sid in swaps]})
+    return out
+
+
 def build():
     out = []
     for tid, nm, d in (("trl_resident", "Resident", "A resident of the city: has a home and a job."),
@@ -118,7 +162,7 @@ def build():
         {"type": "effect_on_condition", "id": "trl_res_haswork", "effect": [{"if": {"math": ["rand(3) == 0"]}, "then": [{"math": ["u_trl_has_work = 1"]}], "else": [{"math": ["u_trl_has_work = 0"]}]}]},
         {"type": "effect_on_condition", "id": "trl_res_goto_spot", "effect": [{"u_go_to_loc": {"u_val": "trl_spot"}}]},
         {"type": "effect_on_condition", "id": "trl_res_tick", "recurrence": ["15 minutes", "20 minutes"], "global": True,
-         "effect": [{"u_run_npc_eocs": ["trl_res_step"], "overmap": True}]},
+         "effect": [{"u_run_npc_eocs": ["trl_res_step"], "local": True, "npc_range": 70}]},
         {"type": "effect_on_condition", "id": "trl_res_step",
          "condition": {"and": [{"u_has_trait": "trl_resident"}, {"not": "u_following"},
                                {"math": ["u_trl_skip_until < time('now')"]}]},
@@ -179,7 +223,7 @@ def build():
     for tier, job in all_jobs():
         out.append({"type": "effect_on_condition", "id": f"trl_res_bark_{tier}_{job}", "condition": {"u_has_class": template_id(tier, job)},
                     "effect": [{"u_make_sound": f"trl_bark_{tier}_{job}", "snippet": True, "volume": 14, "type": "speech"}]})
-    return out
+    return out + monsters()
 
 
 def names():

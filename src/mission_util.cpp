@@ -322,7 +322,7 @@ std::optional<tripoint_abs_omt> mission_util::assign_mission_target(
 }
 
 tripoint_abs_omt mission_util::get_om_terrain_pos( const mission_target_params &params,
-        dialogue &d )
+        dialogue &d, bool *found )
 {
     // use the player or NPC's current position, adjust for the z value if any
     tripoint_abs_omt origin_pos = get_mission_om_origin( params, d );
@@ -333,6 +333,8 @@ tripoint_abs_omt mission_util::get_om_terrain_pos( const mission_target_params &
         std::optional<tripoint_abs_omt> temp_pos = find_or_create_om_terrain( origin_pos, params, d );
         if( temp_pos ) {
             target_pos = *temp_pos;
+        } else if( found ) {
+            *found = false;   // Trilobit: let callers tell 'nothing matched' from 'matched here'
         }
     }
 

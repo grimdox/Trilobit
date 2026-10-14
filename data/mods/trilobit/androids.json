@@ -75830,7 +75830,8 @@
     "u_run_npc_eocs": [
      "trl_andr_step"
     ],
-    "overmap": true
+    "local": true,
+    "npc_range": 70
    }
   ]
  },

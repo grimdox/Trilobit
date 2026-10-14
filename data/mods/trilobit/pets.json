@@ -7,7 +7,9 @@
    "str": "house dog"
   },
   "description": "A well-fed, collared dog that belongs to somebody.  It looks at you with friendly interest and waits to be patted.",
-  "categories": [],
+  "categories": [
+   "TRILOBIT"
+  ],
   "aggression": -99,
   "morale": 40,
   "anger_triggers": [
@@ -29,7 +31,9 @@
    "str": "house cat"
   },
   "description": "A sleek, unbothered house cat.  It watches you with half-closed eyes and tolerates being fussed over.",
-  "categories": [],
+  "categories": [
+   "TRILOBIT"
+  ],
   "aggression": -99,
   "morale": 40,
   "anger_triggers": [
@@ -52,7 +56,9 @@
    "str": "coop chicken"
   },
   "description": "A scruffy chicken that lives in the yard and scratches at the floor for scraps.",
-  "categories": [],
+  "categories": [
+   "TRILOBIT"
+  ],
   "aggression": -99,
   "anger_triggers": [],
   "fear_triggers": [

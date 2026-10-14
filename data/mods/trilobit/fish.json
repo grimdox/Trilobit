@@ -1752,7 +1752,9 @@
    "str": "house rabbit"
   },
   "description": "A soft, well-fed pet rabbit that nibbles at whatever you hold out and tolerates being patted.",
-  "categories": [],
+  "categories": [
+   "TRILOBIT"
+  ],
   "aggression": -99,
   "morale": 40,
   "anger_triggers": [

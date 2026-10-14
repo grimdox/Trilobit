@@ -7,15 +7,15 @@ MOD = sys.argv[1]
 out = [
     {"type": "MONSTER", "id": "mon_trl_dog", "copy-from": "mon_dog", "name": {"str": "house dog"},
      "description": "A well-fed, collared dog that belongs to somebody.  It looks at you with friendly interest and waits to be patted.",
-     "categories": [], "aggression": -99, "morale": 40, "anger_triggers": ["HURT"], "fear_triggers": [],
+     "categories": ["TRILOBIT"], "aggression": -99, "morale": 40, "anger_triggers": ["HURT"], "fear_triggers": [],
      "placate_triggers": ["PLAYER_CLOSE", "PLAYER_WEAK"], "color": "brown", "death_drops": "mon_dog_death_drops"},
     {"type": "MONSTER", "id": "mon_trl_cat", "copy-from": "mon_cat", "name": {"str": "house cat"},
      "description": "A sleek, unbothered house cat.  It watches you with half-closed eyes and tolerates being fussed over.",
-     "categories": [], "aggression": -99, "morale": 40, "anger_triggers": ["HURT"], "fear_triggers": ["FRIEND_ATTACKED"],
+     "categories": ["TRILOBIT"], "aggression": -99, "morale": 40, "anger_triggers": ["HURT"], "fear_triggers": ["FRIEND_ATTACKED"],
      "placate_triggers": ["PLAYER_CLOSE", "PLAYER_WEAK"], "color": "light_gray"},
     {"type": "MONSTER", "id": "mon_trl_chicken", "copy-from": "mon_chicken", "name": {"str": "coop chicken"},
      "description": "A scruffy chicken that lives in the yard and scratches at the floor for scraps.",
-     "categories": [], "aggression": -99, "anger_triggers": [], "fear_triggers": ["FRIEND_ATTACKED"], "placate_triggers": ["PLAYER_CLOSE"],
+     "categories": ["TRILOBIT"], "aggression": -99, "anger_triggers": [], "fear_triggers": ["FRIEND_ATTACKED"], "placate_triggers": ["PLAYER_CLOSE"],
      "color": "white"},
     {"type": "effect_on_condition", "id": "trl_fish_watch", "effect": [
         {"u_message": "You watch the fish drift through the glowing water: slow orange and blue shapes in endless, silent loops.  It is oddly calming.", "type": "good"},

@@ -11227,7 +11227,7 @@
  {
   "type": "effect_on_condition",
   "id": "trl_cyber_recount_timer",
-  "recurrence": "10 seconds",
+  "recurrence": "2 minutes",
   "global": true,
   "condition": {
    "math": [
@@ -13091,51 +13091,47 @@
   },
   "effect": [
    {
+    "math": [
+     "_sig",
+     "=",
+     "u_hp('head') + u_trl_ihp_head + u_hp('torso') + u_trl_ihp_torso + u_hp('arm_l') + u_trl_ihp_arm_l + u_hp('arm_r') + u_trl_ihp_arm_r + u_hp('leg_l') + u_trl_ihp_leg_l + u_hp('leg_r') + u_trl_ihp_leg_r"
+    ]
+   },
+   {
     "if": {
      "math": [
-      "u_trl_s_head >= 0.999"
+      "_sig != u_trl_sig"
      ]
     },
     "then": [
      {
+      "math": [
+       "u_trl_sig",
+       "=",
+       "_sig"
+      ]
+     },
+     {
       "if": {
        "math": [
-        "u_trl_lock_head == 0"
+        "u_trl_s_head >= 0.999"
        ]
       },
       "then": [
        {
-        "math": [
-         "u_trl_lock_head",
-         "=",
-         "1"
-        ]
-       },
-       {
-        "math": [
-         "u_trl_last_head",
-         "=",
-         "u_hp('head')"
-        ]
-       }
-      ],
-      "else": [
-       {
         "if": {
          "math": [
-          "u_hp('head') > u_trl_last_head"
+          "u_trl_lock_head == 0"
          ]
         },
         "then": [
          {
           "math": [
-           "u_hp('head')",
+           "u_trl_lock_head",
            "=",
-           "u_trl_last_head"
+           "1"
           ]
-         }
-        ],
-        "else": [
+         },
          {
           "math": [
            "u_trl_last_head",
@@ -13143,67 +13139,67 @@
            "u_hp('head')"
           ]
          }
-        ]
-       }
-      ]
-     }
-    ],
-    "else": [
-     {
-      "math": [
-       "u_trl_lock_head",
-       "=",
-       "0"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_torso >= 0.999"
-     ]
-    },
-    "then": [
-     {
-      "if": {
-       "math": [
-        "u_trl_lock_torso == 0"
-       ]
-      },
-      "then": [
-       {
-        "math": [
-         "u_trl_lock_torso",
-         "=",
-         "1"
-        ]
-       },
-       {
-        "math": [
-         "u_trl_last_torso",
-         "=",
-         "u_hp('torso')"
+        ],
+        "else": [
+         {
+          "if": {
+           "math": [
+            "u_hp('head') > u_trl_last_head"
+           ]
+          },
+          "then": [
+           {
+            "math": [
+             "u_hp('head')",
+             "=",
+             "u_trl_last_head"
+            ]
+           }
+          ],
+          "else": [
+           {
+            "math": [
+             "u_trl_last_head",
+             "=",
+             "u_hp('head')"
+            ]
+           }
+          ]
+         }
         ]
        }
       ],
       "else": [
        {
+        "math": [
+         "u_trl_lock_head",
+         "=",
+         "0"
+        ]
+       }
+      ]
+     },
+     {
+      "if": {
+       "math": [
+        "u_trl_s_torso >= 0.999"
+       ]
+      },
+      "then": [
+       {
         "if": {
          "math": [
-          "u_hp('torso') > u_trl_last_torso"
+          "u_trl_lock_torso == 0"
          ]
         },
         "then": [
          {
           "math": [
-           "u_hp('torso')",
+           "u_trl_lock_torso",
            "=",
-           "u_trl_last_torso"
+           "1"
           ]
-         }
-        ],
-        "else": [
+         },
          {
           "math": [
            "u_trl_last_torso",
@@ -13211,67 +13207,67 @@
            "u_hp('torso')"
           ]
          }
-        ]
-       }
-      ]
-     }
-    ],
-    "else": [
-     {
-      "math": [
-       "u_trl_lock_torso",
-       "=",
-       "0"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_arm_l >= 0.999"
-     ]
-    },
-    "then": [
-     {
-      "if": {
-       "math": [
-        "u_trl_lock_arm_l == 0"
-       ]
-      },
-      "then": [
-       {
-        "math": [
-         "u_trl_lock_arm_l",
-         "=",
-         "1"
-        ]
-       },
-       {
-        "math": [
-         "u_trl_last_arm_l",
-         "=",
-         "u_hp('arm_l')"
+        ],
+        "else": [
+         {
+          "if": {
+           "math": [
+            "u_hp('torso') > u_trl_last_torso"
+           ]
+          },
+          "then": [
+           {
+            "math": [
+             "u_hp('torso')",
+             "=",
+             "u_trl_last_torso"
+            ]
+           }
+          ],
+          "else": [
+           {
+            "math": [
+             "u_trl_last_torso",
+             "=",
+             "u_hp('torso')"
+            ]
+           }
+          ]
+         }
         ]
        }
       ],
       "else": [
        {
+        "math": [
+         "u_trl_lock_torso",
+         "=",
+         "0"
+        ]
+       }
+      ]
+     },
+     {
+      "if": {
+       "math": [
+        "u_trl_s_arm_l >= 0.999"
+       ]
+      },
+      "then": [
+       {
         "if": {
          "math": [
-          "u_hp('arm_l') > u_trl_last_arm_l"
+          "u_trl_lock_arm_l == 0"
          ]
         },
         "then": [
          {
           "math": [
-           "u_hp('arm_l')",
+           "u_trl_lock_arm_l",
            "=",
-           "u_trl_last_arm_l"
+           "1"
           ]
-         }
-        ],
-        "else": [
+         },
          {
           "math": [
            "u_trl_last_arm_l",
@@ -13279,67 +13275,67 @@
            "u_hp('arm_l')"
           ]
          }
-        ]
-       }
-      ]
-     }
-    ],
-    "else": [
-     {
-      "math": [
-       "u_trl_lock_arm_l",
-       "=",
-       "0"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_arm_r >= 0.999"
-     ]
-    },
-    "then": [
-     {
-      "if": {
-       "math": [
-        "u_trl_lock_arm_r == 0"
-       ]
-      },
-      "then": [
-       {
-        "math": [
-         "u_trl_lock_arm_r",
-         "=",
-         "1"
-        ]
-       },
-       {
-        "math": [
-         "u_trl_last_arm_r",
-         "=",
-         "u_hp('arm_r')"
+        ],
+        "else": [
+         {
+          "if": {
+           "math": [
+            "u_hp('arm_l') > u_trl_last_arm_l"
+           ]
+          },
+          "then": [
+           {
+            "math": [
+             "u_hp('arm_l')",
+             "=",
+             "u_trl_last_arm_l"
+            ]
+           }
+          ],
+          "else": [
+           {
+            "math": [
+             "u_trl_last_arm_l",
+             "=",
+             "u_hp('arm_l')"
+            ]
+           }
+          ]
+         }
         ]
        }
       ],
       "else": [
        {
+        "math": [
+         "u_trl_lock_arm_l",
+         "=",
+         "0"
+        ]
+       }
+      ]
+     },
+     {
+      "if": {
+       "math": [
+        "u_trl_s_arm_r >= 0.999"
+       ]
+      },
+      "then": [
+       {
         "if": {
          "math": [
-          "u_hp('arm_r') > u_trl_last_arm_r"
+          "u_trl_lock_arm_r == 0"
          ]
         },
         "then": [
          {
           "math": [
-           "u_hp('arm_r')",
+           "u_trl_lock_arm_r",
            "=",
-           "u_trl_last_arm_r"
+           "1"
           ]
-         }
-        ],
-        "else": [
+         },
          {
           "math": [
            "u_trl_last_arm_r",
@@ -13347,67 +13343,67 @@
            "u_hp('arm_r')"
           ]
          }
-        ]
-       }
-      ]
-     }
-    ],
-    "else": [
-     {
-      "math": [
-       "u_trl_lock_arm_r",
-       "=",
-       "0"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_leg_l >= 0.999"
-     ]
-    },
-    "then": [
-     {
-      "if": {
-       "math": [
-        "u_trl_lock_leg_l == 0"
-       ]
-      },
-      "then": [
-       {
-        "math": [
-         "u_trl_lock_leg_l",
-         "=",
-         "1"
-        ]
-       },
-       {
-        "math": [
-         "u_trl_last_leg_l",
-         "=",
-         "u_hp('leg_l')"
+        ],
+        "else": [
+         {
+          "if": {
+           "math": [
+            "u_hp('arm_r') > u_trl_last_arm_r"
+           ]
+          },
+          "then": [
+           {
+            "math": [
+             "u_hp('arm_r')",
+             "=",
+             "u_trl_last_arm_r"
+            ]
+           }
+          ],
+          "else": [
+           {
+            "math": [
+             "u_trl_last_arm_r",
+             "=",
+             "u_hp('arm_r')"
+            ]
+           }
+          ]
+         }
         ]
        }
       ],
       "else": [
        {
+        "math": [
+         "u_trl_lock_arm_r",
+         "=",
+         "0"
+        ]
+       }
+      ]
+     },
+     {
+      "if": {
+       "math": [
+        "u_trl_s_leg_l >= 0.999"
+       ]
+      },
+      "then": [
+       {
         "if": {
          "math": [
-          "u_hp('leg_l') > u_trl_last_leg_l"
+          "u_trl_lock_leg_l == 0"
          ]
         },
         "then": [
          {
           "math": [
-           "u_hp('leg_l')",
+           "u_trl_lock_leg_l",
            "=",
-           "u_trl_last_leg_l"
+           "1"
           ]
-         }
-        ],
-        "else": [
+         },
          {
           "math": [
            "u_trl_last_leg_l",
@@ -13415,67 +13411,67 @@
            "u_hp('leg_l')"
           ]
          }
-        ]
-       }
-      ]
-     }
-    ],
-    "else": [
-     {
-      "math": [
-       "u_trl_lock_leg_l",
-       "=",
-       "0"
-      ]
-     }
-    ]
-   },
-   {
-    "if": {
-     "math": [
-      "u_trl_s_leg_r >= 0.999"
-     ]
-    },
-    "then": [
-     {
-      "if": {
-       "math": [
-        "u_trl_lock_leg_r == 0"
-       ]
-      },
-      "then": [
-       {
-        "math": [
-         "u_trl_lock_leg_r",
-         "=",
-         "1"
-        ]
-       },
-       {
-        "math": [
-         "u_trl_last_leg_r",
-         "=",
-         "u_hp('leg_r')"
+        ],
+        "else": [
+         {
+          "if": {
+           "math": [
+            "u_hp('leg_l') > u_trl_last_leg_l"
+           ]
+          },
+          "then": [
+           {
+            "math": [
+             "u_hp('leg_l')",
+             "=",
+             "u_trl_last_leg_l"
+            ]
+           }
+          ],
+          "else": [
+           {
+            "math": [
+             "u_trl_last_leg_l",
+             "=",
+             "u_hp('leg_l')"
+            ]
+           }
+          ]
+         }
         ]
        }
       ],
       "else": [
        {
+        "math": [
+         "u_trl_lock_leg_l",
+         "=",
+         "0"
+        ]
+       }
+      ]
+     },
+     {
+      "if": {
+       "math": [
+        "u_trl_s_leg_r >= 0.999"
+       ]
+      },
+      "then": [
+       {
         "if": {
          "math": [
-          "u_hp('leg_r') > u_trl_last_leg_r"
+          "u_trl_lock_leg_r == 0"
          ]
         },
         "then": [
          {
           "math": [
-           "u_hp('leg_r')",
+           "u_trl_lock_leg_r",
            "=",
-           "u_trl_last_leg_r"
+           "1"
           ]
-         }
-        ],
-        "else": [
+         },
          {
           "math": [
            "u_trl_last_leg_r",
@@ -13483,24 +13479,51 @@
            "u_hp('leg_r')"
           ]
          }
+        ],
+        "else": [
+         {
+          "if": {
+           "math": [
+            "u_hp('leg_r') > u_trl_last_leg_r"
+           ]
+          },
+          "then": [
+           {
+            "math": [
+             "u_hp('leg_r')",
+             "=",
+             "u_trl_last_leg_r"
+            ]
+           }
+          ],
+          "else": [
+           {
+            "math": [
+             "u_trl_last_leg_r",
+             "=",
+             "u_hp('leg_r')"
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ],
+      "else": [
+       {
+        "math": [
+         "u_trl_lock_leg_r",
+         "=",
+         "0"
         ]
        }
       ]
-     }
-    ],
-    "else": [
+     },
      {
-      "math": [
-       "u_trl_lock_leg_r",
-       "=",
-       "0"
+      "run_eocs": [
+       "trl_cyber_bars"
       ]
      }
-    ]
-   },
-   {
-    "run_eocs": [
-     "trl_cyber_bars"
     ]
    }
   ]
