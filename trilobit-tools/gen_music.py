@@ -240,6 +240,6 @@ for name, bpm, prog, pat, lead in TRACKS:
     print(name, os.path.getsize(p) // 1024, "KB", round(len(st) / SR), "s")
 
 ms = os.path.join(repo, "data/sound/Basic/musicset.json")
-json.dump([{"type": "playlist", "playlists": [{"id": "title", "shuffle": True, "files": files}]}],
+json.dump([{"type": "playlist", "playlists": []}] if os.environ.get("TRL_MUSIC") != "1" else [{"type": "playlist", "playlists": [{"id": "title", "shuffle": True, "files": files}]}],
           open(ms, "w"), indent=2)
 print("playlist written")
