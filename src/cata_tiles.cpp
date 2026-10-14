@@ -4462,14 +4462,15 @@ void cata_tiles::draw_entity_with_overlays( const Character &ch, const tripoint_
         if( !dir_sprite.empty() && tileset_ptr->find_tile_type( dir_sprite ) ) {
             draw_from_id_string( dir_sprite, TILE_CATEGORY::NONE, "", p, corner, 0, ll, false,
                                  height_3d );
-        } else
-        // depending on the toggle flip sprite left or right
-        if( facing == FacingDirection::RIGHT ) {
-            draw_from_id_string( ent_name, TILE_CATEGORY::NONE, "", p, corner, 0, ll, false,
-                                 height_3d );
-        } else if( facing == FacingDirection::LEFT ) {
-            draw_from_id_string( ent_name, TILE_CATEGORY::NONE, "", p, corner, -1, ll, false,
-                                 height_3d );
+        } else {
+            // depending on the toggle flip sprite left or right (Trilobit: any other facing draws unflipped,
+            // and a tileset without an NPC body falls back to the player body so NPCs are never invisible)
+            const int rota = facing == FacingDirection::LEFT ? -1 : 0;
+            if( !draw_from_id_string( ent_name, TILE_CATEGORY::NONE, "", p, corner, rota, ll, false,
+                                      height_3d ) && ch.is_npc() ) {
+                draw_from_id_string( ch.male ? "player_male" : "player_female", TILE_CATEGORY::NONE, "", p,
+                                     corner, rota, ll, false, height_3d );
+            }
         }
     } else {
         mutation_branch::OverrideLook override_look = override_look_muts.at(

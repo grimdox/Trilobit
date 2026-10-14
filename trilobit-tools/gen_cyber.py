@@ -110,8 +110,7 @@ lock = []
 for p in PARTS:
     lock.append({"if": {"math": [f"u_trl_s_{p} >= 0.999"]},
                  "then": [{"if": {"math": [f"u_trl_lock_{p} == 0"]},
-                           "then": [{"math": [f"u_trl_lock_{p}", "=", "1"]}, {"math": [f"u_trl_last_{p}", "=", f"u_hp('{p}')"]},
-                                    {"u_message": f"Your {LABEL[p].lower()} is fully cyberized: it no longer heals on its own.  Only an implant shop can repair it.", "type": "info"}],
+                           "then": [{"math": [f"u_trl_lock_{p}", "=", "1"]}, {"math": [f"u_trl_last_{p}", "=", f"u_hp('{p}')"]}],
                            "else": [{"if": {"math": [f"u_hp('{p}') > u_trl_last_{p}"]}, "then": [{"math": [f"u_hp('{p}')", "=", f"u_trl_last_{p}"]}],
                                      "else": [{"math": [f"u_trl_last_{p}", "=", f"u_hp('{p}')"]}]}]}],
                  "else": [{"math": [f"u_trl_lock_{p}", "=", "0"]}]})

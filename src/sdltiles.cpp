@@ -1054,6 +1054,11 @@ void cata_tiles::draw_om( const point &dest, const tripoint_abs_omt &center_abs_
             draw_entity_with_overlays( *guy, global_omt_to_draw_position( guy_loc ),
                                        lit_level::LIT,
                                        height_3d );
+        } else if( guy_loc.z() == center_pos.z() &&
+                   ( has_debug_vision || overmap_buffer.seen_more_than( guy_loc, om_vision_level::details ) ) ) {
+            // Trilobit: hostile NPCs get their own marker on the overmap
+            draw_from_id_string( "overmap_npc_hostile", global_omt_to_draw_position( guy_loc ), 0, 0,
+                                 lit_level::LIT, false );
         }
     }
 

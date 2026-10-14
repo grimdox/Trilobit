@@ -1840,11 +1840,11 @@
   "name": {
    "str": "Light dermal plating (torso)"
   },
-  "description": "Plates of ceramic and polymer under the skin of the torso: +6 bullet armor and +3 against blows and blades.  Uses 4 of the 24 points in the torso; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the torso: +6 bullet armor and +3 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "occupied_bodyparts": [
    [
     "torso",
-    4
+    0
    ]
   ],
   "flags": [
@@ -1873,10 +1873,10 @@
    "str": "Light dermal plating (torso) CBM"
   },
   "looks_like": "bio_int_enhancer",
-  "description": "Plates of ceramic and polymer under the skin of the torso: +6 bullet armor and +3 against blows and blades.  Uses 4 of the 24 points in the torso; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the torso: +6 bullet armor and +3 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "price": "20000 USD",
   "price_postapoc": "20000 USD",
-  "weight": "1300 g",
+  "weight": "300 g",
   "difficulty": 6
  },
  {
@@ -1885,11 +1885,11 @@
   "name": {
    "str": "Heavy dermal plating (torso)"
   },
-  "description": "Plates of ceramic and polymer under the skin of the torso: +11 bullet armor and +5 against blows and blades.  Uses 8 of the 24 points in the torso; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the torso: +11 bullet armor and +5 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "occupied_bodyparts": [
    [
     "torso",
-    8
+    0
    ]
   ],
   "flags": [
@@ -1918,10 +1918,10 @@
    "str": "Heavy dermal plating (torso) CBM"
   },
   "looks_like": "bio_int_enhancer",
-  "description": "Plates of ceramic and polymer under the skin of the torso: +11 bullet armor and +5 against blows and blades.  Uses 8 of the 24 points in the torso; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the torso: +11 bullet armor and +5 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "price": "90000 USD",
   "price_postapoc": "90000 USD",
-  "weight": "2300 g",
+  "weight": "300 g",
   "difficulty": 6
  },
  {
@@ -1930,11 +1930,11 @@
   "name": {
    "str": "Light dermal plating (head)"
   },
-  "description": "Plates of ceramic and polymer under the skin of the head: +4 bullet armor and +2 against blows and blades.  Uses 2 of the 8 points in the head; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the head: +4 bullet armor and +2 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "occupied_bodyparts": [
    [
     "head",
-    2
+    0
    ]
   ],
   "flags": [
@@ -1963,10 +1963,10 @@
    "str": "Light dermal plating (head) CBM"
   },
   "looks_like": "bio_int_enhancer",
-  "description": "Plates of ceramic and polymer under the skin of the head: +4 bullet armor and +2 against blows and blades.  Uses 2 of the 8 points in the head; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the head: +4 bullet armor and +2 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "price": "18000 USD",
   "price_postapoc": "18000 USD",
-  "weight": "800 g",
+  "weight": "300 g",
   "difficulty": 6
  },
  {
@@ -1975,11 +1975,11 @@
   "name": {
    "str": "Heavy dermal plating (head)"
   },
-  "description": "Plates of ceramic and polymer under the skin of the head: +8 bullet armor and +4 against blows and blades.  Uses 3 of the 8 points in the head; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the head: +8 bullet armor and +4 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "occupied_bodyparts": [
    [
     "head",
-    3
+    0
    ]
   ],
   "flags": [
@@ -2008,10 +2008,10 @@
    "str": "Heavy dermal plating (head) CBM"
   },
   "looks_like": "bio_int_enhancer",
-  "description": "Plates of ceramic and polymer under the skin of the head: +8 bullet armor and +4 against blows and blades.  Uses 3 of the 8 points in the head; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the head: +8 bullet armor and +4 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "price": "85000 USD",
   "price_postapoc": "85000 USD",
-  "weight": "1050 g",
+  "weight": "300 g",
   "difficulty": 6
  },
  {
@@ -2020,11 +2020,11 @@
   "name": {
    "str": "Light dermal plating (left arm)"
   },
-  "description": "Plates of ceramic and polymer under the skin of the left arm: +4 bullet armor and +2 against blows and blades.  Uses 2 of the 6 points in the left arm; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the left arm: +4 bullet armor and +2 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "occupied_bodyparts": [
    [
     "arm_l",
-    2
+    0
    ]
   ],
   "flags": [
@@ -2053,10 +2053,10 @@
    "str": "Light dermal plating (left arm) CBM"
   },
   "looks_like": "bio_int_enhancer",
-  "description": "Plates of ceramic and polymer under the skin of the left arm: +4 bullet armor and +2 against blows and blades.  Uses 2 of the 6 points in the left arm; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the left arm: +4 bullet armor and +2 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "price": "12000 USD",
   "price_postapoc": "12000 USD",
-  "weight": "800 g",
+  "weight": "300 g",
   "difficulty": 6
  },
  {
@@ -2065,11 +2065,11 @@
   "name": {
    "str": "Heavy dermal plating (left arm)"
   },
-  "description": "Plates of ceramic and polymer under the skin of the left arm: +8 bullet armor and +4 against blows and blades.  Uses 3 of the 6 points in the left arm; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the left arm: +8 bullet armor and +4 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "occupied_bodyparts": [
    [
     "arm_l",
-    3
+    0
    ]
   ],
   "flags": [
@@ -2098,10 +2098,10 @@
    "str": "Heavy dermal plating (left arm) CBM"
   },
   "looks_like": "bio_int_enhancer",
-  "description": "Plates of ceramic and polymer under the skin of the left arm: +8 bullet armor and +4 against blows and blades.  Uses 3 of the 6 points in the left arm; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the left arm: +8 bullet armor and +4 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "price": "60000 USD",
   "price_postapoc": "60000 USD",
-  "weight": "1050 g",
+  "weight": "300 g",
   "difficulty": 6
  },
  {
@@ -2110,11 +2110,11 @@
   "name": {
    "str": "Light dermal plating (right arm)"
   },
-  "description": "Plates of ceramic and polymer under the skin of the right arm: +4 bullet armor and +2 against blows and blades.  Uses 2 of the 6 points in the right arm; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the right arm: +4 bullet armor and +2 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "occupied_bodyparts": [
    [
     "arm_r",
-    2
+    0
    ]
   ],
   "flags": [
@@ -2143,10 +2143,10 @@
    "str": "Light dermal plating (right arm) CBM"
   },
   "looks_like": "bio_int_enhancer",
-  "description": "Plates of ceramic and polymer under the skin of the right arm: +4 bullet armor and +2 against blows and blades.  Uses 2 of the 6 points in the right arm; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the right arm: +4 bullet armor and +2 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "price": "12000 USD",
   "price_postapoc": "12000 USD",
-  "weight": "800 g",
+  "weight": "300 g",
   "difficulty": 6
  },
  {
@@ -2155,11 +2155,11 @@
   "name": {
    "str": "Heavy dermal plating (right arm)"
   },
-  "description": "Plates of ceramic and polymer under the skin of the right arm: +8 bullet armor and +4 against blows and blades.  Uses 3 of the 6 points in the right arm; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the right arm: +8 bullet armor and +4 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "occupied_bodyparts": [
    [
     "arm_r",
-    3
+    0
    ]
   ],
   "flags": [
@@ -2188,10 +2188,10 @@
    "str": "Heavy dermal plating (right arm) CBM"
   },
   "looks_like": "bio_int_enhancer",
-  "description": "Plates of ceramic and polymer under the skin of the right arm: +8 bullet armor and +4 against blows and blades.  Uses 3 of the 6 points in the right arm; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the right arm: +8 bullet armor and +4 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "price": "60000 USD",
   "price_postapoc": "60000 USD",
-  "weight": "1050 g",
+  "weight": "300 g",
   "difficulty": 6
  },
  {
@@ -2200,11 +2200,11 @@
   "name": {
    "str": "Light dermal plating (left leg)"
   },
-  "description": "Plates of ceramic and polymer under the skin of the left leg: +4 bullet armor and +2 against blows and blades.  Uses 3 of the 10 points in the left leg; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the left leg: +4 bullet armor and +2 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "occupied_bodyparts": [
    [
     "leg_l",
-    3
+    0
    ]
   ],
   "flags": [
@@ -2233,10 +2233,10 @@
    "str": "Light dermal plating (left leg) CBM"
   },
   "looks_like": "bio_int_enhancer",
-  "description": "Plates of ceramic and polymer under the skin of the left leg: +4 bullet armor and +2 against blows and blades.  Uses 3 of the 10 points in the left leg; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the left leg: +4 bullet armor and +2 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "price": "15000 USD",
   "price_postapoc": "15000 USD",
-  "weight": "1050 g",
+  "weight": "300 g",
   "difficulty": 6
  },
  {
@@ -2245,11 +2245,11 @@
   "name": {
    "str": "Heavy dermal plating (left leg)"
   },
-  "description": "Plates of ceramic and polymer under the skin of the left leg: +8 bullet armor and +4 against blows and blades.  Uses 5 of the 10 points in the left leg; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the left leg: +8 bullet armor and +4 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "occupied_bodyparts": [
    [
     "leg_l",
-    5
+    0
    ]
   ],
   "flags": [
@@ -2278,10 +2278,10 @@
    "str": "Heavy dermal plating (left leg) CBM"
   },
   "looks_like": "bio_int_enhancer",
-  "description": "Plates of ceramic and polymer under the skin of the left leg: +8 bullet armor and +4 against blows and blades.  Uses 5 of the 10 points in the left leg; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the left leg: +8 bullet armor and +4 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "price": "75000 USD",
   "price_postapoc": "75000 USD",
-  "weight": "1550 g",
+  "weight": "300 g",
   "difficulty": 6
  },
  {
@@ -2290,11 +2290,11 @@
   "name": {
    "str": "Light dermal plating (right leg)"
   },
-  "description": "Plates of ceramic and polymer under the skin of the right leg: +4 bullet armor and +2 against blows and blades.  Uses 3 of the 10 points in the right leg; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the right leg: +4 bullet armor and +2 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "occupied_bodyparts": [
    [
     "leg_r",
-    3
+    0
    ]
   ],
   "flags": [
@@ -2323,10 +2323,10 @@
    "str": "Light dermal plating (right leg) CBM"
   },
   "looks_like": "bio_int_enhancer",
-  "description": "Plates of ceramic and polymer under the skin of the right leg: +4 bullet armor and +2 against blows and blades.  Uses 3 of the 10 points in the right leg; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the right leg: +4 bullet armor and +2 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "price": "15000 USD",
   "price_postapoc": "15000 USD",
-  "weight": "1050 g",
+  "weight": "300 g",
   "difficulty": 6
  },
  {
@@ -2335,11 +2335,11 @@
   "name": {
    "str": "Heavy dermal plating (right leg)"
   },
-  "description": "Plates of ceramic and polymer under the skin of the right leg: +8 bullet armor and +4 against blows and blades.  Uses 5 of the 10 points in the right leg; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the right leg: +8 bullet armor and +4 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "occupied_bodyparts": [
    [
     "leg_r",
-    5
+    0
    ]
   ],
   "flags": [
@@ -2368,10 +2368,10 @@
    "str": "Heavy dermal plating (right leg) CBM"
   },
   "looks_like": "bio_int_enhancer",
-  "description": "Plates of ceramic and polymer under the skin of the right leg: +8 bullet armor and +4 against blows and blades.  Uses 5 of the 10 points in the right leg; only one plating fits per body part.",
+  "description": "Plates of ceramic and polymer under the skin of the right leg: +8 bullet armor and +4 against blows and blades.  Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
   "price": "75000 USD",
   "price_postapoc": "75000 USD",
-  "weight": "1550 g",
+  "weight": "300 g",
   "difficulty": 6
  },
  {
@@ -7531,7 +7531,7 @@
        "math": [
         "u_trl_free_torso",
         ">=",
-        "4"
+        "0"
        ]
       },
       "then": [
@@ -7554,7 +7554,7 @@
       ],
       "else": [
        {
-        "u_message": "Not enough space in your torso for Light dermal plating (torso): it needs 4 points and you have <u_val:trl_free_torso> free.  Remove something first.",
+        "u_message": "Not enough space in your torso for Light dermal plating (torso): it needs 0 points and you have <u_val:trl_free_torso> free.  Remove something first.",
         "type": "bad"
        }
       ]
@@ -7624,7 +7624,7 @@
        "math": [
         "u_trl_free_torso",
         ">=",
-        "8"
+        "0"
        ]
       },
       "then": [
@@ -7647,7 +7647,7 @@
       ],
       "else": [
        {
-        "u_message": "Not enough space in your torso for Heavy dermal plating (torso): it needs 8 points and you have <u_val:trl_free_torso> free.  Remove something first.",
+        "u_message": "Not enough space in your torso for Heavy dermal plating (torso): it needs 0 points and you have <u_val:trl_free_torso> free.  Remove something first.",
         "type": "bad"
        }
       ]
@@ -7717,7 +7717,7 @@
        "math": [
         "u_trl_free_head",
         ">=",
-        "2"
+        "0"
        ]
       },
       "then": [
@@ -7740,7 +7740,7 @@
       ],
       "else": [
        {
-        "u_message": "Not enough space in your head for Light dermal plating (head): it needs 2 points and you have <u_val:trl_free_head> free.  Remove something first.",
+        "u_message": "Not enough space in your head for Light dermal plating (head): it needs 0 points and you have <u_val:trl_free_head> free.  Remove something first.",
         "type": "bad"
        }
       ]
@@ -7810,7 +7810,7 @@
        "math": [
         "u_trl_free_head",
         ">=",
-        "3"
+        "0"
        ]
       },
       "then": [
@@ -7833,7 +7833,7 @@
       ],
       "else": [
        {
-        "u_message": "Not enough space in your head for Heavy dermal plating (head): it needs 3 points and you have <u_val:trl_free_head> free.  Remove something first.",
+        "u_message": "Not enough space in your head for Heavy dermal plating (head): it needs 0 points and you have <u_val:trl_free_head> free.  Remove something first.",
         "type": "bad"
        }
       ]
@@ -7903,7 +7903,7 @@
        "math": [
         "u_trl_free_arm_l",
         ">=",
-        "2"
+        "0"
        ]
       },
       "then": [
@@ -7926,7 +7926,7 @@
       ],
       "else": [
        {
-        "u_message": "Not enough space in your left arm for Light dermal plating (left arm): it needs 2 points and you have <u_val:trl_free_arm_l> free.  Remove something first.",
+        "u_message": "Not enough space in your left arm for Light dermal plating (left arm): it needs 0 points and you have <u_val:trl_free_arm_l> free.  Remove something first.",
         "type": "bad"
        }
       ]
@@ -7996,7 +7996,7 @@
        "math": [
         "u_trl_free_arm_l",
         ">=",
-        "3"
+        "0"
        ]
       },
       "then": [
@@ -8019,7 +8019,7 @@
       ],
       "else": [
        {
-        "u_message": "Not enough space in your left arm for Heavy dermal plating (left arm): it needs 3 points and you have <u_val:trl_free_arm_l> free.  Remove something first.",
+        "u_message": "Not enough space in your left arm for Heavy dermal plating (left arm): it needs 0 points and you have <u_val:trl_free_arm_l> free.  Remove something first.",
         "type": "bad"
        }
       ]
@@ -8089,7 +8089,7 @@
        "math": [
         "u_trl_free_arm_r",
         ">=",
-        "2"
+        "0"
        ]
       },
       "then": [
@@ -8112,7 +8112,7 @@
       ],
       "else": [
        {
-        "u_message": "Not enough space in your right arm for Light dermal plating (right arm): it needs 2 points and you have <u_val:trl_free_arm_r> free.  Remove something first.",
+        "u_message": "Not enough space in your right arm for Light dermal plating (right arm): it needs 0 points and you have <u_val:trl_free_arm_r> free.  Remove something first.",
         "type": "bad"
        }
       ]
@@ -8182,7 +8182,7 @@
        "math": [
         "u_trl_free_arm_r",
         ">=",
-        "3"
+        "0"
        ]
       },
       "then": [
@@ -8205,7 +8205,7 @@
       ],
       "else": [
        {
-        "u_message": "Not enough space in your right arm for Heavy dermal plating (right arm): it needs 3 points and you have <u_val:trl_free_arm_r> free.  Remove something first.",
+        "u_message": "Not enough space in your right arm for Heavy dermal plating (right arm): it needs 0 points and you have <u_val:trl_free_arm_r> free.  Remove something first.",
         "type": "bad"
        }
       ]
@@ -8275,7 +8275,7 @@
        "math": [
         "u_trl_free_leg_l",
         ">=",
-        "3"
+        "0"
        ]
       },
       "then": [
@@ -8298,7 +8298,7 @@
       ],
       "else": [
        {
-        "u_message": "Not enough space in your left leg for Light dermal plating (left leg): it needs 3 points and you have <u_val:trl_free_leg_l> free.  Remove something first.",
+        "u_message": "Not enough space in your left leg for Light dermal plating (left leg): it needs 0 points and you have <u_val:trl_free_leg_l> free.  Remove something first.",
         "type": "bad"
        }
       ]
@@ -8368,7 +8368,7 @@
        "math": [
         "u_trl_free_leg_l",
         ">=",
-        "5"
+        "0"
        ]
       },
       "then": [
@@ -8391,7 +8391,7 @@
       ],
       "else": [
        {
-        "u_message": "Not enough space in your left leg for Heavy dermal plating (left leg): it needs 5 points and you have <u_val:trl_free_leg_l> free.  Remove something first.",
+        "u_message": "Not enough space in your left leg for Heavy dermal plating (left leg): it needs 0 points and you have <u_val:trl_free_leg_l> free.  Remove something first.",
         "type": "bad"
        }
       ]
@@ -8461,7 +8461,7 @@
        "math": [
         "u_trl_free_leg_r",
         ">=",
-        "3"
+        "0"
        ]
       },
       "then": [
@@ -8484,7 +8484,7 @@
       ],
       "else": [
        {
-        "u_message": "Not enough space in your right leg for Light dermal plating (right leg): it needs 3 points and you have <u_val:trl_free_leg_r> free.  Remove something first.",
+        "u_message": "Not enough space in your right leg for Light dermal plating (right leg): it needs 0 points and you have <u_val:trl_free_leg_r> free.  Remove something first.",
         "type": "bad"
        }
       ]
@@ -8554,7 +8554,7 @@
        "math": [
         "u_trl_free_leg_r",
         ">=",
-        "5"
+        "0"
        ]
       },
       "then": [
@@ -8577,7 +8577,7 @@
       ],
       "else": [
        {
-        "u_message": "Not enough space in your right leg for Heavy dermal plating (right leg): it needs 5 points and you have <u_val:trl_free_leg_r> free.  Remove something first.",
+        "u_message": "Not enough space in your right leg for Heavy dermal plating (right leg): it needs 0 points and you have <u_val:trl_free_leg_r> free.  Remove something first.",
         "type": "bad"
        }
       ]

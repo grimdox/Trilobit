@@ -205,6 +205,44 @@ def moku(im):
     return out
 
 
+def markers():
+    """Overlay sprites the overmap renderer asks for: player, NPCs (friendly and hostile), cursor, path highlight, mission arrows, unexplored."""
+    import math
+    out = {}
+    def blank():
+        im = Image.new("RGBA", (S, S), (0, 0, 0, 0)); return im, ImageDraw.Draw(im)
+    def dot(ring, fill, extra=None):
+        im, d = blank()
+        d.ellipse((2, 2, 13, 13), fill=(0, 0, 0, 200), outline=ring)
+        d.ellipse((4, 4, 11, 11), fill=fill)
+        if extra: extra(d)
+        return im
+    player = dot((255, 255, 255, 255), (60, 235, 255, 255), lambda d: (d.line((8, 0, 8, 3), fill=(255, 255, 255, 255)), d.line((8, 12, 8, 15), fill=(255, 255, 255, 255)), d.line((0, 8, 3, 8), fill=(255, 255, 255, 255)), d.line((12, 8, 15, 8), fill=(255, 255, 255, 255))))
+    npc = dot((110, 240, 140, 255), (40, 170, 90, 255))
+    hostile = dot((255, 90, 100, 255), (220, 40, 60, 255), lambda d: (d.line((8, 5, 8, 8), fill=(255, 255, 255, 255)), d.point((8, 10), fill=(255, 255, 255, 255))))
+    for i in ("player_male", "player_female"): out[i] = player
+    for i in ("npc_male", "npc_female"): out[i] = npc
+    out["overmap_npc_hostile"] = hostile
+    im, d = blank()
+    y = (255, 230, 60, 255)
+    for (x0, y0, dx, dy) in ((0, 0, 1, 1), (15, 0, -1, 1), (0, 15, 1, -1), (15, 15, -1, -1)):
+        d.line((x0, y0, x0 + 5 * dx, y0), fill=y, width=1); d.line((x0, y0, x0, y0 + 5 * dy), fill=y, width=1)
+        d.line((x0 + dx, y0 + dy, x0 + 5 * dx, y0 + dy), fill=y); d.line((x0 + dx, y0 + dy, x0 + dx, y0 + 5 * dy), fill=y)
+    out["cursor"] = im
+    im, d = blank(); d.rectangle((0, 0, S - 1, S - 1), fill=(255, 230, 60, 70), outline=(255, 230, 60, 255)); out["highlight"] = im
+    im, d = blank(); d.rectangle((0, 0, S - 1, S - 1), outline=(255, 80, 220, 255)); d.rectangle((2, 2, S - 3, S - 3), outline=(255, 80, 220, 255)); d.line((5, 5, 10, 10), fill=(255, 80, 220, 255)); d.line((10, 5, 5, 10), fill=(255, 80, 220, 255)); out["mission_cursor"] = im
+    for name, ang in (("e", 0), ("se", 45), ("s", 90), ("sw", 135), ("w", 180), ("nw", 225), ("n", 270), ("ne", 315)):
+        im, d = blank(); a = math.radians(ang); cx = cy = 7.5
+        tip = (cx + 7 * math.cos(a), cy + 7 * math.sin(a)); l = (cx + 4 * math.cos(a + 2.4), cy + 4 * math.sin(a + 2.4)); r = (cx + 4 * math.cos(a - 2.4), cy + 4 * math.sin(a - 2.4))
+        d.polygon([tip, l, r], fill=(255, 80, 220, 255), outline=(255, 255, 255, 255)); out["mission_arrow_" + name] = im
+    for name, pts in (("up", [(8, 1), (14, 9), (2, 9)]), ("down", [(8, 14), (14, 6), (2, 6)])):
+        im, d = blank(); d.polygon(pts, fill=(255, 80, 220, 255), outline=(255, 255, 255, 255)); out["mission_arrow_" + name] = im
+    im = Image.new("RGBA", (S, S), (28, 12, 40, 255)); ImageDraw.Draw(im).line((3, 3, 12, 12), fill=(255, 80, 220, 255)); ImageDraw.Draw(im).line((12, 3, 3, 12), fill=(255, 80, 220, 255))
+    out["unknown_terrain"] = im
+    im = Image.new("RGBA", (S, S), (18, 14, 30, 255)); out["unexplored_terrain"] = im
+    return out
+
+
 def main():
     types = {}
     visions = set()
@@ -234,6 +272,8 @@ def main():
         add_tiles = [{"id": k, "fg": [add(i) for i in ims] if len(ims) > 1 else add(ims[0])} for k, ims in v.items() if k != "unconnected"]
         add_tiles.append({"id": "unconnected", "fg": [add(i) for i in v["unconnected"]]})
         entries.append({"id": kind, "fg": add(v["unconnected"][0]), "multitile": True, "additional_tiles": add_tiles})
+    for mid, im in markers().items():
+        entries.append({"id": mid, "fg": add(im)})
     grey = Image.new("RGBA", (S, S), (24, 26, 42, 255)); ImageDraw.Draw(grey).rectangle((0, 0, S - 1, S - 1), outline=(60, 70, 110))
     dgrey = Image.new("RGBA", (S, S), (14, 16, 28, 255))
     for v in sorted(x for x in visions if x):

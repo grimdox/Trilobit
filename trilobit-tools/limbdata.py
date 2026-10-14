@@ -106,8 +106,8 @@ for part, rows in PLATE.items():
         lid = f"plate_{grp}_{w}"
         add(f"trl_imp_plate_{part}_{w}", f"{w.capitalize()} dermal plating ({PRETTY[part]})",
             f"Plates of ceramic and polymer under the skin of the {PRETTY[part]}: +{arm[3]} bullet armor and +{arm[0]} against blows and blades.  "
-            f"Uses {pts} of the {CAP[part]} points in the {PRETTY[part]}; only one plating fits per body part.",
-            [(part, pts)], price, 0.8, {}, [[part, prot4(arm)]], group=f"plate_{part}",
+            f"Dermal plating sits in the skin, so it uses no implant points; only one plating fits per body part.",
+            [(part, 0)], price, 0.8, {}, [[part, prot4(arm)]], group=f"plate_{part}",
             line=dict(id=lid, name=f"{w} dermal plating ({'torso' if part == 'torso' else 'head' if part == 'head' else grp + 's'})"))
 
 # ---------------------------------------------------------------- specialized implants

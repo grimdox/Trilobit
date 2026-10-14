@@ -10407,14 +10407,14 @@
       "math": [
        "u_trl_used_arm_l",
        "+=",
-       "3"
+       "0"
       ]
      },
      {
       "math": [
        "u_trl_qw_arm_l",
        "+=",
-       "2.4"
+       "0.0"
       ]
      }
     ]
@@ -10428,14 +10428,14 @@
       "math": [
        "u_trl_used_arm_l",
        "+=",
-       "2"
+       "0"
       ]
      },
      {
       "math": [
        "u_trl_qw_arm_l",
        "+=",
-       "1.6"
+       "0.0"
       ]
      }
     ]
@@ -10449,14 +10449,14 @@
       "math": [
        "u_trl_used_arm_r",
        "+=",
-       "3"
+       "0"
       ]
      },
      {
       "math": [
        "u_trl_qw_arm_r",
        "+=",
-       "2.4"
+       "0.0"
       ]
      }
     ]
@@ -10470,14 +10470,14 @@
       "math": [
        "u_trl_used_arm_r",
        "+=",
-       "2"
+       "0"
       ]
      },
      {
       "math": [
        "u_trl_qw_arm_r",
        "+=",
-       "1.6"
+       "0.0"
       ]
      }
     ]
@@ -10491,14 +10491,14 @@
       "math": [
        "u_trl_used_head",
        "+=",
-       "3"
+       "0"
       ]
      },
      {
       "math": [
        "u_trl_qw_head",
        "+=",
-       "2.4"
+       "0.0"
       ]
      }
     ]
@@ -10512,14 +10512,14 @@
       "math": [
        "u_trl_used_head",
        "+=",
-       "2"
+       "0"
       ]
      },
      {
       "math": [
        "u_trl_qw_head",
        "+=",
-       "1.6"
+       "0.0"
       ]
      }
     ]
@@ -10533,14 +10533,14 @@
       "math": [
        "u_trl_used_leg_l",
        "+=",
-       "5"
+       "0"
       ]
      },
      {
       "math": [
        "u_trl_qw_leg_l",
        "+=",
-       "4.0"
+       "0.0"
       ]
      }
     ]
@@ -10554,14 +10554,14 @@
       "math": [
        "u_trl_used_leg_l",
        "+=",
-       "3"
+       "0"
       ]
      },
      {
       "math": [
        "u_trl_qw_leg_l",
        "+=",
-       "2.4"
+       "0.0"
       ]
      }
     ]
@@ -10575,14 +10575,14 @@
       "math": [
        "u_trl_used_leg_r",
        "+=",
-       "5"
+       "0"
       ]
      },
      {
       "math": [
        "u_trl_qw_leg_r",
        "+=",
-       "4.0"
+       "0.0"
       ]
      }
     ]
@@ -10596,14 +10596,14 @@
       "math": [
        "u_trl_used_leg_r",
        "+=",
-       "3"
+       "0"
       ]
      },
      {
       "math": [
        "u_trl_qw_leg_r",
        "+=",
-       "2.4"
+       "0.0"
       ]
      }
     ]
@@ -10617,14 +10617,14 @@
       "math": [
        "u_trl_used_torso",
        "+=",
-       "8"
+       "0"
       ]
      },
      {
       "math": [
        "u_trl_qw_torso",
        "+=",
-       "6.4"
+       "0.0"
       ]
      }
     ]
@@ -10638,14 +10638,14 @@
       "math": [
        "u_trl_used_torso",
        "+=",
-       "4"
+       "0"
       ]
      },
      {
       "math": [
        "u_trl_qw_torso",
        "+=",
-       "3.2"
+       "0.0"
       ]
      }
     ]
@@ -13117,10 +13117,6 @@
          "=",
          "u_hp('head')"
         ]
-       },
-       {
-        "u_message": "Your head is fully cyberized: it no longer heals on its own.  Only an implant shop can repair it.",
-        "type": "info"
        }
       ],
       "else": [
@@ -13189,10 +13185,6 @@
          "=",
          "u_hp('torso')"
         ]
-       },
-       {
-        "u_message": "Your torso is fully cyberized: it no longer heals on its own.  Only an implant shop can repair it.",
-        "type": "info"
        }
       ],
       "else": [
@@ -13261,10 +13253,6 @@
          "=",
          "u_hp('arm_l')"
         ]
-       },
-       {
-        "u_message": "Your l arm is fully cyberized: it no longer heals on its own.  Only an implant shop can repair it.",
-        "type": "info"
        }
       ],
       "else": [
@@ -13333,10 +13321,6 @@
          "=",
          "u_hp('arm_r')"
         ]
-       },
-       {
-        "u_message": "Your r arm is fully cyberized: it no longer heals on its own.  Only an implant shop can repair it.",
-        "type": "info"
        }
       ],
       "else": [
@@ -13405,10 +13389,6 @@
          "=",
          "u_hp('leg_l')"
         ]
-       },
-       {
-        "u_message": "Your l leg is fully cyberized: it no longer heals on its own.  Only an implant shop can repair it.",
-        "type": "info"
        }
       ],
       "else": [
@@ -13477,10 +13457,6 @@
          "=",
          "u_hp('leg_r')"
         ]
-       },
-       {
-        "u_message": "Your r leg is fully cyberized: it no longer heals on its own.  Only an implant shop can repair it.",
-        "type": "info"
        }
       ],
       "else": [
