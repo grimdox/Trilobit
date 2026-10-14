@@ -245,6 +245,14 @@
    {
     "item": "trl_gun_vp9",
     "prob": 30
+   },
+   {
+    "item": "trl_gun_zp9",
+    "prob": 20
+   },
+   {
+    "item": "trl_gun_vr38",
+    "prob": 15
    }
   ]
  },
@@ -349,6 +357,18 @@
    {
     "item": "tec9",
     "prob": 40
+   },
+   {
+    "item": "trl_gun_zp19",
+    "prob": 25
+   },
+   {
+    "item": "trl_gun_vs45",
+    "prob": 20
+   },
+   {
+    "item": "trl_gun_zs20",
+    "prob": 15
    },
    {
     "item": "machete",
@@ -460,6 +480,14 @@
    {
     "item": "trl_gun_gr44",
     "prob": 40
+   },
+   {
+    "item": "trl_gun_sp45",
+    "prob": 15
+   },
+   {
+    "item": "trl_gun_zk15",
+    "prob": 10
    }
   ]
  },
@@ -1069,6 +1097,14 @@
     "prob": 60
    },
    {
+    "item": "trl_gun_hp40",
+    "prob": 15
+   },
+   {
+    "item": "trl_gun_hx9",
+    "prob": 20
+   },
+   {
     "item": "baton-extended",
     "prob": 40
    }
@@ -1167,7 +1203,15 @@
   "entries": [
    {
     "item": "trl_gun_hs12",
-    "prob": 60
+    "prob": 40
+   },
+   {
+    "item": "trl_gun_hs10",
+    "prob": 25
+   },
+   {
+    "item": "trl_gun_gs12",
+    "prob": 20
    },
    {
     "item": "baton-extended",
@@ -1276,6 +1320,22 @@
    {
     "item": "trl_gun_gs300",
     "prob": 30
+   },
+   {
+    "item": "trl_gun_ha5",
+    "prob": 25
+   },
+   {
+    "item": "trl_gun_sa14",
+    "prob": 15
+   },
+   {
+    "item": "trl_gun_sm9",
+    "prob": 15
+   },
+   {
+    "item": "trl_gun_sd7",
+    "prob": 6
    },
    {
     "item": "katana",
@@ -1915,6 +1975,14 @@
     "prob": 30
    },
    {
+    "item": "trl_gun_lp22",
+    "prob": 20
+   },
+   {
+    "item": "trl_gun_fp7",
+    "prob": 15
+   },
+   {
     "item": "knife_folding",
     "prob": 30
    }
@@ -2043,7 +2111,19 @@
    },
    {
     "item": "mac_10",
-    "prob": 40
+    "prob": 30
+   },
+   {
+    "item": "trl_gun_fs9",
+    "prob": 25
+   },
+   {
+    "item": "trl_gun_ls5",
+    "prob": 15
+   },
+   {
+    "item": "trl_gun_fs410",
+    "prob": 15
    }
   ]
  },

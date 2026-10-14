@@ -1,0 +1,1059 @@
+[
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_hx9",
+  "copy-from": "colt_ro635",
+  "looks_like": "colt_ro635",
+  "name": {
+   "str": "HX-9 Fuji"
+  },
+  "description": "A smooth, balanced 9mm submachine gun carried by city security.  Made by Hoshikawa Arms.",
+  "weight": "2600 g",
+  "price": "2600 USD",
+  "price_postapoc": "130 USD",
+  "relative": {
+   "dispersion": -15
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_sm9",
+  "copy-from": "TDI",
+  "looks_like": "TDI",
+  "name": {
+   "str": "SM-9 Kagero"
+  },
+  "description": "A vertical-magazine 9mm SMG with almost no felt recoil.  Made by Sakurada Precision.",
+  "weight": "2300 g",
+  "price": "3400 USD",
+  "price_postapoc": "170 USD",
+  "relative": {
+   "dispersion": -25
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_vs45",
+  "copy-from": "greasegun",
+  "looks_like": "greasegun",
+  "name": {
+   "str": "VS-45 Buran"
+  },
+  "description": "A crude, cheap .45 submachine gun that never seems to jam.  Made by Volkov Works.",
+  "weight": "3400 g",
+  "price": "900 USD",
+  "price_postapoc": "45 USD",
+  "relative": {
+   "dispersion": 10
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_zp19",
+  "copy-from": "mac_10",
+  "looks_like": "mac_10",
+  "name": {
+   "str": "ZP-19 Vikhr"
+  },
+  "description": "A short, loud, fast-firing SMG for room fights.  Made by Zarya Combine.",
+  "weight": "2000 g",
+  "price": "1200 USD",
+  "price_postapoc": "60 USD",
+  "relative": {
+   "dispersion": 25
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_gk7",
+  "copy-from": "tommygun",
+  "looks_like": "tommygun",
+  "name": {
+   "str": "GK-7 Grizzly"
+  },
+  "description": "A drum-fed .45 submachine gun with a heavy, steady hit.  Made by Granite Arms.",
+  "weight": "4300 g",
+  "price": "2800 USD",
+  "price_postapoc": "140 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_ls5",
+  "copy-from": "calico",
+  "looks_like": "calico",
+  "name": {
+   "str": "LS-5 Panda"
+  },
+  "description": "A high-capacity helical-magazine carbine, quiet and compact.  Made by Longhai Ordnance.",
+  "weight": "2300 g",
+  "price": "2200 USD",
+  "price_postapoc": "110 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_fs9",
+  "copy-from": "mac_11",
+  "looks_like": "mac_11",
+  "name": {
+   "str": "FS-9 Needle"
+  },
+  "description": "A tiny machine pistol that fits under a coat.  Made by Feng-Xu Arms.",
+  "weight": "1300 g",
+  "price": "1500 USD",
+  "price_postapoc": "75 USD",
+  "relative": {
+   "dispersion": 30
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_sp45",
+  "copy-from": "m1911_10",
+  "looks_like": "m1911_10",
+  "name": {
+   "str": "SP-45 Hayabusa"
+  },
+  "description": "A slim target-grade .45 with a crisp trigger.  Made by Sakurada Precision.",
+  "weight": "1000 g",
+  "price": "2400 USD",
+  "price_postapoc": "120 USD",
+  "relative": {
+   "dispersion": -20
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_zp9",
+  "copy-from": "makarov",
+  "looks_like": "makarov",
+  "name": {
+   "str": "ZP-9 Gnezdo"
+  },
+  "description": "A small, blunt 9mm pistol: ugly, reliable and everywhere in the slums.  Made by Zarya Combine.",
+  "weight": "700 g",
+  "price": "380 USD",
+  "price_postapoc": "19 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_fp7",
+  "copy-from": "ruger_57",
+  "looks_like": "ruger_57",
+  "name": {
+   "str": "FP-7 Lotus"
+  },
+  "description": "A slim 20-round pistol firing a small, fast, armor-piercing round.  Made by Feng-Xu Arms.",
+  "weight": "650 g",
+  "price": "1700 USD",
+  "price_postapoc": "85 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_hp40",
+  "copy-from": "sw_610",
+  "looks_like": "sw_610",
+  "name": {
+   "str": "HP-40 Sagi"
+  },
+  "description": "A six-shot revolver in 10mm with a short, quick-pointing barrel.  Made by Hoshikawa Arms.",
+  "weight": "1000 g",
+  "price": "1400 USD",
+  "price_postapoc": "70 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_gp10",
+  "copy-from": "modular_deagle",
+  "looks_like": "modular_deagle",
+  "name": {
+   "str": "GP-10 Mustang"
+  },
+  "description": "A huge gas-operated hand cannon.  It is as loud as it looks.  Made by Granite Arms.",
+  "weight": "1900 g",
+  "price": "3000 USD",
+  "price_postapoc": "150 USD",
+  "relative": {
+   "loudness": 10
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_lp22",
+  "copy-from": "sr22",
+  "looks_like": "sr22",
+  "name": {
+   "str": "LP-22 Sparrow"
+  },
+  "description": "A quiet little .22 target pistol that thieves like.  Made by Longhai Ordnance.",
+  "weight": "500 g",
+  "price": "300 USD",
+  "price_postapoc": "15 USD",
+  "relative": {
+   "loudness": -12
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_vr38",
+  "copy-from": "model_10_revolver",
+  "looks_like": "model_10_revolver",
+  "name": {
+   "str": "VR-38 Kolokol"
+  },
+  "description": "A plain six-shooter built to be dropped, kicked and fired again.  Made by Volkov Works.",
+  "weight": "900 g",
+  "price": "450 USD",
+  "price_postapoc": "22 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_sr44",
+  "copy-from": "colt_anaconda_6",
+  "looks_like": "colt_anaconda_6",
+  "name": {
+   "str": "SR-44 Okami"
+  },
+  "description": "A long-barrel .44 revolver for patient, accurate shots.  Made by Sakurada Precision.",
+  "weight": "1500 g",
+  "price": "2100 USD",
+  "price_postapoc": "105 USD",
+  "relative": {
+   "dispersion": -15
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_gr500",
+  "copy-from": "sw_500",
+  "looks_like": "sw_500",
+  "name": {
+   "str": "GR-500 Thunderhead"
+  },
+  "description": "A five-shot .500 revolver: slow, heavy and devastating.  Made by Granite Arms.",
+  "weight": "2100 g",
+  "price": "2900 USD",
+  "price_postapoc": "145 USD",
+  "relative": {
+   "loudness": 8
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_ha5",
+  "copy-from": "modular_m4_carbine",
+  "looks_like": "modular_m4_carbine",
+  "name": {
+   "str": "HA-5 Kaede"
+  },
+  "description": "A short, light carbine for patrols in corridors.  Made by Hoshikawa Arms.",
+  "weight": "2900 g",
+  "price": "3000 USD",
+  "price_postapoc": "150 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_sa14",
+  "copy-from": "modular_m16a4",
+  "looks_like": "modular_m16a4",
+  "name": {
+   "str": "SA-14 Zuiun"
+  },
+  "description": "A burst-fire rifle with a long barrel and fine sights.  Made by Sakurada Precision.",
+  "weight": "3400 g",
+  "price": "3500 USD",
+  "price_postapoc": "175 USD",
+  "relative": {
+   "dispersion": -15
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_vk74",
+  "copy-from": "ak74_semi",
+  "looks_like": "ak74_semi",
+  "name": {
+   "str": "VK-74 Granit"
+  },
+  "description": "A mid-weight semi-automatic rifle, tough and honest.  Made by Volkov Works.",
+  "weight": "3300 g",
+  "price": "1400 USD",
+  "price_postapoc": "70 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_zk15",
+  "copy-from": "kord",
+  "looks_like": "kord",
+  "name": {
+   "str": "ZK-15 Taiga"
+  },
+  "description": "A modernised AK-pattern rifle with a short tactical barrel.  Made by Zarya Combine.",
+  "weight": "3500 g",
+  "price": "2100 USD",
+  "price_postapoc": "105 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_ga10",
+  "copy-from": "ar10",
+  "looks_like": "ar10",
+  "name": {
+   "str": "GA-10 Ironwood"
+  },
+  "description": "A full-power battle rifle with a steel barrel.  Made by Granite Arms.",
+  "weight": "4200 g",
+  "price": "3300 USD",
+  "price_postapoc": "165 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_lk95",
+  "copy-from": "rdb_223",
+  "looks_like": "rdb_223",
+  "name": {
+   "str": "LK-95 Jade"
+  },
+  "description": "A light bullpup rifle with an ambidextrous receiver.  Made by Longhai Ordnance.",
+  "weight": "3200 g",
+  "price": "2500 USD",
+  "price_postapoc": "125 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_fk9",
+  "copy-from": "rfb_308",
+  "looks_like": "rfb_308",
+  "name": {
+   "str": "FK-9 Lantern"
+  },
+  "description": "A long-range bullpup rifle with a folding stock.  Made by Feng-Xu Arms.",
+  "weight": "3800 g",
+  "price": "3200 USD",
+  "price_postapoc": "160 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_gm14",
+  "copy-from": "m1a",
+  "looks_like": "m1a",
+  "name": {
+   "str": "GM-14 Patriot"
+  },
+  "description": "A blocky, accurate battle rifle that has seen three generations.  Made by Granite Arms.",
+  "weight": "4500 g",
+  "price": "3000 USD",
+  "price_postapoc": "150 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_vs44",
+  "copy-from": "sks",
+  "looks_like": "sks",
+  "name": {
+   "str": "VS-44 Kholod"
+  },
+  "description": "A simple, long semi-automatic carbine with a fixed magazine.  Made by Volkov Works.",
+  "weight": "3800 g",
+  "price": "700 USD",
+  "price_postapoc": "35 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_lc30",
+  "copy-from": "m1carbine",
+  "looks_like": "m1carbine",
+  "name": {
+   "str": "LC-30 Dragonfly"
+  },
+  "description": "A light carbine with a thin stock, easy to carry all day.  Made by Longhai Ordnance.",
+  "weight": "2400 g",
+  "price": "900 USD",
+  "price_postapoc": "45 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_hs10",
+  "copy-from": "mossberg_930",
+  "looks_like": "mossberg_930",
+  "name": {
+   "str": "HS-10 Raiden"
+  },
+  "description": "A semi-automatic shotgun with a quick follow-up shot.  Made by Hoshikawa Arms.",
+  "weight": "3600 g",
+  "price": "1400 USD",
+  "price_postapoc": "70 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_zs20",
+  "copy-from": "saiga_12",
+  "looks_like": "saiga_12",
+  "name": {
+   "str": "ZS-20 Kabanchik"
+  },
+  "description": "A boxy semi-automatic with a big detachable magazine.  Made by Zarya Combine.",
+  "weight": "3800 g",
+  "price": "1100 USD",
+  "price_postapoc": "55 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_gs12",
+  "copy-from": "remington_870_express",
+  "looks_like": "remington_870_express",
+  "name": {
+   "str": "GS-12 Warden"
+  },
+  "description": "A riot shotgun with a long magazine tube.  Made by Granite Arms.",
+  "weight": "3500 g",
+  "price": "1100 USD",
+  "price_postapoc": "55 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_ls12",
+  "copy-from": "ksg",
+  "looks_like": "ksg",
+  "name": {
+   "str": "LS-12 Pagoda"
+  },
+  "description": "A compact twin-tube pump that holds a lot of shells.  Made by Longhai Ordnance.",
+  "weight": "3100 g",
+  "price": "1700 USD",
+  "price_postapoc": "85 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_ss12",
+  "copy-from": "m26_mass",
+  "looks_like": "m26_mass",
+  "name": {
+   "str": "SS-12 Tsubame"
+  },
+  "description": "A clip-on and standalone door-breaker shotgun.  Made by Sakurada Precision.",
+  "weight": "2500 g",
+  "price": "1600 USD",
+  "price_postapoc": "80 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_fs410",
+  "copy-from": "bond_410",
+  "looks_like": "bond_410",
+  "name": {
+   "str": "FS-410 Quail"
+  },
+  "description": "A two-barrel pocket shotgun for close, ugly encounters.  Made by Feng-Xu Arms.",
+  "weight": "600 g",
+  "price": "500 USD",
+  "price_postapoc": "25 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_sd7",
+  "copy-from": "m14ebr",
+  "looks_like": "m14ebr",
+  "name": {
+   "str": "SD-7 Kiri"
+  },
+  "description": "A scoped semi-automatic marksman rifle.  Made by Sakurada Precision.",
+  "weight": "5000 g",
+  "price": "4800 USD",
+  "price_postapoc": "240 USD",
+  "relative": {
+   "dispersion": -20
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_vd62",
+  "copy-from": "mosin91_30",
+  "looks_like": "mosin91_30",
+  "name": {
+   "str": "VD-62 Ruchey"
+  },
+  "description": "An ancient bolt-action rifle with a modern scope: still deadly.  Made by Volkov Works.",
+  "weight": "4200 g",
+  "price": "900 USD",
+  "price_postapoc": "45 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_zd54",
+  "copy-from": "tac50",
+  "looks_like": "tac50",
+  "name": {
+   "str": "ZD-54 Filin"
+  },
+  "description": "A heavy bolt-action rifle that shoots a huge round very far.  Made by Zarya Combine.",
+  "weight": "11000 g",
+  "price": "9000 USD",
+  "price_postapoc": "450 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_fd338",
+  "copy-from": "mrad_smr",
+  "looks_like": "mrad_smr",
+  "name": {
+   "str": "FD-338 Heron"
+  },
+  "description": "A folding precision rifle with a thick, damped barrel.  Made by Feng-Xu Arms.",
+  "weight": "6100 g",
+  "price": "7000 USD",
+  "price_postapoc": "350 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_hd308",
+  "copy-from": "remington_700_308",
+  "looks_like": "remington_700_308",
+  "name": {
+   "str": "HD-308 Tanuki"
+  },
+  "description": "A dependable bolt-action hunting rifle set up for the city.  Made by Hoshikawa Arms.",
+  "weight": "4300 g",
+  "price": "1800 USD",
+  "price_postapoc": "90 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_gd300",
+  "copy-from": "ruger_pr",
+  "looks_like": "ruger_pr",
+  "name": {
+   "str": "GD-300 Longshot"
+  },
+  "description": "A chassis rifle with a hand-lapped barrel.  Made by Granite Arms.",
+  "weight": "5700 g",
+  "price": "3800 USD",
+  "price_postapoc": "190 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_ld10",
+  "copy-from": "m2010",
+  "looks_like": "m2010",
+  "name": {
+   "str": "LD-10 Pale Horse"
+  },
+  "description": "A long-range magnum rifle with an integral suppressor.  Made by Longhai Ordnance.",
+  "weight": "6000 g",
+  "price": "6400 USD",
+  "price_postapoc": "320 USD",
+  "relative": {
+   "loudness": -10
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_vm12",
+  "copy-from": "m2browning",
+  "looks_like": "m2browning",
+  "name": {
+   "str": "VM-12 Tundra"
+  },
+  "description": "A tripod-mounted heavy machine gun.  It needs a strong back or a vehicle.  Made by Volkov Works.",
+  "weight": "38000 g",
+  "price": "12000 USD",
+  "price_postapoc": "600 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_zm74",
+  "copy-from": "m60_semi",
+  "looks_like": "m60_semi",
+  "name": {
+   "str": "ZM-74 Rokot"
+  },
+  "description": "A semi-auto belt-fed support gun for patient shooters.  Made by Zarya Combine.",
+  "weight": "9500 g",
+  "price": "4500 USD",
+  "price_postapoc": "225 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_gm134",
+  "copy-from": "m134",
+  "looks_like": "m134",
+  "name": {
+   "str": "GM-134 Hornet"
+  },
+  "description": "A six-barrel minigun on a harness.  Do not run out of ammunition.  Made by Granite Arms.",
+  "weight": "19000 g",
+  "price": "28000 USD",
+  "price_postapoc": "1400 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_hm5",
+  "copy-from": "m60",
+  "looks_like": "m60",
+  "name": {
+   "str": "HM-5 Kujira"
+  },
+  "description": "A heavy belt-fed machine gun with a quick-change barrel.  Made by Hoshikawa Arms.",
+  "weight": "9800 g",
+  "price": "4800 USD",
+  "price_postapoc": "240 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_lm7",
+  "copy-from": "m1918",
+  "looks_like": "m1918",
+  "name": {
+   "str": "LM-7 Tiger"
+  },
+  "description": "An automatic battle rifle with a bipod, good for suppressing fire.  Made by Longhai Ordnance.",
+  "weight": "8800 g",
+  "price": "3600 USD",
+  "price_postapoc": "180 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_gl40",
+  "copy-from": "m79",
+  "looks_like": "m79",
+  "name": {
+   "str": "GL-40 Pumpkin"
+  },
+  "description": "A break-open single-shot grenade launcher.  Made by Granite Arms.",
+  "weight": "2700 g",
+  "price": "2400 USD",
+  "price_postapoc": "120 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_zl40",
+  "copy-from": "m203",
+  "looks_like": "m203",
+  "name": {
+   "str": "ZL-40 Gvozd"
+  },
+  "description": "A grenade launcher that clips under a rifle.  Made by Zarya Combine.",
+  "weight": "1600 g",
+  "price": "2000 USD",
+  "price_postapoc": "100 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_fl80",
+  "copy-from": "m202_flash",
+  "looks_like": "m202_flash",
+  "name": {
+   "str": "FL-80 Cloud"
+  },
+  "description": "A four-tube rocket launcher that fills a street with fire.  Made by Feng-Xu Arms.",
+  "weight": "6500 g",
+  "price": "8000 USD",
+  "price_postapoc": "400 USD"
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_he3",
+  "copy-from": "laser_rifle",
+  "looks_like": "laser_rifle",
+  "name": {
+   "str": "HE-3 Kitsune"
+  },
+  "description": "A silent laser pistol with a rotating heat sink.  Made by Hoshikawa Arms.",
+  "weight": "1000 g",
+  "price": "5500 USD",
+  "price_postapoc": "275 USD",
+  "relative": {
+   "range": -4
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_se9",
+  "copy-from": "laser_rifle",
+  "looks_like": "laser_rifle",
+  "name": {
+   "str": "SE-9 Prism"
+  },
+  "description": "A mid-range laser carbine with a precise cooling jacket.  Made by Sakurada Precision.",
+  "weight": "2600 g",
+  "price": "8000 USD",
+  "price_postapoc": "400 USD",
+  "relative": {
+   "range": 6
+  }
+ },
+ {
+  "type": "ITEM",
+  "subtypes": [
+   "GUN"
+  ],
+  "id": "trl_gun_fe7",
+  "copy-from": "laser_rifle",
+  "looks_like": "laser_rifle",
+  "name": {
+   "str": "FE-7 Needle Beam"
+  },
+  "description": "A thin-beam laser rifle for long, patient shots.  Made by Feng-Xu Arms.",
+  "weight": "3400 g",
+  "price": "12000 USD",
+  "price_postapoc": "600 USD",
+  "relative": {
+   "range": 22
+  }
+ },
+ {
+  "type": "item_group",
+  "id": "trl_loot_guns",
+  "subtype": "distribution",
+  "extend": {
+   "entries": [
+    {
+     "item": "trl_gun_hx9",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_sm9",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_vs45",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_zp19",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_gk7",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_ls5",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_fs9",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_sp45",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_zp9",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_fp7",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_hp40",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_gp10",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_lp22",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_vr38",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_sr44",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_gr500",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_ha5",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_sa14",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_vk74",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_zk15",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_ga10",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_lk95",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_fk9",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_gm14",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_vs44",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_lc30",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_hs10",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_zs20",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_gs12",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_ls12",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_ss12",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_fs410",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_sd7",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_vd62",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_zd54",
+     "prob": 1
+    },
+    {
+     "item": "trl_gun_fd338",
+     "prob": 1
+    },
+    {
+     "item": "trl_gun_hd308",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_gd300",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_ld10",
+     "prob": 1
+    },
+    {
+     "item": "trl_gun_vm12",
+     "prob": 1
+    },
+    {
+     "item": "trl_gun_zm74",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_gm134",
+     "prob": 1
+    },
+    {
+     "item": "trl_gun_hm5",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_lm7",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_gl40",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_zl40",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_fl80",
+     "prob": 1
+    },
+    {
+     "item": "trl_gun_he3",
+     "prob": 6
+    },
+    {
+     "item": "trl_gun_se9",
+     "prob": 1
+    },
+    {
+     "item": "trl_gun_fe7",
+     "prob": 1
+    }
+   ]
+  }
+ }
+]

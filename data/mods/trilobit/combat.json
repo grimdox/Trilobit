@@ -7,9 +7,9 @@
     "id": "trl_pistol",
     "copy-from": "usp_9mm",
     "name": {
-      "str": "Trilobit sidearm"
+      "str": "HP-8 Shinobi"
     },
-    "description": "A heavy-framed 9mm service pistol with a tuned barrel.  Hits much harder than it should.",
+    "description": "A heavy-framed 9mm service pistol with a tuned barrel.  Hits much harder than it should.  Made by Hoshikawa Arms.",
     "ranged_damage": {
       "damage_type": "bullet",
       "amount": 8
@@ -24,9 +24,9 @@
     "id": "trl_smg",
     "copy-from": "hk_mp5",
     "name": {
-      "str": "Trilobit SMG"
+      "str": "SM-5 Kagura"
     },
-    "description": "A compact 9mm submachine gun with a ported barrel and stabilised frame.",
+    "description": "A compact 9mm submachine gun with a ported barrel and stabilised frame.  Made by Sakurada Precision.",
     "ranged_damage": {
       "damage_type": "bullet",
       "amount": 6
@@ -41,9 +41,9 @@
     "id": "trl_rifle",
     "copy-from": "sig_assault_rifle",
     "name": {
-      "str": "Trilobit rifle"
+      "str": "GA-4 Marshal"
     },
-    "description": "A 5.56 battle rifle with a match barrel.  Punches through armor.",
+    "description": "A 5.56 battle rifle with a match barrel.  Punches through armor.  Made by Granite Arms.",
     "dispersion": 70,
     "ranged_damage": {
       "damage_type": "bullet",

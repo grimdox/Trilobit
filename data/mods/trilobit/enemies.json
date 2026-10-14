@@ -261,11 +261,11 @@
       "223"
     ],
     "name": {
-      "str": "soldier's rifle",
+      "str": "GA-4S Garrison",
       "//~": "NO_I18N"
     },
     "description": {
-      "str": "The rifle carried by soldier enemies.",
+      "str": "The service rifle carried by soldier enemies.  Made by Granite Arms.",
       "//~": "NO_I18N"
     },
     "dispersion": 450,

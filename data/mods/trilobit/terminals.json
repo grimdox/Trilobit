@@ -2332,6 +2332,46 @@
       {
         "item": "trl_arrow_ap",
         "count": 30
+      },
+      {
+        "item": "trl_gun_zp9",
+        "count": 4
+      },
+      {
+        "item": "trl_gun_vr38",
+        "count": 3
+      },
+      {
+        "item": "trl_gun_lp22",
+        "count": 3
+      },
+      {
+        "item": "trl_gun_hx9",
+        "count": 2
+      },
+      {
+        "item": "trl_gun_sp45",
+        "count": 2
+      },
+      {
+        "item": "trl_gun_vs44",
+        "count": 2
+      },
+      {
+        "item": "trl_gun_vk74",
+        "count": 2
+      },
+      {
+        "item": "trl_gun_gs12",
+        "count": 2
+      },
+      {
+        "item": "trl_gun_hd308",
+        "count": 1
+      },
+      {
+        "item": "trl_gun_gl40",
+        "count": 1
       }
     ]
   },
@@ -2426,6 +2466,56 @@
       {
         "item": "trl_arrow_ap",
         "price": 3500,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_gun_zp9",
+        "price": 38000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_gun_vr38",
+        "price": 45000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_gun_lp22",
+        "price": 30000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_gun_hx9",
+        "price": 260000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_gun_sp45",
+        "price": 240000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_gun_vs44",
+        "price": 70000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_gun_vk74",
+        "price": 140000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_gun_gs12",
+        "price": 110000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_gun_hd308",
+        "price": 180000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_gun_gl40",
+        "price": 240000,
         "fixed_adj": 0
       },
       {

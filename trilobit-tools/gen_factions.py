@@ -13,18 +13,18 @@ ENEMIES = {"trl_bratva": ["trl_nap", "trl_nasim"], "trl_nap": ["trl_bratva", "tr
 # (class id suffix, title, worn[], weapons[(item, prob)], carry extras, skills)
 MEMBERS = {
     "trl_bratva": [
-        ("thug", "Street thug", ["jacket_leather", "jeans", "boots_hiking", "tshirt"], [("pipe", 30), ("trl_kama", 15), ("knife_combat", 25), ("trl_gun_vp9", 30)], {"melee": 3, "pistol": 2}),
-        ("enforcer", "Enforcer", ["trenchcoat_leather", "ballistic_vest_light", "pants_cargo", "boots_combat", "gloves_light"], [("trl_gun_va7", 40), ("tec9", 40), ("machete", 20)], {"smg": 4, "melee": 3}),
-        ("fixer", "Fixer", ["suit", "tie_necktie", "dress_shoes", "trenchcoat"], [("trl_gun_gr44", 40)], {"speech": 6, "pistol": 3}),
+        ("thug", "Street thug", ["jacket_leather", "jeans", "boots_hiking", "tshirt"], [("pipe", 30), ("trl_kama", 15), ("knife_combat", 25), ("trl_gun_vp9", 30), ("trl_gun_zp9", 20), ("trl_gun_vr38", 15)], {"melee": 3, "pistol": 2}),
+        ("enforcer", "Enforcer", ["trenchcoat_leather", "ballistic_vest_light", "pants_cargo", "boots_combat", "gloves_light"], [("trl_gun_va7", 40), ("tec9", 40), ("trl_gun_zp19", 25), ("trl_gun_vs45", 20), ("trl_gun_zs20", 15), ("machete", 20)], {"smg": 4, "melee": 3}),
+        ("fixer", "Fixer", ["suit", "tie_necktie", "dress_shoes", "trenchcoat"], [("trl_gun_gr44", 40), ("trl_gun_sp45", 15), ("trl_gun_zk15", 10)], {"speech": 6, "pistol": 3}),
     ],
     "trl_nap": [
-        ("patrol", "Patrol officer", ["leather_police_jacket", "pants_cargo", "boots_combat", "ballistic_vest_light"], [("trl_gun_hp9", 60), ("baton-extended", 40)], {"pistol": 3, "melee": 2}),
-        ("riot", "Riot trooper", ["armor_riot", "helmet_riot", "boots_combat", "gloves_light"], [("trl_gun_hs12", 60), ("baton-extended", 40)], {"shotgun": 4, "melee": 3}),
-        ("tactical", "Tactical operator", ["trl_kp_vest", "trl_kp_helmet", "pants_army", "boots_combat", "gloves_light"], [("trl_gun_ga5", 50), ("trl_gun_gs300", 30), ("katana", 20), ("trl_gun_w2011", 4)], {"smg": 6, "rifle": 5, "melee": 4}),
+        ("patrol", "Patrol officer", ["leather_police_jacket", "pants_cargo", "boots_combat", "ballistic_vest_light"], [("trl_gun_hp9", 60), ("trl_gun_hp40", 15), ("trl_gun_hx9", 20), ("baton-extended", 40)], {"pistol": 3, "melee": 2}),
+        ("riot", "Riot trooper", ["armor_riot", "helmet_riot", "boots_combat", "gloves_light"], [("trl_gun_hs12", 40), ("trl_gun_hs10", 25), ("trl_gun_gs12", 20), ("baton-extended", 40)], {"shotgun": 4, "melee": 3}),
+        ("tactical", "Tactical operator", ["trl_kp_vest", "trl_kp_helmet", "pants_army", "boots_combat", "gloves_light"], [("trl_gun_ga5", 50), ("trl_gun_gs300", 30), ("trl_gun_ha5", 25), ("trl_gun_sa14", 15), ("trl_gun_sm9", 15), ("trl_gun_sd7", 6), ("katana", 20), ("trl_gun_w2011", 4)], {"smg": 6, "rifle": 5, "melee": 4}),
     ],
     "trl_nasim": [
-        ("hacker", "Script-hacker", ["hoodie", "jeans", "sneakers", "gloves_light"], [("trl_gun_lp5", 30), ("knife_folding", 30)], {"computer": 7, "electronics": 5, "pistol": 2}),
-        ("saboteur", "Saboteur", ["jacket_windbreaker", "pants_cargo", "boots_rubber", "mask_dust"], [("grenade", 40), ("mac_10", 40)], {"traps": 5, "launcher": 2, "pistol": 3}),
+        ("hacker", "Script-hacker", ["hoodie", "jeans", "sneakers", "gloves_light"], [("trl_gun_lp5", 30), ("trl_gun_lp22", 20), ("trl_gun_fp7", 15), ("knife_folding", 30)], {"computer": 7, "electronics": 5, "pistol": 2}),
+        ("saboteur", "Saboteur", ["jacket_windbreaker", "pants_cargo", "boots_rubber", "mask_dust"], [("grenade", 40), ("mac_10", 30), ("trl_gun_fs9", 25), ("trl_gun_ls5", 15), ("trl_gun_fs410", 15)], {"traps": 5, "launcher": 2, "pistol": 3}),
         ("zealot", "Zealot", ["jumpsuit", "trenchcoat", "boots_combat"], [("katana", 40), ("tanto", 20), ("machete", 20), ("trl_kusarigama", 20)], {"melee": 7, "cutting": 6, "dodge": 4}),
     ],
 }

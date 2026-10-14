@@ -18,12 +18,7 @@ J_yen = [{
     "weight": "1 g", "volume": "1 ml", "color": "light_gray", "symbol": "$",
     "material": ["aluminum"]
 }]
-import re
-def fix(o):
-    if isinstance(o, str): return re.sub(r'([.!?:]) (?=[A-Z"])', r'\1  ', o)
-    if isinstance(o, list): return [fix(x) for x in o]
-    if isinstance(o, dict): return {k: fix(v) for k, v in o.items()}
-    return o
+from common import two_space as fix
 json.dump(fix(J_yen), open(out + "/yen.json", "w"), indent=2)
 
 # ---------------------------------------------------------------- NPC gear (Runner class, used by the terminal jobs)
