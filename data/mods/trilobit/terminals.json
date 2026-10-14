@@ -2372,6 +2372,18 @@
       {
         "item": "trl_gun_gl40",
         "count": 1
+      },
+      {
+        "item": "trl_bratva_coat",
+        "count": 2
+      },
+      {
+        "item": "trl_nap_jacket",
+        "count": 2
+      },
+      {
+        "item": "trl_nasim_hoodie",
+        "count": 2
       }
     ]
   },
@@ -2516,6 +2528,21 @@
       {
         "item": "trl_gun_gl40",
         "price": 240000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_bratva_coat",
+        "price": 60000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_nap_jacket",
+        "price": 90000,
+        "fixed_adj": 0
+      },
+      {
+        "item": "trl_nasim_hoodie",
+        "price": 40000,
         "fixed_adj": 0
       },
       {

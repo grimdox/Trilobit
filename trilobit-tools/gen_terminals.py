@@ -197,7 +197,8 @@ add({"type": "faction", "id": "trl_terminal", "name": "Vending Terminal", "descr
 NEWSTOCK = [("trl_gun_hp9", 3, 900), ("trl_gun_vp9", 3, 450), ("trl_gun_hs12", 2, 1200), ("trl_gun_va7", 2, 1800), ("trl_kama", 4, 120),
             ("trl_yari", 2, 260), ("trl_nunchaku", 3, 70), ("katana", 2, 1500), ("trl_shuriken_4", 20, 8), ("trl_yumi", 2, 700), ("trl_arrow_ap", 30, 35),
             ("trl_gun_zp9", 4, 380), ("trl_gun_vr38", 3, 450), ("trl_gun_lp22", 3, 300), ("trl_gun_hx9", 2, 2600), ("trl_gun_sp45", 2, 2400),
-            ("trl_gun_vs44", 2, 700), ("trl_gun_vk74", 2, 1400), ("trl_gun_gs12", 2, 1100), ("trl_gun_hd308", 1, 1800), ("trl_gun_gl40", 1, 2400)]
+            ("trl_gun_vs44", 2, 700), ("trl_gun_vk74", 2, 1400), ("trl_gun_gs12", 2, 1100), ("trl_gun_hd308", 1, 1800), ("trl_gun_gl40", 1, 2400),
+            ("trl_bratva_coat", 2, 600), ("trl_nap_jacket", 2, 900), ("trl_nasim_hoodie", 2, 400)]
 add({"type": "item_group", "id": "trl_shop_stock", "subtype": "collection",
      "entries": [{"item": "9mm", "charges": 500}, {"item": "hat_hard", "count": 10}, {"item": "m1911", "count": 5}] + [{"item": i, "count": n} for i, n, _ in NEWSTOCK]})
 add({"type": "item_group", "id": "trl_shop_none", "subtype": "collection", "entries": []})

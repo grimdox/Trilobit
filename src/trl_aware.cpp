@@ -86,6 +86,72 @@ void note_post( const Creature &c, entry &e )
     }
 }
 
+// F3: a creature that starts hunting shouts; same-faction aware monsters within 14 tiles come to look.
+void raise_alarm( Creature &c, const tripoint_abs_ms &src )
+{
+    monster *me = c.as_monster();
+    if( me == nullptr ) {
+        return;
+    }
+    int shouted = 0;
+    for( monster &o : g->all_monsters() ) {
+        if( &o == me || !( o.faction == me->faction ) || o.friendly != 0 || !enabled( o ) ) {
+            continue;
+        }
+        if( rl_dist( o.pos_abs(), me->pos_abs() ) > 14 ) {
+            continue;
+        }
+        entry &oe = get( o );
+        if( oe.st == HUNTING ) {
+            continue;
+        }
+        note_post( o, oe );
+        oe.last_pos = src;
+        oe.meter = std::max( oe.meter, 70 );
+        oe.reached = false;
+        oe.spot.reset();
+        oe.st = SUSPICIOUS;
+        o.trl_face_toward( src );
+        ++shouted;
+    }
+    if( shouted > 0 ) {
+        say( c, m_warning, _( "%s shouts an alarm!" ) );
+    }
+}
+
+// F8: wearing a faction's uniform makes that faction's guards slow to notice you unless you are close.
+bool disguised( const Creature &c, const Creature &pl )
+{
+    const Character *pc = pl.as_character();
+    if( pc == nullptr ) {
+        return false;
+    }
+    static const flag_id f_bratva( "TRL_DISGUISE_BRATVA" );
+    static const flag_id f_nap( "TRL_DISGUISE_NAP" );
+    static const flag_id f_nasim( "TRL_DISGUISE_NASIM" );
+    std::string fac;
+    if( const monster *m = c.as_monster() ) {
+        const std::string t = m->type->id.str();
+        fac = t == "mon_trl_thug" ? "bratva" : ( t == "mon_trl_soldier" || t == "mon_trl_sniper" ) ? "nap" : "";
+    } else if( const npc *n = c.as_npc() ) {
+        const faction *f = n->get_faction();
+        if( f != nullptr && f->id.str().rfind( "trl_", 0 ) == 0 ) {
+            fac = f->id.str().substr( 4 );
+        }
+    }
+    if( fac == "bratva" ) {
+        return pc->worn_with_flag( f_bratva );
+    }
+    if( fac == "nap" ) {
+        return pc->worn_with_flag( f_nap );
+    }
+    if( fac == "nasim" ) {
+        return pc->worn_with_flag( f_nasim );
+    }
+    return false;
+}
+
+
 point rot( const point &f, int k )
 {
     static const point ring[8] = { { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 }, { -1, -1 } };
@@ -251,10 +317,17 @@ bool gate( Creature &c, const Creature &player, bool raw )
         if( e.st != UNAWARE ) {
             gain *= 1.5f;
         }
+        const bool in_disguise = dist >= 3 && disguised( c, player );
+        if( in_disguise ) {
+            gain *= 0.1f;
+        }
         if( dist <= 1 ) {
             gain = 100.0f;
         }
         e.meter = std::min( 100, e.meter + std::max( 1, static_cast<int>( gain ) ) );
+        if( in_disguise ) {
+            e.meter = std::min( e.meter, 60 );
+        }
         e.last_pos = ppos;
         if( e.meter >= 100 ) {
             e.st = HUNTING;
@@ -279,6 +352,7 @@ bool gate( Creature &c, const Creature &player, bool raw )
     if( e.st != prev ) {
         if( e.st == HUNTING ) {
             say( c, m_bad, _( "%s spots you!" ) );
+            raise_alarm( c, ppos );
         } else if( e.st == SUSPICIOUS && prev != HUNTING ) {
             say( c, m_warning, _( "%s notices something." ) );
         } else if( e.st == SEARCHING && prev == HUNTING ) {
@@ -335,6 +409,15 @@ void alerted( Creature &c, const tripoint_abs_ms &src )
         e.st = HUNTING;
         c.trl_face_toward( src );
         say( c, m_bad, _( "%s is on to you!" ) );
+        raise_alarm( c, src );
+    }
+    // F12: badly hurt fighters break and run (the stock flee logic runs on morale)
+    if( monster *m = c.as_monster() ) {
+        if( m->get_hp() * 4 < m->get_hp_max() && m->morale >= 0 && !m->has_flag( mon_flag_id( "IMMOBILE" ) ) ) {
+            m->morale = -40;
+            m->anger = 0;
+            say( c, m_good, _( "%s breaks and runs!" ) );
+        }
     }
 }
 
