@@ -17,7 +17,6 @@ on:
       - 'gfx/Mokuhanga_TopDown/**'
       - 'gfx/Bouma_Overmap/**'
       - 'gfx/Mokuhanga_Overmap/**'
-      - 'data/sound/**'
 
 permissions:
   contents: write
@@ -36,7 +35,6 @@ jobs:
           cp -r gfx/Bouma out/trilobit/gfx/
           cp -r gfx/Mokuhanga out/trilobit/gfx/
           for d in Bouma_TopDown Mokuhanga_TopDown Bouma_Overmap Mokuhanga_Overmap; do cp -r gfx/$d out/trilobit/gfx/; done
-          mkdir -p out/trilobit/data/sound && cp -r data/sound/Basic out/trilobit/data/sound/
           echo "Built from commit $GITHUB_SHA" > out/trilobit/MOD_VERSION.txt
           cd out && zip -qr ../trilobit-mod.zip trilobit
           ls -la ../trilobit-mod.zip
