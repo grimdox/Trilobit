@@ -326,6 +326,18 @@
      "x": 20,
      "y": 22
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 5,
+     "y": 16
+    },
+    {
+     "monster": "mon_trl_res_poor_scrapper",
+     "x": 20,
+     "y": 17
+    }
    ]
   }
  },
@@ -726,6 +738,18 @@
      "x": 17,
      "y": 20
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_street_vendor",
+     "x": 7,
+     "y": 17
+    },
+    {
+     "monster": "mon_trl_res_poor_day_laborer",
+     "x": 18,
+     "y": 17
+    }
    ]
   }
  },
@@ -1036,6 +1060,13 @@
      ],
      "x": 22,
      "y": 5
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_day_laborer",
+     "x": 13,
+     "y": 13
     }
    ]
   }
@@ -1364,6 +1395,13 @@
      ],
      "x": 13,
      "y": 17
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 15,
+     "y": 14
     }
    ]
   }
@@ -1709,6 +1747,13 @@
      ],
      "x": 4,
      "y": 20
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_day_laborer",
+     "x": 13,
+     "y": 15
     }
    ]
   }
@@ -2117,6 +2162,18 @@
      "x": 10,
      "y": 13
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 6,
+     "y": 15
+    },
+    {
+     "monster": "mon_trl_res_poor_dishwasher",
+     "x": 20,
+     "y": 15
+    }
    ]
   }
  },
@@ -2503,6 +2560,18 @@
      "x": 21,
      "y": 6
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 6,
+     "y": 16
+    },
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 19,
+     "y": 17
+    }
    ]
   }
  },
@@ -2852,6 +2921,13 @@
      ],
      "x": 2,
      "y": 19
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_dishwasher",
+     "x": 17,
+     "y": 14
     }
    ]
   }
@@ -3233,6 +3309,13 @@
      "x": 15,
      "y": 22
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_scrapper",
+     "x": 18,
+     "y": 12
+    }
    ]
   }
  },
@@ -3562,6 +3645,13 @@
      ],
      "x": 16,
      "y": 5
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_day_laborer",
+     "x": 10,
+     "y": 16
     }
    ]
   }
@@ -3965,6 +4055,18 @@
      "x": 12,
      "y": 5
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_day_laborer",
+     "x": 6,
+     "y": 15
+    },
+    {
+     "monster": "mon_trl_res_poor_dishwasher",
+     "x": 19,
+     "y": 15
+    }
    ]
   }
  },
@@ -4352,6 +4454,18 @@
      "x": 22,
      "y": 22
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_scrapper",
+     "x": 5,
+     "y": 18
+    },
+    {
+     "monster": "mon_trl_res_poor_scrapper",
+     "x": 18,
+     "y": 15
+    }
    ]
   }
  },
@@ -4727,6 +4841,13 @@
      "x": 22,
      "y": 21
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 6,
+     "y": 15
+    }
    ]
   }
  },
@@ -5041,6 +5162,13 @@
      ],
      "x": 20,
      "y": 12
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 17,
+     "y": 15
     }
    ]
   }
@@ -5406,6 +5534,13 @@
      ],
      "x": 19,
      "y": 15
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_day_laborer",
+     "x": 15,
+     "y": 14
     }
    ]
   }
@@ -5799,6 +5934,18 @@
      "x": 8,
      "y": 2
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 4,
+     "y": 16
+    },
+    {
+     "monster": "mon_trl_res_poor_scrapper",
+     "x": 18,
+     "y": 16
+    }
    ]
   }
  },
@@ -6144,6 +6291,18 @@
      "x": 6,
      "y": 3
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_dishwasher",
+     "x": 7,
+     "y": 16
+    },
+    {
+     "monster": "mon_trl_res_poor_day_laborer",
+     "x": 19,
+     "y": 17
+    }
    ]
   }
  },
@@ -6438,6 +6597,13 @@
      ],
      "x": 22,
      "y": 9
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 6,
+     "y": 14
     }
    ]
   }
@@ -6736,6 +6902,13 @@
      ],
      "x": 3,
      "y": 14
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 18,
+     "y": 13
     }
    ]
   }
@@ -7090,6 +7263,13 @@
      ],
      "x": 10,
      "y": 11
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 14,
+     "y": 16
     }
    ]
   }
@@ -7472,6 +7652,18 @@
      "x": 11,
      "y": 13
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_scrapper",
+     "x": 6,
+     "y": 17
+    },
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 20,
+     "y": 16
+    }
    ]
   }
  },
@@ -7844,6 +8036,18 @@
      "x": 22,
      "y": 14
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 5,
+     "y": 17
+    },
+    {
+     "monster": "mon_trl_res_poor_street_vendor",
+     "x": 17,
+     "y": 15
+    }
    ]
   }
  },
@@ -8170,6 +8374,13 @@
      "x": 3,
      "y": 22
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_dishwasher",
+     "x": 7,
+     "y": 15
+    }
    ]
   }
  },
@@ -8490,6 +8701,13 @@
      "x": 1,
      "y": 11
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 12,
+     "y": 15
+    }
    ]
   }
  },
@@ -8802,6 +9020,13 @@
       ]
      ],
      "x": 21,
+     "y": 14
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 16,
      "y": 14
     }
    ]
@@ -9174,6 +9399,18 @@
      "x": 14,
      "y": 7
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_street_vendor",
+     "x": 3,
+     "y": 17
+    },
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 16,
+     "y": 12
+    }
    ]
   }
  },
@@ -9534,6 +9771,18 @@
      "x": 5,
      "y": 6
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 6,
+     "y": 18
+    },
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 18,
+     "y": 18
+    }
    ]
   }
  },
@@ -9857,6 +10106,13 @@
      "x": 20,
      "y": 19
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_day_laborer",
+     "x": 14,
+     "y": 18
+    }
    ]
   }
  },
@@ -10170,6 +10426,13 @@
      ],
      "x": 10,
      "y": 14
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 4,
+     "y": 12
     }
    ]
   }
@@ -10498,6 +10761,13 @@
      ],
      "x": 4,
      "y": 12
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 7,
+     "y": 15
     }
    ]
   }
@@ -10951,6 +11221,18 @@
      "x": 7,
      "y": 15
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 7,
+     "y": 15
+    },
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 16,
+     "y": 12
+    }
    ]
   }
  },
@@ -11357,6 +11639,18 @@
      "x": 9,
      "y": 18
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_street_vendor",
+     "x": 6,
+     "y": 15
+    },
+    {
+     "monster": "mon_trl_res_poor_day_laborer",
+     "x": 19,
+     "y": 14
+    }
    ]
   }
  },
@@ -11709,6 +12003,13 @@
       ]
      ],
      "x": 12,
+     "y": 14
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 17,
      "y": 14
     }
    ]
@@ -12076,6 +12377,13 @@
      "x": 18,
      "y": 22
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_street_vendor",
+     "x": 10,
+     "y": 18
+    }
    ]
   }
  },
@@ -12399,6 +12707,13 @@
      ],
      "x": 7,
      "y": 13
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_dishwasher",
+     "x": 14,
+     "y": 15
     }
    ]
   }
@@ -12788,6 +13103,18 @@
      "x": 1,
      "y": 1
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 6,
+     "y": 18
+    },
+    {
+     "monster": "mon_trl_res_poor_scrapper",
+     "x": 19,
+     "y": 17
+    }
    ]
   }
  },
@@ -13167,6 +13494,18 @@
      "x": 1,
      "y": 13
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 4,
+     "y": 15
+    },
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 19,
+     "y": 13
+    }
    ]
   }
  },
@@ -13502,6 +13841,13 @@
      ],
      "x": 13,
      "y": 12
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_dishwasher",
+     "x": 15,
+     "y": 16
     }
    ]
   }
@@ -13850,6 +14196,13 @@
       ]
      ],
      "x": 8,
+     "y": 15
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 15,
      "y": 15
     }
    ]
@@ -14201,6 +14554,13 @@
      ],
      "x": 6,
      "y": 20
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_day_laborer",
+     "x": 11,
+     "y": 17
     }
    ]
   }
@@ -14588,6 +14948,18 @@
      "x": 2,
      "y": 9
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 6,
+     "y": 14
+    },
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 17,
+     "y": 16
+    }
    ]
   }
  },
@@ -14973,6 +15345,18 @@
      "x": 19,
      "y": 8
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_day_laborer",
+     "x": 3,
+     "y": 15
+    },
+    {
+     "monster": "mon_trl_res_poor_dishwasher",
+     "x": 15,
+     "y": 12
+    }
    ]
   }
  },
@@ -15287,6 +15671,13 @@
      ],
      "x": 8,
      "y": 16
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 6,
+     "y": 15
     }
    ]
   }
@@ -15641,6 +16032,13 @@
       ]
      ],
      "x": 12,
+     "y": 15
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 14,
      "y": 15
     }
    ]
@@ -16017,6 +16415,13 @@
      ],
      "x": 20,
      "y": 22
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 4,
+     "y": 16
     }
    ]
   }
@@ -16439,6 +16844,18 @@
      "x": 21,
      "y": 21
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 5,
+     "y": 17
+    },
+    {
+     "monster": "mon_trl_res_poor_street_vendor",
+     "x": 19,
+     "y": 12
+    }
    ]
   }
  },
@@ -16819,6 +17236,18 @@
      "x": 4,
      "y": 11
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 6,
+     "y": 16
+    },
+    {
+     "monster": "mon_trl_res_poor_dishwasher",
+     "x": 17,
+     "y": 15
+    }
    ]
   }
  },
@@ -17193,6 +17622,13 @@
      "x": 2,
      "y": 18
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 13,
+     "y": 16
+    }
    ]
   }
  },
@@ -17543,6 +17979,13 @@
      "x": 1,
      "y": 22
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_courier",
+     "x": 17,
+     "y": 15
+    }
    ]
   }
  },
@@ -17881,6 +18324,13 @@
      ],
      "x": 10,
      "y": 20
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_poor_janitor",
+     "x": 13,
+     "y": 16
     }
    ]
   }
@@ -18291,6 +18741,18 @@
      ],
      "x": 15,
      "y": 19
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_technician",
+     "x": 11,
+     "y": 17
+    },
+    {
+     "monster": "mon_trl_res_mid_police_clerk",
+     "x": 8,
+     "y": 17
     }
    ]
   }
@@ -18823,6 +19285,18 @@
      "x": 19,
      "y": 14
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_clerk",
+     "x": 14,
+     "y": 14
+    },
+    {
+     "monster": "mon_trl_res_mid_shop_assistant",
+     "x": 19,
+     "y": 17
+    }
    ]
   }
  },
@@ -19340,6 +19814,18 @@
      "x": 18,
      "y": 14
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_driver",
+     "x": 18,
+     "y": 12
+    },
+    {
+     "monster": "mon_trl_res_mid_police_clerk",
+     "x": 18,
+     "y": 17
+    }
    ]
   }
  },
@@ -19704,6 +20190,18 @@
      ],
      "x": 14,
      "y": 16
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_engineer",
+     "x": 11,
+     "y": 14
+    },
+    {
+     "monster": "mon_trl_res_mid_police_clerk",
+     "x": 15,
+     "y": 13
     }
    ]
   }
@@ -20335,6 +20833,18 @@
      "x": 18,
      "y": 13
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_driver",
+     "x": 9,
+     "y": 18
+    },
+    {
+     "monster": "mon_trl_res_mid_driver",
+     "x": 5,
+     "y": 19
+    }
    ]
   }
  },
@@ -20935,6 +21445,18 @@
      "x": 1,
      "y": 15
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_driver",
+     "x": 6,
+     "y": 13
+    },
+    {
+     "monster": "mon_trl_res_mid_engineer",
+     "x": 11,
+     "y": 18
+    }
    ]
   }
  },
@@ -21255,6 +21777,18 @@
      ],
      "x": 22,
      "y": 5
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_clerk",
+     "x": 14,
+     "y": 14
+    },
+    {
+     "monster": "mon_trl_res_mid_police_clerk",
+     "x": 16,
+     "y": 15
     }
    ]
   }
@@ -21795,6 +22329,18 @@
      ],
      "x": 20,
      "y": 22
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_shop_assistant",
+     "x": 16,
+     "y": 19
+    },
+    {
+     "monster": "mon_trl_res_mid_teacher",
+     "x": 19,
+     "y": 13
     }
    ]
   }
@@ -22351,6 +22897,18 @@
      "x": 1,
      "y": 13
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_technician",
+     "x": 16,
+     "y": 17
+    },
+    {
+     "monster": "mon_trl_res_mid_driver",
+     "x": 12,
+     "y": 15
+    }
    ]
   }
  },
@@ -22784,6 +23342,18 @@
      ],
      "x": 6,
      "y": 16
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_shop_assistant",
+     "x": 17,
+     "y": 16
+    },
+    {
+     "monster": "mon_trl_res_mid_engineer",
+     "x": 13,
+     "y": 12
     }
    ]
   }
@@ -23363,6 +23933,18 @@
      "x": 15,
      "y": 1
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_engineer",
+     "x": 13,
+     "y": 17
+    },
+    {
+     "monster": "mon_trl_res_mid_nurse",
+     "x": 9,
+     "y": 16
+    }
    ]
   }
  },
@@ -23912,6 +24494,18 @@
      "x": 19,
      "y": 1
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_clerk",
+     "x": 16,
+     "y": 13
+    },
+    {
+     "monster": "mon_trl_res_mid_clerk",
+     "x": 13,
+     "y": 19
+    }
    ]
   }
  },
@@ -24270,6 +24864,18 @@
       ]
      ],
      "x": 16,
+     "y": 15
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_engineer",
+     "x": 9,
+     "y": 14
+    },
+    {
+     "monster": "mon_trl_res_mid_driver",
+     "x": 8,
      "y": 15
     }
    ]
@@ -24788,6 +25394,18 @@
      "x": 1,
      "y": 10
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_police_clerk",
+     "x": 16,
+     "y": 13
+    },
+    {
+     "monster": "mon_trl_res_mid_technician",
+     "x": 16,
+     "y": 14
+    }
    ]
   }
  },
@@ -25259,6 +25877,18 @@
      "x": 10,
      "y": 13
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_shop_assistant",
+     "x": 11,
+     "y": 16
+    },
+    {
+     "monster": "mon_trl_res_mid_engineer",
+     "x": 14,
+     "y": 19
+    }
    ]
   }
  },
@@ -25643,6 +26273,18 @@
      ],
      "x": 11,
      "y": 17
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_teacher",
+     "x": 10,
+     "y": 17
+    },
+    {
+     "monster": "mon_trl_res_mid_technician",
+     "x": 8,
+     "y": 12
     }
    ]
   }
@@ -26210,6 +26852,18 @@
      "x": 22,
      "y": 6
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_police_clerk",
+     "x": 11,
+     "y": 16
+    },
+    {
+     "monster": "mon_trl_res_mid_shop_assistant",
+     "x": 8,
+     "y": 18
+    }
    ]
   }
  },
@@ -26775,6 +27429,18 @@
      "x": 1,
      "y": 2
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_shop_assistant",
+     "x": 5,
+     "y": 14
+    },
+    {
+     "monster": "mon_trl_res_mid_teacher",
+     "x": 13,
+     "y": 17
+    }
    ]
   }
  },
@@ -27166,6 +27832,18 @@
      ],
      "x": 12,
      "y": 19
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_shop_assistant",
+     "x": 13,
+     "y": 18
+    },
+    {
+     "monster": "mon_trl_res_mid_nurse",
+     "x": 9,
+     "y": 17
     }
    ]
   }
@@ -27705,6 +28383,18 @@
      ],
      "x": 8,
      "y": 22
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_technician",
+     "x": 14,
+     "y": 19
+    },
+    {
+     "monster": "mon_trl_res_mid_police_clerk",
+     "x": 15,
+     "y": 12
     }
    ]
   }
@@ -28336,6 +29026,18 @@
      "x": 14,
      "y": 15
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_engineer",
+     "x": 6,
+     "y": 17
+    },
+    {
+     "monster": "mon_trl_res_mid_engineer",
+     "x": 6,
+     "y": 14
+    }
    ]
   }
  },
@@ -28740,6 +29442,18 @@
      ],
      "x": 11,
      "y": 22
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_engineer",
+     "x": 13,
+     "y": 13
+    },
+    {
+     "monster": "mon_trl_res_mid_technician",
+     "x": 15,
+     "y": 17
     }
    ]
   }
@@ -29278,6 +29992,18 @@
      "x": 21,
      "y": 1
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_clerk",
+     "x": 8,
+     "y": 19
+    },
+    {
+     "monster": "mon_trl_res_mid_shop_assistant",
+     "x": 14,
+     "y": 16
+    }
    ]
   }
  },
@@ -29811,6 +30537,18 @@
      "x": 12,
      "y": 15
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_police_clerk",
+     "x": 15,
+     "y": 13
+    },
+    {
+     "monster": "mon_trl_res_mid_engineer",
+     "x": 16,
+     "y": 17
+    }
    ]
   }
  },
@@ -30193,6 +30931,18 @@
      ],
      "x": 4,
      "y": 22
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_driver",
+     "x": 15,
+     "y": 18
+    },
+    {
+     "monster": "mon_trl_res_mid_nurse",
+     "x": 10,
+     "y": 19
     }
    ]
   }
@@ -30734,6 +31484,18 @@
      "x": 2,
      "y": 22
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_shop_assistant",
+     "x": 10,
+     "y": 17
+    },
+    {
+     "monster": "mon_trl_res_mid_nurse",
+     "x": 11,
+     "y": 17
+    }
    ]
   }
  },
@@ -31215,6 +31977,18 @@
      "x": 11,
      "y": 15
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_clerk",
+     "x": 14,
+     "y": 14
+    },
+    {
+     "monster": "mon_trl_res_mid_teacher",
+     "x": 14,
+     "y": 18
+    }
    ]
   }
  },
@@ -31578,6 +32352,18 @@
      ],
      "x": 1,
      "y": 4
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_engineer",
+     "x": 14,
+     "y": 15
+    },
+    {
+     "monster": "mon_trl_res_mid_technician",
+     "x": 18,
+     "y": 13
     }
    ]
   }
@@ -32103,6 +32889,18 @@
      ],
      "x": 17,
      "y": 17
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_driver",
+     "x": 7,
+     "y": 14
+    },
+    {
+     "monster": "mon_trl_res_mid_teacher",
+     "x": 6,
+     "y": 14
     }
    ]
   }
@@ -32658,6 +33456,18 @@
      "x": 7,
      "y": 18
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_clerk",
+     "x": 12,
+     "y": 17
+    },
+    {
+     "monster": "mon_trl_res_mid_technician",
+     "x": 13,
+     "y": 14
+    }
    ]
   }
  },
@@ -32969,6 +33779,18 @@
      ],
      "x": 19,
      "y": 22
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_teacher",
+     "x": 12,
+     "y": 12
+    },
+    {
+     "monster": "mon_trl_res_mid_nurse",
+     "x": 15,
+     "y": 18
     }
    ]
   }
@@ -33499,6 +34321,18 @@
      ],
      "x": 18,
      "y": 19
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_police_clerk",
+     "x": 15,
+     "y": 15
+    },
+    {
+     "monster": "mon_trl_res_mid_shop_assistant",
+     "x": 12,
+     "y": 14
     }
    ]
   }
@@ -34115,6 +34949,18 @@
      "x": 22,
      "y": 6
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_driver",
+     "x": 9,
+     "y": 16
+    },
+    {
+     "monster": "mon_trl_res_mid_engineer",
+     "x": 11,
+     "y": 14
+    }
    ]
   }
  },
@@ -34514,6 +35360,18 @@
      ],
      "x": 22,
      "y": 14
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_police_clerk",
+     "x": 13,
+     "y": 19
+    },
+    {
+     "monster": "mon_trl_res_mid_clerk",
+     "x": 16,
+     "y": 19
     }
    ]
   }
@@ -35051,6 +35909,18 @@
      ],
      "x": 17,
      "y": 14
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_mid_teacher",
+     "x": 11,
+     "y": 13
+    },
+    {
+     "monster": "mon_trl_res_mid_driver",
+     "x": 10,
+     "y": 16
     }
    ]
   }
@@ -35688,6 +36558,13 @@
      "x": 2,
      "y": 8
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_owner",
+     "x": 23,
+     "y": 11
+    }
    ]
   }
  },
@@ -36007,6 +36884,13 @@
      ],
      "x": 13,
      "y": 16
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_owner",
+     "x": 6,
+     "y": 11
     }
    ]
   }
@@ -36774,6 +37658,13 @@
      "x": 10,
      "y": 13
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_investor",
+     "x": 19,
+     "y": 18
+    }
    ]
   }
  },
@@ -37022,6 +37913,13 @@
      ],
      "x": 3,
      "y": 1
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_investor",
+     "x": 6,
+     "y": 13
     }
    ]
   }
@@ -38085,6 +38983,13 @@
      "x": 5,
      "y": 18
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_surgeon",
+     "x": 18,
+     "y": 13
+    }
    ]
   }
  },
@@ -38296,6 +39201,13 @@
      ],
      "x": 22,
      "y": 13
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_surgeon",
+     "x": 0,
+     "y": 16
     }
    ]
   }
@@ -39161,6 +40073,13 @@
      "x": 8,
      "y": 22
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_surgeon",
+     "x": 22,
+     "y": 16
+    }
    ]
   }
  },
@@ -39515,6 +40434,13 @@
      ],
      "x": 17,
      "y": 18
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_surgeon",
+     "x": 9,
+     "y": 14
     }
    ]
   }
@@ -40398,6 +41324,13 @@
      "x": 16,
      "y": 13
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_owner",
+     "x": 8,
+     "y": 15
+    }
    ]
   }
  },
@@ -40813,6 +41746,13 @@
      "x": 6,
      "y": 1
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_executive",
+     "x": 20,
+     "y": 18
+    }
    ]
   }
  },
@@ -41098,6 +42038,13 @@
      ],
      "x": 1,
      "y": 4
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_executive",
+     "x": 2,
+     "y": 16
     }
    ]
   }
@@ -41954,6 +42901,13 @@
      "x": 4,
      "y": 22
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_owner",
+     "x": 6,
+     "y": 14
+    }
    ]
   }
  },
@@ -42619,6 +43573,13 @@
      "x": 11,
      "y": 1
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_surgeon",
+     "x": 23,
+     "y": 16
+    }
    ]
   }
  },
@@ -42971,6 +43932,13 @@
      ],
      "x": 8,
      "y": 15
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_surgeon",
+     "x": 6,
+     "y": 17
     }
    ]
   }
@@ -43830,6 +44798,13 @@
      "x": 1,
      "y": 21
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_investor",
+     "x": 13,
+     "y": 17
+    }
    ]
   }
  },
@@ -44470,6 +45445,13 @@
      "x": 10,
      "y": 13
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_owner",
+     "x": 15,
+     "y": 16
+    }
    ]
   }
  },
@@ -44694,6 +45676,13 @@
      ],
      "x": 10,
      "y": 1
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_owner",
+     "x": 1,
+     "y": 19
     }
    ]
   }
@@ -45211,6 +46200,13 @@
      "x": 9,
      "y": 22
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_official",
+     "x": 11,
+     "y": 17
+    }
    ]
   }
  },
@@ -45693,6 +46689,13 @@
      "x": 1,
      "y": 11
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_official",
+     "x": 23,
+     "y": 12
+    }
    ]
   }
  },
@@ -46035,6 +47038,13 @@
      ],
      "x": 4,
      "y": 11
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_official",
+     "x": 8,
+     "y": 12
     }
    ]
   }
@@ -46868,6 +47878,13 @@
      "x": 19,
      "y": 18
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_owner",
+     "x": 15,
+     "y": 15
+    }
    ]
   }
  },
@@ -47434,6 +48451,13 @@
      "x": 16,
      "y": 22
     }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_owner",
+     "x": 16,
+     "y": 16
+    }
    ]
   }
  },
@@ -47735,6 +48759,13 @@
      ],
      "x": 9,
      "y": 15
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_owner",
+     "x": 0,
+     "y": 12
     }
    ]
   }
@@ -48663,6 +49694,13 @@
      ],
      "x": 8,
      "y": 13
+    }
+   ],
+   "place_monster": [
+    {
+     "monster": "mon_trl_res_rich_owner",
+     "x": 12,
+     "y": 17
     }
    ]
   }

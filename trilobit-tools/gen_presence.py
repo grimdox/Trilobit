@@ -90,14 +90,16 @@ for sub in ("houses", "midrise", "midrise2", "midrise3", "lots", "towers", "city
             return isinstance(c, dict) or (isinstance(c, str) and "chance" in n and c.startswith((NPC + "bratva_", NPC + "nap_", NPC + "nasim_")))
         npcs = [n for n in obj.get("place_npcs", []) if not _ours(n)]
         # ordinary residents become cheap monsters (swapped for the real NPC when the player comes near)
-        mons = [n for n in obj.get("place_monster", []) if not str(n.get("monster", "")).startswith("mon_trl_res_")]
-        keep_npcs = []
+        mons = list(obj.get("place_monster", []))
+        keep_npcs, new_res = [], []
         for n in npcs:
             c = str(n.get("class", ""))
             if c.startswith("trl_nc_res_"):
-                mons.append({"monster": c.replace("trl_nc_res_", "mon_trl_res_", 1), "x": n["x"], "y": n["y"]})
+                new_res.append({"monster": c.replace("trl_nc_res_", "mon_trl_res_", 1), "x": n["x"], "y": n["y"]})
             else:
                 keep_npcs.append(n)
+        if new_res:     # freshly generated residents replace any monsters from an earlier run (so reruns do not duplicate)
+            mons = [n for n in mons if not str(n.get("monster", "")).startswith("mon_trl_res_")] + new_res
         npcs = keep_npcs
         if mons:
             obj["place_monster"] = mons
