@@ -115,7 +115,7 @@ def build():
     # ---- routine
     out += [
         {"type": "effect_on_condition", "id": "trl_res_nowork", "effect": [{"math": ["u_trl_has_work = 0"]}]},
-        {"type": "effect_on_condition", "id": "trl_res_haswork", "effect": [{"math": ["u_trl_has_work = 1"]}]},
+        {"type": "effect_on_condition", "id": "trl_res_haswork", "effect": [{"if": {"math": ["rand(3) == 0"]}, "then": [{"math": ["u_trl_has_work = 1"]}], "else": [{"math": ["u_trl_has_work = 0"]}]}]},
         {"type": "effect_on_condition", "id": "trl_res_goto_spot", "effect": [{"u_go_to_loc": {"u_val": "trl_spot"}}]},
         {"type": "effect_on_condition", "id": "trl_res_tick", "recurrence": ["15 minutes", "20 minutes"], "global": True,
          "effect": [{"u_run_npc_eocs": ["trl_res_step"], "overmap": True}]},
@@ -170,8 +170,8 @@ def build():
              "else": [{"if": {"math": ["u_trl_at == 0"]},
                        "then": [{"if": {"math": ["distance('u', u_trl_home) > 10"]},
                                  "then": [{"u_go_to_loc": {"u_val": "trl_home"}}],
-                                 "else": [{"if": {"math": ["rand(4) == 0"]},
-                                           "then": [{"u_location_variable": {"u_val": "trl_spot"}, "max_radius": 4, "passable_only": True,
+                                 "else": [{"if": {"math": ["rand(2) == 0"]},
+                                           "then": [{"u_location_variable": {"u_val": "trl_spot"}, "max_radius": 9, "passable_only": True,
                                                      "true_eocs": ["trl_res_goto_spot"]}]}]}]}]}]},
         {"type": "effect_on_condition", "id": "trl_res_bark", "effect": [
             {"if": {"math": ["rand(9) == 0"]}, "then": [{"run_eocs": [f"trl_res_bark_{t}_{j}" for t, j in all_jobs()]}]}]},

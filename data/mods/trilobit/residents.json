@@ -2883,8 +2883,24 @@
   "id": "trl_res_haswork",
   "effect": [
    {
-    "math": [
-     "u_trl_has_work = 1"
+    "if": {
+     "math": [
+      "rand(3) == 0"
+     ]
+    },
+    "then": [
+     {
+      "math": [
+       "u_trl_has_work = 1"
+      ]
+     }
+    ],
+    "else": [
+     {
+      "math": [
+       "u_trl_has_work = 0"
+      ]
+     }
     ]
    }
   ]
@@ -3319,7 +3335,7 @@
          {
           "if": {
            "math": [
-            "rand(4) == 0"
+            "rand(2) == 0"
            ]
           },
           "then": [
@@ -3327,7 +3343,7 @@
             "u_location_variable": {
              "u_val": "trl_spot"
             },
-            "max_radius": 4,
+            "max_radius": 9,
             "passable_only": true,
             "true_eocs": [
              "trl_res_goto_spot"
