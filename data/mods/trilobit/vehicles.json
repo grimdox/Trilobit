@@ -90,6 +90,38 @@
    [
     "trl_veh_micro",
     25
+   ],
+   [
+    "trl_veh_dune",
+    10
+   ],
+   [
+    "trl_veh_ridge",
+    10
+   ],
+   [
+    "trl_veh_trio",
+    12
+   ],
+   [
+    "trl_veh_pod",
+    10
+   ],
+   [
+    "trl_veh_shuttle",
+    10
+   ],
+   [
+    "trl_veh_minivan",
+    18
+   ],
+   [
+    "trl_veh_cargovan",
+    15
+   ],
+   [
+    "trl_veh_pickup",
+    18
    ]
   ]
  },
@@ -124,6 +156,58 @@
    [
     "trl_veh_suv",
     15
+   ],
+   [
+    "trl_veh_kaze",
+    15
+   ],
+   [
+    "trl_veh_dune",
+    10
+   ],
+   [
+    "trl_veh_ridge",
+    10
+   ],
+   [
+    "trl_veh_pod",
+    10
+   ],
+   [
+    "trl_veh_shuttle",
+    10
+   ],
+   [
+    "trl_veh_tourer",
+    18
+   ],
+   [
+    "trl_veh_longtour",
+    10
+   ],
+   [
+    "trl_veh_sportsed",
+    12
+   ],
+   [
+    "trl_veh_expedit",
+    10
+   ],
+   [
+    "trl_veh_minivan",
+    18
+   ],
+   [
+    "trl_veh_cargovan",
+    15
+   ],
+   [
+    "trl_veh_camper",
+    5
+   ],
+   [
+    "trl_veh_pickup",
+    18
    ]
   ]
  },
@@ -150,6 +234,26 @@
    [
     "trl_veh_super",
     5
+   ],
+   [
+    "trl_veh_longtour",
+    10
+   ],
+   [
+    "trl_veh_sportsed",
+    12
+   ],
+   [
+    "trl_veh_track",
+    8
+   ],
+   [
+    "trl_veh_roadster",
+    8
+   ],
+   [
+    "trl_veh_hypergt",
+    3
    ]
   ]
  },
@@ -192,6 +296,62 @@
    [
     "trl_veh_suv",
     15
+   ],
+   [
+    "trl_veh_dune",
+    10
+   ],
+   [
+    "trl_veh_ridge",
+    10
+   ],
+   [
+    "trl_veh_trio",
+    12
+   ],
+   [
+    "trl_veh_pod",
+    10
+   ],
+   [
+    "trl_veh_shuttle",
+    10
+   ],
+   [
+    "trl_veh_minivan",
+    18
+   ],
+   [
+    "trl_veh_cargovan",
+    15
+   ],
+   [
+    "trl_veh_pickup",
+    18
+   ],
+   [
+    "trl_veh_kaze",
+    15
+   ],
+   [
+    "trl_veh_tourer",
+    18
+   ],
+   [
+    "trl_veh_longtour",
+    10
+   ],
+   [
+    "trl_veh_sportsed",
+    12
+   ],
+   [
+    "trl_veh_expedit",
+    10
+   ],
+   [
+    "trl_veh_camper",
+    5
    ]
   ]
  },
