@@ -5,6 +5,7 @@ import numpy as np
 from PIL import Image
 from iso import Canvas, box, face, sides, diamond, shade, mix
 import icons2
+import icons3
 
 PAL = {
     "black": (30, 30, 40), "red": (170, 56, 66), "green": (62, 140, 86), "brown": (132, 94, 62), "blue": (66, 90, 170),
@@ -262,7 +263,8 @@ def classify_item(i, o):
     if "BATTERY" in st or has(s, "battery", "cell"):
         return ("battery", col)
     # melee and everything else, by name
-    if has(s, "katana", "sword", "knife", "dagger", "tanto", "wakizashi", "nodachi", "machete", "blade", "kama", "sickle", "cleaver", "scalpel", "razor", "saber", "sabre", "scythe"):
+    if has(s, "katana", "sword", "knife", "dagger", "tanto", "wakizashi", "nodachi", "machete", "blade", "kama", "sickle", "cleaver", "scalpel", "razor", "saber", "sabre", "scythe",
+             "rapier", "estoc", "jian", "cutlass", "falx", "kukri", "kriegsmesser", "shamshir", "zweih", "claymore", "scimitar", "gladius", "dao ", "sai "):
         return ("blade", col)
     if has(s, "spear", "yari", "naginata", "javelin", "pike", "halberd", "lance"):
         return ("spear", col)
@@ -272,7 +274,7 @@ def classify_item(i, o):
         return ("star", col)
     if has(s, "hammer", "mallet", "club", "bat ", " bat", "baton", "staff", "nunchaku", "pipe", "crowbar", "wrench", "tonfa", "cane", "bo ", "sledge", "flail", "mace"):
         return ("blunt", col)
-    if has(s, "chip", "data", "card", "usb", "cpu", "processor", "ram", "circuit", "disk", "drive"):
+    if has(s, "software", "efile", "encryption", "media file", "photo gallery", "chip", "data", "card", "usb", "cpu", "processor", "ram", "circuit", "disk", "drive"):
         return ("chip", col)
     if has(s, "phone", "radio", "laptop", "computer", "tablet", "camera", "scanner", "monitor", "screen", "device", "detector", "remote", "gps", "lcd", "tv"):
         return ("device", col)
@@ -286,6 +288,17 @@ def classify_item(i, o):
         return ("bottle", col)
     if has(s, "key", "token", "coin", "yen", "cash", "money", "chit"):
         return ("coin", col)
+    if has(s, "pecan", "almond", "pistachio", "peanut", "walnut", "hazelnut", "butternut", "acorn", "chestnut"):
+        return ("food", col)
+    if i.startswith("material_") or has(s, "uranium", "plutonium", "rhodonite", "zincite", "goop", "effigy"):
+        return ("named_crystal3", col)
+    # nothing above fits: a shape by name (icons3), then by material, and only then the generic gem
+    k3 = icons3.named_kind3(n)
+    if k3:
+        return ("named_" + k3, col)
+    mk = icons3.material_kind(o.get("material"))
+    if mk:
+        return ("named_" + mk, col)
     return ("gem", col)
 
 

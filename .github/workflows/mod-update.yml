@@ -13,6 +13,9 @@ on:
       - 'gfx/splash/**'
       - 'gfx/Bouma/**'
       - 'gfx/Mokuhanga/**'
+      - 'gfx/Neonoir/**'
+      - 'gfx/Pixel16/**'
+      - 'gfx/Smog/**'
       - 'gfx/Bouma_TopDown/**'
       - 'gfx/Mokuhanga_TopDown/**'
       - 'gfx/Bouma_Overmap/**'
@@ -34,6 +37,7 @@ jobs:
           cp -r gfx/splash out/trilobit/gfx/
           cp -r gfx/Bouma out/trilobit/gfx/
           cp -r gfx/Mokuhanga out/trilobit/gfx/
+          for d in Neonoir Pixel16 Smog; do cp -r gfx/$d out/trilobit/gfx/; done
           for d in Bouma_TopDown Mokuhanga_TopDown Bouma_Overmap Mokuhanga_Overmap; do cp -r gfx/$d out/trilobit/gfx/; done
           echo "Built from commit $GITHUB_SHA" > out/trilobit/MOD_VERSION.txt
           cd out && zip -qr ../trilobit-mod.zip trilobit

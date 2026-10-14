@@ -1,0 +1,4 @@
+NAME: Smog
+VIEW: Smog
+JSON: tile_config.json
+TILESET: tiles.png

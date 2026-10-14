@@ -291,7 +291,7 @@ def skin(seed):
     return [(236, 200, 170), (200, 150, 110), (150, 100, 70), (110, 70, 50)][seed % 4]
 
 
-def p_human(role, seed, female=False):
+def _p_human_old(role, seed, female=False):
     cv = Canvas(32, 36)
     cvcol = {"player": (40, 220, 255), "npc": (255, 170, 60), "hostile": (230, 70, 80), "android": (190, 200, 215)}[role]
     # shadow
@@ -321,6 +321,9 @@ def p_human(role, seed, female=False):
         cv.rect((14, 7, 15, 8), (20, 20, 20))
         cv.rect((17, 7, 18, 8), (20, 20, 20))
     return cv.done(seed, 0)
+
+
+from people import p_human  # noqa: E402  (upgraded figures)
 
 
 SHAPE_OF = {"Z": "human", "@": "human", "h": "human", "H": "human", "a": "bug", "A": "bug", "x": "bug", "S": "spider", "s": "spider", "d": "quad", "f": "quad", "C": "quad",

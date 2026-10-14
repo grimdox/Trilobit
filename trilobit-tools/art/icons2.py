@@ -2,6 +2,7 @@
 and colour words in the name (green, red...) that override the item's own colour so the picture matches the label."""
 import re
 from iso import Canvas, shade
+import icons3
 
 # first matching rule wins; patterns are whole words (plural allowed)
 NAMED = [
@@ -37,6 +38,8 @@ def named_kind(name):
 
 
 def draw(kind, c, d, l, cv, PAL):
+    if kind.endswith('3') or kind.startswith('m_'):
+        return icons3.draw(kind, c, d, l, cv, PAL)
     ink = (36, 38, 50)
     if kind == "newspaper":
         cv.rect((5, 7, 26, 26), (226, 224, 214)); cv.rect((5, 7, 26, 9), (150, 148, 140))
