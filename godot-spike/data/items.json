@@ -10,7 +10,17 @@
   "tags": [
    "gun",
    "smg"
-  ]
+  ],
+  "looks_like": "colt_ro635",
+  "gun": {
+   "dmg": [
+    7,
+    11
+   ],
+   "range": 12,
+   "shots": 3,
+   "acc": 62
+  }
  },
  {
   "id": "trl_gun_sm9",
@@ -23,7 +33,17 @@
   "tags": [
    "gun",
    "smg"
-  ]
+  ],
+  "looks_like": "TDI",
+  "gun": {
+   "dmg": [
+    7,
+    11
+   ],
+   "range": 12,
+   "shots": 3,
+   "acc": 62
+  }
  },
  {
   "id": "trl_gun_vs45",
@@ -36,7 +56,17 @@
   "tags": [
    "gun",
    "smg"
-  ]
+  ],
+  "looks_like": "greasegun",
+  "gun": {
+   "dmg": [
+    7,
+    11
+   ],
+   "range": 12,
+   "shots": 3,
+   "acc": 62
+  }
  },
  {
   "id": "trl_gun_zp19",
@@ -49,7 +79,17 @@
   "tags": [
    "gun",
    "smg"
-  ]
+  ],
+  "looks_like": "mac_10",
+  "gun": {
+   "dmg": [
+    7,
+    11
+   ],
+   "range": 12,
+   "shots": 3,
+   "acc": 62
+  }
  },
  {
   "id": "trl_gun_gk7",
@@ -62,7 +102,17 @@
   "tags": [
    "gun",
    "smg"
-  ]
+  ],
+  "looks_like": "tommygun",
+  "gun": {
+   "dmg": [
+    7,
+    11
+   ],
+   "range": 12,
+   "shots": 3,
+   "acc": 62
+  }
  },
  {
   "id": "trl_gun_ls5",
@@ -75,7 +125,17 @@
   "tags": [
    "gun",
    "smg"
-  ]
+  ],
+  "looks_like": "calico",
+  "gun": {
+   "dmg": [
+    7,
+    11
+   ],
+   "range": 12,
+   "shots": 3,
+   "acc": 62
+  }
  },
  {
   "id": "trl_gun_fs9",
@@ -88,7 +148,17 @@
   "tags": [
    "gun",
    "smg"
-  ]
+  ],
+  "looks_like": "mac_11",
+  "gun": {
+   "dmg": [
+    7,
+    11
+   ],
+   "range": 12,
+   "shots": 3,
+   "acc": 62
+  }
  },
  {
   "id": "trl_gun_sp45",
@@ -101,7 +171,17 @@
   "tags": [
    "gun",
    "pistol"
-  ]
+  ],
+  "looks_like": "m1911_10",
+  "gun": {
+   "dmg": [
+    10,
+    16
+   ],
+   "range": 10,
+   "shots": 1,
+   "acc": 70
+  }
  },
  {
   "id": "trl_gun_zp9",
@@ -114,7 +194,17 @@
   "tags": [
    "gun",
    "pistol"
-  ]
+  ],
+  "looks_like": "makarov",
+  "gun": {
+   "dmg": [
+    10,
+    16
+   ],
+   "range": 10,
+   "shots": 1,
+   "acc": 70
+  }
  },
  {
   "id": "trl_gun_fp7",
@@ -127,7 +217,17 @@
   "tags": [
    "gun",
    "pistol"
-  ]
+  ],
+  "looks_like": "ruger_57",
+  "gun": {
+   "dmg": [
+    10,
+    16
+   ],
+   "range": 10,
+   "shots": 1,
+   "acc": 70
+  }
  },
  {
   "id": "trl_gun_hp40",
@@ -140,7 +240,17 @@
   "tags": [
    "gun",
    "revolver"
-  ]
+  ],
+  "looks_like": "sw_610",
+  "gun": {
+   "dmg": [
+    14,
+    22
+   ],
+   "range": 10,
+   "shots": 1,
+   "acc": 72
+  }
  },
  {
   "id": "trl_gun_gp10",
@@ -153,7 +263,17 @@
   "tags": [
    "gun",
    "pistol"
-  ]
+  ],
+  "looks_like": "modular_deagle",
+  "gun": {
+   "dmg": [
+    10,
+    16
+   ],
+   "range": 10,
+   "shots": 1,
+   "acc": 70
+  }
  },
  {
   "id": "trl_gun_lp22",
@@ -166,7 +286,17 @@
   "tags": [
    "gun",
    "pistol"
-  ]
+  ],
+  "looks_like": "sr22",
+  "gun": {
+   "dmg": [
+    10,
+    16
+   ],
+   "range": 10,
+   "shots": 1,
+   "acc": 70
+  }
  },
  {
   "id": "trl_gun_vr38",
@@ -179,7 +309,17 @@
   "tags": [
    "gun",
    "revolver"
-  ]
+  ],
+  "looks_like": "model_10_revolver",
+  "gun": {
+   "dmg": [
+    14,
+    22
+   ],
+   "range": 10,
+   "shots": 1,
+   "acc": 72
+  }
  },
  {
   "id": "trl_gun_sr44",
@@ -192,7 +332,17 @@
   "tags": [
    "gun",
    "revolver"
-  ]
+  ],
+  "looks_like": "colt_anaconda_6",
+  "gun": {
+   "dmg": [
+    14,
+    22
+   ],
+   "range": 10,
+   "shots": 1,
+   "acc": 72
+  }
  },
  {
   "id": "trl_gun_gr500",
@@ -205,7 +355,17 @@
   "tags": [
    "gun",
    "revolver"
-  ]
+  ],
+  "looks_like": "sw_500",
+  "gun": {
+   "dmg": [
+    14,
+    22
+   ],
+   "range": 10,
+   "shots": 1,
+   "acc": 72
+  }
  },
  {
   "id": "trl_gun_ha5",
@@ -218,7 +378,17 @@
   "tags": [
    "gun",
    "rifle"
-  ]
+  ],
+  "looks_like": "modular_m4_carbine",
+  "gun": {
+   "dmg": [
+    16,
+    24
+   ],
+   "range": 18,
+   "shots": 1,
+   "acc": 74
+  }
  },
  {
   "id": "trl_gun_sa14",
@@ -231,7 +401,17 @@
   "tags": [
    "gun",
    "rifle"
-  ]
+  ],
+  "looks_like": "modular_m16a4",
+  "gun": {
+   "dmg": [
+    16,
+    24
+   ],
+   "range": 18,
+   "shots": 1,
+   "acc": 74
+  }
  },
  {
   "id": "trl_gun_vk74",
@@ -244,7 +424,17 @@
   "tags": [
    "gun",
    "rifle"
-  ]
+  ],
+  "looks_like": "ak74_semi",
+  "gun": {
+   "dmg": [
+    16,
+    24
+   ],
+   "range": 18,
+   "shots": 1,
+   "acc": 74
+  }
  },
  {
   "id": "trl_gun_zk15",
@@ -257,7 +447,17 @@
   "tags": [
    "gun",
    "rifle"
-  ]
+  ],
+  "looks_like": "kord",
+  "gun": {
+   "dmg": [
+    16,
+    24
+   ],
+   "range": 18,
+   "shots": 1,
+   "acc": 74
+  }
  },
  {
   "id": "trl_gun_ga10",
@@ -270,7 +470,17 @@
   "tags": [
    "gun",
    "rifle"
-  ]
+  ],
+  "looks_like": "ar10",
+  "gun": {
+   "dmg": [
+    16,
+    24
+   ],
+   "range": 18,
+   "shots": 1,
+   "acc": 74
+  }
  },
  {
   "id": "trl_gun_lk95",
@@ -283,7 +493,17 @@
   "tags": [
    "gun",
    "rifle"
-  ]
+  ],
+  "looks_like": "rdb_223",
+  "gun": {
+   "dmg": [
+    16,
+    24
+   ],
+   "range": 18,
+   "shots": 1,
+   "acc": 74
+  }
  },
  {
   "id": "trl_gun_fk9",
@@ -296,7 +516,17 @@
   "tags": [
    "gun",
    "rifle"
-  ]
+  ],
+  "looks_like": "rfb_308",
+  "gun": {
+   "dmg": [
+    16,
+    24
+   ],
+   "range": 18,
+   "shots": 1,
+   "acc": 74
+  }
  },
  {
   "id": "trl_gun_gm14",
@@ -309,7 +539,17 @@
   "tags": [
    "gun",
    "rifle"
-  ]
+  ],
+  "looks_like": "m1a",
+  "gun": {
+   "dmg": [
+    16,
+    24
+   ],
+   "range": 18,
+   "shots": 1,
+   "acc": 74
+  }
  },
  {
   "id": "trl_gun_vs44",
@@ -322,7 +562,17 @@
   "tags": [
    "gun",
    "rifle"
-  ]
+  ],
+  "looks_like": "sks",
+  "gun": {
+   "dmg": [
+    16,
+    24
+   ],
+   "range": 18,
+   "shots": 1,
+   "acc": 74
+  }
  },
  {
   "id": "trl_gun_lc30",
@@ -335,7 +585,17 @@
   "tags": [
    "gun",
    "rifle"
-  ]
+  ],
+  "looks_like": "m1carbine",
+  "gun": {
+   "dmg": [
+    16,
+    24
+   ],
+   "range": 18,
+   "shots": 1,
+   "acc": 74
+  }
  },
  {
   "id": "trl_gun_hs10",
@@ -348,7 +608,17 @@
   "tags": [
    "gun",
    "shotgun"
-  ]
+  ],
+  "looks_like": "mossberg_930",
+  "gun": {
+   "dmg": [
+    20,
+    34
+   ],
+   "range": 6,
+   "shots": 1,
+   "acc": 80
+  }
  },
  {
   "id": "trl_gun_zs20",
@@ -361,7 +631,17 @@
   "tags": [
    "gun",
    "shotgun"
-  ]
+  ],
+  "looks_like": "saiga_12",
+  "gun": {
+   "dmg": [
+    20,
+    34
+   ],
+   "range": 6,
+   "shots": 1,
+   "acc": 80
+  }
  },
  {
   "id": "trl_gun_gs12",
@@ -374,7 +654,17 @@
   "tags": [
    "gun",
    "shotgun"
-  ]
+  ],
+  "looks_like": "remington_870_express",
+  "gun": {
+   "dmg": [
+    20,
+    34
+   ],
+   "range": 6,
+   "shots": 1,
+   "acc": 80
+  }
  },
  {
   "id": "trl_gun_ls12",
@@ -387,7 +677,17 @@
   "tags": [
    "gun",
    "shotgun"
-  ]
+  ],
+  "looks_like": "ksg",
+  "gun": {
+   "dmg": [
+    20,
+    34
+   ],
+   "range": 6,
+   "shots": 1,
+   "acc": 80
+  }
  },
  {
   "id": "trl_gun_ss12",
@@ -400,7 +700,17 @@
   "tags": [
    "gun",
    "shotgun"
-  ]
+  ],
+  "looks_like": "m26_mass",
+  "gun": {
+   "dmg": [
+    20,
+    34
+   ],
+   "range": 6,
+   "shots": 1,
+   "acc": 80
+  }
  },
  {
   "id": "trl_gun_fs410",
@@ -413,7 +723,17 @@
   "tags": [
    "gun",
    "shotgun"
-  ]
+  ],
+  "looks_like": "bond_410",
+  "gun": {
+   "dmg": [
+    20,
+    34
+   ],
+   "range": 6,
+   "shots": 1,
+   "acc": 80
+  }
  },
  {
   "id": "trl_gun_sd7",
@@ -426,7 +746,17 @@
   "tags": [
    "gun",
    "sniper"
-  ]
+  ],
+  "looks_like": "m14ebr",
+  "gun": {
+   "dmg": [
+    30,
+    48
+   ],
+   "range": 30,
+   "shots": 1,
+   "acc": 82
+  }
  },
  {
   "id": "trl_gun_vd62",
@@ -439,7 +769,17 @@
   "tags": [
    "gun",
    "sniper"
-  ]
+  ],
+  "looks_like": "mosin91_30",
+  "gun": {
+   "dmg": [
+    30,
+    48
+   ],
+   "range": 30,
+   "shots": 1,
+   "acc": 82
+  }
  },
  {
   "id": "trl_gun_zd54",
@@ -452,7 +792,17 @@
   "tags": [
    "gun",
    "sniper"
-  ]
+  ],
+  "looks_like": "tac50",
+  "gun": {
+   "dmg": [
+    30,
+    48
+   ],
+   "range": 30,
+   "shots": 1,
+   "acc": 82
+  }
  },
  {
   "id": "trl_gun_fd338",
@@ -465,7 +815,17 @@
   "tags": [
    "gun",
    "sniper"
-  ]
+  ],
+  "looks_like": "mrad_smr",
+  "gun": {
+   "dmg": [
+    30,
+    48
+   ],
+   "range": 30,
+   "shots": 1,
+   "acc": 82
+  }
  },
  {
   "id": "trl_gun_hd308",
@@ -478,7 +838,17 @@
   "tags": [
    "gun",
    "sniper"
-  ]
+  ],
+  "looks_like": "remington_700_308",
+  "gun": {
+   "dmg": [
+    30,
+    48
+   ],
+   "range": 30,
+   "shots": 1,
+   "acc": 82
+  }
  },
  {
   "id": "trl_gun_gd300",
@@ -491,7 +861,17 @@
   "tags": [
    "gun",
    "sniper"
-  ]
+  ],
+  "looks_like": "ruger_pr",
+  "gun": {
+   "dmg": [
+    30,
+    48
+   ],
+   "range": 30,
+   "shots": 1,
+   "acc": 82
+  }
  },
  {
   "id": "trl_gun_ld10",
@@ -504,7 +884,17 @@
   "tags": [
    "gun",
    "sniper"
-  ]
+  ],
+  "looks_like": "m2010",
+  "gun": {
+   "dmg": [
+    30,
+    48
+   ],
+   "range": 30,
+   "shots": 1,
+   "acc": 82
+  }
  },
  {
   "id": "trl_gun_vm12",
@@ -517,7 +907,17 @@
   "tags": [
    "gun",
    "heavy_mg"
-  ]
+  ],
+  "looks_like": "m2browning",
+  "gun": {
+   "dmg": [
+    16,
+    24
+   ],
+   "range": 20,
+   "shots": 5,
+   "acc": 55
+  }
  },
  {
   "id": "trl_gun_zm74",
@@ -530,7 +930,17 @@
   "tags": [
    "gun",
    "mg"
-  ]
+  ],
+  "looks_like": "m60_semi",
+  "gun": {
+   "dmg": [
+    12,
+    18
+   ],
+   "range": 16,
+   "shots": 4,
+   "acc": 55
+  }
  },
  {
   "id": "trl_gun_gm134",
@@ -543,7 +953,17 @@
   "tags": [
    "gun",
    "heavy_mg"
-  ]
+  ],
+  "looks_like": "m134",
+  "gun": {
+   "dmg": [
+    16,
+    24
+   ],
+   "range": 20,
+   "shots": 5,
+   "acc": 55
+  }
  },
  {
   "id": "trl_gun_hm5",
@@ -556,7 +976,17 @@
   "tags": [
    "gun",
    "mg"
-  ]
+  ],
+  "looks_like": "m60",
+  "gun": {
+   "dmg": [
+    12,
+    18
+   ],
+   "range": 16,
+   "shots": 4,
+   "acc": 55
+  }
  },
  {
   "id": "trl_gun_lm7",
@@ -569,7 +999,17 @@
   "tags": [
    "gun",
    "mg"
-  ]
+  ],
+  "looks_like": "m1918",
+  "gun": {
+   "dmg": [
+    12,
+    18
+   ],
+   "range": 16,
+   "shots": 4,
+   "acc": 55
+  }
  },
  {
   "id": "trl_gun_gl40",
@@ -582,7 +1022,17 @@
   "tags": [
    "gun",
    "launcher"
-  ]
+  ],
+  "looks_like": "m79",
+  "gun": {
+   "dmg": [
+    40,
+    70
+   ],
+   "range": 14,
+   "shots": 1,
+   "acc": 65
+  }
  },
  {
   "id": "trl_gun_zl40",
@@ -595,7 +1045,17 @@
   "tags": [
    "gun",
    "launcher"
-  ]
+  ],
+  "looks_like": "m203",
+  "gun": {
+   "dmg": [
+    40,
+    70
+   ],
+   "range": 14,
+   "shots": 1,
+   "acc": 65
+  }
  },
  {
   "id": "trl_gun_fl80",
@@ -608,7 +1068,17 @@
   "tags": [
    "gun",
    "launcher"
-  ]
+  ],
+  "looks_like": "m202_flash",
+  "gun": {
+   "dmg": [
+    40,
+    70
+   ],
+   "range": 14,
+   "shots": 1,
+   "acc": 65
+  }
  },
  {
   "id": "trl_gun_he3",
@@ -621,7 +1091,17 @@
   "tags": [
    "gun",
    "laser"
-  ]
+  ],
+  "looks_like": "laser_rifle",
+  "gun": {
+   "dmg": [
+    14,
+    22
+   ],
+   "range": 15,
+   "shots": 1,
+   "acc": 78
+  }
  },
  {
   "id": "trl_gun_se9",
@@ -634,7 +1114,17 @@
   "tags": [
    "gun",
    "laser"
-  ]
+  ],
+  "looks_like": "laser_rifle",
+  "gun": {
+   "dmg": [
+    14,
+    22
+   ],
+   "range": 15,
+   "shots": 1,
+   "acc": 78
+  }
  },
  {
   "id": "trl_gun_fe7",
@@ -647,7 +1137,17 @@
   "tags": [
    "gun",
    "laser"
-  ]
+  ],
+  "looks_like": "laser_rifle",
+  "gun": {
+   "dmg": [
+    14,
+    22
+   ],
+   "range": 15,
+   "shots": 1,
+   "acc": 78
+  }
  },
  {
   "id": "trl_backpack",
@@ -660,6 +1160,7 @@
    "container",
    "worn"
   ],
+  "looks_like": "backpack",
   "pockets": [
    {
     "id": "main",
@@ -694,6 +1195,7 @@
    "container",
    "worn"
   ],
+  "looks_like": "holster",
   "pockets": [
    {
     "id": "holster",
@@ -720,6 +1222,7 @@
    "container",
    "worn"
   ],
+  "looks_like": "trenchcoat",
   "pockets": [
    {
     "id": "inner",
@@ -760,6 +1263,7 @@
   "tags": [
    "container"
   ],
+  "looks_like": "chestpouch",
   "pockets": [
    {
     "id": "main",
@@ -782,6 +1286,7 @@
   "tags": [
    "container"
   ],
+  "looks_like": "duffelbag",
   "pockets": [
    {
     "id": "main",
@@ -805,6 +1310,7 @@
    "container",
    "bottle"
   ],
+  "looks_like": "bottle_plastic",
   "pockets": [
    {
     "id": "liquid",
@@ -818,6 +1324,30 @@
     "max_item_length_mm": 0
    }
   ]
+ },
+ {
+  "id": "trl_yen",
+  "name": "yen notes",
+  "weight_g": 1,
+  "volume_ml": 1,
+  "length_mm": 0,
+  "price": 1,
+  "tags": [
+   "money"
+  ],
+  "looks_like": "money_bundle_hundred"
+ },
+ {
+  "id": "trl_ammo",
+  "name": "ammo box",
+  "weight_g": 12,
+  "volume_ml": 8,
+  "length_mm": 60,
+  "price": 1,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm"
  },
  {
   "id": "trl_water",
@@ -840,7 +1370,8 @@
   "price": 15,
   "tags": [
    "food"
-  ]
+  ],
+  "looks_like": "granola"
  },
  {
   "id": "trl_credstick",
@@ -851,6 +1382,7 @@
   "price": 0,
   "tags": [
    "card"
-  ]
+  ],
+  "looks_like": "cash_card"
  }
 ]

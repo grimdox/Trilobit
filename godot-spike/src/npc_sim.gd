@@ -30,7 +30,7 @@ var near: PackedByteArray          # 1 if a full agent
 var idle: PackedByteArray          # near agent that has arrived
 var depart: PackedInt32Array
 var arrive: PackedInt32Array       # tick of arrival for far agents in transit, -1 if none
-var occ: PackedByteArray
+var at: PackedInt32Array           # agent index standing on each cell (near agents only), -1 if none
 var buckets: Dictionary = {}       # tick -> PackedInt32Array of agents
 var near_list: PackedInt32Array
 var near_slot: PackedInt32Array
@@ -39,6 +39,9 @@ var player: int = 0
 var promotions: int = 0
 var demotions: int = 0
 var churn_per_tick: int = 0        # stress option: this many random agents get a new random goal every tick (keeps everyone walking)
+var perception_standin: bool = true   # the scale test's stand-in LOS check; the game turns it off and runs real awareness instead
+var alive: PackedByteArray
+var ctl: PackedByteArray           # 1 = an AI routine (awareness, combat, flight) drives this near agent instead of the routine
 var seen_player: int = 0           # agents that currently see the player (output of the perception stand-in)
 
 func setup(city, count: int, seed: int) -> void:
@@ -66,9 +69,11 @@ func setup(city, count: int, seed: int) -> void:
 	depart = PackedInt32Array(); depart.resize(n)
 	arrive = PackedInt32Array(); arrive.resize(n); arrive.fill(-1)
 	near_slot = PackedInt32Array(); near_slot.resize(n); near_slot.fill(-1)
-	occ = PackedByteArray(); occ.resize(size * size)
+	at = PackedInt32Array(); at.resize(size * size); at.fill(-1)
+	alive = PackedByteArray(); alive.resize(n); alive.fill(1)
+	ctl = PackedByteArray(); ctl.resize(n)
 	for i in n:
-		var h := homes[rng.randi() % homes.size()]
+		var h := _scatter(homes[rng.randi() % homes.size()], 9)
 		home_cell[i] = h
 		pos[i] = h
 		dest[i] = h
@@ -77,14 +82,28 @@ func setup(city, count: int, seed: int) -> void:
 func _dist_to(cell_a: int, cell_b: int) -> int:
 	return maxi(absi(cell_a % size - cell_b % size), absi(cell_a / size - cell_b / size))
 
+## a random walkable floor cell within r of a marker, so that people sharing a building do not share a cell
+func _scatter(c: int, r: int) -> int:
+	for _t in 24:
+		var nx := c % size + rng.randi_range(-r, r)
+		var ny := c / size + rng.randi_range(-r, r)
+		if nx < 0 or ny < 0 or nx >= size or ny >= size:
+			continue
+		var nc := ny * size + nx
+		if tiles[nc] == 3 and walk[nc] == 1:
+			return nc
+	return c
+
 func _pick_dest(g: int, i: int) -> int:
 	match g:
-		WORK: return works[rng.randi() % works.size()]
-		SHOP: return shops[rng.randi() % shops.size()]
+		WORK: return _scatter(works[rng.randi() % works.size()], 4)
+		SHOP: return _scatter(shops[rng.randi() % shops.size()], 4)
 		_: return home_cell[i]
 
 ## a new goal for agent i
 func set_goal(i: int, g: int) -> void:
+	if alive[i] == 0:
+		return
 	goal[i] = g
 	dest[i] = _pick_dest(g, i)
 	if near[i] == 1:
@@ -142,8 +161,27 @@ func _promote(i: int) -> void:
 	idle[i] = 0
 	near_slot[i] = near_list.size()
 	near_list.append(i)
-	occ[pos[i]] = mini(255, occ[pos[i]] + 1)
+	pos[i] = _free_near(pos[i])
+	at[pos[i]] = i
 	promotions += 1
+
+## nearest walkable cell without an agent (several agents share a home cell when they are stored far away)
+func _free_near(c: int) -> int:
+	if walk[c] == 1 and at[c] == -1:
+		return c
+	for r in range(1, 6):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var nx := c % size + dx
+				var ny := c / size + dy
+				if nx < 0 or ny < 0 or nx >= size or ny >= size:
+					continue
+				var nc := ny * size + nx
+				if walk[nc] == 1 and at[nc] == -1:
+					return nc
+	return c
 
 func _demote(i: int) -> void:
 	var s := near_slot[i]
@@ -153,7 +191,9 @@ func _demote(i: int) -> void:
 	near_list.resize(near_list.size() - 1)
 	near_slot[i] = -1
 	near[i] = 0
-	occ[pos[i]] = maxi(0, occ[pos[i]] - 1)
+	ctl[i] = 0
+	if at[pos[i]] == i:
+		at[pos[i]] = -1
 	if idle[i] == 0:
 		var d: int = fields[goal[i]][pos[i]]
 		if d < FF.UNREACHED:
@@ -196,7 +236,7 @@ func step(player_cell: int) -> void:
 	# arrivals of far agents
 	if buckets.has(tick):
 		for i in buckets[tick]:
-			if arrive[i] == tick and near[i] == 0:
+			if arrive[i] == tick and near[i] == 0 and alive[i] == 1:
 				pos[i] = dest[i]
 				arrive[i] = -1
 		buckets.erase(tick)
@@ -204,6 +244,8 @@ func step(player_cell: int) -> void:
 	var slice := n / 8 + 1
 	var start := (tick % 8) * slice
 	for i in range(start, mini(start + slice, n)):
+		if alive[i] == 0:
+			continue
 		var cell: int = pos[i]
 		var d := _dist_to(cell, player)
 		if near[i] == 0:
@@ -229,17 +271,20 @@ func step(player_cell: int) -> void:
 	for k in near_list.size():
 		var i := near_list[k]
 		var c := pos[i]
-		# perception stand-in: line of sight to the player within 25 tiles
-		if absi(c % size - plx) <= 25 and absi(c / size - ply) <= 25:
+		if perception_standin and absi(c % size - plx) <= 25 and absi(c / size - ply) <= 25:
 			if _sees(c, player, 25):
 				seen_player += 1
-		if idle[i] == 1:
+		if idle[i] == 1 or ctl[i] == 1:
 			continue
 		var f: PackedInt32Array = fields[goal[i]]
 		var cur: int = f[c]
 		if cur == 0 or cur >= FF.UNREACHED:
 			idle[i] = 1
-			pos[i] = dest[i] if _dist_to(c, dest[i]) < 14 else c   # last mile: snap (a small A* window replaces this later)
+			# last mile: step into the exact destination if it is free and close (a small A* window replaces this later)
+			if _dist_to(c, dest[i]) < 14 and at[dest[i]] == -1:
+				at[c] = -1
+				at[dest[i]] = i
+				pos[i] = dest[i]
 			continue
 		var best := c
 		var bv := cur
@@ -253,11 +298,28 @@ func step(player_cell: int) -> void:
 				_: nb = c + size
 			if nb < 0 or nb >= f.size() or walk[nb] == 0:
 				continue
-			if f[nb] < bv and occ[nb] < 2:
+			if f[nb] < bv and at[nb] == -1:
 				bv = f[nb]
 				best = nb
 		if best != c:
-			occ[c] -= 1
-			occ[best] += 1
+			at[c] = -1
+			at[best] = i
 			pos[i] = best
 	tick += 1
+
+
+## the game kills an agent: take it out of every structure
+func remove_agent(i: int) -> void:
+	if near[i] == 1:
+		if at[pos[i]] == i:
+			at[pos[i]] = -1
+		var sl := near_slot[i]
+		var last := near_list[near_list.size() - 1]
+		near_list[sl] = last
+		near_slot[last] = sl
+		near_list.resize(near_list.size() - 1)
+		near_slot[i] = -1
+		near[i] = 0
+	alive[i] = 0
+	arrive[i] = -1
+	ctl[i] = 0

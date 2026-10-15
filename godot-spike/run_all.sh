@@ -3,7 +3,7 @@
 cd "$(dirname "$0")"
 python3 tools/export_items.py
 rc=0
-for t in pockets world scale; do
+for t in pockets world scale game; do
   timeout 280 godot --headless --path . -s tests/run_$t.gd 2>&1 | grep -v "^$\|Godot Engine" || rc=1
 done
 exit $rc

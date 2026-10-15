@@ -1,0 +1,4 @@
+NAME: Mokuhanga TopDown
+VIEW: Mokuhanga TopDown
+JSON: tile_config.json
+TILESET: tiles.png

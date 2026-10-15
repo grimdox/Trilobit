@@ -33,3 +33,7 @@ All three pass: **pockets 19 of 19, world 12 of 12, scale 6 of 6.**  Run `godot-
 
 ## Risks
 GDScript speed for real AI (mitigation: hot loops in C# or GDExtension), art pipeline mapping (the generators are engine-independent), and the sheer volume of UI to rebuild.
+
+## Round two status (vertical slice)
+Playable slice in `src/game.gd`, `view.gd`, `main.gd`: city, FOV, Bouma/Mokuhanga tilesets (F2), pockets inventory, awareness-driven Bratva/NAP/Nasim hostiles, theft, shooting, heat, 30 cars (12 AI-driven), save/load (F5/F9). Tests: pockets 19/19, world 12/12, scale 6/6, game 20/20; full turn ~2.5 ms at 2,000 people.
+Known gaps: no floors/stairs, 1x1 vehicles, no overworld travel, no dialogue, no Windows export workflow. Crowding on promotion is density, not a bug: default population lowered to 1,200.

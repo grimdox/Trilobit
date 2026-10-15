@@ -149,7 +149,7 @@ func _building(bx0: int, by0: int, bx1: int, by1: int, kind: String) -> void:
 	tiles[door.y * size + door.x] = DOOR
 	# markers: houses get one home per room with some probability; towers get several desks, flats and counters per room
 	for r in rooms:
-		var n := 1 if kind == "house" else maxi(1, int(r.get_area() / 9))
+		var n := 1 if kind == "house" else maxi(1, int(r.get_area() / 6))
 		for _k in n:
 			var cell := Vector2i(rng.randi_range(r.position.x, r.end.x - 1), rng.randi_range(r.position.y, r.end.y - 1))
 			if tiles[cell.y * size + cell.x] != FLOOR:
@@ -160,9 +160,9 @@ func _building(bx0: int, by0: int, bx1: int, by1: int, kind: String) -> void:
 					homes.append(idx)
 			else:
 				var roll := rng.randf()
-				if roll < 0.5:
+				if roll < 0.35:
 					works.append(idx)
-				elif roll < 0.62:
+				elif roll < 0.47:
 					shops.append(idx)
 				else:
 					homes.append(idx)
