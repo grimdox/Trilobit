@@ -103,6 +103,12 @@ var postc: PackedInt32Array
 var yenn: PackedInt32Array
 var gunc: PackedByteArray            # 0 unarmed, 1 pistol, 2 SMG, 3 rifle
 var cool: PackedByteArray
+var stun: PackedByteArray             # turns a person is stunned, tangled or tripped
+var bleed: PackedByteArray            # turns left bleeding (1 hp each)
+var mdis: PackedByteArray             # 1 = their melee weapon has been knocked away
+var melee_pool: Dictionary = {}       # faction -> melee weapon ids they carry
+var melee_all: Array = []
+var prev_wield = null
 var face: PackedByteArray              # which way each person looks: index into DIR8
 var prevpos: PackedInt32Array
 var _silent: bool = false
@@ -134,6 +140,7 @@ func setup(n_people: int = 1200) -> void:
 					if not gun_ids.has(t):
 						gun_ids[t] = []
 					gun_ids[t].append(k)
+	_melee_pools()
 	city = CG.new()
 	city.generate(seed_value, Vector2(1, 0.2))
 	LV.build(city, seed_value)
@@ -174,6 +181,9 @@ func _people() -> void:
 	yenn = PackedInt32Array(); yenn.resize(n)
 	gunc = PackedByteArray(); gunc.resize(n)
 	cool = PackedByteArray(); cool.resize(n)
+	stun = PackedByteArray(); stun.resize(n)
+	bleed = PackedByteArray(); bleed.resize(n)
+	mdis = PackedByteArray(); mdis.resize(n)
 	face = PackedByteArray(); face.resize(n)
 	prevpos = PackedInt32Array(); prevpos.resize(n)
 	for i in n:
@@ -335,12 +345,13 @@ func _loot() -> void:
 	for c in markers:
 		if rng.randf() > 0.4:
 			continue
-		var kind := _weighted([["trl_ration", 28], ["trl_yen", 26], ["ammo", 16], ["water", 8], ["gun", 9], ["mod", 3], ["trl_backpack", 3], ["trl_coat", 2], ["trl_pouch", 3], ["trl_duffel", 1]])
+		var kind := _weighted([["trl_ration", 28], ["trl_yen", 26], ["ammo", 16], ["water", 8], ["gun", 9], ["mod", 3], ["melee", 6], ["trl_backpack", 3], ["trl_coat", 2], ["trl_pouch", 3], ["trl_duffel", 1]])
 		var it
 		match kind:
 			"trl_yen": it = _new_item("trl_yen", rng.randi_range(20, 220))
 			"ammo": it = _new_item(_random_ammo() if rng.randf() < 0.6 else "trl_ammo", rng.randi_range(1, 3))
 			"mod": it = _new_item(_random_mod())
+			"melee": it = _new_item(_random_melee())
 			"water":
 				it = _new_item("trl_water_bottle")
 				it.pockets[0].append(_new_item("trl_water", 450))
@@ -358,6 +369,7 @@ func _vault_loot() -> void:
 		_put(arr[rng.randi() % arr.size()], _new_item(_random_gun()))
 		_put(arr[rng.randi() % arr.size()], _new_item("trl_yen", rng.randi_range(300, 900)))
 		_put(arr[rng.randi() % arr.size()], _new_item(_random_ammo(), rng.randi_range(2, 4)))
+		_put(arr[rng.randi() % arr.size()], _new_item(_random_melee("_m" if rng.randf() < 0.4 else "_f")))
 		_put(arr[rng.randi() % arr.size()], _new_item(_random_mod()))
 		if rng.randf() < 0.5:
 			_put(arr[rng.randi() % arr.size()], _new_item(_random_mod()))
@@ -479,6 +491,8 @@ func item_label(it) -> String:
 	var s: String = it.def["name"]
 	if it.count > 1:
 		s += " x%d" % it.count
+	if it.def.has("melee"):
+		s += " (%d-%d)" % [it.def["melee"]["dmg"][0], it.def["melee"]["dmg"][1]]
 	if it.def.has("gun"):
 		var gs: Dictionary = GP.stats(it)
 		s += " (%d/%d%s)" % [it.loaded, gs["mag"], (" +%d mods" % it.mods.size()) if not it.mods.is_empty() else ""]
@@ -512,7 +526,7 @@ func act_pickup() -> bool:
 		elif stow(it):
 			say("You stow the %s." % item_label(it))
 			took += 1
-		elif wield == null and it.has_tag("gun"):
+		elif wield == null and (it.has_tag("gun") or it.has_tag("melee")):
 			wield = it
 			say("You pick up the %s." % item_label(it))
 			took += 1
@@ -528,7 +542,7 @@ func act_pickup() -> bool:
 	return took > 0
 
 func act_wield(it) -> bool:
-	if not it.has_tag("gun"):
+	if not (it.has_tag("gun") or it.has_tag("melee")):
 		say("You can't wield that as a weapon.")
 		return false
 	var holder = null
@@ -536,10 +550,13 @@ func act_wield(it) -> bool:
 		if c == it or c.contains_item(it):
 			c.remove(it)
 			holder = c
+	var old = wield
 	if wield != null:
 		if not stow(wield):
 			_put(pc, wield)
 			say("You drop the %s." % item_label(wield))
+			old = null
+	prev_wield = old
 	wield = it
 	say("You wield the %s." % item_label(it))
 	end_turn()
@@ -575,7 +592,12 @@ func act_move(dx: int, dy: int, run: bool = false) -> bool:
 	if who >= 0:
 		melee(who)
 		end_turn()
+		if melee_stats().get("slow", false) and not game_over:
+			end_turn()
 		return true
+	var rt: int = _reach_target(dx, dy)
+	if rt >= 0 and sim.at[c] == -1:
+		return act_strike(dx, dy)
 	if veh_at[c] != -1:
 		say("A car blocks the way.  [e] to get in.")
 		return false
@@ -818,27 +840,228 @@ func _face_toward(i: int, cell: int) -> void:
 	face[i] = DIR8.find([dx, dy])
 
 
-func melee(i: int) -> void:
+# ---------------------------------------------------------------- melee
+## the stats of whatever is in your hands for close work: a melee weapon, a gun used as a club, or bare hands
+func melee_stats() -> Dictionary:
+	if wield != null and wield.def.has("melee"):
+		return wield.def["melee"]
+	if wield != null and wield.def.has("gun"):
+		return {"dmg": [2, 4], "reach": 1, "acc": -5, "verb": "club"}
+	return {"dmg": [3, 6], "reach": 1, "acc": 0, "verb": "hit"}
+
+func melee_line() -> String:
+	var m: Dictionary = melee_stats()
+	var bits: Array = ["dmg %d-%d" % [m["dmg"][0], m["dmg"][1]]]
+	if int(m["reach"]) > 1:
+		bits.append("reach %d" % m["reach"])
+	for k in ["parry", "stun", "sneak"]:
+		if m.has(k):
+			bits.append("%s %s" % [k, str(m[k])])
+	if m.get("slow", false):
+		bits.append("slow")
+	return ", ".join(bits)
+
+## which weapon person i carries into a fight (a def id), or "" if none: Bratva carry Russian blades, the NAP and Nasim Japanese ones.  Deterministic per person.
+func npc_melee_id(i: int) -> String:
+	if fac[i] == CIV or gunc[i] > 0 or mdis[i] == 1 or (i * 40503 + 17) % 100 >= 55:
+		return ""
+	var pool: Array = melee_pool.get(fac[i], [])
+	if pool.is_empty():
+		return ""
+	var id: String = pool[(i * 7 + 3) % pool.size()]
+	return id + ("_f" if (i * 31) % 10 == 0 else "")
+
+func npc_melee_stats(i: int) -> Dictionary:
+	var id := npc_melee_id(i)
+	if id == "":
+		return {}
+	return db.defs[id]["melee"]
+
+func _melee_pools() -> void:
+	melee_pool = {BRATVA: [], NAP: [], NASIM: []}
+	var ids: Array = []
+	for k in db.defs:
+		if "melee" in db.defs[k].get("tags", []) and not (k.ends_with("_f") or k.ends_with("_m")):
+			ids.append(k)
+	ids.sort()
+	for k in ids:
+		var name: String = k.substr(8)
+		var ru: bool = db.defs[k]["culture"] == "Russian"
+		if ru:
+			melee_pool[BRATVA].append(k)
+		elif name in ["wakizashi", "tanto", "katana", "tonfa", "bo", "jitte"]:
+			melee_pool[NAP].append(k)
+		elif name in ["kama", "nunchaku", "sai", "kunai", "jo", "tessen"]:
+			melee_pool[NASIM].append(k)
+	melee_all = ids
+
+func _random_melee(grade: String = "") -> String:
+	return melee_all[rng.randi() % melee_all.size()] + grade
+
+func _line_clear(a: int, b: int) -> bool:
+	for c in GP.line_cells(a, b, size):
+		var t: int = city.tiles[c]
+		if t == CG.WALL or t == CG.EARTH or t == CG.LOCKED or t == CG.GLASS:
+			return false
+	return true
+
+## one strike at person i from where you stand, with whatever you hold.  dist is how far away they are (reach weapons).
+func melee(i: int, dist: int = 1) -> void:
+	var ms: Dictionary = melee_stats()
 	var sneak := astate[i] == UNAWARE or astate[i] == RETURNING
-	var chance: int = 72 + skills["melee"] * 3 - (0 if sneak else 12)
+	var chance: int = 72 + skills["melee"] * 3 + int(ms.get("acc", 0)) - (0 if sneak else 12) - 4 * (dist - 1)
 	if astate[i] == SURRENDERED:
 		chance = 100
-	if rng.randi() % 100 >= chance:
-		say("You miss %s." % name_of(i))
-		_alert(i)
+	var strikes := 1
+	if rng.randf() < float(ms.get("fast", 0.0)):
+		strikes = 2
+	for s in strikes:
+		if sim.alive[i] == 0:
+			break
+		if s == 1:
+			say("...and again, quick as a snake.")
+			sneak = false
+		if rng.randi() % 100 >= chance:
+			say("You miss %s." % name_of(i))
+			_alert(i)
+			continue
+		var dmg: int = rng.randi_range(int(ms["dmg"][0]), int(ms["dmg"][1])) + skills["melee"] / 2
+		var behind: bool = sneak and cone_factor(i, pc) == 0.0
+		if behind:
+			dmg *= int(ms.get("sneak", 4))
+			say("You strike %s from behind!" % name_of(i))
+		elif sneak:
+			dmg *= 2
+			say("You catch %s unready." % name_of(i))
+		if dist > 1 and ms.get("brace", false) and astate[i] == HUNTING:
+			dmg = dmg * 3 / 2
+			say("You meet the charge on the point.")
+		_silent = behind
+		_melee_damage(i, dmg, ms)
+		_silent = false
+		if sim.alive[i] == 1:
+			_melee_effects(i, ms)
+		skill_up("melee", 3 if hpmax[i] >= 40 else 1)
+	if ms.get("sweep", false):
+		_sweep_others(i, ms)
+
+func _melee_damage(i: int, dmg: int, ms: Dictionary) -> void:
+	hpn[i] -= dmg
+	if hpn[i] <= 0:
+		kill(i)
 		return
-	var dmg: int = rng.randi_range(3, 6) + skills["melee"] / 2
-	var behind: bool = sneak and cone_factor(i, pc) == 0.0
-	if behind:
-		dmg *= 4
-		say("You strike %s from behind!" % name_of(i))
-	elif sneak:
-		dmg *= 2
-		say("You catch %s unready." % name_of(i))
-	_silent = behind
-	hurt(i, dmg, true)
-	_silent = false
-	skill_up("melee", 3 if hpmax[i] >= 40 else 1)
+	say("You %s %s (%d)." % [ms.get("verb", "hit"), name_of(i), dmg])
+	_alert(i)
+
+func _melee_effects(i: int, ms: Dictionary) -> void:
+	if ms.get("bleed", false) and bleed[i] < 6:
+		bleed[i] = 5
+		say_if_seen(sim.pos[i], "%s is bleeding." % name_of(i))
+	if rng.randf() < float(ms.get("stun", 0.0)):
+		stun[i] = 3
+		sim.ctl[i] = 1
+		say("%s reels." % name_of(i))
+	elif rng.randf() < float(ms.get("trip", 0.0)):
+		stun[i] = 1
+		sim.ctl[i] = 1
+		say("The hook takes %s's feet from under them." % name_of(i))
+	elif rng.randf() < float(ms.get("entangle", 0.0)):
+		stun[i] = 3
+		sim.ctl[i] = 1
+		say("The chain wraps %s and pulls them up short." % name_of(i))
+	if rng.randf() < float(ms.get("disarm", 0.0)):
+		var c: int = sim.pos[i]
+		if gunc[i] > 0:
+			var tag: String = ["", "pistol", "smg", "rifle"][gunc[i]]
+			var arr: Array = gun_ids[tag]
+			var gn = _new_item(arr[rng.randi() % arr.size()])
+			_part_load(gn)
+			_put(c, gn)
+			gunc[i] = 0
+			say("You knock the gun from %s's hand." % name_of(i))
+		elif npc_melee_id(i) != "":
+			_put(c, _new_item(npc_melee_id(i)))
+			mdis[i] = 1
+			say("You send %s's weapon spinning away." % name_of(i))
+
+## a long weapon's arc takes in other enemies beside the one you hit
+func _sweep_others(i: int, ms: Dictionary) -> void:
+	var hit := 0
+	for k in sim.near_list.size():
+		var j: int = sim.near_list[k]
+		if j == i or sim.alive[j] == 0 or hit >= 2:
+			continue
+		if cheb(sim.pos[j], pc) <= 1 and (astate[j] == HUNTING or hostile(j)):
+			var dmg: int = rng.randi_range(int(ms["dmg"][0]), int(ms["dmg"][1])) * 6 / 10
+			say("The sweep catches %s." % name_of(j))
+			_melee_damage(j, dmg, ms)
+			hit += 1
+
+## strike in a direction as far as the weapon reaches
+func act_strike(dx: int, dy: int) -> bool:
+	if in_vehicle >= 0 and not in_mech():
+		return false
+	var ms: Dictionary = melee_stats()
+	var reach: int = int(ms["reach"])
+	for dist in range(1, reach + 1):
+		var nx: int = pc % size + dx * dist
+		var ny: int = pc / size + dy * dist
+		if not in_bounds(nx, ny):
+			return false
+		var c: int = ny * size + nx
+		if z_of(c) != z_of(pc):
+			return false
+		var who: int = sim.at[c]
+		if who >= 0:
+			if dist > 1 and not _line_clear(pc, c):
+				return false
+			facing = Vector2i(dx, dy)
+			melee(who, dist)
+			end_turn()
+			if ms.get("slow", false) and not game_over:
+				end_turn()
+			return true
+	say("Nothing within reach of your %s." % (wield.def["name"] if wield != null else "fists"))
+	return false
+
+## a hunter two cells away in a straight line: a reach weapon strikes instead of stepping
+func _reach_target(dx: int, dy: int) -> int:
+	var ms: Dictionary = melee_stats()
+	if int(ms["reach"]) < 2:
+		return -1
+	var nx: int = pc % size + dx * 2
+	var ny: int = pc / size + dy * 2
+	if not in_bounds(nx, ny):
+		return -1
+	var c: int = ny * size + nx
+	var who: int = sim.at[c]
+	if who >= 0 and astate[who] == HUNTING and fac[who] != CIV and z_of(c) == z_of(pc) and _line_clear(pc, c):
+		return who
+	return -1
+
+func act_swap() -> bool:
+	if prev_wield == null:
+		say("Nothing to swap to.")
+		return false
+	var carried := false
+	for e in inventory_list():
+		if e["item"] == prev_wield:
+			carried = true
+	if not carried:
+		prev_wield = null
+		say("Nothing to swap to.")
+		return false
+	return act_wield(prev_wield)
+
+func _bleed_tick() -> void:
+	for k in sim.near_list.size():
+		var j: int = sim.near_list[k]
+		if sim.alive[j] == 1 and bleed[j] > 0:
+			bleed[j] -= 1
+			hpn[j] -= 1
+			if hpn[j] <= 0:
+				say_if_seen(sim.pos[j], "%s bleeds out." % name_of(j))
+				kill(j)
 
 func hurt(i: int, dmg: int, by_player: bool) -> void:
 	hpn[i] -= dmg
@@ -886,6 +1109,11 @@ func kill(i: int) -> void:
 		_put(c, dropped)
 		if rng.randf() < 0.1:
 			_put(c, _new_item(_random_mod()))
+	var mw: String = npc_melee_id(i)
+	if mw != "" and rng.randf() < 0.5:
+		_put(c, _new_item(mw))
+	stun[i] = 0
+	bleed[i] = 0
 	sim.remove_agent(i)
 	astate[i] = UNAWARE
 	_witness(c, 4 if _silent else 14, 3 if _silent else 14, i)
@@ -1042,7 +1270,11 @@ func _shot_chance(st: Dictionary, t: int, aimed: int, shot_index: int) -> int:
 
 ## one-line description of the wielded gun and what it is aimed at
 func gun_line() -> String:
-	if wield == null or not wield.has_tag("gun"):
+	if wield == null:
+		return "bare hands"
+	if wield.has_tag("melee"):
+		return "%s [%s]" % [wield.def["name"], melee_line()]
+	if not wield.has_tag("gun"):
 		return "bare hands"
 	var st: Dictionary = gun_stats()
 	var s := "%s [%s] %d/%d %s  res %d" % [wield.def["name"], GP.mode_name(wield), wield.loaded, st["mag"], st["label"] if wield.loaded > 0 else "empty", reserve(st["cal"])]
@@ -1373,6 +1605,7 @@ func end_turn() -> void:
 	sim.step(pc)
 	transit.step()
 	_ai()
+	_bleed_tick()
 	_vehicles()
 	eco.step()
 	step_noise = 0
@@ -1505,6 +1738,10 @@ func _ai() -> void:
 			prevpos[i] = cp
 		elif st == UNAWARE and (turn + i) % 7 == 0:
 			face[i] = (int(face[i]) + (1 if rng.randf() < 0.5 else 7) + (0 if rng.randf() < 0.6 else (1 if rng.randf() < 0.5 else 7))) % 8
+		if stun[i] > 0:
+			stun[i] -= 1
+			sim.ctl[i] = 1
+			continue
 		# who is worth watching: armed or hostile factions, or anyone already worked up
 		var capable := fac[i] == BRATVA or fac[i] == NAP or (fac[i] == NASIM and noticed_you[i] == 1)
 		if st == UNAWARE and (not capable or d > 24 or not hostile(i)):
@@ -1640,8 +1877,18 @@ func _hunt(i: int, d: int) -> void:
 		_noise(c, 14)
 		return
 	if d <= 1:
-		if rng.randi() % 100 < 60:
-			player_hurt(rng.randi_range(3, 7), "%s hits you" % name_of(i))
+		var nm: Dictionary = npc_melee_stats(i)
+		var parry: int = int(melee_stats().get("parry", 0)) if (wield != null and wield.has_tag("melee") and not nm.get("flail", false)) else 0
+		var hit_c: int = 60 + int(nm.get("acc", 0)) / 2 - parry
+		if rng.randi() % 100 < hit_c:
+			var dm: int = rng.randi_range(3, 7)
+			var what := "hits you"
+			if not nm.is_empty():
+				dm = rng.randi_range(int(nm["dmg"][0]), int(nm["dmg"][1])) * 7 / 10
+				what = "%ss you" % nm.get("verb", "hit")
+			player_hurt(dm, "%s %s" % [name_of(i), what])
+		elif parry > 0 and rng.randi() % 100 < parry + 20:
+			say("You turn %s's blow aside." % name_of(i))
 		else:
 			say("%s swings and misses." % name_of(i))
 		return
@@ -2299,7 +2546,7 @@ func save_dict() -> Dictionary:
 			"items_at": it_at, "vehicles": vs, "tick": sim.tick, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
 					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc),
-					"noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle)}}
+					"mdis": Array(mdis), "noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle)}}
 
 func load_dict(d: Dictionary) -> void:
 	seed_value = int(d["seed"])
@@ -2379,6 +2626,7 @@ func load_dict(d: Dictionary) -> void:
 		yenn[i] = int(nn["yen"][i])
 		gunc[i] = int(nn["gun"][i])
 		noticed_you[i] = int(nn["noticed"][i])
+		mdis[i] = int(nn["mdis"][i]) if nn.has("mdis") else 0
 		if sim.alive[i] == 1:
 			if sim.near[i] == 1:
 				sim.near_slot[i] = sim.near_list.size()

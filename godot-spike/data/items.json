@@ -2912,6 +2912,2069 @@
   }
  },
  {
+  "id": "trl_mel_kama",
+  "name": "kama",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 600,
+  "volume_ml": 200,
+  "length_mm": 400,
+  "price": 60,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "trl_kama",
+  "melee": {
+   "dmg": [
+    6,
+    11
+   ],
+   "reach": 1,
+   "acc": 0,
+   "fast": 0.4,
+   "trip": 0.2,
+   "bleed": true,
+   "verb": "hook"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_kama_f",
+  "name": "forged kama",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 600,
+  "volume_ml": 200,
+  "length_mm": 400,
+  "price": 210,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "trl_kama",
+  "melee": {
+   "dmg": [
+    7,
+    13
+   ],
+   "reach": 1,
+   "acc": 4,
+   "fast": 0.4,
+   "trip": 0.2,
+   "bleed": true,
+   "verb": "hook"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_kama_m",
+  "name": "masterwork kama",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 600,
+  "volume_ml": 200,
+  "length_mm": 400,
+  "price": 540,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "trl_kama",
+  "melee": {
+   "dmg": [
+    9,
+    16
+   ],
+   "reach": 1,
+   "acc": 8,
+   "fast": 0.4,
+   "trip": 0.2,
+   "bleed": true,
+   "verb": "hook",
+   "parry": 5
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_wakizashi",
+  "name": "wakizashi",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 900,
+  "volume_ml": 300,
+  "length_mm": 650,
+  "price": 220,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "wakizashi",
+  "melee": {
+   "dmg": [
+    9,
+    15
+   ],
+   "reach": 1,
+   "acc": 0,
+   "parry": 10,
+   "fast": 0.15,
+   "bleed": true,
+   "verb": "cut"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_wakizashi_f",
+  "name": "forged wakizashi",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 900,
+  "volume_ml": 300,
+  "length_mm": 650,
+  "price": 770,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "wakizashi",
+  "melee": {
+   "dmg": [
+    11,
+    18
+   ],
+   "reach": 1,
+   "acc": 4,
+   "parry": 10,
+   "fast": 0.15,
+   "bleed": true,
+   "verb": "cut"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_wakizashi_m",
+  "name": "masterwork wakizashi",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 900,
+  "volume_ml": 300,
+  "length_mm": 650,
+  "price": 1980,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "wakizashi",
+  "melee": {
+   "dmg": [
+    13,
+    22
+   ],
+   "reach": 1,
+   "acc": 8,
+   "parry": 15,
+   "fast": 0.15,
+   "bleed": true,
+   "verb": "cut"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_katana",
+  "name": "katana",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 1200,
+  "volume_ml": 400,
+  "length_mm": 1000,
+  "price": 450,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "katana",
+  "melee": {
+   "dmg": [
+    12,
+    20
+   ],
+   "reach": 1,
+   "acc": 0,
+   "parry": 15,
+   "bleed": true,
+   "verb": "cut"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_katana_f",
+  "name": "forged katana",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 1200,
+  "volume_ml": 400,
+  "length_mm": 1000,
+  "price": 1575,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "katana",
+  "melee": {
+   "dmg": [
+    14,
+    24
+   ],
+   "reach": 1,
+   "acc": 4,
+   "parry": 15,
+   "bleed": true,
+   "verb": "cut"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_katana_m",
+  "name": "masterwork katana",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 1200,
+  "volume_ml": 400,
+  "length_mm": 1000,
+  "price": 4050,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "katana",
+  "melee": {
+   "dmg": [
+    17,
+    29
+   ],
+   "reach": 1,
+   "acc": 8,
+   "parry": 20,
+   "bleed": true,
+   "verb": "cut"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_tanto",
+  "name": "tanto",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 300,
+  "volume_ml": 100,
+  "length_mm": 300,
+  "price": 90,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "tanto",
+  "melee": {
+   "dmg": [
+    6,
+    10
+   ],
+   "reach": 1,
+   "acc": 0,
+   "sneak": 5,
+   "fast": 0.3,
+   "bleed": true,
+   "verb": "stab"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_tanto_f",
+  "name": "forged tanto",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 300,
+  "volume_ml": 100,
+  "length_mm": 300,
+  "price": 315,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "tanto",
+  "melee": {
+   "dmg": [
+    7,
+    12
+   ],
+   "reach": 1,
+   "acc": 4,
+   "sneak": 5,
+   "fast": 0.3,
+   "bleed": true,
+   "verb": "stab"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_tanto_m",
+  "name": "masterwork tanto",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 300,
+  "volume_ml": 100,
+  "length_mm": 300,
+  "price": 810,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "tanto",
+  "melee": {
+   "dmg": [
+    9,
+    14
+   ],
+   "reach": 1,
+   "acc": 8,
+   "sneak": 5,
+   "fast": 0.3,
+   "bleed": true,
+   "verb": "stab",
+   "parry": 5
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_nodachi",
+  "name": "nodachi",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 2800,
+  "volume_ml": 933,
+  "length_mm": 1600,
+  "price": 700,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "nodachi",
+  "melee": {
+   "dmg": [
+    16,
+    28
+   ],
+   "reach": 2,
+   "acc": 0,
+   "slow": true,
+   "parry": 10,
+   "bleed": true,
+   "verb": "cleave"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_nodachi_f",
+  "name": "forged nodachi",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 2800,
+  "volume_ml": 933,
+  "length_mm": 1600,
+  "price": 2450,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "nodachi",
+  "melee": {
+   "dmg": [
+    19,
+    34
+   ],
+   "reach": 2,
+   "acc": 4,
+   "slow": true,
+   "parry": 10,
+   "bleed": true,
+   "verb": "cleave"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_nodachi_m",
+  "name": "masterwork nodachi",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 2800,
+  "volume_ml": 933,
+  "length_mm": 1600,
+  "price": 6300,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "nodachi",
+  "melee": {
+   "dmg": [
+    23,
+    41
+   ],
+   "reach": 2,
+   "acc": 8,
+   "slow": true,
+   "parry": 15,
+   "bleed": true,
+   "verb": "cleave"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_naginata",
+  "name": "naginata",
+  "desc": "A Japanese weapon (polearm).",
+  "weight_g": 2200,
+  "volume_ml": 733,
+  "length_mm": 2100,
+  "price": 380,
+  "tags": [
+   "melee",
+   "polearm",
+   "japanese"
+  ],
+  "looks_like": "naginata",
+  "melee": {
+   "dmg": [
+    11,
+    18
+   ],
+   "reach": 2,
+   "acc": 0,
+   "sweep": true,
+   "parry": 10,
+   "bleed": true,
+   "verb": "slash"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_naginata_f",
+  "name": "forged naginata",
+  "desc": "A Japanese weapon (polearm).",
+  "weight_g": 2200,
+  "volume_ml": 733,
+  "length_mm": 2100,
+  "price": 1330,
+  "tags": [
+   "melee",
+   "polearm",
+   "japanese"
+  ],
+  "looks_like": "naginata",
+  "melee": {
+   "dmg": [
+    13,
+    22
+   ],
+   "reach": 2,
+   "acc": 4,
+   "sweep": true,
+   "parry": 10,
+   "bleed": true,
+   "verb": "slash"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_naginata_m",
+  "name": "masterwork naginata",
+  "desc": "A Japanese weapon (polearm).",
+  "weight_g": 2200,
+  "volume_ml": 733,
+  "length_mm": 2100,
+  "price": 3420,
+  "tags": [
+   "melee",
+   "polearm",
+   "japanese"
+  ],
+  "looks_like": "naginata",
+  "melee": {
+   "dmg": [
+    16,
+    26
+   ],
+   "reach": 2,
+   "acc": 8,
+   "sweep": true,
+   "parry": 15,
+   "bleed": true,
+   "verb": "slash"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_yari",
+  "name": "yari",
+  "desc": "A Japanese weapon (polearm).",
+  "weight_g": 1800,
+  "volume_ml": 600,
+  "length_mm": 2000,
+  "price": 200,
+  "tags": [
+   "melee",
+   "polearm",
+   "japanese"
+  ],
+  "looks_like": "trl_yari",
+  "melee": {
+   "dmg": [
+    10,
+    16
+   ],
+   "reach": 2,
+   "acc": 0,
+   "brace": true,
+   "verb": "thrust"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_yari_f",
+  "name": "forged yari",
+  "desc": "A Japanese weapon (polearm).",
+  "weight_g": 1800,
+  "volume_ml": 600,
+  "length_mm": 2000,
+  "price": 700,
+  "tags": [
+   "melee",
+   "polearm",
+   "japanese"
+  ],
+  "looks_like": "trl_yari",
+  "melee": {
+   "dmg": [
+    12,
+    19
+   ],
+   "reach": 2,
+   "acc": 4,
+   "brace": true,
+   "verb": "thrust"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_yari_m",
+  "name": "masterwork yari",
+  "desc": "A Japanese weapon (polearm).",
+  "weight_g": 1800,
+  "volume_ml": 600,
+  "length_mm": 2000,
+  "price": 1800,
+  "tags": [
+   "melee",
+   "polearm",
+   "japanese"
+  ],
+  "looks_like": "trl_yari",
+  "melee": {
+   "dmg": [
+    14,
+    23
+   ],
+   "reach": 2,
+   "acc": 8,
+   "brace": true,
+   "verb": "thrust",
+   "parry": 5
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_bo",
+  "name": "bo staff",
+  "desc": "A Japanese weapon (staff).",
+  "weight_g": 1000,
+  "volume_ml": 333,
+  "length_mm": 1800,
+  "price": 40,
+  "tags": [
+   "melee",
+   "staff",
+   "japanese"
+  ],
+  "looks_like": "bokken",
+  "melee": {
+   "dmg": [
+    5,
+    9
+   ],
+   "reach": 2,
+   "acc": 0,
+   "stun": 0.25,
+   "parry": 20,
+   "verb": "crack"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_bo_f",
+  "name": "forged bo staff",
+  "desc": "A Japanese weapon (staff).",
+  "weight_g": 1000,
+  "volume_ml": 333,
+  "length_mm": 1800,
+  "price": 140,
+  "tags": [
+   "melee",
+   "staff",
+   "japanese"
+  ],
+  "looks_like": "bokken",
+  "melee": {
+   "dmg": [
+    6,
+    11
+   ],
+   "reach": 2,
+   "acc": 4,
+   "stun": 0.25,
+   "parry": 20,
+   "verb": "crack"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_bo_m",
+  "name": "masterwork bo staff",
+  "desc": "A Japanese weapon (staff).",
+  "weight_g": 1000,
+  "volume_ml": 333,
+  "length_mm": 1800,
+  "price": 360,
+  "tags": [
+   "melee",
+   "staff",
+   "japanese"
+  ],
+  "looks_like": "bokken",
+  "melee": {
+   "dmg": [
+    7,
+    13
+   ],
+   "reach": 2,
+   "acc": 8,
+   "stun": 0.25,
+   "parry": 25,
+   "verb": "crack"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_jo",
+  "name": "jo staff",
+  "desc": "A Japanese weapon (staff).",
+  "weight_g": 500,
+  "volume_ml": 166,
+  "length_mm": 1300,
+  "price": 30,
+  "tags": [
+   "melee",
+   "staff",
+   "japanese"
+  ],
+  "looks_like": "bokken",
+  "melee": {
+   "dmg": [
+    4,
+    8
+   ],
+   "reach": 1,
+   "acc": 0,
+   "stun": 0.2,
+   "parry": 15,
+   "verb": "rap"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_jo_f",
+  "name": "forged jo staff",
+  "desc": "A Japanese weapon (staff).",
+  "weight_g": 500,
+  "volume_ml": 166,
+  "length_mm": 1300,
+  "price": 105,
+  "tags": [
+   "melee",
+   "staff",
+   "japanese"
+  ],
+  "looks_like": "bokken",
+  "melee": {
+   "dmg": [
+    5,
+    10
+   ],
+   "reach": 1,
+   "acc": 4,
+   "stun": 0.2,
+   "parry": 15,
+   "verb": "rap"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_jo_m",
+  "name": "masterwork jo staff",
+  "desc": "A Japanese weapon (staff).",
+  "weight_g": 500,
+  "volume_ml": 166,
+  "length_mm": 1300,
+  "price": 270,
+  "tags": [
+   "melee",
+   "staff",
+   "japanese"
+  ],
+  "looks_like": "bokken",
+  "melee": {
+   "dmg": [
+    6,
+    12
+   ],
+   "reach": 1,
+   "acc": 8,
+   "stun": 0.2,
+   "parry": 20,
+   "verb": "rap"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_nunchaku",
+  "name": "nunchaku",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 450,
+  "volume_ml": 150,
+  "length_mm": 350,
+  "price": 50,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "trl_nunchaku",
+  "melee": {
+   "dmg": [
+    6,
+    11
+   ],
+   "reach": 1,
+   "acc": 0,
+   "fast": 0.4,
+   "stun": 0.1,
+   "verb": "whip"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_nunchaku_f",
+  "name": "forged nunchaku",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 450,
+  "volume_ml": 150,
+  "length_mm": 350,
+  "price": 175,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "trl_nunchaku",
+  "melee": {
+   "dmg": [
+    7,
+    13
+   ],
+   "reach": 1,
+   "acc": 4,
+   "fast": 0.4,
+   "stun": 0.1,
+   "verb": "whip"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_nunchaku_m",
+  "name": "masterwork nunchaku",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 450,
+  "volume_ml": 150,
+  "length_mm": 350,
+  "price": 450,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "trl_nunchaku",
+  "melee": {
+   "dmg": [
+    9,
+    16
+   ],
+   "reach": 1,
+   "acc": 8,
+   "fast": 0.4,
+   "stun": 0.1,
+   "verb": "whip",
+   "parry": 5
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_kusarigama",
+  "name": "kusarigama",
+  "desc": "A Japanese weapon (chain).",
+  "weight_g": 1100,
+  "volume_ml": 366,
+  "length_mm": 1500,
+  "price": 260,
+  "tags": [
+   "melee",
+   "chain",
+   "japanese"
+  ],
+  "looks_like": "trl_kusarigama",
+  "melee": {
+   "dmg": [
+    7,
+    12
+   ],
+   "reach": 2,
+   "acc": 0,
+   "entangle": 0.35,
+   "bleed": true,
+   "verb": "lash"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_kusarigama_f",
+  "name": "forged kusarigama",
+  "desc": "A Japanese weapon (chain).",
+  "weight_g": 1100,
+  "volume_ml": 366,
+  "length_mm": 1500,
+  "price": 910,
+  "tags": [
+   "melee",
+   "chain",
+   "japanese"
+  ],
+  "looks_like": "trl_kusarigama",
+  "melee": {
+   "dmg": [
+    8,
+    14
+   ],
+   "reach": 2,
+   "acc": 4,
+   "entangle": 0.35,
+   "bleed": true,
+   "verb": "lash"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_kusarigama_m",
+  "name": "masterwork kusarigama",
+  "desc": "A Japanese weapon (chain).",
+  "weight_g": 1100,
+  "volume_ml": 366,
+  "length_mm": 1500,
+  "price": 2340,
+  "tags": [
+   "melee",
+   "chain",
+   "japanese"
+  ],
+  "looks_like": "trl_kusarigama",
+  "melee": {
+   "dmg": [
+    10,
+    17
+   ],
+   "reach": 2,
+   "acc": 8,
+   "entangle": 0.35,
+   "bleed": true,
+   "verb": "lash",
+   "parry": 5
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_sai",
+  "name": "sai",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 600,
+  "volume_ml": 200,
+  "length_mm": 400,
+  "price": 140,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "punch_dagger",
+  "melee": {
+   "dmg": [
+    5,
+    9
+   ],
+   "reach": 1,
+   "acc": 0,
+   "parry": 20,
+   "disarm": 0.3,
+   "fast": 0.2,
+   "verb": "jab"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_sai_f",
+  "name": "forged sai",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 600,
+  "volume_ml": 200,
+  "length_mm": 400,
+  "price": 490,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "punch_dagger",
+  "melee": {
+   "dmg": [
+    6,
+    11
+   ],
+   "reach": 1,
+   "acc": 4,
+   "parry": 20,
+   "disarm": 0.3,
+   "fast": 0.2,
+   "verb": "jab"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_sai_m",
+  "name": "masterwork sai",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 600,
+  "volume_ml": 200,
+  "length_mm": 400,
+  "price": 1260,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "punch_dagger",
+  "melee": {
+   "dmg": [
+    7,
+    13
+   ],
+   "reach": 1,
+   "acc": 8,
+   "parry": 25,
+   "disarm": 0.3,
+   "fast": 0.2,
+   "verb": "jab"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_jitte",
+  "name": "jitte",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 700,
+  "volume_ml": 233,
+  "length_mm": 450,
+  "price": 170,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "baton",
+  "melee": {
+   "dmg": [
+    6,
+    10
+   ],
+   "reach": 1,
+   "acc": 0,
+   "parry": 20,
+   "disarm": 0.45,
+   "stun": 0.1,
+   "verb": "strike"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_jitte_f",
+  "name": "forged jitte",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 700,
+  "volume_ml": 233,
+  "length_mm": 450,
+  "price": 595,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "baton",
+  "melee": {
+   "dmg": [
+    7,
+    12
+   ],
+   "reach": 1,
+   "acc": 4,
+   "parry": 20,
+   "disarm": 0.45,
+   "stun": 0.1,
+   "verb": "strike"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_jitte_m",
+  "name": "masterwork jitte",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 700,
+  "volume_ml": 233,
+  "length_mm": 450,
+  "price": 1530,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "baton",
+  "melee": {
+   "dmg": [
+    9,
+    14
+   ],
+   "reach": 1,
+   "acc": 8,
+   "parry": 25,
+   "disarm": 0.45,
+   "stun": 0.1,
+   "verb": "strike"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_tessen",
+  "name": "tessen (iron fan)",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 400,
+  "volume_ml": 133,
+  "length_mm": 300,
+  "price": 160,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "baton",
+  "melee": {
+   "dmg": [
+    3,
+    6
+   ],
+   "reach": 1,
+   "acc": 0,
+   "parry": 20,
+   "sneak": 3,
+   "fast": 0.3,
+   "verb": "rap"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_tessen_f",
+  "name": "forged tessen (iron fan)",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 400,
+  "volume_ml": 133,
+  "length_mm": 300,
+  "price": 560,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "baton",
+  "melee": {
+   "dmg": [
+    4,
+    7
+   ],
+   "reach": 1,
+   "acc": 4,
+   "parry": 20,
+   "sneak": 3,
+   "fast": 0.3,
+   "verb": "rap"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_tessen_m",
+  "name": "masterwork tessen (iron fan)",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 400,
+  "volume_ml": 133,
+  "length_mm": 300,
+  "price": 1440,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "baton",
+  "melee": {
+   "dmg": [
+    4,
+    9
+   ],
+   "reach": 1,
+   "acc": 8,
+   "parry": 25,
+   "sneak": 3,
+   "fast": 0.3,
+   "verb": "rap"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_kunai",
+  "name": "kunai",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 200,
+  "volume_ml": 66,
+  "length_mm": 220,
+  "price": 45,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "tanto",
+  "melee": {
+   "dmg": [
+    4,
+    8
+   ],
+   "reach": 1,
+   "acc": 0,
+   "sneak": 5,
+   "fast": 0.25,
+   "verb": "stab"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_kunai_f",
+  "name": "forged kunai",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 200,
+  "volume_ml": 66,
+  "length_mm": 220,
+  "price": 157,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "tanto",
+  "melee": {
+   "dmg": [
+    5,
+    10
+   ],
+   "reach": 1,
+   "acc": 4,
+   "sneak": 5,
+   "fast": 0.25,
+   "verb": "stab"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_kunai_m",
+  "name": "masterwork kunai",
+  "desc": "A Japanese weapon (blade).",
+  "weight_g": 200,
+  "volume_ml": 66,
+  "length_mm": 220,
+  "price": 405,
+  "tags": [
+   "melee",
+   "blade",
+   "japanese"
+  ],
+  "looks_like": "tanto",
+  "melee": {
+   "dmg": [
+    6,
+    12
+   ],
+   "reach": 1,
+   "acc": 8,
+   "sneak": 5,
+   "fast": 0.25,
+   "verb": "stab",
+   "parry": 5
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_ono",
+  "name": "ono (axe)",
+  "desc": "A Japanese weapon (axe).",
+  "weight_g": 3500,
+  "volume_ml": 1166,
+  "length_mm": 1100,
+  "price": 300,
+  "tags": [
+   "melee",
+   "axe",
+   "japanese"
+  ],
+  "looks_like": "hatchet",
+  "melee": {
+   "dmg": [
+    14,
+    22
+   ],
+   "reach": 1,
+   "acc": 0,
+   "slow": true,
+   "bleed": true,
+   "verb": "chop"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_ono_f",
+  "name": "forged ono (axe)",
+  "desc": "A Japanese weapon (axe).",
+  "weight_g": 3500,
+  "volume_ml": 1166,
+  "length_mm": 1100,
+  "price": 1050,
+  "tags": [
+   "melee",
+   "axe",
+   "japanese"
+  ],
+  "looks_like": "hatchet",
+  "melee": {
+   "dmg": [
+    17,
+    26
+   ],
+   "reach": 1,
+   "acc": 4,
+   "slow": true,
+   "bleed": true,
+   "verb": "chop"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_ono_m",
+  "name": "masterwork ono (axe)",
+  "desc": "A Japanese weapon (axe).",
+  "weight_g": 3500,
+  "volume_ml": 1166,
+  "length_mm": 1100,
+  "price": 2700,
+  "tags": [
+   "melee",
+   "axe",
+   "japanese"
+  ],
+  "looks_like": "hatchet",
+  "melee": {
+   "dmg": [
+    20,
+    32
+   ],
+   "reach": 1,
+   "acc": 8,
+   "slow": true,
+   "bleed": true,
+   "verb": "chop",
+   "parry": 5
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_tonfa",
+  "name": "tonfa",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 600,
+  "volume_ml": 200,
+  "length_mm": 450,
+  "price": 70,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "tonfa",
+  "melee": {
+   "dmg": [
+    5,
+    9
+   ],
+   "reach": 1,
+   "acc": 0,
+   "parry": 15,
+   "stun": 0.2,
+   "verb": "strike"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_tonfa_f",
+  "name": "forged tonfa",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 600,
+  "volume_ml": 200,
+  "length_mm": 450,
+  "price": 245,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "tonfa",
+  "melee": {
+   "dmg": [
+    6,
+    11
+   ],
+   "reach": 1,
+   "acc": 4,
+   "parry": 15,
+   "stun": 0.2,
+   "verb": "strike"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_tonfa_m",
+  "name": "masterwork tonfa",
+  "desc": "A Japanese weapon (blunt).",
+  "weight_g": 600,
+  "volume_ml": 200,
+  "length_mm": 450,
+  "price": 630,
+  "tags": [
+   "melee",
+   "blunt",
+   "japanese"
+  ],
+  "looks_like": "tonfa",
+  "melee": {
+   "dmg": [
+    7,
+    13
+   ],
+   "reach": 1,
+   "acc": 8,
+   "parry": 20,
+   "stun": 0.2,
+   "verb": "strike"
+  },
+  "culture": "Japanese"
+ },
+ {
+  "id": "trl_mel_shashka",
+  "name": "shashka",
+  "desc": "A Russian weapon (blade).",
+  "weight_g": 1100,
+  "volume_ml": 366,
+  "length_mm": 900,
+  "price": 320,
+  "tags": [
+   "melee",
+   "blade",
+   "russian"
+  ],
+  "looks_like": "cavalry_sabre",
+  "melee": {
+   "dmg": [
+    11,
+    18
+   ],
+   "reach": 1,
+   "acc": 0,
+   "parry": 15,
+   "fast": 0.15,
+   "bleed": true,
+   "verb": "slash"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_shashka_f",
+  "name": "forged shashka",
+  "desc": "A Russian weapon (blade).",
+  "weight_g": 1100,
+  "volume_ml": 366,
+  "length_mm": 900,
+  "price": 1120,
+  "tags": [
+   "melee",
+   "blade",
+   "russian"
+  ],
+  "looks_like": "cavalry_sabre",
+  "melee": {
+   "dmg": [
+    13,
+    22
+   ],
+   "reach": 1,
+   "acc": 4,
+   "parry": 15,
+   "fast": 0.15,
+   "bleed": true,
+   "verb": "slash"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_shashka_m",
+  "name": "masterwork shashka",
+  "desc": "A Russian weapon (blade).",
+  "weight_g": 1100,
+  "volume_ml": 366,
+  "length_mm": 900,
+  "price": 2880,
+  "tags": [
+   "melee",
+   "blade",
+   "russian"
+  ],
+  "looks_like": "cavalry_sabre",
+  "melee": {
+   "dmg": [
+    16,
+    26
+   ],
+   "reach": 1,
+   "acc": 8,
+   "parry": 20,
+   "fast": 0.15,
+   "bleed": true,
+   "verb": "slash"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_kinzhal",
+  "name": "kinzhal",
+  "desc": "A Russian weapon (blade).",
+  "weight_g": 500,
+  "volume_ml": 166,
+  "length_mm": 450,
+  "price": 130,
+  "tags": [
+   "melee",
+   "blade",
+   "russian"
+  ],
+  "looks_like": "tanto",
+  "melee": {
+   "dmg": [
+    7,
+    12
+   ],
+   "reach": 1,
+   "acc": 0,
+   "sneak": 5,
+   "fast": 0.25,
+   "bleed": true,
+   "verb": "stab"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_kinzhal_f",
+  "name": "forged kinzhal",
+  "desc": "A Russian weapon (blade).",
+  "weight_g": 500,
+  "volume_ml": 166,
+  "length_mm": 450,
+  "price": 455,
+  "tags": [
+   "melee",
+   "blade",
+   "russian"
+  ],
+  "looks_like": "tanto",
+  "melee": {
+   "dmg": [
+    8,
+    14
+   ],
+   "reach": 1,
+   "acc": 4,
+   "sneak": 5,
+   "fast": 0.25,
+   "bleed": true,
+   "verb": "stab"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_kinzhal_m",
+  "name": "masterwork kinzhal",
+  "desc": "A Russian weapon (blade).",
+  "weight_g": 500,
+  "volume_ml": 166,
+  "length_mm": 450,
+  "price": 1170,
+  "tags": [
+   "melee",
+   "blade",
+   "russian"
+  ],
+  "looks_like": "tanto",
+  "melee": {
+   "dmg": [
+    10,
+    17
+   ],
+   "reach": 1,
+   "acc": 8,
+   "sneak": 5,
+   "fast": 0.25,
+   "bleed": true,
+   "verb": "stab",
+   "parry": 5
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_finka",
+  "name": "Finka knife",
+  "desc": "A Russian weapon (blade).",
+  "weight_g": 250,
+  "volume_ml": 83,
+  "length_mm": 280,
+  "price": 70,
+  "tags": [
+   "melee",
+   "blade",
+   "russian"
+  ],
+  "looks_like": "tanto",
+  "melee": {
+   "dmg": [
+    6,
+    10
+   ],
+   "reach": 1,
+   "acc": 0,
+   "sneak": 5,
+   "fast": 0.25,
+   "bleed": true,
+   "verb": "stab"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_finka_f",
+  "name": "forged Finka knife",
+  "desc": "A Russian weapon (blade).",
+  "weight_g": 250,
+  "volume_ml": 83,
+  "length_mm": 280,
+  "price": 245,
+  "tags": [
+   "melee",
+   "blade",
+   "russian"
+  ],
+  "looks_like": "tanto",
+  "melee": {
+   "dmg": [
+    7,
+    12
+   ],
+   "reach": 1,
+   "acc": 4,
+   "sneak": 5,
+   "fast": 0.25,
+   "bleed": true,
+   "verb": "stab"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_finka_m",
+  "name": "masterwork Finka knife",
+  "desc": "A Russian weapon (blade).",
+  "weight_g": 250,
+  "volume_ml": 83,
+  "length_mm": 280,
+  "price": 630,
+  "tags": [
+   "melee",
+   "blade",
+   "russian"
+  ],
+  "looks_like": "tanto",
+  "melee": {
+   "dmg": [
+    9,
+    14
+   ],
+   "reach": 1,
+   "acc": 8,
+   "sneak": 5,
+   "fast": 0.25,
+   "bleed": true,
+   "verb": "stab",
+   "parry": 5
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_lopata",
+  "name": "MPL-50 sapper shovel",
+  "desc": "A Russian weapon (axe).",
+  "weight_g": 1300,
+  "volume_ml": 433,
+  "length_mm": 500,
+  "price": 55,
+  "tags": [
+   "melee",
+   "axe",
+   "russian"
+  ],
+  "looks_like": "shovel",
+  "melee": {
+   "dmg": [
+    9,
+    15
+   ],
+   "reach": 1,
+   "acc": 0,
+   "stun": 0.15,
+   "verb": "chop"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_lopata_f",
+  "name": "forged MPL-50 sapper shovel",
+  "desc": "A Russian weapon (axe).",
+  "weight_g": 1300,
+  "volume_ml": 433,
+  "length_mm": 500,
+  "price": 192,
+  "tags": [
+   "melee",
+   "axe",
+   "russian"
+  ],
+  "looks_like": "shovel",
+  "melee": {
+   "dmg": [
+    11,
+    18
+   ],
+   "reach": 1,
+   "acc": 4,
+   "stun": 0.15,
+   "verb": "chop"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_lopata_m",
+  "name": "masterwork MPL-50 sapper shovel",
+  "desc": "A Russian weapon (axe).",
+  "weight_g": 1300,
+  "volume_ml": 433,
+  "length_mm": 500,
+  "price": 495,
+  "tags": [
+   "melee",
+   "axe",
+   "russian"
+  ],
+  "looks_like": "shovel",
+  "melee": {
+   "dmg": [
+    13,
+    22
+   ],
+   "reach": 1,
+   "acc": 8,
+   "stun": 0.15,
+   "verb": "chop",
+   "parry": 5
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_kistien",
+  "name": "kistien flail",
+  "desc": "A Russian weapon (chain).",
+  "weight_g": 900,
+  "volume_ml": 300,
+  "length_mm": 500,
+  "price": 90,
+  "tags": [
+   "melee",
+   "chain",
+   "russian"
+  ],
+  "looks_like": "2h_flail_wood",
+  "melee": {
+   "dmg": [
+    8,
+    16
+   ],
+   "reach": 1,
+   "acc": 0,
+   "stun": 0.2,
+   "flail": true,
+   "verb": "smash"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_kistien_f",
+  "name": "forged kistien flail",
+  "desc": "A Russian weapon (chain).",
+  "weight_g": 900,
+  "volume_ml": 300,
+  "length_mm": 500,
+  "price": 315,
+  "tags": [
+   "melee",
+   "chain",
+   "russian"
+  ],
+  "looks_like": "2h_flail_wood",
+  "melee": {
+   "dmg": [
+    10,
+    19
+   ],
+   "reach": 1,
+   "acc": 4,
+   "stun": 0.2,
+   "flail": true,
+   "verb": "smash"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_kistien_m",
+  "name": "masterwork kistien flail",
+  "desc": "A Russian weapon (chain).",
+  "weight_g": 900,
+  "volume_ml": 300,
+  "length_mm": 500,
+  "price": 810,
+  "tags": [
+   "melee",
+   "chain",
+   "russian"
+  ],
+  "looks_like": "2h_flail_wood",
+  "melee": {
+   "dmg": [
+    12,
+    23
+   ],
+   "reach": 1,
+   "acc": 8,
+   "stun": 0.2,
+   "flail": true,
+   "verb": "smash",
+   "parry": 5
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_chekan",
+  "name": "chekan axe-hammer",
+  "desc": "A Russian weapon (axe).",
+  "weight_g": 900,
+  "volume_ml": 300,
+  "length_mm": 650,
+  "price": 150,
+  "tags": [
+   "melee",
+   "axe",
+   "russian"
+  ],
+  "looks_like": "hatchet",
+  "melee": {
+   "dmg": [
+    10,
+    17
+   ],
+   "reach": 1,
+   "acc": 0,
+   "bleed": true,
+   "stun": 0.1,
+   "verb": "hack"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_chekan_f",
+  "name": "forged chekan axe-hammer",
+  "desc": "A Russian weapon (axe).",
+  "weight_g": 900,
+  "volume_ml": 300,
+  "length_mm": 650,
+  "price": 525,
+  "tags": [
+   "melee",
+   "axe",
+   "russian"
+  ],
+  "looks_like": "hatchet",
+  "melee": {
+   "dmg": [
+    12,
+    20
+   ],
+   "reach": 1,
+   "acc": 4,
+   "bleed": true,
+   "stun": 0.1,
+   "verb": "hack"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_chekan_m",
+  "name": "masterwork chekan axe-hammer",
+  "desc": "A Russian weapon (axe).",
+  "weight_g": 900,
+  "volume_ml": 300,
+  "length_mm": 650,
+  "price": 1350,
+  "tags": [
+   "melee",
+   "axe",
+   "russian"
+  ],
+  "looks_like": "hatchet",
+  "melee": {
+   "dmg": [
+    14,
+    25
+   ],
+   "reach": 1,
+   "acc": 8,
+   "bleed": true,
+   "stun": 0.1,
+   "verb": "hack",
+   "parry": 5
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_topor",
+  "name": "topor axe",
+  "desc": "A Russian weapon (axe).",
+  "weight_g": 1600,
+  "volume_ml": 533,
+  "length_mm": 700,
+  "price": 100,
+  "tags": [
+   "melee",
+   "axe",
+   "russian"
+  ],
+  "looks_like": "hatchet",
+  "melee": {
+   "dmg": [
+    12,
+    20
+   ],
+   "reach": 1,
+   "acc": 0,
+   "bleed": true,
+   "verb": "chop"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_topor_f",
+  "name": "forged topor axe",
+  "desc": "A Russian weapon (axe).",
+  "weight_g": 1600,
+  "volume_ml": 533,
+  "length_mm": 700,
+  "price": 350,
+  "tags": [
+   "melee",
+   "axe",
+   "russian"
+  ],
+  "looks_like": "hatchet",
+  "melee": {
+   "dmg": [
+    14,
+    24
+   ],
+   "reach": 1,
+   "acc": 4,
+   "bleed": true,
+   "verb": "chop"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_topor_m",
+  "name": "masterwork topor axe",
+  "desc": "A Russian weapon (axe).",
+  "weight_g": 1600,
+  "volume_ml": 533,
+  "length_mm": 700,
+  "price": 900,
+  "tags": [
+   "melee",
+   "axe",
+   "russian"
+  ],
+  "looks_like": "hatchet",
+  "melee": {
+   "dmg": [
+    17,
+    29
+   ],
+   "reach": 1,
+   "acc": 8,
+   "bleed": true,
+   "verb": "chop",
+   "parry": 5
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_kastet",
+  "name": "kastet knuckles",
+  "desc": "A Russian weapon (blunt).",
+  "weight_g": 250,
+  "volume_ml": 83,
+  "length_mm": 100,
+  "price": 40,
+  "tags": [
+   "melee",
+   "blunt",
+   "russian"
+  ],
+  "looks_like": "knuckle_brass",
+  "melee": {
+   "dmg": [
+    4,
+    8
+   ],
+   "reach": 1,
+   "acc": 0,
+   "fast": 0.45,
+   "stun": 0.15,
+   "verb": "punch"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_kastet_f",
+  "name": "forged kastet knuckles",
+  "desc": "A Russian weapon (blunt).",
+  "weight_g": 250,
+  "volume_ml": 83,
+  "length_mm": 100,
+  "price": 140,
+  "tags": [
+   "melee",
+   "blunt",
+   "russian"
+  ],
+  "looks_like": "knuckle_brass",
+  "melee": {
+   "dmg": [
+    5,
+    10
+   ],
+   "reach": 1,
+   "acc": 4,
+   "fast": 0.45,
+   "stun": 0.15,
+   "verb": "punch"
+  },
+  "culture": "Russian"
+ },
+ {
+  "id": "trl_mel_kastet_m",
+  "name": "masterwork kastet knuckles",
+  "desc": "A Russian weapon (blunt).",
+  "weight_g": 250,
+  "volume_ml": 83,
+  "length_mm": 100,
+  "price": 360,
+  "tags": [
+   "melee",
+   "blunt",
+   "russian"
+  ],
+  "looks_like": "knuckle_brass",
+  "melee": {
+   "dmg": [
+    6,
+    12
+   ],
+   "reach": 1,
+   "acc": 8,
+   "fast": 0.45,
+   "stun": 0.15,
+   "verb": "punch",
+   "parry": 5
+  },
+  "culture": "Russian"
+ },
+ {
   "id": "trl_backpack",
   "name": "commuter backpack",
   "weight_g": 700,

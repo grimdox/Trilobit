@@ -83,6 +83,48 @@ MODS = [
 for mid, name, slot, eff, price, wt, desc in MODS:
     items.append({"id": "trl_mod_" + mid, "name": name, "desc": desc, "weight_g": wt, "volume_ml": max(40, wt // 2), "length_mm": 150, "price": price,
                   "tags": ["mod"], "looks_like": "scope", "mod": {"slot": slot, "fx": eff}})
+# melee weapons: strictly Japanese or Russian.  Three grades each (plain, forged, masterwork).  fields: dmg, reach, acc, fast (chance of a second strike),
+# slow (attack takes two turns), parry (percent off enemy melee hit chance), stun/trip/entangle/disarm (chances), bleed, sneak (backstab multiplier),
+# sweep (also hits others beside you), brace (reach strike on a charger does more), flail (ignores the target's parry), verb
+JP = "Japanese"
+RU = "Russian"
+MELEE = [
+    # id, name, culture, class tag, dmg, reach, weight g, length mm, price, looks_like, extras
+    ("kama", "kama", JP, "blade", [6, 11], 1, 600, 400, 60, "trl_kama", {"fast": 0.4, "trip": 0.2, "bleed": True, "verb": "hook"}),
+    ("wakizashi", "wakizashi", JP, "blade", [9, 15], 1, 900, 650, 220, "wakizashi", {"parry": 10, "fast": 0.15, "bleed": True, "verb": "cut"}),
+    ("katana", "katana", JP, "blade", [12, 20], 1, 1200, 1000, 450, "katana", {"parry": 15, "bleed": True, "verb": "cut"}),
+    ("tanto", "tanto", JP, "blade", [6, 10], 1, 300, 300, 90, "tanto", {"sneak": 5, "fast": 0.3, "bleed": True, "verb": "stab"}),
+    ("nodachi", "nodachi", JP, "blade", [16, 28], 2, 2800, 1600, 700, "nodachi", {"slow": True, "parry": 10, "bleed": True, "verb": "cleave"}),
+    ("naginata", "naginata", JP, "polearm", [11, 18], 2, 2200, 2100, 380, "naginata", {"sweep": True, "parry": 10, "bleed": True, "verb": "slash"}),
+    ("yari", "yari", JP, "polearm", [10, 16], 2, 1800, 2000, 200, "trl_yari", {"brace": True, "verb": "thrust"}),
+    ("bo", "bo staff", JP, "staff", [5, 9], 2, 1000, 1800, 40, "bokken", {"stun": 0.25, "parry": 20, "verb": "crack"}),
+    ("jo", "jo staff", JP, "staff", [4, 8], 1, 500, 1300, 30, "bokken", {"stun": 0.2, "parry": 15, "verb": "rap"}),
+    ("nunchaku", "nunchaku", JP, "blunt", [6, 11], 1, 450, 350, 50, "trl_nunchaku", {"fast": 0.4, "stun": 0.1, "verb": "whip"}),
+    ("kusarigama", "kusarigama", JP, "chain", [7, 12], 2, 1100, 1500, 260, "trl_kusarigama", {"entangle": 0.35, "bleed": True, "verb": "lash"}),
+    ("sai", "sai", JP, "blunt", [5, 9], 1, 600, 400, 140, "punch_dagger", {"parry": 20, "disarm": 0.3, "fast": 0.2, "verb": "jab"}),
+    ("jitte", "jitte", JP, "blunt", [6, 10], 1, 700, 450, 170, "baton", {"parry": 20, "disarm": 0.45, "stun": 0.1, "verb": "strike"}),
+    ("tessen", "tessen (iron fan)", JP, "blunt", [3, 6], 1, 400, 300, 160, "baton", {"parry": 20, "sneak": 3, "fast": 0.3, "verb": "rap"}),
+    ("kunai", "kunai", JP, "blade", [4, 8], 1, 200, 220, 45, "tanto", {"sneak": 5, "fast": 0.25, "verb": "stab"}),
+    ("ono", "ono (axe)", JP, "axe", [14, 22], 1, 3500, 1100, 300, "hatchet", {"slow": True, "bleed": True, "verb": "chop"}),
+    ("tonfa", "tonfa", JP, "blunt", [5, 9], 1, 600, 450, 70, "tonfa", {"parry": 15, "stun": 0.2, "verb": "strike"}),
+    ("shashka", "shashka", RU, "blade", [11, 18], 1, 1100, 900, 320, "cavalry_sabre", {"parry": 15, "fast": 0.15, "bleed": True, "verb": "slash"}),
+    ("kinzhal", "kinzhal", RU, "blade", [7, 12], 1, 500, 450, 130, "tanto", {"sneak": 5, "fast": 0.25, "bleed": True, "verb": "stab"}),
+    ("finka", "Finka knife", RU, "blade", [6, 10], 1, 250, 280, 70, "tanto", {"sneak": 5, "fast": 0.25, "bleed": True, "verb": "stab"}),
+    ("lopata", "MPL-50 sapper shovel", RU, "axe", [9, 15], 1, 1300, 500, 55, "shovel", {"stun": 0.15, "verb": "chop"}),
+    ("kistien", "kistien flail", RU, "chain", [8, 16], 1, 900, 500, 90, "2h_flail_wood", {"stun": 0.2, "flail": True, "verb": "smash"}),
+    ("chekan", "chekan axe-hammer", RU, "axe", [10, 17], 1, 900, 650, 150, "hatchet", {"bleed": True, "stun": 0.1, "verb": "hack"}),
+    ("topor", "topor axe", RU, "axe", [12, 20], 1, 1600, 700, 100, "hatchet", {"bleed": True, "verb": "chop"}),
+    ("kastet", "kastet knuckles", RU, "blunt", [4, 8], 1, 250, 100, 40, "knuckle_brass", {"fast": 0.45, "stun": 0.15, "verb": "punch"}),
+]
+GRADES = [("", "", 1.0, 0, 1.0, 0), ("_f", "forged ", 1.2, 4, 3.5, 0), ("_m", "masterwork ", 1.45, 8, 9.0, 5)]
+for mid, name, culture, klass, dmg, reach, wt, ln, price, looks, extra in MELEE:
+    for suf, pre, dm, acc, pm, parry_bonus in GRADES:
+        m = {"dmg": [max(1, round(dmg[0] * dm)), max(1, round(dmg[1] * dm))], "reach": reach, "acc": acc}
+        m.update(extra)
+        if "parry" in m or parry_bonus:
+            m["parry"] = m.get("parry", 0) + parry_bonus
+        items.append({"id": "trl_mel_" + mid + suf, "name": pre + name, "desc": "A %s weapon (%s)." % (culture, klass), "weight_g": wt, "volume_ml": max(60, wt // 3),
+                      "length_mm": ln, "price": int(price * pm), "tags": ["melee", klass, culture.lower()], "looks_like": looks, "melee": m, "culture": culture})
 # containers: the pocket model
 P = lambda i, vol, wt, flex=False, tags=None, water=False, length=0: {"id": i, "max_volume_ml": vol, "max_weight_g": wt, "flexible": flex,
                                                                     "allow_tags": tags or [], "watertight": water, "max_item_length_mm": length}

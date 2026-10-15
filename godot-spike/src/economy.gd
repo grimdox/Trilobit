@@ -346,9 +346,7 @@ func menu_for(i: int) -> Dictionary:
 	return m
 
 func _stock(i: int = 0) -> Array:
-	var out: Array = [["trl_ration", "cyber ration bar", 12], ["trl_water_bottle", "bottled water", 8], ["trl_ammo", "9mm ball box (12 rounds)", 22],
-			["trl_backpack", "backpack", 120]]
-	# each vendor has a few different rounds and gun mods on the shelf
+	var out: Array = [["trl_ration", "cyber ration bar", 12], ["trl_water_bottle", "bottled water", 8], ["trl_ammo", "9mm ball box (12 rounds)", 22]]
 	var ammo_ids: Array = []
 	var mod_ids: Array = []
 	for k in g.db.defs:
@@ -359,12 +357,25 @@ func _stock(i: int = 0) -> Array:
 			mod_ids.append(k)
 	ammo_ids.sort()
 	mod_ids.sort()
-	for n in 2:
+	var melee_ids: Array = g.melee_all
+	# three kinds of stall: guns and mods, blades, a bit of everything
+	var kind: int = i % 3
+	if kind != 1:
+		out.append(["trl_backpack", "backpack", 120])
+	for n in (2 if kind != 1 else 0):
 		var a: String = ammo_ids[(i * 5 + n * 7) % ammo_ids.size()]
 		out.append([a, g.db.defs[a]["name"], int(g.db.defs[a]["price"]) * 3 / 2])
-	for n in 3:
-		var m: String = mod_ids[(i * 3 + n * 5) % mod_ids.size()]
-		out.append([m, g.db.defs[m]["name"], int(g.db.defs[m]["price"]) * 3 / 2])
+	if kind == 0:
+		for n in 3:
+			var m: String = mod_ids[(i * 3 + n * 5) % mod_ids.size()]
+			out.append([m, g.db.defs[m]["name"], int(g.db.defs[m]["price"]) * 3 / 2])
+	else:
+		var count: int = 6 if kind == 1 else 3
+		for n in count:
+			var w: String = melee_ids[(i * 5 + n * 3) % melee_ids.size()]
+			var forged: bool = n % 2 == 1 or kind == 1 and n >= 3
+			var id: String = w + ("_f" if forged else "")
+			out.append([id, g.db.defs[id]["name"], int(g.db.defs[id]["price"]) * 3 / 2])
 	return out
 
 func _rumor(i: int) -> String:
