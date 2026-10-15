@@ -19,6 +19,7 @@ const WALKING := 2
 const RUNNING := 3
 const STAMINA_MAX := 30
 const DIR8 := [[0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1]]   # in a ring, so a turn is +-1
+const FUEL_MAX := 24
 const SUSPICIOUS := 1
 const SEARCHING := 2
 const HUNTING := 3
@@ -69,6 +70,10 @@ var stamina: int = 30
 var ran_this_turn: bool = false
 var run_dir := Vector2i(0, 0)
 var run_streak: int = 0
+var implants := {}                             # "legs": leg actuators, "jets": dorsal jump jets
+var fuel: int = 24
+var flying: bool = false
+var followers: Array = []                      # hunters climbing after you
 var step_noise: int = 0                        # how far this turn's footsteps carry
 var skills := {"melee": 2, "ranged": 2, "stealth": 2, "theft": 1}
 var xp := {"melee": 0, "ranged": 0, "stealth": 0, "theft": 0}
@@ -220,6 +225,57 @@ func _roads_and_cars() -> void:
 						 "driver": -3 if ai else -1})
 		veh_at[c] = vehicles.size() - 1
 		sim.walk[c] = 0
+	_spawn_special_vehicles(road_cells)
+
+func _free_spot_near(cell: int, minr: int, maxr: int, tiles: Array) -> int:
+	for r in range(minr, maxr):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var nx: int = cell % size + dx
+				var ny: int = cell / size + dy
+				if not in_bounds(nx, ny):
+					continue
+				var c: int = ny * size + nx
+				if city.tiles[c] in tiles and sim.walk[c] == 1 and sim.at[c] == -1 and veh_at[c] == -1:
+					return c
+	return -1
+
+func _add_special(kind: String, cell: int) -> void:
+	if cell < 0:
+		return
+	var v := {"cell": cell, "dir": 0, "spd": 0, "ai": false, "dest": 0, "driver": -1, "kind": kind, "air": false}
+	match kind:
+		"gyro":
+			v.merge({"charge": 100, "hp": 50, "color": Color("#7fd6e8")})
+		"mech":
+			v.merge({"charge": 100, "hp": 160, "color": Color("#c0583a")})
+	vehicles.append(v)
+	veh_at[cell] = vehicles.size() - 1
+	sim.walk[cell] = 0
+
+## a gyro and a mech within sight of the start, more gyros on the two tallest roofs, more mechs around the centre
+func _spawn_special_vehicles(road_cells: PackedInt32Array) -> void:
+	var centre: int = (size / 2) * size + size / 2
+	var start: int = centre
+	for i in size * size:
+		if city.tiles[i] == CG.ROAD and veh_at[i] == -1 and sim.at[i] == -1:
+			var d := maxi(absi(i % size - size / 2), absi(i / size - size / 2))
+			if d < 3:
+				start = i
+				break
+	_add_special("gyro", _free_spot_near(start, 6, 16, [CG.GROUND]))
+	_add_special("mech", _free_spot_near(start, 8, 20, [CG.GROUND, CG.ROAD]))
+	var towers: Array = city.tower_info.duplicate()
+	towers.sort_custom(func(a, b): return int(a["h"]) > int(b["h"]))
+	for k in mini(2, towers.size()):
+		var t: Dictionary = towers[k]
+		var roof: int = city.lvl_of_z(int(t["h"])) * s2 + ((int(t["y0"]) + int(t["y1"])) / 2) * size + (int(t["x0"]) + int(t["x1"])) / 2
+		_add_special("gyro", _free_spot_near(roof, 0, 8, [CG.ROOF]))
+	for k in 2:
+		var c2: int = road_cells[(road_cells.size() * (k * 2 + 1)) / 5]
+		_add_special("mech", _free_spot_near(c2, 1, 8, [CG.GROUND, CG.ROAD]))
 
 func _weighted(table: Array) -> String:
 	var total := 0
@@ -501,9 +557,14 @@ func act_move(dx: int, dy: int, run: bool = false) -> bool:
 	if game_over:
 		return false
 	if in_vehicle >= 0:
+		match veh_kind(in_vehicle):
+			"gyro": return fly_drive(dx, dy)
+			"mech": return mech_move(dx, dy, run)
 		return drive(dx, dy)
 	if transit.riding >= 0:
 		return transit.ride_move(dx, dy)
+	if flying:
+		return fly_move(dx, dy)
 	var nx: int = pc % size + dx
 	var ny: int = pc / size + dy
 	if not in_bounds(nx, ny):
@@ -520,6 +581,9 @@ func act_move(dx: int, dy: int, run: bool = false) -> bool:
 		return false
 	if city.tiles[c] == CG.LOCKED:
 		return _pick_lock(c)
+	if city.tiles[c] == CG.AIR:
+		say("Open air.  [q] to leap across, or fly with jump jets.")
+		return false
 	if sim.walk[c] == 0:
 		return false
 	if city.tiles[c] == CG.TRACK and transit.try_board(c):
@@ -580,48 +644,6 @@ func _pick_lock(c: int) -> bool:
 	end_turn()
 	return true
 
-## climb or descend where the cell links to another level.  dir +1 up, -1 down.  An elevator carries you up to three floors.
-func act_vertical(dir: int) -> bool:
-	if in_vehicle >= 0 or transit.riding >= 0:
-		return false
-	if not city.haslink[pc] == 1:
-		say("There is no way %s here." % ("up" if dir > 0 else "down"))
-		return false
-	var here_lvl := pc / s2
-	var best := -1
-	for nb in city.links[pc]:
-		var z_to := z_of(nb)
-		if (dir > 0 and z_to > z_of(pc)) or (dir < 0 and z_to < z_of(pc)):
-			best = nb
-	if best < 0:
-		say("There is no way %s from here." % ("up" if dir > 0 else "down"))
-		return false
-	var elevator: bool = city.tiles[pc] == CG.ELEVATOR
-	if sim.at[best] >= 0:
-		say("Someone is in the way.")
-		return false
-	var steps := 1
-	var cur := best
-	if elevator:
-		while steps < 3:
-			var nxt := -1
-			for nb in city.links[cur]:
-				if (dir > 0 and z_of(nb) > z_of(cur)) or (dir < 0 and z_of(nb) < z_of(cur)):
-					nxt = nb
-			if nxt < 0 or sim.at[nxt] >= 0:
-				break
-			cur = nxt
-			steps += 1
-	pc = cur
-	var kind: String = "The elevator whirs" if elevator else ("You climb the stairs" if city.tiles[pc] == CG.STAIRS else "You climb the ladder")
-	say("%s %s to %s." % [kind, "up" if dir > 0 else "down", zname(pc)])
-	var tw := tower_at(pc)
-	if z_of(pc) > 0 and not tw.is_empty():
-		say("(%d of %d floors)" % [z_of(pc), tw["h"]])
-	sim.retier(pc)
-	end_turn()
-	return true
-
 func act_pay(amount: int) -> bool:
 	return eco.pay(amount)
 
@@ -667,28 +689,39 @@ func stance_name() -> String:
 func footstep_radius() -> int:
 	return [0, 1, 4, 9][stance]
 
-## a standing jump over low obstacles, railings, gaps and people-sized trouble.  Two cells; three after a running start.
+## a jump over low obstacles, railings, gaps: two cells, three after a running start; leg actuators make it four and five, a mech six.
+## If no walkable landing exists but the far side is open air, you leap into the void and fall.
 func act_jump(dx: int, dy: int) -> bool:
-	if in_vehicle >= 0 or transit.riding >= 0:
+	if transit.riding >= 0 or (in_vehicle >= 0 and not in_mech()) or flying:
 		say("Not from here.")
 		return false
 	if stance == CRAWL:
 		say("You can't jump from the floor.")
 		return false
-	if stamina < 4:
+	var cost: int = 2 if has_implant("legs") else 4
+	if in_mech():
+		cost = 0
+	if stamina < cost:
 		say("You are too winded to jump.")
 		return false
 	if dx == 0 and dy == 0:
 		return false
 	var run_up: bool = run_streak >= 1 and run_dir == Vector2i(dx, dy)
-	var maxd := 3 if run_up else 2
+	var base_d := 2
+	if has_implant("legs"):
+		base_d = 4
+	if in_mech():
+		base_d = 5
+	var maxd: int = base_d + (1 if run_up else 0)
+	var void_cell := -1
+	var landed := false
 	for dist in range(maxd, 1, -1):
 		var nx: int = pc % size + dx * dist
 		var ny: int = pc / size + dy * dist
 		if not in_bounds(nx, ny):
 			continue
 		var land: int = ny * size + nx
-		if z_of(land) != z_of(pc) or sim.walk[land] == 0 or sim.at[land] != -1 or veh_at[land] != -1 or city.tiles[land] == CG.LOCKED:
+		if z_of(land) != z_of(pc):
 			continue
 		var clear := true
 		for k in range(1, dist):
@@ -698,22 +731,40 @@ func act_jump(dx: int, dy: int) -> bool:
 				clear = false
 		if not clear:
 			continue
-		facing = Vector2i(dx, dy)
-		pc = land
-		stamina -= 4
-		run_streak = 0
-		ran_this_turn = true
-		step_noise = 7
+		if sim.walk[land] == 1 and sim.at[land] == -1 and veh_at[land] == -1 and city.tiles[land] != CG.LOCKED:
+			pc = land
+			landed = true
+			break
+		if void_cell < 0 and city.tiles[land] == CG.AIR and z_of(land) > 0:
+			void_cell = land
+	if not landed and void_cell >= 0:
+		pc = void_cell
+		landed = true
+		say("You leap into the void!")
+		if has_implant("jets") and fuel >= 4:
+			flying = true
+			say("Your jets catch you.")
+	if not landed:
+		say("There is nowhere to land that way.")
+		return false
+	facing = Vector2i(dx, dy)
+	stamina -= cost
+	run_streak = 0
+	ran_this_turn = true
+	step_noise = 7
+	if in_mech():
+		_move_vehicle(in_vehicle, pc)
+	if city.tiles[pc] == CG.AIR and not flying:
+		_fall_player("There is nothing under you.")
+	elif not flying:
 		say("You leap%s." % (" from a running start" if run_up else ""))
-		if items_at.has(pc):
-			var names := []
-			for it in items_at[pc]:
-				names.append(item_label(it))
-			say("You see here: " + ", ".join(names) + ".")
-		end_turn()
-		return true
-	say("There is nowhere to land that way.")
-	return false
+	if items_at.has(pc):
+		var names := []
+		for it in items_at[pc]:
+			names.append(item_label(it))
+		say("You see here: " + ", ".join(names) + ".")
+	end_turn()
+	return true
 
 ## squares between a shooter and a target that give the target cover: low props (halved by crouching behind them), walls at the corner, cars
 func cover_vs(from: int, to: int, crouched: bool = false) -> int:
@@ -1062,7 +1113,7 @@ func act_reload() -> bool:
 	if st.is_empty():
 		say("You have no gun wielded.")
 		return false
-	if in_vehicle >= 0:
+	if in_vehicle >= 0 and not in_mech():
 		say("Not while driving.")
 		return false
 	if wield.jammed:
@@ -1112,7 +1163,7 @@ func _victim_in_line(t: int) -> int:
 	return t
 
 func act_fire(any: bool = false) -> bool:
-	if in_vehicle >= 0:
+	if in_vehicle >= 0 and not in_mech():
 		say("You can't aim from the driver's seat.")
 		return false
 	var st: Dictionary = gun_stats()
@@ -1326,6 +1377,8 @@ func end_turn() -> void:
 	eco.step()
 	step_noise = 0
 	ran_this_turn = false
+	_jet_tick()
+	_process_followers()
 	if turn % 20 == 0 and heat > 0:
 		heat -= 1
 	if turn % 12 == 0 and hp < hp_max and in_vehicle < 0:
@@ -1600,8 +1653,471 @@ func say_if_seen(cell: int, msg: String) -> void:
 		say(msg)
 
 func player_hurt(dmg: int, msg: String) -> void:
+	if in_mech():
+		var v: Dictionary = vehicles[in_vehicle]
+		v["hp"] -= dmg
+		var through: int = dmg / 5
+		hp -= through
+		say("%s: the mech's armour takes it (-%d frame, -%d you)." % [msg, dmg, through])
+		if v["hp"] <= 0:
+			_eject_mech()
+		return
 	hp -= dmg
 	say("%s (-%d)." % [msg, dmg])
+
+# ---------------------------------------------------------------- moving between levels
+## Falling, jump jets, leg actuators, stairs with pursuers, gyros and mechs.
+func veh_kind(vi: int) -> String:
+	return String(vehicles[vi].get("kind", "car"))
+
+func in_mech() -> bool:
+	return in_vehicle >= 0 and veh_kind(in_vehicle) == "mech"
+
+func in_gyro() -> bool:
+	return in_vehicle >= 0 and veh_kind(in_vehicle) == "gyro"
+
+func has_implant(id: String) -> bool:
+	return implants.get(id, false)
+
+func airborne() -> bool:
+	return flying or (in_gyro() and vehicles[in_vehicle].get("air", false))
+
+func _free_for_player(c: int) -> bool:
+	return sim.walk[c] == 1 and sim.at[c] == -1 and veh_at[c] == -1
+
+## where something dropped from `cell` ends up: [landing cell, levels fallen].  Air columns open above ground, roofs and floors; a landing spot that is solid or taken
+## is replaced by the nearest free walkable cell on that level.
+func land_cell(cell: int) -> Array:
+	var cur: int = cell
+	var levels := 0
+	while z_of(cur) > 0 and city.tiles[cur] == CG.AIR:
+		cur -= s2
+		levels += 1
+	if _free_for_player(cur):
+		return [cur, levels]
+	for r in range(1, 7):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var nx: int = cur % size + dx
+				var ny: int = cur / size + dy
+				if in_bounds(nx, ny) and z_of(ny * size + nx) == z_of(cur) and _free_for_player(ny * size + nx):
+					return [ny * size + nx, levels]
+	return [cur, levels]
+
+## damage of a fall: 5 a floor (plus a little), halved by leg actuators, absent with jets that still have fuel, a third in water or sludge
+func fall_damage(levels: int, soft: bool = false) -> int:
+	if levels <= 0:
+		return 0
+	var d: int = levels * 5
+	if has_implant("legs"):
+		d /= 2
+	if has_implant("jets") and fuel >= 3:
+		d = 0
+	if soft:
+		d /= 3
+	return d
+
+func _fall_player(reason: String) -> void:
+	var lc: Array = land_cell(pc)
+	var levels: int = lc[1]
+	var dmg := fall_damage(levels, city.tiles[lc[0]] == CG.WATER or city.tiles[lc[0]] == CG.SLUDGE)
+	if dmg > 0:
+		dmg += rng.randi_range(0, 3)
+	flying = false
+	pc = lc[0]
+	if in_vehicle >= 0:
+		_move_vehicle(in_vehicle, pc)
+	say("%s  You fall %d floor%s." % [reason, levels, "" if levels == 1 else "s"])
+	if has_implant("jets") and fuel >= 3 and levels > 0:
+		say("Your jets flare and slow the drop.")
+		fuel = maxi(0, fuel - 3)
+	if dmg > 0:
+		player_hurt(dmg, "You hit the ground hard")
+		_noise(pc, 6 + levels)
+	sim.retier(pc)
+	aim_turns = 0
+
+## ---- jump jets
+func _fly_ok_target(c: int) -> bool:
+	return city.tiles[c] == CG.AIR and sim.at[c] == -1 and veh_at[c] == -1
+
+func act_takeoff_or_climb() -> bool:
+	return act_vertical(1)
+
+## move one cell in the air (jets).  Anything that is not open air blocks you; a walkable cell at your own level lets you land.
+func fly_move(dx: int, dy: int) -> bool:
+	var nx: int = pc % size + dx
+	var ny: int = pc / size + dy
+	if not in_bounds(nx, ny):
+		return false
+	facing = Vector2i(dx, dy)
+	var c: int = ny * size + nx
+	if sim.at[c] >= 0:
+		say("Someone is in the way.")
+		return false
+	if veh_at[c] != -1:
+		return false
+	if city.tiles[c] == CG.AIR or city.tiles[c] in CG.LOW_COVER:
+		pc = c
+		fuel -= 1
+		step_noise = 6
+		ran_this_turn = true
+		end_turn()
+		return true
+	if sim.walk[c] == 1:
+		pc = c
+		flying = false
+		say("You touch down.")
+		end_turn()
+		return true
+	say("Something solid is in the way.")
+	return false
+
+## ---- stairs, ladders, elevators, jets, gyros: the vertical action
+func _collect_followers(old_pc: int, new_pc: int) -> void:
+	for k in sim.near_list.size():
+		var i: int = sim.near_list[k]
+		if followers.size() >= 4:
+			break
+		if sim.alive[i] == 0 or astate[i] != HUNTING or fac[i] == CIV:
+			continue
+		var d := cheb(sim.pos[i], old_pc)
+		if d <= 5:
+			followers.append({"i": i, "t": turn + 2 + d / 2, "cell": new_pc})
+
+func _process_followers() -> void:
+	var keep: Array = []
+	for f in followers:
+		var i: int = f["i"]
+		if sim.alive[i] == 0 or astate[i] != HUNTING:
+			continue
+		if turn < int(f["t"]):
+			keep.append(f)
+			continue
+		var cell: int = f["cell"]
+		var best := -1
+		for r in range(1, 5):
+			for dy in range(-r, r + 1):
+				for dx in range(-r, r + 1):
+					if best >= 0 or maxi(absi(dx), absi(dy)) != r:
+						continue
+					var nx: int = cell % size + dx
+					var ny: int = cell / size + dy
+					if in_bounds(nx, ny):
+						var nc: int = ny * size + nx
+						if z_of(nc) == z_of(cell) and sim.walk[nc] == 1 and sim.at[nc] == -1 and nc != pc and veh_at[nc] == -1:
+							best = nc
+		if best >= 0:
+			sim.place(i, best)
+			astate[i] = HUNTING
+			sim.ctl[i] = 1
+			meter[i] = 100
+			lastpos[i] = pc
+			say_if_seen(best, "%s comes after you." % name_of(i))
+	followers = keep
+
+func _vertical_cost_and_move(dest: int, steps: int, elevator: bool, kind_msg: String) -> void:
+	var old: int = pc
+	_collect_followers(old, dest)
+	pc = dest
+	if in_mech():
+		_move_vehicle(in_vehicle, pc)
+	say("%s %s to %s." % [kind_msg, "up" if z_of(dest) > z_of(old) else "down", zname(pc)])
+	var tw := tower_at(pc)
+	if z_of(pc) > 0 and not tw.is_empty():
+		say("(%d of %d floors)" % [z_of(pc), tw["h"]])
+	sim.retier(pc)
+	end_turn()
+	# stairs and ladders are slower than a step; an elevator costs a turn per two floors
+	var extra: int = (steps / 2) if elevator else 1
+	for _k in extra:
+		if not game_over:
+			end_turn()
+
+func act_vertical(dir: int) -> bool:
+	if transit.riding >= 0:
+		return false
+	if flying:
+		return _jet_vertical(dir)
+	if in_gyro():
+		return _gyro_vertical(dir)
+	if in_vehicle >= 0 and not in_mech():
+		return false
+	if not city.haslink[pc] == 1:
+		if has_implant("jets") and z_of(pc) >= 0 and not in_mech():
+			return _jet_vertical(dir)
+		say("There is no way %s here." % ("up" if dir > 0 else "down"))
+		return false
+	var best := -1
+	for nb in city.links[pc]:
+		var z_to := z_of(nb)
+		if (dir > 0 and z_to > z_of(pc)) or (dir < 0 and z_to < z_of(pc)):
+			best = nb
+	if best < 0:
+		say("There is no way %s from here." % ("up" if dir > 0 else "down"))
+		return false
+	var elevator: bool = city.tiles[pc] == CG.ELEVATOR
+	if sim.at[best] >= 0:
+		say("Someone is in the way.")
+		return false
+	var steps := 1
+	var cur := best
+	if elevator:
+		while steps < 3:
+			var nxt := -1
+			for nb in city.links[cur]:
+				if (dir > 0 and z_of(nb) > z_of(cur)) or (dir < 0 and z_of(nb) < z_of(cur)):
+					nxt = nb
+			if nxt < 0 or sim.at[nxt] >= 0:
+				break
+			cur = nxt
+			steps += 1
+	var kind: String = "The elevator whirs" if elevator else ("You climb the stairs" if city.tiles[cur] == CG.STAIRS else "You climb the ladder")
+	if not elevator and dir < 0:
+		kind = kind.replace("climb", "descend") if "stairs" in kind else kind
+	_vertical_cost_and_move(cur, steps, elevator, kind)
+	return true
+
+func _jet_vertical(dir: int) -> bool:
+	if not has_implant("jets"):
+		return false
+	if dir > 0:
+		var up: int = pc + s2
+		if z_of(pc) < 0 or z_of(pc) >= city.zmax or not _fly_ok_target(up):
+			say("Something solid is overhead." if z_of(pc) < city.zmax else "You can't climb higher.")
+			return false
+		if not flying and fuel < 4:
+			say("The jets sputter; not enough fuel (%d)." % fuel)
+			return false
+		if fuel < 2:
+			say("Out of fuel.")
+			return false
+		if not flying:
+			say("The jets ignite and lift you.")
+			flying = true
+		pc = up
+		fuel -= 2
+		step_noise = 9
+		ran_this_turn = true
+		sim.retier(pc)
+		end_turn()
+		return true
+	if not flying:
+		say("You are on the ground.")
+		return false
+	var dn: int = pc - s2
+	if z_of(pc) <= 0:
+		flying = false
+		return false
+	if sim.at[dn] >= 0 or veh_at[dn] != -1:
+		say("Someone is below you.")
+		return false
+	if city.tiles[dn] == CG.AIR:
+		pc = dn
+		sim.retier(pc)
+		end_turn()
+		return true
+	if sim.walk[dn] == 1:
+		pc = dn
+		flying = false
+		say("You touch down on %s." % zname(pc))
+		sim.retier(pc)
+		end_turn()
+		return true
+	say("Something solid is below you.")
+	return false
+
+func _jet_tick() -> void:
+	if flying:
+		fuel -= 1
+		if fuel <= 0:
+			fuel = 0
+			_fall_player("The jets cough and die.")
+	else:
+		fuel = mini(FUEL_MAX, fuel + (2 if not moved else 1)) if has_implant("jets") else 0
+
+## ---- gyro: a small flying vehicle
+func _gyro_vertical(dir: int) -> bool:
+	var v: Dictionary = vehicles[in_vehicle]
+	if v["charge"] <= 0:
+		say("The cells are dead.")
+		return false
+	if dir > 0:
+		var up: int = v["cell"] + s2
+		if z_of(v["cell"]) < 0 or z_of(v["cell"]) >= city.zmax or not _fly_ok_target(up):
+			say("Blocked overhead.")
+			return false
+		if not v.get("air", false):
+			say("The rotors spin up and the gyro lifts.")
+			v["air"] = true
+		_move_vehicle(in_vehicle, up)
+		pc = up
+		v["spd"] = 0
+		sim.retier(pc)
+		end_turn()
+		return true
+	if not v.get("air", false):
+		return false
+	var dn: int = v["cell"] - s2
+	if sim.at[dn] >= 0 or veh_at[dn] != -1:
+		say("Something is below you.")
+		return false
+	if city.tiles[dn] == CG.AIR:
+		_move_vehicle(in_vehicle, dn)
+		pc = dn
+		v["spd"] = 0
+		sim.retier(pc)
+		end_turn()
+		return true
+	if city.walkable(city.tiles[dn]):
+		_move_vehicle(in_vehicle, dn)
+		pc = dn
+		v["air"] = false
+		v["spd"] = 0
+		say("The gyro settles onto %s." % zname(pc))
+		sim.retier(pc)
+		end_turn()
+		return true
+	say("There is no safe place to set down.")
+	return false
+
+func fly_drive(dx: int, dy: int) -> bool:
+	var vi := in_vehicle
+	var v: Dictionary = vehicles[vi]
+	if dx == 0 and dy == 0:
+		v["spd"] = 0
+		end_turn()
+		return true
+	if not v.get("air", false):
+		say("Lift off first: [<] climbs.")
+		return false
+	if v["charge"] <= 0:
+		_gyro_fall("The cells die.")
+		return true
+	var dir := 0
+	if dx != 0:
+		dir = 1 if dx > 0 else 3
+	else:
+		dir = 2 if dy > 0 else 0
+	v["spd"] = 1 if (v["spd"] == 0 or dir != v["dir"]) else mini(v["spd"] + 1, 4)
+	v["dir"] = dir
+	var dv: Array = DIR4[dir]
+	for s in v["spd"]:
+		var cx: int = v["cell"] % size + dv[0]
+		var cy: int = v["cell"] / size + dv[1]
+		if not in_bounds(cx, cy):
+			v["spd"] = 0
+			break
+		var nc := cy * size + cx
+		if sim.at[nc] >= 0 or veh_at[nc] != -1 or city.tiles[nc] != CG.AIR:
+			if v["spd"] >= 2:
+				say("The gyro scrapes something solid!")
+				v["hp"] -= 5 * v["spd"]
+				hp -= v["spd"]
+			v["spd"] = 0
+			break
+		_move_vehicle(vi, nc)
+		pc = nc
+	if turn % 2 == 0:
+		v["charge"] = maxi(0, v["charge"] - 1)
+	if v["hp"] <= 0:
+		_gyro_fall("The gyro breaks up!")
+		return true
+	end_turn()
+	return true
+
+func _gyro_fall(reason: String) -> void:
+	var v: Dictionary = vehicles[in_vehicle]
+	var lc: Array = land_cell(v["cell"])
+	var levels: int = lc[1]
+	v["air"] = false
+	v["spd"] = 0
+	v["hp"] -= 10 * levels
+	_move_vehicle(in_vehicle, lc[0])
+	pc = lc[0]
+	say("%s The gyro drops %d floor%s." % [reason, levels, "" if levels == 1 else "s"])
+	var dmg: int = fall_damage(levels) / 2 + (rng.randi_range(0, 3) if levels > 0 else 0)
+	if dmg > 0:
+		player_hurt(dmg, "The crash jars you")
+	_noise(pc, 8 + levels)
+	sim.retier(pc)
+	end_turn()
+
+## ---- mech: a walking armoured frame.  It steps over low cover, kicks doors in, shrugs off damage and jumps far.
+func mech_move(dx: int, dy: int, run: bool = false) -> bool:
+	var vi := in_vehicle
+	var v: Dictionary = vehicles[vi]
+	if v["charge"] <= 0:
+		say("The mech is dead.  [e] to climb out.")
+		return false
+	facing = Vector2i(dx, dy)
+	var steps := 2 if run else 1
+	var moved_any := false
+	for s in steps:
+		var nx: int = pc % size + dx
+		var ny: int = pc / size + dy
+		if not in_bounds(nx, ny):
+			break
+		var c := ny * size + nx
+		var who: int = sim.at[c]
+		if who >= 0:
+			var dmg: int = rng.randi_range(14, 22)
+			say("The mech slams %s." % name_of(who))
+			_witness(c, 12, 14, who)
+			_silent = false
+			hpn[who] -= dmg
+			if hpn[who] <= 0:
+				kill(who)
+			else:
+				_alert(who)
+			moved_any = true
+			break
+		if veh_at[c] != -1:
+			say("A car blocks the way.")
+			break
+		var t: int = city.tiles[c]
+		if t == CG.LOCKED or (t == CG.DOOR and false):
+			city.tiles[c] = CG.DOOR
+			sim.tiles[c] = CG.DOOR
+			sim.walk[c] = 1
+			say("The mech bursts the door.")
+			_noise(c, 12)
+			moved_any = true
+			break
+		if t in CG.LOW_COVER and t != CG.RAILING:
+			var flat: int = CG.GROUND if z_of(c) == 0 else CG.FLOOR
+			city.tiles[c] = flat
+			sim.tiles[c] = flat
+			sim.walk[c] = 1
+			say("The mech crushes the %s." % ["crate", "dumpster", "planter"][[CG.CRATE, CG.DUMPSTER, CG.PLANTER].find(t)])
+		elif sim.walk[c] == 0:
+			break
+		_move_vehicle(vi, c)
+		pc = c
+		moved_any = true
+	if not moved_any:
+		return false
+	step_noise = 10
+	ran_this_turn = run
+	if turn % 4 == 0:
+		v["charge"] = maxi(0, v["charge"] - 1)
+	end_turn()
+	return true
+
+func _eject_mech() -> void:
+	var v: Dictionary = vehicles[in_vehicle]
+	say("The mech collapses.  You tumble out.")
+	v["driver"] = -1
+	var cell: int = v["cell"]
+	in_vehicle = -1
+	for d in SIZE_DIRS:
+		var nx: int = cell % size + d[0]
+		var ny: int = cell / size + d[1]
+		if in_bounds(nx, ny) and _free_for_player(ny * size + nx):
+			pc = ny * size + nx
+			break
 
 # ---------------------------------------------------------------- vehicles
 func vehicle_near() -> int:
@@ -1613,11 +2129,30 @@ func vehicle_near() -> int:
 	return -1
 
 func act_vehicle() -> bool:
+	if flying:
+		say("You cut the jets and drop.")
+		_fall_player("You let go.")
+		end_turn()
+		return true
 	if in_vehicle >= 0:
 		var v: Dictionary = vehicles[in_vehicle]
+		var kind := veh_kind(in_vehicle)
+		if kind == "gyro" and v.get("air", false):
+			say("You bail out of the gyro!")
+			var gv := in_vehicle
+			var lc: Array = land_cell(v["cell"])
+			v["hp"] -= 10 * int(lc[1])
+			v["air"] = false
+			_move_vehicle(gv, lc[0])
+			v["driver"] = -1
+			v["spd"] = 0
+			in_vehicle = -1
+			_fall_player("The gyro tumbles away.")
+			end_turn()
+			return true
 		v["driver"] = -1
 		v["spd"] = 0
-		say("You step out of the car.")
+		say("You step out of the %s." % {"car": "car", "gyro": "gyro", "mech": "mech"}.get(kind, "car"))
 		# stand on a free neighbouring cell
 		for d in SIZE_DIRS:
 			var nx: int = v["cell"] % size + d[0]
@@ -1632,19 +2167,23 @@ func act_vehicle() -> bool:
 		return true
 	var vi := vehicle_near()
 	if vi < 0:
-		say("No car within reach.")
+		say("No vehicle within reach.")
 		return false
 	var v2: Dictionary = vehicles[vi]
 	if v2["driver"] == -3:
 		say("The driver glares at you and pulls away.")
 		return false
-	if v2["charge"] <= 0:
-		say("The battery is dead.")
+	if v2["charge"] <= 0 or v2["hp"] <= 0:
+		say("It is dead.")
 		return false
 	in_vehicle = vi
 	v2["driver"] = -2
 	pc = v2["cell"]
-	say("You get into the car.  Arrow keys drive, [space] brakes, [e] exits.  Battery %d%%." % v2["charge"])
+	flying = false
+	match veh_kind(vi):
+		"gyro": say("You strap into the gyro.  [<] lifts off, arrows fly, [>] descends, [e] exits (when landed).  Cells %d%%." % v2["charge"])
+		"mech": say("You climb into the mech.  It steps over cover, crushes crates, jumps (q) and takes the hits.  Cells %d%%, frame %d." % [v2["charge"], v2["hp"]])
+		_: say("You get into the car.  Arrow keys drive, [space] brakes, [e] exits.  Battery %d%%." % v2["charge"])
 	end_turn()
 	return true
 
@@ -1755,7 +2294,7 @@ func save_dict() -> Dictionary:
 		var o: Dictionary = v.duplicate()
 		o["color"] = v["color"].to_html()
 		vs.append(o)
-	return {"seed": seed_value, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "xp": xp, "in_vehicle": in_vehicle,
+	return {"seed": seed_value, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "xp": xp, "in_vehicle": in_vehicle,
 			"rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 			"items_at": it_at, "vehicles": vs, "tick": sim.tick, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
@@ -1778,6 +2317,10 @@ func load_dict(d: Dictionary) -> void:
 	aim_target = -1
 	_set_stance(WALKING)
 	stamina = STAMINA_MAX
+	implants = d.get("implants", {})
+	fuel = int(d.get("fuel", FUEL_MAX))
+	flying = bool(d.get("flying", false))
+	followers = []
 	skills = d["skills"]
 	for k in skills:
 		skills[k] = int(skills[k])

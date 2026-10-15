@@ -112,7 +112,7 @@ func _draw() -> void:
 			continue
 		if game.fov.visible[c] == 0:
 			continue
-		_draw_car(Vector2(wx * T + T / 2.0, wy * T + T / 2.0), int(v["dir"]), v["color"], T)
+		_draw_vehicle(Vector2(wx * T + T / 2.0, wy * T + T / 2.0), v, T)
 	# people
 	for k in game.sim.near_list.size():
 		var i: int = game.sim.near_list[k]
@@ -145,8 +145,11 @@ func _draw() -> void:
 	# the player
 	var centre := Vector2((px - ox) * T, (py - oy) * T)
 	if game.in_vehicle >= 0:
-		_draw_car(centre + Vector2(T / 2.0, T / 2.0), int(game.vehicles[game.in_vehicle]["dir"]), game.vehicles[game.in_vehicle]["color"], T)
+		_draw_vehicle(centre + Vector2(T / 2.0, T / 2.0), game.vehicles[game.in_vehicle], T)
 	elif game.transit.riding < 0:
+		if game.flying:
+			draw_circle(centre + Vector2(T / 2.0, T * 0.9), T * 0.28, Color(0, 0, 0, 0.35))
+			draw_circle(centre + Vector2(T / 2.0, T * 0.95), 5.0, Color(1, 0.7, 0.2, 0.9))
 		_blit("player_male", centre)
 	else:
 		_blit("player_male", centre, Color(1, 1, 1, 0.9))
@@ -192,6 +195,26 @@ func _draw() -> void:
 		var pa := Vector2((a % size - ox + 0.5) * T, ((a / size) % size - oy + 0.5) * T)
 		var pb := Vector2((b % size - ox + 0.5) * T, ((b / size) % size - oy + 0.5) * T)
 		draw_line(pa, pb, Color(1, 0.95, 0.5) if tr[2] else Color(0.8, 0.8, 0.8, 0.6), 2.0)
+
+func _draw_vehicle(centre: Vector2, v: Dictionary, T: int) -> void:
+	var kind: String = String(v.get("kind", "car"))
+	if kind == "gyro":
+		var col: Color = v["color"]
+		if v.get("air", false):
+			draw_circle(centre + Vector2(0, T * 0.45), T * 0.3, Color(0, 0, 0, 0.3))
+		draw_circle(centre, T * 0.3, col)
+		draw_circle(centre, T * 0.16, col.darkened(0.5))
+		draw_line(centre - Vector2(T * 0.5, 0), centre + Vector2(T * 0.5, 0), Color(0.9, 0.9, 0.95), 2.0)
+		draw_line(centre - Vector2(0, T * 0.5), centre + Vector2(0, T * 0.5), Color(0.9, 0.9, 0.95), 2.0)
+	elif kind == "mech":
+		var col2: Color = v["color"]
+		draw_rect(Rect2(centre + Vector2(-T * 0.3, -T * 0.1), Vector2(T * 0.6, T * 0.45)), col2)
+		draw_rect(Rect2(centre + Vector2(-T * 0.15, -T * 0.4), Vector2(T * 0.3, T * 0.28)), col2.lightened(0.3))
+		draw_rect(Rect2(centre + Vector2(-T * 0.1, -T * 0.32), Vector2(T * 0.2, 4)), Color(1, 0.9, 0.3))
+		draw_rect(Rect2(centre + Vector2(-T * 0.4, T * 0.15), Vector2(T * 0.18, T * 0.3)), col2.darkened(0.3))
+		draw_rect(Rect2(centre + Vector2(T * 0.22, T * 0.15), Vector2(T * 0.18, T * 0.3)), col2.darkened(0.3))
+	else:
+		_draw_car(centre, int(v["dir"]), v["color"], T)
 
 func _draw_car(centre: Vector2, dir: int, col: Color, T: int) -> void:
 	var horiz := dir == 1 or dir == 3
