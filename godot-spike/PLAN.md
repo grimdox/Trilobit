@@ -53,6 +53,13 @@ Why: the city was flat.  Verticality is also the cheapest big win for the NPC si
 4. Time pressure - first cut: Kuroda debt with daily interest, installments every three days, arrears, collectors; failing implant with tremor then seizures, serviced by a ripperdoc; clearing the debt is the placeholder win.
 5. Lootable world - first cut: locked doors (theft skill), vault rooms; no terminals, hacking, furniture containers, or alarms yet.
 
-**Tests**: pockets 19, world 12, scale 6, levels 11, game 20, vertical 37, plus a 6,000-turn random soak (`tests/run_soak.gd`).  `run_all.sh` now fails if any suite fails or does not finish.
+**Ranged combat and gun mods** (`gunplay.gd` rules, `game.gd` actions, tests in `test_guns.gd`):
+- Every gun has caliber, magazine, fire modes (single/burst/auto), recoil, report radius, reload time, pellets, jam chance and mod slots by class, with per-model variance.
+- 18 mods in six slots (optic, muzzle, barrel, mag, under, stock): red-dot, holo, 4x and 8x scopes (accuracy and range up, handicap inside 4 tiles), smartlink, laser, foregrip, bipod, suppressor (report 5 tiles), compensator, flash hider, long/short barrel, choke, extended/drum/quick magazines, stocks.
+- Typed ammunition per caliber (ball, AP, hollow-point, buckshot, slug, HE grenade, charge pack) as a loose-round pool; `x` picks the kind, `r` reloads (clears jams), `v` fire mode, `a` aim (up to 3 turns), Tab cycles targets, `m` opens the gunsmith.
+- Hit chance = model + mods + skill + aiming - range - recoil within a burst - moving - implant tremor; shown live in the HUD.  Shotguns throw pellets that spread with range, launchers burst (and hurt you), shots can hit people in the line of fire, tracers are drawn.
+- Mods and ammunition are sold by vendors, found as loot and in vaults, and dropped by gunmen.  Save/load keeps mods, rounds, kind and fire mode.
 
-**Known gaps / next**: pursuit across levels (hunters lose you on stairs), NPCs riding the train, falling and jumping, multi-tile vehicles, 3D sight through glass floors, per-floor lighting, elevator floor selection UI, a Windows export workflow, terminals and alarms, faction dialogue and rep.
+**Tests**: pockets 19, world 12, scale 6, levels 11, game 20, vertical 37, guns 36, plus a 6,000-turn random soak (`tests/run_soak.gd`).  `run_all.sh` now fails if any suite fails or does not finish.
+
+**Known gaps / next**: NPCs still shoot with class-level numbers (no mods, no reloading), no armour or cover model for either side, no wall penetration; pursuit across levels (hunters lose you on stairs), NPCs riding the train, falling and jumping, multi-tile vehicles, 3D sight through glass floors, per-floor lighting, elevator floor selection UI, a Windows export workflow, terminals and alarms, faction dialogue and rep.

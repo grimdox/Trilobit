@@ -11,4 +11,6 @@ A time-boxed test of whether Godot 4 can carry Trilobit instead of CDDA.  Three 
 
 ## Keys added in round three
 `<` / PgUp go up, `>` / PgDn go down (stairs, elevators, ladders; an elevator rides three floors), `t` talk, `p` pay 100 on the debt (Shift+P 1000).  Walk into a locked door to pick it; step onto a carriage while the train doors are open to board.
-Tests: `./run_all.sh` (pockets, world, scale, levels, game, vertical).  Screenshots: `xvfb-run -a godot --path . --rendering-driver opengl3 -s tests/shot3.gd`.
+## Guns
+`f` fire at the target (Shift+F at anyone), Tab cycle targets, `a` aim (stacks to 3 turns), `r` reload or clear a jam, `v` fire mode, `x` next ammunition kind, `m` gunsmith (fit scopes, suppressors, magazines, grips, stocks, barrels).
+Tests: `./run_all.sh` (pockets, world, scale, levels, game, vertical, guns).  Screenshots: `xvfb-run -a godot --path . --rendering-driver opengl3 -s tests/shot3.gd`.
