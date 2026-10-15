@@ -10,7 +10,7 @@ var font: Font = ThemeDB.fallback_font
 const TERRAIN := {0: "t_sidewalk", 1: "t_pavement", 2: "t_wall", 3: "t_floor", 4: "t_door_c", 5: "t_water_dp", 6: "t_grass", 7: "",
 	8: "t_stairs_up", 9: "t_elevator", 10: "t_wall_glass", 11: "t_metal_flat_roof", 12: "t_rock_floor", 13: "t_concrete", 14: "t_railroad_tie",
 	15: "t_floor_metal_gangway", 16: "t_water_sh_murky_underground", 17: "t_rock", 18: "t_metal_floor", 19: "t_ladder_up_down", 20: "t_glass_railing",
-	21: "t_manhole_cover", 22: "t_door_metal_locked"}
+	21: "t_manhole_cover", 22: "t_door_metal_locked", 23: "f_crate_c", 24: "f_dumpster", 25: "f_planter"}
 const DARK := Color(0.38, 0.4, 0.55)
 
 func tile() -> int:
@@ -80,7 +80,12 @@ func _draw() -> void:
 				if bt >= 0:
 					_blit(TERRAIN[bt], pos, mod * below_mod)
 				continue
-			_blit(TERRAIN[t], pos, mod)
+			if t >= 23:
+				_blit(TERRAIN[0], pos, mod)
+				if not _blit(TERRAIN[t], pos, mod):
+					draw_rect(Rect2(pos + Vector2(4, 4), Vector2(T - 8, T - 8)), Color(0.5, 0.4, 0.25) * mod)
+			else:
+				_blit(TERRAIN[t], pos, mod)
 			if vis and game.items_at.has(c):
 				var arr: Array = game.items_at[c]
 				_blit(item_sprite(arr[arr.size() - 1]), pos)
@@ -150,6 +155,28 @@ func _draw() -> void:
 		var jc: int = game.eco.job["cell"]
 		var jr := Rect2((game.lx(jc) - ox) * T, (game.ly(jc) - oy) * T, T, T)
 		draw_rect(jr, Color(1, 0.8, 0.2), false, 2.0)
+	# vision cones of the watchful (armed or hostile, still unaware)
+	for k in game.sim.near_list.size():
+		var i: int = game.sim.near_list[k]
+		if game.sim.alive[i] == 0 or int(game.fac[i]) == 0 or game.astate[i] > 2 or game.sim.pos[i] / s2 != base / s2:
+			continue
+		var pcell: int = game.sim.pos[i]
+		if game.fov.visible[pcell] == 0:
+			continue
+		var fd: Array = game.DIR8[game.face[i]]
+		var fl: float = sqrt(float(fd[0] * fd[0] + fd[1] * fd[1]))
+		var tint := Color(1, 0.85, 0.2, 0.13) if game.astate[i] == 0 else Color(1, 0.5, 0.1, 0.2)
+		for dy in range(-6, 7):
+			for dx in range(-6, 7):
+				if dx == 0 and dy == 0:
+					continue
+				var dl: float = sqrt(float(dx * dx + dy * dy))
+				if dl > 6.5 or float(fd[0] * dx + fd[1] * dy) / (fl * dl) < 0.5:
+					continue
+				var cc: int = pcell + dy * size + dx
+				if cc < 0 or cc >= game.total or game.fov.visible[cc] == 0 or not game.sim._sees(pcell, cc, 7):
+					continue
+				draw_rect(Rect2((game.lx(cc) - ox) * T, (game.ly(cc) - oy) * T, T, T), tint)
 	# target bracket
 	var tg: int = game.current_target()
 	if tg >= 0:

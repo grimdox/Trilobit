@@ -81,6 +81,8 @@ func run() -> Array:
 	g.pc = spot
 	g.fov.compute(g.pc % g.size, g.pc / g.size, 18)
 	var reached := 0
+	g.sim.sticky[hot] = 1                    # hold him still and looking at us: a hostile with his back turned would (rightly) not notice
+	g._face_toward(hot, g.pc)
 	for k in 25:
 		g.end_turn()
 		reached = maxi(reached, g.astate[hot])

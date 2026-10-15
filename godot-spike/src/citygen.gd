@@ -25,8 +25,12 @@ const LADDER := 19      # links a tunnel to the sewer below, or a hatch to the s
 const RAILING := 20
 const MANHOLE := 21     # a street-level cover over a ladder
 const LOCKED := 22      # a locked door: people with keys walk through, the player has to pick it
+const CRATE := 23       # low cover: blocks movement, not sight; can be jumped
+const DUMPSTER := 24
+const PLANTER := 25
+const LOW_COVER := [20, 23, 24, 25]
 ## 1 where a tile can be walked on (indexed by tile id)
-const WALK := [1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1]
+const WALK := [1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0]
 
 var size: int = 256
 var tiles: PackedByteArray

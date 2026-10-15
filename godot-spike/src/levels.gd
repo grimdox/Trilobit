@@ -71,6 +71,7 @@ static func build(c, seed: int) -> void:
 	_bridges(c, all, rng)
 	_underground(c, all, links, rng)
 
+	_props(c, all, links, rng)
 	c.tiles = all
 	c.links = links
 	c.haslink = PackedByteArray()
@@ -85,6 +86,56 @@ static func _concat(a: PackedInt32Array, b: PackedInt32Array) -> PackedInt32Arra
 	var out := a.duplicate()
 	out.append_array(b)
 	return out
+
+## low cover: crates in rooms, dumpsters and planters outdoors.  A prop only goes where all eight neighbours are walkable (so it can never wall anything in)
+## and never on a marker, a link or a vault cell.
+static func _props(c, all: PackedByteArray, links: Dictionary, rng: RandomNumberGenerator) -> void:
+	var size: int = c.size
+	var s2: int = size * size
+	var skip := {}
+	for arr in [c.homes_g, c.works_g, c.shops_g, c.homes_t, c.works_t, c.shops_t, c.lairs]:
+		for i in arr:
+			skip[i] = 1
+	for v in c.vaults:
+		for i in v:
+			skip[i] = 1
+	for k in links:
+		skip[k] = 1
+	# ground
+	for _n in 5000:
+		var x: int = rng.randi_range(2, size - 3)
+		var y: int = rng.randi_range(2, size - 3)
+		_prop_try(all, skip, y * size + x, size, rng)
+	# floors and roofs of each tower
+	for t in c.tower_info:
+		var x0: int = t["x0"]
+		var y0: int = t["y0"]
+		var x1: int = t["x1"]
+		var y1: int = t["y1"]
+		for z in range(1, int(t["h"]) + 1):
+			var base: int = c.lvl_of_z(z) * s2
+			for _n in 7:
+				var x: int = rng.randi_range(x0 + 2, x1 - 2)
+				var y: int = rng.randi_range(y0 + 2, y1 - 2)
+				_prop_try(all, skip, base + y * size + x, size, rng)
+
+static func _prop_try(all: PackedByteArray, skip: Dictionary, cell: int, size: int, rng: RandomNumberGenerator) -> void:
+	if skip.has(cell):
+		return
+	var t: int = all[cell]
+	var kind := -1
+	match t:
+		CG.GROUND: kind = CG.DUMPSTER if rng.randf() < 0.35 else (CG.PLANTER if rng.randf() < 0.5 else CG.CRATE)
+		CG.PARK: kind = CG.PLANTER
+		CG.FLOOR, CG.ROOF: kind = CG.CRATE
+	if kind < 0:
+		return
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			var nb: int = cell + dy * size + dx
+			if skip.has(nb) or CG.WALK[all[nb]] != 1:
+				return
+	all[cell] = kind
 
 static func _link(links: Dictionary, a: int, b: int) -> void:
 	if not links.has(a):

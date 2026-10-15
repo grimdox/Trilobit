@@ -13,6 +13,12 @@ const EC = preload("res://src/economy.gd")
 const GP = preload("res://src/gunplay.gd")
 
 const UNAWARE := 0
+const CRAWL := 0
+const CROUCH := 1
+const WALKING := 2
+const RUNNING := 3
+const STAMINA_MAX := 30
+const DIR8 := [[0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1]]   # in a ring, so a turn is +-1
 const SUSPICIOUS := 1
 const SEARCHING := 2
 const HUNTING := 3
@@ -57,7 +63,13 @@ var aim_target: int = -1
 var moved: bool = false
 var last_pc: int = -1
 var tracers: Array = []                        # [from_cell, to_cell, hit] for the view; cleared on the next key
-var crouch: bool = false
+var crouch: bool = false                       # derived from stance: true when crouching or crawling
+var stance: int = 2                            # CRAWL, CROUCH, WALKING, RUNNING
+var stamina: int = 30
+var ran_this_turn: bool = false
+var run_dir := Vector2i(0, 0)
+var run_streak: int = 0
+var step_noise: int = 0                        # how far this turn's footsteps carry
 var skills := {"melee": 2, "ranged": 2, "stealth": 2, "theft": 1}
 var xp := {"melee": 0, "ranged": 0, "stealth": 0, "theft": 0}
 var worn: Array = []
@@ -86,6 +98,9 @@ var postc: PackedInt32Array
 var yenn: PackedInt32Array
 var gunc: PackedByteArray            # 0 unarmed, 1 pistol, 2 SMG, 3 rifle
 var cool: PackedByteArray
+var face: PackedByteArray              # which way each person looks: index into DIR8
+var prevpos: PackedInt32Array
+var _silent: bool = false
 var fem: PackedByteArray
 var nname: PackedStringArray
 var noticed_you: PackedByteArray     # 1 once this person has been aware of you (for theft consequences)
@@ -154,6 +169,10 @@ func _people() -> void:
 	yenn = PackedInt32Array(); yenn.resize(n)
 	gunc = PackedByteArray(); gunc.resize(n)
 	cool = PackedByteArray(); cool.resize(n)
+	face = PackedByteArray(); face.resize(n)
+	prevpos = PackedInt32Array(); prevpos.resize(n)
+	for i in n:
+		face[i] = (i * 5 + 3) & 7
 	fem = PackedByteArray(); fem.resize(n)
 	noticed_you = PackedByteArray(); noticed_you.resize(n)
 	nname = PackedStringArray(); nname.resize(n)
@@ -478,7 +497,7 @@ func act_drop_wield() -> void:
 		end_turn()
 
 # ---------------------------------------------------------------- acting
-func act_move(dx: int, dy: int) -> bool:
+func act_move(dx: int, dy: int, run: bool = false) -> bool:
 	if game_over:
 		return false
 	if in_vehicle >= 0:
@@ -507,12 +526,38 @@ func act_move(dx: int, dy: int) -> bool:
 		end_turn()
 		return true
 	pc = c
-	if items_at.has(c):
+	var ran := false
+	if run and stamina >= 2 and stance >= WALKING:
+		ran = true
+		stamina -= 2
+		var c2: int = c + dy * size + dx
+		var nx2: int = nx + dx
+		var ny2: int = ny + dy
+		if in_bounds(nx2, ny2) and z_of(c2) == z_of(c) and sim.walk[c2] == 1 and sim.at[c2] == -1 and veh_at[c2] == -1 and not items_at.has(c) \
+				and city.tiles[c2] != CG.LOCKED and city.tiles[c2] != CG.TRACK:
+			pc = c2
+			stamina -= 2
+	elif run and stamina < 2:
+		say("You are winded.")
+	ran_this_turn = ran
+	if ran:
+		run_streak = run_streak + 1 if run_dir == Vector2i(dx, dy) else 1
+		run_dir = Vector2i(dx, dy)
+		if stance == WALKING:
+			stance = RUNNING
+	else:
+		run_streak = 0
+		if stance == RUNNING:
+			stance = WALKING
+	step_noise = [0, 1, 4, 9][stance]
+	if items_at.has(pc):
 		var names := []
-		for it in items_at[c]:
+		for it in items_at[pc]:
 			names.append(item_label(it))
 		say("You see here: " + ", ".join(names) + ".")
 	end_turn()
+	if stance == CRAWL and not game_over:
+		end_turn()                       # crawling is half speed
 	return true
 
 func act_wait() -> void:
@@ -594,9 +639,133 @@ func talk_target() -> int:
 			best = i
 	return best
 
+func _set_stance(s: int) -> void:
+	stance = s
+	crouch = s <= CROUCH
+	aim_turns = 0
+
 func act_crouch() -> void:
-	crouch = not crouch
-	say("You crouch low." if crouch else "You stand.")
+	if stance == CROUCH:
+		_set_stance(WALKING)
+		say("You stand.")
+	else:
+		_set_stance(CROUCH)
+		say("You crouch low.")
+
+func act_crawl() -> void:
+	if stance == CRAWL:
+		_set_stance(CROUCH)
+		say("You come up onto your knees.")
+	else:
+		_set_stance(CRAWL)
+		say("You drop flat.  Slow, but hard to see or hear.")
+
+func stance_name() -> String:
+	return ["crawling", "crouching", "walking", "running"][stance]
+
+## the farthest anything hears your steps this turn if you move: by stance
+func footstep_radius() -> int:
+	return [0, 1, 4, 9][stance]
+
+## a standing jump over low obstacles, railings, gaps and people-sized trouble.  Two cells; three after a running start.
+func act_jump(dx: int, dy: int) -> bool:
+	if in_vehicle >= 0 or transit.riding >= 0:
+		say("Not from here.")
+		return false
+	if stance == CRAWL:
+		say("You can't jump from the floor.")
+		return false
+	if stamina < 4:
+		say("You are too winded to jump.")
+		return false
+	if dx == 0 and dy == 0:
+		return false
+	var run_up: bool = run_streak >= 1 and run_dir == Vector2i(dx, dy)
+	var maxd := 3 if run_up else 2
+	for dist in range(maxd, 1, -1):
+		var nx: int = pc % size + dx * dist
+		var ny: int = pc / size + dy * dist
+		if not in_bounds(nx, ny):
+			continue
+		var land: int = ny * size + nx
+		if z_of(land) != z_of(pc) or sim.walk[land] == 0 or sim.at[land] != -1 or veh_at[land] != -1 or city.tiles[land] == CG.LOCKED:
+			continue
+		var clear := true
+		for k in range(1, dist):
+			var mid: int = (pc / size + dy * k) * size + pc % size + dx * k
+			var mt: int = city.tiles[mid]
+			if mt == CG.WALL or mt == CG.EARTH or mt == CG.LOCKED or sim.at[mid] != -1:
+				clear = false
+		if not clear:
+			continue
+		facing = Vector2i(dx, dy)
+		pc = land
+		stamina -= 4
+		run_streak = 0
+		ran_this_turn = true
+		step_noise = 7
+		say("You leap%s." % (" from a running start" if run_up else ""))
+		if items_at.has(pc):
+			var names := []
+			for it in items_at[pc]:
+				names.append(item_label(it))
+			say("You see here: " + ", ".join(names) + ".")
+		end_turn()
+		return true
+	say("There is nowhere to land that way.")
+	return false
+
+## squares between a shooter and a target that give the target cover: low props (halved by crouching behind them), walls at the corner, cars
+func cover_vs(from: int, to: int, crouched: bool = false) -> int:
+	var tx: int = to % size
+	var ty: int = to / size
+	var sx: int = signi(from % size - tx)
+	var sy: int = signi(from / size - ty)
+	if sx == 0 and sy == 0:
+		return 0
+	var best := 0
+	for off in [[sx, sy], [sx, 0], [0, sy]]:
+		if off[0] == 0 and off[1] == 0:
+			continue
+		var nx: int = tx + off[0]
+		var ny: int = ty + off[1]
+		if not in_bounds(nx, ny):
+			continue
+		var c: int = ny * size + nx
+		if z_of(c) != z_of(to):
+			continue
+		var t: int = city.tiles[c]
+		var v := 0
+		if t in CG.LOW_COVER or veh_at[c] != -1:
+			v = 32 if crouched else 20
+		elif t == CG.WALL:
+			v = 15
+		best = maxi(best, v)
+	return best
+
+## how well person i sees toward a cell given where they face: 1 in front (about 120 degrees), less at the sides, none behind.  Alerted people look wider.
+func cone_factor(i: int, cell: int, wide: bool = false) -> float:
+	var f: Array = DIR8[face[i]]
+	var c: int = sim.pos[i]
+	var dx: int = cell % size - c % size
+	var dy: int = cell / size - c / size
+	if dx == 0 and dy == 0:
+		return 1.0
+	var cs: float = (float(f[0] * dx + f[1] * dy)) / (sqrt(float(f[0] * f[0] + f[1] * f[1])) * sqrt(float(dx * dx + dy * dy)))
+	if cs >= 0.5:
+		return 1.0
+	if cs >= -0.2:
+		return 0.8 if wide else 0.4
+	return 0.35 if wide else 0.0
+
+func _face_toward(i: int, cell: int) -> void:
+	var c: int = sim.pos[i]
+	var dx: int = signi(cell % size - c % size)
+	var dy: int = signi(cell / size - c / size)
+	if dx == 0 and dy == 0:
+		return
+	face[i] = DIR8.find([dx, dy])
+
 
 func melee(i: int) -> void:
 	var sneak := astate[i] == UNAWARE or astate[i] == RETURNING
@@ -608,10 +777,16 @@ func melee(i: int) -> void:
 		_alert(i)
 		return
 	var dmg: int = rng.randi_range(3, 6) + skills["melee"] / 2
-	if sneak:
-		dmg *= 3
-		say("You strike %s from the shadows!" % name_of(i))
+	var behind: bool = sneak and cone_factor(i, pc) == 0.0
+	if behind:
+		dmg *= 4
+		say("You strike %s from behind!" % name_of(i))
+	elif sneak:
+		dmg *= 2
+		say("You catch %s unready." % name_of(i))
+	_silent = behind
 	hurt(i, dmg, true)
+	_silent = false
 	skill_up("melee", 3 if hpmax[i] >= 40 else 1)
 
 func hurt(i: int, dmg: int, by_player: bool) -> void:
@@ -662,7 +837,7 @@ func kill(i: int) -> void:
 			_put(c, _new_item(_random_mod()))
 	sim.remove_agent(i)
 	astate[i] = UNAWARE
-	_witness(c, 14, 14, i)
+	_witness(c, 4 if _silent else 14, 3 if _silent else 14, i)
 
 ## people who see violence react: civilians panic, officers add heat
 func _witness(cell: int, radius: int, add_heat: int, except: int) -> void:
@@ -675,6 +850,8 @@ func _witness(cell: int, radius: int, add_heat: int, except: int) -> void:
 			continue
 		if not sim._sees(sim.pos[j], cell, radius):
 			continue
+		if astate[j] != HUNTING and cone_factor(j, cell, true) == 0.0:
+			continue                       # they had their back turned
 		if fac[j] == CIV or fac[j] == NAP:
 			seen_by += 1
 			if fac[j] == CIV and astate[j] != FLEEING:
@@ -805,7 +982,12 @@ func hit_chance_on(t: int, shot_index: int = 0) -> int:
 	var st: Dictionary = gun_stats()
 	if st.is_empty() or t < 0:
 		return 0
-	return GP.hit_chance(st, cheb(sim.pos[t], pc), aim_turns, moved, crouch, skills["ranged"], eco.aim_penalty(), shot_index)
+	return _shot_chance(st, t, aim_turns, shot_index)
+
+## model + stance + cover on the target
+func _shot_chance(st: Dictionary, t: int, aimed: int, shot_index: int) -> int:
+	var c: int = GP.hit_chance(st, cheb(sim.pos[t], pc), aimed, moved, crouch, skills["ranged"], eco.aim_penalty(), shot_index, stance == CRAWL)
+	return clampi(c - cover_vs(pc, sim.pos[t], false), 5, 95)
 
 ## one-line description of the wielded gun and what it is aimed at
 func gun_line() -> String:
@@ -954,7 +1136,7 @@ func act_fire(any: bool = false) -> bool:
 	var hits_by: Dictionary = {}
 	var aimed: int = aim_turns
 	for s in shots:
-		var chance: int = GP.hit_chance(st, d, aimed, moved, crouch, skills["ranged"], eco.aim_penalty(), s)
+		var chance: int = _shot_chance(st, t, aimed, s)
 		var victim: int = _victim_in_line(t)
 		var vd: int = d if victim == t else cheb(sim.pos[victim], pc)
 		var pellets: int = int(st["pellets"])
@@ -1010,11 +1192,14 @@ func act_fire(any: bool = false) -> bool:
 func _damage_npc(v: int, dmg: int) -> void:
 	if sim.alive[v] == 0:
 		return
+	var st: Dictionary = gun_stats()
+	_silent = (not st.is_empty() and st["suppressed"]) and (astate[v] == UNAWARE or astate[v] == RETURNING)
 	hpn[v] -= dmg
 	if hpn[v] <= 0:
 		kill(v)
 	else:
 		_alert(v)
+	_silent = false
 
 func _scatter_cell(c: int) -> int:
 	var nx: int = c % size + rng.randi_range(-2, 2)
@@ -1120,6 +1305,7 @@ func _noise(cell: int, radius: int) -> void:
 			lastpos[j] = cell
 			postc[j] = sim.pos[j]
 			sim.ctl[j] = 1
+			_face_toward(j, cell)
 
 # ---------------------------------------------------------------- turns
 func end_turn() -> void:
@@ -1128,11 +1314,18 @@ func end_turn() -> void:
 	if moved:
 		aim_turns = 0
 	last_pc = pc
+	if not ran_this_turn:
+		stamina = mini(STAMINA_MAX, stamina + (1 if moved else 2))
+		if stance == RUNNING:
+			stance = WALKING
+			run_streak = 0
 	sim.step(pc)
 	transit.step()
 	_ai()
 	_vehicles()
 	eco.step()
+	step_noise = 0
+	ran_this_turn = false
 	if turn % 20 == 0 and heat > 0:
 		heat -= 1
 	if turn % 12 == 0 and hp < hp_max and in_vehicle < 0:
@@ -1229,8 +1422,12 @@ func _step_away(i: int) -> bool:
 
 func _stance_mult() -> float:
 	var m := 1.0
-	if crouch:
-		m = 0.7
+	if stance == CRAWL:
+		m = 0.4
+	elif stance == CROUCH:
+		m = 0.65
+	elif stance == RUNNING:
+		m = 1.5
 	if in_vehicle >= 0:
 		m = 1.3
 	return m
@@ -1245,6 +1442,16 @@ func _ai() -> void:
 		var d := cheb(sim.pos[i], pc)
 		if cool[i] > 0:
 			cool[i] -= 1
+		# which way they look: where they last walked; the unaware idle ones glance around now and then
+		var cp: int = sim.pos[i]
+		if cp != prevpos[i]:
+			var mdx: int = signi(cp % size - prevpos[i] % size)
+			var mdy: int = signi(cp / size - prevpos[i] / size)
+			if absi(cp - prevpos[i]) < 4 * size and (mdx != 0 or mdy != 0):
+				face[i] = DIR8.find([mdx, mdy])
+			prevpos[i] = cp
+		elif st == UNAWARE and (turn + i) % 7 == 0:
+			face[i] = (int(face[i]) + (1 if rng.randf() < 0.5 else 7) + (0 if rng.randf() < 0.6 else (1 if rng.randf() < 0.5 else 7))) % 8
 		# who is worth watching: armed or hostile factions, or anyone already worked up
 		var capable := fac[i] == BRATVA or fac[i] == NAP or (fac[i] == NASIM and noticed_you[i] == 1)
 		if st == UNAWARE and (not capable or d > 24 or not hostile(i)):
@@ -1294,14 +1501,17 @@ func _ai() -> void:
 
 func _notice(i: int, d: int) -> void:
 	var c: int = sim.pos[i]
-	var sees: bool = d <= 16 and fov.visible[c] == 1 and sim._sees(c, pc, 16)
 	var st := astate[i]
+	var los: bool = d <= 16 and fov.visible[c] == 1 and sim._sees(c, pc, 16)
+	var cf: float = cone_factor(i, pc, st != UNAWARE) if los else 0.0
+	var sees: bool = cf > 0.0
+	var heard: bool = step_noise > 0 and d <= step_noise and z_of(c) == z_of(pc)
 	if sees:
-		var gain := 45.0 / (1.0 + d / 6.0) * _stance_mult()
+		var gain := 45.0 / (1.0 + d / 6.0) * _stance_mult() * cf
 		if st != UNAWARE:
 			gain *= 1.5
 		if d <= 1:
-			gain = 100.0
+			gain = 100.0 * cf
 		meter[i] = mini(100, meter[i] + maxi(1, int(gain)))
 		lastpos[i] = pc
 		if st == UNAWARE or st == RETURNING:
@@ -1326,6 +1536,16 @@ func _notice(i: int, d: int) -> void:
 			postc[i] = c
 			if sees_cell(c):
 				say("%s notices something." % name_of(i))
+	elif heard:
+		meter[i] = mini(99, meter[i] + (16 if stance == RUNNING else 9))
+		lastpos[i] = pc
+		_face_toward(i, pc)
+		if st == UNAWARE and meter[i] >= 25:
+			astate[i] = SUSPICIOUS
+			sim.ctl[i] = 1
+			postc[i] = c
+			if sees_cell(c):
+				say("%s hears something and turns." % name_of(i))
 	else:
 		if st == UNAWARE:
 			meter[i] = maxi(0, meter[i] - 6)
@@ -1357,7 +1577,8 @@ func _hunt(i: int, d: int) -> void:
 	var g := gunc[i]
 	if g > 0 and sees and cool[i] == 0 and d >= 2 and d <= (8 if g == 1 else 14):
 		cool[i] = 2
-		var chance := clampi(62 - 4 * maxi(0, d - 2) - (10 if crouch else 0) - (15 if in_vehicle >= 0 else 0), 10, 85)
+		var stance_pen: int = [18, 10, 0, 6][stance]
+		var chance := clampi(62 - 4 * maxi(0, d - 2) - stance_pen - (15 if in_vehicle >= 0 else 0) - cover_vs(c, pc, crouch), 8, 85)
 		if rng.randi() % 100 < chance:
 			var dmg := rng.randi_range(5, 9) if g == 1 else rng.randi_range(6, 11)
 			player_hurt(dmg, "%s shoots you" % name_of(i))
@@ -1555,6 +1776,8 @@ func load_dict(d: Dictionary) -> void:
 	want_kind = d.get("want_kind", {})
 	aim_turns = 0
 	aim_target = -1
+	_set_stance(WALKING)
+	stamina = STAMINA_MAX
 	skills = d["skills"]
 	for k in skills:
 		skills[k] = int(skills[k])

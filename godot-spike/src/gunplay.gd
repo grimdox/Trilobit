@@ -69,7 +69,7 @@ static func stats(gun) -> Dictionary:
 	return s
 
 ## percent chance for the shot_index'th shot of a volley to hit at distance d
-static func hit_chance(s: Dictionary, d: int, aim: int, moved: bool, crouch: bool, skill: int, penalty: int, shot_index: int = 0) -> int:
+static func hit_chance(s: Dictionary, d: int, aim: int, moved: bool, crouch: bool, skill: int, penalty: int, shot_index: int = 0, prone: bool = false) -> int:
 	var c: float = float(s["acc"]) + float(skill) * 2.0
 	c += float(aim * int(s["aim_step"])) if aim > 0 else float(s["hip"])
 	c -= float(s["rangepen"]) * float(maxi(0, d - 3))
@@ -81,6 +81,8 @@ static func hit_chance(s: Dictionary, d: int, aim: int, moved: bool, crouch: boo
 	if moved:
 		c -= 10.0
 	if crouch:
+		c += 5.0
+	if prone:
 		c += 5.0
 	c -= float(penalty)
 	return clampi(int(c), 5, 95)

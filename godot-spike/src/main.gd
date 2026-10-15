@@ -72,7 +72,7 @@ func refresh() -> void:
 	view.queue_redraw()
 	var g = game
 	var line1 := "HP %d/%d   ¥%d   Heat %d   %s%s   %s   Turn %d   Carry %.1f kg%s" % [g.hp, g.hp_max, g.yen, g.heat, g.gun_line(),
-		"  [crouching]" if g.crouch else "", g.time_text(), g.turn, g.total_weight_kg(), "  [IN CAR %d%%]" % g.vehicles[g.in_vehicle]["charge"] if g.in_vehicle >= 0 else ""]
+		"  [%s %d]" % [g.stance_name(), g.stamina] if g.stance != 2 or g.stamina < 30 else "", g.time_text(), g.turn, g.total_weight_kg(), "  [IN CAR %d%%]" % g.vehicles[g.in_vehicle]["charge"] if g.in_vehicle >= 0 else ""]
 	var tw: Dictionary = g.tower_at(g.pc) if g.z_of(g.pc) > 0 else {}
 	var where: String = g.zname(g.pc) + (" of %d" % tw["h"] if not tw.is_empty() else "")
 	var line2: String = "%s   |   %s" % [where, g.eco.status_text()]
@@ -83,7 +83,8 @@ func refresh() -> void:
 		line2 += "   [ON THE TRAIN]"
 	var tgt: int = g.current_target()
 	if tgt >= 0:
-		line2 += "   |   Target: %s, %d tiles, %d%%" % [g.name_of(tgt), g.cheb(g.sim.pos[tgt], g.pc), g.hit_chance_on(tgt)]
+		var cov: int = g.cover_vs(g.pc, g.sim.pos[tgt], false)
+		line2 += "   |   Target: %s, %d tiles, %d%%%s" % [g.name_of(tgt), g.cheb(g.sim.pos[tgt], g.pc), g.hit_chance_on(tgt), (" (in cover)" if cov > 0 else "")]
 	var jt: String = g.eco.job_text()
 	status.text = line1 + "\n" + line2 + ("\n" + jt if jt != "" else "")
 	var lines: Array = g.log.slice(-5)
@@ -153,7 +154,7 @@ func show_inventory() -> void:
 	panel.visible = true
 
 func show_help() -> void:
-	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\n<  or  PgUp  go up (stairs, elevator, ladder)      >  or  PgDn  go down.  An elevator rides up to three floors.\nt   talk to the nearest person (vendors, fixers, ripperdocs)      p   pay 100 on the debt (Shift+P: 1000)\nWalk into a locked door to pick it.  Step onto a carriage while the train doors are open to ride; step onto a platform to get off.\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the target (Shift+F: at anyone)      Tab  cycle targets      a  aim (up to 3 turns, each steadier)\nr   reload / clear a jam      v  fire mode (single, burst, auto)      x  choose the next ammunition kind\nm   gunsmith: fit scopes, suppressors, magazines, grips, stocks, barrels (a scope helps at range, hurts up close)\ns   pickpocket an adjacent person (stealth and theft skill)\nc   crouch (harder to notice)        e   get in or out of a car\nd   drop the wielded weapon\nF2   switch tileset        F5  save        F9  load        Esc  close\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  Crouch and approach from behind for a triple-damage strike.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
+	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\n<  or  PgUp  go up (stairs, elevator, ladder)      >  or  PgDn  go down.  An elevator rides up to three floors.\nt   talk to the nearest person (vendors, fixers, ripperdocs)      p   pay 100 on the debt (Shift+P: 1000)\nWalk into a locked door to pick it.  Step onto a carriage while the train doors are open to ride; step onto a platform to get off.\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the target (Shift+F: at anyone)      Tab  cycle targets      a  aim (up to 3 turns, each steadier)\nr   reload / clear a jam      v  fire mode (single, burst, auto)      x  choose the next ammunition kind\nm   gunsmith: fit scopes, suppressors, magazines, grips, stocks, barrels (a scope helps at range, hurts up close)\ns   pickpocket an adjacent person (stealth and theft skill)\nc   crouch      z   crawl (half speed, nearly invisible and silent)      Shift+direction   run two cells (noisy, tiring)      q + direction   jump (2 cells, 3 after a run)        e   get in or out of a car\nd   drop the wielded weapon\nF2   switch tileset        F5  save        F9  load        Esc  close\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  People see in a cone in front of them and hear footsteps by stance.  Strike an unaware person from behind for a quiet kill.  Crates, dumpsters, planters, railings and cars give cover; crouch behind them.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
 	panel.visible = true
 
 func _unhandled_key_input(ev: InputEvent) -> void:
@@ -186,6 +187,23 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 					game.act_mod_install(v)
 		refresh()
 		return
+	if mode == "jump":
+		mode = "play"
+		var jd := Vector2i(0, 0)
+		match k:
+			KEY_UP, KEY_KP_8, KEY_K: jd = Vector2i(0, -1)
+			KEY_DOWN, KEY_KP_2, KEY_J: jd = Vector2i(0, 1)
+			KEY_LEFT, KEY_KP_4, KEY_H: jd = Vector2i(-1, 0)
+			KEY_RIGHT, KEY_KP_6, KEY_L: jd = Vector2i(1, 0)
+			KEY_KP_7, KEY_Y: jd = Vector2i(-1, -1)
+			KEY_KP_9, KEY_U: jd = Vector2i(1, -1)
+			KEY_KP_1, KEY_B: jd = Vector2i(-1, 1)
+			KEY_KP_3, KEY_N: jd = Vector2i(1, 1)
+		if jd != Vector2i(0, 0):
+			game.tracers.clear()
+			game.act_jump(jd.x, jd.y)
+		refresh()
+		return
 	if mode == "talk":
 		if k == KEY_ESCAPE:
 			mode = "play"
@@ -214,14 +232,14 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 	var acted := true
 	g.tracers.clear()
 	match k:
-		KEY_UP, KEY_KP_8, KEY_K: g.act_move(0, -1)
-		KEY_DOWN, KEY_KP_2, KEY_J: g.act_move(0, 1)
-		KEY_LEFT, KEY_KP_4, KEY_H: g.act_move(-1, 0)
-		KEY_RIGHT, KEY_KP_6, KEY_L: g.act_move(1, 0)
-		KEY_KP_7, KEY_Y: g.act_move(-1, -1)
-		KEY_KP_9, KEY_U: g.act_move(1, -1)
-		KEY_KP_1, KEY_B: g.act_move(-1, 1)
-		KEY_KP_3, KEY_N: g.act_move(1, 1)
+		KEY_UP, KEY_KP_8, KEY_K: g.act_move(0, -1, ev.shift_pressed)
+		KEY_DOWN, KEY_KP_2, KEY_J: g.act_move(0, 1, ev.shift_pressed)
+		KEY_LEFT, KEY_KP_4, KEY_H: g.act_move(-1, 0, ev.shift_pressed)
+		KEY_RIGHT, KEY_KP_6, KEY_L: g.act_move(1, 0, ev.shift_pressed)
+		KEY_KP_7, KEY_Y: g.act_move(-1, -1, ev.shift_pressed)
+		KEY_KP_9, KEY_U: g.act_move(1, -1, ev.shift_pressed)
+		KEY_KP_1, KEY_B: g.act_move(-1, 1, ev.shift_pressed)
+		KEY_KP_3, KEY_N: g.act_move(1, 1, ev.shift_pressed)
 		KEY_PERIOD, KEY_KP_5:
 			if ev.shift_pressed:
 				g.act_vertical(-1)
@@ -257,6 +275,10 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		KEY_M: mode = "mods"
 		KEY_S: g.act_steal()
 		KEY_C: g.act_crouch()
+		KEY_Z: g.act_crawl()
+		KEY_Q:
+			mode = "jump"
+			g.say("Jump which way?  (direction key, Esc cancels)")
 		KEY_E: g.act_vehicle()
 		KEY_D: g.act_drop_wield()
 		KEY_I:
