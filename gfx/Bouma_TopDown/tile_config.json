@@ -6486,6 +6486,7 @@
      "id": [
       "mon_leech_blossom",
       "mon_spawn_raptor_electric",
+      "mon_trl_hacker",
       "mon_zombie_electric",
       "mon_zombie_miner",
       "mon_zombie_technician"
@@ -6683,12 +6684,41 @@
      "fg": 728
     },
     {
-     "id": "mon_trl_kumo",
+     "id": "mon_trl_drone",
      "fg": 729
     },
     {
-     "id": "mon_trl_rabbit",
+     "id": "mon_trl_kumo",
      "fg": 730
+    },
+    {
+     "id": "mon_trl_rabbit",
+     "fg": 731
+    },
+    {
+     "id": [
+      "mon_trl_res_mid_clerk",
+      "mon_trl_res_mid_driver",
+      "mon_trl_res_mid_engineer",
+      "mon_trl_res_mid_nurse",
+      "mon_trl_res_mid_police_clerk",
+      "mon_trl_res_mid_shop_assistant",
+      "mon_trl_res_mid_teacher",
+      "mon_trl_res_mid_technician",
+      "mon_trl_res_poor_courier",
+      "mon_trl_res_poor_day_laborer",
+      "mon_trl_res_poor_dishwasher",
+      "mon_trl_res_poor_janitor",
+      "mon_trl_res_poor_scrapper",
+      "mon_trl_res_poor_street_vendor",
+      "mon_trl_res_rich_executive",
+      "mon_trl_res_rich_investor",
+      "mon_trl_res_rich_official",
+      "mon_trl_res_rich_owner",
+      "mon_trl_res_rich_surgeon",
+      "npc_male"
+     ],
+     "fg": 732
     },
     {
      "id": [
@@ -6697,30 +6727,30 @@
       "mon_turret_rifle",
       "mon_turret_rifle_balthazar"
      ],
-     "fg": 731
+     "fg": 733
     },
     {
      "id": "mon_turret_riot",
-     "fg": 732
+     "fg": 734
     },
     {
      "id": [
       "mon_turret_searchlight",
       "mon_turret_speaker"
      ],
-     "fg": 733
-    },
-    {
-     "id": "mon_tusked_moose",
-     "fg": 734
-    },
-    {
-     "id": "mon_void_spider_spiderling",
      "fg": 735
     },
     {
-     "id": "mon_void_spider_spiderling_skewered",
+     "id": "mon_tusked_moose",
      "fg": 736
+    },
+    {
+     "id": "mon_void_spider_spiderling",
+     "fg": 737
+    },
+    {
+     "id": "mon_void_spider_spiderling_skewered",
+     "fg": 738
     },
     {
      "id": [
@@ -6728,19 +6758,19 @@
       "mon_worm_larva",
       "mon_yugg"
      ],
-     "fg": 737
-    },
-    {
-     "id": "mon_zolf",
-     "fg": 738
-    },
-    {
-     "id": "mon_zombear_acidic",
      "fg": 739
     },
     {
-     "id": "mon_zombear_skeleton",
+     "id": "mon_zolf",
      "fg": 740
+    },
+    {
+     "id": "mon_zombear_acidic",
+     "fg": 741
+    },
+    {
+     "id": "mon_zombear_skeleton",
+     "fg": 742
     },
     {
      "id": [
@@ -6751,18 +6781,18 @@
       "mon_zombie_horse_white",
       "mon_zombie_medical_acidic"
      ],
-     "fg": 741
+     "fg": 743
     },
     {
      "id": "mon_zombie_biter",
-     "fg": 742
+     "fg": 744
     },
     {
      "id": [
       "mon_zombie_brute_ninja",
       "mon_zombie_grue"
      ],
-     "fg": 743
+     "fg": 745
     },
     {
      "id": [
@@ -6770,11 +6800,11 @@
       "mon_zombie_lashing",
       "mon_zombie_scientist"
      ],
-     "fg": 744
+     "fg": 746
     },
     {
      "id": "mon_zombie_corrosive",
-     "fg": 745
+     "fg": 747
     },
     {
      "id": [
@@ -6782,68 +6812,68 @@
       "mon_zombie_crawler_pupa",
       "mon_zombie_crawler_pupa_decoy"
      ],
-     "fg": 746
-    },
-    {
-     "id": "mon_zombie_crushed_giant",
-     "fg": 747
-    },
-    {
-     "id": "mon_zombie_dog_acidic",
      "fg": 748
     },
     {
-     "id": "mon_zombie_dog_brute_acidic",
+     "id": "mon_zombie_crushed_giant",
      "fg": 749
     },
     {
-     "id": "mon_zombie_fireproof",
+     "id": "mon_zombie_dog_acidic",
      "fg": 750
     },
     {
-     "id": "mon_zombie_fireproof_brute",
+     "id": "mon_zombie_dog_brute_acidic",
      "fg": 751
+    },
+    {
+     "id": "mon_zombie_fireproof",
+     "fg": 752
+    },
+    {
+     "id": "mon_zombie_fireproof_brute",
+     "fg": 753
     },
     {
      "id": [
       "mon_zombie_fursuit",
       "mon_zombie_hazmat"
      ],
-     "fg": 752
+     "fg": 754
     },
     {
      "id": "mon_zombie_gasbag",
-     "fg": 753
+     "fg": 755
     },
     {
      "id": [
       "mon_zombie_gasbag_crawler",
       "mon_zombie_gasbag_impaler"
      ],
-     "fg": 754
+     "fg": 756
     },
     {
      "id": "mon_zombie_gasbag_immobile",
-     "fg": 755
+     "fg": 757
     },
     {
      "id": [
       "mon_zombie_giant_heart",
       "mon_zombie_scissorlimbs"
      ],
-     "fg": 756
-    },
-    {
-     "id": "mon_zombie_grappler",
-     "fg": 757
-    },
-    {
-     "id": "mon_zombie_hanging_innards",
      "fg": 758
     },
     {
-     "id": "mon_zombie_hollow",
+     "id": "mon_zombie_grappler",
      "fg": 759
+    },
+    {
+     "id": "mon_zombie_hanging_innards",
+     "fg": 760
+    },
+    {
+     "id": "mon_zombie_hollow",
+     "fg": 761
     },
     {
      "id": [
@@ -6851,19 +6881,19 @@
       "mon_zombie_kevlar_1",
       "mon_zombie_kevlar_2"
      ],
-     "fg": 760
-    },
-    {
-     "id": "mon_zombie_living_wall",
-     "fg": 761
-    },
-    {
-     "id": "mon_zombie_mancroc",
      "fg": 762
     },
     {
-     "id": "mon_zombie_ocular",
+     "id": "mon_zombie_living_wall",
      "fg": 763
+    },
+    {
+     "id": "mon_zombie_mancroc",
+     "fg": 764
+    },
+    {
+     "id": "mon_zombie_ocular",
+     "fg": 765
     },
     {
      "id": [
@@ -6872,173 +6902,245 @@
       "mon_zombie_survivor_elite",
       "mon_zombie_survivor_no_weakpoints"
      ],
-     "fg": 764
+     "fg": 766
     },
     {
      "id": [
       "mon_zombie_phase_shrike",
       "mon_zombie_phase_skulker"
      ],
-     "fg": 765
+     "fg": 767
     },
     {
      "id": [
       "mon_zombie_relax_gasbag",
       "mon_zombie_screecher"
      ],
-     "fg": 766
-    },
-    {
-     "id": "mon_zombie_rot",
-     "fg": 767
-    },
-    {
-     "id": "mon_zombie_runner",
      "fg": 768
     },
     {
-     "id": "mon_zombie_sheep",
+     "id": "mon_zombie_rot",
      "fg": 769
     },
     {
-     "id": "mon_zombie_spitter",
+     "id": "mon_zombie_runner",
      "fg": 770
     },
     {
-     "id": "mon_zombie_strider",
+     "id": "mon_zombie_sheep",
      "fg": 771
     },
     {
-     "id": "mon_zombie_tentacle",
+     "id": "mon_zombie_spitter",
      "fg": 772
     },
     {
-     "id": "player_male",
+     "id": "mon_zombie_strider",
      "fg": 773
     },
     {
-     "id": "player_female",
+     "id": "mon_zombie_tentacle",
      "fg": 774
     },
     {
-     "id": "npc_male",
+     "id": "player_male",
      "fg": 775
     },
     {
-     "id": "npc_female",
+     "id": "player_female",
      "fg": 776
     },
     {
-     "id": "overlay_wielded_trl_gun_w2011",
+     "id": "npc_female",
      "fg": 777
     },
     {
-     "id": "overlay_wielded_trl_fake_arm_gun",
+     "id": "overlay_wielded_trl_gun_w2011",
      "fg": 778
     },
     {
      "id": [
-      "overlay_wielded_trl_gun_ga5",
-      "overlay_wielded_trl_gun_gam50",
-      "overlay_wielded_trl_gun_gm4",
-      "overlay_wielded_trl_gun_gs300",
-      "overlay_wielded_trl_gun_ha20",
-      "overlay_wielded_trl_gun_hs7",
-      "overlay_wielded_trl_gun_lh95",
-      "overlay_wielded_trl_gun_lm95",
-      "overlay_wielded_trl_gun_va7",
-      "overlay_wielded_trl_gun_vm6",
-      "overlay_wielded_trl_rifle",
-      "overlay_wielded_trl_soldier_rifle"
+      "overlay_wielded_trl_fake_arm_gun",
+      "overlay_wielded_trl_gun_hp40"
      ],
      "fg": 779
     },
     {
      "id": [
-      "overlay_wielded_trl_gun_gl9",
-      "overlay_wielded_trl_gun_hl1",
-      "overlay_wielded_trl_gun_ll3",
-      "overlay_wielded_trl_gun_vlx"
+      "overlay_wielded_trl_gun_fd338",
+      "overlay_wielded_trl_gun_fk9",
+      "overlay_wielded_trl_gun_ga10",
+      "overlay_wielded_trl_gun_ga5",
+      "overlay_wielded_trl_gun_gam50",
+      "overlay_wielded_trl_gun_gd300",
+      "overlay_wielded_trl_gun_gm14",
+      "overlay_wielded_trl_gun_gm4",
+      "overlay_wielded_trl_gun_gs300",
+      "overlay_wielded_trl_gun_ha20",
+      "overlay_wielded_trl_gun_ha5",
+      "overlay_wielded_trl_gun_hd308",
+      "overlay_wielded_trl_gun_hm5",
+      "overlay_wielded_trl_gun_hs7",
+      "overlay_wielded_trl_gun_lc30",
+      "overlay_wielded_trl_gun_ld10",
+      "overlay_wielded_trl_gun_lh95",
+      "overlay_wielded_trl_gun_lm7",
+      "overlay_wielded_trl_gun_lm95",
+      "overlay_wielded_trl_gun_sa14",
+      "overlay_wielded_trl_gun_sd7",
+      "overlay_wielded_trl_gun_va7",
+      "overlay_wielded_trl_gun_vd62",
+      "overlay_wielded_trl_gun_vk74",
+      "overlay_wielded_trl_gun_vm12",
+      "overlay_wielded_trl_gun_vm6",
+      "overlay_wielded_trl_gun_vs44",
+      "overlay_wielded_trl_gun_zd54",
+      "overlay_wielded_trl_gun_zk15",
+      "overlay_wielded_trl_gun_zm74",
+      "overlay_wielded_trl_rifle",
+      "overlay_wielded_trl_soldier_rifle"
      ],
      "fg": 780
     },
     {
-     "id": [
-      "overlay_wielded_trl_gun_gp45",
-      "overlay_wielded_trl_gun_gr44",
-      "overlay_wielded_trl_gun_hp9",
-      "overlay_wielded_trl_gun_hr357",
-      "overlay_wielded_trl_gun_lp5",
-      "overlay_wielded_trl_gun_vp9",
-      "overlay_wielded_trl_pistol"
-     ],
+     "id": "overlay_wielded_trl_gun_fe7",
      "fg": 781
     },
     {
      "id": [
-      "overlay_wielded_trl_gun_gr8",
-      "overlay_wielded_trl_gun_hs12",
-      "overlay_wielded_trl_gun_vz12"
+      "overlay_wielded_trl_gun_fl80",
+      "overlay_wielded_trl_gun_lr80"
      ],
      "fg": 782
     },
     {
-     "id": "overlay_wielded_trl_gun_lr80",
+     "id": [
+      "overlay_wielded_trl_gun_fp7",
+      "overlay_wielded_trl_gun_fs410",
+      "overlay_wielded_trl_gun_gp10",
+      "overlay_wielded_trl_gun_gp45",
+      "overlay_wielded_trl_gun_gr44",
+      "overlay_wielded_trl_gun_gr500",
+      "overlay_wielded_trl_gun_hp9",
+      "overlay_wielded_trl_gun_hr357",
+      "overlay_wielded_trl_gun_lp22",
+      "overlay_wielded_trl_gun_lp5",
+      "overlay_wielded_trl_gun_sp45",
+      "overlay_wielded_trl_gun_sr44",
+      "overlay_wielded_trl_gun_vp9",
+      "overlay_wielded_trl_gun_vr38",
+      "overlay_wielded_trl_gun_zp9",
+      "overlay_wielded_trl_pistol"
+     ],
      "fg": 783
     },
     {
-     "id": "overlay_wielded_trl_gun_vr7",
+     "id": [
+      "overlay_wielded_trl_gun_fs9",
+      "overlay_wielded_trl_gun_gk7",
+      "overlay_wielded_trl_gun_ls5",
+      "overlay_wielded_trl_gun_sm9",
+      "overlay_wielded_trl_gun_vs45",
+      "overlay_wielded_trl_gun_zp19",
+      "overlay_wielded_trl_smg"
+     ],
      "fg": 784
+    },
+    {
+     "id": "overlay_wielded_trl_gun_gl40",
+     "fg": 785
+    },
+    {
+     "id": [
+      "overlay_wielded_trl_gun_gl9",
+      "overlay_wielded_trl_gun_he3",
+      "overlay_wielded_trl_gun_hl1",
+      "overlay_wielded_trl_gun_ll3",
+      "overlay_wielded_trl_gun_se9",
+      "overlay_wielded_trl_gun_vlx"
+     ],
+     "fg": 786
+    },
+    {
+     "id": [
+      "overlay_wielded_trl_gun_gm134",
+      "overlay_wielded_trl_gun_lk95"
+     ],
+     "fg": 787
+    },
+    {
+     "id": [
+      "overlay_wielded_trl_gun_gr8",
+      "overlay_wielded_trl_gun_gs12",
+      "overlay_wielded_trl_gun_hs10",
+      "overlay_wielded_trl_gun_hs12",
+      "overlay_wielded_trl_gun_ls12",
+      "overlay_wielded_trl_gun_vz12",
+      "overlay_wielded_trl_gun_zs20"
+     ],
+     "fg": 788
+    },
+    {
+     "id": "overlay_wielded_trl_gun_hx9",
+     "fg": 789
+    },
+    {
+     "id": "overlay_wielded_trl_gun_ss12",
+     "fg": 790
+    },
+    {
+     "id": "overlay_wielded_trl_gun_vr7",
+     "fg": 791
+    },
+    {
+     "id": "overlay_wielded_trl_gun_zl40",
+     "fg": 792
     },
     {
      "id": [
       "overlay_wielded_trl_hankyu",
       "overlay_wielded_trl_yumi"
      ],
-     "fg": 785
+     "fg": 793
     },
     {
      "id": [
       "overlay_wielded_trl_kama",
       "overlay_wielded_trl_kusarigama"
      ],
-     "fg": 786
-    },
-    {
-     "id": "overlay_wielded_trl_nunchaku",
-     "fg": 787
-    },
-    {
-     "id": "overlay_wielded_trl_smg",
-     "fg": 788
-    },
-    {
-     "id": "overlay_wielded_trl_yari",
-     "fg": 789
-    },
-    {
-     "id": "overlay_worn_trl_plasteel_armor",
-     "fg": 790
-    },
-    {
-     "id": "overlay_worn_trl_plasteel_helm",
-     "fg": 791
-    },
-    {
-     "id": "overlay_worn_trl_kp_vest",
-     "fg": 792
-    },
-    {
-     "id": "overlay_worn_trl_kp_helmet",
-     "fg": 793
-    },
-    {
-     "id": "overlay_worn_trl_plasteel_boots",
      "fg": 794
     },
     {
-     "id": "overlay_worn_trl_plasteel_gloves",
+     "id": "overlay_wielded_trl_nunchaku",
      "fg": 795
+    },
+    {
+     "id": "overlay_wielded_trl_yari",
+     "fg": 796
+    },
+    {
+     "id": "overlay_worn_trl_plasteel_armor",
+     "fg": 797
+    },
+    {
+     "id": "overlay_worn_trl_plasteel_helm",
+     "fg": 798
+    },
+    {
+     "id": "overlay_worn_trl_kp_vest",
+     "fg": 799
+    },
+    {
+     "id": "overlay_worn_trl_kp_helmet",
+     "fg": 800
+    },
+    {
+     "id": "overlay_worn_trl_plasteel_boots",
+     "fg": 801
+    },
+    {
+     "id": "overlay_worn_trl_plasteel_gloves",
+     "fg": 802
     }
    ]
   },
@@ -7682,92 +7784,17 @@
     {
      "id": [
       "12000_gasoline_generator",
-      "LAW_Packed",
       "acetylene_cooker",
-      "alexandrite",
-      "ambush",
-      "armchair",
-      "beach_volleyball",
       "biogas_cooker",
-      "bot_crows_m240",
-      "bot_dispatch_military",
-      "bot_rifleturret",
-      "broken_crows_m240",
-      "broken_dispatch_military",
-      "broken_lab_security_drone_GM",
-      "broken_molebot",
-      "broken_robofac_camspy",
-      "broken_robofac_laserturret_mk1",
-      "broken_robofac_prototype",
-      "broken_science_bot",
-      "broken_secubot",
-      "broken_secubot_balthazar",
-      "broken_talon_m202a1",
-      "broken_tazer_hack",
-      "broken_turret",
-      "broken_turret_artisans",
-      "broken_turret_bmg",
-      "broken_turret_rifle",
-      "broken_turret_rifle_balthazar",
-      "broketent",
       "charcoal_cooker",
-      "cobalt_60",
-      "corpse_yugg_jade",
-      "cot",
-      "crossbow_trap",
-      "decorative_wreath",
       "diesel_generator",
-      "dog_tag_dog",
-      "dry_seaweed",
-      "dry_seaweed_pile",
-      "e_scrap",
-      "electrohack",
-      "emerald",
-      "fertilizer",
-      "fidget_spinner",
-      "fighter_sting",
-      "fish_trap",
       "gasoline_cooker",
-      "geiger_off",
-      "geiger_on",
-      "green_pen",
-      "hose",
-      "hose_garden",
-      "hotplate",
-      "hotplate_induction",
-      "inflatable_section",
-      "jerrycan",
-      "jerrycan_big",
-      "joint_roach",
-      "largebroketent",
-      "lawnmower",
-      "leaves",
-      "makeshift_hose",
-      "medium_biogas_tank",
-      "medium_propane_tank",
-      "mil_plate",
       "military_generator",
-      "militarymap",
       "oil_cooker",
       "oil_press_electric",
       "oil_press_manual",
       "oil_press_primitive",
-      "paint_can_plastic",
-      "parachute_mil",
-      "peridot",
-      "pine_bough",
-      "portable_generator",
-      "pressurized_canister",
-      "propane_cooker",
-      "puller",
-      "small_biogas_tank",
-      "small_propane_tank",
-      "snakesnladders",
-      "survivor_scope",
-      "thermos",
-      "trailmap",
-      "trimmer_off",
-      "trimmer_on"
+      "portable_generator"
      ],
      "fg": 825
     },
@@ -7982,16 +8009,36 @@
       "steyr_scout",
       "tac338",
       "tac50",
+      "trl_gun_fd338",
+      "trl_gun_fk9",
+      "trl_gun_ga10",
       "trl_gun_ga5",
       "trl_gun_gam50",
+      "trl_gun_gd300",
+      "trl_gun_gm14",
       "trl_gun_gm4",
       "trl_gun_gs300",
       "trl_gun_ha20",
+      "trl_gun_ha5",
+      "trl_gun_hd308",
+      "trl_gun_hm5",
       "trl_gun_hs7",
+      "trl_gun_lc30",
+      "trl_gun_ld10",
       "trl_gun_lh95",
+      "trl_gun_lm7",
       "trl_gun_lm95",
+      "trl_gun_sa14",
+      "trl_gun_sd7",
       "trl_gun_va7",
+      "trl_gun_vd62",
+      "trl_gun_vk74",
+      "trl_gun_vm12",
       "trl_gun_vm6",
+      "trl_gun_vs44",
+      "trl_gun_zd54",
+      "trl_gun_zk15",
+      "trl_gun_zm74",
       "trl_rifle",
       "trl_soldier_rifle",
       "type99",
@@ -8104,12 +8151,21 @@
       "taurus_judge",
       "tec9",
       "tokarev",
+      "trl_gun_fp7",
+      "trl_gun_fs410",
+      "trl_gun_gp10",
       "trl_gun_gp45",
       "trl_gun_gr44",
+      "trl_gun_gr500",
       "trl_gun_hp9",
       "trl_gun_hr357",
+      "trl_gun_lp22",
       "trl_gun_lp5",
+      "trl_gun_sp45",
+      "trl_gun_sr44",
       "trl_gun_vp9",
+      "trl_gun_vr38",
+      "trl_gun_zp9",
       "trl_pistol",
       "usp_45",
       "usp_9mm",
@@ -8572,181 +8628,12 @@
     {
      "id": [
       "22lr_ammo_tray",
-      "2x4",
-      "adobe_pallet_done",
-      "adobe_pallet_full",
-      "alder_bark",
-      "almond",
-      "alquerque",
-      "anvil_stump",
-      "art_harp",
-      "bag_canvas_small",
       "basketball",
-      "birchbark",
-      "block_and_tackle_wood",
-      "board_trap",
-      "boat_board",
-      "bokken",
-      "bokken_fake",
-      "bokken_inferior",
-      "bowl_clay",
-      "bowl_coconut",
-      "bowl_wood",
-      "bowl_wood_large",
-      "bowling_pin",
-      "brick",
-      "bucket_wood",
-      "bullwhip",
-      "bundle_branch",
-      "bundle_branch_long",
-      "bundle_leather",
-      "bundle_plank",
-      "butterfly_net_makeshift",
-      "carbonfiber_boat_hull",
-      "carton_egg",
-      "casting_mold",
-      "casting_mold_large",
-      "casting_mold_long",
-      "casting_mold_small",
-      "chair_plywood",
-      "chair_wood",
-      "chaturanga",
-      "checkers",
-      "chess",
-      "chinese_checkers",
-      "clay_canister",
-      "clay_hydria",
-      "clay_lump",
-      "clay_teapot",
-      "clay_urn",
       "clothes_hanger",
-      "connect_four",
-      "cow_bell",
-      "crucible_clay",
-      "cudgel",
-      "cured_pelt",
-      "cutting_board",
-      "deck_chair",
-      "digging_stick",
-      "domino",
-      "doormat",
-      "drum_skin",
-      "fanning_mill",
-      "fire_brick",
-      "fire_piston",
-      "fish_trap_basket",
-      "fishing_rod_basic",
-      "fishing_rod_professional",
-      "flux_comp_gen",
-      "football",
-      "fur",
-      "fur_rollmat",
-      "giant_wood_screw",
-      "glassblowers_crucible",
-      "go",
-      "hazelnut",
-      "hickory_nut",
-      "hickory_root",
-      "hnefatafl",
-      "hoboreel",
-      "hoe",
-      "homewrecker",
-      "jackstraws",
-      "kantele",
-      "knitting_needles",
-      "lajatang",
-      "large_space_heater",
-      "large_space_heater_on",
-      "large_stomach_sealed",
-      "latrunculi",
-      "leather",
-      "leather_bellow",
-      "leather_filing",
-      "leather_funnel",
-      "leather_journal",
-      "leather_tarp",
-      "log",
-      "long_pole",
-      "mahjong",
-      "makeshift_checkers",
-      "makeshift_tree_spile",
-      "mancala",
-      "mortar_adobe",
-      "nailboard",
-      "needle_wood",
-      "notched_plank",
-      "notched_stick",
-      "openfire",
-      "othello",
-      "paint_brush",
-      "pallet",
-      "peanut",
-      "pecan",
-      "pedal_extenders_makeshift",
-      "pet_carrier_wooden",
-      "pinecone",
-      "pistachio",
-      "pitchfork",
-      "plank_long",
-      "plank_short",
       "plastic_boat_hull",
-      "pointy_stick",
-      "pointy_stick_long",
-      "pool_cue",
       "poppirate",
-      "primitive_shovel",
-      "pseudo_training_dummy_heavy",
-      "pulverizer",
-      "raft_board",
-      "rake",
       "rake_plastic",
-      "ranger",
-      "rolling_pin",
-      "rummy",
-      "sandpaper",
-      "sassafras_root",
-      "scraper_steel",
-      "sculpture_clay",
-      "senet",
-      "shillelagh",
-      "shillelagh_fake",
-      "shillelagh_weighted",
-      "shogi",
-      "shovel",
-      "shovel_snow",
-      "shovel_snow_plastic",
-      "small_checkers",
-      "small_chess",
-      "small_space_heater",
-      "small_space_heater_on",
-      "soaking_long_pole",
-      "soft_adobe_brick",
-      "splinter",
-      "stepladder",
-      "stick",
-      "stick_long",
-      "stomach_sealed",
-      "tanbark",
-      "tankard_wooden",
-      "tanned_hide",
-      "tanned_pelt",
-      "tanning_hide",
-      "tanning_pelt",
-      "tattered_garment",
-      "tonewood",
-      "towel_hanger",
-      "tuning_pegs",
-      "twig",
-      "ukulele",
-      "violin",
-      "walnut",
-      "willowbark",
-      "wood_beam",
-      "wood_block",
-      "wood_smoother",
-      "wooden_post",
-      "wooden_post_long",
-      "wooden_post_short"
+      "shovel_snow_plastic"
      ],
      "fg": 836
     },
@@ -9141,645 +9028,68 @@
     },
     {
      "id": [
+      "2x4",
+      "cutting_board",
+      "digging_stick",
+      "hickory_root",
+      "log",
+      "notched_plank",
+      "notched_stick",
+      "plank_long",
+      "plank_short",
+      "pointy_stick",
+      "pointy_stick_long",
+      "sassafras_root",
+      "shillelagh_weighted",
+      "stick",
+      "stick_long",
+      "twig"
+     ],
+     "fg": 844
+    },
+    {
+     "id": [
       "30gal_barrel",
       "30gal_barrel_mutagen",
       "chest_freezer",
       "chest_minifreezer",
       "gelbox"
      ],
-     "fg": 844
+     "fg": 845
     },
     {
      "id": [
       "30gal_drum",
       "55gal_drum",
-      "anvil",
-      "anvil_crude",
-      "anvil_heavy",
-      "anvil_scavenged",
-      "art_trident",
-      "atgm_spent",
-      "backgammon",
-      "bag_body_bag",
-      "bag_garbage",
-      "bag_garbage_reinforced",
-      "bagh_nakha",
-      "black_pen",
-      "blackjack",
-      "bot_flashbang_hack",
-      "bot_gasbomb_hack",
-      "bot_lab_security_drone_BS",
-      "brick_kiln",
-      "brick_oven_pseudo",
-      "broken_flashbang_hack",
-      "broken_gasbomb_hack",
-      "broken_grocerybot",
-      "broken_grocerybot_busted",
-      "broken_lab_security_drone_BS",
-      "broken_nursebot",
-      "broken_nursebot_defective",
-      "burnt_out_bionic",
-      "butane_can",
       "butane_tank",
-      "butchery_tree_pseudo",
-      "c4_payload",
-      "caltrops",
-      "caltrops_teeth",
       "canister_goo",
-      "cannonball_4lb",
-      "cantilever_medium",
-      "cantilever_small",
-      "cargo_lock",
-      "ch_cutlass",
-      "ch_kilij",
-      "ch_kukri",
-      "ch_talwar",
-      "char_forge",
-      "char_kiln",
-      "cig_butt",
-      "cigar_butt",
-      "closed_loop_extractor_large",
-      "closed_loop_extractor_small",
-      "compressor",
-      "con_mix_foldable",
-      "condensor_coil",
-      "corpse_yugg_rubber",
-      "counterweight",
-      "crane_pseudo_item",
-      "crucible",
-      "crutches",
-      "cutlass",
-      "cutlass_fake",
-      "cutlass_inferior",
-      "door_lock",
-      "dressage_whip",
-      "dutch_oven",
-      "elec_shears",
-      "emergency_lockpick",
-      "evaporator_coil",
-      "exodii_kiln",
-      "exodii_micro_module",
-      "exodii_prybar",
-      "fake_butcher_rack",
-      "fake_forge",
-      "filter_air",
-      "filter_air_makeshift",
-      "filter_liquid",
-      "filter_liquid_makeshift",
-      "fishing_rod_tele",
-      "fishing_rod_tele_packed",
-      "five-point_harness",
-      "flashbang",
-      "flashbang_act",
-      "flint_steel",
       "fungicidalbomb_act",
       "fungicidalbomb_makeshift_act",
-      "g_shovel",
-      "gas_forge",
       "gasbomb_makeshift",
       "gasbomb_makeshift_act",
-      "gasket_plastic",
-      "gasket_plastic_set",
-      "glowplug",
-      "grinder_cutoff_disc",
-      "grinder_metal_grinding_disc",
-      "guitar_stand",
-      "hair_dryer",
-      "hc_cutlass",
-      "hc_kilij",
-      "hc_kukri",
-      "hc_talwar",
-      "hd_compressor",
-      "hd_valve",
-      "heavy_duty_military_rotor",
-      "honey_scraper",
-      "imperfect_doll_features",
-      "imperfect_doll_legs",
-      "inflatable_airbag",
-      "insecticidalbomb_act",
-      "kevlar_patch",
-      "kiln",
-      "kirpan",
-      "kirpan_cheap",
-      "kris",
-      "kris_fake",
-      "kukri",
-      "large_pressure_vessel",
-      "large_surface_pseudo",
-      "lc_cutlass",
-      "lc_kilij",
-      "lc_kukri",
-      "lc_talwar",
-      "louverture",
-      "makeshift_crutches",
-      "makeshift_sap",
-      "manhole_cover",
-      "mannequin",
-      "mc_cutlass",
-      "mc_kilij",
-      "mc_kukri",
-      "mc_talwar",
-      "medium_surface_pseudo",
-      "monolith_brick",
-      "monolith_disc",
-      "mp3",
-      "mp3_on",
-      "neoprene",
-      "nether_huntsman_statuette",
-      "nitrogen_membrane_filter",
-      "nylon_bag",
-      "oil_extractor_crude",
-      "onyx",
-      "outfit_storage",
-      "oven",
-      "oven_stovetop",
-      "painting",
-      "pallet_lifter",
-      "pastaextruder",
-      "pedal_extenders",
-      "pedal_grindstone",
-      "permanent_marker",
-      "petrified_eye",
-      "plastichoboreel",
-      "plunger_futuristic",
-      "pointed_rebar",
-      "press",
-      "press_dowel",
-      "pressure_gauge",
-      "pseudo_ergometer_mechanical",
-      "pseudo_exercise_machine",
-      "pseudo_punching_bag",
-      "pseudo_treadmill_mechanical",
-      "pump_complex",
-      "pyrometer",
-      "qt_cutlass",
-      "qt_kilij",
-      "qt_kukri",
-      "qt_talwar",
-      "railroad_track_small",
-      "recovery_pump",
-      "riding_crop",
-      "rubber_tire_chunk",
-      "scrap_canvas",
-      "scrap_carpet",
-      "scrap_cotton",
-      "scrap_denim",
-      "scrap_faux_fur",
-      "scrap_felt",
-      "scrap_fur",
-      "scrap_kevlar",
-      "scrap_leather",
-      "scrap_lycra",
-      "scrap_neoprene",
-      "scrap_nomex",
-      "scrap_nylon",
-      "sharp_rebar",
-      "shotgun_trap",
-      "sieve_steel",
-      "sieve_steel_makeshift",
-      "simple_crank",
-      "small_pressure_vessel",
-      "stationary_water_purifier",
-      "strap_cotton",
-      "survival_marker",
-      "tazer",
-      "teapot",
-      "tear_gas_payload",
-      "tear_gas_payload_act",
-      "telepad",
-      "teleumbrella-extended",
-      "television",
-      "tent_pole",
-      "v_airjack_item",
-      "v_motorcycle_kickstand_item",
-      "v_plow_item",
-      "v_rockwheel_item",
-      "vac_oven_small",
-      "vac_pump",
-      "vibrator",
-      "waffleiron",
-      "wallet",
-      "wallet_duct_tape",
-      "wallet_large",
-      "wallet_leather",
-      "wallet_stylish",
-      "wasp_sting",
-      "weighted_dart",
-      "well_pump",
-      "wheel_10",
-      "wheel_caster",
-      "wheel_caster_large",
-      "wheel_mount_skateboard",
-      "wheel_rim_bicycle",
-      "wheel_rim_medium",
-      "wheel_rim_motorbike",
-      "wheel_rim_wide",
-      "wrapper_foil_roll"
+      "insecticidalbomb_act"
      ],
-     "fg": 845
+     "fg": 846
     },
     {
      "id": [
       "30gal_drum_aluminum",
       "432gal_drum_rubber",
       "55gal_drum_aluminum",
-      "UPS_OFF",
-      "UPS_ON",
-      "UPS_off",
-      "abstract_software",
-      "acetylene_machine",
-      "altered_exposed_wiring_prototype",
-      "altered_rubicks_cube",
-      "altered_teapot",
-      "aluminum_boat_hull",
-      "aluminum_stepladder",
-      "ammonia_machine_reactor",
-      "ammunition_can_30",
-      "ammunition_can_50",
-      "ammunition_can_fat_50",
-      "ammunition_can_pa120",
-      "ammunition_can_pa124",
-      "android_arms",
-      "android_chassis",
-      "android_legs",
-      "animal_locker",
-      "antenna",
-      "art_beads",
-      "art_crystal",
-      "art_disc",
-      "art_duocylinder",
-      "art_irrational",
-      "art_jelly",
-      "art_penrose",
-      "art_pin",
-      "art_rod",
-      "art_snake",
-      "art_sphere",
-      "art_spiral",
-      "art_tesseract",
-      "art_tube",
-      "bag_iv",
-      "bag_plastic",
-      "bag_plastic_small",
-      "bag_zipper",
       "bag_zipper_gallon",
-      "ballast",
-      "barometer",
-      "basket_laundry",
-      "beartrap",
-      "beeper",
-      "bench_vise",
-      "bike_rack",
-      "bio_claws_weapon",
-      "blister_pack",
-      "block_and_tackle",
-      "bot_c4_hack",
-      "bot_secubot_liberty",
-      "bot_yrax_triakis",
-      "bouquet",
-      "bowl_pewter",
-      "brazier",
-      "broken_c4_hack",
-      "broken_exodii_quad",
-      "broken_exodii_worker",
-      "broken_kord",
-      "broken_stiltwalker_1_1",
-      "broken_yrax_triakis",
-      "broken_yrax_trifacet",
-      "bronze_file",
-      "brush",
-      "bucket",
-      "bucket_5gal",
-      "bundle_rebar",
-      "butterfly_net_collapsible",
-      "butterfly_net_collapsible_extended",
-      "c4",
-      "c4armed",
-      "camp_chair",
-      "can_opener",
-      "can_sealer",
       "canister_empty",
-      "carving_fork",
-      "ch_estoc",
-      "ch_falx",
-      "ch_jian",
-      "ch_kriegsmesser",
-      "ch_rapier",
-      "ch_scimitar",
-      "ch_shoulder_guards",
-      "ch_shoulder_guards_xs",
-      "ch_zweihander",
-      "chair_folding",
-      "chair_wood_black",
-      "char_purifier",
-      "char_purifier_clay",
-      "char_smoker",
-      "cheese_grater",
-      "chemistry_set",
-      "chemistry_set_basic",
-      "chicken_cage",
-      "chisel",
-      "chisel_bronze",
-      "chopsticks",
-      "chunk_cast_iron",
-      "churn",
-      "cigar_punch",
-      "clarinet",
-      "clay_cup",
-      "clock",
-      "clockworks",
-      "coffeemaker",
-      "colander_steel",
-      "concrete",
-      "copbot_chassis",
-      "corkscrew",
-      "crude_heating_element",
-      "crude_picklock",
-      "cup_foil",
-      "cuvettes",
-      "debug_apply_fault",
-      "debug_item_damager",
-      "debug_item_damager_adv",
-      "debug_item_search",
-      "debug_lux_meter",
-      "debug_mortar",
-      "delay_fuze",
-      "directional_antenna",
-      "drift",
-      "efile_junk",
-      "efile_lore",
-      "efile_map",
-      "efile_photos",
-      "efile_recipes",
-      "efile_recipes_medical",
-      "efile_recipes_science",
-      "electric_spinwheel",
-      "electrolyzer_makeshift",
-      "element",
-      "esbit_stove",
-      "estoc",
-      "estoc_fake",
-      "estoc_inferior",
-      "exodii_chassis",
-      "exodii_drone_chassis",
-      "falx",
-      "family_photo",
-      "fan",
-      "fencing_epee",
-      "fencing_epee_sharpened",
-      "fencing_foil",
-      "fencing_foil_sharpened",
-      "flute",
-      "folded_bicycle",
-      "folded_inflatable_boat",
-      "folded_skateboard_generic",
-      "folded_wheelchair_generic",
-      "foon",
-      "foot_crank",
-      "foot_locker",
-      "forge",
-      "forged_shears",
-      "fork",
-      "garlic_press",
-      "gas_charger",
-      "gas_charger_on",
-      "generic_folded_vehicle",
-      "glaive",
-      "glowstick_dead",
-      "grass_yarn",
-      "grip_hook",
-      "hand_controls",
-      "hand_crank_charger",
-      "hand_paddles",
-      "hand_rims",
-      "hc_estoc",
-      "hc_falx",
-      "hc_jian",
-      "hc_kriegsmesser",
-      "hc_rapier",
-      "hc_scimitar",
-      "hc_shoulder_guards",
-      "hc_shoulder_guards_xs",
-      "hc_zweihander",
-      "hd_compressor_unit",
       "hd_steel_drum",
-      "heatpack",
-      "heatpack_used",
-      "horn_bicycle",
-      "horn_big",
-      "horn_car",
-      "hotcut",
-      "hotcut_bronze",
       "hydrogen_tank",
-      "icecream_scoop",
-      "impact_fuze",
-      "improvised_oven",
-      "jack_makeshift",
-      "jack_small",
-      "jade_nagamaki",
-      "jian",
-      "jian_fake",
-      "jian_inferior",
-      "kriegsmesser",
-      "ladle",
       "large_biogas_tank",
       "large_propane_tank",
-      "lc_estoc",
-      "lc_falx",
-      "lc_jian",
-      "lc_kriegsmesser",
-      "lc_rapier",
-      "lc_scimitar",
-      "lc_shoulder_guards",
-      "lc_shoulder_guards_xs",
-      "lc_zweihander",
-      "livestock_carrier",
-      "livestock_scale",
-      "lump_cast_iron",
-      "lux_meter",
-      "magnetron",
-      "makeshift_brazier",
-      "makeshift_glaive",
-      "makeshift_pressure_cooker",
-      "makeshift_welding_blanket",
-      "mannequin_decoy",
-      "material_aluminium_ingot",
-      "mc_estoc",
-      "mc_falx",
-      "mc_jian",
-      "mc_kriegsmesser",
-      "mc_rapier",
-      "mc_scimitar",
-      "mc_shoulder_guards",
-      "mc_shoulder_guards_xs",
-      "mc_zweihander",
-      "melting_point",
-      "menorah",
-      "mess_tray",
-      "metal_butcher_rack",
-      "metal_file",
-      "metal_smoking_rack",
-      "metal_smoother",
-      "metalworking_tongs",
-      "metalworking_tongs_bronze",
-      "microwave",
-      "mixer_music",
-      "mjolnir",
-      "molotov",
-      "molotov_lit",
-      "mop",
-      "mop_folded",
-      "mortar_build",
-      "mortar_pestle",
-      "movie_poster",
-      "mre_bag",
-      "mre_bag_dessert",
-      "mre_bag_jam",
-      "mre_bag_small",
-      "mre_bag_spread",
-      "mre_package",
-      "muffler",
-      "multimeter",
-      "nail_puller_bronze",
-      "needle_curved",
-      "needle_steel",
-      "nether_huntsman_armorpiece_small",
-      "nitrogen_generator",
       "nitrogen_tank",
-      "nomex",
-      "office_holepunch",
       "oxygen_concentrator",
-      "paint_can_steel",
-      "peeler",
-      "pen",
-      "pet_carrier",
-      "ph_meter",
-      "pin_reamer",
-      "pizza_cutter",
-      "plastic_fork",
-      "plastic_spoon",
-      "plastic_spoon_kids",
-      "plastic_straw",
-      "platinum_grille",
-      "plutonium",
-      "pocketwatch",
-      "polaroid_photo",
-      "polisher",
-      "poppy_bud",
-      "portable_game",
-      "portable_stove",
-      "potato_masher",
-      "power_supply",
-      "pressure_cooker",
       "pressure_tank",
-      "pseudo_bio_picklock",
-      "punch_nail",
-      "qiang",
-      "qt_estoc",
-      "qt_falx",
-      "qt_jian",
-      "qt_kriegsmesser",
-      "qt_rapier",
-      "qt_scimitar",
-      "qt_shoulder_guards",
-      "qt_shoulder_guards_xs",
-      "qt_zweihander",
-      "quad_rotors",
-      "railroad_track_item",
-      "railroad_track_item_half",
-      "rapier",
-      "rapier_fake",
-      "rebar",
-      "receiver",
-      "reins_tackle",
-      "resin_chunk",
-      "rx12_injector",
-      "sail",
-      "saline_bag_1000_empty",
-      "saline_bag_2000_empty",
-      "saline_bag_250_empty",
-      "saline_bag_500_empty",
-      "satellitemap",
-      "scimitar",
-      "scimitar_fake",
-      "scimitar_inferior",
-      "scissors_medical",
-      "scrap_aluminum",
-      "scrap_cast_iron",
-      "scrap_copper",
-      "scrap_tin",
-      "sextant",
-      "sharpener",
-      "shears",
-      "shock_epee",
-      "shock_foil",
-      "shrink_wrap",
-      "sieve_primitive",
-      "software_encryption_codes",
-      "software_hacking",
-      "software_math",
-      "software_medical",
-      "software_useless",
-      "soldering_iron",
-      "soldering_iron_portable",
-      "spatula",
-      "spectrophotometer",
-      "spidery_legs_big",
-      "spidery_legs_small",
-      "splatter_guard",
-      "spoon",
-      "spork",
-      "spray_can",
-      "spring",
-      "stand_ring",
-      "stapler",
-      "steel_grille",
-      "storage_line",
-      "straw_doll",
-      "string_36",
-      "string_6",
-      "sunflower",
-      "swage",
       "tank_tread",
-      "testflames",
-      "thermostat",
-      "thread_cutting_set",
-      "tin_cup",
-      "tin_snips",
-      "toaster",
-      "tourist_table",
-      "training_dummy_heavy",
-      "trashcan",
-      "trashcan_large",
-      "tree_spile",
-      "turret_chassis",
-      "uranium",
-      "v_reaper_item",
-      "v_reaper_item_advanced",
-      "v_scoop_item",
-      "voltmeter",
-      "water_faucet",
-      "welding_blanket",
-      "whisk",
-      "wicker_basket_large",
-      "withered",
-      "wrapper_foil",
-      "wrapper_pr",
-      "xedra_antenna",
       "xl_biogas_tank",
-      "xl_ch_shoulder_guards",
-      "xl_hc_shoulder_guards",
-      "xl_lc_shoulder_guards",
-      "xl_mc_shoulder_guards",
-      "xl_propane_tank",
-      "xl_qt_shoulder_guards",
-      "yoke_harness_heavyduty",
-      "yoyo",
-      "zweihander",
-      "zweihander_fake",
-      "zweihander_inferior"
+      "xl_propane_tank"
      ],
-     "fg": 846
+     "fg": 847
     },
     {
      "id": [
@@ -9798,7 +9108,7 @@
       "tinderbox",
       "tinderbox_on"
      ],
-     "fg": 847
+     "fg": 848
     },
     {
      "id": [
@@ -9901,7 +9211,7 @@
       "thread_nomex",
       "tin"
      ],
-     "fg": 848
+     "fg": 849
     },
     {
      "id": [
@@ -9949,14 +9259,14 @@
       "toxic_waste_labnote",
       "wrapper"
      ],
-     "fg": 849
+     "fg": 850
     },
     {
      "id": [
       "40x53mm_buckshot_m169",
       "bp_40x53mm_buckshot_m169"
      ],
-     "fg": 850
+     "fg": 851
     },
     {
      "id": [
@@ -9992,96 +9302,31 @@
       "reloaded_50ae_jhp",
       "signal_flare"
      ],
-     "fg": 851
+     "fg": 852
     },
     {
      "id": [
       "410shot_hull",
       "airhorn",
-      "alien_fern",
-      "arcade_machine",
-      "boltcutters",
-      "boobytrap",
-      "bot_antimateriel",
-      "bot_turret_riot",
-      "calming_stone",
       "disc_golf",
       "dnd",
       "dnd_2",
       "dnd_3",
-      "dynamite",
-      "dynamite_act",
-      "extinguisher",
-      "fake_anvil",
-      "fake_anvil_heavy",
-      "fake_arc_furnace",
-      "fake_beverly_shear",
-      "fake_burrowing",
-      "fake_char_kiln",
-      "fake_char_smoker",
-      "fake_clay_kiln",
-      "fake_digester_tank",
-      "fake_fireplace",
-      "fake_goggles",
-      "fake_lift_heavy",
-      "fake_lift_medium",
-      "fake_milling_item",
-      "fake_sharp_metal_wreckage",
-      "fake_smoke_plume",
-      "fake_stove",
-      "fake_woodstove",
-      "fire",
-      "firecracker",
-      "firecracker_act",
-      "firecracker_pack",
-      "firecracker_pack_act",
-      "fuel_tin",
-      "garnet",
       "handflare_dead",
       "homemade_demolition_charge",
       "homemade_demolition_charge_act",
-      "material_rhodonite",
-      "material_zincite",
       "monopoly",
-      "mountable_heater",
-      "mountable_heater_small",
-      "multi_cooker",
-      "multi_cooker_filled",
-      "null",
-      "ouija",
-      "parkour_practice",
-      "plastic_bag_vac",
       "plectrum",
-      "plunger_toilet",
-      "pseudo_app_hd_compressor_unit",
-      "pseudo_app_oxygen_concentrator",
       "red_pen",
       "rubber_band",
-      "ruby",
       "saddle",
-      "screw_press",
-      "scutcheritem",
-      "seat",
-      "seat_bench",
-      "seat_bench_leather",
-      "seat_leather",
       "shot_hull",
-      "sm_extinguisher",
-      "stereo",
-      "survival_match",
       "teargas_sprayer",
       "thermometer",
       "unprimed_410shot_hull",
-      "unprimed_shot_hull",
-      "unstable_rift",
-      "v_table",
-      "w_table",
-      "water_mill",
-      "wind_mill",
-      "workbench",
-      "wrapping_vacuumed"
+      "unprimed_shot_hull"
      ],
-     "fg": 852
+     "fg": 853
     },
     {
      "id": [
@@ -10110,7 +9355,7 @@
       "shot_slug",
       "wax_slug"
      ],
-     "fg": 853
+     "fg": 854
     },
     {
      "id": [
@@ -10143,100 +9388,11 @@
       "uran_cell",
       "wood_atlatl_spear"
      ],
-     "fg": 854
+     "fg": 855
     },
     {
-     "id": [
-      "55gal_drum_rubber",
-      "EOD_hotstick",
-      "adobe_brick",
-      "alarmclock",
-      "altered_comb",
-      "ammolink223",
-      "ammolink308",
-      "ammolink50",
-      "angle_grinder",
-      "anvil_bronze",
-      "autoclave",
-      "awl_steel",
-      "beverly_shear",
-      "bot_dispatch",
-      "bot_golden_monolith",
-      "bot_lab_security_drone_YM",
-      "bot_yrax_delta",
-      "broken_dispatch",
-      "broken_exodii_sniper_drone",
-      "broken_exodii_turret",
-      "broken_golden_monolith",
-      "broken_lab_security_drone_YM",
-      "broken_turret_speaker",
-      "broken_yrax_delta",
-      "broken_yrax_quadraphract",
-      "broken_yrax_quadraphract_leg",
-      "bronze_hoe",
-      "bronze_shears",
-      "broom",
-      "butternut",
-      "butternut_husk",
-      "candlestick",
-      "carver_off",
-      "carver_on",
-      "chalice",
-      "chem_agar",
-      "chem_peptone_broth",
-      "cigar_cutter",
-      "citrine",
-      "crude_bronze_nail",
-      "dao",
-      "debug_template",
-      "dog_whistle",
-      "dog_whistle_wood",
-      "elec_hairtrimmer",
-      "exodii_digger",
-      "fiber_mat",
-      "frisbee",
-      "funnel",
-      "horse_tack",
-      "ji",
-      "jointer",
-      "kevlar_shears",
-      "khopesh",
-      "krar",
-      "krar_golden",
-      "lawn_dart",
-      "metal_funnel",
-      "noise_emitter",
-      "noise_emitter_on",
-      "noise_emitter_super",
-      "noise_emitter_super_on",
-      "ny_hook",
-      "peephole",
-      "pencil",
-      "pictionary",
-      "planer",
-      "pseudo_archery_target_bale",
-      "rack_test_tube",
-      "rack_test_tube_micro",
-      "roadmap",
-      "router",
-      "rubik_farthing",
-      "scrap_brass",
-      "scrap_bronze",
-      "shed_stick",
-      "sponge",
-      "tailoring_pattern_set",
-      "tarp_raincatcher",
-      "template_armor",
-      "template_photonics",
-      "tindalos_whistle",
-      "trumpet",
-      "vh_autoclave",
-      "violin_golden",
-      "yoke_harness",
-      "yrax_electronics",
-      "yrax_scrap"
-     ],
-     "fg": 855
+     "id": "55gal_drum_rubber",
+     "fg": 856
     },
     {
      "id": [
@@ -10248,7 +9404,7 @@
       "gun_lock",
       "power_cord"
      ],
-     "fg": 856
+     "fg": 857
     },
     {
      "id": [
@@ -10256,7 +9412,7 @@
       "60mm_shell_m768",
       "rubber_slug"
      ],
-     "fg": 857
+     "fg": 858
     },
     {
      "id": [
@@ -10266,7 +9422,7 @@
       "m4_carlgustav",
       "trl_gun_vr7"
      ],
-     "fg": 858
+     "fg": 859
     },
     {
      "id": [
@@ -10306,7 +9462,7 @@
       "stone_pouch",
       "vortex_stone"
      ],
-     "fg": 859
+     "fg": 860
     },
     {
      "id": [
@@ -10316,6 +9472,7 @@
       "acorns",
       "acorns_blanched",
       "acorns_cooked",
+      "almond",
       "almond_pulp",
       "almond_roasted",
       "almond_shelled",
@@ -10490,6 +9647,7 @@
       "hair_dye_brown",
       "hallula",
       "hamburger",
+      "hazelnut",
       "hazelnut_cake",
       "hazelnut_pulp",
       "hazelnut_roasted",
@@ -10582,8 +9740,10 @@
       "pancakes",
       "paste_nut",
       "paste_seed",
+      "peanut",
       "peanut_butter_toast",
       "peanut_shelled",
+      "pecan",
       "pecan_roasted",
       "pecan_shelled",
       "pemmican",
@@ -10596,6 +9756,7 @@
       "pine_nuts",
       "pineapple",
       "pineapple_chunks",
+      "pistachio",
       "pork_beans",
       "porkstick",
       "potato",
@@ -10718,6 +9879,7 @@
       "trl_f_yakitori",
       "vegan_butter",
       "vegan_gravy_mix",
+      "walnut",
       "walnut_pulp",
       "walnut_roasted",
       "walnut_shelled",
@@ -10728,7 +9890,7 @@
       "wild_rice_stalks",
       "wild_sarsaparilla_root"
      ],
-     "fg": 860
+     "fg": 861
     },
     {
      "id": [
@@ -10737,7 +9899,15 @@
       "belt40mm",
       "mark19"
      ],
-     "fg": 861
+     "fg": 862
+    },
+    {
+     "id": [
+      "EOD_hotstick",
+      "fiber_mat",
+      "shed_stick"
+     ],
+     "fg": 863
     },
     {
      "id": [
@@ -10890,105 +10060,20 @@
       "xsboxer_shorts",
       "xsboy_shorts"
      ],
-     "fg": 862
+     "fg": 864
     },
     {
      "id": [
       "FMCNote",
       "HAADF_t_substrate",
       "LIXA_mil_file",
-      "adhesive_bandages",
-      "advanced_ecig",
-      "alcohol_wipes",
-      "animal",
       "artifact_scp_doc",
-      "balloon",
-      "bandages",
-      "bandages_makeshift",
-      "bandages_makeshift_bleached",
-      "bandages_makeshift_boiled",
-      "banjo",
-      "bee_sting",
-      "bigmirror",
       "bio_file",
-      "birchbark_funnel",
-      "bodypillow",
-      "book_pieces",
       "book_ruined",
-      "bot_grocerybot",
-      "bot_grocerybot_busted",
-      "breadboard",
-      "brew_sake_koji",
-      "brush_toilet",
-      "bundle_nylon",
-      "bundle_rag",
-      "bundle_wool",
-      "candle",
-      "candle_lit",
-      "canvas_patch",
-      "chair_wood_white",
-      "chamomile",
-      "chem_acrylamide",
-      "chem_citric_acid",
-      "condom",
-      "condom_sealed",
-      "corpse",
-      "corpse_bloody",
-      "corpse_child_calm",
-      "corpse_child_gunned",
-      "corpse_generic_boy",
-      "corpse_generic_female",
-      "corpse_generic_girl",
-      "corpse_generic_gunned",
-      "corpse_generic_human",
-      "corpse_generic_infected",
-      "corpse_generic_male",
-      "corpse_gunned",
-      "corpse_half_beheaded",
-      "corpse_halved_upper",
-      "corpse_oldwoman_jewelry",
-      "corpse_painful",
-      "corpse_scorched",
-      "corpse_stabbed",
-      "corpse_void_mummified",
-      "cotton_ball",
-      "cotton_patchwork",
-      "cottonwood_tree_boll",
-      "craft",
-      "crystallizing_sugar",
-      "cured_hide",
-      "denim_patch",
-      "diamond",
-      "disassembly",
-      "dish_towel",
-      "disincotton_ball",
-      "disinrag",
-      "down_mattress",
-      "drum_percussion",
-      "drum_percussion_primitive",
-      "e_handcuffs",
-      "egg_void_spider",
       "envelope",
-      "eraser",
-      "exodii_ingot_plastic",
-      "felt_patch",
-      "fetid_goop",
       "file",
-      "fishing_hook_bone",
-      "foot_locker_aluminum",
-      "golf_ball",
-      "golf_tee",
-      "hammock",
-      "hammock_net",
-      "handflare_lit",
       "home_picture",
-      "household_dishwasher",
-      "household_washing_machine",
-      "household_water_heater",
-      "household_water_heater_family",
       "icon",
-      "imperfect_doll_complete",
-      "indoor_volleyball",
       "lab_file_bio",
       "lab_file_mutation_testing",
       "lab_file_portal",
@@ -10996,88 +10081,49 @@
       "lab_file_sec",
       "lab_file_serum_testing",
       "log_immersion27",
-      "lotus",
-      "ludo",
-      "magic_8_ball",
-      "makeshift_dominoes",
-      "makeshift_sealer",
-      "makeshift_vacuum_mold",
-      "mattress",
-      "medical_gauze",
       "melchior_science_doc",
-      "menstrual_pad",
-      "metabolism",
-      "microcentrifuge",
-      "microscope",
-      "microscope_dissecting",
       "missing_poster_adult",
       "missing_poster_cat",
       "missing_poster_child",
       "missing_poster_dog",
-      "mortar_lime",
-      "muscle",
       "napkin",
       "note_mutant_alpha_boss",
-      "nylon",
-      "opal",
-      "pearl",
-      "plastic_bucket",
-      "plastic_six_dice",
-      "porcelain_urn",
       "psych_file",
       "report_t_substrate",
-      "rmi2_corpse",
-      "robot_controls",
-      "rotovap",
-      "rubber_cement",
-      "sake_koji_rice",
-      "salt_lick",
       "sarcophagus_access_code",
       "security_file",
-      "serum_regen",
-      "shuttlecock",
-      "sigflare_lit",
-      "small_checkboard",
-      "small_squeeze_tube",
-      "snow_machine_home",
-      "soy_wheat_dough",
-      "soy_wheat_dough_done",
-      "spurge",
-      "stand_flyer",
-      "still",
-      "stopcock",
-      "styrofoam_cup",
       "survivormap",
-      "syringe",
-      "tampon",
       "tic_tac",
-      "toilet_travel",
-      "toilet_travel_folded",
-      "turret_controls",
       "urbexmap",
-      "vac_mold",
-      "vac_sealer",
-      "wall_wiring",
-      "wallet_photo",
-      "washboard",
-      "wax",
-      "wax_paraffin",
-      "wind",
-      "wool_staple",
-      "young_koji",
-      "young_koji_done",
-      "yrax_metal",
-      "yrax_robotics",
-      "yrax_sensor"
+      "wallet_photo"
      ],
-     "fg": 863
+     "fg": 865
     },
     {
      "id": [
       "FlatCoin",
       "coin_penny"
      ],
-     "fg": 864
+     "fg": 866
+    },
+    {
+     "id": [
+      "LAW_Packed",
+      "bot_dispatch_military",
+      "broken_dispatch_military",
+      "broken_robofac_camspy",
+      "broken_secubot",
+      "broken_secubot_balthazar",
+      "broken_talon_m202a1",
+      "broken_tazer_hack",
+      "cobalt_60",
+      "cot",
+      "hotplate",
+      "hotplate_induction",
+      "lawnmower",
+      "thermos"
+     ],
+     "fg": 867
     },
     {
      "id": [
@@ -11104,14 +10150,14 @@
       "usb_drive_nano",
       "usb_drive_older"
      ],
-     "fg": 865
+     "fg": 868
     },
     {
      "id": [
       "LIXA_lab_file",
       "gambeson_batting"
      ],
-     "fg": 866
+     "fg": 869
     },
     {
      "id": [
@@ -11124,7 +10170,7 @@
       "migo_bio_gun",
       "nether_huntsman_arm"
      ],
-     "fg": 867
+     "fg": 870
     },
     {
      "id": [
@@ -11134,7 +10180,7 @@
       "masterkey",
       "u_shotgun"
      ],
-     "fg": 868
+     "fg": 871
     },
     {
      "id": [
@@ -11149,7 +10195,7 @@
       "trl_chip_nh_cloak",
       "trl_chip_nh_dampener"
      ],
-     "fg": 869
+     "fg": 872
     },
     {
      "id": [
@@ -11158,7 +10204,7 @@
       "resonance_measurement_device",
       "two_way_radio"
      ],
-     "fg": 870
+     "fg": 873
     },
     {
      "id": [
@@ -11166,7 +10212,7 @@
       "altered_keyring",
       "coin_gold"
      ],
-     "fg": 871
+     "fg": 874
     },
     {
      "id": [
@@ -11248,7 +10294,7 @@
       "trappers_companion",
       "welding_book"
      ],
-     "fg": 872
+     "fg": 875
     },
     {
      "id": [
@@ -11270,10 +10316,129 @@
       "smg_9mm",
       "sten",
       "tommygun",
+      "trl_gun_fs9",
+      "trl_gun_gk7",
+      "trl_gun_ls5",
+      "trl_gun_sm9",
+      "trl_gun_vs45",
+      "trl_gun_zp19",
       "trl_smg",
       "uzi"
      ],
-     "fg": 873
+     "fg": 876
+    },
+    {
+     "id": [
+      "UPS_OFF",
+      "UPS_ON",
+      "UPS_off",
+      "aluminum_boat_hull",
+      "android_arms",
+      "android_chassis",
+      "android_legs",
+      "animal_locker",
+      "antenna",
+      "bike_rack",
+      "bio_claws_weapon",
+      "block_and_tackle",
+      "bot_c4_hack",
+      "bot_secubot_liberty",
+      "bot_yrax_triakis",
+      "brazier",
+      "broken_c4_hack",
+      "broken_kord",
+      "broken_stiltwalker_1_1",
+      "broken_yrax_triakis",
+      "broken_yrax_trifacet",
+      "bronze_file",
+      "bucket",
+      "cheese_grater",
+      "chicken_cage",
+      "chisel",
+      "chisel_bronze",
+      "cigar_punch",
+      "clockworks",
+      "corkscrew",
+      "crude_heating_element",
+      "crude_picklock",
+      "delay_fuze",
+      "directional_antenna",
+      "drift",
+      "electrolyzer_makeshift",
+      "element",
+      "fencing_epee",
+      "fencing_epee_sharpened",
+      "fencing_foil",
+      "fencing_foil_sharpened",
+      "flute",
+      "foon",
+      "foot_crank",
+      "foot_locker",
+      "forged_shears",
+      "gas_charger",
+      "gas_charger_on",
+      "glaive",
+      "hand_controls",
+      "hand_rims",
+      "hd_compressor_unit",
+      "horn_big",
+      "horn_car",
+      "hotcut",
+      "hotcut_bronze",
+      "icecream_scoop",
+      "impact_fuze",
+      "jack_makeshift",
+      "jack_small",
+      "magnetron",
+      "makeshift_brazier",
+      "makeshift_glaive",
+      "menorah",
+      "mess_tray",
+      "metal_butcher_rack",
+      "metal_file",
+      "metal_smoking_rack",
+      "metal_smoother",
+      "mixer_music",
+      "muffler",
+      "needle_curved",
+      "needle_steel",
+      "office_holepunch",
+      "pen",
+      "pet_carrier",
+      "pin_reamer",
+      "pizza_cutter",
+      "pocketwatch",
+      "polisher",
+      "potato_masher",
+      "power_supply",
+      "qiang",
+      "quad_rotors",
+      "railroad_track_item",
+      "railroad_track_item_half",
+      "rebar",
+      "receiver",
+      "shears",
+      "shock_epee",
+      "shock_foil",
+      "spidery_legs_big",
+      "spidery_legs_small",
+      "spork",
+      "stand_ring",
+      "steel_grille",
+      "swage",
+      "thermostat",
+      "tourist_table",
+      "training_dummy_heavy",
+      "tree_spile",
+      "v_reaper_item",
+      "v_reaper_item_advanced",
+      "v_scoop_item",
+      "water_faucet",
+      "whisk",
+      "wrapper_foil",
+      "xedra_antenna"
+     ],
+     "fg": 877
     },
     {
      "id": [
@@ -11317,7 +10482,7 @@
       "wine_noir",
       "wine_vermouth"
      ],
-     "fg": 874
+     "fg": 878
     },
     {
      "id": [
@@ -11530,7 +10695,38 @@
       "trl_f_mapo_tofu",
       "wintergreen_berry"
      ],
-     "fg": 875
+     "fg": 879
+    },
+    {
+     "id": [
+      "abstract_software",
+      "amplifier",
+      "art_pyramid",
+      "efile_junk",
+      "efile_lore",
+      "efile_map",
+      "efile_photos",
+      "efile_recipes",
+      "efile_recipes_medical",
+      "efile_recipes_science",
+      "foldframe",
+      "foldxlframe",
+      "frame_concrete_mix",
+      "software_archived_data",
+      "software_blood_data",
+      "software_electronics_reference",
+      "software_encryption_codes",
+      "software_hacking",
+      "software_lab_data",
+      "software_math",
+      "software_medical",
+      "software_useless",
+      "transponder",
+      "trl_chip_nh_plating",
+      "trl_chip_nh_reactive",
+      "xlframe"
+     ],
+     "fg": 880
     },
     {
      "id": [
@@ -11562,7 +10758,7 @@
       "tums",
       "weak_antibiotic"
      ],
-     "fg": 876
+     "fg": 881
     },
     {
      "id": [
@@ -11585,7 +10781,24 @@
       "trl_f_century_egg",
       "tupelo_fruit"
      ],
-     "fg": 877
+     "fg": 882
+    },
+    {
+     "id": [
+      "acetylene_machine",
+      "ammonia_machine_reactor",
+      "debug_mortar",
+      "esbit_stove",
+      "garlic_press",
+      "improvised_oven",
+      "makeshift_pressure_cooker",
+      "microwave",
+      "nitrogen_generator",
+      "portable_stove",
+      "pressure_cooker",
+      "toaster"
+     ],
+     "fg": 883
     },
     {
      "id": [
@@ -11643,7 +10856,7 @@
       "young_yeast",
       "zeroorange"
      ],
-     "fg": 878
+     "fg": 884
     },
     {
      "id": [
@@ -11670,7 +10883,7 @@
       "xs_lsurvivor_jumpsuit",
       "xs_survivor_vest"
      ],
-     "fg": 879
+     "fg": 885
     },
     {
      "id": [
@@ -11718,7 +10931,7 @@
       "xs_armguard_acidchitin",
       "xs_armguard_chitin"
      ],
-     "fg": 880
+     "fg": 886
     },
     {
      "id": [
@@ -11735,7 +10948,7 @@
       "tacoma_drink_token",
       "trl_yen"
      ],
-     "fg": 881
+     "fg": 887
     },
     {
      "id": [
@@ -11751,7 +10964,7 @@
       "tablesaw",
       "wash_kit"
      ],
-     "fg": 882
+     "fg": 888
     },
     {
      "id": [
@@ -11813,7 +11026,7 @@
       "wire_stock",
       "wire_stock_folded"
      ],
-     "fg": 883
+     "fg": 889
     },
     {
      "id": [
@@ -11913,7 +11126,7 @@
       "wine_barley",
       "zerocola"
      ],
-     "fg": 884
+     "fg": 890
     },
     {
      "id": [
@@ -11925,11 +11138,75 @@
       "trl_drug_redeye",
       "trl_rx_pain"
      ],
-     "fg": 885
+     "fg": 891
+    },
+    {
+     "id": [
+      "adhesive_bandages",
+      "alcohol_wipes",
+      "bandages",
+      "bandages_makeshift",
+      "bandages_makeshift_bleached",
+      "bandages_makeshift_boiled",
+      "cured_hide",
+      "disinrag",
+      "hammock",
+      "medical_gauze",
+      "wool_staple"
+     ],
+     "fg": 892
+    },
+    {
+     "id": [
+      "adobe_brick",
+      "scrap_brass",
+      "scrap_bronze",
+      "yrax_scrap"
+     ],
+     "fg": 893
+    },
+    {
+     "id": [
+      "adobe_pallet_done",
+      "adobe_pallet_full",
+      "alder_bark",
+      "birchbark",
+      "brick",
+      "bundle_branch",
+      "bundle_branch_long",
+      "bundle_leather",
+      "bundle_plank",
+      "clay_hydria",
+      "clay_lump",
+      "clay_teapot",
+      "clay_urn",
+      "fire_brick",
+      "sculpture_clay",
+      "soft_adobe_brick",
+      "tanbark",
+      "willowbark"
+     ],
+     "fg": 894
     },
     {
      "id": "adrenaline_injector",
-     "fg": 886
+     "fg": 895
+    },
+    {
+     "id": [
+      "advanced_ecig",
+      "brush_toilet",
+      "foot_locker_aluminum",
+      "household_dishwasher",
+      "microcentrifuge",
+      "microscope",
+      "microscope_dissecting",
+      "rotovap",
+      "still",
+      "yrax_robotics",
+      "yrax_sensor"
+     ],
+     "fg": 896
     },
     {
      "id": [
@@ -12005,6 +11282,7 @@
       "throat_guard_mercenary",
       "throat_guard_plastic",
       "tophat",
+      "trl_nasim_hoodie",
       "welding_mask",
       "welding_mask_crude",
       "welding_mask_crude_raised",
@@ -12023,7 +11301,7 @@
       "xs_wetsuit_hood",
       "xs_wetsuit_hood_thick"
      ],
-     "fg": 887
+     "fg": 897
     },
     {
      "id": [
@@ -12096,115 +11374,47 @@
       "white_phosphorous",
       "yarn"
      ],
-     "fg": 888
+     "fg": 898
     },
     {
      "id": [
       "agricola",
-      "alien_pod_resin",
-      "apartment_freezer",
-      "apartment_fridge",
-      "beanbag",
-      "big_portable_freezer",
-      "big_portable_fridge",
-      "blue_topaz",
-      "bot_nursebot",
-      "burette",
-      "can_drink",
       "catan",
-      "cyborg_matrix",
-      "dishwasher",
-      "display_freezer",
-      "display_fridge",
-      "epoxy_chunk",
       "feast_for_odin",
       "fields_of_arle",
-      "filter_port_40mm",
       "friday",
-      "fridgetank",
-      "fridgetank_large",
-      "funnel_separation",
-      "furniturebrochure",
       "gloomhaven",
-      "glowstick",
-      "glowstick_lit",
-      "grocerybrochure",
-      "heattank",
-      "heavy_duty_freezer",
-      "heavy_duty_fridge",
-      "historybrochure",
-      "hygrometer",
-      "inhalation_valve",
-      "inhaler",
       "knight_mage",
       "le_havre",
-      "lycra_patch",
-      "mallbrochure",
       "mansions_of_madness",
-      "minifreezer",
-      "minifridge",
       "nemo",
       "pandemic",
-      "plastic_chunk",
-      "polycarbonate_chunk",
-      "recharge_station",
-      "restaurantbrochure",
-      "sewermap",
-      "sharp_toothbrush",
       "soyang",
       "spirit_island",
-      "still_lab",
-      "subwaymap",
-      "subwaystationmap",
-      "technologybrochure",
       "terraforming_mercury",
-      "thermo_resin_chunk",
       "viticulture",
-      "washing_machine",
-      "water_filter_sand",
-      "water_purifier",
       "world_nations"
      ],
-     "fg": 889
+     "fg": 899
     },
     {
      "id": [
       "ai_module",
       "ai_module_advanced",
       "ai_module_basic",
-      "aquamarine",
-      "bike_basket",
-      "bot_EMP_hack",
-      "bot_lab_security_drone_BM2",
-      "bot_tazer_hack",
-      "bot_yrax_trifacet",
-      "broken_EMP_hack",
-      "broken_lab_security_drone_BM2",
-      "cargo_aisle",
-      "cargo_rack",
       "electronics_controls",
-      "fishing_hook_basic",
-      "foot_locker_recharge_station",
       "gun_module",
       "identification_module",
-      "imperfect_doll_arms",
-      "makeshift_funnel",
       "memory_module",
-      "module_meteorologist",
       "pathfinding_module",
       "ruler",
       "sensor_module",
-      "shark_plushie",
-      "standard_template_construct",
-      "standard_template_construct_combat_exoskeleton",
       "targeting_module",
-      "teddy_bear",
       "toy_figurine",
       "toy_figurine_large",
-      "turret_mount",
       "vehicle_dashboard"
      ],
-     "fg": 890
+     "fg": 900
     },
     {
      "id": [
@@ -12228,65 +11438,23 @@
       "sunlight",
       "wall_light"
      ],
-     "fg": 891
+     "fg": 901
     },
     {
-     "id": [
-      "air_compressor",
-      "ephemeral_gem",
-      "hydraulic_press",
-      "piano"
-     ],
-     "fg": 892
+     "id": "air_compressor",
+     "fg": 902
     },
     {
      "id": [
       "air_launcher",
-      "altered_stopwatch",
-      "amethyst",
       "amplifier_head",
-      "arc_furnace",
-      "battleship",
-      "blue_pen",
-      "bot_lab_security_drone_BM",
-      "bowling_ball",
-      "broken_lab_security_drone_BM",
-      "broken_turret_riot",
-      "can_food",
-      "can_food_big",
-      "can_medium",
-      "candle_small",
-      "candle_small_lit",
       "chimes",
-      "clue",
       "comb_lice",
-      "comb_pocket",
-      "curler_hair",
-      "dehydrator",
-      "down_pillow",
-      "dry_bag_large",
       "exodii_sensor",
-      "fishing_rod_2pc",
-      "fishing_rod_2pc_packed",
-      "hairbrush",
-      "hand_pump",
-      "id_science_visitor_1",
-      "makeshift_pillow",
-      "matches",
-      "pillow",
-      "rollmat",
-      "sapphire",
       "small_helicopter_rotor",
-      "soap_holder",
-      "string_floss",
-      "swimming_kickboard",
-      "throw_extinguisher",
-      "toothbrush_electric",
-      "toothbrush_plain",
-      "touristmap",
-      "warehouse_rebooter"
+      "throw_extinguisher"
      ],
-     "fg": 893
+     "fg": 903
     },
     {
      "id": [
@@ -12312,7 +11480,7 @@
       "tac_helmet",
       "xl_helmet_kabuto"
      ],
-     "fg": 894
+     "fg": 904
     },
     {
      "id": [
@@ -12331,7 +11499,7 @@
       "speargun",
       "staff_sling"
      ],
-     "fg": 895
+     "fg": 905
     },
     {
      "id": [
@@ -12515,7 +11683,7 @@
       "xs_mc_vambrace_brigandine",
       "xs_qt_vambrace_brigandine"
      ],
-     "fg": 896
+     "fg": 906
     },
     {
      "id": [
@@ -12732,7 +11900,7 @@
       "xs_mc_mirror_armor",
       "xs_qt_mirror_armor"
      ],
-     "fg": 897
+     "fg": 907
     },
     {
      "id": [
@@ -12846,7 +12014,7 @@
       "xs_knuckle_skewer",
       "xs_knuckle_steel_forged"
      ],
-     "fg": 898
+     "fg": 908
     },
     {
      "id": [
@@ -12947,7 +12115,63 @@
       "xs_hood_fsurvivor",
       "xs_hood_wsurvivor"
      ],
-     "fg": 899
+     "fg": 909
+    },
+    {
+     "id": [
+      "alarmclock",
+      "altered_comb",
+      "ammolink223",
+      "ammolink308",
+      "ammolink50",
+      "angle_grinder",
+      "autoclave",
+      "awl_steel",
+      "beverly_shear",
+      "bot_dispatch",
+      "bot_golden_monolith",
+      "bot_yrax_delta",
+      "broken_dispatch",
+      "broken_golden_monolith",
+      "broken_turret_speaker",
+      "broken_yrax_delta",
+      "broken_yrax_quadraphract",
+      "broken_yrax_quadraphract_leg",
+      "bronze_hoe",
+      "bronze_shears",
+      "candlestick",
+      "carver_off",
+      "carver_on",
+      "cigar_cutter",
+      "debug_template",
+      "dog_whistle",
+      "jointer",
+      "khopesh",
+      "krar_golden",
+      "peephole",
+      "planer",
+      "router",
+      "rubik_farthing",
+      "template_armor",
+      "template_photonics",
+      "tindalos_whistle",
+      "trumpet",
+      "vh_autoclave",
+      "violin_golden",
+      "yrax_electronics"
+     ],
+     "fg": 910
+    },
+    {
+     "id": [
+      "alexandrite",
+      "dry_seaweed",
+      "dry_seaweed_pile",
+      "emerald",
+      "joint_roach",
+      "peridot"
+     ],
+     "fg": 911
     },
     {
      "id": [
@@ -12977,7 +12201,7 @@
       "xs_gloves_lsurvivor",
       "xs_gloves_lsurvivor_fingerless"
      ],
-     "fg": 900
+     "fg": 912
     },
     {
      "id": [
@@ -12995,67 +12219,26 @@
       "xl_hood_lsurvivor",
       "xs_hood_lsurvivor"
      ],
-     "fg": 901
+     "fg": 913
+    },
+    {
+     "id": [
+      "alien_fern",
+      "ouija"
+     ],
+     "fg": 914
+    },
+    {
+     "id": "alien_pod_resin",
+     "fg": 915
     },
     {
      "id": [
       "alloy_plate",
-      "alternator_bicycle",
-      "alternator_car",
-      "alternator_motorbike",
-      "alternator_truck",
-      "aquarium_large",
-      "aquarium_large_drying",
-      "aquarium_medium",
-      "aquarium_medium_drying",
-      "aquarium_small",
-      "aquarium_small_drying",
-      "beaker",
-      "bowl_plastic",
-      "bubblewrap",
-      "butter_churn",
-      "carton_milk",
-      "catalytic_cracking_reactor",
-      "cup_plastic",
-      "cup_plastic_yoghurt",
-      "fish_bowl",
-      "forgerig",
-      "gradcylinder",
       "hard_plate",
-      "hinge",
-      "integrated_cooler",
-      "keg",
-      "keg_steel",
-      "kilnrig",
-      "lifestraw",
-      "metal_tank",
-      "metal_tank_little",
-      "mirror",
-      "mountable_cooler",
-      "nm_teeth",
-      "oven_door",
-      "petri_dish",
-      "plastic_bowl_kids",
-      "rebar_plate",
-      "refrigerant_tank",
-      "sippy_cup",
-      "spring_plate",
-      "squeeze_tube",
-      "squeeze_tube_small",
-      "steel_plate",
-      "tankard_metal",
-      "tearer",
-      "test_tube",
-      "test_tube_micro",
-      "trl_cf_ghost_sashimi",
-      "trl_cf_hydration_gel",
-      "trl_cf_nutrient_paste",
-      "trl_cf_overclock_chow",
-      "trl_cf_protein_brick",
-      "tumbler_plastic",
-      "vehicle_controls"
+      "steel_plate"
      ],
-     "fg": 902
+     "fg": 916
     },
     {
      "id": [
@@ -13253,7 +12436,7 @@
       "xs_legguard_metal_sheets",
       "yrax_trinket"
      ],
-     "fg": 903
+     "fg": 917
     },
     {
      "id": [
@@ -13320,7 +12503,7 @@
       "wine_mycus",
       "wine_riesling"
      ],
-     "fg": 904
+     "fg": 918
     },
     {
      "id": [
@@ -13328,7 +12511,63 @@
       "crustacean_sample",
       "raptor_sample"
      ],
-     "fg": 905
+     "fg": 919
+    },
+    {
+     "id": [
+      "alquerque",
+      "art_harp",
+      "block_and_tackle_wood",
+      "boat_board",
+      "bokken",
+      "bokken_fake",
+      "bokken_inferior",
+      "bowling_pin",
+      "bucket_wood",
+      "carton_egg",
+      "connect_four",
+      "cudgel",
+      "fanning_mill",
+      "go",
+      "hnefatafl",
+      "homewrecker",
+      "jackstraws",
+      "kantele",
+      "lajatang",
+      "makeshift_tree_spile",
+      "mancala",
+      "nailboard",
+      "needle_wood",
+      "othello",
+      "paint_brush",
+      "pallet",
+      "pedal_extenders_makeshift",
+      "pet_carrier_wooden",
+      "pinecone",
+      "pool_cue",
+      "primitive_shovel",
+      "pulverizer",
+      "raft_board",
+      "rolling_pin",
+      "rummy",
+      "scraper_steel",
+      "senet",
+      "shillelagh",
+      "shillelagh_fake",
+      "shogi",
+      "splinter",
+      "tonewood",
+      "tuning_pegs",
+      "ukulele",
+      "violin",
+      "wood_beam",
+      "wood_block",
+      "wood_smoother",
+      "wooden_post",
+      "wooden_post_long",
+      "wooden_post_short"
+     ],
+     "fg": 920
     },
     {
      "id": [
@@ -13435,7 +12674,7 @@
       "xs_bra",
       "xssports_bra"
      ],
-     "fg": 906
+     "fg": 921
     },
     {
      "id": [
@@ -13451,7 +12690,60 @@
       "gold_medal",
       "id_science_security_yellow"
      ],
-     "fg": 907
+     "fg": 922
+    },
+    {
+     "id": [
+      "altered_exposed_wiring_prototype",
+      "bag_iv",
+      "bag_plastic",
+      "bag_plastic_small",
+      "bag_zipper",
+      "barometer",
+      "basket_laundry",
+      "beeper",
+      "blister_pack",
+      "brush",
+      "bucket_5gal",
+      "clock",
+      "coffeemaker",
+      "cuvettes",
+      "electric_spinwheel",
+      "glowstick_dead",
+      "hand_crank_charger",
+      "heatpack",
+      "heatpack_used",
+      "horn_bicycle",
+      "lux_meter",
+      "melting_point",
+      "mop_folded",
+      "mre_bag",
+      "mre_bag_dessert",
+      "mre_bag_jam",
+      "mre_bag_small",
+      "mre_bag_spread",
+      "mre_package",
+      "multimeter",
+      "peeler",
+      "ph_meter",
+      "plastic_straw",
+      "polaroid_photo",
+      "saline_bag_1000_empty",
+      "saline_bag_2000_empty",
+      "saline_bag_250_empty",
+      "saline_bag_500_empty",
+      "sextant",
+      "sharpener",
+      "shrink_wrap",
+      "soldering_iron",
+      "soldering_iron_portable",
+      "spatula",
+      "spectrophotometer",
+      "stapler",
+      "voltmeter",
+      "yoyo"
+     ],
+     "fg": 923
     },
     {
      "id": [
@@ -13470,33 +12762,54 @@
       "sleeveless_trenchcoat",
       "trenchcoat",
       "trenchcoat_steampunk",
+      "trl_nap_jacket",
       "wetsuit_jacket",
       "xl_wetsuit_jacket",
       "xs_wetsuit_jacket"
      ],
-     "fg": 908
+     "fg": 924
     },
     {
      "id": "altered_phone",
-     "fg": 909
+     "fg": 925
+    },
+    {
+     "id": [
+      "altered_rubicks_cube",
+      "altered_teapot",
+      "ballast",
+      "concrete",
+      "mortar_pestle",
+      "rx12_injector"
+     ],
+     "fg": 926
     },
     {
      "id": [
       "altered_scissors",
-      "fog_machine",
-      "handflare",
-      "hygroscope",
-      "inflatable_dragon",
-      "inflatable_ghost",
-      "migo_bio_tech",
       "scissors",
       "scissors_child",
-      "scissors_wavy",
-      "throw_extinguisher_act",
-      "tourmaline",
-      "void_spider_test_item"
+      "scissors_wavy"
      ],
-     "fg": 910
+     "fg": 927
+    },
+    {
+     "id": [
+      "altered_stopwatch",
+      "battleship",
+      "blue_pen",
+      "comb_pocket",
+      "curler_hair",
+      "dry_bag_large",
+      "hairbrush",
+      "id_science_visitor_1",
+      "rollmat",
+      "string_floss",
+      "swimming_kickboard",
+      "toothbrush_electric",
+      "toothbrush_plain"
+     ],
+     "fg": 928
     },
     {
      "id": [
@@ -13516,7 +12829,20 @@
       "sunglasses_reading",
       "survivor_goggles"
      ],
-     "fg": 911
+     "fg": 929
+    },
+    {
+     "id": [
+      "alternator_bicycle",
+      "alternator_car",
+      "alternator_motorbike",
+      "alternator_truck",
+      "catalytic_cracking_reactor",
+      "rebar_plate",
+      "spring_plate",
+      "tearer"
+     ],
+     "fg": 930
     },
     {
      "id": [
@@ -13555,7 +12881,19 @@
       "trl_f_hotpot_tin",
       "xl_helmet_kettle"
      ],
-     "fg": 912
+     "fg": 931
+    },
+    {
+     "id": "aluminum_stepladder",
+     "fg": 932
+    },
+    {
+     "id": [
+      "ambush",
+      "decorative_wreath",
+      "pine_bough"
+     ],
+     "fg": 933
     },
     {
      "id": [
@@ -13667,7 +13005,16 @@
       "xs_shark_suit",
       "xs_shark_suit_faraday"
      ],
-     "fg": 913
+     "fg": 934
+    },
+    {
+     "id": [
+      "amethyst",
+      "candle_small",
+      "candle_small_lit",
+      "sapphire"
+     ],
+     "fg": 935
     },
     {
      "id": [
@@ -13719,7 +13066,7 @@
       "xs_wetsuit_spring_sleeveless",
       "yukata"
      ],
-     "fg": 914
+     "fg": 936
     },
     {
      "id": [
@@ -13745,7 +13092,7 @@
       "xs_gloves_wool",
       "xs_gloves_wool_fingerless"
      ],
-     "fg": 915
+     "fg": 937
     },
     {
      "id": [
@@ -13772,7 +13119,7 @@
       "wearable_light",
       "wearable_light_on"
      ],
-     "fg": 916
+     "fg": 938
     },
     {
      "id": [
@@ -13798,7 +13145,7 @@
       "frame_wood_light",
       "tangram"
      ],
-     "fg": 917
+     "fg": 939
     },
     {
      "id": [
@@ -13809,7 +13156,7 @@
       "survivor_duffel_bag",
       "survivor_rucksack"
      ],
-     "fg": 918
+     "fg": 940
     },
     {
      "id": [
@@ -13826,7 +13173,7 @@
       "survivor_pack",
       "survivor_runner_pack"
      ],
-     "fg": 919
+     "fg": 941
     },
     {
      "id": [
@@ -13834,7 +13181,7 @@
       "scrambler",
       "scrambler_act"
      ],
-     "fg": 920
+     "fg": 942
     },
     {
      "id": [
@@ -13978,7 +13325,7 @@
       "yeast",
       "yogurt_starter_culture"
      ],
-     "fg": 921
+     "fg": 943
     },
     {
      "id": [
@@ -14005,7 +13352,7 @@
       "wrench_large",
       "wrench_small"
      ],
-     "fg": 922
+     "fg": 944
     },
     {
      "id": [
@@ -14017,7 +13364,7 @@
       "oven_cabinet",
       "pencil_case"
      ],
-     "fg": 923
+     "fg": 945
     },
     {
      "id": [
@@ -14039,32 +13386,31 @@
       "torso_bandolier_grenade",
       "ugl_buttstock"
      ],
-     "fg": 924
+     "fg": 946
     },
     {
      "id": [
-      "amplifier",
-      "art_pyramid",
-      "foldframe",
-      "foldxlframe",
-      "frame_concrete_mix",
-      "software_archived_data",
-      "software_blood_data",
-      "software_electronics_reference",
-      "software_lab_data",
-      "transponder",
-      "trl_chip_nh_plating",
-      "trl_chip_nh_reactive",
-      "xlframe"
+      "ammunition_can_30",
+      "ammunition_can_50",
+      "ammunition_can_fat_50",
+      "ammunition_can_pa120",
+      "ammunition_can_pa124",
+      "can_opener",
+      "can_sealer",
+      "paint_can_steel",
+      "spray_can",
+      "tin_snips",
+      "trashcan",
+      "trashcan_large"
      ],
-     "fg": 925
+     "fg": 947
     },
     {
      "id": [
       "ampoule",
       "bird_sample"
      ],
-     "fg": 926
+     "fg": 948
     },
     {
      "id": [
@@ -14102,7 +13448,7 @@
       "tongs",
       "v_planter_item"
      ],
-     "fg": 927
+     "fg": 949
     },
     {
      "id": [
@@ -14115,11 +13461,11 @@
       "welding_rod_alloy",
       "welding_wire_alloy"
      ],
-     "fg": 928
+     "fg": 950
     },
     {
      "id": "anesthetic_kit",
-     "fg": 929
+     "fg": 951
     },
     {
      "id": [
@@ -14171,7 +13517,29 @@
       "xl_armguard_bronze",
       "xs_armguard_bronze"
      ],
-     "fg": 930
+     "fg": 952
+    },
+    {
+     "id": [
+      "animal",
+      "candle",
+      "candle_lit",
+      "craft",
+      "crystallizing_sugar",
+      "diamond",
+      "disassembly",
+      "metabolism",
+      "mortar_lime",
+      "muscle",
+      "opal",
+      "pearl",
+      "porcelain_urn",
+      "serum_regen",
+      "soy_wheat_dough",
+      "soy_wheat_dough_done",
+      "wind"
+     ],
+     "fg": 953
     },
     {
      "id": [
@@ -14221,7 +13589,51 @@
       "xs_espadrilles",
       "xsnomex_socks"
      ],
-     "fg": 931
+     "fg": 954
+    },
+    {
+     "id": [
+      "anvil",
+      "anvil_crude",
+      "anvil_heavy",
+      "anvil_scavenged",
+      "char_forge",
+      "crucible",
+      "fake_forge",
+      "gas_forge"
+     ],
+     "fg": 955
+    },
+    {
+     "id": "anvil_bronze",
+     "fg": 956
+    },
+    {
+     "id": [
+      "anvil_stump",
+      "casting_mold",
+      "casting_mold_large",
+      "casting_mold_long",
+      "casting_mold_small",
+      "crucible_clay",
+      "glassblowers_crucible",
+      "leather_bellow"
+     ],
+     "fg": 957
+    },
+    {
+     "id": [
+      "apartment_freezer",
+      "apartment_fridge",
+      "big_portable_freezer",
+      "big_portable_fridge",
+      "display_freezer",
+      "display_fridge",
+      "heavy_duty_freezer",
+      "heavy_duty_fridge",
+      "washing_machine"
+     ],
+     "fg": 958
     },
     {
      "id": [
@@ -14229,7 +13641,7 @@
       "fake_radio",
       "rc_car_box"
      ],
-     "fg": 932
+     "fg": 959
     },
     {
      "id": [
@@ -14240,13 +13652,15 @@
       "offal_canned",
       "peppermutant_human"
      ],
-     "fg": 933
+     "fg": 960
     },
     {
      "id": [
       "apricot",
       "banana",
       "butter",
+      "butternut",
+      "butternut_husk",
       "can_cheese",
       "can_peach",
       "candy3",
@@ -14390,18 +13804,22 @@
       "venom_bee",
       "waffles"
      ],
-     "fg": 934
+     "fg": 961
     },
     {
      "id": "apron_plastic",
-     "fg": 935
+     "fg": 962
+    },
+    {
+     "id": "aquamarine",
+     "fg": 963
     },
     {
      "id": [
       "aquamarine_dental_grill",
       "towel"
      ],
-     "fg": 936
+     "fg": 964
     },
     {
      "id": [
@@ -14425,7 +13843,7 @@
       "xl_gloves_light",
       "xs_gloves_light"
      ],
-     "fg": 937
+     "fg": 965
     },
     {
      "id": [
@@ -14457,7 +13875,7 @@
       "postman_shirt",
       "tarp"
      ],
-     "fg": 938
+     "fg": 966
     },
     {
      "id": [
@@ -14470,7 +13888,24 @@
       "throat_guard_nylon",
       "wizard_hat_costume"
      ],
-     "fg": 939
+     "fg": 967
+    },
+    {
+     "id": [
+      "aquarium_large",
+      "aquarium_large_drying",
+      "aquarium_medium",
+      "aquarium_medium_drying",
+      "aquarium_small",
+      "aquarium_small_drying",
+      "gradcylinder",
+      "keg",
+      "keg_steel",
+      "metal_tank",
+      "metal_tank_little",
+      "refrigerant_tank"
+     ],
+     "fg": 968
     },
     {
      "id": [
@@ -14508,12 +13943,16 @@
       "srm_1216",
       "tavor_12",
       "trl_gun_gr8",
+      "trl_gun_gs12",
+      "trl_gun_hs10",
       "trl_gun_hs12",
+      "trl_gun_ls12",
       "trl_gun_vz12",
+      "trl_gun_zs20",
       "winchester_1887",
       "winchester_1897"
      ],
-     "fg": 940
+     "fg": 969
     },
     {
      "id": [
@@ -14523,7 +13962,32 @@
       "glasses_safety",
       "iggaak"
      ],
-     "fg": 941
+     "fg": 970
+    },
+    {
+     "id": [
+      "arc_furnace",
+      "dehydrator"
+     ],
+     "fg": 971
+    },
+    {
+     "id": [
+      "arcade_machine",
+      "fake_arc_furnace",
+      "fake_char_kiln",
+      "fake_clay_kiln",
+      "fake_stove",
+      "fake_woodstove",
+      "mountable_heater",
+      "mountable_heater_small",
+      "multi_cooker",
+      "multi_cooker_filled",
+      "plastic_bag_vac",
+      "screw_press",
+      "wrapping_vacuumed"
+     ],
+     "fg": 972
     },
     {
      "id": [
@@ -14558,7 +14022,7 @@
       "underbarrel_mount",
       "upstest"
      ],
-     "fg": 942
+     "fg": 973
     },
     {
      "id": [
@@ -14578,7 +14042,15 @@
       "robofac_handguard",
       "wooden_grip"
      ],
-     "fg": 943
+     "fg": 974
+    },
+    {
+     "id": [
+      "armchair",
+      "makeshift_hose",
+      "parachute_mil"
+     ],
+     "fg": 975
     },
     {
      "id": [
@@ -14617,7 +14089,7 @@
       "xs_vambrace_larmor",
       "xssurvivor_jumpsuit"
      ],
-     "fg": 944
+     "fg": 976
     },
     {
      "id": [
@@ -14688,7 +14160,7 @@
       "xs_cuirass_tire",
       "xs_legguard_tire"
      ],
-     "fg": 945
+     "fg": 977
     },
     {
      "id": [
@@ -14707,20 +14179,41 @@
       "butterfly_swords",
       "ch_arming_sword",
       "ch_broadsword",
+      "ch_estoc",
+      "ch_falx",
+      "ch_jian",
       "ch_katana",
+      "ch_kriegsmesser",
       "ch_longsword",
       "ch_nodachi",
+      "ch_rapier",
+      "ch_scimitar",
       "ch_wakizashi",
+      "ch_zweihander",
       "circsaw_blade",
+      "estoc",
+      "estoc_fake",
+      "estoc_inferior",
+      "falx",
       "fanblade_metal",
       "fencing_sabre",
       "fencing_sabre_sharpened",
       "hc_arming_sword",
       "hc_broadsword",
+      "hc_estoc",
+      "hc_falx",
+      "hc_jian",
       "hc_katana",
+      "hc_kriegsmesser",
       "hc_longsword",
       "hc_nodachi",
+      "hc_rapier",
+      "hc_scimitar",
       "hc_wakizashi",
+      "hc_zweihander",
+      "jian",
+      "jian_fake",
+      "jian_inferior",
       "katana",
       "katana_fake",
       "katana_inferior",
@@ -14730,12 +14223,22 @@
       "knife_huge",
       "knife_large",
       "knife_small",
+      "kriegsmesser",
       "lc_arming_sword",
       "lc_broadsword",
+      "lc_estoc",
+      "lc_falx",
+      "lc_jian",
       "lc_katana",
+      "lc_kriegsmesser",
       "lc_longsword",
       "lc_nodachi",
+      "lc_rapier",
+      "lc_scimitar",
       "lc_wakizashi",
+      "lc_zweihander",
+      "livestock_carrier",
+      "livestock_scale",
       "longsword",
       "longsword_fake",
       "longsword_inferior",
@@ -14743,21 +14246,40 @@
       "makeshift_scythe_war",
       "mc_arming_sword",
       "mc_broadsword",
+      "mc_estoc",
+      "mc_falx",
+      "mc_jian",
       "mc_katana",
+      "mc_kriegsmesser",
       "mc_longsword",
       "mc_nodachi",
+      "mc_rapier",
+      "mc_scimitar",
       "mc_wakizashi",
+      "mc_zweihander",
       "nodachi",
       "nodachi_fake",
       "nodachi_inferior",
       "plastic_knife",
       "qt_arming_sword",
       "qt_broadsword",
+      "qt_estoc",
+      "qt_falx",
+      "qt_jian",
       "qt_katana",
+      "qt_kriegsmesser",
       "qt_longsword",
       "qt_nodachi",
+      "qt_rapier",
+      "qt_scimitar",
       "qt_wakizashi",
+      "qt_zweihander",
+      "rapier",
+      "rapier_fake",
       "scalpel",
+      "scimitar",
+      "scimitar_fake",
+      "scimitar_inferior",
       "scythe",
       "scythe_fake",
       "scythe_toy",
@@ -14780,9 +14302,12 @@
       "wakizashi",
       "wakizashi_fake",
       "wakizashi_inferior",
-      "xacto"
+      "xacto",
+      "zweihander",
+      "zweihander_fake",
+      "zweihander_inferior"
      ],
-     "fg": 946
+     "fg": 978
     },
     {
      "id": [
@@ -14845,7 +14370,7 @@
       "weather_glass",
       "wine_glass"
      ],
-     "fg": 947
+     "fg": 979
     },
     {
      "id": [
@@ -14861,7 +14386,7 @@
       "xs_armor_cuirass",
       "xs_cuirass_bronze"
      ],
-     "fg": 948
+     "fg": 980
     },
     {
      "id": [
@@ -14882,7 +14407,7 @@
       "xs_lsurvivor_pants",
       "xs_pants_survivor"
      ],
-     "fg": 949
+     "fg": 981
     },
     {
      "id": [
@@ -14925,7 +14450,7 @@
       "xs_mc_chainmail_vest",
       "xs_qt_chainmail_vest"
      ],
-     "fg": 950
+     "fg": 982
     },
     {
      "id": [
@@ -14975,7 +14500,7 @@
       "xs_wsurvivor_jumpsuit",
       "xs_wsurvivor_jumpsuit_nofur"
      ],
-     "fg": 951
+     "fg": 983
     },
     {
      "id": [
@@ -15039,7 +14564,7 @@
       "xs_wetsuit_shorts_technical",
       "xs_wetsuit_shorts_technical_loose"
      ],
-     "fg": 952
+     "fg": 984
     },
     {
      "id": [
@@ -15048,7 +14573,7 @@
       "morningstar_fake",
       "morningstar_inferior"
      ],
-     "fg": 953
+     "fg": 985
     },
     {
      "id": [
@@ -15097,7 +14622,7 @@
       "xedra_gun_ar",
       "xedra_gun_shotgun"
      ],
-     "fg": 954
+     "fg": 986
     },
     {
      "id": [
@@ -15130,18 +14655,49 @@
       "trl_arrow_ap",
       "trl_arrow_emp"
      ],
-     "fg": 955
+     "fg": 987
     },
     {
      "id": [
       "arrow_flamming",
       "flamable_arrow"
      ],
-     "fg": 956
+     "fg": 988
     },
     {
      "id": "arrow_meteor",
-     "fg": 957
+     "fg": 989
+    },
+    {
+     "id": [
+      "art_beads",
+      "art_disc",
+      "art_duocylinder",
+      "art_irrational",
+      "art_jelly",
+      "art_penrose",
+      "art_pin",
+      "art_sphere",
+      "art_tesseract",
+      "bouquet",
+      "c4",
+      "c4armed",
+      "colander_steel",
+      "folded_bicycle",
+      "folded_inflatable_boat",
+      "folded_skateboard_generic",
+      "folded_wheelchair_generic",
+      "generic_folded_vehicle",
+      "jade_nagamaki",
+      "mortar_build",
+      "platinum_grille",
+      "poppy_bud",
+      "pseudo_bio_picklock",
+      "sunflower",
+      "wicker_basket_large",
+      "withered"
+     ],
+     "fg": 990
     },
     {
      "id": [
@@ -15166,7 +14722,7 @@
       "xl_knuckle_brass",
       "xs_knuckle_brass"
      ],
-     "fg": 958
+     "fg": 991
     },
     {
      "id": [
@@ -15211,7 +14767,7 @@
       "xs_wetsuit_booties",
       "xs_wetsuit_booties_thick"
      ],
-     "fg": 959
+     "fg": 992
     },
     {
      "id": [
@@ -15221,7 +14777,7 @@
       "jacket_army_modern",
       "tacjacket"
      ],
-     "fg": 960
+     "fg": 993
     },
     {
      "id": [
@@ -15239,10 +14795,24 @@
       "trenchcoat_fur",
       "trenchcoat_leather",
       "trenchcoat_survivor",
+      "trl_bratva_coat",
       "xl_coat_fur",
       "xs_coat_fur"
      ],
-     "fg": 961
+     "fg": 994
+    },
+    {
+     "id": [
+      "art_crystal",
+      "broken_exodii_quad",
+      "broken_exodii_worker",
+      "exodii_chassis",
+      "material_aluminium_ingot",
+      "nether_huntsman_armorpiece_small",
+      "plutonium",
+      "uranium"
+     ],
+     "fg": 995
     },
     {
      "id": [
@@ -15296,7 +14866,7 @@
       "xs_wetsuit_gloves",
       "xs_wetsuit_gloves_thick"
      ],
-     "fg": 962
+     "fg": 996
     },
     {
      "id": [
@@ -15312,7 +14882,7 @@
       "xl_helmet_corinthian",
       "xs_helmet_bronze"
      ],
-     "fg": 963
+     "fg": 997
     },
     {
      "id": [
@@ -15332,7 +14902,7 @@
       "soup_fish",
       "soup_mushroom"
      ],
-     "fg": 964
+     "fg": 998
     },
     {
      "id": [
@@ -15353,7 +14923,17 @@
       "wire_draw_machine",
       "wire_mesh"
      ],
-     "fg": 965
+     "fg": 999
+    },
+    {
+     "id": [
+      "art_rod",
+      "art_snake",
+      "art_spiral",
+      "art_tube",
+      "hand_paddles"
+     ],
+     "fg": 1000
     },
     {
      "id": [
@@ -15377,7 +14957,28 @@
       "spike",
       "trl_yari"
      ],
-     "fg": 966
+     "fg": 1001
+    },
+    {
+     "id": [
+      "art_trident",
+      "c4_payload",
+      "cig_butt",
+      "cigar_butt",
+      "crane_pseudo_item",
+      "monolith_disc",
+      "nether_huntsman_statuette",
+      "onyx",
+      "oven_stovetop",
+      "pseudo_ergometer_mechanical",
+      "pseudo_punching_bag",
+      "pseudo_treadmill_mechanical",
+      "stationary_water_purifier",
+      "survival_marker",
+      "tear_gas_payload",
+      "tear_gas_payload_act"
+     ],
+     "fg": 1002
     },
     {
      "id": [
@@ -15389,36 +14990,26 @@
       "mgl",
       "pseudo_m203",
       "rm451_flamethrower",
-      "surv_rocket_launcher"
+      "surv_rocket_launcher",
+      "trl_gun_gl40"
      ],
-     "fg": 967
+     "fg": 1003
+    },
+    {
+     "id": [
+      "atgm_spent",
+      "fishing_rod_tele",
+      "fishing_rod_tele_packed",
+      "tent_pole"
+     ],
+     "fg": 1004
     },
     {
      "id": [
       "atomic_coffeepot",
-      "bot_broken_cyborg",
-      "bot_hazmatbot",
-      "bot_lab_security_drone_GM",
-      "bot_lab_security_drone_GR",
-      "bot_manhack",
-      "bot_molebot",
-      "bot_prototype_cyborg",
-      "bot_robofac_camspy",
-      "bot_science_bot",
-      "bot_secubot",
-      "bot_talon_m202a1",
-      "bot_turret",
-      "bot_turret_speaker",
-      "broken_lab_security_drone_GR",
-      "broken_manhack",
-      "broken_mech_lifter",
-      "broken_mech_recon",
-      "cannabis",
-      "pseudo_magazine_mod",
-      "tobacco_raw",
       "trl_inj_regen"
      ],
-     "fg": 968
+     "fg": 1005
     },
     {
      "id": [
@@ -15447,7 +15038,7 @@
       "smart_lamp_on",
       "standing_lamp"
      ],
-     "fg": 969
+     "fg": 1006
     },
     {
      "id": [
@@ -15457,7 +15048,7 @@
       "bot_skitterbot",
       "bot_turret_searchlight"
      ],
-     "fg": 970
+     "fg": 1007
     },
     {
      "id": [
@@ -15476,7 +15067,7 @@
       "mesh_nape_protector",
       "tinfoil_hat"
      ],
-     "fg": 971
+     "fg": 1008
     },
     {
      "id": [
@@ -15488,7 +15079,7 @@
       "juniper",
       "paint_blue"
      ],
-     "fg": 972
+     "fg": 1009
     },
     {
      "id": [
@@ -15529,7 +15120,7 @@
       "skewer_bone",
       "tainted_marrow"
      ],
-     "fg": 973
+     "fg": 1010
     },
     {
      "id": [
@@ -15551,7 +15142,7 @@
       "qt_battleaxe",
       "throwing_axe"
      ],
-     "fg": 974
+     "fg": 1011
     },
     {
      "id": [
@@ -15568,9 +15159,11 @@
       "rm51_assault_rifle",
       "rm614_lmg",
       "rm88_battle_rifle",
-      "sig_mcx_rattler_sbr"
+      "sig_mcx_rattler_sbr",
+      "trl_gun_gm134",
+      "trl_gun_lk95"
      ],
-     "fg": 975
+     "fg": 1012
     },
     {
      "id": [
@@ -15595,11 +15188,22 @@
       "sword_wood_large",
       "teeth_macuahuitl"
      ],
-     "fg": 976
+     "fg": 1013
     },
     {
      "id": "b_shorts",
-     "fg": 977
+     "fg": 1014
+    },
+    {
+     "id": [
+      "backgammon",
+      "makeshift_crutches",
+      "mannequin",
+      "railroad_track_small",
+      "weighted_dart",
+      "wrapper_foil_roll"
+     ],
+     "fg": 1015
     },
     {
      "id": [
@@ -15636,11 +15240,11 @@
       "trapper_pack",
       "wicker_backpack"
      ],
-     "fg": 978
+     "fg": 1016
     },
     {
      "id": "backpack_denim",
-     "fg": 979
+     "fg": 1017
     },
     {
      "id": [
@@ -15695,7 +15299,47 @@
       "rehydrated_fruit",
       "rehydrated_mollusk"
      ],
-     "fg": 980
+     "fg": 1018
+    },
+    {
+     "id": [
+      "bag_body_bag",
+      "bag_garbage",
+      "bag_garbage_reinforced",
+      "black_pen",
+      "con_mix_foldable",
+      "elec_shears",
+      "filter_air",
+      "filter_air_makeshift",
+      "glowplug",
+      "inflatable_airbag",
+      "outfit_storage",
+      "pedal_extenders",
+      "permanent_marker",
+      "plunger_futuristic",
+      "tazer",
+      "teleumbrella-extended",
+      "wheel_10"
+     ],
+     "fg": 1019
+    },
+    {
+     "id": [
+      "bag_canvas_small",
+      "bullwhip",
+      "cured_pelt",
+      "doormat",
+      "football",
+      "fur_rollmat",
+      "leather_journal",
+      "leather_tarp",
+      "tanned_hide",
+      "tanned_pelt",
+      "tanning_hide",
+      "tanning_pelt",
+      "tattered_garment"
+     ],
+     "fg": 1020
     },
     {
      "id": [
@@ -15711,14 +15355,108 @@
       "pillowcase",
       "sauerkraut_ferment"
      ],
-     "fg": 981
+     "fg": 1021
     },
     {
      "id": [
       "bag_durasack_cement",
       "dairy_book"
      ],
-     "fg": 982
+     "fg": 1022
+    },
+    {
+     "id": [
+      "bagh_nakha",
+      "bot_flashbang_hack",
+      "bot_gasbomb_hack",
+      "broken_flashbang_hack",
+      "broken_gasbomb_hack",
+      "burnt_out_bionic",
+      "cannonball_4lb",
+      "cantilever_medium",
+      "cantilever_small",
+      "cargo_lock",
+      "closed_loop_extractor_large",
+      "closed_loop_extractor_small",
+      "compressor",
+      "condensor_coil",
+      "counterweight",
+      "crutches",
+      "door_lock",
+      "emergency_lockpick",
+      "evaporator_coil",
+      "exodii_micro_module",
+      "exodii_prybar",
+      "filter_liquid",
+      "filter_liquid_makeshift",
+      "flashbang",
+      "flashbang_act",
+      "g_shovel",
+      "grinder_cutoff_disc",
+      "grinder_metal_grinding_disc",
+      "guitar_stand",
+      "hd_compressor",
+      "heavy_duty_military_rotor",
+      "honey_scraper",
+      "kris",
+      "kris_fake",
+      "large_pressure_vessel",
+      "louverture",
+      "manhole_cover",
+      "mp3",
+      "mp3_on",
+      "nitrogen_membrane_filter",
+      "oil_extractor_crude",
+      "pallet_lifter",
+      "pointed_rebar",
+      "pressure_gauge",
+      "pyrometer",
+      "sharp_rebar",
+      "sieve_steel",
+      "sieve_steel_makeshift",
+      "simple_crank",
+      "small_pressure_vessel",
+      "teapot",
+      "television",
+      "v_airjack_item",
+      "v_motorcycle_kickstand_item",
+      "v_plow_item",
+      "v_rockwheel_item",
+      "vibrator",
+      "waffleiron",
+      "wheel_caster",
+      "wheel_caster_large",
+      "wheel_rim_bicycle",
+      "wheel_rim_medium",
+      "wheel_rim_motorbike",
+      "wheel_rim_wide"
+     ],
+     "fg": 1023
+    },
+    {
+     "id": [
+      "balloon",
+      "breadboard",
+      "condom",
+      "condom_sealed",
+      "e_handcuffs",
+      "eraser",
+      "exodii_ingot_plastic",
+      "handflare_lit",
+      "indoor_volleyball",
+      "plastic_bucket",
+      "plastic_six_dice",
+      "shuttlecock",
+      "sigflare_lit",
+      "stand_flyer",
+      "stopcock",
+      "syringe",
+      "tampon",
+      "toilet_travel",
+      "toilet_travel_folded",
+      "wall_wiring"
+     ],
+     "fg": 1024
     },
     {
      "id": [
@@ -15737,7 +15475,7 @@
       "smartphone_music",
       "waterproof_smart_phone_case"
      ],
-     "fg": 983
+     "fg": 1025
     },
     {
      "id": [
@@ -15826,7 +15564,18 @@
       "wild_herbs",
       "wintergreen_leaves"
      ],
-     "fg": 984
+     "fg": 1026
+    },
+    {
+     "id": [
+      "banjo",
+      "cottonwood_tree_boll",
+      "golf_tee",
+      "ludo",
+      "small_checkboard",
+      "washboard"
+     ],
+     "fg": 1027
     },
     {
      "id": [
@@ -15835,7 +15584,7 @@
       "gene_sting_gun",
       "khuunaofaai"
      ],
-     "fg": 985
+     "fg": 1028
     },
     {
      "id": [
@@ -15854,7 +15603,7 @@
       "xl_wsurvivor_suit_nofur",
       "xs_wetsuit_spring"
      ],
-     "fg": 986
+     "fg": 1029
     },
     {
      "id": [
@@ -15865,7 +15614,7 @@
       "m249semi",
       "tec9_auto_parts"
      ],
-     "fg": 987
+     "fg": 1030
     },
     {
      "id": [
@@ -15978,14 +15727,14 @@
       "trade_writ",
       "visions_solitude"
      ],
-     "fg": 988
+     "fg": 1031
     },
     {
      "id": [
       "basket",
       "folding_basket"
      ],
-     "fg": 989
+     "fg": 1032
     },
     {
      "id": [
@@ -16017,11 +15766,11 @@
       "xs_boots_fur",
       "xs_boots_larmor"
      ],
-     "fg": 990
+     "fg": 1033
     },
     {
      "id": "bat_anklet",
-     "fg": 991
+     "fg": 1034
     },
     {
      "id": [
@@ -16033,7 +15782,7 @@
       "mace_bronze",
       "socket_wrench_set"
      ],
-     "fg": 992
+     "fg": 1035
     },
     {
      "id": [
@@ -16042,14 +15791,14 @@
       "plant_sample",
       "sewage"
      ],
-     "fg": 993
+     "fg": 1036
     },
     {
      "id": [
       "battery_bionic",
       "battery_ups"
      ],
-     "fg": 994
+     "fg": 1037
     },
     {
      "id": [
@@ -16061,11 +15810,31 @@
       "small_storage_battery",
       "storage_battery"
      ],
-     "fg": 995
+     "fg": 1038
     },
     {
      "id": "battery_charger",
-     "fg": 996
+     "fg": 1039
+    },
+    {
+     "id": [
+      "beach_volleyball",
+      "broketent",
+      "dog_tag_dog",
+      "electrohack",
+      "fidget_spinner",
+      "geiger_off",
+      "geiger_on",
+      "green_pen",
+      "hose",
+      "hose_garden",
+      "inflatable_section",
+      "largebroketent",
+      "puller",
+      "trimmer_off",
+      "trimmer_on"
+     ],
+     "fg": 1040
     },
     {
      "id": [
@@ -16098,7 +15867,19 @@
       "xs_gloves_survivor_fingerless",
       "xs_knuckle_nail"
      ],
-     "fg": 997
+     "fg": 1041
+    },
+    {
+     "id": [
+      "beaker",
+      "fish_bowl",
+      "mirror"
+     ],
+     "fg": 1042
+    },
+    {
+     "id": "beanbag",
+     "fg": 1043
     },
     {
      "id": [
@@ -16150,11 +15931,15 @@
       "trl_f_vobla",
       "venom_paralytic"
      ],
-     "fg": 998
+     "fg": 1044
+    },
+    {
+     "id": "beartrap",
+     "fg": 1045
     },
     {
      "id": "beast_sample",
-     "fg": 999
+     "fg": 1046
     },
     {
      "id": [
@@ -16172,7 +15957,15 @@
       "spurge_tea",
       "weed"
      ],
-     "fg": 1000
+     "fg": 1047
+    },
+    {
+     "id": [
+      "bee_sting",
+      "chem_acrylamide",
+      "chem_citric_acid"
+     ],
+     "fg": 1048
     },
     {
      "id": [
@@ -16213,7 +16006,7 @@
       "winter_gloves_army",
       "wool_sockmitts"
      ],
-     "fg": 1001
+     "fg": 1049
     },
     {
      "id": [
@@ -16244,11 +16037,42 @@
       "turban",
       "zombie_mask"
      ],
-     "fg": 1002
+     "fg": 1050
+    },
+    {
+     "id": [
+      "bench_vise",
+      "camp_chair",
+      "chair_folding",
+      "chair_wood_black"
+     ],
+     "fg": 1051
     },
     {
      "id": "betavoltaic",
-     "fg": 1003
+     "fg": 1052
+    },
+    {
+     "id": [
+      "bigmirror",
+      "egg_void_spider"
+     ],
+     "fg": 1053
+    },
+    {
+     "id": [
+      "bike_basket",
+      "bot_EMP_hack",
+      "bot_tazer_hack",
+      "bot_yrax_trifacet",
+      "broken_EMP_hack",
+      "cargo_aisle",
+      "cargo_rack",
+      "foot_locker_recharge_station",
+      "standard_template_construct",
+      "standard_template_construct_combat_exoskeleton"
+     ],
+     "fg": 1054
     },
     {
      "id": [
@@ -16286,7 +16110,7 @@
       "xs_qt_chainmail_half_legs",
       "xs_qt_chainmail_legs"
      ],
-     "fg": 1004
+     "fg": 1055
     },
     {
      "id": [
@@ -16301,7 +16125,7 @@
       "tourniquet_lower_XL",
       "tourniquet_lower_XS"
      ],
-     "fg": 1005
+     "fg": 1056
     },
     {
      "id": [
@@ -16346,7 +16170,7 @@
       "tourniquet_upper_XS",
       "wool_suit_devil"
      ],
-     "fg": 1006
+     "fg": 1057
     },
     {
      "id": [
@@ -16518,7 +16342,7 @@
       "trl_imp_spine_str_3",
       "trl_imp_stomach"
      ],
-     "fg": 1007
+     "fg": 1058
     },
     {
      "id": [
@@ -16526,30 +16350,44 @@
       "cavalry_sabre",
       "cavalry_sabre_fake",
       "ch_cavalry_sabre",
+      "ch_cutlass",
       "ch_knife_rambo",
       "ch_knife_trench",
+      "ch_kukri",
+      "cutlass",
+      "cutlass_fake",
+      "cutlass_inferior",
       "grinder_blade",
       "hc_cavalry_sabre",
+      "hc_cutlass",
       "hc_knife_rambo",
       "hc_knife_trench",
+      "hc_kukri",
       "knife_baselard",
       "knife_hunting",
       "knife_rambo",
       "knife_rm42",
       "knife_trench",
       "knuckle_katar",
+      "kukri",
       "lc_cavalry_sabre",
+      "lc_cutlass",
       "lc_knife_rambo",
       "lc_knife_trench",
+      "lc_kukri",
       "machete",
       "makeshift_knife",
       "mc_cavalry_sabre",
+      "mc_cutlass",
       "mc_knife_rambo",
       "mc_knife_trench",
+      "mc_kukri",
       "punch_dagger",
       "qt_cavalry_sabre",
+      "qt_cutlass",
       "qt_knife_rambo",
       "qt_knife_trench",
+      "qt_kukri",
       "survivor_machete",
       "survivor_machete_qt",
       "switchblade",
@@ -16557,7 +16395,7 @@
       "tanto_fake",
       "tanto_inferior"
      ],
-     "fg": 1008
+     "fg": 1059
     },
     {
      "id": [
@@ -16565,7 +16403,7 @@
       "emp_gun",
       "exodii_plasma_projectile"
      ],
-     "fg": 1009
+     "fg": 1060
     },
     {
      "id": [
@@ -16576,14 +16414,14 @@
       "yrax_deterrent_laser",
       "yrax_metaljet_cannon"
      ],
-     "fg": 1010
+     "fg": 1061
     },
     {
      "id": [
       "bio_lightning",
       "mut_longpull"
      ],
-     "fg": 1011
+     "fg": 1062
     },
     {
      "id": [
@@ -16591,33 +16429,32 @@
       "fake_razor",
       "knife_swissarmy"
      ],
-     "fg": 1012
+     "fg": 1063
     },
     {
      "id": [
       "bio_shotgun_gun",
       "mut_quills"
      ],
-     "fg": 1013
+     "fg": 1064
     },
     {
      "id": [
       "bio_spasm",
       "motor_oil"
      ],
-     "fg": 1014
+     "fg": 1065
+    },
+    {
+     "id": "biollante_bud",
+     "fg": 1066
     },
     {
      "id": [
-      "biollante_bud",
-      "crystal_urn",
-      "curling_iron",
-      "escape_stone",
-      "portal",
-      "teleporter",
-      "umbrella"
+      "birchbark_funnel",
+      "styrofoam_cup"
      ],
-     "fg": 1015
+     "fg": 1067
     },
     {
      "id": [
@@ -16647,11 +16484,37 @@
       "robofac_yrax_trifacet_deactivation_manual",
       "textbook_atomic_lab"
      ],
-     "fg": 1016
+     "fg": 1068
     },
     {
      "id": "black_glass_shard",
-     "fg": 1017
+     "fg": 1069
+    },
+    {
+     "id": [
+      "blackjack",
+      "ch_kilij",
+      "ch_talwar",
+      "dressage_whip",
+      "five-point_harness",
+      "hc_kilij",
+      "hc_talwar",
+      "imperfect_doll_features",
+      "imperfect_doll_legs",
+      "kirpan",
+      "kirpan_cheap",
+      "lc_kilij",
+      "lc_talwar",
+      "makeshift_sap",
+      "mc_kilij",
+      "mc_talwar",
+      "nylon_bag",
+      "qt_kilij",
+      "qt_talwar",
+      "riding_crop",
+      "strap_cotton"
+     ],
+     "fg": 1070
     },
     {
      "id": [
@@ -16661,15 +16524,48 @@
       "drink_strawberry_surprise",
       "wine_marloss"
      ],
-     "fg": 1018
+     "fg": 1071
+    },
+    {
+     "id": [
+      "blue_topaz",
+      "filter_port_40mm",
+      "minifreezer",
+      "minifridge"
+     ],
+     "fg": 1072
     },
     {
      "id": "blueberries_cooked",
-     "fg": 1019
+     "fg": 1073
     },
     {
      "id": "blunderbuss",
-     "fg": 1020
+     "fg": 1074
+    },
+    {
+     "id": [
+      "board_trap",
+      "fish_trap_basket"
+     ],
+     "fg": 1075
+    },
+    {
+     "id": [
+      "bodypillow",
+      "dish_towel",
+      "down_mattress",
+      "mattress"
+     ],
+     "fg": 1076
+    },
+    {
+     "id": "boltcutters",
+     "fg": 1077
+    },
+    {
+     "id": "boobytrap",
+     "fg": 1078
     },
     {
      "id": [
@@ -16686,7 +16582,7 @@
       "phonebook",
       "poetic_edda"
      ],
-     "fg": 1021
+     "fg": 1079
     },
     {
      "id": [
@@ -16744,7 +16640,7 @@
       "survival_book",
       "tall_tales"
      ],
-     "fg": 1022
+     "fg": 1080
     },
     {
      "id": [
@@ -16793,7 +16689,20 @@
       "retool_instructions",
       "vacuum_sealing"
      ],
-     "fg": 1023
+     "fg": 1081
+    },
+    {
+     "id": [
+      "book_pieces",
+      "bundle_nylon",
+      "bundle_rag",
+      "bundle_wool",
+      "rubber_cement",
+      "salt_lick",
+      "wax",
+      "wax_paraffin"
+     ],
+     "fg": 1082
     },
     {
      "id": [
@@ -16808,7 +16717,7 @@
       "xs_boots_chitin",
       "xs_boots_lsurvivor"
      ],
-     "fg": 1024
+     "fg": 1083
     },
     {
      "id": [
@@ -16821,7 +16730,7 @@
       "sneakers_steel",
       "socks_bag"
      ],
-     "fg": 1025
+     "fg": 1084
     },
     {
      "id": [
@@ -16830,7 +16739,47 @@
       "xl_boots_wsurvivor_nofur",
       "xs_boots_wsurvivor_nofur"
      ],
-     "fg": 1026
+     "fg": 1085
+    },
+    {
+     "id": [
+      "bot_antimateriel",
+      "bot_turret_riot"
+     ],
+     "fg": 1086
+    },
+    {
+     "id": [
+      "bot_broken_cyborg",
+      "bot_manhack",
+      "bot_prototype_cyborg",
+      "bot_robofac_camspy",
+      "bot_secubot",
+      "bot_talon_m202a1",
+      "bot_turret_speaker",
+      "broken_manhack",
+      "broken_mech_lifter",
+      "broken_mech_recon"
+     ],
+     "fg": 1087
+    },
+    {
+     "id": [
+      "bot_crows_m240",
+      "bot_rifleturret",
+      "broken_crows_m240",
+      "broken_lab_security_drone_GM",
+      "broken_molebot",
+      "broken_robofac_laserturret_mk1",
+      "broken_robofac_prototype",
+      "broken_science_bot",
+      "broken_turret",
+      "broken_turret_artisans",
+      "broken_turret_bmg",
+      "broken_turret_rifle",
+      "broken_turret_rifle_balthazar"
+     ],
+     "fg": 1088
     },
     {
      "id": [
@@ -16854,7 +16803,69 @@
       "small_homemade_grenade",
       "small_homemade_grenade_act"
      ],
-     "fg": 1027
+     "fg": 1089
+    },
+    {
+     "id": [
+      "bot_grocerybot",
+      "bot_grocerybot_busted",
+      "robot_controls",
+      "turret_controls"
+     ],
+     "fg": 1090
+    },
+    {
+     "id": [
+      "bot_hazmatbot",
+      "bot_lab_security_drone_GM",
+      "bot_lab_security_drone_GR",
+      "bot_molebot",
+      "bot_science_bot",
+      "bot_turret",
+      "broken_lab_security_drone_GR"
+     ],
+     "fg": 1091
+    },
+    {
+     "id": [
+      "bot_lab_security_drone_BM",
+      "broken_lab_security_drone_BM",
+      "broken_turret_riot"
+     ],
+     "fg": 1092
+    },
+    {
+     "id": [
+      "bot_lab_security_drone_BM2",
+      "broken_lab_security_drone_BM2",
+      "module_meteorologist",
+      "turret_mount"
+     ],
+     "fg": 1093
+    },
+    {
+     "id": [
+      "bot_lab_security_drone_BS",
+      "broken_grocerybot",
+      "broken_grocerybot_busted",
+      "broken_lab_security_drone_BS",
+      "broken_nursebot",
+      "broken_nursebot_defective"
+     ],
+     "fg": 1094
+    },
+    {
+     "id": [
+      "bot_lab_security_drone_YM",
+      "broken_exodii_sniper_drone",
+      "broken_exodii_turret",
+      "broken_lab_security_drone_YM"
+     ],
+     "fg": 1095
+    },
+    {
+     "id": "bot_nursebot",
+     "fg": 1096
     },
     {
      "id": [
@@ -16889,7 +16900,7 @@
       "water_spring",
       "zeromdew"
      ],
-     "fg": 1028
+     "fg": 1097
     },
     {
      "id": [
@@ -16906,14 +16917,54 @@
       "watermelon",
       "watermelon_wedge"
      ],
-     "fg": 1029
+     "fg": 1098
     },
     {
      "id": [
       "bottle_twoliter",
       "drink_boozeberry"
      ],
-     "fg": 1030
+     "fg": 1099
+    },
+    {
+     "id": [
+      "bowl_clay",
+      "bowl_coconut",
+      "bowl_wood",
+      "bowl_wood_large",
+      "leather_funnel",
+      "tankard_wooden"
+     ],
+     "fg": 1100
+    },
+    {
+     "id": [
+      "bowl_pewter",
+      "carving_fork",
+      "chopsticks",
+      "clay_cup",
+      "cup_foil",
+      "fork",
+      "ladle",
+      "plastic_fork",
+      "plastic_spoon",
+      "plastic_spoon_kids",
+      "spoon",
+      "tin_cup"
+     ],
+     "fg": 1101
+    },
+    {
+     "id": [
+      "bowl_plastic",
+      "bubblewrap",
+      "trl_cf_ghost_sashimi",
+      "trl_cf_hydration_gel",
+      "trl_cf_overclock_chow",
+      "tumbler_plastic",
+      "vehicle_controls"
+     ],
+     "fg": 1102
     },
     {
      "id": [
@@ -16950,11 +17001,15 @@
       "skull_sheep",
       "skull_skunk"
      ],
-     "fg": 1031
+     "fg": 1103
+    },
+    {
+     "id": "bowling_ball",
+     "fg": 1104
     },
     {
      "id": "box_battery_charger",
-     "fg": 1032
+     "fg": 1105
     },
     {
      "id": [
@@ -16987,7 +17042,7 @@
       "training_dummy_light",
       "wood_plate"
      ],
-     "fg": 1033
+     "fg": 1106
     },
     {
      "id": [
@@ -16995,7 +17050,7 @@
       "circuit",
       "hdframe"
      ],
-     "fg": 1034
+     "fg": 1107
     },
     {
      "id": [
@@ -17016,7 +17071,7 @@
       "santa_gloves",
       "suitcase_l"
      ],
-     "fg": 1035
+     "fg": 1108
     },
     {
      "id": [
@@ -17149,7 +17204,7 @@
       "occult_economicon",
       "occult_glimpses"
      ],
-     "fg": 1036
+     "fg": 1109
     },
     {
      "id": [
@@ -17165,7 +17220,36 @@
       "sports_drink",
       "trl_f_kompot"
      ],
-     "fg": 1037
+     "fg": 1110
+    },
+    {
+     "id": [
+      "brew_sake_koji",
+      "chamomile",
+      "lotus",
+      "sake_koji_rice",
+      "spurge"
+     ],
+     "fg": 1111
+    },
+    {
+     "id": [
+      "brick_kiln",
+      "brick_oven_pseudo",
+      "char_kiln",
+      "dutch_oven",
+      "exodii_kiln",
+      "hair_dryer",
+      "kiln",
+      "oven",
+      "pastaextruder",
+      "press",
+      "press_dowel",
+      "pseudo_exercise_machine",
+      "vac_oven_small",
+      "vac_pump"
+     ],
+     "fg": 1112
     },
     {
      "id": [
@@ -17179,11 +17263,11 @@
       "winter_pants_army",
       "zubon_gi"
      ],
-     "fg": 1038
+     "fg": 1113
     },
     {
      "id": "broken_mech_combat",
-     "fg": 1039
+     "fg": 1114
     },
     {
      "id": [
@@ -17197,7 +17281,7 @@
       "tool_rocket_candy",
       "tool_rocket_candy_act"
      ],
-     "fg": 1040
+     "fg": 1115
     },
     {
      "id": [
@@ -17205,31 +17289,41 @@
       "bronze_brush_axe",
       "bronze_pickaxe"
      ],
-     "fg": 1041
+     "fg": 1116
     },
     {
      "id": [
       "bronze_knife",
       "bronze_sickle",
+      "dao",
       "diveknife",
       "sword_bronze",
       "sword_xiphos"
      ],
-     "fg": 1042
+     "fg": 1117
     },
     {
      "id": [
       "bronze_medal",
       "service_medal"
      ],
-     "fg": 1043
+     "fg": 1118
+    },
+    {
+     "id": [
+      "broom",
+      "dog_whistle_wood",
+      "ji",
+      "pencil"
+     ],
+     "fg": 1119
     },
     {
      "id": [
       "brush_axe",
       "copper_ax"
      ],
-     "fg": 1044
+     "fg": 1120
     },
     {
      "id": [
@@ -17241,14 +17335,31 @@
       "huge_crossbow",
       "rep_crossbow"
      ],
-     "fg": 1045
+     "fg": 1121
     },
     {
      "id": [
       "bundle_copper_pipe",
       "cu_pipe"
      ],
-     "fg": 1046
+     "fg": 1122
+    },
+    {
+     "id": [
+      "bundle_rebar",
+      "char_purifier",
+      "char_purifier_clay",
+      "char_smoker",
+      "chunk_cast_iron",
+      "lump_cast_iron",
+      "resin_chunk",
+      "scrap_aluminum",
+      "scrap_cast_iron",
+      "scrap_copper",
+      "scrap_tin",
+      "testflames"
+     ],
+     "fg": 1123
     },
     {
      "id": [
@@ -17257,7 +17368,7 @@
       "folding_poncho",
       "grass_cloak"
      ],
-     "fg": 1047
+     "fg": 1124
     },
     {
      "id": [
@@ -17280,7 +17391,55 @@
       "thyme",
       "yoghurt"
      ],
-     "fg": 1048
+     "fg": 1125
+    },
+    {
+     "id": [
+      "burette",
+      "still_lab"
+     ],
+     "fg": 1126
+    },
+    {
+     "id": "butane_can",
+     "fg": 1127
+    },
+    {
+     "id": [
+      "butchery_tree_pseudo",
+      "fake_butcher_rack",
+      "gasket_plastic",
+      "gasket_plastic_set",
+      "hd_valve",
+      "large_surface_pseudo",
+      "medium_surface_pseudo",
+      "pump_complex",
+      "recovery_pump",
+      "well_pump"
+     ],
+     "fg": 1128
+    },
+    {
+     "id": [
+      "butter_churn",
+      "hinge"
+     ],
+     "fg": 1129
+    },
+    {
+     "id": [
+      "butterfly_net_collapsible",
+      "butterfly_net_collapsible_extended",
+      "grip_hook"
+     ],
+     "fg": 1130
+    },
+    {
+     "id": [
+      "butterfly_net_makeshift",
+      "hoboreel"
+     ],
+     "fg": 1131
     },
     {
      "id": [
@@ -17289,7 +17448,7 @@
       "iv_mutagen_bird",
       "xanax"
      ],
-     "fg": 1049
+     "fg": 1132
     },
     {
      "id": [
@@ -17301,7 +17460,36 @@
       "vitc_fragment",
       "vitc_tablet"
      ],
-     "fg": 1050
+     "fg": 1133
+    },
+    {
+     "id": [
+      "calming_stone",
+      "fake_beverly_shear",
+      "fake_burrowing",
+      "fake_fireplace",
+      "fake_goggles",
+      "fake_lift_heavy",
+      "fake_lift_medium",
+      "fake_milling_item",
+      "fake_smoke_plume",
+      "fire",
+      "garnet",
+      "null",
+      "parkour_practice",
+      "pseudo_app_hd_compressor_unit",
+      "ruby",
+      "scutcheritem"
+     ],
+     "fg": 1134
+    },
+    {
+     "id": [
+      "caltrops",
+      "caltrops_teeth",
+      "shotgun_trap"
+     ],
+     "fg": 1135
     },
     {
      "id": [
@@ -17314,7 +17502,7 @@
       "remotevehcontrol",
       "yrax_computer"
      ],
-     "fg": 1051
+     "fg": 1136
     },
     {
      "id": [
@@ -17323,7 +17511,7 @@
       "dive_bag",
       "travelpack"
      ],
-     "fg": 1052
+     "fg": 1137
     },
     {
      "id": [
@@ -17332,7 +17520,7 @@
       "omnicamera_reinforced",
       "vortex"
      ],
-     "fg": 1053
+     "fg": 1138
     },
     {
      "id": [
@@ -17343,7 +17531,7 @@
       "mre_potato",
       "pale_ale"
      ],
-     "fg": 1054
+     "fg": 1139
     },
     {
      "id": [
@@ -17352,7 +17540,7 @@
       "canned_heart",
       "canned_liver"
      ],
-     "fg": 1055
+     "fg": 1140
     },
     {
      "id": [
@@ -17362,7 +17550,7 @@
       "fish_canned",
       "lobster_canned"
      ],
-     "fg": 1056
+     "fg": 1141
     },
     {
      "id": [
@@ -17373,7 +17561,19 @@
       "marloss_gel",
       "poutine"
      ],
-     "fg": 1057
+     "fg": 1142
+    },
+    {
+     "id": "can_drink",
+     "fg": 1143
+    },
+    {
+     "id": [
+      "can_food",
+      "can_food_big",
+      "can_medium"
+     ],
+     "fg": 1144
     },
     {
      "id": [
@@ -17411,17 +17611,37 @@
       "zucchini",
       "zucchini_cut"
      ],
-     "fg": 1058
+     "fg": 1145
+    },
+    {
+     "id": [
+      "cannabis",
+      "tobacco_raw"
+     ],
+     "fg": 1146
     },
     {
      "id": [
       "cannon_3in_ordnance",
       "m202_flash",
       "m320_mod",
+      "trl_gun_fl80",
       "trl_gun_lr80",
       "watercannon"
      ],
-     "fg": 1059
+     "fg": 1147
+    },
+    {
+     "id": [
+      "canvas_patch",
+      "cotton_patchwork",
+      "denim_patch",
+      "felt_patch",
+      "menstrual_pad",
+      "nylon",
+      "yrax_metal"
+     ],
+     "fg": 1148
     },
     {
      "id": [
@@ -17429,7 +17649,7 @@
       "solar_cell",
       "solar_cell_v2"
      ],
-     "fg": 1060
+     "fg": 1149
     },
     {
      "id": [
@@ -17444,7 +17664,7 @@
       "santa_hat",
       "zucchetto"
      ],
-     "fg": 1061
+     "fg": 1150
     },
     {
      "id": [
@@ -17456,11 +17676,23 @@
       "xl_hood_wsurvivor_nofur",
       "xs_hood_wsurvivor_nofur"
      ],
-     "fg": 1062
+     "fg": 1151
+    },
+    {
+     "id": [
+      "carbonfiber_boat_hull",
+      "large_stomach_sealed",
+      "leather_filing",
+      "mortar_adobe",
+      "pseudo_training_dummy_heavy",
+      "sandpaper",
+      "stomach_sealed"
+     ],
+     "fg": 1152
     },
     {
      "id": "carpet_cuirass",
-     "fg": 1063
+     "fg": 1153
     },
     {
      "id": [
@@ -17487,7 +17719,11 @@
       "trl_f_sashimi",
       "trl_f_solyanka"
      ],
-     "fg": 1064
+     "fg": 1154
+    },
+    {
+     "id": "carton_milk",
+     "fg": 1155
     },
     {
      "id": [
@@ -17497,7 +17733,7 @@
       "old_key",
       "puck"
      ],
-     "fg": 1065
+     "fg": 1156
     },
     {
      "id": [
@@ -17507,7 +17743,7 @@
       "steroid_eyedrops",
       "trl_rx_sleep"
      ],
-     "fg": 1066
+     "fg": 1157
     },
     {
      "id": [
@@ -17520,7 +17756,7 @@
       "rat_sample",
       "ursine_sample"
      ],
-     "fg": 1067
+     "fg": 1158
     },
     {
      "id": [
@@ -17531,14 +17767,14 @@
       "methanol_fuel_cell",
       "misc_repairkit"
      ],
-     "fg": 1068
+     "fg": 1159
     },
     {
      "id": [
       "cephalopod_sample",
       "spider_sample"
      ],
-     "fg": 1069
+     "fg": 1160
     },
     {
      "id": [
@@ -17609,7 +17845,7 @@
       "xs_qt_chainmail_hood",
       "xs_qt_steel_facemask"
      ],
-     "fg": 1070
+     "fg": 1161
     },
     {
      "id": [
@@ -17631,7 +17867,7 @@
       "xs_mc_chainmail_feet",
       "xs_qt_chainmail_feet"
      ],
-     "fg": 1071
+     "fg": 1162
     },
     {
      "id": [
@@ -17658,7 +17894,7 @@
       "xs_mc_chainmail_hands",
       "xs_qt_chainmail_hands"
      ],
-     "fg": 1072
+     "fg": 1163
     },
     {
      "id": [
@@ -17712,7 +17948,30 @@
       "xs_qt_helmet_nasal",
       "xs_qt_helmet_turban"
      ],
-     "fg": 1073
+     "fg": 1164
+    },
+    {
+     "id": [
+      "ch_shoulder_guards",
+      "ch_shoulder_guards_xs",
+      "hc_shoulder_guards",
+      "hc_shoulder_guards_xs",
+      "lc_shoulder_guards",
+      "lc_shoulder_guards_xs",
+      "mc_shoulder_guards",
+      "mc_shoulder_guards_xs",
+      "nomex",
+      "qt_shoulder_guards",
+      "qt_shoulder_guards_xs",
+      "scissors_medical",
+      "splatter_guard",
+      "xl_ch_shoulder_guards",
+      "xl_hc_shoulder_guards",
+      "xl_lc_shoulder_guards",
+      "xl_mc_shoulder_guards",
+      "xl_qt_shoulder_guards"
+     ],
+     "fg": 1165
     },
     {
      "id": [
@@ -17720,7 +17979,7 @@
       "coat_winter",
       "jacket_flannel"
      ],
-     "fg": 1074
+     "fg": 1166
     },
     {
      "id": [
@@ -17732,7 +17991,41 @@
       "elec_chainsaw_on",
       "nre_recorder"
      ],
-     "fg": 1075
+     "fg": 1167
+    },
+    {
+     "id": [
+      "chair_plywood",
+      "chair_wood",
+      "deck_chair"
+     ],
+     "fg": 1168
+    },
+    {
+     "id": "chair_wood_white",
+     "fg": 1169
+    },
+    {
+     "id": [
+      "chalice",
+      "funnel",
+      "metal_funnel"
+     ],
+     "fg": 1170
+    },
+    {
+     "id": [
+      "chaturanga",
+      "checkers",
+      "chess",
+      "chinese_checkers",
+      "domino",
+      "mahjong",
+      "makeshift_checkers",
+      "small_checkers",
+      "small_chess"
+     ],
+     "fg": 1171
     },
     {
      "id": [
@@ -17745,7 +18038,15 @@
       "liquid_soap",
       "trl_f_herring"
      ],
-     "fg": 1076
+     "fg": 1172
+    },
+    {
+     "id": [
+      "chem_agar",
+      "chem_peptone_broth",
+      "exodii_digger"
+     ],
+     "fg": 1173
     },
     {
      "id": [
@@ -17762,7 +18063,16 @@
       "unfinished_charcoal",
       "wooden_bead"
      ],
-     "fg": 1077
+     "fg": 1174
+    },
+    {
+     "id": [
+      "chemistry_set",
+      "chemistry_set_basic",
+      "molotov",
+      "molotov_lit"
+     ],
+     "fg": 1175
     },
     {
      "id": [
@@ -17772,11 +18082,22 @@
       "snowcone",
       "snowcone_alcoholic"
      ],
-     "fg": 1078
+     "fg": 1176
     },
     {
      "id": "chimera_sample",
-     "fg": 1079
+     "fg": 1177
+    },
+    {
+     "id": [
+      "churn",
+      "clarinet",
+      "mannequin_decoy",
+      "mjolnir",
+      "mop",
+      "sail"
+     ],
+     "fg": 1178
     },
     {
      "id": [
@@ -17788,7 +18109,7 @@
       "iv_mutagen_slime",
       "iv_mutagen_troglobite"
      ],
-     "fg": 1080
+     "fg": 1179
     },
     {
      "id": [
@@ -17799,7 +18120,23 @@
       "tea_willowbark",
       "tobacco"
      ],
-     "fg": 1081
+     "fg": 1180
+    },
+    {
+     "id": [
+      "citrine",
+      "krar",
+      "pseudo_archery_target_bale"
+     ],
+     "fg": 1181
+    },
+    {
+     "id": [
+      "clay_canister",
+      "drum_skin",
+      "openfire"
+     ],
+     "fg": 1182
     },
     {
      "id": [
@@ -17807,7 +18144,7 @@
       "jacket_jean",
       "ski_jacket"
      ],
-     "fg": 1082
+     "fg": 1183
     },
     {
      "id": [
@@ -17815,7 +18152,7 @@
       "santa_jacket",
       "santa_jacket_short"
      ],
-     "fg": 1083
+     "fg": 1184
     },
     {
      "id": [
@@ -17826,7 +18163,7 @@
       "peacoat",
       "sweater"
      ],
-     "fg": 1084
+     "fg": 1185
     },
     {
      "id": [
@@ -17835,7 +18172,14 @@
       "gold_anklet",
       "gold_toe_ring"
      ],
-     "fg": 1085
+     "fg": 1186
+    },
+    {
+     "id": [
+      "clue",
+      "touristmap"
+     ],
+     "fg": 1187
     },
     {
      "id": [
@@ -17843,7 +18187,7 @@
       "xl_coat_faux_fur",
       "xs_coat_faux_fur"
      ],
-     "fg": 1086
+     "fg": 1188
     },
     {
      "id": [
@@ -17857,7 +18201,7 @@
       "robe_wizard",
       "waistcoat"
      ],
-     "fg": 1087
+     "fg": 1189
     },
     {
      "id": [
@@ -17870,7 +18214,7 @@
       "trl_kannushi_robe",
       "winter_jacket_army"
      ],
-     "fg": 1088
+     "fg": 1190
     },
     {
      "id": [
@@ -17883,7 +18227,7 @@
       "morphine",
       "quikclot"
      ],
-     "fg": 1089
+     "fg": 1191
     },
     {
      "id": [
@@ -17895,16 +18239,17 @@
       "trl_f_oolong",
       "zerotropical"
      ],
-     "fg": 1090
+     "fg": 1192
     },
     {
      "id": [
       "colt_ro635",
       "hk_mp7",
       "modular_ump",
-      "rm2000_smg"
+      "rm2000_smg",
+      "trl_gun_hx9"
      ],
-     "fg": 1091
+     "fg": 1193
     },
     {
      "id": [
@@ -17924,14 +18269,14 @@
       "trl_yumi",
       "woodgreatbow"
      ],
-     "fg": 1092
+     "fg": 1194
     },
     {
      "id": [
       "conc_venom",
       "plant_fibre"
      ],
-     "fg": 1093
+     "fg": 1195
     },
     {
      "id": [
@@ -17942,28 +18287,91 @@
       "textbook_arthropod",
       "winemaking_beginner"
      ],
-     "fg": 1094
+     "fg": 1196
+    },
+    {
+     "id": [
+      "copbot_chassis",
+      "exodii_drone_chassis",
+      "turret_chassis"
+     ],
+     "fg": 1197
     },
     {
      "id": [
       "cordage_36_leather",
       "cordage_6_leather"
      ],
-     "fg": 1095
+     "fg": 1198
     },
     {
      "id": [
       "corded_powerdrill",
       "cordless_drill"
      ],
-     "fg": 1096
+     "fg": 1199
+    },
+    {
+     "id": [
+      "corpse",
+      "corpse_bloody",
+      "corpse_child_calm",
+      "corpse_child_gunned",
+      "corpse_generic_boy",
+      "corpse_generic_female",
+      "corpse_generic_girl",
+      "corpse_generic_gunned",
+      "corpse_generic_human",
+      "corpse_generic_infected",
+      "corpse_generic_male",
+      "corpse_gunned",
+      "corpse_half_beheaded",
+      "corpse_halved_upper",
+      "corpse_oldwoman_jewelry",
+      "corpse_painful",
+      "corpse_scorched",
+      "corpse_stabbed",
+      "corpse_void_mummified",
+      "rmi2_corpse"
+     ],
+     "fg": 1200
+    },
+    {
+     "id": "corpse_yugg_jade",
+     "fg": 1201
+    },
+    {
+     "id": "corpse_yugg_rubber",
+     "fg": 1202
+    },
+    {
+     "id": [
+      "cotton_ball",
+      "disincotton_ball",
+      "golf_ball",
+      "imperfect_doll_complete",
+      "magic_8_ball",
+      "makeshift_dominoes"
+     ],
+     "fg": 1203
+    },
+    {
+     "id": [
+      "cow_bell",
+      "hoe",
+      "pitchfork",
+      "rake",
+      "shovel",
+      "shovel_snow"
+     ],
+     "fg": 1204
     },
     {
      "id": [
       "crackpipe",
       "pipe_water"
      ],
-     "fg": 1097
+     "fg": 1205
     },
     {
      "id": [
@@ -17971,7 +18379,7 @@
       "energy_drink",
       "purple_drink"
      ],
-     "fg": 1098
+     "fg": 1206
     },
     {
      "id": [
@@ -17985,20 +18393,25 @@
       "military_explosive_full_barrel_bomb_act",
       "military_explosive_half_barrel_bomb_act"
      ],
-     "fg": 1099
+     "fg": 1207
     },
     {
      "id": [
       "creepy_doll",
-      "dentures",
-      "faux_fur",
-      "fluid_preserved_brain",
-      "insecticide",
-      "menstrual_cup",
-      "restaurantmap",
       "talking_doll"
      ],
-     "fg": 1100
+     "fg": 1208
+    },
+    {
+     "id": [
+      "crossbow_trap",
+      "fish_trap"
+     ],
+     "fg": 1209
+    },
+    {
+     "id": "crude_bronze_nail",
+     "fg": 1210
     },
     {
      "id": [
@@ -18006,11 +18419,45 @@
       "trl_shuriken_4",
       "trl_shuriken_8"
      ],
-     "fg": 1101
+     "fg": 1211
+    },
+    {
+     "id": [
+      "crystal_urn",
+      "escape_stone"
+     ],
+     "fg": 1212
+    },
+    {
+     "id": [
+      "cup_plastic",
+      "cup_plastic_yoghurt",
+      "petri_dish",
+      "plastic_bowl_kids",
+      "sippy_cup",
+      "tankard_metal"
+     ],
+     "fg": 1213
+    },
+    {
+     "id": "curling_iron",
+     "fg": 1214
+    },
+    {
+     "id": [
+      "cyborg_matrix",
+      "glowstick",
+      "glowstick_lit",
+      "hygrometer",
+      "inhaler",
+      "sharp_toothbrush",
+      "water_purifier"
+     ],
+     "fg": 1215
     },
     {
      "id": "daypack",
-     "fg": 1102
+     "fg": 1216
     },
     {
      "id": [
@@ -18026,7 +18473,21 @@
       "trl_rx_focus",
       "wintergreen_oil"
      ],
-     "fg": 1103
+     "fg": 1217
+    },
+    {
+     "id": [
+      "debug_apply_fault",
+      "debug_item_damager",
+      "debug_item_damager_adv",
+      "debug_item_search",
+      "debug_lux_meter",
+      "fan",
+      "nail_puller_bronze",
+      "punch_nail",
+      "spring"
+     ],
+     "fg": 1218
     },
     {
      "id": [
@@ -18039,7 +18500,7 @@
       "mutagen_jabberblood",
       "panacea"
      ],
-     "fg": 1104
+     "fg": 1219
     },
     {
      "id": [
@@ -18047,7 +18508,7 @@
       "drive_by_wire_controls",
       "valentine_card"
      ],
-     "fg": 1105
+     "fg": 1220
     },
     {
      "id": [
@@ -18059,7 +18520,18 @@
       "v_planter_item_advanced",
       "whistle_multitool"
      ],
-     "fg": 1106
+     "fg": 1221
+    },
+    {
+     "id": "dentures",
+     "fg": 1222
+    },
+    {
+     "id": [
+      "dishwasher",
+      "recharge_station"
+     ],
+     "fg": 1223
     },
     {
      "id": [
@@ -18069,7 +18541,7 @@
       "pure_meth",
       "saline"
      ],
-     "fg": 1107
+     "fg": 1224
     },
     {
      "id": [
@@ -18093,7 +18565,22 @@
       "masonrysaw_on",
       "small_lighter"
      ],
-     "fg": 1108
+     "fg": 1225
+    },
+    {
+     "id": [
+      "down_pillow",
+      "makeshift_pillow",
+      "pillow"
+     ],
+     "fg": 1226
+    },
+    {
+     "id": [
+      "drum_percussion",
+      "drum_percussion_primitive"
+     ],
+     "fg": 1227
     },
     {
      "id": [
@@ -18104,7 +18591,18 @@
       "survivor_dry_bag",
       "survivor_dry_duffelbag"
      ],
-     "fg": 1109
+     "fg": 1228
+    },
+    {
+     "id": [
+      "dynamite",
+      "dynamite_act",
+      "firecracker",
+      "firecracker_act",
+      "firecracker_pack",
+      "firecracker_pack_act"
+     ],
+     "fg": 1229
     },
     {
      "id": [
@@ -18118,14 +18616,18 @@
       "military_explosive_full_barrel_bomb",
       "military_explosive_half_barrel_bomb"
      ],
-     "fg": 1110
+     "fg": 1230
+    },
+    {
+     "id": "e_scrap",
+     "fg": 1231
     },
     {
      "id": [
       "egg_robin",
       "triffid_fungicide"
      ],
-     "fg": 1111
+     "fg": 1232
     },
     {
      "id": [
@@ -18135,18 +18637,28 @@
       "exodii_portalizer",
       "exodii_scanner_dish"
      ],
-     "fg": 1112
+     "fg": 1233
+    },
+    {
+     "id": [
+      "elec_hairtrimmer",
+      "frisbee",
+      "lawn_dart",
+      "pictionary",
+      "sponge"
+     ],
+     "fg": 1234
     },
     {
      "id": [
       "elfa_sample",
       "slime_sample"
      ],
-     "fg": 1113
+     "fg": 1235
     },
     {
      "id": "emp_frond",
-     "fg": 1114
+     "fg": 1236
     },
     {
      "id": [
@@ -18156,11 +18668,25 @@
       "engine_block_small",
       "engine_block_tiny"
      ],
-     "fg": 1115
+     "fg": 1237
     },
     {
      "id": "engineering_engine_kit",
-     "fg": 1116
+     "fg": 1238
+    },
+    {
+     "id": "ephemeral_gem",
+     "fg": 1239
+    },
+    {
+     "id": [
+      "epoxy_chunk",
+      "plastic_chunk",
+      "polycarbonate_chunk",
+      "thermo_resin_chunk",
+      "water_filter_sand"
+     ],
+     "fg": 1240
     },
     {
      "id": [
@@ -18176,11 +18702,11 @@
       "small_lcd_screen",
       "xedra_microphone"
      ],
-     "fg": 1117
+     "fg": 1241
     },
     {
      "id": "exodii_plasma_fan",
-     "fg": 1118
+     "fg": 1242
     },
     {
      "id": [
@@ -18191,7 +18717,38 @@
       "jumper_cable_heavy",
       "long_extension_cable"
      ],
-     "fg": 1119
+     "fg": 1243
+    },
+    {
+     "id": [
+      "extinguisher",
+      "sm_extinguisher",
+      "stereo",
+      "wind_mill"
+     ],
+     "fg": 1244
+    },
+    {
+     "id": [
+      "fake_anvil",
+      "fake_anvil_heavy"
+     ],
+     "fg": 1245
+    },
+    {
+     "id": [
+      "fake_char_smoker",
+      "fake_sharp_metal_wreckage"
+     ],
+     "fg": 1246
+    },
+    {
+     "id": [
+      "fake_digester_tank",
+      "fuel_tin",
+      "pseudo_app_oxygen_concentrator"
+     ],
+     "fg": 1247
     },
     {
      "id": [
@@ -18199,11 +18756,11 @@
       "heavy_crowbar",
       "sinister_cane"
      ],
-     "fg": 1120
+     "fg": 1248
     },
     {
      "id": "fake_firestarter",
-     "fg": 1121
+     "fg": 1249
     },
     {
      "id": [
@@ -18218,7 +18775,21 @@
       "sweets_book",
       "tailor_portfolio"
      ],
-     "fg": 1122
+     "fg": 1250
+    },
+    {
+     "id": [
+      "family_photo",
+      "movie_poster",
+      "satellitemap",
+      "sieve_primitive",
+      "wrapper_pr"
+     ],
+     "fg": 1251
+    },
+    {
+     "id": "faux_fur",
+     "fg": 1252
     },
     {
      "id": [
@@ -18227,7 +18798,27 @@
       "sample_t_substrate",
       "troglobite_sample"
      ],
-     "fg": 1123
+     "fg": 1253
+    },
+    {
+     "id": [
+      "fertilizer",
+      "fighter_sting",
+      "leaves"
+     ],
+     "fg": 1254
+    },
+    {
+     "id": "fetid_goop",
+     "fg": 1255
+    },
+    {
+     "id": [
+      "fire_piston",
+      "giant_wood_screw",
+      "hickory_nut"
+     ],
+     "fg": 1256
     },
     {
      "id": [
@@ -18240,15 +18831,42 @@
       "welding_rod_steel",
       "welding_wire_steel"
      ],
-     "fg": 1124
+     "fg": 1257
     },
     {
      "id": "fish_sample",
-     "fg": 1125
+     "fg": 1258
+    },
+    {
+     "id": "fishing_hook_basic",
+     "fg": 1259
+    },
+    {
+     "id": [
+      "fishing_hook_bone",
+      "hammock_net"
+     ],
+     "fg": 1260
+    },
+    {
+     "id": [
+      "fishing_rod_2pc",
+      "fishing_rod_2pc_packed"
+     ],
+     "fg": 1261
+    },
+    {
+     "id": [
+      "fishing_rod_basic",
+      "fishing_rod_professional",
+      "long_pole",
+      "soaking_long_pole"
+     ],
+     "fg": 1262
     },
     {
      "id": "flaregun",
-     "fg": 1126
+     "fg": 1263
     },
     {
      "id": [
@@ -18258,7 +18876,16 @@
       "nether_grub",
       "ruined_chunks"
      ],
-     "fg": 1127
+     "fg": 1264
+    },
+    {
+     "id": [
+      "flint_steel",
+      "pedal_grindstone",
+      "petrified_eye",
+      "wasp_sting"
+     ],
+     "fg": 1265
     },
     {
      "id": [
@@ -18268,7 +18895,7 @@
       "xlsocks_wool",
       "xssocks_wool"
      ],
-     "fg": 1128
+     "fg": 1266
     },
     {
      "id": [
@@ -18276,7 +18903,25 @@
       "inj_iron",
       "purifier_smart_shot"
      ],
-     "fg": 1129
+     "fg": 1267
+    },
+    {
+     "id": "fluid_preserved_brain",
+     "fg": 1268
+    },
+    {
+     "id": [
+      "flux_comp_gen",
+      "large_space_heater",
+      "large_space_heater_on",
+      "small_space_heater",
+      "small_space_heater_on"
+     ],
+     "fg": 1269
+    },
+    {
+     "id": "fog_machine",
+     "fg": 1270
     },
     {
      "id": [
@@ -18284,7 +18929,7 @@
       "wind_turbine",
       "xl_wind_turbine"
      ],
-     "fg": 1130
+     "fg": 1271
     },
     {
      "id": [
@@ -18295,22 +18940,42 @@
       "xlsocks",
       "xssocks"
      ],
-     "fg": 1131
+     "fg": 1272
+    },
+    {
+     "id": [
+      "forge",
+      "metalworking_tongs",
+      "metalworking_tongs_bronze"
+     ],
+     "fg": 1273
+    },
+    {
+     "id": "forgerig",
+     "fg": 1274
     },
     {
      "id": [
       "fp_loyalty_card",
       "trl_chip_nh_siphon"
      ],
-     "fg": 1132
+     "fg": 1275
     },
     {
      "id": "frame",
-     "fg": 1133
+     "fg": 1276
+    },
+    {
+     "id": [
+      "fridgetank",
+      "fridgetank_large",
+      "heattank"
+     ],
+     "fg": 1277
     },
     {
      "id": "fuel_bunker",
-     "fg": 1134
+     "fg": 1278
     },
     {
      "id": [
@@ -18321,7 +18986,33 @@
       "purifier",
       "trl_drug_neon"
      ],
-     "fg": 1135
+     "fg": 1279
+    },
+    {
+     "id": "funnel_separation",
+     "fg": 1280
+    },
+    {
+     "id": [
+      "fur",
+      "knitting_needles",
+      "leather"
+     ],
+     "fg": 1281
+    },
+    {
+     "id": [
+      "furniturebrochure",
+      "grocerybrochure",
+      "historybrochure",
+      "mallbrochure",
+      "restaurantbrochure",
+      "sewermap",
+      "subwaymap",
+      "subwaystationmap",
+      "technologybrochure"
+     ],
+     "fg": 1282
     },
     {
      "id": [
@@ -18330,7 +19021,7 @@
       "recon_mech_laser",
       "recon_mech_laser_single"
      ],
-     "fg": 1136
+     "fg": 1283
     },
     {
      "id": [
@@ -18339,21 +19030,21 @@
       "gelatin_dessert_processed",
       "insect_dust"
      ],
-     "fg": 1137
+     "fg": 1284
     },
     {
      "id": [
       "gelatin_dessert_fruit",
       "gelatin_dessert_homemade"
      ],
-     "fg": 1138
+     "fg": 1285
     },
     {
      "id": [
       "gelatin_dessert_vegan",
       "gelatin_dessert_vegan_fruit"
      ],
-     "fg": 1139
+     "fg": 1286
     },
     {
      "id": [
@@ -18362,7 +19053,7 @@
       "glasses_monocle",
       "glasses_reading"
      ],
-     "fg": 1140
+     "fg": 1287
     },
     {
      "id": [
@@ -18370,32 +19061,44 @@
       "xl_gloves_wsurvivor_nofur",
       "xs_gloves_wsurvivor_nofur"
      ],
-     "fg": 1141
+     "fg": 1288
     },
     {
      "id": [
       "godcotrader_accounting_records_clean",
       "godcotrader_accounting_records_dirty"
      ],
-     "fg": 1142
+     "fg": 1289
     },
     {
      "id": [
       "goggles_swim",
       "shield_visor"
      ],
-     "fg": 1143
+     "fg": 1290
+    },
+    {
+     "id": [
+      "grass_yarn",
+      "reins_tackle",
+      "storage_line",
+      "string_36",
+      "string_6",
+      "thread_cutting_set",
+      "yoke_harness_heavyduty"
+     ],
+     "fg": 1291
     },
     {
      "id": [
       "grenade_emp",
       "grenade_emp_act"
      ],
-     "fg": 1144
+     "fg": 1292
     },
     {
      "id": "gun_crossbow",
-     "fg": 1145
+     "fg": 1293
     },
     {
      "id": [
@@ -18409,7 +19112,19 @@
       "swim_briefs",
       "trunks"
      ],
-     "fg": 1146
+     "fg": 1294
+    },
+    {
+     "id": "hand_pump",
+     "fg": 1295
+    },
+    {
+     "id": [
+      "handflare",
+      "inflatable_dragon",
+      "inflatable_ghost"
+     ],
+     "fg": 1296
     },
     {
      "id": [
@@ -18421,11 +19136,11 @@
       "weldkit",
       "wide_headlight_reinforced"
      ],
-     "fg": 1147
+     "fg": 1297
     },
     {
      "id": "heavy_atomic_battery_cell",
-     "fg": 1148
+     "fg": 1298
     },
     {
      "id": [
@@ -18445,7 +19160,7 @@
       "xl_helmet_chitin",
       "xl_helmet_chitin_light"
      ],
-     "fg": 1149
+     "fg": 1299
     },
     {
      "id": [
@@ -18458,18 +19173,18 @@
       "xl_helmet_conical",
       "xl_helmet_larmor"
      ],
-     "fg": 1150
+     "fg": 1300
     },
     {
      "id": "helmet_ball",
-     "fg": 1151
+     "fg": 1301
     },
     {
      "id": [
       "helmet_eod",
       "helmet_eod_on"
      ],
-     "fg": 1152
+     "fg": 1302
     },
     {
      "id": [
@@ -18480,18 +19195,20 @@
       "xl_helmet_scavenger",
       "xs_helmet_nomad"
      ],
-     "fg": 1153
+     "fg": 1303
     },
     {
      "id": [
       "hm12",
       "long_speargun",
       "trl_gun_gl9",
+      "trl_gun_he3",
       "trl_gun_hl1",
       "trl_gun_ll3",
+      "trl_gun_se9",
       "trl_gun_vlx"
      ],
-     "fg": 1154
+     "fg": 1304
     },
     {
      "id": [
@@ -18501,7 +19218,7 @@
       "wizard_cane_cheap_on",
       "wizard_cane_on"
      ],
-     "fg": 1155
+     "fg": 1305
     },
     {
      "id": [
@@ -18509,7 +19226,28 @@
       "money_strap_FMCNote",
       "signed_chit"
      ],
-     "fg": 1156
+     "fg": 1306
+    },
+    {
+     "id": [
+      "horse_tack",
+      "tarp_raincatcher",
+      "yoke_harness"
+     ],
+     "fg": 1307
+    },
+    {
+     "id": [
+      "household_washing_machine",
+      "household_water_heater",
+      "household_water_heater_family",
+      "makeshift_sealer",
+      "makeshift_vacuum_mold",
+      "snow_machine_home",
+      "vac_mold",
+      "vac_sealer"
+     ],
+     "fg": 1308
     },
     {
      "id": [
@@ -18517,27 +19255,36 @@
       "rm103a_pistol",
       "rm228",
       "sw_610",
-      "trl_fake_arm_gun"
+      "trl_fake_arm_gun",
+      "trl_gun_hp40"
      ],
-     "fg": 1157
+     "fg": 1309
     },
     {
      "id": [
       "huge_atomic_battery_cell",
       "pseudo_magazine"
      ],
-     "fg": 1158
+     "fg": 1310
     },
     {
      "id": "human_sample",
-     "fg": 1159
+     "fg": 1311
+    },
+    {
+     "id": "hydraulic_press",
+     "fg": 1312
+    },
+    {
+     "id": "hygroscope",
+     "fg": 1313
     },
     {
      "id": [
       "iceaxe",
       "pickaxe"
      ],
-     "fg": 1160
+     "fg": 1314
     },
     {
      "id": [
@@ -18550,7 +19297,7 @@
       "id_LIXA_rich",
       "silver_medal"
      ],
-     "fg": 1161
+     "fg": 1315
     },
     {
      "id": [
@@ -18559,7 +19306,7 @@
       "id_military",
       "id_science_maintenance_green"
      ],
-     "fg": 1162
+     "fg": 1316
     },
     {
      "id": [
@@ -18569,35 +19316,59 @@
       "id_science_mu",
       "id_science_transport_1"
      ],
-     "fg": 1163
+     "fg": 1317
     },
     {
      "id": "id_science_medical_red",
-     "fg": 1164
+     "fg": 1318
     },
     {
      "id": "id_science_mutagen_cyan",
-     "fg": 1165
+     "fg": 1319
     },
     {
      "id": "id_science_mutagen_green",
-     "fg": 1166
+     "fg": 1320
     },
     {
      "id": "id_science_mutagen_pink",
-     "fg": 1167
+     "fg": 1321
     },
     {
      "id": "id_science_security_black",
-     "fg": 1168
+     "fg": 1322
     },
     {
      "id": "id_science_security_magenta",
-     "fg": 1169
+     "fg": 1323
     },
     {
      "id": "ifak_pouch",
-     "fg": 1170
+     "fg": 1324
+    },
+    {
+     "id": [
+      "imperfect_doll_arms",
+      "shark_plushie"
+     ],
+     "fg": 1325
+    },
+    {
+     "id": "inhalation_valve",
+     "fg": 1326
+    },
+    {
+     "id": "insecticide",
+     "fg": 1327
+    },
+    {
+     "id": [
+      "integrated_cooler",
+      "kilnrig",
+      "mountable_cooler",
+      "oven_door"
+     ],
+     "fg": 1328
     },
     {
      "id": [
@@ -18618,7 +19389,7 @@
       "vine_30",
       "vine_6"
      ],
-     "fg": 1171
+     "fg": 1329
     },
     {
      "id": [
@@ -18630,7 +19401,7 @@
       "internal_gasoline_tank",
       "internal_oil_tank"
      ],
-     "fg": 1172
+     "fg": 1330
     },
     {
      "id": [
@@ -18667,18 +19438,18 @@
       "prozac",
       "trl_drug_static"
      ],
-     "fg": 1173
+     "fg": 1331
     },
     {
      "id": "jacket_eod",
-     "fg": 1174
+     "fg": 1332
     },
     {
      "id": [
       "jacket_evac",
       "jacket_windbreaker"
      ],
-     "fg": 1175
+     "fg": 1333
     },
     {
      "id": [
@@ -18688,7 +19459,7 @@
       "vest_jean_mod",
       "vest_jean_mod_ch"
      ],
-     "fg": 1176
+     "fg": 1334
     },
     {
      "id": [
@@ -18699,19 +19470,55 @@
       "jeans_vintage",
       "shorts_denim"
      ],
-     "fg": 1177
+     "fg": 1335
+    },
+    {
+     "id": [
+      "jerrycan",
+      "jerrycan_big",
+      "medium_biogas_tank",
+      "medium_propane_tank",
+      "pressurized_canister",
+      "propane_cooker",
+      "small_biogas_tank",
+      "small_propane_tank"
+     ],
+     "fg": 1336
     },
     {
      "id": "kevlar_harness",
-     "fg": 1178
+     "fg": 1337
+    },
+    {
+     "id": [
+      "kevlar_patch",
+      "neoprene",
+      "telepad",
+      "wheel_mount_skateboard"
+     ],
+     "fg": 1338
+    },
+    {
+     "id": "kevlar_shears",
+     "fg": 1339
     },
     {
      "id": "knee_high_boots",
-     "fg": 1179
+     "fg": 1340
     },
     {
-     "id": "laser_rifle",
-     "fg": 1180
+     "id": [
+      "laser_rifle",
+      "trl_gun_fe7"
+     ],
+     "fg": 1341
+    },
+    {
+     "id": [
+      "latrunculi",
+      "ranger"
+     ],
+     "fg": 1342
     },
     {
      "id": [
@@ -18719,7 +19526,7 @@
       "nyquil",
       "prussian_blue"
      ],
-     "fg": 1181
+     "fg": 1343
     },
     {
      "id": [
@@ -18728,37 +19535,51 @@
       "xl_legguard_bronze",
       "xs_legguard_bronze"
      ],
-     "fg": 1182
+     "fg": 1344
+    },
+    {
+     "id": "lifestraw",
+     "fg": 1345
     },
     {
      "id": "lunchbox",
-     "fg": 1183
+     "fg": 1346
     },
     {
-     "id": "m203",
-     "fg": 1184
+     "id": "lycra_patch",
+     "fg": 1347
+    },
+    {
+     "id": [
+      "m203",
+      "trl_gun_zl40"
+     ],
+     "fg": 1348
     },
     {
      "id": [
       "m203_mod",
       "masterkey_mod"
      ],
-     "fg": 1185
+     "fg": 1349
     },
     {
-     "id": "m26_mass",
-     "fg": 1186
+     "id": [
+      "m26_mass",
+      "trl_gun_ss12"
+     ],
+     "fg": 1350
     },
     {
      "id": [
       "m26_mass_mod",
       "muzzle_weight"
      ],
-     "fg": 1187
+     "fg": 1351
     },
     {
      "id": "machete_gimmick",
-     "fg": 1188
+     "fg": 1352
     },
     {
      "id": [
@@ -18767,7 +19588,18 @@
       "magazine_battery_medium_mod",
       "magazine_battery_mod"
      ],
-     "fg": 1189
+     "fg": 1353
+    },
+    {
+     "id": "makeshift_funnel",
+     "fg": 1354
+    },
+    {
+     "id": [
+      "makeshift_welding_blanket",
+      "welding_blanket"
+     ],
+     "fg": 1355
     },
     {
      "id": [
@@ -18795,18 +19627,18 @@
       "money_twenty",
       "money_two"
      ],
-     "fg": 1190
+     "fg": 1356
     },
     {
      "id": [
       "manual_engine_kit",
       "motor_micro"
      ],
-     "fg": 1191
+     "fg": 1357
     },
     {
      "id": "manual_makerspace",
-     "fg": 1192
+     "fg": 1358
     },
     {
      "id": [
@@ -18818,18 +19650,52 @@
       "weeks_old_newspaper",
       "years_old_newspaper"
      ],
-     "fg": 1193
+     "fg": 1359
     },
     {
      "id": [
       "marloss_scarf",
       "nape_protector"
      ],
-     "fg": 1194
+     "fg": 1360
+    },
+    {
+     "id": "matches",
+     "fg": 1361
+    },
+    {
+     "id": [
+      "material_rhodonite",
+      "material_zincite",
+      "unstable_rift"
+     ],
+     "fg": 1362
     },
     {
      "id": "medical_sample",
-     "fg": 1195
+     "fg": 1363
+    },
+    {
+     "id": "menstrual_cup",
+     "fg": 1364
+    },
+    {
+     "id": [
+      "migo_bio_tech",
+      "tourmaline"
+     ],
+     "fg": 1365
+    },
+    {
+     "id": "mil_plate",
+     "fg": 1366
+    },
+    {
+     "id": [
+      "militarymap",
+      "trailmap"
+     ],
+     "fg": 1367
     },
     {
      "id": [
@@ -18842,7 +19708,7 @@
       "peridot_silver_bracelet",
       "peridot_silver_ring"
      ],
-     "fg": 1196
+     "fg": 1368
     },
     {
      "id": [
@@ -18850,38 +19716,83 @@
       "recipe_dave_manual",
       "theater_props"
      ],
-     "fg": 1197
+     "fg": 1369
     },
     {
      "id": [
       "monitoring_equipment_doc",
       "waterproof_camera_case"
      ],
-     "fg": 1198
+     "fg": 1370
+    },
+    {
+     "id": [
+      "monolith_brick",
+      "rubber_tire_chunk",
+      "scrap_canvas",
+      "scrap_carpet",
+      "scrap_cotton",
+      "scrap_denim",
+      "scrap_faux_fur",
+      "scrap_felt",
+      "scrap_fur",
+      "scrap_kevlar",
+      "scrap_leather",
+      "scrap_lycra",
+      "scrap_neoprene",
+      "scrap_nomex",
+      "scrap_nylon"
+     ],
+     "fg": 1371
     },
     {
      "id": "nailgun",
-     "fg": 1199
+     "fg": 1372
     },
     {
      "id": "nanoskirt",
-     "fg": 1200
+     "fg": 1373
     },
     {
      "id": "nether_huntsman_organ",
-     "fg": 1201
+     "fg": 1374
+    },
+    {
+     "id": "nm_teeth",
+     "fg": 1375
+    },
+    {
+     "id": [
+      "noise_emitter",
+      "noise_emitter_on",
+      "noise_emitter_super",
+      "noise_emitter_super_on"
+     ],
+     "fg": 1376
     },
     {
      "id": "nuts_bolts",
-     "fg": 1202
+     "fg": 1377
+    },
+    {
+     "id": "ny_hook",
+     "fg": 1378
     },
     {
      "id": "oxygen_cylinder",
-     "fg": 1203
+     "fg": 1379
     },
     {
      "id": "p_carpet",
-     "fg": 1204
+     "fg": 1380
+    },
+    {
+     "id": "paint_can_plastic",
+     "fg": 1381
+    },
+    {
+     "id": "painting",
+     "fg": 1382
     },
     {
      "id": [
@@ -18889,7 +19800,11 @@
       "peridot_platinum_tiara",
       "peridot_silver_tiara"
      ],
-     "fg": 1205
+     "fg": 1383
+    },
+    {
+     "id": "piano",
+     "fg": 1384
     },
     {
      "id": [
@@ -18897,23 +19812,49 @@
       "spear_bronze",
       "spear_dory"
      ],
-     "fg": 1206
+     "fg": 1385
     },
     {
      "id": "pistol_flintlock",
-     "fg": 1207
+     "fg": 1386
     },
     {
      "id": "plasma_rifle",
-     "fg": 1208
+     "fg": 1387
+    },
+    {
+     "id": "plastichoboreel",
+     "fg": 1388
+    },
+    {
+     "id": [
+      "plunger_toilet",
+      "survival_match",
+      "v_table",
+      "w_table",
+      "water_mill",
+      "workbench"
+     ],
+     "fg": 1389
+    },
+    {
+     "id": [
+      "portable_game",
+      "straw_doll"
+     ],
+     "fg": 1390
+    },
+    {
+     "id": "portal",
+     "fg": 1391
     },
     {
      "id": "ppsh",
-     "fg": 1209
+     "fg": 1392
     },
     {
      "id": "pressurized_tank",
-     "fg": 1210
+     "fg": 1393
     },
     {
      "id": [
@@ -18928,30 +19869,45 @@
       "trl_chip_nh_seal",
       "trl_chip_nh_takeover"
      ],
-     "fg": 1211
+     "fg": 1394
     },
     {
      "id": "prophylactic_antivenom",
-     "fg": 1212
+     "fg": 1395
+    },
+    {
+     "id": "pseudo_magazine_mod",
+     "fg": 1396
+    },
+    {
+     "id": [
+      "rack_test_tube",
+      "rack_test_tube_micro"
+     ],
+     "fg": 1397
     },
     {
      "id": [
       "rad_badge",
       "wrapped_rad_badge"
      ],
-     "fg": 1213
+     "fg": 1398
     },
     {
      "id": "razor_blade",
-     "fg": 1214
+     "fg": 1399
     },
     {
      "id": "razor_shaving",
-     "fg": 1215
+     "fg": 1400
     },
     {
      "id": "ref_matches",
-     "fg": 1216
+     "fg": 1401
+    },
+    {
+     "id": "restaurantmap",
+     "fg": 1402
     },
     {
      "id": [
@@ -18962,7 +19918,7 @@
       "retool_ump_45",
       "retool_ump_9"
      ],
-     "fg": 1217
+     "fg": 1403
     },
     {
      "id": [
@@ -18970,37 +19926,53 @@
       "rm121aux",
       "rm20"
      ],
-     "fg": 1218
+     "fg": 1404
+    },
+    {
+     "id": [
+      "roadmap",
+      "tailoring_pattern_set"
+     ],
+     "fg": 1405
     },
     {
      "id": [
       "robofac_gun",
       "xedra_gun"
      ],
-     "fg": 1219
+     "fg": 1406
     },
     {
      "id": "robofac_gun_40mm",
-     "fg": 1220
+     "fg": 1407
     },
     {
      "id": [
       "scout_bipod",
       "scout_bipod_deployed"
      ],
-     "fg": 1221
+     "fg": 1408
     },
     {
      "id": "screen_mesh",
-     "fg": 1222
+     "fg": 1409
     },
     {
      "id": "scythe_game",
-     "fg": 1223
+     "fg": 1410
+    },
+    {
+     "id": [
+      "seat",
+      "seat_bench",
+      "seat_bench_leather",
+      "seat_leather"
+     ],
+     "fg": 1411
     },
     {
      "id": "self_monitoring_module",
-     "fg": 1224
+     "fg": 1412
     },
     {
      "id": [
@@ -19008,11 +19980,15 @@
       "sleeping_bag_improvised",
       "sleeping_bag_roll"
      ],
-     "fg": 1225
+     "fg": 1413
     },
     {
      "id": "slingshot",
-     "fg": 1226
+     "fg": 1414
+    },
+    {
+     "id": "small_squeeze_tube",
+     "fg": 1415
     },
     {
      "id": [
@@ -19020,34 +19996,79 @@
       "tinyweldtank",
       "weldtank"
      ],
-     "fg": 1227
+     "fg": 1416
+    },
+    {
+     "id": "snakesnladders",
+     "fg": 1417
+    },
+    {
+     "id": "soap_holder",
+     "fg": 1418
     },
     {
      "id": "solarpack",
-     "fg": 1228
+     "fg": 1419
     },
     {
      "id": "spear_copper",
-     "fg": 1229
+     "fg": 1420
     },
     {
      "id": "spear_rebar",
-     "fg": 1230
+     "fg": 1421
     },
     {
      "id": "spiked_plate",
-     "fg": 1231
+     "fg": 1422
+    },
+    {
+     "id": [
+      "squeeze_tube",
+      "squeeze_tube_small",
+      "test_tube",
+      "test_tube_micro",
+      "trl_cf_nutrient_paste"
+     ],
+     "fg": 1423
     },
     {
      "id": "staff_sling_grenade_cradle",
-     "fg": 1232
+     "fg": 1424
+    },
+    {
+     "id": "stepladder",
+     "fg": 1425
+    },
+    {
+     "id": "survivor_scope",
+     "fg": 1426
     },
     {
      "id": [
       "takedown_recurbow",
       "takedown_recurbow_folded"
      ],
-     "fg": 1233
+     "fg": 1427
+    },
+    {
+     "id": "teddy_bear",
+     "fg": 1428
+    },
+    {
+     "id": [
+      "teleporter",
+      "umbrella"
+     ],
+     "fg": 1429
+    },
+    {
+     "id": "throw_extinguisher_act",
+     "fg": 1430
+    },
+    {
+     "id": "towel_hanger",
+     "fg": 1431
     },
     {
      "id": [
@@ -19057,36 +20078,40 @@
       "trl_buy_porter",
       "trl_buy_standard"
      ],
-     "fg": 1234
+     "fg": 1432
     },
     {
      "id": "trl_censer",
-     "fg": 1235
+     "fg": 1433
     },
     {
      "id": [
       "trl_cf_cell_ramen",
       "trl_cf_glucose_cube"
      ],
-     "fg": 1236
+     "fg": 1434
     },
     {
      "id": "trl_cf_marrow_ampoule",
-     "fg": 1237
+     "fg": 1435
+    },
+    {
+     "id": "trl_cf_protein_brick",
+     "fg": 1436
     },
     {
      "id": [
       "trl_chip_nh_blink",
       "trl_chip_nh_hop"
      ],
-     "fg": 1238
+     "fg": 1437
     },
     {
      "id": [
       "trl_chip_nh_lock_on",
       "trl_chip_nh_shock_field"
      ],
-     "fg": 1239
+     "fg": 1438
     },
     {
      "id": [
@@ -19094,44 +20119,44 @@
       "trl_chip_nh_pulse_scan",
       "trl_data_core"
      ],
-     "fg": 1240
+     "fg": 1439
     },
     {
      "id": [
       "trl_chip_nh_purge",
       "trl_chip_nh_repair"
      ],
-     "fg": 1241
+     "fg": 1440
     },
     {
      "id": "trl_chotki",
-     "fg": 1242
+     "fg": 1441
     },
     {
      "id": "trl_church_candle",
-     "fg": 1243
+     "fg": 1442
     },
     {
      "id": "trl_drug_drip",
-     "fg": 1244
+     "fg": 1443
     },
     {
      "id": "trl_ema",
-     "fg": 1245
+     "fg": 1444
     },
     {
      "id": [
       "trl_f_caviar_blini",
       "trl_f_tushonka"
      ],
-     "fg": 1246
+     "fg": 1445
     },
     {
      "id": [
       "trl_fish_banggai",
       "trl_fish_moorish_idol"
      ],
-     "fg": 1247
+     "fg": 1446
     },
     {
      "id": [
@@ -19140,11 +20165,11 @@
       "trl_fish_emperor_angel",
       "trl_fish_ribbon_eel"
      ],
-     "fg": 1248
+     "fg": 1447
     },
     {
      "id": "trl_fish_blue_devil",
-     "fg": 1249
+     "fg": 1448
     },
     {
      "id": [
@@ -19154,18 +20179,18 @@
       "trl_fish_pajama_cardinal",
       "trl_fish_yellow_tang"
      ],
-     "fg": 1250
+     "fg": 1449
     },
     {
      "id": [
       "trl_fish_chromis",
       "trl_fish_sixline_wrasse"
      ],
-     "fg": 1251
+     "fg": 1450
     },
     {
      "id": "trl_fish_clown_trigger",
-     "fg": 1252
+     "fg": 1451
     },
     {
      "id": [
@@ -19175,38 +20200,38 @@
       "trl_fish_hawkfish",
       "trl_fish_tuskfish"
      ],
-     "fg": 1253
+     "fg": 1452
     },
     {
      "id": "trl_fish_lionfish",
-     "fg": 1254
+     "fg": 1453
     },
     {
      "id": [
       "trl_fish_mandarinfish",
       "trl_fish_picasso_trigger"
      ],
-     "fg": 1255
+     "fg": 1454
     },
     {
      "id": "trl_fish_seahorse",
-     "fg": 1256
+     "fg": 1455
     },
     {
      "id": "trl_gohei",
-     "fg": 1257
+     "fg": 1456
     },
     {
      "id": "trl_gospel",
-     "fg": 1258
+     "fg": 1457
     },
     {
      "id": "trl_gun_w2011",
-     "fg": 1259
+     "fg": 1458
     },
     {
      "id": "trl_icon",
-     "fg": 1260
+     "fg": 1459
     },
     {
      "id": [
@@ -19226,7 +20251,7 @@
       "trl_imp_plate_arm_r_heavy",
       "trl_imp_plate_arm_r_light"
      ],
-     "fg": 1261
+     "fg": 1460
     },
     {
      "id": [
@@ -19243,65 +20268,65 @@
       "trl_imp_plate_leg_r_heavy",
       "trl_imp_plate_leg_r_light"
      ],
-     "fg": 1262
+     "fg": 1461
     },
     {
      "id": [
       "trl_implant_monitor",
       "trl_nh_console"
      ],
-     "fg": 1263
+     "fg": 1462
     },
     {
      "id": "trl_kp_helmet",
-     "fg": 1264
+     "fg": 1463
     },
     {
      "id": "trl_kp_vest",
-     "fg": 1265
+     "fg": 1464
     },
     {
      "id": "trl_kumo_wreck",
-     "fg": 1266
+     "fg": 1465
     },
     {
      "id": "trl_ofuda",
-     "fg": 1267
+     "fg": 1466
     },
     {
      "id": "trl_omamori",
-     "fg": 1268
+     "fg": 1467
     },
     {
      "id": "trl_omikuji",
-     "fg": 1269
+     "fg": 1468
     },
     {
      "id": [
       "trl_pet_cat",
       "trl_pet_dog"
      ],
-     "fg": 1270
+     "fg": 1469
     },
     {
      "id": "trl_pet_rabbit",
-     "fg": 1271
+     "fg": 1470
     },
     {
      "id": "trl_plasteel_armor",
-     "fg": 1272
+     "fg": 1471
     },
     {
      "id": "trl_plasteel_boots",
-     "fg": 1273
+     "fg": 1472
     },
     {
      "id": "trl_plasteel_gloves",
-     "fg": 1274
+     "fg": 1473
     },
     {
      "id": "trl_plasteel_helm",
-     "fg": 1275
+     "fg": 1474
     },
     {
      "id": [
@@ -19309,38 +20334,63 @@
       "trl_tank_cube",
       "trl_tank_long"
      ],
-     "fg": 1276
+     "fg": 1475
     },
     {
      "id": "trousers_eod",
-     "fg": 1277
+     "fg": 1476
     },
     {
      "id": "veggy_canned",
-     "fg": 1278
+     "fg": 1477
+    },
+    {
+     "id": "void_spider_test_item",
+     "fg": 1478
+    },
+    {
+     "id": [
+      "wallet",
+      "wallet_duct_tape",
+      "wallet_large",
+      "wallet_leather",
+      "wallet_stylish"
+     ],
+     "fg": 1479
+    },
+    {
+     "id": "warehouse_rebooter",
+     "fg": 1480
     },
     {
      "id": [
       "water",
       "water_murky"
      ],
-     "fg": 1279
+     "fg": 1481
     },
     {
      "id": "water_clean",
-     "fg": 1280
+     "fg": 1482
     },
     {
      "id": "welder_crude",
-     "fg": 1281
+     "fg": 1483
     },
     {
      "id": "workbench_with_recharger",
-     "fg": 1282
+     "fg": 1484
     },
     {
      "id": "wristrocket",
-     "fg": 1283
+     "fg": 1485
+    },
+    {
+     "id": [
+      "young_koji",
+      "young_koji_done"
+     ],
+     "fg": 1486
     }
    ]
   },
