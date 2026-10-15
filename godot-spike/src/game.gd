@@ -10,6 +10,7 @@ const FOV = preload("res://src/fov.gd")
 const LV = preload("res://src/levels.gd")
 const TR = preload("res://src/transit.gd")
 const EC = preload("res://src/economy.gd")
+const GP = preload("res://src/gunplay.gd")
 
 const UNAWARE := 0
 const SUSPICIOUS := 1
@@ -49,7 +50,13 @@ var hp: int = 60
 var hp_max: int = 60
 var yen: int = 300
 var heat: int = 0
-var ammo: int = 36
+var ammo_pool: Dictionary = {"9mm|fmj": 36}   # "caliber|kind" -> rounds carried loose
+var want_kind: Dictionary = {}                 # caliber -> kind the next reload loads
+var aim_turns: int = 0
+var aim_target: int = -1
+var moved: bool = false
+var last_pc: int = -1
+var tracers: Array = []                        # [from_cell, to_cell, hit] for the view; cleared on the next key
 var crouch: bool = false
 var skills := {"melee": 2, "ranged": 2, "stealth": 2, "theft": 1}
 var xp := {"melee": 0, "ranged": 0, "stealth": 0, "theft": 0}
@@ -207,7 +214,37 @@ func _weighted(table: Array) -> String:
 	return table[0][0]
 
 func _new_item(id: String, n: int = 1):
-	return ItemScript.new(db.defs[id], n)
+	var it = ItemScript.new(db.defs[id], n)
+	if it.def.has("gun"):
+		_load_full(it)
+	return it
+
+func _load_full(it) -> void:
+	var gs: Dictionary = GP.stats(it)
+	it.loaded = int(gs["mag"])
+	it.kind = GP.default_kind(it.def["gun"]["cal"])
+
+func _part_load(it) -> void:
+	var gs: Dictionary = GP.stats(it)
+	it.loaded = rng.randi_range(0, int(gs["mag"]))
+	if it.loaded == 0:
+		it.kind = ""
+
+func _random_mod() -> String:
+	var ids: Array = []
+	for k in db.defs:
+		if "mod" in db.defs[k].get("tags", []):
+			ids.append(k)
+	ids.sort()
+	return ids[rng.randi() % ids.size()]
+
+func _random_ammo() -> String:
+	var ids: Array = []
+	for k in db.defs:
+		if "ammo" in db.defs[k].get("tags", []) and k != "trl_ammo":
+			ids.append(k)
+	ids.sort()
+	return ids[rng.randi() % ids.size()]
 
 func _random_gun() -> String:
 	var tags := ["smg", "pistol", "revolver", "rifle", "shotgun", "sniper", "mg", "laser"]
@@ -223,15 +260,18 @@ func _loot() -> void:
 	for c in markers:
 		if rng.randf() > 0.4:
 			continue
-		var kind := _weighted([["trl_ration", 28], ["trl_yen", 26], ["trl_ammo", 16], ["water", 8], ["gun", 9], ["trl_backpack", 3], ["trl_coat", 2], ["trl_pouch", 3], ["trl_duffel", 1]])
+		var kind := _weighted([["trl_ration", 28], ["trl_yen", 26], ["ammo", 16], ["water", 8], ["gun", 9], ["mod", 3], ["trl_backpack", 3], ["trl_coat", 2], ["trl_pouch", 3], ["trl_duffel", 1]])
 		var it
 		match kind:
 			"trl_yen": it = _new_item("trl_yen", rng.randi_range(20, 220))
-			"trl_ammo": it = _new_item("trl_ammo", rng.randi_range(1, 3))
+			"ammo": it = _new_item(_random_ammo() if rng.randf() < 0.6 else "trl_ammo", rng.randi_range(1, 3))
+			"mod": it = _new_item(_random_mod())
 			"water":
 				it = _new_item("trl_water_bottle")
 				it.pockets[0].append(_new_item("trl_water", 450))
-			"gun": it = _new_item(_random_gun())
+			"gun":
+				it = _new_item(_random_gun())
+				_part_load(it)
 			_: it = _new_item(kind)
 		_put(c, it)
 
@@ -242,7 +282,10 @@ func _vault_loot() -> void:
 			continue
 		_put(arr[rng.randi() % arr.size()], _new_item(_random_gun()))
 		_put(arr[rng.randi() % arr.size()], _new_item("trl_yen", rng.randi_range(300, 900)))
-		_put(arr[rng.randi() % arr.size()], _new_item("trl_ammo", rng.randi_range(2, 4)))
+		_put(arr[rng.randi() % arr.size()], _new_item(_random_ammo(), rng.randi_range(2, 4)))
+		_put(arr[rng.randi() % arr.size()], _new_item(_random_mod()))
+		if rng.randf() < 0.5:
+			_put(arr[rng.randi() % arr.size()], _new_item(_random_mod()))
 		if rng.randf() < 0.5:
 			_put(arr[rng.randi() % arr.size()], _new_item("trl_backpack"))
 
@@ -271,6 +314,7 @@ func _start_player() -> void:
 	coat.insert_deep(bottle)
 	coat.insert_deep(_new_item("trl_credstick"))
 	wield = _new_item("trl_gun_zp9")
+	_load_full(wield)
 
 # ---------------------------------------------------------------- helpers
 func cheb(a: int, b: int) -> int:
@@ -360,6 +404,9 @@ func item_label(it) -> String:
 	var s: String = it.def["name"]
 	if it.count > 1:
 		s += " x%d" % it.count
+	if it.def.has("gun"):
+		var gs: Dictionary = GP.stats(it)
+		s += " (%d/%d%s)" % [it.loaded, gs["mag"], (" +%d mods" % it.mods.size()) if not it.mods.is_empty() else ""]
 	return s
 
 func total_weight_kg() -> float:
@@ -382,8 +429,10 @@ func act_pickup() -> bool:
 			say("You take ¥%d." % it.count)
 			took += 1
 		elif it.has_tag("ammo"):
-			ammo += it.count * 12
-			say("You take %d rounds." % (it.count * 12))
+			var am: Dictionary = it.def["ammo"]
+			var n: int = it.count * int(am["rounds"])
+			pool_add(am["cal"], am["kind"], n)
+			say("You take %d rounds of %s %s." % [n, am["cal"], GP.KIND[am["kind"]]["label"]])
 			took += 1
 		elif stow(it):
 			say("You stow the %s." % item_label(it))
@@ -606,7 +655,11 @@ func kill(i: int) -> void:
 	if gunc[i] > 0 and rng.randf() < 0.6:
 		var tag: String = ["", "pistol", "smg", "rifle"][gunc[i]]
 		var arr: Array = gun_ids[tag]
-		_put(c, _new_item(arr[rng.randi() % arr.size()]))
+		var dropped = _new_item(arr[rng.randi() % arr.size()])
+		_part_load(dropped)
+		_put(c, dropped)
+		if rng.randf() < 0.1:
+			_put(c, _new_item(_random_mod()))
 	sim.remove_agent(i)
 	astate[i] = UNAWARE
 	_witness(c, 14, 14, i)
@@ -684,28 +737,197 @@ func act_steal() -> bool:
 	return false
 
 # ---------------------------------------------------------------- guns
+func pool_key(cal: String, kind: String) -> String:
+	return cal + "|" + kind
+
+func pool_get(cal: String, kind: String) -> int:
+	return int(ammo_pool.get(pool_key(cal, kind), 0))
+
+func pool_add(cal: String, kind: String, n: int) -> void:
+	var k := pool_key(cal, kind)
+	ammo_pool[k] = int(ammo_pool.get(k, 0)) + n
+	if ammo_pool[k] <= 0:
+		ammo_pool.erase(k)
+
+## loose rounds of one caliber, all kinds
+func reserve(cal: String) -> int:
+	var t := 0
+	for kind in GP.KINDS_BY_CAL.get(cal, []):
+		t += pool_get(cal, kind)
+	return t
+
+func ammo_total() -> int:
+	var t := 0
+	for k in ammo_pool:
+		t += int(ammo_pool[k])
+	return t
+
 func gun_stats() -> Dictionary:
 	if wield == null or not wield.has_tag("gun"):
 		return {}
-	return wield.def.get("gun", {})
+	return GP.stats(wield)
+
+func _target_ok(j: int, any: bool, st: Dictionary) -> bool:
+	if j < 0 or j >= sim.n or sim.alive[j] == 0 or sim.near[j] == 0 or not sees_cell(sim.pos[j]):
+		return false
+	if not any and not (hostile(j) or astate[j] == HUNTING):
+		return false
+	return cheb(sim.pos[j], pc) <= int(st["range"]) + 4 and sim._sees(pc, sim.pos[j], 40)
+
+## visible targets, nearest first
+func target_list(any: bool = false) -> Array:
+	var st: Dictionary = gun_stats()
+	var out: Array = []
+	if st.is_empty():
+		return out
+	for k in sim.near_list.size():
+		var j: int = sim.near_list[k]
+		if _target_ok(j, any, st):
+			out.append(j)
+	out.sort_custom(func(a, b): return cheb(sim.pos[a], pc) < cheb(sim.pos[b], pc))
+	return out
 
 func nearest_target(any: bool = false) -> int:
+	var l: Array = target_list(any)
+	return l[0] if not l.is_empty() else -1
+
+## the target a shot would go at: the chosen one if still valid, otherwise the nearest
+func current_target(any: bool = false) -> int:
 	var st: Dictionary = gun_stats()
 	if st.is_empty():
 		return -1
-	var best := -1
-	var bd := 1 << 30
-	for k in sim.near_list.size():
-		var j: int = sim.near_list[k]
-		if sim.alive[j] == 0 or not sees_cell(sim.pos[j]):
-			continue
-		if not any and not (hostile(j) or astate[j] == HUNTING):
-			continue
-		var d := cheb(sim.pos[j], pc)
-		if d <= int(st["range"]) + 4 and d < bd and sim._sees(pc, sim.pos[j], 40):
-			bd = d
-			best = j
-	return best
+	if aim_target >= 0 and _target_ok(aim_target, any, st):
+		return aim_target
+	aim_target = -1
+	return nearest_target(any)
+
+func hit_chance_on(t: int, shot_index: int = 0) -> int:
+	var st: Dictionary = gun_stats()
+	if st.is_empty() or t < 0:
+		return 0
+	return GP.hit_chance(st, cheb(sim.pos[t], pc), aim_turns, moved, crouch, skills["ranged"], eco.aim_penalty(), shot_index)
+
+## one-line description of the wielded gun and what it is aimed at
+func gun_line() -> String:
+	if wield == null or not wield.has_tag("gun"):
+		return "bare hands"
+	var st: Dictionary = gun_stats()
+	var s := "%s [%s] %d/%d %s  res %d" % [wield.def["name"], GP.mode_name(wield), wield.loaded, st["mag"], st["label"] if wield.loaded > 0 else "empty", reserve(st["cal"])]
+	if wield.jammed:
+		s += "  JAMMED"
+	if aim_turns > 0:
+		s += "  aim %d" % aim_turns
+	return s
+
+func act_cycle_target(any: bool = false) -> bool:
+	var l: Array = target_list(any)
+	if gun_stats().is_empty():
+		say("You have no gun wielded.")
+		return false
+	if l.is_empty():
+		say("Nothing to target.")
+		return false
+	var idx: int = l.find(aim_target)
+	aim_target = l[(idx + 1) % l.size()]
+	aim_turns = 0
+	say("Target: %s, %d tiles, %d%% to hit." % [name_of(aim_target), cheb(sim.pos[aim_target], pc), hit_chance_on(aim_target)])
+	return true
+
+func act_aim(any: bool = false) -> bool:
+	var st: Dictionary = gun_stats()
+	if st.is_empty():
+		say("You have no gun wielded.")
+		return false
+	var t := current_target(any)
+	if t < 0:
+		say("Nothing to aim at.")
+		return false
+	if aim_turns < GP.MAX_AIM:
+		aim_turns += 1
+	aim_target = t
+	say("You steady the %s on %s: %d%% to hit." % [wield.def["name"], name_of(t), hit_chance_on(t)])
+	end_turn()
+	return true
+
+func act_fire_mode() -> bool:
+	if gun_stats().is_empty():
+		return false
+	var m: Array = wield.def["gun"]["modes"]
+	wield.mode = (wield.mode + 1) % m.size()
+	say("Fire mode: %s (%d shot%s)." % [GP.mode_name(wield), GP.mode_shots(wield), "" if GP.mode_shots(wield) == 1 else "s"])
+	return true
+
+## choose which kind the next reload takes
+func act_cycle_kind() -> bool:
+	var st: Dictionary = gun_stats()
+	if st.is_empty():
+		return false
+	var cal: String = st["cal"]
+	var kinds: Array = GP.KINDS_BY_CAL[cal]
+	var cur: String = want_kind.get(cal, wield.kind if wield.kind != "" else kinds[0])
+	var i: int = kinds.find(cur)
+	for step in kinds.size():
+		var k: String = kinds[(i + 1 + step) % kinds.size()]
+		if pool_get(cal, k) > 0 or k == wield.kind:
+			want_kind[cal] = k
+			say("Next reload: %s %s (%d rounds loose)." % [cal, GP.KIND[k]["label"], pool_get(cal, k)])
+			return true
+	say("You carry no other %s ammunition." % cal)
+	return false
+
+func act_reload() -> bool:
+	var st: Dictionary = gun_stats()
+	if st.is_empty():
+		say("You have no gun wielded.")
+		return false
+	if in_vehicle >= 0:
+		say("Not while driving.")
+		return false
+	if wield.jammed:
+		wield.jammed = false
+		say("You clear the jam.")
+		end_turn()
+		return true
+	var cal: String = st["cal"]
+	var kind: String = want_kind.get(cal, "")
+	if kind == "" or (pool_get(cal, kind) == 0 and wield.kind != kind):
+		kind = wield.kind if wield.loaded > 0 else ""
+		if kind == "" or pool_get(cal, kind) == 0:
+			for k in GP.KINDS_BY_CAL[cal]:
+				if pool_get(cal, k) > 0:
+					kind = k
+					break
+	if kind == "":
+		say("You have no %s ammunition." % cal)
+		return false
+	if wield.loaded > 0 and wield.kind != kind:
+		pool_add(cal, wield.kind, wield.loaded)
+		wield.loaded = 0
+	var need: int = int(st["mag"]) - wield.loaded
+	if need <= 0:
+		say("The %s is already full." % wield.def["name"])
+		return false
+	var take: int = mini(need, pool_get(cal, kind))
+	if take <= 0:
+		say("You have no %s %s rounds." % [cal, GP.KIND[kind]["label"]])
+		return false
+	pool_add(cal, kind, -take)
+	wield.loaded += take
+	wield.kind = kind
+	say("You load %d %s rounds (%d/%d)." % [take, GP.KIND[kind]["label"], wield.loaded, st["mag"]])
+	aim_turns = 0
+	for _t in int(st["reload"]):
+		if game_over:
+			break
+		end_turn()
+	return true
+
+func _victim_in_line(t: int) -> int:
+	for c in GP.line_cells(pc, sim.pos[t], size):
+		var who: int = sim.at[c]
+		if who >= 0 and who != t and sim.alive[who] == 1 and rng.randf() < 0.55:
+			return who
+	return t
 
 func act_fire(any: bool = false) -> bool:
 	if in_vehicle >= 0:
@@ -713,40 +935,174 @@ func act_fire(any: bool = false) -> bool:
 		return false
 	var st: Dictionary = gun_stats()
 	if st.is_empty():
-		say("You have no gun wielded.  [w] to wield one.")
+		say("You have no gun wielded.  [i] to wield one.")
 		return false
-	var shots := int(st["shots"])
-	if ammo < shots:
-		say("Click.  You are out of ammunition.")
+	if wield.jammed:
+		say("The %s is jammed.  [r] clears it." % wield.def["name"])
 		return false
-	var t := nearest_target(any)
+	if wield.loaded <= 0:
+		say("Click.  The %s is empty.  [r] reloads." % wield.def["name"])
+		return false
+	var t := current_target(any)
 	if t < 0:
 		say("No hostile target in sight.  (Shift+F fires at anyone.)")
 		return false
-	ammo -= shots
-	var d := cheb(sim.pos[t], pc)
-	var hits := 0
-	var total := 0
+	aim_target = t
+	var shots: int = mini(GP.mode_shots(wield), wield.loaded)
+	var d: int = cheb(sim.pos[t], pc)
+	var dmg_by: Dictionary = {}                  # agent -> damage
+	var hits_by: Dictionary = {}
+	var aimed: int = aim_turns
 	for s in shots:
-		var chance: int = int(st["acc"]) + skills["ranged"] * 2 - 4 * maxi(0, d - 3) - (0 if d <= int(st["range"]) else 25)
-		chance = clampi(chance - eco.aim_penalty(), 8, 95)
-		if rng.randi() % 100 < chance:
-			var dmg: int = rng.randi_range(int(st["dmg"][0]), int(st["dmg"][1]))
-			hits += 1
-			total += dmg
-	say("You fire the %s at %s%s." % [wield.def["name"], name_of(t), (": %d hit for %d" % [hits, total]) if hits > 0 else ": miss"])
-	_noise(pc, 18)
-	if hits > 0:
-		hpn[t] -= total
-		if hpn[t] <= 0:
-			kill(t)
+		var chance: int = GP.hit_chance(st, d, aimed, moved, crouch, skills["ranged"], eco.aim_penalty(), s)
+		var victim: int = _victim_in_line(t)
+		var vd: int = d if victim == t else cheb(sim.pos[victim], pc)
+		var pellets: int = int(st["pellets"])
+		var landed := 0
+		var dmg_total := 0
+		if st["blast"] > 0:
+			landed = 1 if rng.randi() % 100 < chance else 0
+			dmg_total = rng.randi_range(int(st["dmg"][0]), int(st["dmg"][1]))
+		elif pellets > 1:
+			var pc_chance: int = clampi(chance - int(float(vd) * 3.0 * float(st["spread"])), 4, 95)
+			var fall: float = 1.0 if vd <= int(st["range"]) else 0.5
+			for _p in pellets:
+				if rng.randi() % 100 < pc_chance:
+					landed += 1
+					dmg_total += int(float(rng.randi_range(int(st["dmg"][0]), int(st["dmg"][1]))) / float(pellets) * 1.25 * fall)
 		else:
-			_alert(t)
-		skill_up("ranged", 2 + d / 5)
+			if rng.randi() % 100 < chance:
+				landed = 1
+				dmg_total = rng.randi_range(int(st["dmg"][0]), int(st["dmg"][1]))
+		tracers.append([pc, sim.pos[victim] if landed > 0 or st["blast"] > 0 else sim.pos[t], landed > 0])
+		if st["blast"] > 0:
+			_explode(sim.pos[t] if landed > 0 else _scatter_cell(sim.pos[t]), int(st["blast"]), dmg_total)
+			hits_by[t] = hits_by.get(t, 0) + landed
+			continue
+		if landed > 0:
+			dmg_by[victim] = int(dmg_by.get(victim, 0)) + dmg_total
+			hits_by[victim] = int(hits_by.get(victim, 0)) + landed
+	wield.loaded -= shots
+	var msg := "You fire the %s [%s]" % [wield.def["name"], GP.mode_name(wield)]
+	if aimed > 0:
+		msg += " (aimed)"
+	if st["blast"] > 0:
+		msg += ": the grenade bursts."
 	else:
+		var parts: Array = []
+		for v in dmg_by:
+			parts.append("%s: %d hit%s for %d" % [name_of(v), hits_by[v], "" if hits_by[v] == 1 else "s", dmg_by[v]])
+		msg += (": " + ", ".join(parts)) if not parts.is_empty() else ": miss"
+	say(msg)
+	aim_turns = 0
+	_noise(pc, int(st["noise"]))
+	for v in dmg_by:
+		_damage_npc(v, int(dmg_by[v]))
+		skill_up("ranged", 2 + d / 5)
+	if dmg_by.is_empty() and st["blast"] == 0:
 		_alert(t)
+	if rng.randf() * 100.0 < float(st["jam"]) * float(shots) and wield.loaded > 0:
+		wield.jammed = true
+		say("The %s jams." % wield.def["name"])
 	end_turn()
 	return true
+
+func _damage_npc(v: int, dmg: int) -> void:
+	if sim.alive[v] == 0:
+		return
+	hpn[v] -= dmg
+	if hpn[v] <= 0:
+		kill(v)
+	else:
+		_alert(v)
+
+func _scatter_cell(c: int) -> int:
+	var nx: int = c % size + rng.randi_range(-2, 2)
+	var ny: int = c / size + rng.randi_range(-2, 2)
+	if not in_bounds(nx, ny) or z_of(ny * size + nx) != z_of(c) or not city.walkable(city.tiles[ny * size + nx]):
+		return c
+	return ny * size + nx
+
+## a blast: everyone within `radius` on the same level takes damage that falls off with distance, you included
+func _explode(c: int, radius: int, dmg: int) -> void:
+	say_if_seen(c, "BOOM.")
+	var victims: Array = []
+	for k in sim.near_list.size():
+		var j: int = sim.near_list[k]
+		if sim.alive[j] == 1 and cheb(sim.pos[j], c) <= radius:
+			victims.append(j)
+	for j in victims:
+		var f: float = 1.0 - 0.3 * float(cheb(sim.pos[j], c))
+		_damage_npc(j, int(float(dmg) * f))
+	if cheb(pc, c) <= radius:
+		player_hurt(int(float(dmg) * (1.0 - 0.3 * float(cheb(pc, c)))), "The blast catches you")
+	heat = mini(100, heat + 12)
+	_noise(c, 26)
+
+# ---- mods
+## carried mods that could go on the wielded gun
+func mods_carried() -> Array:
+	var out: Array = []
+	for e in inventory_list():
+		if e["item"].has_tag("mod"):
+			out.append(e["item"])
+	return out
+
+func mod_fits(modit) -> bool:
+	var st: Dictionary = gun_stats()
+	return not st.is_empty() and GP.mod_slot(modit) in st["slots"]
+
+func _clamp_mag() -> void:
+	var st: Dictionary = gun_stats()
+	if wield.loaded > int(st["mag"]):
+		var extra: int = wield.loaded - int(st["mag"])
+		pool_add(st["cal"], wield.kind, extra)
+		wield.loaded = int(st["mag"])
+
+func _holder_remove(it) -> void:
+	for c in worn:
+		if c == it:
+			worn.erase(c)
+			return
+		if c.remove(it):
+			return
+
+func act_mod_install(modit) -> bool:
+	if gun_stats().is_empty():
+		say("Wield a gun first.")
+		return false
+	if not modit.has_tag("mod") or not mod_fits(modit):
+		say("The %s does not fit the %s." % [modit.def["name"], wield.def["name"]])
+		return false
+	var slot: String = GP.mod_slot(modit)
+	_holder_remove(modit)
+	for old in wield.mods.duplicate():
+		if GP.mod_slot(old) == slot:
+			wield.mods.erase(old)
+			if not stow(old):
+				_put(pc, old)
+			say("You take off the %s." % old.def["name"])
+	wield.mods.append(modit)
+	say("You fit the %s to the %s." % [modit.def["name"], wield.def["name"]])
+	_clamp_mag()
+	end_turn()
+	end_turn()
+	return true
+
+func act_mod_remove(slot: String) -> bool:
+	if gun_stats().is_empty():
+		return false
+	for old in wield.mods.duplicate():
+		if GP.mod_slot(old) == slot:
+			wield.mods.erase(old)
+			if not stow(old):
+				_put(pc, old)
+				say("No room; it falls at your feet.")
+			say("You remove the %s." % old.def["name"])
+			_clamp_mag()
+			end_turn()
+			return true
+	return false
 
 ## a loud noise: hostiles come to look, civilians flee
 func _noise(cell: int, radius: int) -> void:
@@ -768,6 +1124,10 @@ func _noise(cell: int, radius: int) -> void:
 # ---------------------------------------------------------------- turns
 func end_turn() -> void:
 	turn += 1
+	moved = pc != last_pc and last_pc >= 0
+	if moved:
+		aim_turns = 0
+	last_pc = pc
 	sim.step(pc)
 	transit.step()
 	_ai()
@@ -1174,7 +1534,7 @@ func save_dict() -> Dictionary:
 		var o: Dictionary = v.duplicate()
 		o["color"] = v["color"].to_html()
 		vs.append(o)
-	return {"seed": seed_value, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "ammo": ammo, "skills": skills, "xp": xp, "in_vehicle": in_vehicle,
+	return {"seed": seed_value, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "xp": xp, "in_vehicle": in_vehicle,
 			"rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 			"items_at": it_at, "vehicles": vs, "tick": sim.tick, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
@@ -1189,7 +1549,12 @@ func load_dict(d: Dictionary) -> void:
 	hp = int(d["hp"])
 	yen = int(d["yen"])
 	heat = int(d["heat"])
-	ammo = int(d["ammo"])
+	ammo_pool = {}
+	for k in d["ammo"]:
+		ammo_pool[k] = int(d["ammo"][k])
+	want_kind = d.get("want_kind", {})
+	aim_turns = 0
+	aim_target = -1
 	skills = d["skills"]
 	for k in skills:
 		skills[k] = int(skills[k])

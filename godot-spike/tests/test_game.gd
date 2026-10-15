@@ -32,9 +32,9 @@ func run() -> Array:
 			break
 	g.pc = cell
 	g.fov.compute(cell % g.size, cell / g.size, 18)
-	var before: int = g.yen + g.ammo + g.inventory_list().size()
+	var before: int = g.yen + g.ammo_total() + g.inventory_list().size()
 	g.act_pickup()
-	check.call("picking up changes yen, ammo or the inventory", g.yen + g.ammo + g.inventory_list().size() != before or g.items_at.has(cell))
+	check.call("picking up changes yen, ammo or the inventory", g.yen + g.ammo_total() + g.inventory_list().size() != before or g.items_at.has(cell))
 	# the people
 	check.call("about two thousand people exist, some of them hostile factions", g.fac.count(1) > 40 and g.fac.count(2) > 40)
 	# awareness: a hostile person starts to notice a player who walks into view
@@ -113,8 +113,8 @@ func run() -> Array:
 			ok += 1
 	check.call("pickpocketing succeeds some of the time (%d of %d) and moves yen" % [ok, tries], tries >= 6 and ok >= 1 and ok < tries + 1 and g.yen > y0)
 	# shooting
-	g.ammo = 40
 	g.wield = g._new_item("trl_gun_sp45")
+	var GunPlayCheck = preload("res://src/gunplay.gd")
 	var shot := false
 	for attempt in 40:
 		var tgt: int = g.nearest_target()
@@ -124,7 +124,7 @@ func run() -> Array:
 			shot = true
 			break
 		g.end_turn()
-	check.call("a wielded gun fires at a visible target and uses ammo", (not shot) or g.ammo < 40)
+	check.call("a wielded gun fires at a visible target and uses ammo", (not shot) or g.wield.loaded < int(GunPlayCheck.stats(g.wield)["mag"]))
 	# vehicle: enter the nearest car and drive
 	var vi := -1
 	for k in g.vehicles.size():

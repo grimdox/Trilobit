@@ -9,6 +9,12 @@ const ItemScript = preload("res://src/item.gd")
 var def: Dictionary
 var count: int = 1                         # stack size, or millilitres for per-unit liquids
 var pockets: Array = []                    # Array of Array[Item], parallel to def.pockets
+# gun state (only used when def has a "gun" block)
+var loaded: int = 0                        # rounds in the magazine
+var kind: String = ""                      # ammunition kind loaded ("" when empty)
+var mods: Array = []                       # installed mod items
+var jammed: bool = false
+var mode: int = 0                          # index into gun.modes
 
 func _init(d: Dictionary, n: int = 1) -> void:
 	def = d
@@ -53,6 +59,8 @@ func volume() -> int:
 
 func weight() -> int:
 	var w: int = int(def.get("weight_g", 0)) * count
+	for m in mods:
+		w += m.weight()
 	for i in pockets.size():
 		w += contents_weight(i)
 	return w
@@ -140,6 +148,8 @@ func to_dict() -> Dictionary:
 		cs.append(arr)
 	if not def.get("pockets", []).is_empty():
 		out["contents"] = cs
+	if def.has("gun"):
+		out["gun"] = {"loaded": loaded, "kind": kind, "jammed": jammed, "mode": mode, "mods": mods.map(func(m): return m.to_dict())}
 	return out
 
 static func from_dict(d: Dictionary, db):
@@ -148,4 +158,12 @@ static func from_dict(d: Dictionary, db):
 		for i in d["contents"].size():
 			for sub in d["contents"][i]:
 				it.pockets[i].append(from_dict(sub, db))
+	if d.has("gun"):
+		var gd: Dictionary = d["gun"]
+		it.loaded = int(gd["loaded"])
+		it.kind = String(gd["kind"])
+		it.jammed = bool(gd["jammed"])
+		it.mode = int(gd["mode"])
+		for m in gd["mods"]:
+			it.mods.append(from_dict(m, db))
 	return it

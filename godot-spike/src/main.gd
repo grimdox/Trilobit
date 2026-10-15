@@ -71,8 +71,7 @@ func new_game(seed: int) -> void:
 func refresh() -> void:
 	view.queue_redraw()
 	var g = game
-	var wield_txt: String = g.wield.def["name"] if g.wield != null else "bare hands"
-	var line1 := "HP %d/%d   ¥%d   Heat %d   Ammo %d   %s%s   %s   Turn %d   Carry %.1f kg%s" % [g.hp, g.hp_max, g.yen, g.heat, g.ammo, wield_txt,
+	var line1 := "HP %d/%d   ¥%d   Heat %d   %s%s   %s   Turn %d   Carry %.1f kg%s" % [g.hp, g.hp_max, g.yen, g.heat, g.gun_line(),
 		"  [crouching]" if g.crouch else "", g.time_text(), g.turn, g.total_weight_kg(), "  [IN CAR %d%%]" % g.vehicles[g.in_vehicle]["charge"] if g.in_vehicle >= 0 else ""]
 	var tw: Dictionary = g.tower_at(g.pc) if g.z_of(g.pc) > 0 else {}
 	var where: String = g.zname(g.pc) + (" of %d" % tw["h"] if not tw.is_empty() else "")
@@ -82,6 +81,9 @@ func refresh() -> void:
 		line2 += "   |   Train: %s %s in %d" % ["boarding at" if na["dwelling"] else "next stop", na["name"], na["turns"]]
 	if g.transit.riding >= 0:
 		line2 += "   [ON THE TRAIN]"
+	var tgt: int = g.current_target()
+	if tgt >= 0:
+		line2 += "   |   Target: %s, %d tiles, %d%%" % [g.name_of(tgt), g.cheb(g.sim.pos[tgt], g.pc), g.hit_chance_on(tgt)]
 	var jt: String = g.eco.job_text()
 	status.text = line1 + "\n" + line2 + ("\n" + jt if jt != "" else "")
 	var lines: Array = g.log.slice(-5)
@@ -91,6 +93,8 @@ func refresh() -> void:
 		show_inventory()
 	elif mode == "talk":
 		show_talk()
+	elif mode == "mods":
+		show_mods()
 
 func show_talk() -> void:
 	var t := "[b]%s[/b]   (1-9 chooses, Esc leaves)   ¥%d\n\n" % [menu["title"], game.yen]
@@ -104,9 +108,39 @@ func show_talk() -> void:
 	panel.text = t
 	panel.visible = true
 
+func show_mods() -> void:
+	inv_map.clear()
+	var g = game
+	var st: Dictionary = g.gun_stats()
+	if st.is_empty():
+		panel.text = "[b]Gunsmithing[/b]\n\nWield a gun first."
+		panel.visible = true
+		return
+	var t := "[b]%s[/b]  (1-9 removes the mod in that slot, a-z fits a carried mod, Esc closes)\n" % g.wield.def["name"]
+	t += "dmg %d-%d   range %d   accuracy %d%%   mag %d   recoil %.1f   report %d   reload %d   ammo %s %s\n\n" % [st["dmg"][0], st["dmg"][1], st["range"], st["acc"], st["mag"], st["recoil"], st["noise"], st["reload"], st["cal"], st["label"]]
+	var k := 1
+	for slot in st["slots"]:
+		var cur := "(empty)"
+		for m in g.wield.mods:
+			if m.def["mod"]["slot"] == slot:
+				cur = m.def["name"] + "  [color=#8899aa]" + m.def.get("desc", "") + "[/color]"
+		t += "%d) %-7s %s\n" % [k, slot, cur]
+		inv_map[str(k)] = slot
+		k += 1
+	t += "\n[b]Carried mods[/b]\n"
+	var j := 0
+	for m in g.mods_carried():
+		var key := char(97 + j)
+		var fits: bool = g.mod_fits(m)
+		t += "%s) %s  [color=#8899aa]%s slot%s[/color]\n" % [key, m.def["name"], m.def["mod"]["slot"], "" if fits else ", does not fit"]
+		inv_map[key] = m
+		j += 1
+	panel.text = t
+	panel.visible = true
+
 func show_inventory() -> void:
 	inv_map.clear()
-	var t := "[b]Inventory[/b]   (a-z wields a gun, i or Esc closes)   ¥%d   ammo %d\n\n" % [game.yen, game.ammo]
+	var t := "[b]Inventory[/b]   (a-z wields a gun, i or Esc closes)   ¥%d   loose rounds %d\n\n" % [game.yen, game.ammo_total()]
 	var k := 0
 	for e in game.inventory_list():
 		var key := char(97 + k) if k < 26 else "?"
@@ -119,7 +153,7 @@ func show_inventory() -> void:
 	panel.visible = true
 
 func show_help() -> void:
-	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\n<  or  PgUp  go up (stairs, elevator, ladder)      >  or  PgDn  go down.  An elevator rides up to three floors.\nt   talk to the nearest person (vendors, fixers, ripperdocs)      p   pay 100 on the debt (Shift+P: 1000)\nWalk into a locked door to pick it.  Step onto a carriage while the train doors are open to ride; step onto a platform to get off.\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the nearest hostile in sight  (Shift+F: at anyone)\ns   pickpocket an adjacent person (stealth and theft skill)\nc   crouch (harder to notice)        e   get in or out of a car\nd   drop the wielded weapon\nF2   switch tileset        F5  save        F9  load        Esc  close\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  Crouch and approach from behind for a triple-damage strike.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
+	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\n<  or  PgUp  go up (stairs, elevator, ladder)      >  or  PgDn  go down.  An elevator rides up to three floors.\nt   talk to the nearest person (vendors, fixers, ripperdocs)      p   pay 100 on the debt (Shift+P: 1000)\nWalk into a locked door to pick it.  Step onto a carriage while the train doors are open to ride; step onto a platform to get off.\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the target (Shift+F: at anyone)      Tab  cycle targets      a  aim (up to 3 turns, each steadier)\nr   reload / clear a jam      v  fire mode (single, burst, auto)      x  choose the next ammunition kind\nm   gunsmith: fit scopes, suppressors, magazines, grips, stocks, barrels (a scope helps at range, hurts up close)\ns   pickpocket an adjacent person (stealth and theft skill)\nc   crouch (harder to notice)        e   get in or out of a car\nd   drop the wielded weapon\nF2   switch tileset        F5  save        F9  load        Esc  close\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  Crouch and approach from behind for a triple-damage strike.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
 	panel.visible = true
 
 func _unhandled_key_input(ev: InputEvent) -> void:
@@ -136,6 +170,20 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				game.act_wield(inv_map[key])
 				mode = "play"
 				panel.visible = false
+		refresh()
+		return
+	if mode == "mods":
+		if k == KEY_ESCAPE or k == KEY_M:
+			mode = "play"
+			panel.visible = false
+		else:
+			var key2: String = OS.get_keycode_string(k).to_lower()
+			if inv_map.has(key2):
+				var v = inv_map[key2]
+				if v is String:
+					game.act_mod_remove(v)
+				else:
+					game.act_mod_install(v)
 		refresh()
 		return
 	if mode == "talk":
@@ -164,6 +212,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 			new_game(randi() % 100000)
 		return
 	var acted := true
+	g.tracers.clear()
 	match k:
 		KEY_UP, KEY_KP_8, KEY_K: g.act_move(0, -1)
 		KEY_DOWN, KEY_KP_2, KEY_J: g.act_move(0, 1)
@@ -200,6 +249,12 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				g.act_pickup()
 		KEY_G: g.act_pickup()
 		KEY_F: g.act_fire(ev.shift_pressed)
+		KEY_A: g.act_aim(ev.shift_pressed)
+		KEY_R: g.act_reload()
+		KEY_V: g.act_fire_mode()
+		KEY_X: g.act_cycle_kind()
+		KEY_TAB: g.act_cycle_target(ev.shift_pressed)
+		KEY_M: mode = "mods"
 		KEY_S: g.act_steal()
 		KEY_C: g.act_crouch()
 		KEY_E: g.act_vehicle()

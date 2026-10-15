@@ -18,8 +18,35 @@
     11
    ],
    "range": 12,
-   "shots": 3,
-   "acc": 62
+   "acc": 59,
+   "cal": "9mm",
+   "mag": 29,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ],
+    [
+     "auto",
+     6
+    ]
+   ],
+   "recoil": 4,
+   "noise": 16,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 1.0
   }
  },
  {
@@ -37,12 +64,39 @@
   "looks_like": "TDI",
   "gun": {
    "dmg": [
-    7,
-    11
+    8,
+    12
    ],
    "range": 12,
-   "shots": 3,
-   "acc": 62
+   "acc": 60,
+   "cal": "9mm",
+   "mag": 29,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ],
+    [
+     "auto",
+     6
+    ]
+   ],
+   "recoil": 4,
+   "noise": 16,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 1.0
   }
  },
  {
@@ -64,8 +118,35 @@
     11
    ],
    "range": 12,
-   "shots": 3,
-   "acc": 62
+   "acc": 66,
+   "cal": "9mm",
+   "mag": 25,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ],
+    [
+     "auto",
+     6
+    ]
+   ],
+   "recoil": 4,
+   "noise": 16,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 1.0
   }
  },
  {
@@ -87,8 +168,35 @@
     11
    ],
    "range": 12,
-   "shots": 3,
-   "acc": 62
+   "acc": 58,
+   "cal": "9mm",
+   "mag": 27,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ],
+    [
+     "auto",
+     6
+    ]
+   ],
+   "recoil": 4,
+   "noise": 16,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 1.0
   }
  },
  {
@@ -106,12 +214,39 @@
   "looks_like": "tommygun",
   "gun": {
    "dmg": [
-    7,
+    8,
     11
    ],
    "range": 12,
-   "shots": 3,
-   "acc": 62
+   "acc": 61,
+   "cal": "9mm",
+   "mag": 27,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ],
+    [
+     "auto",
+     6
+    ]
+   ],
+   "recoil": 4,
+   "noise": 16,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 1.0
   }
  },
  {
@@ -129,12 +264,39 @@
   "looks_like": "calico",
   "gun": {
    "dmg": [
-    7,
-    11
+    8,
+    12
    ],
    "range": 12,
-   "shots": 3,
-   "acc": 62
+   "acc": 63,
+   "cal": "9mm",
+   "mag": 23,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ],
+    [
+     "auto",
+     6
+    ]
+   ],
+   "recoil": 4,
+   "noise": 16,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 1.0
   }
  },
  {
@@ -152,12 +314,39 @@
   "looks_like": "mac_11",
   "gun": {
    "dmg": [
-    7,
-    11
+    6,
+    10
    ],
    "range": 12,
-   "shots": 3,
-   "acc": 62
+   "acc": 65,
+   "cal": "9mm",
+   "mag": 27,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ],
+    [
+     "auto",
+     6
+    ]
+   ],
+   "recoil": 4,
+   "noise": 16,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 1.0
   }
  },
  {
@@ -175,12 +364,30 @@
   "looks_like": "m1911_10",
   "gun": {
    "dmg": [
-    10,
-    16
+    11,
+    15
    ],
    "range": 10,
-   "shots": 1,
-   "acc": 70
+   "acc": 72,
+   "cal": "9mm",
+   "mag": 14,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 3,
+   "noise": 14,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "mag",
+    "under"
+   ],
+   "jam": 0.6
   }
  },
  {
@@ -198,12 +405,30 @@
   "looks_like": "makarov",
   "gun": {
    "dmg": [
-    10,
-    16
+    11,
+    15
    ],
    "range": 10,
-   "shots": 1,
-   "acc": 70
+   "acc": 72,
+   "cal": "9mm",
+   "mag": 10,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 3,
+   "noise": 14,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "mag",
+    "under"
+   ],
+   "jam": 0.6
   }
  },
  {
@@ -221,12 +446,30 @@
   "looks_like": "ruger_57",
   "gun": {
    "dmg": [
-    10,
-    16
+    11,
+    17
    ],
    "range": 10,
-   "shots": 1,
-   "acc": 70
+   "acc": 71,
+   "cal": "9mm",
+   "mag": 12,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 3,
+   "noise": 14,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "mag",
+    "under"
+   ],
+   "jam": 0.6
   }
  },
  {
@@ -244,12 +487,29 @@
   "looks_like": "sw_610",
   "gun": {
    "dmg": [
-    14,
-    22
+    13,
+    21
    ],
    "range": 10,
-   "shots": 1,
-   "acc": 72
+   "acc": 70,
+   "cal": ".357",
+   "mag": 4,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 5,
+   "noise": 18,
+   "reload": 3,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "under"
+   ],
+   "jam": 0.1
   }
  },
  {
@@ -267,12 +527,30 @@
   "looks_like": "modular_deagle",
   "gun": {
    "dmg": [
-    10,
+    9,
     16
    ],
    "range": 10,
-   "shots": 1,
-   "acc": 70
+   "acc": 74,
+   "cal": "9mm",
+   "mag": 12,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 3,
+   "noise": 14,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "mag",
+    "under"
+   ],
+   "jam": 0.6
   }
  },
  {
@@ -290,12 +568,30 @@
   "looks_like": "sr22",
   "gun": {
    "dmg": [
-    10,
-    16
+    11,
+    17
    ],
    "range": 10,
-   "shots": 1,
-   "acc": 70
+   "acc": 68,
+   "cal": "9mm",
+   "mag": 14,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 3,
+   "noise": 14,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "mag",
+    "under"
+   ],
+   "jam": 0.6
   }
  },
  {
@@ -313,12 +609,29 @@
   "looks_like": "model_10_revolver",
   "gun": {
    "dmg": [
-    14,
-    22
+    15,
+    23
    ],
    "range": 10,
-   "shots": 1,
-   "acc": 72
+   "acc": 70,
+   "cal": ".357",
+   "mag": 4,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 5,
+   "noise": 18,
+   "reload": 3,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "under"
+   ],
+   "jam": 0.1
   }
  },
  {
@@ -336,12 +649,29 @@
   "looks_like": "colt_anaconda_6",
   "gun": {
    "dmg": [
-    14,
-    22
+    13,
+    23
    ],
    "range": 10,
-   "shots": 1,
-   "acc": 72
+   "acc": 76,
+   "cal": ".357",
+   "mag": 7,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 5,
+   "noise": 18,
+   "reload": 3,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "under"
+   ],
+   "jam": 0.1
   }
  },
  {
@@ -359,12 +689,29 @@
   "looks_like": "sw_500",
   "gun": {
    "dmg": [
-    14,
-    22
+    15,
+    23
    ],
    "range": 10,
-   "shots": 1,
-   "acc": 72
+   "acc": 76,
+   "cal": ".357",
+   "mag": 4,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 5,
+   "noise": 18,
+   "reload": 3,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "under"
+   ],
+   "jam": 0.1
   }
  },
  {
@@ -386,8 +733,32 @@
     24
    ],
    "range": 18,
-   "shots": 1,
-   "acc": 74
+   "acc": 71,
+   "cal": "5.56",
+   "mag": 28,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ]
+   ],
+   "recoil": 4,
+   "noise": 20,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -409,8 +780,32 @@
     24
    ],
    "range": 18,
-   "shots": 1,
-   "acc": 74
+   "acc": 70,
+   "cal": "5.56",
+   "mag": 28,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ]
+   ],
+   "recoil": 4,
+   "noise": 20,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -429,11 +824,35 @@
   "gun": {
    "dmg": [
     16,
-    24
+    23
    ],
    "range": 18,
-   "shots": 1,
-   "acc": 74
+   "acc": 74,
+   "cal": "5.56",
+   "mag": 30,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ]
+   ],
+   "recoil": 4,
+   "noise": 20,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -451,12 +870,36 @@
   "looks_like": "kord",
   "gun": {
    "dmg": [
-    16,
-    24
+    17,
+    25
    ],
    "range": 18,
-   "shots": 1,
-   "acc": 74
+   "acc": 73,
+   "cal": "5.56",
+   "mag": 28,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ]
+   ],
+   "recoil": 4,
+   "noise": 20,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -475,11 +918,35 @@
   "gun": {
    "dmg": [
     16,
-    24
+    25
    ],
    "range": 18,
-   "shots": 1,
-   "acc": 74
+   "acc": 71,
+   "cal": "5.56",
+   "mag": 28,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ]
+   ],
+   "recoil": 4,
+   "noise": 20,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -497,12 +964,36 @@
   "looks_like": "rdb_223",
   "gun": {
    "dmg": [
-    16,
-    24
+    15,
+    23
    ],
    "range": 18,
-   "shots": 1,
-   "acc": 74
+   "acc": 76,
+   "cal": "5.56",
+   "mag": 30,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ]
+   ],
+   "recoil": 4,
+   "noise": 20,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -520,12 +1011,36 @@
   "looks_like": "rfb_308",
   "gun": {
    "dmg": [
-    16,
-    24
+    17,
+    23
    ],
    "range": 18,
-   "shots": 1,
-   "acc": 74
+   "acc": 73,
+   "cal": "5.56",
+   "mag": 32,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ]
+   ],
+   "recoil": 4,
+   "noise": 20,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -543,12 +1058,36 @@
   "looks_like": "m1a",
   "gun": {
    "dmg": [
-    16,
-    24
+    15,
+    25
    ],
    "range": 18,
-   "shots": 1,
-   "acc": 74
+   "acc": 75,
+   "cal": "5.56",
+   "mag": 30,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ]
+   ],
+   "recoil": 4,
+   "noise": 20,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -566,12 +1105,36 @@
   "looks_like": "sks",
   "gun": {
    "dmg": [
-    16,
-    24
+    15,
+    25
    ],
    "range": 18,
-   "shots": 1,
-   "acc": 74
+   "acc": 71,
+   "cal": "5.56",
+   "mag": 28,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ]
+   ],
+   "recoil": 4,
+   "noise": 20,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -593,8 +1156,32 @@
     24
    ],
    "range": 18,
-   "shots": 1,
-   "acc": 74
+   "acc": 73,
+   "cal": "5.56",
+   "mag": 34,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     3
+    ]
+   ],
+   "recoil": 4,
+   "noise": 20,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "mag",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -612,12 +1199,30 @@
   "looks_like": "mossberg_930",
   "gun": {
    "dmg": [
-    20,
+    19,
     34
    ],
    "range": 6,
-   "shots": 1,
-   "acc": 80
+   "acc": 80,
+   "cal": "12ga",
+   "mag": 8,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 6,
+   "noise": 22,
+   "reload": 3,
+   "pellets": 8,
+   "slots": [
+    "optic",
+    "barrel",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -639,8 +1244,26 @@
     34
    ],
    "range": 6,
-   "shots": 1,
-   "acc": 80
+   "acc": 83,
+   "cal": "12ga",
+   "mag": 4,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 6,
+   "noise": 22,
+   "reload": 3,
+   "pellets": 8,
+   "slots": [
+    "optic",
+    "barrel",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -658,12 +1281,30 @@
   "looks_like": "remington_870_express",
   "gun": {
    "dmg": [
-    20,
+    21,
     34
    ],
    "range": 6,
-   "shots": 1,
-   "acc": 80
+   "acc": 76,
+   "cal": "12ga",
+   "mag": 7,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 6,
+   "noise": 22,
+   "reload": 3,
+   "pellets": 8,
+   "slots": [
+    "optic",
+    "barrel",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -681,12 +1322,30 @@
   "looks_like": "ksg",
   "gun": {
    "dmg": [
-    20,
-    34
+    19,
+    35
    ],
    "range": 6,
-   "shots": 1,
-   "acc": 80
+   "acc": 76,
+   "cal": "12ga",
+   "mag": 7,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 6,
+   "noise": 22,
+   "reload": 3,
+   "pellets": 8,
+   "slots": [
+    "optic",
+    "barrel",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -705,11 +1364,29 @@
   "gun": {
    "dmg": [
     20,
-    34
+    33
    ],
    "range": 6,
-   "shots": 1,
-   "acc": 80
+   "acc": 76,
+   "cal": "12ga",
+   "mag": 7,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 6,
+   "noise": 22,
+   "reload": 3,
+   "pellets": 8,
+   "slots": [
+    "optic",
+    "barrel",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -727,12 +1404,30 @@
   "looks_like": "bond_410",
   "gun": {
    "dmg": [
-    20,
+    21,
     34
    ],
    "range": 6,
-   "shots": 1,
-   "acc": 80
+   "acc": 81,
+   "cal": "12ga",
+   "mag": 5,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 6,
+   "noise": 22,
+   "reload": 3,
+   "pellets": 8,
+   "slots": [
+    "optic",
+    "barrel",
+    "under",
+    "stock"
+   ],
+   "jam": 0.8
   }
  },
  {
@@ -750,12 +1445,31 @@
   "looks_like": "m14ebr",
   "gun": {
    "dmg": [
-    30,
-    48
+    29,
+    47
    ],
    "range": 30,
-   "shots": 1,
-   "acc": 82
+   "acc": 82,
+   "cal": ".338",
+   "mag": 6,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 6,
+   "noise": 24,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "under",
+    "stock"
+   ],
+   "jam": 0.5
   }
  },
  {
@@ -774,11 +1488,30 @@
   "gun": {
    "dmg": [
     30,
-    48
+    47
    ],
    "range": 30,
-   "shots": 1,
-   "acc": 82
+   "acc": 81,
+   "cal": ".338",
+   "mag": 6,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 6,
+   "noise": 24,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "under",
+    "stock"
+   ],
+   "jam": 0.5
   }
  },
  {
@@ -796,12 +1529,31 @@
   "looks_like": "tac50",
   "gun": {
    "dmg": [
-    30,
+    31,
     48
    ],
    "range": 30,
-   "shots": 1,
-   "acc": 82
+   "acc": 85,
+   "cal": ".338",
+   "mag": 5,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 6,
+   "noise": 24,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "under",
+    "stock"
+   ],
+   "jam": 0.5
   }
  },
  {
@@ -823,8 +1575,27 @@
     48
    ],
    "range": 30,
-   "shots": 1,
-   "acc": 82
+   "acc": 85,
+   "cal": ".338",
+   "mag": 3,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 6,
+   "noise": 24,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "under",
+    "stock"
+   ],
+   "jam": 0.5
   }
  },
  {
@@ -842,12 +1613,31 @@
   "looks_like": "remington_700_308",
   "gun": {
    "dmg": [
-    30,
+    29,
     48
    ],
    "range": 30,
-   "shots": 1,
-   "acc": 82
+   "acc": 85,
+   "cal": ".338",
+   "mag": 6,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 6,
+   "noise": 24,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "under",
+    "stock"
+   ],
+   "jam": 0.5
   }
  },
  {
@@ -865,12 +1655,31 @@
   "looks_like": "ruger_pr",
   "gun": {
    "dmg": [
-    30,
-    48
+    31,
+    49
    ],
    "range": 30,
-   "shots": 1,
-   "acc": 82
+   "acc": 82,
+   "cal": ".338",
+   "mag": 7,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 6,
+   "noise": 24,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "under",
+    "stock"
+   ],
+   "jam": 0.5
   }
  },
  {
@@ -888,12 +1697,31 @@
   "looks_like": "m2010",
   "gun": {
    "dmg": [
-    30,
-    48
+    31,
+    49
    ],
    "range": 30,
-   "shots": 1,
-   "acc": 82
+   "acc": 85,
+   "cal": ".338",
+   "mag": 6,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 6,
+   "noise": 24,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "barrel",
+    "under",
+    "stock"
+   ],
+   "jam": 0.5
   }
  },
  {
@@ -912,11 +1740,31 @@
   "gun": {
    "dmg": [
     16,
-    24
+    23
    ],
    "range": 20,
-   "shots": 5,
-   "acc": 55
+   "acc": 53,
+   "cal": "12.7",
+   "mag": 65,
+   "modes": [
+    [
+     "burst",
+     5
+    ],
+    [
+     "auto",
+     10
+    ]
+   ],
+   "recoil": 3,
+   "noise": 26,
+   "reload": 5,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle"
+   ],
+   "jam": 1.5
   }
  },
  {
@@ -934,12 +1782,34 @@
   "looks_like": "m60_semi",
   "gun": {
    "dmg": [
-    12,
+    13,
     18
    ],
    "range": 16,
-   "shots": 4,
-   "acc": 55
+   "acc": 53,
+   "cal": "7.62",
+   "mag": 46,
+   "modes": [
+    [
+     "burst",
+     4
+    ],
+    [
+     "auto",
+     8
+    ]
+   ],
+   "recoil": 3,
+   "noise": 22,
+   "reload": 4,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "under",
+    "stock"
+   ],
+   "jam": 1.5
   }
  },
  {
@@ -957,12 +1827,32 @@
   "looks_like": "m134",
   "gun": {
    "dmg": [
-    16,
-    24
+    15,
+    23
    ],
    "range": 20,
-   "shots": 5,
-   "acc": 55
+   "acc": 57,
+   "cal": "12.7",
+   "mag": 55,
+   "modes": [
+    [
+     "burst",
+     5
+    ],
+    [
+     "auto",
+     10
+    ]
+   ],
+   "recoil": 3,
+   "noise": 26,
+   "reload": 5,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle"
+   ],
+   "jam": 1.5
   }
  },
  {
@@ -980,12 +1870,34 @@
   "looks_like": "m60",
   "gun": {
    "dmg": [
-    12,
-    18
+    13,
+    19
    ],
    "range": 16,
-   "shots": 4,
-   "acc": 55
+   "acc": 59,
+   "cal": "7.62",
+   "mag": 42,
+   "modes": [
+    [
+     "burst",
+     4
+    ],
+    [
+     "auto",
+     8
+    ]
+   ],
+   "recoil": 3,
+   "noise": 22,
+   "reload": 4,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "under",
+    "stock"
+   ],
+   "jam": 1.5
   }
  },
  {
@@ -1003,12 +1915,34 @@
   "looks_like": "m1918",
   "gun": {
    "dmg": [
-    12,
-    18
+    11,
+    17
    ],
    "range": 16,
-   "shots": 4,
-   "acc": 55
+   "acc": 54,
+   "cal": "7.62",
+   "mag": 54,
+   "modes": [
+    [
+     "burst",
+     4
+    ],
+    [
+     "auto",
+     8
+    ]
+   ],
+   "recoil": 3,
+   "noise": 22,
+   "reload": 4,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "muzzle",
+    "under",
+    "stock"
+   ],
+   "jam": 1.5
   }
  },
  {
@@ -1030,8 +1964,24 @@
     70
    ],
    "range": 14,
-   "shots": 1,
-   "acc": 65
+   "acc": 68,
+   "cal": "40mm",
+   "mag": 1,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 0,
+   "noise": 24,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "under"
+   ],
+   "jam": 0.5
   }
  },
  {
@@ -1053,8 +2003,24 @@
     70
    ],
    "range": 14,
-   "shots": 1,
-   "acc": 65
+   "acc": 64,
+   "cal": "40mm",
+   "mag": 1,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 0,
+   "noise": 24,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "under"
+   ],
+   "jam": 0.5
   }
  },
  {
@@ -1072,12 +2038,28 @@
   "looks_like": "m202_flash",
   "gun": {
    "dmg": [
-    40,
-    70
+    39,
+    71
    ],
    "range": 14,
-   "shots": 1,
-   "acc": 65
+   "acc": 64,
+   "cal": "40mm",
+   "mag": 1,
+   "modes": [
+    [
+     "single",
+     1
+    ]
+   ],
+   "recoil": 0,
+   "noise": 24,
+   "reload": 2,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "under"
+   ],
+   "jam": 0.5
   }
  },
  {
@@ -1095,12 +2077,32 @@
   "looks_like": "laser_rifle",
   "gun": {
    "dmg": [
-    14,
-    22
+    15,
+    23
    ],
    "range": 15,
-   "shots": 1,
-   "acc": 78
+   "acc": 81,
+   "cal": "cell",
+   "mag": 12,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     2
+    ]
+   ],
+   "recoil": 1,
+   "noise": 8,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "under"
+   ],
+   "jam": 0.0
   }
  },
  {
@@ -1118,12 +2120,32 @@
   "looks_like": "laser_rifle",
   "gun": {
    "dmg": [
-    14,
-    22
+    15,
+    23
    ],
    "range": 15,
-   "shots": 1,
-   "acc": 78
+   "acc": 74,
+   "cal": "cell",
+   "mag": 13,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     2
+    ]
+   ],
+   "recoil": 1,
+   "noise": 8,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "under"
+   ],
+   "jam": 0.0
   }
  },
  {
@@ -1141,12 +2163,752 @@
   "looks_like": "laser_rifle",
   "gun": {
    "dmg": [
-    14,
+    13,
     22
    ],
    "range": 15,
-   "shots": 1,
-   "acc": 78
+   "acc": 81,
+   "cal": "cell",
+   "mag": 12,
+   "modes": [
+    [
+     "single",
+     1
+    ],
+    [
+     "burst",
+     2
+    ]
+   ],
+   "recoil": 1,
+   "noise": 8,
+   "reload": 1,
+   "pellets": 1,
+   "slots": [
+    "optic",
+    "under"
+   ],
+   "jam": 0.0
+  }
+ },
+ {
+  "id": "trl_ammo_9mm_fmj",
+  "name": "9mm ball box",
+  "weight_g": 180,
+  "volume_ml": 108,
+  "length_mm": 80,
+  "price": 14,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "9mm",
+   "kind": "fmj",
+   "rounds": 18
+  }
+ },
+ {
+  "id": "trl_ammo_9mm_ap",
+  "name": "9mm armor-piercing box",
+  "weight_g": 180,
+  "volume_ml": 108,
+  "length_mm": 80,
+  "price": 28,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "9mm",
+   "kind": "ap",
+   "rounds": 18
+  }
+ },
+ {
+  "id": "trl_ammo_9mm_hp",
+  "name": "9mm hollow-point box",
+  "weight_g": 180,
+  "volume_ml": 108,
+  "length_mm": 80,
+  "price": 14,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "9mm",
+   "kind": "hp",
+   "rounds": 18
+  }
+ },
+ {
+  "id": "trl_ammo_357_fmj",
+  "name": ".357 ball box",
+  "weight_g": 120,
+  "volume_ml": 72,
+  "length_mm": 80,
+  "price": 18,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": ".357",
+   "kind": "fmj",
+   "rounds": 12
+  }
+ },
+ {
+  "id": "trl_ammo_357_ap",
+  "name": ".357 armor-piercing box",
+  "weight_g": 120,
+  "volume_ml": 72,
+  "length_mm": 80,
+  "price": 36,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": ".357",
+   "kind": "ap",
+   "rounds": 12
+  }
+ },
+ {
+  "id": "trl_ammo_357_hp",
+  "name": ".357 hollow-point box",
+  "weight_g": 120,
+  "volume_ml": 72,
+  "length_mm": 80,
+  "price": 18,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": ".357",
+   "kind": "hp",
+   "rounds": 12
+  }
+ },
+ {
+  "id": "trl_ammo_556_fmj",
+  "name": "5.56 ball box",
+  "weight_g": 200,
+  "volume_ml": 120,
+  "length_mm": 80,
+  "price": 24,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "5.56",
+   "kind": "fmj",
+   "rounds": 20
+  }
+ },
+ {
+  "id": "trl_ammo_556_ap",
+  "name": "5.56 armor-piercing box",
+  "weight_g": 200,
+  "volume_ml": 120,
+  "length_mm": 80,
+  "price": 48,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "5.56",
+   "kind": "ap",
+   "rounds": 20
+  }
+ },
+ {
+  "id": "trl_ammo_556_hp",
+  "name": "5.56 hollow-point box",
+  "weight_g": 200,
+  "volume_ml": 120,
+  "length_mm": 80,
+  "price": 24,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "5.56",
+   "kind": "hp",
+   "rounds": 20
+  }
+ },
+ {
+  "id": "trl_ammo_12ga_shot",
+  "name": "12ga buckshot box",
+  "weight_g": 100,
+  "volume_ml": 60,
+  "length_mm": 80,
+  "price": 20,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "12ga",
+   "kind": "shot",
+   "rounds": 10
+  }
+ },
+ {
+  "id": "trl_ammo_12ga_slug",
+  "name": "12ga slug box",
+  "weight_g": 100,
+  "volume_ml": 60,
+  "length_mm": 80,
+  "price": 20,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "12ga",
+   "kind": "slug",
+   "rounds": 10
+  }
+ },
+ {
+  "id": "trl_ammo_338_fmj",
+  "name": ".338 ball box",
+  "weight_g": 100,
+  "volume_ml": 60,
+  "length_mm": 80,
+  "price": 40,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": ".338",
+   "kind": "fmj",
+   "rounds": 10
+  }
+ },
+ {
+  "id": "trl_ammo_338_ap",
+  "name": ".338 armor-piercing box",
+  "weight_g": 100,
+  "volume_ml": 60,
+  "length_mm": 80,
+  "price": 80,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": ".338",
+   "kind": "ap",
+   "rounds": 10
+  }
+ },
+ {
+  "id": "trl_ammo_762_fmj",
+  "name": "7.62 ball box",
+  "weight_g": 300,
+  "volume_ml": 180,
+  "length_mm": 80,
+  "price": 30,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "7.62",
+   "kind": "fmj",
+   "rounds": 30
+  }
+ },
+ {
+  "id": "trl_ammo_762_ap",
+  "name": "7.62 armor-piercing box",
+  "weight_g": 300,
+  "volume_ml": 180,
+  "length_mm": 80,
+  "price": 60,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "7.62",
+   "kind": "ap",
+   "rounds": 30
+  }
+ },
+ {
+  "id": "trl_ammo_127_fmj",
+  "name": "12.7 ball box",
+  "weight_g": 200,
+  "volume_ml": 120,
+  "length_mm": 80,
+  "price": 50,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "12.7",
+   "kind": "fmj",
+   "rounds": 20
+  }
+ },
+ {
+  "id": "trl_ammo_127_ap",
+  "name": "12.7 armor-piercing box",
+  "weight_g": 200,
+  "volume_ml": 120,
+  "length_mm": 80,
+  "price": 100,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "12.7",
+   "kind": "ap",
+   "rounds": 20
+  }
+ },
+ {
+  "id": "trl_ammo_40mm_he",
+  "name": "40mm HE grenade box",
+  "weight_g": 30,
+  "volume_ml": 18,
+  "length_mm": 80,
+  "price": 45,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "40mm",
+   "kind": "he",
+   "rounds": 3
+  }
+ },
+ {
+  "id": "trl_ammo_cell_cell",
+  "name": "cell charge pack box",
+  "weight_g": 200,
+  "volume_ml": 120,
+  "length_mm": 80,
+  "price": 30,
+  "tags": [
+   "ammo"
+  ],
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "cell",
+   "kind": "cell",
+   "rounds": 20
+  }
+ },
+ {
+  "id": "trl_mod_redot",
+  "name": "red-dot sight",
+  "desc": "Fast, forgiving.  A little steadier on the first aimed turn.",
+  "weight_g": 120,
+  "volume_ml": 60,
+  "length_mm": 150,
+  "price": 90,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "optic",
+   "fx": {
+    "acc": 5,
+    "aim": 1
+   }
+  }
+ },
+ {
+  "id": "trl_mod_holo",
+  "name": "holographic sight",
+  "desc": "Wide window, bright reticle.",
+  "weight_g": 220,
+  "volume_ml": 110,
+  "length_mm": 150,
+  "price": 150,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "optic",
+   "fx": {
+    "acc": 7,
+    "aim": 2,
+    "rangepen_pct": 15
+   }
+  }
+ },
+ {
+  "id": "trl_mod_scope4",
+  "name": "4x scope",
+  "desc": "Reaches out; clumsy up close.",
+  "weight_g": 400,
+  "volume_ml": 200,
+  "length_mm": 150,
+  "price": 300,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "optic",
+   "fx": {
+    "acc": 8,
+    "aim": 3,
+    "range_pct": 30,
+    "rangepen_pct": 40,
+    "close_pen": 8
+   }
+  }
+ },
+ {
+  "id": "trl_mod_scope8",
+  "name": "8x sniper scope",
+  "desc": "For long streets and rooftops.  Useless at arm's length.",
+  "weight_g": 900,
+  "volume_ml": 450,
+  "length_mm": 150,
+  "price": 700,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "optic",
+   "fx": {
+    "acc": 10,
+    "aim": 5,
+    "range_pct": 70,
+    "rangepen_pct": 65,
+    "close_pen": 18
+   }
+  }
+ },
+ {
+  "id": "trl_mod_smartlink",
+  "name": "smartlink sight",
+  "desc": "Reads your optic nerve.  The gun knows where you are looking.",
+  "weight_g": 1100,
+  "volume_ml": 550,
+  "length_mm": 150,
+  "price": 600,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "optic",
+   "fx": {
+    "acc": 12,
+    "aim": 3,
+    "hip": 6,
+    "rangepen_pct": 30
+   }
+  }
+ },
+ {
+  "id": "trl_mod_laser",
+  "name": "laser sight",
+  "desc": "A red dot on the target.  Helps most when you are not taking time to aim.",
+  "weight_g": 80,
+  "volume_ml": 40,
+  "length_mm": 150,
+  "price": 70,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "under",
+   "fx": {
+    "hip": 10,
+    "close_pen": -4
+   }
+  }
+ },
+ {
+  "id": "trl_mod_foregrip",
+  "name": "foregrip",
+  "desc": "Hold it down in bursts.",
+  "weight_g": 150,
+  "volume_ml": 75,
+  "length_mm": 150,
+  "price": 40,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "under",
+   "fx": {
+    "recoil_pct": -25,
+    "acc": 2
+   }
+  }
+ },
+ {
+  "id": "trl_mod_bipod",
+  "name": "folding bipod",
+  "desc": "Steadies a long gun if you are not walking.",
+  "weight_g": 500,
+  "volume_ml": 250,
+  "length_mm": 150,
+  "price": 80,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "under",
+   "fx": {
+    "recoil_pct": -15,
+    "aim": 2,
+    "acc": 3
+   }
+  }
+ },
+ {
+  "id": "trl_mod_suppressor",
+  "name": "suppressor",
+  "desc": "Quiet shots.  Nobody comes to look.",
+  "weight_g": 350,
+  "volume_ml": 175,
+  "length_mm": 150,
+  "price": 500,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "muzzle",
+   "fx": {
+    "noise_cap": 5,
+    "dmg_pct": -6,
+    "range_pct": -5,
+    "jam": 0.2
+   }
+  }
+ },
+ {
+  "id": "trl_mod_compensator",
+  "name": "compensator",
+  "desc": "Tames the muzzle.",
+  "weight_g": 200,
+  "volume_ml": 100,
+  "length_mm": 150,
+  "price": 120,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "muzzle",
+   "fx": {
+    "recoil_pct": -30,
+    "noise_cap": 99
+   }
+  }
+ },
+ {
+  "id": "trl_mod_flashhider",
+  "name": "flash hider",
+  "desc": "A little less climb, a little less glare.",
+  "weight_g": 100,
+  "volume_ml": 50,
+  "length_mm": 150,
+  "price": 60,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "muzzle",
+   "fx": {
+    "recoil_pct": -10,
+    "acc": 1
+   }
+  }
+ },
+ {
+  "id": "trl_mod_longbarrel",
+  "name": "long barrel",
+  "desc": "More velocity and more reach.",
+  "weight_g": 450,
+  "volume_ml": 225,
+  "length_mm": 150,
+  "price": 160,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "barrel",
+   "fx": {
+    "acc": 4,
+    "range_pct": 25,
+    "dmg_pct": 6
+   }
+  }
+ },
+ {
+  "id": "trl_mod_shortbarrel",
+  "name": "short barrel",
+  "desc": "Handy in corridors.",
+  "weight_g": 250,
+  "volume_ml": 125,
+  "length_mm": 150,
+  "price": 90,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "barrel",
+   "fx": {
+    "acc": -3,
+    "range_pct": -20,
+    "close_pen": -6,
+    "reload": 0
+   }
+  }
+ },
+ {
+  "id": "trl_mod_choke",
+  "name": "choke tube",
+  "desc": "Tighter pattern, more reach.",
+  "weight_g": 120,
+  "volume_ml": 60,
+  "length_mm": 150,
+  "price": 100,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "barrel",
+   "fx": {
+    "spread_pct": -35,
+    "range_pct": 20
+   }
+  }
+ },
+ {
+  "id": "trl_mod_extmag",
+  "name": "extended magazine",
+  "desc": "Half again as many rounds.",
+  "weight_g": 120,
+  "volume_ml": 60,
+  "length_mm": 150,
+  "price": 110,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "mag",
+   "fx": {
+    "mag_pct": 50,
+    "jam": 0.3
+   }
+  }
+ },
+ {
+  "id": "trl_mod_drum",
+  "name": "drum magazine",
+  "desc": "Lots of lead; slow to swap, fond of jamming.",
+  "weight_g": 400,
+  "volume_ml": 200,
+  "length_mm": 150,
+  "price": 260,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "mag",
+   "fx": {
+    "mag_pct": 150,
+    "jam": 1.5,
+    "reload": 1,
+    "acc": -2
+   }
+  }
+ },
+ {
+  "id": "trl_mod_quickmag",
+  "name": "quick-release magazine",
+  "desc": "Swaps in a heartbeat.",
+  "weight_g": 90,
+  "volume_ml": 45,
+  "length_mm": 150,
+  "price": 70,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "mag",
+   "fx": {
+    "reload": -1
+   }
+  }
+ },
+ {
+  "id": "trl_mod_stock",
+  "name": "adjustable stock",
+  "desc": "Solid against the shoulder.",
+  "weight_g": 450,
+  "volume_ml": 225,
+  "length_mm": 150,
+  "price": 90,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "stock",
+   "fx": {
+    "recoil_pct": -20,
+    "acc": 3
+   }
+  }
+ },
+ {
+  "id": "trl_mod_cheekrest",
+  "name": "cheek rest and padded stock",
+  "desc": "Built for precision.",
+  "weight_g": 700,
+  "volume_ml": 350,
+  "length_mm": 150,
+  "price": 160,
+  "tags": [
+   "mod"
+  ],
+  "looks_like": "scope",
+  "mod": {
+   "slot": "stock",
+   "fx": {
+    "recoil_pct": -30,
+    "aim": 2,
+    "acc": 2
+   }
   }
  },
  {
@@ -1340,14 +3102,19 @@
  {
   "id": "trl_ammo",
   "name": "ammo box",
-  "weight_g": 12,
-  "volume_ml": 8,
+  "weight_g": 120,
+  "volume_ml": 70,
   "length_mm": 60,
-  "price": 1,
+  "price": 20,
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm"
+  "looks_like": "9mm",
+  "ammo": {
+   "cal": "9mm",
+   "kind": "fmj",
+   "rounds": 12
+  }
  },
  {
   "id": "trl_water",

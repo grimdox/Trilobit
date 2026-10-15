@@ -151,11 +151,20 @@ func _draw() -> void:
 		var jr := Rect2((game.lx(jc) - ox) * T, (game.ly(jc) - oy) * T, T, T)
 		draw_rect(jr, Color(1, 0.8, 0.2), false, 2.0)
 	# target bracket
-	var tg: int = game.nearest_target()
+	var tg: int = game.current_target()
 	if tg >= 0:
 		var c: int = game.sim.pos[tg]
 		var r := Rect2((c % size - ox) * T, ((c / size) % size - oy) * T, T, T)
 		draw_rect(r, Color(1, 0.2, 0.2), false, 2.0)
+		if game.aim_turns > 0:
+			draw_rect(r.grow(3), Color(1, 0.6, 0.2), false, 1.0)
+	# tracers from the last volley
+	for tr in game.tracers:
+		var a: int = tr[0]
+		var b: int = tr[1]
+		var pa := Vector2((a % size - ox + 0.5) * T, ((a / size) % size - oy + 0.5) * T)
+		var pb := Vector2((b % size - ox + 0.5) * T, ((b / size) % size - oy + 0.5) * T)
+		draw_line(pa, pb, Color(1, 0.95, 0.5) if tr[2] else Color(0.8, 0.8, 0.8, 0.6), 2.0)
 
 func _draw_car(centre: Vector2, dir: int, col: Color, T: int) -> void:
 	var horiz := dir == 1 or dir == 3

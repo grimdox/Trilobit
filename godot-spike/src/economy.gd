@@ -322,7 +322,7 @@ func menu_for(i: int) -> Dictionary:
 	match r:
 		VENDOR:
 			m["text"] = ["\"Cash only.  Cards are for banks.\""]
-			for e in _stock():
+			for e in _stock(i):
 				m["options"].append({"label": "Buy %s  ¥%d" % [e[1], e[2]], "op": "buy", "arg": e})
 		RIPPER:
 			var cost: int = 350 if g.z_of(g.sim.pos[i]) < 0 else 700
@@ -341,9 +341,27 @@ func menu_for(i: int) -> Dictionary:
 	m["options"].append({"label": "Leave", "op": "close", "arg": null})
 	return m
 
-func _stock() -> Array:
-	return [["trl_ration", "cyber ration bar", 12], ["trl_water_bottle", "bottled water", 8], ["trl_ammo", "ammo box (12 rounds)", 22],
-			["trl_medkit", "trauma patch", 45], ["trl_pouch", "chest pouch", 60], ["trl_backpack", "backpack", 120]]
+func _stock(i: int = 0) -> Array:
+	var out: Array = [["trl_ration", "cyber ration bar", 12], ["trl_water_bottle", "bottled water", 8], ["trl_ammo", "9mm ball box (12 rounds)", 22],
+			["trl_backpack", "backpack", 120]]
+	# each vendor has a few different rounds and gun mods on the shelf
+	var ammo_ids: Array = []
+	var mod_ids: Array = []
+	for k in g.db.defs:
+		var tags: Array = g.db.defs[k].get("tags", [])
+		if "ammo" in tags and k != "trl_ammo":
+			ammo_ids.append(k)
+		elif "mod" in tags:
+			mod_ids.append(k)
+	ammo_ids.sort()
+	mod_ids.sort()
+	for n in 2:
+		var a: String = ammo_ids[(i * 5 + n * 7) % ammo_ids.size()]
+		out.append([a, g.db.defs[a]["name"], int(g.db.defs[a]["price"]) * 3 / 2])
+	for n in 3:
+		var m: String = mod_ids[(i * 3 + n * 5) % mod_ids.size()]
+		out.append([m, g.db.defs[m]["name"], int(g.db.defs[m]["price"]) * 3 / 2])
+	return out
 
 func _rumor(i: int) -> String:
 	var lines: Array = []
@@ -374,8 +392,9 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 			var it = g._new_item(e[0])
 			if e[0] == "trl_water_bottle":
 				it.pockets[0].append(g._new_item("trl_water", 500))
-			if e[0] == "trl_ammo":
-				g.ammo += 12
+			if it.has_tag("ammo"):
+				var am: Dictionary = it.def["ammo"]
+				g.pool_add(am["cal"], am["kind"], int(am["rounds"]))
 			elif not g.stow(it):
 				if e[0] in ["trl_pouch", "trl_backpack"] and g.worn.size() < 4:
 					g.worn.append(it)

@@ -30,7 +30,7 @@ func _init() -> void:
 	for k in 14:
 		g.end_turn()
 	g.wield = g._new_item("trl_gun_hx9")
-	g.ammo = 60
+	g.pool_add("9mm", "fmj", 60)
 	for k in 40:
 		var t: int = g.nearest_target()
 		if t >= 0 and k % 3 == 0:
