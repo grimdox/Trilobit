@@ -12,7 +12,8 @@ var view
 var status: Label
 var logbox: RichTextLabel
 var panel: RichTextLabel
-var mode: String = "play"           # play, inventory, help
+var mode: String = "play"           # play, inventory, help, talk
+var menu: Dictionary = {}
 var ts_index: int = 0
 var inv_map: Dictionary = {}
 
@@ -29,7 +30,7 @@ func new_game(seed: int) -> void:
 	tileset = TilesetScript.new()
 	tileset.load_dir("res://gfx/" + TILESETS[ts_index])
 	game = GameScript.new(seed)
-	game.setup(2000)
+	game.setup(1500)
 	view = ViewScript.new()
 	view.game = game
 	view.tileset = tileset
@@ -71,13 +72,37 @@ func refresh() -> void:
 	view.queue_redraw()
 	var g = game
 	var wield_txt: String = g.wield.def["name"] if g.wield != null else "bare hands"
-	status.text = "HP %d/%d   ¥%d   Heat %d   Ammo %d   %s%s   %s   Turn %d   Carry %.1f kg   Tiles: %s%s" % [g.hp, g.hp_max, g.yen, g.heat, g.ammo, wield_txt,
-		"  [crouching]" if g.crouch else "", g.time_text(), g.turn, g.total_weight_kg(), TILESETS[ts_index], "  [IN CAR %d%%]" % g.vehicles[g.in_vehicle]["charge"] if g.in_vehicle >= 0 else ""]
+	var line1 := "HP %d/%d   ¥%d   Heat %d   Ammo %d   %s%s   %s   Turn %d   Carry %.1f kg%s" % [g.hp, g.hp_max, g.yen, g.heat, g.ammo, wield_txt,
+		"  [crouching]" if g.crouch else "", g.time_text(), g.turn, g.total_weight_kg(), "  [IN CAR %d%%]" % g.vehicles[g.in_vehicle]["charge"] if g.in_vehicle >= 0 else ""]
+	var tw: Dictionary = g.tower_at(g.pc) if g.z_of(g.pc) > 0 else {}
+	var where: String = g.zname(g.pc) + (" of %d" % tw["h"] if not tw.is_empty() else "")
+	var line2: String = "%s   |   %s" % [where, g.eco.status_text()]
+	if g.z_of(g.pc) == -1 and g.transit.active():
+		var na: Dictionary = g.transit.next_arrival()
+		line2 += "   |   Train: %s %s in %d" % ["boarding at" if na["dwelling"] else "next stop", na["name"], na["turns"]]
+	if g.transit.riding >= 0:
+		line2 += "   [ON THE TRAIN]"
+	var jt: String = g.eco.job_text()
+	status.text = line1 + "\n" + line2 + ("\n" + jt if jt != "" else "")
 	var lines: Array = g.log.slice(-5)
 	logbox.text = "\n".join(lines)
 	status.add_theme_color_override("font_color", Color(1, 0.4, 0.4) if g.hp < g.hp_max / 3 else Color.WHITE)
 	if mode == "inventory":
 		show_inventory()
+	elif mode == "talk":
+		show_talk()
+
+func show_talk() -> void:
+	var t := "[b]%s[/b]   (1-9 chooses, Esc leaves)   ¥%d\n\n" % [menu["title"], game.yen]
+	for line in menu["text"]:
+		t += "%s\n" % line
+	t += "\n"
+	var k := 1
+	for o in menu["options"]:
+		t += "%d) %s\n" % [k, o["label"]]
+		k += 1
+	panel.text = t
+	panel.visible = true
 
 func show_inventory() -> void:
 	inv_map.clear()
@@ -94,7 +119,7 @@ func show_inventory() -> void:
 	panel.visible = true
 
 func show_help() -> void:
-	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the nearest hostile in sight  (Shift+F: at anyone)\ns   pickpocket an adjacent person (stealth and theft skill)\nc   crouch (harder to notice)        e   get in or out of a car\nd   drop the wielded weapon\nF2   switch tileset        F5  save        F9  load        Esc  close\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  Crouch and approach from behind for a triple-damage strike.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
+	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\n<  or  PgUp  go up (stairs, elevator, ladder)      >  or  PgDn  go down.  An elevator rides up to three floors.\nt   talk to the nearest person (vendors, fixers, ripperdocs)      p   pay 100 on the debt (Shift+P: 1000)\nWalk into a locked door to pick it.  Step onto a carriage while the train doors are open to ride; step onto a platform to get off.\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the nearest hostile in sight  (Shift+F: at anyone)\ns   pickpocket an adjacent person (stealth and theft skill)\nc   crouch (harder to notice)        e   get in or out of a car\nd   drop the wielded weapon\nF2   switch tileset        F5  save        F9  load        Esc  close\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  Crouch and approach from behind for a triple-damage strike.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
 	panel.visible = true
 
 func _unhandled_key_input(ev: InputEvent) -> void:
@@ -109,6 +134,17 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 			var key: String = OS.get_keycode_string(k).to_lower()
 			if inv_map.has(key):
 				game.act_wield(inv_map[key])
+				mode = "play"
+				panel.visible = false
+		refresh()
+		return
+	if mode == "talk":
+		if k == KEY_ESCAPE:
+			mode = "play"
+			panel.visible = false
+		elif k >= KEY_1 and k <= KEY_9:
+			menu = game.eco.choose(menu, k - KEY_1)
+			if menu.is_empty():
 				mode = "play"
 				panel.visible = false
 		refresh()
@@ -137,13 +173,32 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		KEY_KP_9, KEY_U: g.act_move(1, -1)
 		KEY_KP_1, KEY_B: g.act_move(-1, 1)
 		KEY_KP_3, KEY_N: g.act_move(1, 1)
-		KEY_PERIOD, KEY_KP_5: g.act_wait()
+		KEY_PERIOD, KEY_KP_5:
+			if ev.shift_pressed:
+				g.act_vertical(-1)
+			else:
+				g.act_wait()
+		KEY_LESS, KEY_PAGEUP, KEY_BRACKETLEFT: g.act_vertical(1)
+		KEY_GREATER, KEY_PAGEDOWN, KEY_BRACKETRIGHT: g.act_vertical(-1)
+		KEY_T:
+			var who: int = g.talk_target()
+			if who < 0:
+				g.say("Nobody close enough to talk to.")
+			else:
+				menu = g.eco.menu_for(who)
+				mode = "talk"
+		KEY_P: g.act_pay(1000 if ev.shift_pressed else 100)
 		KEY_SPACE:
 			if g.in_vehicle >= 0:
 				g.drive(0, 0)
 			else:
 				g.act_wait()
-		KEY_G, KEY_COMMA: g.act_pickup()
+		KEY_COMMA:
+			if ev.shift_pressed:
+				g.act_vertical(1)
+			else:
+				g.act_pickup()
+		KEY_G: g.act_pickup()
 		KEY_F: g.act_fire(ev.shift_pressed)
 		KEY_S: g.act_steal()
 		KEY_C: g.act_crouch()

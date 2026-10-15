@@ -37,3 +37,22 @@ GDScript speed for real AI (mitigation: hot loops in C# or GDExtension), art pip
 ## Round two status (vertical slice)
 Playable slice in `src/game.gd`, `view.gd`, `main.gd`: city, FOV, Bouma/Mokuhanga tilesets (F2), pockets inventory, awareness-driven Bratva/NAP/Nasim hostiles, theft, shooting, heat, 30 cars (12 AI-driven), save/load (F5/F9). Tests: pockets 19/19, world 12/12, scale 6/6, game 20/20; full turn ~2.5 ms at 2,000 people.
 Known gaps: no floors/stairs, 1x1 vehicles, no overworld travel, no dialogue, no Windows export workflow. Crowding on promotion is density, not a bug: default population lowered to 1,200.
+
+## Round three: the vertical world (towers to 30 floors, underground) and the next five systems
+Why: the city was flat.  Verticality is also the cheapest big win for the NPC simulation: it multiplies places to live and work without more map area.
+
+**How levels work.**  All levels sit in ONE array, ground first, so every ground cell index is unchanged: level n occupies cells n*256*256 ..; then floors 1..30, then -1 and -2.  A cell index says which level it is on.  Row distance between levels is >= 256, so level of detail is free: only people on the player's own level are ever "near" and fully simulated; the rest are abstract agents whose commute is the flow-field distance (through stairs and elevators).  Stairs, elevators, ladders and manholes are `links` (cell -> cells) that BFS flow fields, the near-agent step, and the player treat as one more step.  FOV runs per level; air cells draw the ground below, dimmed.  2.16 M cells, 33 levels: build 40 ms, setup 0.55 s, a full turn 1.2 ms with 1,500 people.
+- Above ground: the core buildings become towers (heights from distance to centre, the tallest always 30): glass-and-wall shell, BSP floors alternating two plans, a stair and an elevator shaft on every floor, retail on floors 1-2 then bands of offices and flats, a roof with railings and plant, glass skybridges between close towers, locked vault rooms with loot.
+- -1: the Ring Line subway under the road grid (four stations, platforms, one train, 6 cells/turn, 7-turn stops, boarding, hazard on the track), maintenance catwalks, street hatches.
+- -2: sewers under every road line, ladders up to the tunnels, manholes to the street, squatter lairs (Bratva and Nasim).
+
+**The five additions (ranked by impact on play)**, status:
+1. Vertical world - built (above).
+2. Transit - built as data (`transit.gd`: a ring of cells, a list of stops, a carriage chain).  An airship or air shuttle is the same object on a roof level.  Commuter NPCs riding it are not built yet.
+3. Talk, trade, jobs - first cut (`economy.gd`): vendors, fixers (courier and retrieval jobs, paid on completion), two ripperdocs (sewer and tower clinic).  No factions' dialogue trees, rep or quests yet (see Faction Quest Trees doc).
+4. Time pressure - first cut: Kuroda debt with daily interest, installments every three days, arrears, collectors; failing implant with tremor then seizures, serviced by a ripperdoc; clearing the debt is the placeholder win.
+5. Lootable world - first cut: locked doors (theft skill), vault rooms; no terminals, hacking, furniture containers, or alarms yet.
+
+**Tests**: pockets 19, world 12, scale 6, levels 11, game 20, vertical 37, plus a 6,000-turn random soak (`tests/run_soak.gd`).  `run_all.sh` now fails if any suite fails or does not finish.
+
+**Known gaps / next**: pursuit across levels (hunters lose you on stairs), NPCs riding the train, falling and jumping, multi-tile vehicles, 3D sight through glass floors, per-floor lighting, elevator floor selection UI, a Windows export workflow, terminals and alarms, faction dialogue and rep.

@@ -1,6 +1,8 @@
 extends RefCounted
 ## Recursive shadowcasting field of view on the tile grid, with a map memory ("explored").
 var size: int
+var row_lo: int = 0       # the level being looked at: rows [row_lo, row_hi) of the stacked map
+var row_hi: int = 0
 var opaque: PackedByteArray
 var visible: PackedByteArray
 var explored: PackedByteArray
@@ -9,13 +11,16 @@ var touched: PackedInt32Array = PackedInt32Array()
 func setup(sz: int, opaque_map: PackedByteArray) -> void:
 	size = sz
 	opaque = opaque_map
-	visible = PackedByteArray(); visible.resize(size * size)
-	explored = PackedByteArray(); explored.resize(size * size)
+	visible = PackedByteArray(); visible.resize(opaque_map.size())
+	explored = PackedByteArray(); explored.resize(opaque_map.size())
+	row_hi = size
 
 func compute(cx: int, cy: int, radius: int) -> void:
 	for c in touched:
 		visible[c] = 0
 	touched.clear()
+	row_lo = (cy / size) * size       # one level at a time: cy is a row of the stacked map
+	row_hi = row_lo + size
 	_mark(cx, cy)
 	for oct in 8:
 		_scan(cx, cy, 1, 1.0, 0.0, radius, oct)
@@ -49,7 +54,7 @@ func _scan(cx: int, cy: int, row: int, start: float, end: float, radius: int, oc
 				continue
 			elif end > l_slope:
 				break
-			if X < 0 or Y < 0 or X >= size or Y >= size:
+			if X < 0 or Y < row_lo or X >= size or Y >= row_hi:
 				continue
 			if dx * dx + dy * dy <= r2:
 				_mark(X, Y)

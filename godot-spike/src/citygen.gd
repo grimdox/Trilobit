@@ -9,6 +9,24 @@ const FLOOR := 3
 const DOOR := 4
 const WATER := 5
 const PARK := 6
+const AIR := 7          # open air above the ground; not walkable, transparent
+const STAIRS := 8       # a stairwell cell: links to the cell above and below
+const ELEVATOR := 9     # an elevator shaft cell: the same links, but a ride covers several floors
+const GLASS := 10       # window or roof railing: blocks movement, not sight
+const ROOF := 11
+const TUNNEL := 12      # maintenance catwalk beside the tracks
+const PLATFORM := 13
+const TRACK := 14
+const SEWER := 15       # dry catwalk in a sewer
+const SLUDGE := 16      # the sewer channel
+const EARTH := 17       # solid rock; opaque
+const TRAIN := 18       # not stored in the map: the game draws carriages over track cells
+const LADDER := 19      # links a tunnel to the sewer below, or a hatch to the street
+const RAILING := 20
+const MANHOLE := 21     # a street-level cover over a ladder
+const LOCKED := 22      # a locked door: people with keys walk through, the player has to pick it
+## 1 where a tile can be walked on (indexed by tile id)
+const WALK := [1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1]
 
 var size: int = 256
 var tiles: PackedByteArray
@@ -16,10 +34,41 @@ var homes: PackedInt32Array
 var works: PackedInt32Array
 var shops: PackedInt32Array
 var buildings: int = 0
+var xs: Array = []                     # x of each vertical road line (left edge), y of each horizontal one
+var ys: Array = []
+var rw: int = 2
+var towers: Array = []                 # {x0,y0,x1,y1,door} of every core building: candidates for a tall tower
+# the vertical world (filled in by levels.gd): all levels stacked in one array, ground first, so a cell index says which level it is on
+var zmax: int = 0                      # roof level of the tallest tower
+var nlev: int = 1                      # ground + upper levels + 2 underground
+var links: Dictionary = {}             # cell -> Array of cells it connects to (stairs, elevators, ladders)
+var haslink: PackedByteArray = PackedByteArray()
+var homes_g: PackedInt32Array = PackedInt32Array()   # markers on the ground level
+var works_g: PackedInt32Array = PackedInt32Array()
+var shops_g: PackedInt32Array = PackedInt32Array()
+var homes_t: PackedInt32Array = PackedInt32Array()   # markers in tower floors
+var works_t: PackedInt32Array = PackedInt32Array()
+var shops_t: PackedInt32Array = PackedInt32Array()
+var lairs: PackedInt32Array = PackedInt32Array()     # cells underground where squatters live
+var vaults: Array = []                 # Array of PackedInt32Array: the cells of each locked room (loot goes here)
+var tower_info: Array = []             # {x0,y0,x1,y1,h,stairs,elev} per built tower
+var subway: Dictionary = {}            # {ring: PackedInt32Array of track cells (level -1), stops: Array of ring indices}
 var rng := RandomNumberGenerator.new()
 
 func walkable(t: int) -> bool:
-	return t == GROUND or t == ROAD or t == FLOOR or t == DOOR or t == PARK
+	return WALK[t] == 1
+
+func level_base(lvl: int) -> int:
+	return lvl * size * size
+
+## level index (0 ground, 1..zmax above, then -1, -2) -> z
+func z_of(cell: int) -> int:
+	var l: int = cell / (size * size)
+	return l if l <= zmax else zmax - l
+
+## z -> level index
+func lvl_of_z(z: int) -> int:
+	return z if z >= 0 else zmax - z
 
 func generate(seed: int, harbor_dir: Vector2, sz: int = 256) -> void:
 	size = sz
@@ -31,6 +80,7 @@ func generate(seed: int, harbor_dir: Vector2, sz: int = 256) -> void:
 	works = PackedInt32Array()
 	shops = PackedInt32Array()
 	buildings = 0
+	towers = []
 	var dir := harbor_dir.normalized() if harbor_dir.length() > 0.01 else Vector2(1, 0)
 	# water: the side facing the harbor, with a wavy edge
 	var nw := FastNoiseLite.new()
@@ -47,9 +97,9 @@ func generate(seed: int, harbor_dir: Vector2, sz: int = 256) -> void:
 				water[y * size + x] = 1
 				tiles[y * size + x] = WATER
 	# road lines with varying block widths
-	var xs := _lines()
-	var ys := _lines()
-	var rw := rng.randi_range(2, 3)
+	xs = _lines()
+	ys = _lines()
+	rw = rng.randi_range(2, 3)
 	for lx in xs:
 		for y in size:
 			for k in rw:
@@ -147,6 +197,8 @@ func _building(bx0: int, by0: int, bx1: int, by1: int, kind: String) -> void:
 	var side := _street_side(bx0, by0, bx1, by1)
 	var door := _wall_cell(bx0, by0, bx1, by1, side)
 	tiles[door.y * size + door.x] = DOOR
+	if kind == "core":
+		towers.append({"x0": bx0, "y0": by0, "x1": bx1, "y1": by1, "door": door, "side": side})
 	# markers: houses get one home per room with some probability; towers get several desks, flats and counters per room
 	for r in rooms:
 		var n := 1 if kind == "house" else maxi(1, int(r.get_area() / 6))
@@ -166,6 +218,32 @@ func _building(bx0: int, by0: int, bx1: int, by1: int, kind: String) -> void:
 					shops.append(idx)
 				else:
 					homes.append(idx)
+
+## the plan of an upper storey: outer wall with windows, BSP rooms with doors, no street door.  Returns {tiles, rooms}.
+func floor_plan(bx0: int, by0: int, bx1: int, by1: int, plan_seed: int) -> Dictionary:
+	var saved_tiles := tiles
+	var saved_state := rng.state
+	rng.seed = plan_seed
+	tiles = PackedByteArray()
+	tiles.resize(size * size)
+	tiles.fill(AIR)
+	for y in range(by0, by1 + 1):
+		for x in range(bx0, bx1 + 1):
+			tiles[y * size + x] = FLOOR
+	for x in range(bx0, bx1 + 1):
+		tiles[by0 * size + x] = GLASS if (x % 3 != 0) else WALL
+		tiles[by1 * size + x] = GLASS if (x % 3 != 0) else WALL
+	for y in range(by0, by1 + 1):
+		tiles[y * size + bx0] = GLASS if (y % 3 != 0) else WALL
+		tiles[y * size + bx1] = GLASS if (y % 3 != 0) else WALL
+	for c in [Vector2i(bx0, by0), Vector2i(bx1, by0), Vector2i(bx0, by1), Vector2i(bx1, by1)]:
+		tiles[c.y * size + c.x] = WALL
+	var rooms := []
+	_split(bx0 + 1, by0 + 1, bx1 - 1, by1 - 1, rooms, 0)
+	var out := tiles
+	tiles = saved_tiles
+	rng.state = saved_state
+	return {"tiles": out, "rooms": rooms}
 
 func _street_side(bx0: int, by0: int, bx1: int, by1: int) -> int:
 	# 0 N, 1 S, 2 W, 3 E: whichever side has a road nearest

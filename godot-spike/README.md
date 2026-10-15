@@ -8,3 +8,7 @@ A time-boxed test of whether Godot 4 can carry Trilobit instead of CDDA.  Three 
 | 1. NPC scale with level of detail | `src/flowfield.gd`, `src/npc_sim.gd`, `tests/test_scale.gd` |
 | 2. Pocket inventory | `src/item.gd`, `src/item_db.gd`, `tests/test_pockets.gd`, `tools/export_items.py` |
 | 3. Anchored overworld and a city | `src/worldgen.gd`, `src/citygen.gd`, `data/anchors.json`, `tests/test_world.gd` |
+
+## Keys added in round three
+`<` / PgUp go up, `>` / PgDn go down (stairs, elevators, ladders; an elevator rides three floors), `t` talk, `p` pay 100 on the debt (Shift+P 1000).  Walk into a locked door to pick it; step onto a carriage while the train doors are open to board.
+Tests: `./run_all.sh` (pockets, world, scale, levels, game, vertical).  Screenshots: `xvfb-run -a godot --path . --rendering-driver opengl3 -s tests/shot3.gd`.

@@ -11,6 +11,17 @@ const WORK := 1
 const SHOP := 2
 
 var size: int
+var rows: int = 0                  # rows of the (possibly stacked) map
+var s2: int = 0                    # cells per level
+var links: Dictionary = {}
+var haslink: PackedByteArray = PackedByteArray()
+var sticky: PackedByteArray        # 1 = never leaves its home (squatters)
+var homes_g: PackedInt32Array
+var homes_t: PackedInt32Array
+var works_g: PackedInt32Array
+var works_t: PackedInt32Array
+var shops_g: PackedInt32Array
+var shops_t: PackedInt32Array
 var tiles: PackedByteArray
 var walk: PackedByteArray
 var opaque: PackedByteArray
@@ -51,14 +62,33 @@ func setup(city, count: int, seed: int) -> void:
 	homes = city.homes
 	works = city.works
 	shops = city.shops
+	s2 = size * size
+	rows = tiles.size() / size
+	links = city.links
+	haslink = city.haslink
+	if haslink.size() != tiles.size():
+		haslink = PackedByteArray()
+		haslink.resize(tiles.size())
+	if city.homes_g.size() > 0:
+		homes_g = city.homes_g; homes_t = city.homes_t
+		works_g = city.works_g; works_t = city.works_t
+		shops_g = city.shops_g; shops_t = city.shops_t
+	else:
+		homes_g = homes; homes_t = PackedInt32Array()
+		works_g = works; works_t = PackedInt32Array()
+		shops_g = shops; shops_t = PackedInt32Array()
 	walk = PackedByteArray()
 	opaque = PackedByteArray()
-	walk.resize(size * size)
-	opaque.resize(size * size)
+	walk.resize(tiles.size())
+	opaque.resize(tiles.size())
+	var lut := PackedByteArray()
+	for t in 32:
+		lut.append(1 if (t < city.WALK.size() and city.WALK[t] == 1) else 0)
 	for i in tiles.size():
-		walk[i] = 1 if city.walkable(tiles[i]) else 0
-		opaque[i] = 1 if (tiles[i] == 2) else 0
-	fields = [FF.build(tiles, size, walk, homes), FF.build(tiles, size, walk, works), FF.build(tiles, size, walk, shops)]
+		var t := tiles[i]
+		walk[i] = lut[t]
+		opaque[i] = 1 if (t == 2 or t == 17) else 0
+	fields = [FF.build(tiles, size, walk, homes, links, haslink), FF.build(tiles, size, walk, works, links, haslink), FF.build(tiles, size, walk, shops, links, haslink)]
 	n = count
 	pos = PackedInt32Array(); pos.resize(n)
 	dest = PackedInt32Array(); dest.resize(n)
@@ -69,11 +99,12 @@ func setup(city, count: int, seed: int) -> void:
 	depart = PackedInt32Array(); depart.resize(n)
 	arrive = PackedInt32Array(); arrive.resize(n); arrive.fill(-1)
 	near_slot = PackedInt32Array(); near_slot.resize(n); near_slot.fill(-1)
-	at = PackedInt32Array(); at.resize(size * size); at.fill(-1)
+	at = PackedInt32Array(); at.resize(tiles.size()); at.fill(-1)
+	sticky = PackedByteArray(); sticky.resize(n)
 	alive = PackedByteArray(); alive.resize(n); alive.fill(1)
 	ctl = PackedByteArray(); ctl.resize(n)
 	for i in n:
-		var h := _scatter(homes[rng.randi() % homes.size()], 9)
+		var h := _scatter(_pick(homes_g, homes_t), 9)
 		home_cell[i] = h
 		pos[i] = h
 		dest[i] = h
@@ -83,6 +114,11 @@ func _dist_to(cell_a: int, cell_b: int) -> int:
 	return maxi(absi(cell_a % size - cell_b % size), absi(cell_a / size - cell_b / size))
 
 ## a random walkable floor cell within r of a marker, so that people sharing a building do not share a cell
+func _pick(g: PackedInt32Array, t: PackedInt32Array) -> int:
+	if t.is_empty() or (not g.is_empty() and rng.randf() < 0.55):
+		return g[rng.randi() % g.size()]
+	return t[rng.randi() % t.size()]
+
 func _scatter(c: int, r: int) -> int:
 	for _t in 24:
 		var nx := c % size + rng.randi_range(-r, r)
@@ -96,13 +132,13 @@ func _scatter(c: int, r: int) -> int:
 
 func _pick_dest(g: int, i: int) -> int:
 	match g:
-		WORK: return _scatter(works[rng.randi() % works.size()], 4)
-		SHOP: return _scatter(shops[rng.randi() % shops.size()], 4)
+		WORK: return _scatter(_pick(works_g, works_t), 4)
+		SHOP: return _scatter(_pick(shops_g, shops_t), 4)
 		_: return home_cell[i]
 
 ## a new goal for agent i
 func set_goal(i: int, g: int) -> void:
-	if alive[i] == 0:
+	if alive[i] == 0 or sticky[i] == 1:
 		return
 	goal[i] = g
 	dest[i] = _pick_dest(g, i)
@@ -194,7 +230,7 @@ func _demote(i: int) -> void:
 	ctl[i] = 0
 	if at[pos[i]] == i:
 		at[pos[i]] = -1
-	if idle[i] == 0:
+	if idle[i] == 0 and sticky[i] == 0:
 		var d: int = fields[goal[i]][pos[i]]
 		if d < FF.UNREACHED:
 			depart[i] = tick
@@ -227,6 +263,35 @@ func _sees(a: int, b: int, limit: int) -> bool:
 			return false
 	return true
 
+## promote or demote one agent according to its distance to the player (a different level is always far)
+func _tier(i: int) -> void:
+	if alive[i] == 0:
+		return
+	var d := _dist_to(pos[i], player)
+	if near[i] == 0:
+		if arrive[i] >= 0:
+			# in transit: its true position is only known roughly; use a straight-line estimate, on the level it is leaving for the
+			# first half of the trip and the level it is heading for in the second half
+			var total := maxi(1, arrive[i] - depart[i])
+			var frac := clampf(float(tick - depart[i]) / total, 0.0, 1.0)
+			var o: int = pos[i]
+			var de: int = dest[i]
+			var lvl: int = (o / s2) if frac < 0.5 else (de / s2)
+			var tx: int = int(lerpf(o % size, de % size, frac))
+			var ty: int = int(lerpf((o / size) % size, (de / size) % size, frac))
+			d = _dist_to(lvl * s2 + ty * size + tx, player)
+		if d < near_radius:
+			_promote(i)
+	else:
+		if d > near_radius + 12:
+			_demote(i)
+
+## examine everyone now (after the player changes level, or on load) instead of waiting for the rolling slice
+func retier(player_cell: int) -> void:
+	player = player_cell
+	for i in n:
+		_tier(i)
+
 func step(player_cell: int) -> void:
 	player = player_cell
 	if tick % 60 == 0:
@@ -244,26 +309,7 @@ func step(player_cell: int) -> void:
 	var slice := n / 8 + 1
 	var start := (tick % 8) * slice
 	for i in range(start, mini(start + slice, n)):
-		if alive[i] == 0:
-			continue
-		var cell: int = pos[i]
-		var d := _dist_to(cell, player)
-		if near[i] == 0:
-			if arrive[i] >= 0:
-				# in transit: close enough to the player to matter?  its true position is only known roughly, use a straight-line estimate
-				var f: PackedInt32Array = fields[goal[i]]
-				var total := maxi(1, arrive[i] - depart[i])
-				var frac := clampf(float(tick - depart[i]) / total, 0.0, 1.0)
-				var ox := pos[i] % size
-				var oy := pos[i] / size
-				var tx: int = int(lerpf(ox, dest[i] % size, frac))
-				var ty: int = int(lerpf(oy, dest[i] / size, frac))
-				d = maxi(absi(tx - player % size), absi(ty - player / size))
-			if d < near_radius:
-				_promote(i)
-		else:
-			if d > near_radius + 12:
-				_demote(i)
+		_tier(i)
 	# full agents
 	seen_player = 0
 	var plx := player % size
@@ -274,7 +320,7 @@ func step(player_cell: int) -> void:
 		if perception_standin and absi(c % size - plx) <= 25 and absi(c / size - ply) <= 25:
 			if _sees(c, player, 25):
 				seen_player += 1
-		if idle[i] == 1 or ctl[i] == 1:
+		if idle[i] == 1 or ctl[i] == 1 or sticky[i] == 1:
 			continue
 		var f: PackedInt32Array = fields[goal[i]]
 		var cur: int = f[c]
@@ -301,12 +347,31 @@ func step(player_cell: int) -> void:
 			if f[nb] < bv and at[nb] == -1:
 				bv = f[nb]
 				best = nb
+		if best == c and haslink[c] == 1:
+			for nb in links[c]:
+				if f[nb] < bv and at[nb] == -1:
+					bv = f[nb]
+					best = nb
 		if best != c:
 			at[c] = -1
 			at[best] = i
 			pos[i] = best
 	tick += 1
 
+
+## put agent i on a cell now (the game moves people around: collectors arriving, a squatter being stationed)
+func place(i: int, cell: int) -> void:
+	if alive[i] == 0:
+		return
+	if near[i] == 1:
+		idle[i] = 1
+		_demote(i)
+	arrive[i] = -1
+	pos[i] = cell
+	dest[i] = cell
+	idle[i] = 1
+	if _dist_to(cell, player) < near_radius:
+		_promote(i)
 
 ## the game kills an agent: take it out of every structure
 func remove_agent(i: int) -> void:

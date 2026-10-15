@@ -7,6 +7,9 @@ const FF = preload("res://src/flowfield.gd")
 const ItemScript = preload("res://src/item.gd")
 const DB = preload("res://src/item_db.gd")
 const FOV = preload("res://src/fov.gd")
+const LV = preload("res://src/levels.gd")
+const TR = preload("res://src/transit.gd")
+const EC = preload("res://src/economy.gd")
 
 const UNAWARE := 0
 const SUSPICIOUS := 1
@@ -31,6 +34,11 @@ var sim
 var db
 var fov
 var size: int
+var s2: int = 0                      # cells per level
+var rows: int = 0                    # rows of the stacked map
+var total: int = 0                   # cells in all levels
+var transit
+var eco
 var turn: int = 0
 var game_over: bool = false
 var log: Array = []
@@ -101,19 +109,28 @@ func setup(n_people: int = 1200) -> void:
 					gun_ids[t].append(k)
 	city = CG.new()
 	city.generate(seed_value, Vector2(1, 0.2))
+	LV.build(city, seed_value)
 	size = city.size
+	s2 = size * size
+	total = city.tiles.size()
+	rows = total / size
 	sim = SIM.new()
 	sim.perception_standin = false
 	sim.setup(city, n_people, seed_value ^ 0x5eed)
 	sim.tick = 7 * 60 - 20
 	fov = FOV.new()
 	fov.setup(size, sim.opaque)
-	pf = PackedInt32Array(); pf.resize(size * size); pf.fill(FF.UNREACHED)
-	veh_at = PackedInt32Array(); veh_at.resize(size * size); veh_at.fill(-1)
+	pf = PackedInt32Array(); pf.resize(total); pf.fill(FF.UNREACHED)
+	veh_at = PackedInt32Array(); veh_at.resize(total); veh_at.fill(-1)
 	_people()
 	_roads_and_cars()
 	_loot()
+	_vault_loot()
 	_start_player()
+	transit = TR.new()
+	transit.setup(self)
+	eco = EC.new()
+	eco.setup(self)
 	fov.compute(pc % size, pc / size, 18)
 	say("You step out onto the street.  Morning in the city.  [?] for keys.")
 
@@ -218,6 +235,17 @@ func _loot() -> void:
 			_: it = _new_item(kind)
 		_put(c, it)
 
+func _vault_loot() -> void:
+	for cells in city.vaults:
+		var arr: PackedInt32Array = cells
+		if arr.is_empty():
+			continue
+		_put(arr[rng.randi() % arr.size()], _new_item(_random_gun()))
+		_put(arr[rng.randi() % arr.size()], _new_item("trl_yen", rng.randi_range(300, 900)))
+		_put(arr[rng.randi() % arr.size()], _new_item("trl_ammo", rng.randi_range(2, 4)))
+		if rng.randf() < 0.5:
+			_put(arr[rng.randi() % arr.size()], _new_item("trl_backpack"))
+
 func _put(cell: int, it) -> void:
 	if not items_at.has(cell):
 		items_at[cell] = []
@@ -248,8 +276,36 @@ func _start_player() -> void:
 func cheb(a: int, b: int) -> int:
 	return maxi(absi(a % size - b % size), absi(a / size - b / size))
 
+## which level the player (or any cell) is on: 0 ground, 1.. above, negative below
+func z_of(c: int) -> int:
+	return city.z_of(c)
+
+func lx(c: int) -> int:
+	return c % size
+
+func ly(c: int) -> int:
+	return (c / size) % size
+
+func zname(c: int) -> String:
+	var z := z_of(c)
+	if z > 0:
+		return "Floor %d" % z
+	match z:
+		0: return "Street level"
+		-1: return "Subway & tunnels"
+		_: return "Sewers"
+
+## the tower whose footprint contains the cell's x,y (any level), or {}
+func tower_at(c: int) -> Dictionary:
+	var x := lx(c)
+	var y := ly(c)
+	for t in city.tower_info:
+		if x >= t["x0"] and x <= t["x1"] and y >= t["y0"] and y <= t["y1"]:
+			return t
+	return {}
+
 func in_bounds(x: int, y: int) -> bool:
-	return x >= 0 and y >= 0 and x < size and y < size
+	return x >= 0 and y >= 0 and x < size and y < rows
 
 func hostile(i: int) -> bool:
 	match fac[i]:
@@ -258,6 +314,8 @@ func hostile(i: int) -> bool:
 		_: return false
 
 func name_of(i: int) -> String:
+	if eco != null and eco.role[i] != 0:
+		return "%s (%s)" % [nname[i], eco.label(i)]
 	return "%s the %s" % [nname[i], FAC_NAMES[fac[i]]]
 
 func time_text() -> String:
@@ -376,6 +434,8 @@ func act_move(dx: int, dy: int) -> bool:
 		return false
 	if in_vehicle >= 0:
 		return drive(dx, dy)
+	if transit.riding >= 0:
+		return transit.ride_move(dx, dy)
 	var nx: int = pc % size + dx
 	var ny: int = pc / size + dy
 	if not in_bounds(nx, ny):
@@ -390,8 +450,13 @@ func act_move(dx: int, dy: int) -> bool:
 	if veh_at[c] != -1:
 		say("A car blocks the way.  [e] to get in.")
 		return false
+	if city.tiles[c] == CG.LOCKED:
+		return _pick_lock(c)
 	if sim.walk[c] == 0:
 		return false
+	if city.tiles[c] == CG.TRACK and transit.try_board(c):
+		end_turn()
+		return true
 	pc = c
 	if items_at.has(c):
 		var names := []
@@ -403,6 +468,82 @@ func act_move(dx: int, dy: int) -> bool:
 
 func act_wait() -> void:
 	end_turn()
+
+## the lock on a door: theft skill against the floor's security
+func _pick_lock(c: int) -> bool:
+	var z := absi(z_of(c))
+	var chance := clampi(28 + skills["theft"] * 9 - z * 2, 10, 90)
+	if rng.randi() % 100 < chance:
+		city.tiles[c] = CG.DOOR
+		sim.tiles[c] = CG.DOOR
+		say("You work the lock open.")
+		skill_up("theft", 3 + z / 6)
+		_noise(c, 5)
+	else:
+		say("The lock holds.  You fumble with it.")
+		_noise(c, 8)
+		_witness(c, 9, 6, -1)
+	end_turn()
+	return true
+
+## climb or descend where the cell links to another level.  dir +1 up, -1 down.  An elevator carries you up to three floors.
+func act_vertical(dir: int) -> bool:
+	if in_vehicle >= 0 or transit.riding >= 0:
+		return false
+	if not city.haslink[pc] == 1:
+		say("There is no way %s here." % ("up" if dir > 0 else "down"))
+		return false
+	var here_lvl := pc / s2
+	var best := -1
+	for nb in city.links[pc]:
+		var z_to := z_of(nb)
+		if (dir > 0 and z_to > z_of(pc)) or (dir < 0 and z_to < z_of(pc)):
+			best = nb
+	if best < 0:
+		say("There is no way %s from here." % ("up" if dir > 0 else "down"))
+		return false
+	var elevator: bool = city.tiles[pc] == CG.ELEVATOR
+	if sim.at[best] >= 0:
+		say("Someone is in the way.")
+		return false
+	var steps := 1
+	var cur := best
+	if elevator:
+		while steps < 3:
+			var nxt := -1
+			for nb in city.links[cur]:
+				if (dir > 0 and z_of(nb) > z_of(cur)) or (dir < 0 and z_of(nb) < z_of(cur)):
+					nxt = nb
+			if nxt < 0 or sim.at[nxt] >= 0:
+				break
+			cur = nxt
+			steps += 1
+	pc = cur
+	var kind: String = "The elevator whirs" if elevator else ("You climb the stairs" if city.tiles[pc] == CG.STAIRS else "You climb the ladder")
+	say("%s %s to %s." % [kind, "up" if dir > 0 else "down", zname(pc)])
+	var tw := tower_at(pc)
+	if z_of(pc) > 0 and not tw.is_empty():
+		say("(%d of %d floors)" % [z_of(pc), tw["h"]])
+	sim.retier(pc)
+	end_turn()
+	return true
+
+func act_pay(amount: int) -> bool:
+	return eco.pay(amount)
+
+## the nearest person within reach who is not trying to kill you
+func talk_target() -> int:
+	var best := -1
+	var bd := 3
+	for k in sim.near_list.size():
+		var i: int = sim.near_list[k]
+		if sim.alive[i] == 0 or astate[i] == HUNTING or astate[i] == FLEEING:
+			continue
+		var d := cheb(sim.pos[i], pc)
+		if d < bd:
+			bd = d
+			best = i
+	return best
 
 func act_crouch() -> void:
 	crouch = not crouch
@@ -588,7 +729,7 @@ func act_fire(any: bool = false) -> bool:
 	var total := 0
 	for s in shots:
 		var chance: int = int(st["acc"]) + skills["ranged"] * 2 - 4 * maxi(0, d - 3) - (0 if d <= int(st["range"]) else 25)
-		chance = clampi(chance, 8, 95)
+		chance = clampi(chance - eco.aim_penalty(), 8, 95)
 		if rng.randi() % 100 < chance:
 			var dmg: int = rng.randi_range(int(st["dmg"][0]), int(st["dmg"][1]))
 			hits += 1
@@ -628,8 +769,10 @@ func _noise(cell: int, radius: int) -> void:
 func end_turn() -> void:
 	turn += 1
 	sim.step(pc)
+	transit.step()
 	_ai()
 	_vehicles()
+	eco.step()
 	if turn % 20 == 0 and heat > 0:
 		heat -= 1
 	if turn % 12 == 0 and hp < hp_max and in_vehicle < 0:
@@ -654,8 +797,7 @@ func _build_pf() -> void:
 		if dd > 40:
 			continue
 		var cx := cur % size
-		var cy := cur / size
-		for nb in [cur - 1 if cx > 0 else -1, cur + 1 if cx < size - 1 else -1, cur - size if cy > 0 else -1, cur + size if cy < size - 1 else -1]:
+		for nb in [cur - 1 if cx > 0 else -1, cur + 1 if cx < size - 1 else -1, cur - size, cur + size if cur + size < total else -1]:
 			if nb >= 0 and pf[nb] > dd and (sim.walk[nb] == 1 or nb == pc):
 				pf[nb] = dd
 				pf_touched.append(nb)
@@ -694,7 +836,7 @@ func _step_field(i: int) -> bool:
 	var best := -1
 	var bv: int = pf[c]
 	for nb in [c - 1, c + 1, c - size, c + size]:
-		if nb < 0 or nb >= size * size:
+		if nb < 0 or nb >= total:
 			continue
 		if pf[nb] < bv and sim.walk[nb] == 1 and sim.at[nb] == -1 and nb != pc:
 			bv = pf[nb]
@@ -1012,7 +1154,7 @@ func _vehicles() -> void:
 			var best := -1
 			var bv := cur
 			for nb in [c - 1, c + 1, c - size, c + size]:
-				if nb >= 0 and nb < size * size and f[nb] < bv and veh_at[nb] == -1 and sim.at[nb] == -1 and nb != pc:
+				if nb >= 0 and nb < s2 and f[nb] < bv and veh_at[nb] == -1 and sim.at[nb] == -1 and nb != pc:
 					bv = f[nb]
 					best = nb
 			if best < 0:
@@ -1033,7 +1175,7 @@ func save_dict() -> Dictionary:
 		o["color"] = v["color"].to_html()
 		vs.append(o)
 	return {"seed": seed_value, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "ammo": ammo, "skills": skills, "xp": xp, "in_vehicle": in_vehicle,
-			"rng_state": str(rng.state), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
+			"rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 			"items_at": it_at, "vehicles": vs, "tick": sim.tick, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
 					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc),
@@ -1065,7 +1207,7 @@ func load_dict(d: Dictionary) -> void:
 			arr.append(ItemScript.from_dict(x, db))
 		items_at[int(k)] = arr
 	# vehicles: undo the freshly generated ones, then restore
-	for c in veh_at.size():
+	for c in s2:
 		if veh_at[c] != -1:
 			sim.walk[c] = 1 if city.walkable(city.tiles[c]) else 0
 	veh_at.fill(-1)
@@ -1079,6 +1221,8 @@ func load_dict(d: Dictionary) -> void:
 		veh_at[o["cell"]] = vehicles.size() - 1
 		sim.walk[o["cell"]] = 0
 	sim.tick = int(d["tick"])
+	transit.load_from(d["transit"])
+	eco.load_from(d["eco"])
 	var nn: Dictionary = d["npc"]
 	# rebuild the agent structures from the saved arrays
 	sim.near_list = PackedInt32Array()

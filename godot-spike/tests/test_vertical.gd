@@ -1,0 +1,232 @@
+extends RefCounted
+## Round three: floors, stairs, elevators, locked doors, the subway, the debt and implant clocks, jobs, vendors, save/load.
+const GameScript = preload("res://src/game.gd")
+const CG = preload("res://src/citygen.gd")
+
+func run() -> Array:
+	var st := [0, 0]
+	var log := []
+	var check = func(name: String, cond: bool) -> void:
+		st[1] += 1
+		if cond:
+			st[0] += 1
+		log.append(("  PASS " if cond else "  FAIL ") + name)
+	var t0 := Time.get_ticks_msec()
+	var g = GameScript.new(5)
+	g.setup(1500)
+	log.append("  (setup %d ms; %d levels; %d towers; %d people)" % [Time.get_ticks_msec() - t0, g.city.nlev, g.city.tower_info.size(), g.sim.n])
+	var tall: Dictionary = {}
+	for t in g.city.tower_info:
+		if tall.is_empty() or int(t["h"]) > int(tall["h"]):
+			tall = t
+	var S: int = tall["stairs"]
+	var E: int = tall["elev"]
+	# --- stairs and elevators
+	g.pc = S
+	g.sim.retier(g.pc)
+	g.fov.compute(g.lx(g.pc), g.pc / g.size, 18)
+	var ok_up := true
+	for k in 5:
+		ok_up = g.act_vertical(1) and ok_up
+	check.call("five flights of stairs up: floor 5, same x,y", ok_up and g.z_of(g.pc) == 5 and g.pc % g.s2 == S)
+	g.act_vertical(-1)
+	check.call("and one flight down", g.z_of(g.pc) == 4)
+	g.pc = E
+	g.act_vertical(1)
+	check.call("an elevator rides three floors at a time", g.z_of(g.pc) == 3)
+	for k in 12:
+		g.act_vertical(1)
+	check.call("the elevator takes you to the roof of the 30-storey tower", g.z_of(g.pc) == 30 and g.city.tiles[g.pc] == CG.ELEVATOR)
+	check.call("there is no way up from the roof", not g.act_vertical(1))
+	check.call("the roof is 30 storeys up", int(tall["h"]) == 30)
+	# --- people on upper floors become real agents when you arrive
+	var res := -1
+	for i in g.sim.n:
+		if g.sim.home_cell[i] / g.s2 >= 6 and g.sim.pos[i] == g.sim.home_cell[i] and g.sim.arrive[i] < 0:
+			res = i
+			break
+	check.call("someone lives above the sixth floor", res >= 0)
+	g.pc = g.sim.home_cell[res]
+	g.sim.at[g.pc] = -1
+	g.sim.retier(g.pc)
+	g.fov.compute(g.lx(g.pc), g.pc / g.size, 18)
+	var same := 0
+	for k in g.sim.near_list.size():
+		if g.sim.pos[g.sim.near_list[k]] / g.s2 == g.pc / g.s2:
+			same += 1
+	check.call("arriving on a floor promotes its residents (%d near)" % same, g.sim.near[res] == 1 and same >= 1)
+	var other := 0
+	for k in g.sim.near_list.size():
+		if g.sim.pos[g.sim.near_list[k]] / g.s2 != g.pc / g.s2:
+			other += 1
+	check.call("nobody on other floors is a full agent", other == 0)
+	# --- view: only this floor is visible
+	var seen_other := false
+	for i in range(0, g.s2 * 2, 997):
+		if g.fov.visible[i] == 1 and (i / g.s2) != (g.pc / g.s2):
+			seen_other = true
+	check.call("FOV stays on the floor you are on", not seen_other)
+	# --- locked vault
+	check.call("there are locked vaults with loot", g.city.vaults.size() >= 3)
+	var vault: PackedInt32Array = g.city.vaults[0]
+	var loot_cells := 0
+	for c in vault:
+		if g.items_at.has(c):
+			loot_cells += 1
+	check.call("vault holds loot", loot_cells >= 1)
+	var door := -1
+	var vc: int = vault[0]
+	for dy in range(-9, 10):
+		for dx in range(-9, 10):
+			var c: int = vc + dy * g.size + dx
+			if door < 0 and g.city.tiles[c] == CG.LOCKED:
+				door = c
+	check.call("a locked door guards the vault", door >= 0)
+	var from := -1
+	for nb in [door - 1, door + 1, door - g.size, door + g.size]:
+		if g.city.tiles[nb] == CG.FLOOR and g.sim.at[nb] == -1 and not vault.has(nb):
+			from = nb
+	if from < 0:
+		for nb in [door - 1, door + 1, door - g.size, door + g.size]:
+			if g.city.tiles[nb] == CG.FLOOR and g.sim.at[nb] == -1:
+				from = nb
+	g.pc = from
+	var dx2: int = (door % g.size) - (from % g.size)
+	var dy2: int = ((door / g.size) % g.size) - ((from / g.size) % g.size)
+	g.skills["theft"] = 6
+	var tries := 0
+	while g.city.tiles[door] == CG.LOCKED and tries < 40:
+		g.pc = from
+		g.act_move(dx2, dy2)
+		tries += 1
+	check.call("picking the lock opens the door (%d tries)" % tries, g.city.tiles[door] == CG.DOOR)
+	# --- the subway
+	var tr = g.transit
+	check.call("subway runs on a ring with four stops", tr.active() and tr.stops.size() == 4)
+	var h0: int = tr.head
+	for k in 20:
+		tr.step()
+	check.call("the train moves along the ring", tr.head != h0)
+	var waits := 0
+	while tr.dwell == 0 and waits < 2000:
+		tr.step()
+		waits += 1
+	check.call("the train stops at a station (%d steps)" % waits, tr.dwell > 0)
+	var car: int = tr.car_cell(1)
+	var plat := -1
+	for nb in [car - 1, car + 1, car - g.size, car + g.size]:
+		if g.city.tiles[nb] == CG.PLATFORM:
+			plat = nb
+	check.call("a platform lies beside a stopped carriage", plat >= 0)
+	g.pc = plat
+	g.sim.retier(g.pc)
+	var board_dx: int = (car % g.size) - (plat % g.size)
+	var board_dy: int = ((car / g.size) % g.size) - ((plat / g.size) % g.size)
+	g.act_move(board_dx, board_dy)
+	check.call("stepping onto an open carriage boards", tr.riding >= 0 and g.pc == tr.car_cell(tr.riding))
+	var start_cell: int = g.pc
+	var guard := 0
+	while (tr.dwell > 0 or guard < 3) and guard < 60:
+		g.act_wait()
+		guard += 1
+	var after_dwell_pc: int = g.pc
+	var moved_ok: bool = tr.riding >= 0 and g.pc == tr.car_cell(tr.riding)
+	check.call("while riding, you travel with the train", moved_ok)
+	var rides := 0
+	while tr.dwell == 0 and rides < 200:
+		g.act_wait()
+		rides += 1
+	var far: int = g.cheb(g.pc, start_cell)
+	check.call("it carries you to the next station (%d cells in %d turns)" % [far, rides], tr.dwell > 0 and far > 30 and g.hp > 0)
+	var exit_dx := 0
+	var exit_dy := 0
+	for d in [[1, 0], [-1, 0], [0, 1], [0, -1]]:
+		if g.city.tiles[g.pc + d[1] * g.size + d[0]] == CG.PLATFORM:
+			exit_dx = d[0]
+			exit_dy = d[1]
+	g.act_move(exit_dx, exit_dy)
+	check.call("you can step off onto the platform", tr.riding < 0 and g.city.tiles[g.pc] == CG.PLATFORM)
+	var hp_before: int = g.hp
+	var track_cell: int = tr.ring[(tr.head + 1) % tr.ring.size()] + tr.base
+	g.pc = track_cell
+	tr.dwell = 0
+	tr.step()
+	check.call("standing on the track when the train comes through hurts", g.hp < hp_before)
+	# --- debt
+	g.hp = g.hp_max
+	var debt0: int = g.eco.debt
+	g.sim.tick = 1440 * 2 - 1
+	g.end_turn()
+	check.call("interest accrues at midnight", g.eco.debt > debt0)
+	g.yen = 1000
+	var d1: int = g.eco.debt
+	g.act_pay(500)
+	check.call("paying reduces debt and cash", g.eco.debt == d1 - 500 and g.yen == 500)
+	g.sim.tick = 3 * 1440 + 8 * 60 - 1
+	var arrears0: int = g.eco.arrears
+	g.eco.paid_cycle = 0
+	g.end_turn()
+	check.call("a missed installment adds arrears and a fee", g.eco.arrears == arrears0 + 1)
+	g.sim.tick = 6 * 1440 + 8 * 60 - 1
+	g.end_turn()
+	var collectors := 0
+	for i in g.sim.n:
+		if g.nname[i].begins_with("Collector") and g.astate[i] == g.HUNTING:
+			collectors += 1
+	check.call("the second miss sends collectors (%d)" % collectors, g.eco.arrears == 2 and collectors >= 1)
+	# --- implant
+	g.eco.implant_left = 1
+	g.end_turn()
+	check.call("a dead implant hurts your aim", g.eco.aim_penalty() > 0)
+	var ripper := -1
+	for i in g.sim.n:
+		if g.eco.role[i] == 2:
+			ripper = i
+	check.call("a ripperdoc exists", ripper >= 0)
+	g.yen = 2000
+	var m: Dictionary = g.eco.menu_for(ripper)
+	g.eco.choose(m, 0)
+	check.call("servicing resets the implant to 96h", g.eco.implant_left == 96 * 60 and g.yen < 2000)
+	# --- vendors and jobs
+	var vendor := -1
+	var fixer := -1
+	for i in g.sim.n:
+		if g.eco.role[i] == 1 and vendor < 0:
+			vendor = i
+		if g.eco.role[i] == 3 and fixer < 0:
+			fixer = i
+	g.yen = 500
+	var inv0: int = g.inventory_list().size()
+	g.eco.choose(g.eco.menu_for(vendor), 0)
+	check.call("a vendor sells food", g.yen < 500 and g.inventory_list().size() >= inv0)
+	g.eco.job = {}
+	g.eco.choose(g.eco.menu_for(fixer), 0)
+	check.call("a fixer gives a courier job to a high floor", g.eco.job.get("kind", "") == "courier" and int(g.eco.job["z"]) >= 4 and g.eco._find("trl_parcel") != null)
+	var y0: int = g.yen
+	g.pc = g.eco.job["cell"]
+	g.sim.retier(g.pc)
+	g.end_turn()
+	check.call("delivering the parcel pays and clears the job", g.yen > y0 and g.eco.job.is_empty() and g.eco.jobs_done == 1)
+	g.eco.choose(g.eco.menu_for(fixer), 1)
+	check.call("a retrieval job places a data case", g.eco.job.get("kind", "") == "retrieval" and g.items_at.has(int(g.eco.job["cell"])))
+	var y1: int = g.yen
+	g.pc = g.eco.job["cell"]
+	g.sim.retier(g.pc)
+	g.act_pickup()
+	check.call("recovering the case pays", g.yen > y1 and g.eco.job.is_empty())
+	# --- save / load
+	g.pc = g.eco.job.get("cell", S) if false else S
+	var d1s: int = g.eco.debt
+	var head1: int = g.transit.head
+	var blob: String = JSON.stringify(g.save_dict())
+	var d = JSON.parse_string(blob)
+	g.load_dict(d)
+	check.call("save and load keep the debt, the train and the position", g.eco.debt == d1s and g.transit.head == head1 and g.pc == S)
+	# --- speed
+	var t1 := Time.get_ticks_msec()
+	for k in 120:
+		g.end_turn()
+	var per: float = float(Time.get_ticks_msec() - t1) / 120.0
+	log.append("  (%.1f ms per full turn with %d people, %d cells in %d levels)" % [per, g.sim.n, g.total, g.city.nlev])
+	check.call("a turn stays under 15 ms", per < 15.0)
+	return [st[0], st[1], log]

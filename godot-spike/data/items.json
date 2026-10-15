@@ -1374,6 +1374,42 @@
   "looks_like": "granola"
  },
  {
+  "id": "trl_parcel",
+  "name": "sealed parcel",
+  "weight_g": 600,
+  "volume_ml": 1500,
+  "length_mm": 250,
+  "price": 0,
+  "tags": [
+   "job"
+  ],
+  "looks_like": "box_small"
+ },
+ {
+  "id": "trl_datacase",
+  "name": "encrypted data case",
+  "weight_g": 1800,
+  "volume_ml": 6000,
+  "length_mm": 420,
+  "price": 400,
+  "tags": [
+   "job"
+  ],
+  "looks_like": "briefcase"
+ },
+ {
+  "id": "trl_medkit",
+  "name": "trauma patch",
+  "weight_g": 120,
+  "volume_ml": 100,
+  "length_mm": 120,
+  "price": 40,
+  "tags": [
+   "medical"
+  ],
+  "looks_like": "bandages"
+ },
+ {
   "id": "trl_credstick",
   "name": "credstick",
   "weight_g": 10,

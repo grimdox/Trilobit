@@ -39,10 +39,14 @@ func run() -> Array:
 	check.call("about two thousand people exist, some of them hostile factions", g.fac.count(1) > 40 and g.fac.count(2) > 40)
 	# awareness: a hostile person starts to notice a player who walks into view
 	var thug := -1
-	for i in g.sim.n:
-		if g.fac[i] == 1 and g.sim.alive[i] == 1 and g.city.tiles[g.sim.pos[i]] == 1:
-			thug = i
+	for _wait in 400:                      # let the morning commute put someone on a street
+		for i in g.sim.n:
+			if g.fac[i] == 1 and g.sim.alive[i] == 1 and g.sim.pos[i] < g.s2 and g.city.tiles[g.sim.pos[i]] == 1:
+				thug = i
+				break
+		if thug >= 0:
 			break
+		g.end_turn()
 	var anchor: int = g.sim.pos[thug]
 	g.pc = anchor
 	var placed := -1
