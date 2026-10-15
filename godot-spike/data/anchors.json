@@ -1,0 +1,10 @@
+{
+ "size": [96, 64],
+ "//": "Anchors always exist.  Their position moves inside the box (fractions of the map); relations place later anchors from earlier ones.",
+ "coast": {"sides": ["E", "S", "W"], "depth_min": 7, "depth_max": 13},
+ "mountains": {"side": "opposite_coast", "depth_min": 9, "depth_max": 15},
+ "big_city": {"x": [0.36, 0.64], "y": [0.34, 0.66], "radius_min": 13, "radius_max": 17},
+ "harbor": {"relation": "city_edge_nearest_coast", "radius": 4},
+ "airport": {"relation": "flat_land_outside_city", "min_dist_from_city": 6, "max_dist_from_city": 16, "radius": 3},
+ "industrial_belt": {"relation": "between_city_and_harbor", "radius": 4}
+}

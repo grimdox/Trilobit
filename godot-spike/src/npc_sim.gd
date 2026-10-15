@@ -1,0 +1,263 @@
+extends RefCounted
+## Spike test 1: many NPCs with level-of-detail.
+##  near the player (< near_radius): a full agent, one step per tick down a shared flow field, with an occupancy check and a
+##  line-of-sight perception check against the player (a stand-in for real AI cost)
+##  far: abstract.  Only a goal, a destination and an arrival tick; nothing is computed until it arrives or the player comes close,
+##  when its position is reconstructed by walking the field for the elapsed time (capped).
+## Struct-of-arrays storage, a bucketed arrival queue, and a rolling slice for tier checks keep the per-tick cost bounded.
+const FF = preload("res://src/flowfield.gd")
+const HOME := 0
+const WORK := 1
+const SHOP := 2
+
+var size: int
+var tiles: PackedByteArray
+var walk: PackedByteArray
+var opaque: PackedByteArray
+var fields: Array = []
+var homes: PackedInt32Array
+var works: PackedInt32Array
+var shops: PackedInt32Array
+var n: int = 0
+var near_radius: int = 45
+var rng := RandomNumberGenerator.new()
+
+var pos: PackedInt32Array          # cell index
+var dest: PackedInt32Array         # specific destination cell
+var home_cell: PackedInt32Array
+var goal: PackedByteArray
+var near: PackedByteArray          # 1 if a full agent
+var idle: PackedByteArray          # near agent that has arrived
+var depart: PackedInt32Array
+var arrive: PackedInt32Array       # tick of arrival for far agents in transit, -1 if none
+var occ: PackedByteArray
+var buckets: Dictionary = {}       # tick -> PackedInt32Array of agents
+var near_list: PackedInt32Array
+var near_slot: PackedInt32Array
+var tick: int = 0
+var player: int = 0
+var promotions: int = 0
+var demotions: int = 0
+var churn_per_tick: int = 0        # stress option: this many random agents get a new random goal every tick (keeps everyone walking)
+var seen_player: int = 0           # agents that currently see the player (output of the perception stand-in)
+
+func setup(city, count: int, seed: int) -> void:
+	rng.seed = seed
+	size = city.size
+	tiles = city.tiles
+	homes = city.homes
+	works = city.works
+	shops = city.shops
+	walk = PackedByteArray()
+	opaque = PackedByteArray()
+	walk.resize(size * size)
+	opaque.resize(size * size)
+	for i in tiles.size():
+		walk[i] = 1 if city.walkable(tiles[i]) else 0
+		opaque[i] = 1 if (tiles[i] == 2) else 0
+	fields = [FF.build(tiles, size, walk, homes), FF.build(tiles, size, walk, works), FF.build(tiles, size, walk, shops)]
+	n = count
+	pos = PackedInt32Array(); pos.resize(n)
+	dest = PackedInt32Array(); dest.resize(n)
+	home_cell = PackedInt32Array(); home_cell.resize(n)
+	goal = PackedByteArray(); goal.resize(n)
+	near = PackedByteArray(); near.resize(n)
+	idle = PackedByteArray(); idle.resize(n)
+	depart = PackedInt32Array(); depart.resize(n)
+	arrive = PackedInt32Array(); arrive.resize(n); arrive.fill(-1)
+	near_slot = PackedInt32Array(); near_slot.resize(n); near_slot.fill(-1)
+	occ = PackedByteArray(); occ.resize(size * size)
+	for i in n:
+		var h := homes[rng.randi() % homes.size()]
+		home_cell[i] = h
+		pos[i] = h
+		dest[i] = h
+		goal[i] = HOME
+
+func _dist_to(cell_a: int, cell_b: int) -> int:
+	return maxi(absi(cell_a % size - cell_b % size), absi(cell_a / size - cell_b / size))
+
+func _pick_dest(g: int, i: int) -> int:
+	match g:
+		WORK: return works[rng.randi() % works.size()]
+		SHOP: return shops[rng.randi() % shops.size()]
+		_: return home_cell[i]
+
+## a new goal for agent i
+func set_goal(i: int, g: int) -> void:
+	goal[i] = g
+	dest[i] = _pick_dest(g, i)
+	if near[i] == 1:
+		idle[i] = 0
+	else:
+		var d: int = fields[g][pos[i]]
+		if d >= FF.UNREACHED:
+			return
+		depart[i] = tick
+		arrive[i] = tick + d
+		_bucket(arrive[i], i)
+
+func _bucket(t: int, i: int) -> void:
+	if not buckets.has(t):
+		buckets[t] = PackedInt32Array()
+	buckets[t].append(i)
+
+func _schedule() -> void:
+	var hour := (tick / 60) % 24
+	for i in n:
+		var r := rng.randf()
+		var g := int(goal[i])
+		if hour == 7 and r < 0.6 and g == HOME:
+			set_goal(i, WORK)
+		elif hour == 12 and r < 0.25 and g == WORK:
+			set_goal(i, SHOP)
+		elif hour == 13 and g == SHOP:
+			set_goal(i, WORK)
+		elif hour == 17 and g != HOME and r < 0.9:
+			set_goal(i, SHOP if r < 0.15 else HOME)
+		elif hour == 19 and g == SHOP:
+			set_goal(i, HOME)
+		elif hour == 21 and g != HOME:
+			set_goal(i, HOME)
+
+func _promote(i: int) -> void:
+	# reconstruct the position of an agent that was in transit
+	if arrive[i] >= 0:
+		var elapsed := mini(tick - depart[i], 400)
+		var f: PackedInt32Array = fields[goal[i]]
+		var c := pos[i]
+		for _s in elapsed:
+			var best := c
+			var bv: int = f[c]
+			for nb in [c - 1, c + 1, c - size, c + size]:
+				if nb >= 0 and nb < f.size() and f[nb] < bv and walk[nb] == 1:
+					bv = f[nb]
+					best = nb
+			if best == c:
+				break
+			c = best
+		pos[i] = c
+		arrive[i] = -1
+	near[i] = 1
+	idle[i] = 0
+	near_slot[i] = near_list.size()
+	near_list.append(i)
+	occ[pos[i]] = mini(255, occ[pos[i]] + 1)
+	promotions += 1
+
+func _demote(i: int) -> void:
+	var s := near_slot[i]
+	var last := near_list[near_list.size() - 1]
+	near_list[s] = last
+	near_slot[last] = s
+	near_list.resize(near_list.size() - 1)
+	near_slot[i] = -1
+	near[i] = 0
+	occ[pos[i]] = maxi(0, occ[pos[i]] - 1)
+	if idle[i] == 0:
+		var d: int = fields[goal[i]][pos[i]]
+		if d < FF.UNREACHED:
+			depart[i] = tick
+			arrive[i] = tick + d
+			_bucket(arrive[i], i)
+	demotions += 1
+
+## line of sight on the tile grid (integer Bresenham), up to `limit` tiles
+func _sees(a: int, b: int, limit: int) -> bool:
+	var x0 := a % size
+	var y0 := a / size
+	var x1 := b % size
+	var y1 := b / size
+	var dx := absi(x1 - x0)
+	var dy := absi(y1 - y0)
+	if maxi(dx, dy) > limit:
+		return false
+	var sx := 1 if x0 < x1 else -1
+	var sy := 1 if y0 < y1 else -1
+	var err := dx - dy
+	while x0 != x1 or y0 != y1:
+		var e2 := 2 * err
+		if e2 > -dy:
+			err -= dy
+			x0 += sx
+		if e2 < dx:
+			err += dx
+			y0 += sy
+		if opaque[y0 * size + x0] == 1 and (x0 != x1 or y0 != y1):
+			return false
+	return true
+
+func step(player_cell: int) -> void:
+	player = player_cell
+	if tick % 60 == 0:
+		_schedule()
+	for _c in churn_per_tick:
+		set_goal(rng.randi() % n, rng.randi() % 3)
+	# arrivals of far agents
+	if buckets.has(tick):
+		for i in buckets[tick]:
+			if arrive[i] == tick and near[i] == 0:
+				pos[i] = dest[i]
+				arrive[i] = -1
+		buckets.erase(tick)
+	# tier checks on a rolling slice (each agent is examined once every 8 ticks)
+	var slice := n / 8 + 1
+	var start := (tick % 8) * slice
+	for i in range(start, mini(start + slice, n)):
+		var cell: int = pos[i]
+		var d := _dist_to(cell, player)
+		if near[i] == 0:
+			if arrive[i] >= 0:
+				# in transit: close enough to the player to matter?  its true position is only known roughly, use a straight-line estimate
+				var f: PackedInt32Array = fields[goal[i]]
+				var total := maxi(1, arrive[i] - depart[i])
+				var frac := clampf(float(tick - depart[i]) / total, 0.0, 1.0)
+				var ox := pos[i] % size
+				var oy := pos[i] / size
+				var tx: int = int(lerpf(ox, dest[i] % size, frac))
+				var ty: int = int(lerpf(oy, dest[i] / size, frac))
+				d = maxi(absi(tx - player % size), absi(ty - player / size))
+			if d < near_radius:
+				_promote(i)
+		else:
+			if d > near_radius + 12:
+				_demote(i)
+	# full agents
+	seen_player = 0
+	var plx := player % size
+	var ply := player / size
+	for k in near_list.size():
+		var i := near_list[k]
+		var c := pos[i]
+		# perception stand-in: line of sight to the player within 25 tiles
+		if absi(c % size - plx) <= 25 and absi(c / size - ply) <= 25:
+			if _sees(c, player, 25):
+				seen_player += 1
+		if idle[i] == 1:
+			continue
+		var f: PackedInt32Array = fields[goal[i]]
+		var cur: int = f[c]
+		if cur == 0 or cur >= FF.UNREACHED:
+			idle[i] = 1
+			pos[i] = dest[i] if _dist_to(c, dest[i]) < 14 else c   # last mile: snap (a small A* window replaces this later)
+			continue
+		var best := c
+		var bv := cur
+		var rot := (i + tick) & 3
+		for t in 4:
+			var nb := c
+			match (t + rot) & 3:
+				0: nb = c - 1
+				1: nb = c + 1
+				2: nb = c - size
+				_: nb = c + size
+			if nb < 0 or nb >= f.size() or walk[nb] == 0:
+				continue
+			if f[nb] < bv and occ[nb] < 2:
+				bv = f[nb]
+				best = nb
+		if best != c:
+			occ[c] -= 1
+			occ[best] += 1
+			pos[i] = best
+	tick += 1

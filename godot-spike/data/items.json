@@ -1,0 +1,856 @@
+[
+ {
+  "id": "trl_gun_hx9",
+  "name": "HX-9 Fuji",
+  "desc": "A smooth, balanced 9mm submachine gun carried by city security.  Made by Hoshikawa Arms.",
+  "weight_g": 2600,
+  "volume_ml": 1300,
+  "length_mm": 450,
+  "price": 2600,
+  "tags": [
+   "gun",
+   "smg"
+  ]
+ },
+ {
+  "id": "trl_gun_sm9",
+  "name": "SM-9 Kagero",
+  "desc": "A vertical-magazine 9mm SMG with almost no felt recoil.  Made by Sakurada Precision.",
+  "weight_g": 2300,
+  "volume_ml": 1150,
+  "length_mm": 450,
+  "price": 3400,
+  "tags": [
+   "gun",
+   "smg"
+  ]
+ },
+ {
+  "id": "trl_gun_vs45",
+  "name": "VS-45 Buran",
+  "desc": "A crude, cheap .45 submachine gun that never seems to jam.  Made by Volkov Works.",
+  "weight_g": 3400,
+  "volume_ml": 1700,
+  "length_mm": 450,
+  "price": 900,
+  "tags": [
+   "gun",
+   "smg"
+  ]
+ },
+ {
+  "id": "trl_gun_zp19",
+  "name": "ZP-19 Vikhr",
+  "desc": "A short, loud, fast-firing SMG for room fights.  Made by Zarya Combine.",
+  "weight_g": 2000,
+  "volume_ml": 1000,
+  "length_mm": 450,
+  "price": 1200,
+  "tags": [
+   "gun",
+   "smg"
+  ]
+ },
+ {
+  "id": "trl_gun_gk7",
+  "name": "GK-7 Grizzly",
+  "desc": "A drum-fed .45 submachine gun with a heavy, steady hit.  Made by Granite Arms.",
+  "weight_g": 4300,
+  "volume_ml": 2150,
+  "length_mm": 450,
+  "price": 2800,
+  "tags": [
+   "gun",
+   "smg"
+  ]
+ },
+ {
+  "id": "trl_gun_ls5",
+  "name": "LS-5 Panda",
+  "desc": "A high-capacity helical-magazine carbine, quiet and compact.  Made by Longhai Ordnance.",
+  "weight_g": 2300,
+  "volume_ml": 1150,
+  "length_mm": 450,
+  "price": 2200,
+  "tags": [
+   "gun",
+   "smg"
+  ]
+ },
+ {
+  "id": "trl_gun_fs9",
+  "name": "FS-9 Needle",
+  "desc": "A tiny machine pistol that fits under a coat.  Made by Feng-Xu Arms.",
+  "weight_g": 1300,
+  "volume_ml": 650,
+  "length_mm": 450,
+  "price": 1500,
+  "tags": [
+   "gun",
+   "smg"
+  ]
+ },
+ {
+  "id": "trl_gun_sp45",
+  "name": "SP-45 Hayabusa",
+  "desc": "A slim target-grade .45 with a crisp trigger.  Made by Sakurada Precision.",
+  "weight_g": 1000,
+  "volume_ml": 500,
+  "length_mm": 200,
+  "price": 2400,
+  "tags": [
+   "gun",
+   "pistol"
+  ]
+ },
+ {
+  "id": "trl_gun_zp9",
+  "name": "ZP-9 Gnezdo",
+  "desc": "A small, blunt 9mm pistol: ugly, reliable and everywhere in the slums.  Made by Zarya Combine.",
+  "weight_g": 700,
+  "volume_ml": 350,
+  "length_mm": 200,
+  "price": 380,
+  "tags": [
+   "gun",
+   "pistol"
+  ]
+ },
+ {
+  "id": "trl_gun_fp7",
+  "name": "FP-7 Lotus",
+  "desc": "A slim 20-round pistol firing a small, fast, armor-piercing round.  Made by Feng-Xu Arms.",
+  "weight_g": 650,
+  "volume_ml": 325,
+  "length_mm": 200,
+  "price": 1700,
+  "tags": [
+   "gun",
+   "pistol"
+  ]
+ },
+ {
+  "id": "trl_gun_hp40",
+  "name": "HP-40 Sagi",
+  "desc": "A six-shot revolver in 10mm with a short, quick-pointing barrel.  Made by Hoshikawa Arms.",
+  "weight_g": 1000,
+  "volume_ml": 500,
+  "length_mm": 220,
+  "price": 1400,
+  "tags": [
+   "gun",
+   "revolver"
+  ]
+ },
+ {
+  "id": "trl_gun_gp10",
+  "name": "GP-10 Mustang",
+  "desc": "A huge gas-operated hand cannon.  It is as loud as it looks.  Made by Granite Arms.",
+  "weight_g": 1900,
+  "volume_ml": 950,
+  "length_mm": 200,
+  "price": 3000,
+  "tags": [
+   "gun",
+   "pistol"
+  ]
+ },
+ {
+  "id": "trl_gun_lp22",
+  "name": "LP-22 Sparrow",
+  "desc": "A quiet little .22 target pistol that thieves like.  Made by Longhai Ordnance.",
+  "weight_g": 500,
+  "volume_ml": 250,
+  "length_mm": 200,
+  "price": 300,
+  "tags": [
+   "gun",
+   "pistol"
+  ]
+ },
+ {
+  "id": "trl_gun_vr38",
+  "name": "VR-38 Kolokol",
+  "desc": "A plain six-shooter built to be dropped, kicked and fired again.  Made by Volkov Works.",
+  "weight_g": 900,
+  "volume_ml": 450,
+  "length_mm": 220,
+  "price": 450,
+  "tags": [
+   "gun",
+   "revolver"
+  ]
+ },
+ {
+  "id": "trl_gun_sr44",
+  "name": "SR-44 Okami",
+  "desc": "A long-barrel .44 revolver for patient, accurate shots.  Made by Sakurada Precision.",
+  "weight_g": 1500,
+  "volume_ml": 750,
+  "length_mm": 220,
+  "price": 2100,
+  "tags": [
+   "gun",
+   "revolver"
+  ]
+ },
+ {
+  "id": "trl_gun_gr500",
+  "name": "GR-500 Thunderhead",
+  "desc": "A five-shot .500 revolver: slow, heavy and devastating.  Made by Granite Arms.",
+  "weight_g": 2100,
+  "volume_ml": 1050,
+  "length_mm": 220,
+  "price": 2900,
+  "tags": [
+   "gun",
+   "revolver"
+  ]
+ },
+ {
+  "id": "trl_gun_ha5",
+  "name": "HA-5 Kaede",
+  "desc": "A short, light carbine for patrols in corridors.  Made by Hoshikawa Arms.",
+  "weight_g": 2900,
+  "volume_ml": 1450,
+  "length_mm": 900,
+  "price": 3000,
+  "tags": [
+   "gun",
+   "rifle"
+  ]
+ },
+ {
+  "id": "trl_gun_sa14",
+  "name": "SA-14 Zuiun",
+  "desc": "A burst-fire rifle with a long barrel and fine sights.  Made by Sakurada Precision.",
+  "weight_g": 3400,
+  "volume_ml": 1700,
+  "length_mm": 900,
+  "price": 3500,
+  "tags": [
+   "gun",
+   "rifle"
+  ]
+ },
+ {
+  "id": "trl_gun_vk74",
+  "name": "VK-74 Granit",
+  "desc": "A mid-weight semi-automatic rifle, tough and honest.  Made by Volkov Works.",
+  "weight_g": 3300,
+  "volume_ml": 1650,
+  "length_mm": 900,
+  "price": 1400,
+  "tags": [
+   "gun",
+   "rifle"
+  ]
+ },
+ {
+  "id": "trl_gun_zk15",
+  "name": "ZK-15 Taiga",
+  "desc": "A modernised AK-pattern rifle with a short tactical barrel.  Made by Zarya Combine.",
+  "weight_g": 3500,
+  "volume_ml": 1750,
+  "length_mm": 900,
+  "price": 2100,
+  "tags": [
+   "gun",
+   "rifle"
+  ]
+ },
+ {
+  "id": "trl_gun_ga10",
+  "name": "GA-10 Ironwood",
+  "desc": "A full-power battle rifle with a steel barrel.  Made by Granite Arms.",
+  "weight_g": 4200,
+  "volume_ml": 2100,
+  "length_mm": 900,
+  "price": 3300,
+  "tags": [
+   "gun",
+   "rifle"
+  ]
+ },
+ {
+  "id": "trl_gun_lk95",
+  "name": "LK-95 Jade",
+  "desc": "A light bullpup rifle with an ambidextrous receiver.  Made by Longhai Ordnance.",
+  "weight_g": 3200,
+  "volume_ml": 1600,
+  "length_mm": 900,
+  "price": 2500,
+  "tags": [
+   "gun",
+   "rifle"
+  ]
+ },
+ {
+  "id": "trl_gun_fk9",
+  "name": "FK-9 Lantern",
+  "desc": "A long-range bullpup rifle with a folding stock.  Made by Feng-Xu Arms.",
+  "weight_g": 3800,
+  "volume_ml": 1900,
+  "length_mm": 900,
+  "price": 3200,
+  "tags": [
+   "gun",
+   "rifle"
+  ]
+ },
+ {
+  "id": "trl_gun_gm14",
+  "name": "GM-14 Patriot",
+  "desc": "A blocky, accurate battle rifle that has seen three generations.  Made by Granite Arms.",
+  "weight_g": 4500,
+  "volume_ml": 2250,
+  "length_mm": 900,
+  "price": 3000,
+  "tags": [
+   "gun",
+   "rifle"
+  ]
+ },
+ {
+  "id": "trl_gun_vs44",
+  "name": "VS-44 Kholod",
+  "desc": "A simple, long semi-automatic carbine with a fixed magazine.  Made by Volkov Works.",
+  "weight_g": 3800,
+  "volume_ml": 1900,
+  "length_mm": 900,
+  "price": 700,
+  "tags": [
+   "gun",
+   "rifle"
+  ]
+ },
+ {
+  "id": "trl_gun_lc30",
+  "name": "LC-30 Dragonfly",
+  "desc": "A light carbine with a thin stock, easy to carry all day.  Made by Longhai Ordnance.",
+  "weight_g": 2400,
+  "volume_ml": 1200,
+  "length_mm": 900,
+  "price": 900,
+  "tags": [
+   "gun",
+   "rifle"
+  ]
+ },
+ {
+  "id": "trl_gun_hs10",
+  "name": "HS-10 Raiden",
+  "desc": "A semi-automatic shotgun with a quick follow-up shot.  Made by Hoshikawa Arms.",
+  "weight_g": 3600,
+  "volume_ml": 1800,
+  "length_mm": 950,
+  "price": 1400,
+  "tags": [
+   "gun",
+   "shotgun"
+  ]
+ },
+ {
+  "id": "trl_gun_zs20",
+  "name": "ZS-20 Kabanchik",
+  "desc": "A boxy semi-automatic with a big detachable magazine.  Made by Zarya Combine.",
+  "weight_g": 3800,
+  "volume_ml": 1900,
+  "length_mm": 950,
+  "price": 1100,
+  "tags": [
+   "gun",
+   "shotgun"
+  ]
+ },
+ {
+  "id": "trl_gun_gs12",
+  "name": "GS-12 Warden",
+  "desc": "A riot shotgun with a long magazine tube.  Made by Granite Arms.",
+  "weight_g": 3500,
+  "volume_ml": 1750,
+  "length_mm": 950,
+  "price": 1100,
+  "tags": [
+   "gun",
+   "shotgun"
+  ]
+ },
+ {
+  "id": "trl_gun_ls12",
+  "name": "LS-12 Pagoda",
+  "desc": "A compact twin-tube pump that holds a lot of shells.  Made by Longhai Ordnance.",
+  "weight_g": 3100,
+  "volume_ml": 1550,
+  "length_mm": 950,
+  "price": 1700,
+  "tags": [
+   "gun",
+   "shotgun"
+  ]
+ },
+ {
+  "id": "trl_gun_ss12",
+  "name": "SS-12 Tsubame",
+  "desc": "A clip-on and standalone door-breaker shotgun.  Made by Sakurada Precision.",
+  "weight_g": 2500,
+  "volume_ml": 1250,
+  "length_mm": 950,
+  "price": 1600,
+  "tags": [
+   "gun",
+   "shotgun"
+  ]
+ },
+ {
+  "id": "trl_gun_fs410",
+  "name": "FS-410 Quail",
+  "desc": "A two-barrel pocket shotgun for close, ugly encounters.  Made by Feng-Xu Arms.",
+  "weight_g": 600,
+  "volume_ml": 300,
+  "length_mm": 950,
+  "price": 500,
+  "tags": [
+   "gun",
+   "shotgun"
+  ]
+ },
+ {
+  "id": "trl_gun_sd7",
+  "name": "SD-7 Kiri",
+  "desc": "A scoped semi-automatic marksman rifle.  Made by Sakurada Precision.",
+  "weight_g": 5000,
+  "volume_ml": 2500,
+  "length_mm": 1100,
+  "price": 4800,
+  "tags": [
+   "gun",
+   "sniper"
+  ]
+ },
+ {
+  "id": "trl_gun_vd62",
+  "name": "VD-62 Ruchey",
+  "desc": "An ancient bolt-action rifle with a modern scope: still deadly.  Made by Volkov Works.",
+  "weight_g": 4200,
+  "volume_ml": 2100,
+  "length_mm": 1100,
+  "price": 900,
+  "tags": [
+   "gun",
+   "sniper"
+  ]
+ },
+ {
+  "id": "trl_gun_zd54",
+  "name": "ZD-54 Filin",
+  "desc": "A heavy bolt-action rifle that shoots a huge round very far.  Made by Zarya Combine.",
+  "weight_g": 11000,
+  "volume_ml": 5500,
+  "length_mm": 1100,
+  "price": 9000,
+  "tags": [
+   "gun",
+   "sniper"
+  ]
+ },
+ {
+  "id": "trl_gun_fd338",
+  "name": "FD-338 Heron",
+  "desc": "A folding precision rifle with a thick, damped barrel.  Made by Feng-Xu Arms.",
+  "weight_g": 6100,
+  "volume_ml": 3050,
+  "length_mm": 1100,
+  "price": 7000,
+  "tags": [
+   "gun",
+   "sniper"
+  ]
+ },
+ {
+  "id": "trl_gun_hd308",
+  "name": "HD-308 Tanuki",
+  "desc": "A dependable bolt-action hunting rifle set up for the city.  Made by Hoshikawa Arms.",
+  "weight_g": 4300,
+  "volume_ml": 2150,
+  "length_mm": 1100,
+  "price": 1800,
+  "tags": [
+   "gun",
+   "sniper"
+  ]
+ },
+ {
+  "id": "trl_gun_gd300",
+  "name": "GD-300 Longshot",
+  "desc": "A chassis rifle with a hand-lapped barrel.  Made by Granite Arms.",
+  "weight_g": 5700,
+  "volume_ml": 2850,
+  "length_mm": 1100,
+  "price": 3800,
+  "tags": [
+   "gun",
+   "sniper"
+  ]
+ },
+ {
+  "id": "trl_gun_ld10",
+  "name": "LD-10 Pale Horse",
+  "desc": "A long-range magnum rifle with an integral suppressor.  Made by Longhai Ordnance.",
+  "weight_g": 6000,
+  "volume_ml": 3000,
+  "length_mm": 1100,
+  "price": 6400,
+  "tags": [
+   "gun",
+   "sniper"
+  ]
+ },
+ {
+  "id": "trl_gun_vm12",
+  "name": "VM-12 Tundra",
+  "desc": "A tripod-mounted heavy machine gun.  It needs a strong back or a vehicle.  Made by Volkov Works.",
+  "weight_g": 38000,
+  "volume_ml": 19000,
+  "length_mm": 1300,
+  "price": 12000,
+  "tags": [
+   "gun",
+   "heavy_mg"
+  ]
+ },
+ {
+  "id": "trl_gun_zm74",
+  "name": "ZM-74 Rokot",
+  "desc": "A semi-auto belt-fed support gun for patient shooters.  Made by Zarya Combine.",
+  "weight_g": 9500,
+  "volume_ml": 4750,
+  "length_mm": 1000,
+  "price": 4500,
+  "tags": [
+   "gun",
+   "mg"
+  ]
+ },
+ {
+  "id": "trl_gun_gm134",
+  "name": "GM-134 Hornet",
+  "desc": "A six-barrel minigun on a harness.  Do not run out of ammunition.  Made by Granite Arms.",
+  "weight_g": 19000,
+  "volume_ml": 9500,
+  "length_mm": 1300,
+  "price": 28000,
+  "tags": [
+   "gun",
+   "heavy_mg"
+  ]
+ },
+ {
+  "id": "trl_gun_hm5",
+  "name": "HM-5 Kujira",
+  "desc": "A heavy belt-fed machine gun with a quick-change barrel.  Made by Hoshikawa Arms.",
+  "weight_g": 9800,
+  "volume_ml": 4900,
+  "length_mm": 1000,
+  "price": 4800,
+  "tags": [
+   "gun",
+   "mg"
+  ]
+ },
+ {
+  "id": "trl_gun_lm7",
+  "name": "LM-7 Tiger",
+  "desc": "An automatic battle rifle with a bipod, good for suppressing fire.  Made by Longhai Ordnance.",
+  "weight_g": 8800,
+  "volume_ml": 4400,
+  "length_mm": 1000,
+  "price": 3600,
+  "tags": [
+   "gun",
+   "mg"
+  ]
+ },
+ {
+  "id": "trl_gun_gl40",
+  "name": "GL-40 Pumpkin",
+  "desc": "A break-open single-shot grenade launcher.  Made by Granite Arms.",
+  "weight_g": 2700,
+  "volume_ml": 1350,
+  "length_mm": 800,
+  "price": 2400,
+  "tags": [
+   "gun",
+   "launcher"
+  ]
+ },
+ {
+  "id": "trl_gun_zl40",
+  "name": "ZL-40 Gvozd",
+  "desc": "A grenade launcher that clips under a rifle.  Made by Zarya Combine.",
+  "weight_g": 1600,
+  "volume_ml": 800,
+  "length_mm": 800,
+  "price": 2000,
+  "tags": [
+   "gun",
+   "launcher"
+  ]
+ },
+ {
+  "id": "trl_gun_fl80",
+  "name": "FL-80 Cloud",
+  "desc": "A four-tube rocket launcher that fills a street with fire.  Made by Feng-Xu Arms.",
+  "weight_g": 6500,
+  "volume_ml": 3250,
+  "length_mm": 800,
+  "price": 8000,
+  "tags": [
+   "gun",
+   "launcher"
+  ]
+ },
+ {
+  "id": "trl_gun_he3",
+  "name": "HE-3 Kitsune",
+  "desc": "A silent laser pistol with a rotating heat sink.  Made by Hoshikawa Arms.",
+  "weight_g": 1000,
+  "volume_ml": 500,
+  "length_mm": 700,
+  "price": 5500,
+  "tags": [
+   "gun",
+   "laser"
+  ]
+ },
+ {
+  "id": "trl_gun_se9",
+  "name": "SE-9 Prism",
+  "desc": "A mid-range laser carbine with a precise cooling jacket.  Made by Sakurada Precision.",
+  "weight_g": 2600,
+  "volume_ml": 1300,
+  "length_mm": 700,
+  "price": 8000,
+  "tags": [
+   "gun",
+   "laser"
+  ]
+ },
+ {
+  "id": "trl_gun_fe7",
+  "name": "FE-7 Needle Beam",
+  "desc": "A thin-beam laser rifle for long, patient shots.  Made by Feng-Xu Arms.",
+  "weight_g": 3400,
+  "volume_ml": 1700,
+  "length_mm": 700,
+  "price": 12000,
+  "tags": [
+   "gun",
+   "laser"
+  ]
+ },
+ {
+  "id": "trl_backpack",
+  "name": "commuter backpack",
+  "weight_g": 700,
+  "volume_ml": 1500,
+  "length_mm": 450,
+  "price": 120,
+  "tags": [
+   "container",
+   "worn"
+  ],
+  "pockets": [
+   {
+    "id": "main",
+    "max_volume_ml": 22000,
+    "max_weight_g": 15000,
+    "flexible": true,
+    "allow_tags": [],
+    "watertight": false,
+    "max_item_length_mm": 0
+   },
+   {
+    "id": "side",
+    "max_volume_ml": 1500,
+    "max_weight_g": 3000,
+    "flexible": false,
+    "allow_tags": [
+     "bottle"
+    ],
+    "watertight": false,
+    "max_item_length_mm": 300
+   }
+  ]
+ },
+ {
+  "id": "trl_holster",
+  "name": "thigh holster",
+  "weight_g": 250,
+  "volume_ml": 400,
+  "length_mm": 300,
+  "price": 60,
+  "tags": [
+   "container",
+   "worn"
+  ],
+  "pockets": [
+   {
+    "id": "holster",
+    "max_volume_ml": 600,
+    "max_weight_g": 2500,
+    "flexible": false,
+    "allow_tags": [
+     "pistol",
+     "revolver"
+    ],
+    "watertight": false,
+    "max_item_length_mm": 260
+   }
+  ]
+ },
+ {
+  "id": "trl_coat",
+  "name": "long coat",
+  "weight_g": 1400,
+  "volume_ml": 3000,
+  "length_mm": 800,
+  "price": 300,
+  "tags": [
+   "container",
+   "worn"
+  ],
+  "pockets": [
+   {
+    "id": "inner",
+    "max_volume_ml": 2500,
+    "max_weight_g": 4000,
+    "flexible": true,
+    "allow_tags": [],
+    "watertight": false,
+    "max_item_length_mm": 0
+   },
+   {
+    "id": "left",
+    "max_volume_ml": 600,
+    "max_weight_g": 1000,
+    "flexible": true,
+    "allow_tags": [],
+    "watertight": false,
+    "max_item_length_mm": 0
+   },
+   {
+    "id": "right",
+    "max_volume_ml": 600,
+    "max_weight_g": 1000,
+    "flexible": true,
+    "allow_tags": [],
+    "watertight": false,
+    "max_item_length_mm": 0
+   }
+  ]
+ },
+ {
+  "id": "trl_pouch",
+  "name": "belt pouch",
+  "weight_g": 120,
+  "volume_ml": 250,
+  "length_mm": 180,
+  "price": 20,
+  "tags": [
+   "container"
+  ],
+  "pockets": [
+   {
+    "id": "main",
+    "max_volume_ml": 1200,
+    "max_weight_g": 2000,
+    "flexible": true,
+    "allow_tags": [],
+    "watertight": false,
+    "max_item_length_mm": 0
+   }
+  ]
+ },
+ {
+  "id": "trl_duffel",
+  "name": "duffel bag",
+  "weight_g": 900,
+  "volume_ml": 1800,
+  "length_mm": 700,
+  "price": 80,
+  "tags": [
+   "container"
+  ],
+  "pockets": [
+   {
+    "id": "main",
+    "max_volume_ml": 55000,
+    "max_weight_g": 30000,
+    "flexible": true,
+    "allow_tags": [],
+    "watertight": false,
+    "max_item_length_mm": 0
+   }
+  ]
+ },
+ {
+  "id": "trl_water_bottle",
+  "name": "water bottle",
+  "weight_g": 80,
+  "volume_ml": 600,
+  "length_mm": 230,
+  "price": 5,
+  "tags": [
+   "container",
+   "bottle"
+  ],
+  "pockets": [
+   {
+    "id": "liquid",
+    "max_volume_ml": 500,
+    "max_weight_g": 600,
+    "flexible": false,
+    "allow_tags": [
+     "liquid"
+    ],
+    "watertight": true,
+    "max_item_length_mm": 0
+   }
+  ]
+ },
+ {
+  "id": "trl_water",
+  "name": "water",
+  "weight_g": 1,
+  "volume_ml": 1,
+  "length_mm": 0,
+  "price": 0,
+  "tags": [
+   "liquid"
+  ],
+  "per_unit": true
+ },
+ {
+  "id": "trl_ration",
+  "name": "cyber ration bar",
+  "weight_g": 90,
+  "volume_ml": 80,
+  "length_mm": 150,
+  "price": 15,
+  "tags": [
+   "food"
+  ]
+ },
+ {
+  "id": "trl_credstick",
+  "name": "credstick",
+  "weight_g": 10,
+  "volume_ml": 4,
+  "length_mm": 80,
+  "price": 0,
+  "tags": [
+   "card"
+  ]
+ }
+]
