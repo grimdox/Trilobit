@@ -260,6 +260,13 @@ func run() -> Array:
 		g.pc = op2
 		g._move_vehicle(mi, op2)
 		g.stance = g.WALKING
+		for q in range(1, 7):
+			if g.thing_at[op2 + q] >= 0:
+				g._remove_thing(g.thing_at[op2 + q])
+			if q >= 2:
+				g.city.tiles[op2 + q] = CG.GROUND
+				g.sim.tiles[op2 + q] = CG.GROUND
+				g.sim.walk[op2 + q] = 1
 		check.call("it jumps five cells", g.act_jump(1, 0) and g.pc == op2 + 5 and g.veh_at[g.pc] == mi)
 		g.player_hurt(500, "Test")
 		check.call("a wrecked mech throws you clear", g.in_vehicle == -1 and g.vehicles[mi]["hp"] <= 0)

@@ -59,6 +59,7 @@ func run() -> Array:
 		if placed >= 0:
 			break
 	g.pc = placed
+	g.sim.sticky[thug] = 1                # keep him on the street while he is promoted
 	for k in 12:
 		g.end_turn()                      # promotes the thug to a full agent
 	var hot := -1

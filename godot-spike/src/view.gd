@@ -101,6 +101,32 @@ func _draw() -> void:
 				draw_rect(r.grow(-5), Color(0.15, 0.2, 0.3))
 				draw_rect(Rect2(r.position.x + 4, r.position.y + 4, r.size.x - 8, 3), Color(1, 0.9, 0.5))
 			k += 1
+	# loose things and animals
+	for t in game.things:
+		if t["k"] == "":
+			continue
+		var tc: int = t["cell"]
+		if tc / s2 != base / s2 or game.fov.visible[tc] == 0:
+			continue
+		var tx: int = tc % size - ox
+		var ty: int = (tc / size) % size - oy
+		if tx < 0 or ty < 0 or tx >= cols or ty >= rows:
+			continue
+		var tid: String = "f_" + String(t["k"]) + ("_c" if t["k"] == "crate" else "")
+		if not _blit(tid, Vector2(tx * T, ty * T)):
+			draw_rect(Rect2(tx * T + 6, ty * T + 6, T - 12, T - 12), Color(0.6, 0.45, 0.25))
+	for k in game.critters:
+		if k["k"] == "":
+			continue
+		var kc: int = k["cell"]
+		if kc / s2 != base / s2 or game.fov.visible[kc] == 0:
+			continue
+		var kx: int = kc % size - ox
+		var ky: int = (kc / size) % size - oy
+		if kx < 0 or ky < 0 or kx >= cols or ky >= rows:
+			continue
+		if not _blit("mon_" + String(k["k"]), Vector2(kx * T, ky * T)):
+			draw_string(font, Vector2(kx * T + T * 0.3, ky * T + T * 0.7), "d" if k["k"] == "dog" else "c", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.9, 0.7, 0.4))
 	# vehicles (they stay on the ground)
 	for v in game.vehicles:
 		var c: int = v["cell"]

@@ -3270,6 +3270,7 @@
    "slow": true,
    "parry": 10,
    "bleed": true,
+   "knock": 0.35,
    "verb": "cleave"
   },
   "culture": "Japanese"
@@ -3298,6 +3299,7 @@
    "slow": true,
    "parry": 10,
    "bleed": true,
+   "knock": 0.35,
    "verb": "cleave"
   },
   "culture": "Japanese"
@@ -3326,6 +3328,7 @@
    "slow": true,
    "parry": 15,
    "bleed": true,
+   "knock": 0.35,
    "verb": "cleave"
   },
   "culture": "Japanese"
@@ -3516,6 +3519,7 @@
    "acc": 0,
    "stun": 0.25,
    "parry": 20,
+   "knock": 0.4,
    "verb": "crack"
   },
   "culture": "Japanese"
@@ -3543,6 +3547,7 @@
    "acc": 4,
    "stun": 0.25,
    "parry": 20,
+   "knock": 0.4,
    "verb": "crack"
   },
   "culture": "Japanese"
@@ -3570,6 +3575,7 @@
    "acc": 8,
    "stun": 0.25,
    "parry": 25,
+   "knock": 0.4,
    "verb": "crack"
   },
   "culture": "Japanese"
@@ -4176,6 +4182,7 @@
    "acc": 0,
    "slow": true,
    "bleed": true,
+   "knock": 0.5,
    "verb": "chop"
   },
   "culture": "Japanese"
@@ -4203,6 +4210,7 @@
    "acc": 4,
    "slow": true,
    "bleed": true,
+   "knock": 0.5,
    "verb": "chop"
   },
   "culture": "Japanese"
@@ -4230,6 +4238,7 @@
    "acc": 8,
    "slow": true,
    "bleed": true,
+   "knock": 0.5,
    "verb": "chop",
    "parry": 5
   },
@@ -4592,6 +4601,7 @@
    "reach": 1,
    "acc": 0,
    "stun": 0.15,
+   "knock": 0.3,
    "verb": "chop"
   },
   "culture": "Russian"
@@ -4618,6 +4628,7 @@
    "reach": 1,
    "acc": 4,
    "stun": 0.15,
+   "knock": 0.3,
    "verb": "chop"
   },
   "culture": "Russian"
@@ -4644,6 +4655,7 @@
    "reach": 1,
    "acc": 8,
    "stun": 0.15,
+   "knock": 0.3,
    "verb": "chop",
    "parry": 5
   },
@@ -4672,6 +4684,7 @@
    "acc": 0,
    "stun": 0.2,
    "flail": true,
+   "knock": 0.4,
    "verb": "smash"
   },
   "culture": "Russian"
@@ -4699,6 +4712,7 @@
    "acc": 4,
    "stun": 0.2,
    "flail": true,
+   "knock": 0.4,
    "verb": "smash"
   },
   "culture": "Russian"
@@ -4726,6 +4740,7 @@
    "acc": 8,
    "stun": 0.2,
    "flail": true,
+   "knock": 0.4,
    "verb": "smash",
    "parry": 5
   },
@@ -4835,6 +4850,7 @@
    "reach": 1,
    "acc": 0,
    "bleed": true,
+   "knock": 0.3,
    "verb": "chop"
   },
   "culture": "Russian"
@@ -4861,6 +4877,7 @@
    "reach": 1,
    "acc": 4,
    "bleed": true,
+   "knock": 0.3,
    "verb": "chop"
   },
   "culture": "Russian"
@@ -4887,6 +4904,7 @@
    "reach": 1,
    "acc": 8,
    "bleed": true,
+   "knock": 0.3,
    "verb": "chop",
    "parry": 5
   },

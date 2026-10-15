@@ -55,6 +55,7 @@ var works_t: PackedInt32Array = PackedInt32Array()
 var shops_t: PackedInt32Array = PackedInt32Array()
 var lairs: PackedInt32Array = PackedInt32Array()     # cells underground where squatters live
 var vaults: Array = []                 # Array of PackedInt32Array: the cells of each locked room (loot goes here)
+var movables: Array = []               # [cell, kind] props the game turns into pushable things (crates, tables, chairs)
 var tower_info: Array = []             # {x0,y0,x1,y1,h,stairs,elev} per built tower
 var subway: Dictionary = {}            # {ring: PackedInt32Array of track cells (level -1), stops: Array of ring indices}
 var rng := RandomNumberGenerator.new()

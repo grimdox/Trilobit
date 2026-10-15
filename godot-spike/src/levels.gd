@@ -71,6 +71,7 @@ static func build(c, seed: int) -> void:
 	_bridges(c, all, rng)
 	_underground(c, all, links, rng)
 
+	c.movables = []
 	_props(c, all, links, rng)
 	c.tiles = all
 	c.links = links
@@ -105,7 +106,7 @@ static func _props(c, all: PackedByteArray, links: Dictionary, rng: RandomNumber
 	for _n in 5000:
 		var x: int = rng.randi_range(2, size - 3)
 		var y: int = rng.randi_range(2, size - 3)
-		_prop_try(all, skip, y * size + x, size, rng)
+		_prop_try(c, all, skip, y * size + x, size, rng)
 	# floors and roofs of each tower
 	for t in c.tower_info:
 		var x0: int = t["x0"]
@@ -117,24 +118,39 @@ static func _props(c, all: PackedByteArray, links: Dictionary, rng: RandomNumber
 			for _n in 7:
 				var x: int = rng.randi_range(x0 + 2, x1 - 2)
 				var y: int = rng.randi_range(y0 + 2, y1 - 2)
-				_prop_try(all, skip, base + y * size + x, size, rng)
+				_prop_try(c, all, skip, base + y * size + x, size, rng)
 
-static func _prop_try(all: PackedByteArray, skip: Dictionary, cell: int, size: int, rng: RandomNumberGenerator) -> void:
+static func _prop_try(c, all: PackedByteArray, skip: Dictionary, cell: int, size: int, rng: RandomNumberGenerator) -> void:
 	if skip.has(cell):
 		return
 	var t: int = all[cell]
 	var kind := -1
+	var mov := ""
 	match t:
-		CG.GROUND: kind = CG.DUMPSTER if rng.randf() < 0.35 else (CG.PLANTER if rng.randf() < 0.5 else CG.CRATE)
+		CG.GROUND:
+			kind = CG.DUMPSTER if rng.randf() < 0.35 else (CG.PLANTER if rng.randf() < 0.5 else CG.CRATE)
 		CG.PARK: kind = CG.PLANTER
-		CG.FLOOR, CG.ROOF: kind = CG.CRATE
-	if kind < 0:
+		CG.FLOOR:
+			var r := rng.randf()
+			mov = "table" if r < 0.45 else ("chair" if r < 0.75 else "crate")
+		CG.ROOF: kind = CG.CRATE
+	if kind < 0 and mov == "":
 		return
 	for dy in range(-1, 2):
 		for dx in range(-1, 2):
 			var nb: int = cell + dy * size + dx
 			if skip.has(nb) or CG.WALK[all[nb]] != 1:
 				return
+	if kind == CG.CRATE and rng.randf() < 0.6:
+		c.movables.append([cell, "crate"])           # a loose crate: the tile stays plain floor
+		return
+	if mov != "":
+		c.movables.append([cell, mov])
+		if mov == "table" and rng.randf() < 0.6:
+			var ds: Array = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
+			var d: Array = ds[rng.randi() % 4]
+			c.movables.append([cell + d[1] * size + d[0], "chair"])
+		return
 	all[cell] = kind
 
 static func _link(links: Dictionary, a: int, b: int) -> void:
