@@ -396,6 +396,10 @@ func _town(c) -> void:
 				continue
 			var m := CG.M_WHITE_V if (k == 0 or k == 11) else (CG.M_YELLOW_V if (k == 5 or k == 6) else 0)
 			_put_t(c, x, y, CG.ROAD, m)
+	c.under = PackedByteArray()
+	c.under.resize(ZS * ZS)
+	c.venues = []
+	c.venue_plan = preload("res://src/venues.gd").town_plan(c.rng)
 	for b in blocks:
 		c._suburb_block(b[0], b[1], b[2], b[3])
 	# the store at the crossroads, and its yard

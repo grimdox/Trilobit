@@ -13,10 +13,18 @@ const NONE := 0
 const VENDOR := 1
 const RIPPER := 2
 const FIXER := 3
+const COOK := 4          # restaurant keepers: order a meal and eat it on the spot
+const GROCER := 5        # grocery keepers: food and water to carry
+const DOCTOR := 6        # clinic doctors: treat wounds
+const PRIEST := 7        # church: candles, confession, a blessing
+const MIKO := 8          # shrine keeper: charms and offerings
+const VN = preload("res://src/venues.gd")
 const DAY := 1440
 
 var g
 var role: PackedByteArray
+var venue_of: Dictionary = {}          # agent -> the venue record they keep
+var look: Dictionary = {}              # agent -> paper-doll layers for a fixed outfit (doctors, cooks, priests, ripperdocs)
 var debt: int = 4000
 var arrears: int = 0
 var paid_cycle: int = 0
@@ -58,6 +66,16 @@ func setup(game) -> void:
 		g.gunc[i] = 1 if bratva and k % 2 == 0 else (2 if bratva else 0)
 		g.yenn[i] = rng.randi_range(40, 220)
 		_station(i, lairs[k], NONE, "")
+	# the keepers of every shop, clinic, church and shrine
+	for vi in g.city.venues.size():
+		var v: Dictionary = g.city.venues[vi]
+		while used < n and (g.fac[order[used]] != g.CIV or role[order[used]] != NONE):
+			used += 1
+		if used >= n:
+			break
+		var ki: int = order[used]
+		used += 1
+		_keeper(ki, v)
 	# vendors and fixers among ordinary people (not the ones above)
 	for i in range(used, n):
 		if g.fac[i] != g.CIV:
@@ -65,12 +83,44 @@ func setup(game) -> void:
 		var r := rng.randf()
 		if r < 0.06:
 			role[i] = VENDOR
+			look[i] = ["backpack", "courier"]
 		elif r < 0.11:
 			role[i] = FIXER
+			look[i] = ["coat", "imp_optics"]
+
+## a venue's keeper stands at the counter, altar or desk for good, in the right clothes
+func _keeper(i: int, v: Dictionary) -> void:
+	var r := COOK
+	var outfit: Array = ["chef"]
+	match v["kind"]:
+		"grocery":
+			r = GROCER
+			outfit = ["overalls"]
+		"implant":
+			r = RIPPER
+			outfit = ["suit", "imp_optics", "imp_cortex", "imp_reflex"] if int(v["tier"]) >= 1 else ["jacket_5", "imp_optics", "imp_mantis"]
+		"clinic":
+			r = DOCTOR
+			outfit = ["labcoat"]
+		"church":
+			r = PRIEST
+			outfit = ["priest"]
+		"temple":
+			r = MIKO
+			outfit = ["kannushi"]
+	_station(i, int(v["keeper"]), r, "")
+	g.fac[i] = g.CIV
+	g.gunc[i] = 0
+	g.hpmax[i] = 40
+	g.hpn[i] = 40
+	venue_of[i] = v
+	look[i] = outfit
 
 ## put agent i at a cell for good
 func _station(i: int, cell: int, r: int, name: String) -> void:
 	role[i] = r
+	if r == RIPPER:
+		look[i] = ["labcoat", "imp_optics", "imp_cortex"]
 	var sim = g.sim
 	sim.pos[i] = cell
 	sim.home_cell[i] = cell
@@ -107,6 +157,11 @@ func label(i: int) -> String:
 		VENDOR: return "vendor"
 		RIPPER: return "ripperdoc"
 		FIXER: return "fixer"
+		COOK: return "cook"
+		GROCER: return "grocer"
+		DOCTOR: return "doctor"
+		PRIEST: return "priest"
+		MIKO: return "shrine keeper"
 	return ""
 
 # ------------------------------------------------------------------ the clocks
@@ -325,7 +380,11 @@ func menu_for(i: int) -> Dictionary:
 			for e in _stock(i):
 				m["options"].append({"label": "Buy %s  ¥%d" % [e[1], e[2]], "op": "buy", "arg": e})
 		RIPPER:
-			var cost: int = 350 if g.z_of(g.sim.pos[i]) < 0 else 700
+			var rv: Dictionary = venue_of.get(i, {})
+			var cheap: bool = g.z_of(g.sim.pos[i]) < 0 or (not rv.is_empty() and int(rv["tier"]) == 0)
+			if not rv.is_empty():
+				m["title"] = "%s - %s" % [who, rv["name"]]
+			var cost: int = 350 if cheap else 700
 			m["text"] = ["\"Let me see that stabiliser.\"  Service life: %dh." % (implant_left / 60)]
 			m["options"].append({"label": "Service the stabiliser  ¥%d  (resets to 96h)" % cost, "op": "service", "arg": cost})
 			m["options"].append({"label": "Trauma patch  ¥40", "op": "buy", "arg": ["trl_medkit", "trauma patch", 40]})
@@ -336,11 +395,60 @@ func menu_for(i: int) -> Dictionary:
 			if wrecked > 0 or g.armor_status()["left"] < g.armor_status()["max"]:
 				var mc: int = 90 + 70 * wrecked
 				m["options"].append({"label": "Rebuild: every limb to 70%%, replate implant armor  ¥%d" % mc, "op": "mend", "arg": mc})
-			var under: bool = g.z_of(g.sim.pos[i]) < 0
+			var under: bool = cheap
 			for d in g.IMP.ALL:
 				if d["live"] and not g.implants.get(d["id"], false):
 					var pr: int = g.IMP.price(d["id"], under)
 					m["options"].append({"label": "%s  ¥%d  (%s)" % [d["name"], pr, d["desc"]], "op": "implant", "arg": [d["id"], pr]})
+		COOK:
+			var v: Dictionary = venue_of.get(i, {})
+			var st: Dictionary = VN.restaurant_style(String(v.get("style", "ramen")))
+			m["title"] = "%s - %s" % [who, v.get("name", "restaurant")]
+			m["text"] = [st["greet"], "(%s.  A meal heals and is eaten here.)" % st["name"]]
+			for fid in st["menu"]:
+				var d: Dictionary = g.db.defs["trl_food_" + fid]
+				var pr: int = int(d["price"]) * (2 if int(v.get("tier", 1)) >= 1 else 1) + 4
+				m["options"].append({"label": "%s  ¥%d  (heals %d)" % [d["name"], pr, int(d["food"]["hp"])], "op": "dine", "arg": ["trl_food_" + fid, d["name"], pr]})
+		GROCER:
+			var gv: Dictionary = venue_of.get(i, {})
+			m["title"] = "%s - %s" % [who, gv.get("name", "grocery")]
+			m["text"] = ["\"Take a basket.  Cash at the counter.\""]
+			for e in _grocery_stock(i):
+				m["options"].append({"label": "Buy %s  ¥%d" % [e[1], e[2]], "op": "buy", "arg": e})
+		DOCTOR:
+			var dv: Dictionary = venue_of.get(i, {})
+			m["title"] = "%s - %s" % [who, dv.get("name", "clinic")]
+			var missing: int = g.hp_max - g.hp
+			var wrecked := 0
+			var hurt := 0
+			for l in g.BODY.LIMBS:
+				if int(g.body.hp[l]) <= 0:
+					wrecked += 1
+				if int(g.body.hp[l]) < int(g.body.mx[l]):
+					hurt += 1
+			m["text"] = ["\"Let me look at you.\"", "You are at %d of %d, with %d hurt limb%s." % [g.hp, g.hp_max, hurt, "" if hurt == 1 else "s"]]
+			if missing > 0 or hurt > 0:
+				var c1: int = 20 + missing * 2 + hurt * 15
+				m["options"].append({"label": "Treat my wounds (health full, limbs half mended)  ¥%d" % c1, "op": "treat", "arg": [c1, 0.5]})
+				var c2: int = 40 + missing * 3 + hurt * 30 + wrecked * 60
+				m["options"].append({"label": "Full recovery (health and every limb)  ¥%d" % c2, "op": "treat", "arg": [c2, 1.0]})
+			else:
+				m["text"].append("\"Nothing wrong with you that I can see.\"")
+			m["options"].append({"label": "Trauma patch  ¥35", "op": "buy", "arg": ["trl_medkit", "trauma patch", 35]})
+		PRIEST:
+			m["title"] = "%s - %s" % [who, venue_of.get(i, {}).get("name", "church")]
+			m["text"] = ["\"Peace be with you.  Come in, stay as long as you need.\""]
+			m["options"].append({"label": "Light a candle  ¥20  (heat -8)", "op": "pray", "arg": [20, 0, 8, 0, "You light a candle.  The flame steadies you."]})
+			m["options"].append({"label": "Confession  ¥150  (heat cleared)", "op": "pray", "arg": [150, 0, 100, 0, "You speak for a long time.  The priest absolves you.  Your heat is gone."]})
+			m["options"].append({"label": "Donation for the roof  ¥100  (a blessing, health +10)", "op": "pray", "arg": [100, 10, 0, 480, "The priest makes a cross over you.  You feel lighter and luckier."]})
+			for e in [["trl_faith_candle", "church candle", 20], ["trl_faith_icon", "small icon", 120], ["trl_faith_gospel", "pocket gospel", 60]]:
+				m["options"].append({"label": "Buy %s  ¥%d" % [e[1], e[2]], "op": "buy", "arg": e})
+		MIKO:
+			m["title"] = "%s - %s" % [who, venue_of.get(i, {}).get("name", "shrine")]
+			m["text"] = ["\"Welcome.  Clap twice, bow, and ask quietly.\""]
+			m["options"].append({"label": "Offering at the saisen box  ¥50  (a blessing, health +8)", "op": "pray", "arg": [50, 8, 0, 360, "You throw the coin, clap twice and bow.  The air feels clean."]})
+			for e in [["trl_faith_omamori", "omamori charm", 150], ["trl_faith_ofuda", "ofuda paper ward", 90], ["trl_faith_ema", "ema plaque", 50]]:
+				m["options"].append({"label": "Buy %s  ¥%d" % [e[1], e[2]], "op": "buy", "arg": e})
 		FIXER:
 			if job.is_empty():
 				m["text"] = ["\"I have work, if you can climb.\""]
@@ -396,6 +504,17 @@ func _stock(i: int = 0) -> Array:
 			out.append([eid, g.db.defs[eid]["name"], int(g.db.defs[eid]["price"]) * 3 / 2])
 	return out
 
+func _grocery_stock(i: int) -> Array:
+	var ids := ["black_bread", "tushonka", "herring", "natto", "mochi", "apple", "orange", "banana", "milk", "protein", "glucose", "hydrogel", "chocolate", "cheese", "onigiri", "cup_ramen"]
+	var out: Array = [["trl_water_bottle", "bottled water", 8], ["trl_ration", "cyber ration bar", 12]]
+	for k in 9:
+		var fid: String = ids[(i * 3 + k * 5) % ids.size()]
+		var d: Dictionary = g.db.defs["trl_food_" + fid]
+		var e: Array = ["trl_food_" + fid, d["name"], int(d["price"])]
+		if not out.any(func(x): return x[0] == e[0]):
+			out.append(e)
+	return out
+
 func _rumor(i: int) -> String:
 	var lines: Array = []
 	lines.append("\"The Ring Line runs under the roads.  Four stations, a train every few minutes.\"")
@@ -436,6 +555,42 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 					g.say("No room; it falls at your feet.")
 			g.yen -= int(e[2])
 			g.say("You buy the %s (¥%d)." % [e[1], e[2]])
+			return m
+		"dine":
+			var de: Array = o["arg"]
+			if g.yen < int(de[2]):
+				g.say("You can't afford that.")
+				return m
+			g.yen -= int(de[2])
+			var meal = g._new_item(de[0])
+			g.eat_now(meal)
+			g.say("You order the %s (¥%d) and eat it at the counter." % [de[1], de[2]])
+			return m
+		"treat":
+			var tr: Array = o["arg"]
+			if g.yen < int(tr[0]):
+				g.say("You can't afford the treatment.")
+				return m
+			g.yen -= int(tr[0])
+			g.hp = g.hp_max
+			g.body.mend_to(float(tr[1]))
+			g.say("The doctor works for an hour.  You feel much better.")
+			m["text"] = ["\"Rest now.  Avoid being shot.\""]
+			m["options"] = [{"label": "Leave", "op": "close", "arg": null}]
+			return m
+		"pray":
+			var pa: Array = o["arg"]
+			if g.yen < int(pa[0]):
+				g.say("You can't afford the offering.")
+				return m
+			g.yen -= int(pa[0])
+			if int(pa[1]) > 0:
+				g.hp = mini(g.hp_max, g.hp + int(pa[1]))
+			if int(pa[2]) > 0:
+				g.heat = maxi(0, g.heat - int(pa[2]))
+			if int(pa[3]) > 0:
+				g.bless_left = maxi(g.bless_left, int(pa[3]))
+			g.say(String(pa[4]))
 			return m
 		"implant":
 			var im: Array = o["arg"]

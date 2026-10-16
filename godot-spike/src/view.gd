@@ -1,6 +1,9 @@
 extends Node2D
 ## Draws the game around the player with a CDDA-format tileset: terrain, items, cars, people with awareness marks, a target bracket.
 const CG = preload("res://src/citygen.gd")
+const PD = preload("res://src/paperdoll.gd")
+const DS = preload("res://src/dollspec.gd")
+var pd = PD.new()
 var game
 var tileset
 var cols: int = 40
@@ -18,6 +21,11 @@ func tile() -> int:
 	return tileset.tile_w
 
 func _blit(id: String, pos: Vector2, mod: Color = Color.WHITE) -> bool:
+	if id.begins_with("icon:"):
+		if not pd.has(id):
+			return false
+		draw_texture_rect_region(pd.tex, Rect2(pos, Vector2(32, 32)), pd.rect(id), mod)
+		return true
 	var sp: Array = tileset.sprite(id)
 	if sp.is_empty():
 		return false
@@ -29,15 +37,31 @@ func item_sprite(it) -> String:
 	var id: String = it.def["id"]
 	if tileset.has(id):
 		return id
+	if pd.has("icon:" + id):
+		return "icon:" + id
 	var ll: String = it.def.get("looks_like", "")
 	return ll if tileset.has(ll) else "money_bundle_hundred"
 
 func person_sprite(i: int) -> String:
-	match int(game.fac[i]):
-		1: return "mon_trl_thug"
-		2: return "mon_trl_soldier"
-		3: return "mon_trl_assassin"
-		_: return "npc_female" if game.fem[i] == 1 else "npc_male"
+	return "npc_female" if game.fem[i] == 1 else "npc_male"
+
+## the paper doll: layers over the base sprite, then the weapon in the hand, turned the way they face
+func _draw_doll(spec: Dictionary, pos: Vector2, face_dir: Vector2i, mod: Color = Color.WHITE) -> void:
+	for l in spec["layers"]:
+		var key := "doll:" + String(l)
+		if pd.has(key):
+			draw_texture_rect_region(pd.tex, Rect2(pos + Vector2(0, -2), Vector2(32, 36)), pd.rect(key), mod)
+	var w: String = spec["weapon"]
+	if w != "" and pd.has("icon:" + w):
+		var d := Vector2(face_dir.x, face_dir.y)
+		if d == Vector2.ZERO:
+			d = Vector2(0, 1)
+		var ang: float = d.angle()
+		var left: bool = d.x < -0.1
+		var hand := pos + (Vector2(9, 22) if left else Vector2(23, 22))
+		draw_set_transform(hand, ang, Vector2(1, -1) if left else Vector2(1, 1))
+		draw_texture_rect_region(pd.tex, Rect2(Vector2(-7, -14), Vector2(32, 32)), pd.rect("icon:" + w), mod)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 ## the first solid tile below an air cell, or -1 (what you would see looking down from a window or the roof edge)
 func _below(c: int) -> int:
@@ -134,6 +158,15 @@ func _draw() -> void:
 				_blit(TERRAIN[0], pos, mod)
 				if not _blit(TERRAIN[t], pos, mod):
 					draw_rect(Rect2(pos + Vector2(4, 4), Vector2(T - 8, T - 8)), Color(0.5, 0.4, 0.25) * mod)
+			elif t >= CG.EXTRA0:
+				if t >= CG.EXTRA0 + 9:      # furniture stands on a floor
+					var under_t: int = game.city.under[c] if c < game.city.under.size() else 3
+					if under_t >= CG.EXTRA0:
+						_blit(String(CG.TILE_SPRITE.get(under_t, "t_floor")), pos, mod)
+					else:
+						_blit(String(TERRAIN.get(under_t, "t_floor")), pos, mod)
+				if not _blit(String(CG.TILE_SPRITE.get(t, "")), pos, mod):
+					draw_rect(Rect2(pos + Vector2(4, 4), Vector2(T - 8, T - 8)), Color(0.5, 0.4, 0.25) * mod)
 			elif t == 29:
 				_blit(TERRAIN[6], pos, mod)
 				_blit(TERRAIN[t], pos, mod)
@@ -208,6 +241,8 @@ func _draw() -> void:
 			continue
 		var pos := Vector2(wx * T, wy * T)
 		_blit(person_sprite(i), pos)
+		var fd: Array = game.DIR8[int(game.face[i]) % 8]
+		_draw_doll(DS.for_person(game, i), pos, Vector2i(fd[0], fd[1]))
 		_facing_mark(pos, int(game.face[i]), Color(1, 0.35, 0.3) if (int(game.fac[i]) != 0 and int(game.astate[i]) >= 1) else Color(0.85, 0.9, 1.0, 0.85))
 		var glyph := ""
 		var col := Color.WHITE
@@ -222,6 +257,9 @@ func _draw() -> void:
 				1: glyph = "$"; col = Color(0.4, 1, 0.5)
 				2: glyph = "+"; col = Color(0.4, 0.9, 1)
 				3: glyph = "*"; col = Color(1, 0.8, 0.3)
+				4, 5: glyph = "$"; col = Color(1, 0.7, 0.3)
+				6: glyph = "+"; col = Color(0.4, 1, 0.8)
+				7, 8: glyph = "^"; col = Color(0.9, 0.85, 1)
 		if glyph != "":
 			draw_string(font, pos + Vector2(T * 0.3, -2), glyph, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, col)
 		elif game.meter[i] > 0 and game.astate[i] == 0:
@@ -236,6 +274,7 @@ func _draw() -> void:
 			draw_circle(centre + Vector2(T / 2.0, T * 0.9), T * 0.28, Color(0, 0, 0, 0.35))
 			draw_circle(centre + Vector2(T / 2.0, T * 0.95), 5.0, Color(1, 0.7, 0.2, 0.9))
 		_blit("player_male", centre)
+		_draw_doll(DS.for_player(game), centre, game.facing)
 	else:
 		_blit("player_male", centre, Color(1, 1, 1, 0.9))
 	if game.in_vehicle < 0 and game.transit.riding < 0:

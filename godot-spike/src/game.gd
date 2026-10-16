@@ -448,14 +448,15 @@ func _loot() -> void:
 	for c in markers:
 		if rng.randf() > 0.4:
 			continue
-		var kind := _weighted([["trl_ration", 28], ["trl_yen", 26], ["ammo", 16], ["water", 8], ["gun", 9], ["mod", 3], ["melee", 6], ["trl_backpack", 3], ["trl_coat", 2], ["trl_pouch", 3], ["trl_duffel", 1], ["armor", 6], ["trl_medkit", 4]])
+		# no loose food, water or weapons: those are bought, in the shops and restaurants (and taken from people who carry them)
+		var kind := _weighted([["trl_yen", 50], ["ammo", 16], ["mod", 3], ["trl_backpack", 3], ["trl_coat", 2], ["trl_pouch", 3], ["trl_duffel", 1], ["armor", 8], ["trl_medkit", 4]])
 		var it
 		match kind:
 			"trl_yen": it = _new_item("trl_yen", rng.randi_range(20, 220))
 			"ammo": it = _new_item(_random_ammo() if rng.randf() < 0.6 else "trl_ammo", rng.randi_range(1, 3))
 			"mod": it = _new_item(_random_mod())
 			"melee": it = _new_item(_random_melee())
-			"armor": it = _new_item(["trl_helmet", "trl_vest", "trl_bracers", "trl_greaves", "trl_visor", "trl_vest_heavy"][rng.randi() % 6])
+			"armor": it = _new_item(["trl_helmet", "trl_vest", "trl_bracers", "trl_greaves", "trl_visor", "trl_vest_heavy", "trl_balaclava", "trl_jacket", "trl_kneepads"][rng.randi() % 9])
 			"water":
 				it = _new_item("trl_water_bottle")
 				it.pockets[0].append(_new_item("trl_water", 450))
@@ -470,10 +471,9 @@ func _vault_loot() -> void:
 		var arr: PackedInt32Array = cells
 		if arr.is_empty():
 			continue
-		_put(arr[rng.randi() % arr.size()], _new_item(_random_gun()))
-		_put(arr[rng.randi() % arr.size()], _new_item("trl_yen", rng.randi_range(300, 900)))
+		_put(arr[rng.randi() % arr.size()], _new_item("trl_yen", rng.randi_range(500, 1400)))
 		_put(arr[rng.randi() % arr.size()], _new_item(_random_ammo(), rng.randi_range(2, 4)))
-		_put(arr[rng.randi() % arr.size()], _new_item(_random_melee("_m" if rng.randf() < 0.4 else "_f")))
+		_put(arr[rng.randi() % arr.size()], _new_item(["trl_helm_tac", "trl_vest_corp", "trl_bracers_heavy", "trl_greaves_heavy"][rng.randi() % 4]))
 		_put(arr[rng.randi() % arr.size()], _new_item(_random_mod()))
 		if rng.randf() < 0.5:
 			_put(arr[rng.randi() % arr.size()], _new_item(_random_mod()))
@@ -659,6 +659,10 @@ func act_wield(it) -> bool:
 		return act_wear(it)
 	if it.has_tag("medical"):
 		return act_use_medical(it)
+	if it.has_tag("food"):
+		return act_eat(it)
+	if it.has_tag("charm"):
+		return act_use_charm(it)
 	if not (it.has_tag("gun") or it.has_tag("melee")):
 		say("You can't wield that as a weapon.")
 		return false
@@ -1006,6 +1010,8 @@ var body = BODY.new()
 var armor_worn: Array = []                     # armor items worn over the body (helmet, vest, arm guards, shin guards)
 var imp_dur: Dictionary = {}                   # implant id -> armor durability left (absent = as new)
 var melee_arts: Array = []                     # learned melee arts: "parry", "riposte" (see _melee_arts_on_miss); empty until the player learns some
+var bless_left: int = 0                        # turns of blessing left: a little luck (+6% to hit, +4% to dodge a blade)
+var drunk_left: int = 0                        # turns of drink left: -8% to hit
 var atk_debt: int = 0                          # action cost of strikes not yet paid for in turns
 var aim_last: int = -10
 var aim_frac: float = 0.0                      # progress towards the next aim level
@@ -1144,7 +1150,7 @@ func player_bullet_dodge() -> int:
 	return clampi(int(d), 0, 40)
 
 func player_melee_dodge() -> int:
-	var d: float = 4.0 + float(skills["melee"]) + imp_sum("dodge_melee") + (3.0 if crouch else 0.0)
+	var d: float = 4.0 + float(skills["melee"]) + imp_sum("dodge_melee") + (3.0 if crouch else 0.0) + (4.0 if bless_left > 0 else 0.0)
 	if body.legs_ok() < 2:
 		d *= 0.5 if body.legs_ok() == 1 else 0.0
 	return clampi(int(d), 0, 45)
@@ -1276,6 +1282,56 @@ func act_use_medical(it) -> bool:
 	var l: String = body.worst()
 	body.heal(l, maxi(8, int(body.mx[l]) / 3))
 	say("You slap on a trauma patch: health up, your %s mended a little." % limb_name(l))
+	end_turn()
+	return true
+
+## take one of a stack out of whatever holds it
+func _consume_one(it) -> void:
+	if it.count > 1:
+		it.count -= 1
+		return
+	var holder = null
+	for c in worn:
+		if c == it or c.contains_item(it):
+			holder = c
+	if holder != null and holder != it:
+		holder.remove(it)
+	elif holder == it:
+		worn.erase(it)
+	elif items_at.has(pc) and items_at[pc].has(it):
+		items_at[pc].erase(it)
+
+## the effect of a meal or drink: health, stamina; strong drink dulls the aim for a while
+func eat_now(it) -> void:
+	var f: Dictionary = it.def.get("food", {})
+	hp = mini(hp_max, hp + int(f.get("hp", 0)))
+	stamina = mini(STAMINA_MAX, stamina + int(f.get("stam", 0)))
+	if f.get("alcohol", false):
+		drunk_left = mini(240, drunk_left + 60)
+
+func act_eat(it) -> bool:
+	var f: Dictionary = it.def.get("food", {})
+	if f.is_empty():
+		say("You can't eat that.")
+		return false
+	_consume_one(it)
+	eat_now(it)
+	say("You %s the %s.  (health +%d, stamina +%d)" % ["drink" if f.get("drink", false) else "eat", it.def["name"], int(f.get("hp", 0)), int(f.get("stam", 0))])
+	end_turn()
+	return true
+
+func act_use_charm(it) -> bool:
+	var u: Dictionary = it.def.get("use", {})
+	if u.is_empty():
+		return false
+	_consume_one(it)
+	if u.has("heat"):
+		heat = maxi(0, heat + int(u["heat"]))
+	if u.has("hp"):
+		hp = mini(hp_max, hp + int(u["hp"]))
+	if u.has("bless"):
+		bless_left = maxi(bless_left, int(u["bless"]))
+	say(String(u.get("msg", "You use it.")))
 	end_turn()
 	return true
 
@@ -1767,6 +1823,10 @@ func _shot_chance(st: Dictionary, t: int, aimed: int, shot_index: int) -> int:
 	if d >= 5:
 		c += int(imp_sum("acc_far"))
 	c -= _arm_acc_pen()
+	if bless_left > 0:
+		c += 6
+	if drunk_left > 0:
+		c -= 8
 	return clampi(c - cover_vs(pc, sim.pos[t], false), 5, 95)
 
 ## one-line description of the wielded gun and what it is aimed at
@@ -2242,6 +2302,10 @@ func end_turn() -> void:
 	_process_followers()
 	if turn % 20 == 0 and heat > 0:
 		heat -= 1
+	if bless_left > 0:
+		bless_left -= 1
+	if drunk_left > 0:
+		drunk_left -= 1
 	if turn % 12 == 0 and hp < hp_max and in_vehicle < 0:
 		hp += 1
 	if turn % 40 == 0:
@@ -2582,9 +2646,9 @@ func smash_thing(ti: int, why: String) -> void:
 		elif roll < 0.6:
 			_put(cell, _new_item(_random_ammo(), 1))
 		elif roll < 0.8:
-			_put(cell, _new_item("trl_ration", 1))
+			_put(cell, _new_item("trl_yen", rng.randi_range(10, 80)))
 		else:
-			_put(cell, _new_item(_random_melee()) if rng.randf() < 0.5 else _new_item(_random_mod()))
+			_put(cell, _new_item(_random_mod()))
 	_remove_thing(ti)
 	_noise_gentle(cell, 7)
 
@@ -3359,7 +3423,7 @@ func outside_tile(x: int, y: int) -> int:
 func player_dict() -> Dictionary:
 	return {"hp": hp, "hp_max": hp_max, "yen": yen, "heat": heat, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
 		"skills": skills.duplicate(), "xp": xp.duplicate(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
-		"stamina": stamina, "stance": stance, "turn": turn, "tick": sim.tick, "eco": eco.save(), "flying": flying,
+		"stamina": stamina, "stance": stance, "turn": turn, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "eco": eco.save(), "flying": flying,
 		"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
 
 func _load_body(d: Dictionary) -> void:
@@ -3394,6 +3458,8 @@ func apply_player(d: Dictionary) -> void:
 		worn.append(ItemScript.from_dict(x, db))
 	wield = ItemScript.from_dict(d["wield"], db) if d["wield"] != null else null
 	stamina = int(d["stamina"])
+	bless_left = int(d.get("bless", 0))
+	drunk_left = int(d.get("drunk", 0))
 	stance = int(d["stance"])
 	turn = int(d["turn"])
 	sim.tick = int(d["tick"])

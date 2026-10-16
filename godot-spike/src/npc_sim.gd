@@ -82,7 +82,7 @@ func setup(city, count: int, seed: int) -> void:
 	walk.resize(tiles.size())
 	opaque.resize(tiles.size())
 	var lut := PackedByteArray()
-	for t in 40:
+	for t in 128:
 		lut.append(1 if (t < city.WALK.size() and city.WALK[t] == 1) else 0)
 	for i in tiles.size():
 		var t := tiles[i]

@@ -31,5 +31,5 @@ Tests: `./run_all.sh` (pockets, world, scale, levels, game, vertical, guns, stea
 - Fixed a crash when stepping onto the railway in any zone without a subway (`transit.car_cell` took a modulo by an empty ring).
 - Exe icon (the splash-screen car, `trilobit-tools/gen_icon.py`) and version info are stamped by `tools/set_exe_icon.py`; `tools/build_windows.sh` exports, stamps and zips.
 - Loading screen shows とりろびつ (bundled kana subset of Noto Sans CJK JP, OFL); the title tag line is gone; menus take mouse hover, click, right-click back and wheel.
-- Everyone has an on-screen facing arrow (people, animals, you); the drawn vision-cone tint is removed.  The player sees a 180 degree half circle (`vision_arc()`; implants may add degrees with an `arc` field); `,` + direction turns without a step.  NPCs still look back at you all round (`fov.around`).
+- Everyone has an on-screen facing arrow (people, animals, you); the drawn vision-cone tint is removed.  The player sees a 180 degree half circle (`vision_arc()`; implants may add degrees with an `arc` field); `;` + direction turns without a step.  NPCs still look back at you all round (`fov.around`).
 - Windows SmartScreen only goes away with a trusted code-signing certificate; see README-FIRST.txt in the zip for the workaround.

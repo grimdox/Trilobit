@@ -1,0 +1,1112 @@
+{
+"doll:backpack": [
+352,
+324,
+32,
+36
+],
+"doll:balaclava": [
+0,
+324,
+32,
+36
+],
+"doll:bracers": [
+192,
+324,
+32,
+36
+],
+"doll:bracers_heavy": [
+224,
+324,
+32,
+36
+],
+"doll:chef": [
+448,
+324,
+32,
+36
+],
+"doll:coat": [
+160,
+324,
+32,
+36
+],
+"doll:courier": [
+192,
+360,
+32,
+36
+],
+"doll:greaves": [
+256,
+324,
+32,
+36
+],
+"doll:greaves_heavy": [
+288,
+324,
+32,
+36
+],
+"doll:helm_tac": [
+480,
+288,
+32,
+36
+],
+"doll:helmet_ball": [
+416,
+288,
+32,
+36
+],
+"doll:holster": [
+384,
+324,
+32,
+36
+],
+"doll:imp_cortex": [
+288,
+360,
+32,
+36
+],
+"doll:imp_dermal": [
+416,
+360,
+32,
+36
+],
+"doll:imp_grip": [
+64,
+396,
+32,
+36
+],
+"doll:imp_heart": [
+32,
+396,
+32,
+36
+],
+"doll:imp_jets": [
+320,
+360,
+32,
+36
+],
+"doll:imp_legs": [
+480,
+360,
+32,
+36
+],
+"doll:imp_mantis": [
+448,
+360,
+32,
+36
+],
+"doll:imp_optics": [
+224,
+360,
+32,
+36
+],
+"doll:imp_reflex": [
+352,
+360,
+32,
+36
+],
+"doll:imp_smartlink": [
+0,
+396,
+32,
+36
+],
+"doll:imp_synapse": [
+384,
+360,
+32,
+36
+],
+"doll:imp_thermal": [
+256,
+360,
+32,
+36
+],
+"doll:jacket": [
+128,
+324,
+32,
+36
+],
+"doll:jacket_0": [
+96,
+396,
+32,
+36
+],
+"doll:jacket_1": [
+128,
+396,
+32,
+36
+],
+"doll:jacket_2": [
+160,
+396,
+32,
+36
+],
+"doll:jacket_3": [
+192,
+396,
+32,
+36
+],
+"doll:jacket_4": [
+224,
+396,
+32,
+36
+],
+"doll:jacket_5": [
+256,
+396,
+32,
+36
+],
+"doll:kannushi": [
+0,
+360,
+32,
+36
+],
+"doll:kneepads": [
+320,
+324,
+32,
+36
+],
+"doll:labcoat": [
+416,
+324,
+32,
+36
+],
+"doll:nap": [
+96,
+360,
+32,
+36
+],
+"doll:nasim": [
+128,
+360,
+32,
+36
+],
+"doll:overalls": [
+160,
+360,
+32,
+36
+],
+"doll:priest": [
+480,
+324,
+32,
+36
+],
+"doll:suit": [
+32,
+360,
+32,
+36
+],
+"doll:thug": [
+64,
+360,
+32,
+36
+],
+"doll:vest": [
+32,
+324,
+32,
+36
+],
+"doll:vest_corp": [
+96,
+324,
+32,
+36
+],
+"doll:vest_heavy": [
+64,
+324,
+32,
+36
+],
+"doll:visor": [
+448,
+288,
+32,
+36
+],
+"icon:trl_backpack": [
+416,
+252,
+32,
+32
+],
+"icon:trl_balaclava": [
+192,
+288,
+32,
+32
+],
+"icon:trl_bracers": [
+128,
+288,
+32,
+32
+],
+"icon:trl_bracers_heavy": [
+320,
+288,
+32,
+32
+],
+"icon:trl_coat": [
+480,
+252,
+32,
+32
+],
+"icon:trl_greaves": [
+160,
+288,
+32,
+32
+],
+"icon:trl_greaves_heavy": [
+352,
+288,
+32,
+32
+],
+"icon:trl_gun_fd338": [
+96,
+72,
+32,
+32
+],
+"icon:trl_gun_fe7": [
+32,
+108,
+32,
+32
+],
+"icon:trl_gun_fk9": [
+192,
+36,
+32,
+32
+],
+"icon:trl_gun_fl80": [
+448,
+72,
+32,
+32
+],
+"icon:trl_gun_fp7": [
+288,
+0,
+32,
+32
+],
+"icon:trl_gun_fs410": [
+480,
+36,
+32,
+32
+],
+"icon:trl_gun_fs9": [
+192,
+0,
+32,
+32
+],
+"icon:trl_gun_ga10": [
+128,
+36,
+32,
+32
+],
+"icon:trl_gun_gd300": [
+160,
+72,
+32,
+32
+],
+"icon:trl_gun_gk7": [
+128,
+0,
+32,
+32
+],
+"icon:trl_gun_gl40": [
+384,
+72,
+32,
+32
+],
+"icon:trl_gun_gm134": [
+288,
+72,
+32,
+32
+],
+"icon:trl_gun_gm14": [
+224,
+36,
+32,
+32
+],
+"icon:trl_gun_gp10": [
+352,
+0,
+32,
+32
+],
+"icon:trl_gun_gr500": [
+480,
+0,
+32,
+32
+],
+"icon:trl_gun_gs12": [
+384,
+36,
+32,
+32
+],
+"icon:trl_gun_ha5": [
+0,
+36,
+32,
+32
+],
+"icon:trl_gun_hd308": [
+128,
+72,
+32,
+32
+],
+"icon:trl_gun_he3": [
+480,
+72,
+32,
+32
+],
+"icon:trl_gun_hm5": [
+320,
+72,
+32,
+32
+],
+"icon:trl_gun_hp40": [
+320,
+0,
+32,
+32
+],
+"icon:trl_gun_hs10": [
+320,
+36,
+32,
+32
+],
+"icon:trl_gun_hx9": [
+0,
+0,
+32,
+32
+],
+"icon:trl_gun_lc30": [
+288,
+36,
+32,
+32
+],
+"icon:trl_gun_ld10": [
+192,
+72,
+32,
+32
+],
+"icon:trl_gun_lk95": [
+160,
+36,
+32,
+32
+],
+"icon:trl_gun_lm7": [
+352,
+72,
+32,
+32
+],
+"icon:trl_gun_lp22": [
+384,
+0,
+32,
+32
+],
+"icon:trl_gun_ls12": [
+416,
+36,
+32,
+32
+],
+"icon:trl_gun_ls5": [
+160,
+0,
+32,
+32
+],
+"icon:trl_gun_sa14": [
+32,
+36,
+32,
+32
+],
+"icon:trl_gun_sd7": [
+0,
+72,
+32,
+32
+],
+"icon:trl_gun_se9": [
+0,
+108,
+32,
+32
+],
+"icon:trl_gun_sm9": [
+32,
+0,
+32,
+32
+],
+"icon:trl_gun_sp45": [
+224,
+0,
+32,
+32
+],
+"icon:trl_gun_sr44": [
+448,
+0,
+32,
+32
+],
+"icon:trl_gun_ss12": [
+448,
+36,
+32,
+32
+],
+"icon:trl_gun_vd62": [
+32,
+72,
+32,
+32
+],
+"icon:trl_gun_vk74": [
+64,
+36,
+32,
+32
+],
+"icon:trl_gun_vm12": [
+224,
+72,
+32,
+32
+],
+"icon:trl_gun_vr38": [
+416,
+0,
+32,
+32
+],
+"icon:trl_gun_vs44": [
+256,
+36,
+32,
+32
+],
+"icon:trl_gun_vs45": [
+64,
+0,
+32,
+32
+],
+"icon:trl_gun_zd54": [
+64,
+72,
+32,
+32
+],
+"icon:trl_gun_zk15": [
+96,
+36,
+32,
+32
+],
+"icon:trl_gun_zl40": [
+416,
+72,
+32,
+32
+],
+"icon:trl_gun_zm74": [
+256,
+72,
+32,
+32
+],
+"icon:trl_gun_zp19": [
+96,
+0,
+32,
+32
+],
+"icon:trl_gun_zp9": [
+256,
+0,
+32,
+32
+],
+"icon:trl_gun_zs20": [
+352,
+36,
+32,
+32
+],
+"icon:trl_helm_tac": [
+224,
+288,
+32,
+32
+],
+"icon:trl_helmet": [
+0,
+288,
+32,
+32
+],
+"icon:trl_holster": [
+448,
+252,
+32,
+32
+],
+"icon:trl_jacket": [
+256,
+288,
+32,
+32
+],
+"icon:trl_kneepads": [
+384,
+288,
+32,
+32
+],
+"icon:trl_mel_bo": [
+224,
+144,
+32,
+32
+],
+"icon:trl_mel_bo_f": [
+256,
+144,
+32,
+32
+],
+"icon:trl_mel_bo_m": [
+288,
+144,
+32,
+32
+],
+"icon:trl_mel_chekan": [
+128,
+252,
+32,
+32
+],
+"icon:trl_mel_chekan_f": [
+160,
+252,
+32,
+32
+],
+"icon:trl_mel_chekan_m": [
+192,
+252,
+32,
+32
+],
+"icon:trl_mel_finka": [
+352,
+216,
+32,
+32
+],
+"icon:trl_mel_finka_f": [
+384,
+216,
+32,
+32
+],
+"icon:trl_mel_finka_m": [
+416,
+216,
+32,
+32
+],
+"icon:trl_mel_jitte": [
+192,
+180,
+32,
+32
+],
+"icon:trl_mel_jitte_f": [
+224,
+180,
+32,
+32
+],
+"icon:trl_mel_jitte_m": [
+256,
+180,
+32,
+32
+],
+"icon:trl_mel_jo": [
+320,
+144,
+32,
+32
+],
+"icon:trl_mel_jo_f": [
+352,
+144,
+32,
+32
+],
+"icon:trl_mel_jo_m": [
+384,
+144,
+32,
+32
+],
+"icon:trl_mel_kama": [
+64,
+108,
+32,
+32
+],
+"icon:trl_mel_kama_f": [
+96,
+108,
+32,
+32
+],
+"icon:trl_mel_kama_m": [
+128,
+108,
+32,
+32
+],
+"icon:trl_mel_kastet": [
+320,
+252,
+32,
+32
+],
+"icon:trl_mel_kastet_f": [
+352,
+252,
+32,
+32
+],
+"icon:trl_mel_kastet_m": [
+384,
+252,
+32,
+32
+],
+"icon:trl_mel_katana": [
+256,
+108,
+32,
+32
+],
+"icon:trl_mel_katana_f": [
+288,
+108,
+32,
+32
+],
+"icon:trl_mel_katana_m": [
+320,
+108,
+32,
+32
+],
+"icon:trl_mel_kinzhal": [
+256,
+216,
+32,
+32
+],
+"icon:trl_mel_kinzhal_f": [
+288,
+216,
+32,
+32
+],
+"icon:trl_mel_kinzhal_m": [
+320,
+216,
+32,
+32
+],
+"icon:trl_mel_kistien": [
+32,
+252,
+32,
+32
+],
+"icon:trl_mel_kistien_f": [
+64,
+252,
+32,
+32
+],
+"icon:trl_mel_kistien_m": [
+96,
+252,
+32,
+32
+],
+"icon:trl_mel_kunai": [
+384,
+180,
+32,
+32
+],
+"icon:trl_mel_kunai_f": [
+416,
+180,
+32,
+32
+],
+"icon:trl_mel_kunai_m": [
+448,
+180,
+32,
+32
+],
+"icon:trl_mel_kusarigama": [
+0,
+180,
+32,
+32
+],
+"icon:trl_mel_kusarigama_f": [
+32,
+180,
+32,
+32
+],
+"icon:trl_mel_kusarigama_m": [
+64,
+180,
+32,
+32
+],
+"icon:trl_mel_lopata": [
+448,
+216,
+32,
+32
+],
+"icon:trl_mel_lopata_f": [
+480,
+216,
+32,
+32
+],
+"icon:trl_mel_lopata_m": [
+0,
+252,
+32,
+32
+],
+"icon:trl_mel_naginata": [
+32,
+144,
+32,
+32
+],
+"icon:trl_mel_naginata_f": [
+64,
+144,
+32,
+32
+],
+"icon:trl_mel_naginata_m": [
+96,
+144,
+32,
+32
+],
+"icon:trl_mel_nodachi": [
+448,
+108,
+32,
+32
+],
+"icon:trl_mel_nodachi_f": [
+480,
+108,
+32,
+32
+],
+"icon:trl_mel_nodachi_m": [
+0,
+144,
+32,
+32
+],
+"icon:trl_mel_nunchaku": [
+416,
+144,
+32,
+32
+],
+"icon:trl_mel_nunchaku_f": [
+448,
+144,
+32,
+32
+],
+"icon:trl_mel_nunchaku_m": [
+480,
+144,
+32,
+32
+],
+"icon:trl_mel_ono": [
+480,
+180,
+32,
+32
+],
+"icon:trl_mel_ono_f": [
+0,
+216,
+32,
+32
+],
+"icon:trl_mel_ono_m": [
+32,
+216,
+32,
+32
+],
+"icon:trl_mel_sai": [
+96,
+180,
+32,
+32
+],
+"icon:trl_mel_sai_f": [
+128,
+180,
+32,
+32
+],
+"icon:trl_mel_sai_m": [
+160,
+180,
+32,
+32
+],
+"icon:trl_mel_shashka": [
+160,
+216,
+32,
+32
+],
+"icon:trl_mel_shashka_f": [
+192,
+216,
+32,
+32
+],
+"icon:trl_mel_shashka_m": [
+224,
+216,
+32,
+32
+],
+"icon:trl_mel_tanto": [
+352,
+108,
+32,
+32
+],
+"icon:trl_mel_tanto_f": [
+384,
+108,
+32,
+32
+],
+"icon:trl_mel_tanto_m": [
+416,
+108,
+32,
+32
+],
+"icon:trl_mel_tessen": [
+288,
+180,
+32,
+32
+],
+"icon:trl_mel_tessen_f": [
+320,
+180,
+32,
+32
+],
+"icon:trl_mel_tessen_m": [
+352,
+180,
+32,
+32
+],
+"icon:trl_mel_tonfa": [
+64,
+216,
+32,
+32
+],
+"icon:trl_mel_tonfa_f": [
+96,
+216,
+32,
+32
+],
+"icon:trl_mel_tonfa_m": [
+128,
+216,
+32,
+32
+],
+"icon:trl_mel_topor": [
+224,
+252,
+32,
+32
+],
+"icon:trl_mel_topor_f": [
+256,
+252,
+32,
+32
+],
+"icon:trl_mel_topor_m": [
+288,
+252,
+32,
+32
+],
+"icon:trl_mel_wakizashi": [
+160,
+108,
+32,
+32
+],
+"icon:trl_mel_wakizashi_f": [
+192,
+108,
+32,
+32
+],
+"icon:trl_mel_wakizashi_m": [
+224,
+108,
+32,
+32
+],
+"icon:trl_mel_yari": [
+128,
+144,
+32,
+32
+],
+"icon:trl_mel_yari_f": [
+160,
+144,
+32,
+32
+],
+"icon:trl_mel_yari_m": [
+192,
+144,
+32,
+32
+],
+"icon:trl_vest": [
+64,
+288,
+32,
+32
+],
+"icon:trl_vest_corp": [
+288,
+288,
+32,
+32
+],
+"icon:trl_vest_heavy": [
+96,
+288,
+32,
+32
+],
+"icon:trl_visor": [
+32,
+288,
+32,
+32
+]
+}

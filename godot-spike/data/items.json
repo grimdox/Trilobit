@@ -5338,7 +5338,13 @@
   "tags": [
    "food"
   ],
-  "looks_like": "granola"
+  "looks_like": "granola",
+  "food": {
+   "hp": 3,
+   "stam": 6,
+   "drink": false,
+   "alcohol": false
+  }
  },
  {
   "id": "trl_parcel",
@@ -5530,6 +5536,1126 @@
    "fits": [
     "mech"
    ]
+  }
+ },
+ {
+  "id": "trl_balaclava",
+  "name": "balaclava",
+  "desc": "Armor 1 on the head.  Hides your face.",
+  "weight_g": 150,
+  "volume_ml": 300,
+  "length_mm": 250,
+  "price": 60,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "looks_like": "helmet_ball",
+  "armor": {
+   "slot": "head",
+   "phys": 1,
+   "dur": 12
+  }
+ },
+ {
+  "id": "trl_helm_tac",
+  "name": "tactical helmet",
+  "desc": "Armor 4 on the head, with a night-vision mount.",
+  "weight_g": 1500,
+  "volume_ml": 3200,
+  "length_mm": 310,
+  "price": 650,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "looks_like": "helmet_ball",
+  "armor": {
+   "slot": "head",
+   "phys": 4,
+   "dur": 50
+  }
+ },
+ {
+  "id": "trl_jacket",
+  "name": "riot jacket",
+  "desc": "Armor 2 on the chest.",
+  "weight_g": 1800,
+  "volume_ml": 3500,
+  "length_mm": 600,
+  "price": 220,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "looks_like": "vest_ballistic",
+  "armor": {
+   "slot": "chest",
+   "phys": 2,
+   "dur": 36
+  }
+ },
+ {
+  "id": "trl_vest_corp",
+  "name": "corporate liner vest",
+  "desc": "Armor 3 on the chest.  Slim enough to wear under a suit.",
+  "weight_g": 2200,
+  "volume_ml": 3500,
+  "length_mm": 500,
+  "price": 900,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "looks_like": "vest_ballistic",
+  "armor": {
+   "slot": "chest",
+   "phys": 3,
+   "dur": 55
+  }
+ },
+ {
+  "id": "trl_bracers_heavy",
+  "name": "reinforced arm armor",
+  "desc": "Armor 4 on both arms.",
+  "weight_g": 2400,
+  "volume_ml": 3000,
+  "length_mm": 380,
+  "price": 700,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "looks_like": "armguard",
+  "armor": {
+   "slot": "arms",
+   "phys": 4,
+   "dur": 60
+  }
+ },
+ {
+  "id": "trl_greaves_heavy",
+  "name": "reinforced leg armor",
+  "desc": "Armor 4 on both legs.",
+  "weight_g": 3000,
+  "volume_ml": 4000,
+  "length_mm": 450,
+  "price": 700,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "looks_like": "legguard",
+  "armor": {
+   "slot": "legs",
+   "phys": 4,
+   "dur": 60
+  }
+ },
+ {
+  "id": "trl_kneepads",
+  "name": "knee pads",
+  "desc": "Armor 1 on both legs.",
+  "weight_g": 400,
+  "volume_ml": 800,
+  "length_mm": 200,
+  "price": 70,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "looks_like": "legguard",
+  "armor": {
+   "slot": "legs",
+   "phys": 1,
+   "dur": 20
+  }
+ },
+ {
+  "id": "trl_food_cup_ramen",
+  "name": "cup ramen",
+  "desc": "Cup ramen.  Heals 4, restores 6 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 18,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_cup_ramen",
+  "food": {
+   "hp": 4,
+   "stam": 6,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_gyoza",
+  "name": "gyoza plate",
+  "desc": "Gyoza plate.  Heals 5, restores 6 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 25,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_gyoza",
+  "food": {
+   "hp": 5,
+   "stam": 6,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_onigiri",
+  "name": "onigiri",
+  "desc": "Onigiri.  Heals 3, restores 4 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 12,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_onigiri",
+  "food": {
+   "hp": 3,
+   "stam": 4,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_sashimi",
+  "name": "sashimi plate",
+  "desc": "Sashimi plate.  Heals 8, restores 8 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 60,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_sashimi",
+  "food": {
+   "hp": 8,
+   "stam": 8,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_yakitori",
+  "name": "yakitori skewers",
+  "desc": "Yakitori skewers.  Heals 6, restores 6 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 30,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_yakitori",
+  "food": {
+   "hp": 6,
+   "stam": 6,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_katsu",
+  "name": "katsu bento",
+  "desc": "Katsu bento.  Heals 10, restores 10 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 55,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_katsu_bento",
+  "food": {
+   "hp": 10,
+   "stam": 10,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_unagi",
+  "name": "unagi donburi",
+  "desc": "Unagi donburi.  Heals 12, restores 12 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 90,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_unagi_don",
+  "food": {
+   "hp": 12,
+   "stam": 12,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_miso",
+  "name": "miso soup",
+  "desc": "Miso soup.  Heals 3, restores 5 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 15,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_miso_soup",
+  "food": {
+   "hp": 3,
+   "stam": 5,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_okonomiyaki",
+  "name": "okonomiyaki",
+  "desc": "Okonomiyaki.  Heals 7, restores 8 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 35,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_okonomiyaki",
+  "food": {
+   "hp": 7,
+   "stam": 8,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_takoyaki",
+  "name": "takoyaki",
+  "desc": "Takoyaki.  Heals 5, restores 6 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 28,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_takoyaki",
+  "food": {
+   "hp": 5,
+   "stam": 6,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_pelmeni",
+  "name": "pelmeni",
+  "desc": "Pelmeni.  Heals 6, restores 8 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 28,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_pelmeni",
+  "food": {
+   "hp": 6,
+   "stam": 8,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_borscht",
+  "name": "borscht",
+  "desc": "Borscht.  Heals 6, restores 8 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 24,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_borscht",
+  "food": {
+   "hp": 6,
+   "stam": 8,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_blini",
+  "name": "blini",
+  "desc": "Blini.  Heals 4, restores 5 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 20,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_blini",
+  "food": {
+   "hp": 4,
+   "stam": 5,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_caviar_blini",
+  "name": "caviar blini",
+  "desc": "Caviar blini.  Heals 8, restores 8 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 75,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_caviar_blini",
+  "food": {
+   "hp": 8,
+   "stam": 8,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_solyanka",
+  "name": "solyanka",
+  "desc": "Solyanka.  Heals 7, restores 8 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 30,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_solyanka",
+  "food": {
+   "hp": 7,
+   "stam": 8,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_piroshki",
+  "name": "piroshki",
+  "desc": "Piroshki.  Heals 3, restores 4 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 14,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_piroshki",
+  "food": {
+   "hp": 3,
+   "stam": 4,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_kotleta",
+  "name": "kotleta and kasha",
+  "desc": "Kotleta and kasha.  Heals 8, restores 9 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 34,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_kotleta",
+  "food": {
+   "hp": 8,
+   "stam": 9,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_chow_mein",
+  "name": "chow mein",
+  "desc": "Chow mein.  Heals 7, restores 8 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 32,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_chow_mein",
+  "food": {
+   "hp": 7,
+   "stam": 8,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_fried_rice",
+  "name": "fried rice",
+  "desc": "Fried rice.  Heals 6, restores 7 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 26,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_fried_rice",
+  "food": {
+   "hp": 6,
+   "stam": 7,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_hamburger",
+  "name": "hamburger",
+  "desc": "Hamburger.  Heals 7, restores 8 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 30,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "hamburger",
+  "food": {
+   "hp": 7,
+   "stam": 8,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_taco",
+  "name": "taco",
+  "desc": "Taco.  Heals 5, restores 5 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 22,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "taco",
+  "food": {
+   "hp": 5,
+   "stam": 5,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_fries",
+  "name": "fries",
+  "desc": "Fries.  Heals 2, restores 4 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 14,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "fries",
+  "food": {
+   "hp": 2,
+   "stam": 4,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_crepe",
+  "name": "crepe",
+  "desc": "Crepe.  Heals 4, restores 5 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 24,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "crepe",
+  "food": {
+   "hp": 4,
+   "stam": 5,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_sencha",
+  "name": "sencha tea",
+  "desc": "Sencha tea.  Heals 1, restores 6 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 8,
+  "tags": [
+   "food",
+   "drink"
+  ],
+  "looks_like": "trl_f_sencha",
+  "food": {
+   "hp": 1,
+   "stam": 6,
+   "drink": true,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_oolong",
+  "name": "oolong tea",
+  "desc": "Oolong tea.  Heals 1, restores 6 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 9,
+  "tags": [
+   "food",
+   "drink"
+  ],
+  "looks_like": "trl_f_oolong",
+  "food": {
+   "hp": 1,
+   "stam": 6,
+   "drink": true,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_kan_coffee",
+  "name": "canned coffee",
+  "desc": "Canned coffee.  Heals 0, restores 10 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 7,
+  "tags": [
+   "food",
+   "drink"
+  ],
+  "looks_like": "trl_f_kan_coffee",
+  "food": {
+   "hp": 0,
+   "stam": 10,
+   "drink": true,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_kvass",
+  "name": "kvass",
+  "desc": "Kvass.  Heals 1, restores 5 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 8,
+  "tags": [
+   "food",
+   "drink"
+  ],
+  "looks_like": "trl_f_kvass",
+  "food": {
+   "hp": 1,
+   "stam": 5,
+   "drink": true,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_kompot",
+  "name": "kompot",
+  "desc": "Kompot.  Heals 1, restores 5 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 8,
+  "tags": [
+   "food",
+   "drink"
+  ],
+  "looks_like": "trl_f_kompot",
+  "food": {
+   "hp": 1,
+   "stam": 5,
+   "drink": true,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_cola",
+  "name": "cola",
+  "desc": "Cola.  Heals 0, restores 6 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 7,
+  "tags": [
+   "food",
+   "drink"
+  ],
+  "looks_like": "cola",
+  "food": {
+   "hp": 0,
+   "stam": 6,
+   "drink": true,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_beer",
+  "name": "beer",
+  "desc": "Beer.  Heals 1, restores 0 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 12,
+  "tags": [
+   "food",
+   "drink"
+  ],
+  "looks_like": "beer",
+  "food": {
+   "hp": 1,
+   "stam": 0,
+   "drink": true,
+   "alcohol": true
+  }
+ },
+ {
+  "id": "trl_food_vodka",
+  "name": "vodka shot",
+  "desc": "Vodka shot.  Heals 1, restores 0 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 15,
+  "tags": [
+   "food",
+   "drink"
+  ],
+  "looks_like": "vodka",
+  "food": {
+   "hp": 1,
+   "stam": 0,
+   "drink": true,
+   "alcohol": true
+  }
+ },
+ {
+  "id": "trl_food_sake",
+  "name": "sake",
+  "desc": "Sake.  Heals 1, restores 0 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 18,
+  "tags": [
+   "food",
+   "drink"
+  ],
+  "looks_like": "sake_filtered",
+  "food": {
+   "hp": 1,
+   "stam": 0,
+   "drink": true,
+   "alcohol": true
+  }
+ },
+ {
+  "id": "trl_food_black_bread",
+  "name": "black bread",
+  "desc": "Black bread.  Heals 4, restores 6 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 10,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_black_bread",
+  "food": {
+   "hp": 4,
+   "stam": 6,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_tushonka",
+  "name": "canned stew",
+  "desc": "Canned stew.  Heals 6, restores 8 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 16,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_tushonka",
+  "food": {
+   "hp": 6,
+   "stam": 8,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_herring",
+  "name": "salted herring",
+  "desc": "Salted herring.  Heals 4, restores 5 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 14,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_herring",
+  "food": {
+   "hp": 4,
+   "stam": 5,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_natto",
+  "name": "natto",
+  "desc": "Natto.  Heals 3, restores 4 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 9,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_natto",
+  "food": {
+   "hp": 3,
+   "stam": 4,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_mochi",
+  "name": "mochi",
+  "desc": "Mochi.  Heals 2, restores 4 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 10,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_f_mochi",
+  "food": {
+   "hp": 2,
+   "stam": 4,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_apple",
+  "name": "apple",
+  "desc": "Apple.  Heals 2, restores 3 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 5,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "apple",
+  "food": {
+   "hp": 2,
+   "stam": 3,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_orange",
+  "name": "orange",
+  "desc": "Orange.  Heals 2, restores 3 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 5,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "orange",
+  "food": {
+   "hp": 2,
+   "stam": 3,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_banana",
+  "name": "banana",
+  "desc": "Banana.  Heals 2, restores 3 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 5,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "banana",
+  "food": {
+   "hp": 2,
+   "stam": 3,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_milk",
+  "name": "milk",
+  "desc": "Milk.  Heals 2, restores 4 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 8,
+  "tags": [
+   "food",
+   "drink"
+  ],
+  "looks_like": "milk",
+  "food": {
+   "hp": 2,
+   "stam": 4,
+   "drink": true,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_protein",
+  "name": "protein brick",
+  "desc": "Protein brick.  Heals 5, restores 10 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 20,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_cf_protein_brick",
+  "food": {
+   "hp": 5,
+   "stam": 10,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_glucose",
+  "name": "glucose cube",
+  "desc": "Glucose cube.  Heals 1, restores 14 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 9,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "trl_cf_glucose_cube",
+  "food": {
+   "hp": 1,
+   "stam": 14,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_hydrogel",
+  "name": "hydration gel",
+  "desc": "Hydration gel.  Heals 1, restores 12 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 10,
+  "tags": [
+   "food",
+   "drink"
+  ],
+  "looks_like": "trl_cf_hydration_gel",
+  "food": {
+   "hp": 1,
+   "stam": 12,
+   "drink": true,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_chocolate",
+  "name": "chocolate bar",
+  "desc": "Chocolate bar.  Heals 1, restores 8 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 7,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "chocolate",
+  "food": {
+   "hp": 1,
+   "stam": 8,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_food_cheese",
+  "name": "cheese wedge",
+  "desc": "Cheese wedge.  Heals 3, restores 4 stamina.",
+  "weight_g": 250,
+  "volume_ml": 300,
+  "length_mm": 120,
+  "price": 12,
+  "tags": [
+   "food"
+  ],
+  "looks_like": "cheese",
+  "food": {
+   "hp": 3,
+   "stam": 4,
+   "drink": false,
+   "alcohol": false
+  }
+ },
+ {
+  "id": "trl_faith_candle",
+  "name": "church candle",
+  "desc": "A church candle.  Use it for a small blessing.",
+  "weight_g": 80,
+  "volume_ml": 100,
+  "length_mm": 100,
+  "price": 20,
+  "tags": [
+   "charm"
+  ],
+  "looks_like": "trl_church_candle",
+  "use": {
+   "heat": -8,
+   "msg": "You light the candle and say a short prayer.  Things feel quieter."
+  }
+ },
+ {
+  "id": "trl_faith_icon",
+  "name": "small icon",
+  "desc": "A small icon.  Use it for a small blessing.",
+  "weight_g": 80,
+  "volume_ml": 100,
+  "length_mm": 100,
+  "price": 120,
+  "tags": [
+   "charm"
+  ],
+  "looks_like": "trl_icon",
+  "use": {
+   "bless": 480,
+   "msg": "You hold the icon.  You feel watched over for a while."
+  }
+ },
+ {
+  "id": "trl_faith_gospel",
+  "name": "pocket gospel",
+  "desc": "A pocket gospel.  Use it for a small blessing.",
+  "weight_g": 80,
+  "volume_ml": 100,
+  "length_mm": 100,
+  "price": 60,
+  "tags": [
+   "charm"
+  ],
+  "looks_like": "trl_gospel",
+  "use": {
+   "heat": -15,
+   "msg": "You read a few lines.  Your pulse slows."
+  }
+ },
+ {
+  "id": "trl_faith_omamori",
+  "name": "omamori charm",
+  "desc": "A omamori charm.  Use it for a small blessing.",
+  "weight_g": 80,
+  "volume_ml": 100,
+  "length_mm": 100,
+  "price": 150,
+  "tags": [
+   "charm"
+  ],
+  "looks_like": "trl_omamori",
+  "use": {
+   "bless": 600,
+   "msg": "The charm warms in your hand.  Luck is with you for a while."
+  }
+ },
+ {
+  "id": "trl_faith_ofuda",
+  "name": "ofuda paper ward",
+  "desc": "A ofuda paper ward.  Use it for a small blessing.",
+  "weight_g": 80,
+  "volume_ml": 100,
+  "length_mm": 100,
+  "price": 90,
+  "tags": [
+   "charm"
+  ],
+  "looks_like": "trl_ofuda",
+  "use": {
+   "bless": 300,
+   "msg": "You tuck the ward in your sleeve."
+  }
+ },
+ {
+  "id": "trl_faith_ema",
+  "name": "ema plaque",
+  "desc": "A ema plaque.  Use it for a small blessing.",
+  "weight_g": 80,
+  "volume_ml": 100,
+  "length_mm": 100,
+  "price": 50,
+  "tags": [
+   "charm"
+  ],
+  "looks_like": "trl_ema",
+  "use": {
+   "hp": 8,
+   "msg": "You write a wish and hang it.  You feel lighter."
   }
  }
 ]

@@ -150,7 +150,7 @@ items += [
     {"id": "trl_yen", "name": "yen notes", "weight_g": 1, "volume_ml": 1, "length_mm": 0, "price": 1, "tags": ["money"], "looks_like": "money_bundle_hundred"},
     {"id": "trl_ammo", "name": "ammo box", "weight_g": 120, "volume_ml": 70, "length_mm": 60, "price": 20, "tags": ["ammo"], "looks_like": "9mm", "ammo": {"cal": "9mm", "kind": "fmj", "rounds": 12}},
     {"id": "trl_water", "name": "water", "weight_g": 1, "volume_ml": 1, "length_mm": 0, "price": 0, "tags": ["liquid"], "per_unit": True},
-    {"id": "trl_ration", "name": "cyber ration bar", "weight_g": 90, "volume_ml": 80, "length_mm": 150, "price": 15, "tags": ["food"], "looks_like": "granola"},
+    {"id": "trl_ration", "name": "cyber ration bar", "weight_g": 90, "volume_ml": 80, "length_mm": 150, "price": 15, "tags": ["food"], "looks_like": "granola", "food": {"hp": 3, "stam": 6, "drink": False, "alcohol": False}},
     {"id": "trl_parcel", "name": "sealed parcel", "weight_g": 600, "volume_ml": 1500, "length_mm": 250, "price": 0, "tags": ["job"], "looks_like": "box_small"},
     {"id": "trl_datacase", "name": "encrypted data case", "weight_g": 1800, "volume_ml": 6000, "length_mm": 420, "price": 400, "tags": ["job"], "looks_like": "briefcase"},
     {"id": "trl_medkit", "name": "trauma patch", "weight_g": 120, "volume_ml": 100, "length_mm": 120, "price": 40, "tags": ["medical"], "looks_like": "bandages", "desc": "Heals 25 and mends your worst limb a little."},
@@ -170,5 +170,58 @@ ENGINES = [
 for eid, ename, power, drain, hp, fits, price, wt in ENGINES:
     items.append({"id": "trl_eng_" + eid, "name": ename, "desc": "Vehicle engine: top speed %d, %d hp, fits %s." % (power, hp, ", ".join(fits)), "weight_g": wt, "volume_ml": wt // 2, "length_mm": 900, "price": price,
                   "tags": ["engine"], "looks_like": "engine_block", "engine": {"power": power, "drain": drain, "hp": hp, "fits": fits}})
+# ---- more armor: the paper doll shows each piece, and every one has its own icon (trilobit-tools/pd_armor.py)
+items += [
+    {"id": "trl_balaclava", "name": "balaclava", "desc": "Armor 1 on the head.  Hides your face.", "weight_g": 150, "volume_ml": 300, "length_mm": 250, "price": 60, "tags": ["armor", "worn"], "looks_like": "helmet_ball", "armor": {"slot": "head", "phys": 1, "dur": 12}},
+    {"id": "trl_helm_tac", "name": "tactical helmet", "desc": "Armor 4 on the head, with a night-vision mount.", "weight_g": 1500, "volume_ml": 3200, "length_mm": 310, "price": 650, "tags": ["armor", "worn"], "looks_like": "helmet_ball", "armor": {"slot": "head", "phys": 4, "dur": 50}},
+    {"id": "trl_jacket", "name": "riot jacket", "desc": "Armor 2 on the chest.", "weight_g": 1800, "volume_ml": 3500, "length_mm": 600, "price": 220, "tags": ["armor", "worn"], "looks_like": "vest_ballistic", "armor": {"slot": "chest", "phys": 2, "dur": 36}},
+    {"id": "trl_vest_corp", "name": "corporate liner vest", "desc": "Armor 3 on the chest.  Slim enough to wear under a suit.", "weight_g": 2200, "volume_ml": 3500, "length_mm": 500, "price": 900, "tags": ["armor", "worn"], "looks_like": "vest_ballistic", "armor": {"slot": "chest", "phys": 3, "dur": 55}},
+    {"id": "trl_bracers_heavy", "name": "reinforced arm armor", "desc": "Armor 4 on both arms.", "weight_g": 2400, "volume_ml": 3000, "length_mm": 380, "price": 700, "tags": ["armor", "worn"], "looks_like": "armguard", "armor": {"slot": "arms", "phys": 4, "dur": 60}},
+    {"id": "trl_greaves_heavy", "name": "reinforced leg armor", "desc": "Armor 4 on both legs.", "weight_g": 3000, "volume_ml": 4000, "length_mm": 450, "price": 700, "tags": ["armor", "worn"], "looks_like": "legguard", "armor": {"slot": "legs", "phys": 4, "dur": 60}},
+    {"id": "trl_kneepads", "name": "knee pads", "desc": "Armor 1 on both legs.", "weight_g": 400, "volume_ml": 800, "length_mm": 200, "price": 70, "tags": ["armor", "worn"], "looks_like": "legguard", "armor": {"slot": "legs", "phys": 1, "dur": 20}},
+]
+
+# ---- food and drink.  food = {hp: healed, stam: stamina restored, drink, alcohol}; sprites come from the tilesets' trl_f_* art
+FOODS = [
+    # id, name, price, hp, stamina, sprite, kind (""/drink/alcohol)
+    ("cup_ramen", "cup ramen", 18, 4, 6, "trl_f_cup_ramen", ""), ("gyoza", "gyoza plate", 25, 5, 6, "trl_f_gyoza", ""),
+    ("onigiri", "onigiri", 12, 3, 4, "trl_f_onigiri", ""), ("sashimi", "sashimi plate", 60, 8, 8, "trl_f_sashimi", ""),
+    ("yakitori", "yakitori skewers", 30, 6, 6, "trl_f_yakitori", ""), ("katsu", "katsu bento", 55, 10, 10, "trl_f_katsu_bento", ""),
+    ("unagi", "unagi donburi", 90, 12, 12, "trl_f_unagi_don", ""), ("miso", "miso soup", 15, 3, 5, "trl_f_miso_soup", ""),
+    ("okonomiyaki", "okonomiyaki", 35, 7, 8, "trl_f_okonomiyaki", ""), ("takoyaki", "takoyaki", 28, 5, 6, "trl_f_takoyaki", ""),
+    ("pelmeni", "pelmeni", 28, 6, 8, "trl_f_pelmeni", ""), ("borscht", "borscht", 24, 6, 8, "trl_f_borscht", ""),
+    ("blini", "blini", 20, 4, 5, "trl_f_blini", ""), ("caviar_blini", "caviar blini", 75, 8, 8, "trl_f_caviar_blini", ""),
+    ("solyanka", "solyanka", 30, 7, 8, "trl_f_solyanka", ""), ("piroshki", "piroshki", 14, 3, 4, "trl_f_piroshki", ""),
+    ("kotleta", "kotleta and kasha", 34, 8, 9, "trl_f_kotleta", ""), ("chow_mein", "chow mein", 32, 7, 8, "trl_f_chow_mein", ""),
+    ("fried_rice", "fried rice", 26, 6, 7, "trl_f_fried_rice", ""), ("hamburger", "hamburger", 30, 7, 8, "hamburger", ""),
+    ("taco", "taco", 22, 5, 5, "taco", ""), ("fries", "fries", 14, 2, 4, "fries", ""), ("crepe", "crepe", 24, 4, 5, "crepe", ""),
+    ("sencha", "sencha tea", 8, 1, 6, "trl_f_sencha", "drink"), ("oolong", "oolong tea", 9, 1, 6, "trl_f_oolong", "drink"),
+    ("kan_coffee", "canned coffee", 7, 0, 10, "trl_f_kan_coffee", "drink"), ("kvass", "kvass", 8, 1, 5, "trl_f_kvass", "drink"),
+    ("kompot", "kompot", 8, 1, 5, "trl_f_kompot", "drink"), ("cola", "cola", 7, 0, 6, "cola", "drink"),
+    ("beer", "beer", 12, 1, 0, "beer", "alcohol"), ("vodka", "vodka shot", 15, 1, 0, "vodka", "alcohol"), ("sake", "sake", 18, 1, 0, "sake_filtered", "alcohol"),
+    # the grocery
+    ("black_bread", "black bread", 10, 4, 6, "trl_f_black_bread", ""), ("tushonka", "canned stew", 16, 6, 8, "trl_f_tushonka", ""),
+    ("herring", "salted herring", 14, 4, 5, "trl_f_herring", ""), ("natto", "natto", 9, 3, 4, "trl_f_natto", ""),
+    ("mochi", "mochi", 10, 2, 4, "trl_f_mochi", ""), ("apple", "apple", 5, 2, 3, "apple", ""), ("orange", "orange", 5, 2, 3, "orange", ""),
+    ("banana", "banana", 5, 2, 3, "banana", ""), ("milk", "milk", 8, 2, 4, "milk", "drink"), ("protein", "protein brick", 20, 5, 10, "trl_cf_protein_brick", ""),
+    ("glucose", "glucose cube", 9, 1, 14, "trl_cf_glucose_cube", ""), ("hydrogel", "hydration gel", 10, 1, 12, "trl_cf_hydration_gel", "drink"),
+    ("chocolate", "chocolate bar", 7, 1, 8, "chocolate", ""), ("cheese", "cheese wedge", 12, 3, 4, "cheese", ""),
+]
+for fid, nm, pr, hp, st, spr, kind in FOODS:
+    items.append({"id": "trl_food_" + fid, "name": nm, "desc": "%s.  Heals %d, restores %d stamina." % (nm.capitalize(), hp, st), "weight_g": 250, "volume_ml": 300, "length_mm": 120,
+                  "price": pr, "tags": ["food"] + (["drink"] if kind else []), "looks_like": spr, "food": {"hp": hp, "stam": st, "drink": kind != "", "alcohol": kind == "alcohol"}})
+
+# ---- faith items (church and shrine shops); `use` is what they do when used
+FAITH = [
+    ("candle", "church candle", 20, "trl_church_candle", {"heat": -8, "msg": "You light the candle and say a short prayer.  Things feel quieter."}),
+    ("icon", "small icon", 120, "trl_icon", {"bless": 480, "msg": "You hold the icon.  You feel watched over for a while."}),
+    ("gospel", "pocket gospel", 60, "trl_gospel", {"heat": -15, "msg": "You read a few lines.  Your pulse slows."}),
+    ("omamori", "omamori charm", 150, "trl_omamori", {"bless": 600, "msg": "The charm warms in your hand.  Luck is with you for a while."}),
+    ("ofuda", "ofuda paper ward", 90, "trl_ofuda", {"bless": 300, "msg": "You tuck the ward in your sleeve."}),
+    ("ema", "ema plaque", 50, "trl_ema", {"hp": 8, "msg": "You write a wish and hang it.  You feel lighter."}),
+]
+for fid, nm, pr, spr, use in FAITH:
+    items.append({"id": "trl_faith_" + fid, "name": nm, "desc": "A %s.  Use it for a small blessing." % nm, "weight_g": 80, "volume_ml": 100, "length_mm": 100, "price": pr, "tags": ["charm"], "looks_like": spr, "use": use})
+
 json.dump(items, open(os.path.join(HERE, "../data/items.json"), "w"), indent=1)
 print(len(items), "items exported")

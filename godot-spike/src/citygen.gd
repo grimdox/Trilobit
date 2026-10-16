@@ -2,6 +2,7 @@ extends RefCounted
 ## Spike test 3b: one city map (256 x 256 tiles) from a seed.  A road grid with varying block widths, a core of tall mixed-use buildings,
 ## suburban houses and parks outside it, and a harbor on the side that faces the overworld's harbor.  Buildings are BSP rooms with doors;
 ## each building is placed with its door on the street side.  Produces home, work and shop markers for the NPC simulation.
+const VN = preload("res://src/venues.gd")
 const GROUND := 0
 const ROAD := 1
 const WALL := 2
@@ -35,9 +36,61 @@ const TREE := 29        # a dense tree: impassable, blocks sight
 const ROCKS := 30       # rough rocky ground along the coast
 const FIELD := 31       # ploughed or planted field
 const SAND := 32        # beach
-const LOW_COVER := [20, 23, 24, 25]
 ## 1 where a tile can be walked on (indexed by tile id)
-const WALK := [1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1]
+## the shops, clinics, churches and shrines add floors and furniture as tile ids from 33 up: [name, sprite, walkable, low cover]
+const EXTRA := [
+	["floor_checker", "t_trl_checker", 1, 0], ["floor_church", "t_trl_floor_church", 1, 0], ["floor_hinoki", "t_trl_floor_hinoki", 1, 0],
+	["floor_clean", "t_trl_floor_clean", 1, 0], ["floor_marble", "t_trl_marble", 1, 0], ["floor_steel", "t_trl_floor_steel", 1, 0],
+	["floor_wood", "t_trl_floor_wood", 1, 0], ["floor_tatami", "t_trl_tatami", 1, 0], ["floor_carpet", "t_trl_carpet_red", 1, 0],
+	["counter", "f_trl_shop_counter", 0, 1], ["noodle_counter", "f_trl_counter_noodle", 0, 1], ["range", "f_trl_kitchen_range", 0, 0], ["fridge", "f_trl_kitchen_fridge", 0, 0],
+	["sushi_case", "f_trl_sushi_case", 0, 1], ["pizza_oven", "f_trl_pizza_oven", 0, 0], ["dining_table", "f_trl_dining_table", 0, 1], ["table_plastic", "f_trl_table_plastic", 0, 1],
+	["tea_table", "f_trl_tea_table", 0, 1], ["stool", "f_trl_stool_plastic", 1, 0], ["bar_stool", "f_trl_bar_stool", 1, 0], ["menu_board", "f_trl_menu_board", 0, 0],
+	["samovar", "f_trl_samovar", 0, 0], ["liquor_shelf", "f_trl_liquor_shelf", 0, 1], ["hot_plate", "f_trl_hot_plate", 0, 0], ["shelf", "f_trl_shelf_clean", 0, 1],
+	["produce_bin", "f_trl_produce_bin", 0, 1], ["freezer_case", "f_trl_freezer_case", 0, 1], ["checkout", "f_trl_checkout", 0, 1], ["vending", "f_trl_vending", 0, 0],
+	["water_cooler", "f_trl_water_cooler", 0, 0], ["implant_chair", "f_trl_implant_chair", 0, 1], ["implant_printer", "f_trl_implant_printer", 0, 0],
+	["limb_bin", "f_trl_limb_bin", 0, 1], ["autodoc", "f_trl_autodoc_imp_m", 0, 0], ["hospital_bed", "f_trl_hospital_bed", 0, 1], ["ward_bed", "f_trl_ward_bed", 0, 1],
+	["scanner", "f_trl_scanner", 0, 0], ["med_cabinet", "f_trl_med_cabinet", 0, 1], ["iv_stand", "f_trl_iv_stand", 0, 0], ["reception", "f_trl_reception", 0, 1],
+	["exam_couch", "f_trl_exam_couch", 0, 1], ["church_bench", "f_trl_church_bench", 0, 1], ["iconostasis", "f_trl_iconostasis", 0, 0], ["candle_stand", "f_trl_candle_stand", 0, 0],
+	["analoy", "f_trl_analoy", 0, 0], ["baptismal_font", "f_trl_baptismal_font", 0, 0], ["icon_lamp", "f_trl_icon_lamp", 0, 0], ["worship_cross", "f_trl_worship_cross", 0, 0],
+	["shrine", "f_trl_shrine", 0, 0], ["offering_table", "f_trl_offering_table", 0, 1], ["saisen_box", "f_trl_saisen_box", 0, 0], ["komainu", "f_trl_komainu", 0, 0],
+	["lantern_stone", "f_trl_lantern_stone", 0, 0], ["chozuya", "f_trl_chozuya", 0, 0], ["ema_rack", "f_trl_ema_rack", 0, 0], ["torii", "f_trl_torii", 1, 0],
+	["shimenawa", "f_trl_shimenawa_pole", 0, 0], ["bonsai", "f_trl_bonsai", 0, 0], ["fern", "f_trl_fern", 0, 0], ["aquarium", "f_trl_aquarium", 0, 0],
+	["charm_counter", "f_trl_charm_counter", 0, 1], ["cabinet", "f_trl_cabinet_lacquer", 0, 1], ["neon", "f_trl_neon_pink", 0, 0],
+]
+const EXTRA0 := 33
+static var TID: Dictionary = _tids()
+static var TILE_SPRITE: Dictionary = _tile_sprites()
+static var WALK: Array = _walk_table()
+static var LOW_COVER: Array = _low_cover()
+
+static func _tids() -> Dictionary:
+	var d := {}
+	for k in EXTRA.size():
+		d[EXTRA[k][0]] = EXTRA0 + k
+	return d
+
+static func _tile_sprites() -> Dictionary:
+	var d := {}
+	for k in EXTRA.size():
+		d[EXTRA0 + k] = EXTRA[k][1]
+	return d
+
+static func _walk_table() -> Array:
+	var w := [1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1]
+	for e in EXTRA:
+		w.append(e[2])
+	return w
+
+static func _low_cover() -> Array:
+	var c := [20, 23, 24, 25]
+	for k in EXTRA.size():
+		if EXTRA[k][3] == 1:
+			c.append(EXTRA0 + k)
+	return c
+
+## true for the furniture and floors of the venues (tile ids from EXTRA0)
+static func is_extra(t: int) -> bool:
+	return t >= EXTRA0
 const OPAQUE := [2, 17, 27, 28, 29]
 
 ## lane markings painted over ROAD tiles on the ground level (a road is two lanes of six tiles: white edge, four black, yellow centre)
@@ -79,6 +132,9 @@ var movables: Array = []               # [cell, kind] props the game turns into 
 var tower_info: Array = []             # {x0,y0,x1,y1,h,stairs,elev} per built tower
 var subway: Dictionary = {}            # {ring: PackedInt32Array of track cells (level -1), stops: Array of ring indices}
 var rng := RandomNumberGenerator.new()
+var venues: Array = []                 # {kind, style, tier, x0, y0, x1, y1, door, keeper: cell, name}: shops, clinics, churches, shrines
+var venue_plan: Array = []             # kinds still to place while the suburbs are laid out
+var under: PackedByteArray = PackedByteArray()   # ground level: the floor tile under each piece of furniture
 
 func walkable(t: int) -> bool:
 	return WALK[t] == 1
@@ -108,6 +164,10 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 	shops = PackedInt32Array()
 	buildings = 0
 	towers = []
+	venues = []
+	venue_plan = VN.city_plan(rng)
+	under = PackedByteArray()
+	under.resize(size * size)
 	var m := mini(grid_margin, size / 6)
 	# the paved city area
 	for y in range(m, size - m):
@@ -249,7 +309,12 @@ func _suburb_block(x0: int, y0: int, x1: int, y1: int) -> void:
 			var wdt := rng.randi_range(10, 15)
 			if x + wdt > x1 - 2:
 				break
-			if rng.randf() < 0.9:
+			var rid: int = rows.find(row)
+			if rid < 2 and wdt >= 12 and not venue_plan.is_empty() and rng.randf() < 0.6:
+				var kind: String = venue_plan.pop_front()
+				var d := Vector2((x + x + wdt) * 0.5, (row[0] + row[1]) * 0.5).distance_to(Vector2(size * 0.5, size * 0.5)) / (size * 0.5)
+				VN.stamp(self, kind, x, row[0], x + wdt, row[1], 0 if rid == 0 else 1, 0 if d > 0.8 else 1)
+			elif rng.randf() < 0.9:
 				_building(x, row[0], x + wdt, row[1], "house")
 			x += wdt + rng.randi_range(3, 6)
 
@@ -429,8 +494,8 @@ func reachable_fraction() -> float:
 
 func save_png(path: String, scale: int = 3) -> void:
 	var pal := [Color("#6b6b73"), Color("#2a2a30"), Color("#d8d8e0"), Color("#9a8f7a"), Color("#e0a030"), Color("#1d4f91"), Color("#4a9a4a")]
-	pal.resize(40)
-	for k in 40:
+	pal.resize(128)
+	for k in 128:
 		if pal[k] == null:
 			pal[k] = Color("#554455")
 	var img := Image.create(size * scale, size * scale, false, Image.FORMAT_RGBA8)

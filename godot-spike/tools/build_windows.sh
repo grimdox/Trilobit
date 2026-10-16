@@ -4,6 +4,8 @@
 set -e
 cd "$(dirname "$0")/.."
 VER=${1:-0.19.0.0}
+python3 tools/export_items.py
+python3 ../trilobit-tools/gen_paperdoll.py data/items.json gfx/paperdoll
 godot --headless --path . --import >/dev/null 2>&1 || true
 godot --headless --path . --export-release "Windows Desktop" build/Trilobit.exe 2>&1 | grep -E "ERROR|error" || true
 python3 tools/set_exe_icon.py build/Trilobit.exe gfx/icon.ico "Trilobit" "Trilobit" "$VER" "Trilobit"
