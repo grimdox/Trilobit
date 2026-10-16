@@ -128,7 +128,7 @@ func step() -> void:
 			3 * 60: g.say("The stabiliser is failing.  Three hours.")
 			0: g.say("The stabiliser dies.  Your nerves misfire.  Find a ripperdoc.")
 	elif g.turn % 10 == 0:
-		g.hp -= 2
+		g._raw_hurt(2, "chest")
 		g.say("A seizure grips you (-2).")
 	if implant_left < 12 * 60 and implant_left > 0 and g.turn % 40 == 0:
 		g.say(["Your fingers jitter.", "A static hiss floods your ears.", "The edges of your vision flicker."][g.rng.randi() % 3])
@@ -329,9 +329,16 @@ func menu_for(i: int) -> Dictionary:
 			m["text"] = ["\"Let me see that stabiliser.\"  Service life: %dh." % (implant_left / 60)]
 			m["options"].append({"label": "Service the stabiliser  ¥%d  (resets to 96h)" % cost, "op": "service", "arg": cost})
 			m["options"].append({"label": "Trauma patch  ¥40", "op": "buy", "arg": ["trl_medkit", "trauma patch", 40]})
+			var wrecked := 0
+			for l in g.BODY.LIMBS:
+				if int(g.body.hp[l]) < int(g.body.mx[l]):
+					wrecked += 1
+			if wrecked > 0 or g.armor_status()["left"] < g.armor_status()["max"]:
+				var mc: int = 90 + 70 * wrecked
+				m["options"].append({"label": "Rebuild: every limb to 70%%, replate implant armor  ¥%d" % mc, "op": "mend", "arg": mc})
 			var under: bool = g.z_of(g.sim.pos[i]) < 0
 			for d in g.IMP.ALL:
-				if d["live"] and not g.has_implant(d["id"]):
+				if d["live"] and not g.implants.get(d["id"], false):
 					var pr: int = g.IMP.price(d["id"], under)
 					m["options"].append({"label": "%s  ¥%d  (%s)" % [d["name"], pr, d["desc"]], "op": "implant", "arg": [d["id"], pr]})
 		FIXER:
@@ -363,6 +370,12 @@ func _stock(i: int = 0) -> Array:
 	var kind: int = i % 3
 	if kind != 1:
 		out.append(["trl_backpack", "backpack", 120])
+	if i % 2 == 0:
+		out.append(["trl_vest", "ballistic vest", 500])
+		out.append(["trl_helmet", "ballistic helmet", 350])
+	else:
+		out.append(["trl_bracers", "composite arm guards", 300])
+		out.append(["trl_greaves", "shin guards", 300])
 	for n in (2 if kind != 1 else 0):
 		var a: String = ammo_ids[(i * 5 + n * 7) % ammo_ids.size()]
 		out.append([a, g.db.defs[a]["name"], int(g.db.defs[a]["price"]) * 3 / 2])
@@ -446,6 +459,19 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 			implant_left = 96 * 60
 			g.say("The stabiliser hums back to life.  96 hours.")
 			m["text"] = ["\"Come back in four days.\""]
+			return m
+		"mend":
+			var mcost: int = o["arg"]
+			if g.yen < mcost:
+				g.say("You can't afford the work.")
+				return m
+			g.yen -= mcost
+			g.body.mend_to(0.7)
+			g.imp_dur.clear()
+			g.hp = g.hp_max
+			g.say("Hours under the lamp.  Limbs rebuilt, implant plating replaced.")
+			m["text"] = ["\"Good as used.\""]
+			m["options"] = [{"label": "Leave", "op": "close", "arg": null}]
 			return m
 		"job":
 			var j: Dictionary = _make_courier() if o["arg"] == "courier" else _make_retrieval()

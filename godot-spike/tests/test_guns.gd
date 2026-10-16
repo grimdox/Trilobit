@@ -179,15 +179,18 @@ func run() -> Array:
 			gun2.loaded = int(GP.stats(gun2)["mag"])
 			var h0: int = g.hpn[found]
 			g.hp = g.hp_max
+			g.body.reset()
 			g.act_fire(true)
 			dmg_total += h0 - g.hpn[found]
 			trials += 1
 		check.call("shooting at a target in view deals damage over a few volleys (%d dmg in %d volleys)" % [dmg_total, trials], dmg_total > 0)
 		# aiming takes turns and shows in the HUD line
 		g.hpn[found] = 400
-		g.act_aim(true)
-		g.act_aim(true)
-		check.call("aiming stacks and appears in the gun line", g.aim_turns == 2 and g.gun_line().contains("aim 2"))
+		var aims := 0
+		while g.aim_turns < 2 and aims < 6:
+			g.act_aim(true)
+			aims += 1
+		check.call("aiming stacks (%d actions at %.2f a turn) and appears in the gun line" % [aims, g.aim_rate()], g.aim_turns == 2 and g.gun_line().contains("aim 2") and aims <= 3)
 		g.act_move(0, 0) if false else null
 		# the report of a shot
 		var civ_noise: int = int(GP.stats(gun2)["noise"])

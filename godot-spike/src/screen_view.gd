@@ -223,8 +223,16 @@ func _implants(W: float, H: float) -> void:
 	_txt(part["name"].to_upper(), Vector2(px + 20, py + 44), 28, Color.WHITE)
 	var y := py + 90.0
 	for d in IMP.for_part(part["id"]):
-		var have: bool = game != null and game.has_implant(d["id"])
+		var fitted: bool = game != null and game.implants.get(d["id"], false)
+		var have: bool = fitted
 		var status := "INSTALLED" if have else ("available - ripperdocs" if d["live"] else "not yet available")
+		status = "grade %d   " % int(d.get("grade", 1)) + status
+		if fitted and not game.has_implant(d["id"]):
+			status = "OFFLINE - the %s is disabled" % game.BODY.PART_GROUP.get(d["part"], "limb")
+		elif fitted and d.has("armor"):
+			status += "   armor %d  (plating %d/%d)" % [int(d["armor"]), int(game.imp_dur.get(d["id"], int(d["dur"]))), int(d["dur"])]
+		elif d.has("armor"):
+			status += "   armor %d" % int(d["armor"])
 		var col := Color(1.0, 0.8, 0.25) if have else (Color(0.5, 1.0, 0.7) if d["live"] else Color(0.55, 0.6, 0.68))
 		draw_rect(Rect2(px + 16, y - 26, W - px - 72, 92), Color(1, 1, 1, 0.04))
 		_txt(d["name"], Vector2(px + 28, y), 24, Color.WHITE if (have or d["live"]) else Color(0.7, 0.75, 0.82))
@@ -236,7 +244,7 @@ func _implants(W: float, H: float) -> void:
 	# overall tally
 	var total_have := 0
 	for d in IMP.ALL:
-		if game != null and game.has_implant(d["id"]):
+		if game != null and game.implants.get(d["id"], false):
 			total_have += 1
 	_txt("%d of %d implants fitted" % [total_have, IMP.ALL.size()], Vector2(px + 20, H - 78), 16, Color(0.6, 0.75, 0.9))
 

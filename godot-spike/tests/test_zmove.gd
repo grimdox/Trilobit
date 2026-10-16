@@ -81,6 +81,7 @@ func run() -> Array:
 		check.call("leaping over the railing into the void drops you the whole height", g.act_jump(1, 0) and g.z_of(g.pc) == 0 and hp1 - g.hp >= 60)
 		g.pc = edge
 		g.implants["jets"] = true
+		g.body.reset()
 		g.fuel = 24
 		g.stamina = 30
 		g.sim.retier(g.pc)
@@ -100,6 +101,8 @@ func run() -> Array:
 	# ---- leg actuators
 	var open: int = _open_cell(g, g.pc if g.z_of(g.pc) == 0 else (g.size / 2) * g.size + g.size / 2, 5)
 	check.call("found open ground", open >= 0)
+	g.body.reset()
+	g.hp = g.hp_max
 	g.pc = open
 	g.sim.retier(g.pc)
 	g.stamina = 30
@@ -109,6 +112,7 @@ func run() -> Array:
 	check.call("an ordinary jump goes two cells", g.pc == open + 2)
 	g.pc = open
 	g.implants["legs"] = true
+	g.body.reset()
 	g.stamina = 30
 	g.act_jump(1, 0)
 	check.call("leg actuators jump four", g.pc == open + 4)
@@ -118,6 +122,7 @@ func run() -> Array:
 	g.pc = open
 	g.last_pc = open
 	g.implants["jets"] = true
+	g.body.reset()
 	g.fuel = 24
 	g.stamina = 30
 	check.call("without leaving the ground first, jets lift you through open air", g.act_vertical(1) and g.flying and g.z_of(g.pc) == 1)
@@ -189,7 +194,9 @@ func run() -> Array:
 
 	# ---- save / load
 	g.implants["jets"] = true
+	g.body.reset()
 	g.implants["legs"] = true
+	g.body.reset()
 	g.fuel = 17
 	g.pc = open + 2 * g.s2
 	g.flying = true

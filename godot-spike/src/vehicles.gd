@@ -295,7 +295,7 @@ func damage(vi: int, part: String, amount: int, how: String = "") -> bool:
 			"drive": g.say("The %s's %s are wrecked." % [name, KINDS[v["kind"]]["drive"]])
 			"cabin": g.say("The %s's cabin caves in." % name)
 	if part == "cabin" and g.in_vehicle == vi:
-		g.hp -= maxi(1, amount / 4)
+		g._raw_hurt(maxi(1, amount / 4), "chest")
 	if part == "drive" and before > 0 and v["parts"]["drive"] <= 0 and v.get("air", false) and v["kind"] != "plane":
 		if seen:
 			g.say("The rotor fails and the %s falls!" % name)
@@ -333,7 +333,7 @@ func _wreck(vi: int) -> void:
 		g.in_vehicle = -1
 		g.say("You are thrown clear.")
 		_exit_cell(vi)
-		g.hp -= 3
+		g._raw_hurt(3, "chest")
 	if was_air:
 		_fall(vi)
 	if int(v["charge"]) >= 30 and g.rng.randf() < 0.35 and v["kind"] != "mech":
@@ -581,7 +581,7 @@ func _crash(vi: int, pr: Dictionary) -> void:
 		damage(vi, "body", imp)
 		damage(vi, "engine", imp / 3, "the crash")
 		if v["driver"] == -2:
-			g.hp -= maxi(1, spd - 1)
+			g._raw_hurt(maxi(1, spd - 1), "chest")
 		if String(pr.get("t", "")) == "vehicle" and int(pr["idx"]) >= 0:
 			var other: int = int(pr["idx"])
 			damage_cell(other, cell, imp, "rammed")
@@ -758,7 +758,7 @@ func fly(dx: int, dy: int) -> bool:
 					g.say("The helicopter clips something solid!")
 					damage(vi, "body", 5 * spd)
 					damage(vi, "drive", 6 * spd)
-					g.hp -= 1
+					g._raw_hurt(1, "chest")
 				v["spd"] = 0
 				break
 	if g.turn % 2 == 0:

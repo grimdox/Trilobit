@@ -17,6 +17,11 @@ const KIND := {
 const KINDS_BY_CAL := {"9mm": ["fmj", "ap", "hp"], ".357": ["fmj", "ap", "hp"], "5.56": ["fmj", "ap", "hp"], "12ga": ["shot", "slug"], ".338": ["fmj", "ap"],
 	"7.62": ["fmj", "ap"], "12.7": ["fmj", "ap"], "40mm": ["he"], "cell": ["cell"]}
 const MAX_AIM := 3
+## iron sights (percent to hit, lost as soon as an optic is fitted), hands needed, and how quick the class is to settle (aim speed modifier)
+const SIGHTS := {"pistol": 3, "revolver": 4, "smg": 4, "rifle": 6, "shotgun": 2, "sniper": 8, "mg": 3, "heavy_mg": 1, "launcher": 0, "laser": 5}
+const HANDS := {"pistol": 1, "revolver": 1, "laser": 1}
+const AIM_CLASS := {"pistol": 0.1, "revolver": 0.05, "smg": 0.0, "rifle": -0.05, "shotgun": -0.1, "sniper": -0.2, "mg": -0.25, "heavy_mg": -0.35, "launcher": -0.2, "laser": 0.0}
+const AIM_MOD := {"trl_mod_redot": 0.05, "trl_mod_holo": 0.05, "trl_mod_scope4": -0.08, "trl_mod_scope8": -0.2, "trl_mod_smartlink": 0.1, "trl_mod_laser": 0.05, "trl_mod_bipod": -0.05}
 
 static func default_kind(cal: String) -> String:
 	return KINDS_BY_CAL[cal][0]
@@ -58,8 +63,28 @@ static func stats(gun) -> Dictionary:
 	s["pellets"] = int(km.get("pellets", b["pellets"]))
 	s["spread"] = maxf(0.2, 1.0 + float(f["spread_pct"]) / 100.0)
 	s["blast"] = int(km.get("blast", 0))
+	s["pen"] = int(km.get("pen", 0))
 	s["aim_step"] = 6 + int(f["aim"])
 	s["hip"] = int(f["hip"])
+	var cls := ""
+	for tg in gun.def.get("tags", []):
+		if tg != "gun":
+			cls = String(tg)
+	s["cls"] = cls
+	var optic := false
+	var scoped := false
+	var rate: float = float(AIM_CLASS.get(cls, 0.0))
+	for m in gun.mods:
+		if m.def["mod"]["slot"] == "optic":
+			optic = true
+			if int(m.def["mod"]["fx"].get("range_pct", 0)) > 0:
+				scoped = true
+		rate += float(AIM_MOD.get(m.def["id"], 0.0))
+	s["optic"] = optic
+	s["scoped"] = scoped
+	s["sights"] = 0 if optic else int(SIGHTS.get(cls, 2))
+	s["hands"] = int(HANDS.get(cls, 2))
+	s["aim_rate"] = rate
 	s["rangepen"] = 4.0 * (1.0 - clampf(float(f["rangepen_pct"]) / 100.0, 0.0, 0.9))
 	s["close_pen"] = int(f["close_pen"])
 	s["jam"] = maxf(0.0, float(b["jam"]) + float(f["jam"]))
@@ -70,7 +95,7 @@ static func stats(gun) -> Dictionary:
 
 ## percent chance for the shot_index'th shot of a volley to hit at distance d
 static func hit_chance(s: Dictionary, d: int, aim: int, moved: bool, crouch: bool, skill: int, penalty: int, shot_index: int = 0, prone: bool = false) -> int:
-	var c: float = float(s["acc"]) + float(skill) * 2.0
+	var c: float = float(s["acc"]) + float(skill) * 2.0 + float(s.get("sights", 0))
 	c += float(aim * int(s["aim_step"])) if aim > 0 else float(s["hip"])
 	c -= float(s["rangepen"]) * float(maxi(0, d - 3))
 	if d < 4:

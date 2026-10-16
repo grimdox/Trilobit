@@ -278,6 +278,56 @@ func _draw() -> void:
 		var pa := Vector2((a % size - ox + 0.5) * T, ((a / size) % size - oy + 0.5) * T)
 		var pb := Vector2((b % size - ox + 0.5) * T, ((b / size) % size - oy + 0.5) * T)
 		draw_line(pa, pb, Color(1, 0.95, 0.5) if tr[2] else Color(0.8, 0.8, 0.8, 0.6), 2.0)
+	_draw_hud()
+
+func _limb_color(f: float) -> Color:
+	if f <= 0.0:
+		return Color(0.25, 0.25, 0.28)
+	return Color(0.9, 0.15, 0.15).lerp(Color(0.25, 0.85, 0.35), clampf(f, 0.0, 1.0))
+
+func _bar(x: float, y: float, w: float, h: float, f: float, col: Color, label: String) -> void:
+	draw_rect(Rect2(x, y, w, h), Color(0, 0, 0, 0.7))
+	draw_rect(Rect2(x + 1, y + 1, (w - 2) * clampf(f, 0.0, 1.0), h - 2), col)
+	draw_rect(Rect2(x, y, w, h), Color(1, 1, 1, 0.35), false, 1.0)
+	draw_string(font, Vector2(x + 4, y + h - 3), label, HORIZONTAL_ALIGNMENT_LEFT, -1, int(h) - 2, Color.WHITE)
+
+## health and armor bars and a body diagram, top right: each limb is coloured by its health, grey when disabled
+func _draw_hud() -> void:
+	var W: float = float(cols * tile())
+	var x0: float = W - 236.0
+	var y0: float = 6.0
+	draw_rect(Rect2(x0 - 6, y0 - 4, 238, 188), Color(0.03, 0.04, 0.08, 0.72))
+	_bar(x0, y0, 224, 16, float(game.hp) / float(maxi(1, game.hp_max)), _limb_color(float(game.hp) / float(maxi(1, game.hp_max))), "HP  %d / %d" % [game.hp, game.hp_max])
+	var ar: Dictionary = game.armor_status()
+	var broken := false
+	for l in game.BODY.LIMBS:
+		for p in game.armor_pieces(l):
+			if int(p["left"]) <= 0:
+				broken = true
+	var af: float = float(ar["left"]) / float(maxi(1, int(ar["max"])))
+	_bar(x0, y0 + 20, 224, 16, af if int(ar["max"]) > 0 else 0.0, Color(0.35, 0.65, 0.95) if not broken else Color(0.9, 0.55, 0.2), "ARMOR %d   %d / %d%s" % [int(ar["value"]), int(ar["left"]), int(ar["max"]), "  BROKEN!" if broken else ""])
+	# the figure
+	var fx: float = x0 + 34.0
+	var fy: float = y0 + 46.0
+	var B = game.body
+	draw_circle(Vector2(fx, fy + 8), 8.0, _limb_color(B.frac("head")))
+	draw_rect(Rect2(fx - 10, fy + 18, 20, 32), _limb_color(B.frac("chest")))
+	draw_rect(Rect2(fx - 20, fy + 19, 8, 28), _limb_color(B.frac("r_arm")))
+	draw_rect(Rect2(fx + 12, fy + 19, 8, 28), _limb_color(B.frac("l_arm")))
+	draw_rect(Rect2(fx - 9, fy + 52, 8, 34), _limb_color(B.frac("r_leg")))
+	draw_rect(Rect2(fx + 1, fy + 52, 8, 34), _limb_color(B.frac("l_leg")))
+	for r in [Rect2(fx - 20, fy + 19, 8, 28), Rect2(fx + 12, fy + 19, 8, 28), Rect2(fx - 9, fy + 52, 8, 34), Rect2(fx + 1, fy + 52, 8, 34), Rect2(fx - 10, fy + 18, 20, 32)]:
+		draw_rect(r, Color(1, 1, 1, 0.3), false, 1.0)
+	# per-limb bars with the armor on each
+	var names := {"head": "HEAD", "chest": "CHEST", "l_arm": "L ARM", "r_arm": "R ARM", "l_leg": "L LEG", "r_leg": "R LEG"}
+	var k := 0
+	for l in game.BODY.LIMBS:
+		var by: float = y0 + 44.0 + float(k) * 22.0
+		var av: int = game.armor_value(l)
+		_bar(x0 + 74, by, 150, 18, B.frac(l), _limb_color(B.frac(l)), "%s %d/%d%s" % [names[l], int(B.hp[l]), int(B.mx[l]), ("  [%d]" % av) if av > 0 else ""])
+		if not B.ok(l):
+			draw_string(font, Vector2(x0 + 190, by + 14), "OFF", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 0.4, 0.4))
+		k += 1
 
 ## a vehicle drawn tile by tile from its template
 func _draw_body(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> void:

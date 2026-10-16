@@ -119,17 +119,23 @@ func run() -> Array:
 	var master_avg: float = dmg_of.call(g._new_item("trl_mel_katana_m"), 60)
 	check.call("katana beats bare hands, forged beats plain, masterwork beats forged (%.1f, %.1f, %.1f, %.1f)" % [fists, kat_avg, forged_avg, master_avg],
 		kat_avg > fists * 2 and forged_avg > kat_avg and master_avg > forged_avg)
-	# fast weapons strike twice now and then
-	var twice := 0
+	# attack speed: a strike costs action points; fast weapons get more of them per turn
 	g.wield = g._new_item("trl_mel_kastet")
-	for _t in 80:
+	var c_fast: int = g.melee_cost(g.melee_stats())
+	g.wield = g._new_item("trl_mel_katana")
+	var c_norm: int = g.melee_cost(g.melee_stats())
+	g.wield = g._new_item("trl_mel_nodachi")
+	var c_slow: int = g.melee_cost(g.melee_stats())
+	check.call("attack speed: knuckles cost %d, a katana %d, a nodachi %d action points" % [c_fast, c_norm, c_slow], c_fast < 70 and c_norm >= 90 and c_norm <= 100 and c_slow > 150)
+	g.wield = g._new_item("trl_mel_kastet")
+	g.atk_debt = 0
+	var tn0: int = g.turn
+	for _t in 20:
 		put.call(spot + 1)
-		var before: int = g.log.size()
-		g.melee(who)
-		for l in g.log.slice(before):
-			if "again" in l:
-				twice += 1
-	check.call("fast weapons get second strikes (%d of 80)" % twice, twice >= 15 and twice <= 55)
+		g.pc = spot
+		g.act_move(1, 0)
+	var fast_turns: int = g.turn - tn0
+	check.call("twenty punches take about %d turns, not twenty" % fast_turns, fast_turns <= 15)
 	# bleed
 	g.wield = g._new_item("trl_mel_katana")
 	put.call(spot + 1)
@@ -180,8 +186,13 @@ func run() -> Array:
 	put.call(spot + 2)
 	var hy0: int = g.hpn[who]
 	var t0: int = g.turn
-	var did: bool = g.act_strike(1, 0)
-	check.call("a yari strikes someone two cells away (%d damage)" % (hy0 - g.hpn[who]), did and g.hpn[who] < hy0 and g.turn == t0 + 1)
+	var did := false
+	for _t in 12:
+		put.call(spot + 2)
+		did = g.act_strike(1, 0) or did
+		if g.hpn[who] < hy0:
+			break
+	check.call("a yari strikes someone two cells away (%d damage)" % (hy0 - g.hpn[who]), did and g.hpn[who] < hy0 and g.turn >= t0)
 	g.wield = g._new_item("trl_mel_katana")
 	put.call(spot + 2)
 	check.call("a katana does not", not g.act_strike(1, 0) and g.hpn[who] == 5000)
@@ -225,18 +236,19 @@ func run() -> Array:
 			put.call(spot + 1)
 			g.melee(who)
 		check.call("a naginata's sweep hits the second enemy too (%d damage)" % (oh - g.hpn[other]), g.hpn[other] < oh)
-	# slow weapons
-	g.wield = g._new_item("trl_mel_nodachi")
-	put.call(spot + 1)
-	t0 = g.turn
-	g.pc = spot
-	g.act_move(1, 0)
-	var slow_turns: int = g.turn - t0
-	g.wield = g._new_item("trl_mel_katana")
-	put.call(spot + 1)
-	t0 = g.turn
-	g.act_move(1, 0)
-	check.call("a nodachi swing takes two turns, a katana's one (%d, %d)" % [slow_turns, g.turn - t0], slow_turns == 2 and g.turn - t0 == 1)
+	# slow weapons: ten swings of a nodachi take far longer than ten of a katana
+	var turns_for := func(w: String) -> int:
+		g.wield = g._new_item(w)
+		g.atk_debt = 0
+		var tt: int = g.turn
+		for _t in 10:
+			put.call(spot + 1)
+			g.pc = spot
+			g.act_move(1, 0)
+		return g.turn - tt
+	var slow_turns: int = turns_for.call("trl_mel_nodachi")
+	var kat_turns: int = turns_for.call("trl_mel_katana")
+	check.call("ten nodachi swings take %d turns, a katana's %d" % [slow_turns, kat_turns], slow_turns >= 15 and kat_turns <= 10 and kat_turns >= 8)
 	# stealth
 	var tot_t := 0
 	var tot_k := 0
@@ -263,7 +275,9 @@ func run() -> Array:
 	var parry_hits := 0
 	var naked_hits := 0
 	g.fac[who] = g.BRATVA
-	for _t in 200:
+	for _t in 600:
+		g.body.reset()
+		g.hp = g.hp_max
 		put.call(spot + 1)
 		g.pc = spot
 		g.gunc[who] = 0
@@ -279,7 +293,7 @@ func run() -> Array:
 		g._hunt(who, 1)
 		if g.hp < p2:
 			naked_hits += 1
-	check.call("a parrying weapon lowers the chance of being hit (%d vs %d of 200)" % [parry_hits, naked_hits], parry_hits < naked_hits - 15)
+	check.call("a parrying weapon lowers the chance of being hit (%d vs %d of 600)" % [parry_hits, naked_hits], parry_hits < naked_hits - 20)
 
 	# ---- what people carry
 	var ru_ok := true

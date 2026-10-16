@@ -5066,6 +5066,11 @@
    "worn"
   ],
   "looks_like": "trenchcoat",
+  "armor": {
+   "slot": "chest",
+   "phys": 1,
+   "dur": 20
+  },
   "pockets": [
    {
     "id": "inner",
@@ -5095,6 +5100,120 @@
     "max_item_length_mm": 0
    }
   ]
+ },
+ {
+  "id": "trl_helmet",
+  "name": "ballistic helmet",
+  "desc": "Armor 3 on the head.",
+  "weight_g": 1200,
+  "volume_ml": 3000,
+  "length_mm": 300,
+  "price": 350,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "looks_like": "helmet_ball",
+  "armor": {
+   "slot": "head",
+   "phys": 3,
+   "dur": 40
+  }
+ },
+ {
+  "id": "trl_visor",
+  "name": "riot visor helmet",
+  "desc": "Armor 5 on the head.",
+  "weight_g": 1900,
+  "volume_ml": 4000,
+  "length_mm": 320,
+  "price": 800,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "looks_like": "helmet_riot",
+  "armor": {
+   "slot": "head",
+   "phys": 5,
+   "dur": 60
+  }
+ },
+ {
+  "id": "trl_vest",
+  "name": "ballistic vest",
+  "desc": "Armor 4 on the chest.",
+  "weight_g": 3200,
+  "volume_ml": 5000,
+  "length_mm": 500,
+  "price": 500,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "looks_like": "vest_ballistic",
+  "armor": {
+   "slot": "chest",
+   "phys": 4,
+   "dur": 60
+  }
+ },
+ {
+  "id": "trl_vest_heavy",
+  "name": "plate carrier",
+  "desc": "Armor 7 on the chest.",
+  "weight_g": 6800,
+  "volume_ml": 8000,
+  "length_mm": 520,
+  "price": 1400,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "looks_like": "vest_plate",
+  "armor": {
+   "slot": "chest",
+   "phys": 7,
+   "dur": 90
+  }
+ },
+ {
+  "id": "trl_bracers",
+  "name": "composite arm guards",
+  "desc": "Armor 2 on both arms.",
+  "weight_g": 1100,
+  "volume_ml": 2000,
+  "length_mm": 350,
+  "price": 300,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "looks_like": "armguard",
+  "armor": {
+   "slot": "arms",
+   "phys": 2,
+   "dur": 40
+  }
+ },
+ {
+  "id": "trl_greaves",
+  "name": "shin guards",
+  "desc": "Armor 2 on both legs.",
+  "weight_g": 1500,
+  "volume_ml": 2500,
+  "length_mm": 400,
+  "price": 300,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "looks_like": "legguard",
+  "armor": {
+   "slot": "legs",
+   "phys": 2,
+   "dur": 40
+  }
  },
  {
   "id": "trl_pouch",
@@ -5255,7 +5374,8 @@
   "tags": [
    "medical"
   ],
-  "looks_like": "bandages"
+  "looks_like": "bandages",
+  "desc": "Heals 25 and mends your worst limb a little."
  },
  {
   "id": "trl_kit_repair",
