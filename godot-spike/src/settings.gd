@@ -23,7 +23,7 @@ const ACTIONS := [
 	["firemode", "Fire mode", [KEY_V]],
 	["ammo", "Next ammo kind", [KEY_X]],
 	["target", "Cycle target", [KEY_TAB]],
-	["gunsmith", "Gunsmith", [KEY_M]],
+	["gunsmith", "Gunsmith", [KEY_F4]],
 	["steal", "Pickpocket", [KEY_S]],
 	["crouch", "Crouch", [KEY_C]],
 	["crawl", "Crawl", [KEY_Z]],
@@ -36,6 +36,7 @@ const ACTIONS := [
 	["drop", "Drop wielded", [KEY_D]],
 	["inventory", "Inventory", [KEY_I]],
 	["implants", "Implants screen", [KEY_F3]],
+	["map", "Island map", [KEY_M]],
 	["help", "Help", [KEY_QUESTION]],
 ]
 

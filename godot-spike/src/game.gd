@@ -2,6 +2,7 @@ extends RefCounted
 ## The playable slice: one city, one player, roughly two thousand people, awareness-driven hostiles, theft, shooting, pockets and cars.
 ## All rules live here and run headless; main.gd and view.gd only draw it and feed it keys.
 const CG = preload("res://src/citygen.gd")
+const ISL = preload("res://src/island.gd")
 const SIM = preload("res://src/npc_sim.gd")
 const FF = preload("res://src/flowfield.gd")
 const ItemScript = preload("res://src/item.gd")
@@ -141,7 +142,7 @@ func say(msg: String) -> void:
 	if log.size() > 200:
 		log = log.slice(100)
 
-func setup(n_people: int = 1200) -> void:
+func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) -> void:
 	rng.seed = seed_value
 	db = DB.new()
 	db.load_file("res://data/items.json")
@@ -154,9 +155,20 @@ func setup(n_people: int = 1200) -> void:
 						gun_ids[t] = []
 					gun_ids[t].append(k)
 	_melee_pools()
-	city = CG.new()
-	city.generate(seed_value, Vector2(1, 0.2))
-	LV.build(city, seed_value)
+	if isl != null:
+		island = isl
+		zone = zn
+		city = island.build_zone(zn.x, zn.y)
+		if zn == island.CITY_ZONE:
+			LV.build(city, island.seed_value)
+		else:
+			LV.flat(city, seed_value)
+	else:
+		island = null
+		zone = Vector2i(-1, -1)
+		city = CG.new()
+		city.generate(seed_value, Vector2(1, 0.2))
+		LV.build(city, seed_value)
 	size = city.size
 	s2 = size * size
 	total = city.tiles.size()
@@ -183,7 +195,8 @@ func setup(n_people: int = 1200) -> void:
 	eco = EC.new()
 	eco.setup(self)
 	fov.compute(pc % size, pc / size, 18)
-	say("You step out onto the street.  Morning in the city.  [?] for keys.")
+	if island == null or zone == island.CITY_ZONE:
+		say("You step out onto the street.  Morning in the city.  [?] for keys.")
 
 func _people() -> void:
 	var n: int = sim.n
@@ -247,6 +260,9 @@ func _car_colors() -> Array:
 ## cars in the lanes of the street grid (they drive), parked cars in the yards, and the special vehicles near the start
 func _spawn_vehicles() -> void:
 	vs = VS.new(self)
+	if island != null and zone != island.CITY_ZONE:
+		_spawn_zone_vehicles()
+		return
 	var cols: Array = _car_colors()
 	var placed := 0
 	var tries := 0
@@ -306,6 +322,39 @@ func _spawn_vehicles() -> void:
 	_spawn_special_vehicles()
 
 var special_dir := 0
+
+## park something at the first free spot of the right ground near a local position
+func _place(kind: String, near_x: int, near_y: int, minr: int, maxr: int, tiles: Array, dir: int, color: Color) -> void:
+	var cell: int = vs.find_spot(kind, clampi(near_y, 0, size - 1) * size + clampi(near_x, 0, size - 1), minr, maxr, tiles, dir)
+	special_dir = dir
+	_add_special(kind, cell, color)
+
+## the vehicles of the wild zones: trucks and a mech on the quay, cars in the town, a plane on the strip
+func _spawn_zone_vehicles() -> void:
+	var cols: Array = _car_colors()
+	var o: Vector2i = island.zone_origin(zone.x, zone.y)
+	if zone == Vector2i(0, 1):
+		var qx: int = int(island.west_x(island.PORT.y)) + 6 - o.x
+		var py: int = island.PORT.y - o.y
+		for k in 3:
+			_place("truck", qx + 3, py - 60 + k * 30, 0, 60, [CG.PLATFORM, CG.PARK, CG.SAND], 0, cols[rng.randi() % cols.size()])
+		_place("mech", qx + 4, py - 20, 0, 60, [CG.PLATFORM, CG.PARK, CG.SAND], 1, Color("#c0583a"))
+		for k in 2:
+			_place("car", qx + 24, py + 40 + k * 10, 0, 80, [CG.PLATFORM, CG.PARK], 1, cols[rng.randi() % cols.size()])
+	elif zone == Vector2i(2, 1):
+		var cx: int = island.TOWN.x - o.x
+		var cy: int = island.TOWN.y - o.y
+		for k in 5:
+			_place("car", cx + rng.randi_range(-60, 60), cy + rng.randi_range(-50, 60), 0, 60, [CG.GROUND], rng.randi() % 2, cols[rng.randi() % cols.size()])
+		_place("heli", cx + 40, cy - 100, 0, 100, [CG.GROUND, CG.PARK], 0, Color("#7fd6e8"))
+	elif zone == Vector2i(3, 1):
+		var x0: int = 1480 - o.x
+		var y0: int = island.HWY_Y - 8 - o.y
+		_place("plane", x0 + 20, y0 + 8, 0, 6, [CG.GROUND, CG.ROAD], 1, Color("#e8e8ee"))
+		_place("car", x0 + 24, y0 + 23, 0, 12, [CG.GROUND], 0, cols[rng.randi() % cols.size()])
+var island = null                      # the Island (shared by every zone) or null for a stand-alone city
+var zone := Vector2i(-1, -1)
+var world = null                       # the World that owns this zone game (zone changes go through it)
 
 func _add_special(kind: String, cell: int, color: Color) -> void:
 	if cell < 0:
@@ -2265,7 +2314,7 @@ func _noise_gentle(cell: int, radius: int) -> void:
 # ---- animals
 func _spawn_critters() -> void:
 	var tries := 0
-	var want := 70
+	var want := 70 if (island == null or zone == island.CITY_ZONE) else 24
 	while critters.size() < want and tries < 4000:
 		tries += 1
 		var c: int = rng.randi() % s2
@@ -2906,6 +2955,49 @@ func _move_vehicle(vi: int, to: int) -> void:
 func _vehicles() -> void:
 	vs.ai_turn()
 
+## where the player is on the whole island
+func global_pos(cell: int = -1) -> Vector2i:
+	var c: int = pc if cell < 0 else cell
+	var o: Vector2i = island.zone_origin(zone.x, zone.y) if island != null else Vector2i.ZERO
+	return Vector2i(o.x + c % size, o.y + (c % s2) / size)
+
+## the terrain beyond the edge of this zone's map (for drawing), or -1 on a stand-alone city
+func outside_tile(x: int, y: int) -> int:
+	if island == null:
+		return -1
+	var o: Vector2i = island.zone_origin(zone.x, zone.y)
+	return island.terrain(o.x + x, o.y + y)
+
+## everything about the player that travels between zones
+func player_dict() -> Dictionary:
+	return {"hp": hp, "hp_max": hp_max, "yen": yen, "heat": heat, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
+		"skills": skills.duplicate(), "xp": xp.duplicate(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
+		"stamina": stamina, "stance": stance, "turn": turn, "tick": sim.tick, "eco": eco.save(), "flying": flying}
+
+func apply_player(d: Dictionary) -> void:
+	hp = int(d["hp"])
+	hp_max = int(d["hp_max"])
+	yen = int(d["yen"])
+	heat = int(d["heat"])
+	implants = d["implants"]
+	fuel = int(d["fuel"])
+	ammo_pool = d["ammo"]
+	want_kind = d["want_kind"]
+	skills = d["skills"]
+	xp = d["xp"]
+	worn = []
+	for x in d["worn"]:
+		worn.append(ItemScript.from_dict(x, db))
+	wield = ItemScript.from_dict(d["wield"], db) if d["wield"] != null else null
+	stamina = int(d["stamina"])
+	stance = int(d["stance"])
+	turn = int(d["turn"])
+	sim.tick = int(d["tick"])
+	eco.load_from(JSON.parse_string(JSON.stringify(d["eco"])))
+	eco.job = {}
+	flying = bool(d.get("flying", false))
+	followers = []
+
 ## the player has walked or driven off the edge of the zone (a stub until zones exist)
 func zone_cross(_dx: int, _dy: int) -> bool:
 	return false
@@ -2921,7 +3013,7 @@ func save_dict() -> Dictionary:
 	var vlist := []
 	for v in vehicles:
 		vlist.append(vs.to_dict(v))
-	return {"seed": seed_value, "people": sim.n, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "xp": xp, "in_vehicle": in_vehicle,
+	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "xp": xp, "in_vehicle": in_vehicle,
 			"rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 			"items_at": it_at, "vehicles": vlist, "tick": sim.tick, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
@@ -2930,7 +3022,12 @@ func save_dict() -> Dictionary:
 
 func load_dict(d: Dictionary) -> void:
 	seed_value = int(d["seed"])
-	setup(int(d.get("people", sim.n if sim != null else 1500)))             # regenerates the deterministic parts (map, markers, names, factions)
+	var isl_seed: int = int(d.get("island", -1))
+	if isl_seed >= 0:
+		var isl = island if (island != null and island.seed_value == isl_seed) else ISL.new(isl_seed)
+		setup(int(d.get("people", 0)), isl, Vector2i(int(d["zone"][0]), int(d["zone"][1])))
+	else:
+		setup(int(d.get("people", sim.n if sim != null else 1500)))             # regenerates the deterministic parts (map, markers, names, factions)
 	turn = int(d["turn"])
 	pc = int(d["pc"])
 	hp = int(d["hp"])

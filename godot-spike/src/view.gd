@@ -110,6 +110,13 @@ func _draw() -> void:
 			var wx := ox + sx
 			var wy := oy + sy
 			if wx < 0 or wy < 0 or wx >= size or wy >= size:
+				if game.island != null and base == 0:
+					var ot: int = game.outside_tile(wx, wy)
+					var opos := Vector2(sx * T, sy * T)
+					if ot == 29:
+						_blit(TERRAIN[6], opos, DARK)
+					if not _blit(TERRAIN[ot], opos, DARK):
+						draw_rect(Rect2(opos, Vector2(T, T)), _fallback(ot) * DARK)
 				continue
 			var c := base + wy * size + wx
 			if game.fov.explored[c] == 0:

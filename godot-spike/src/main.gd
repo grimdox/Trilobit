@@ -1,6 +1,7 @@
 extends Node
 ## Entry point: title screen, menus, then the game, its view and HUD; turns keys into actions.
 const GameScript = preload("res://src/game.gd")
+const WorldScript = preload("res://src/world.gd")
 const TilesetScript = preload("res://src/tileset.gd")
 const ViewScript = preload("res://src/view.gd")
 const SettingsScript = preload("res://src/settings.gd")
@@ -28,6 +29,9 @@ var screen_back: String = "title"     # where Esc on a sub-screen goes
 var rebinding: String = ""            # action waiting for a key
 var key_scroll_items: Array = []
 var pending_seed: int = -1
+var world = null                      # the island (zone games); null for a stand-alone city
+var map_tex: ImageTexture = null
+var map_seed: int = -1
 var save_prefix: String = "user://trilobit_save_"
 var settings_path: String = "user://trilobit_settings.json"
 
@@ -62,9 +66,9 @@ func begin_new(seed: int) -> void:
 	open_screen("loading")
 	await get_tree().process_frame
 	await get_tree().process_frame
-	var g = GameScript.new(seed)
-	g.setup(1500)
-	start_play(g)
+	world = WorldScript.new()
+	world.start(seed, 1500)
+	start_play(world.game)
 
 func begin_load(slot: int) -> void:
 	var d := read_slot(slot)
@@ -73,9 +77,15 @@ func begin_load(slot: int) -> void:
 	open_screen("loading")
 	await get_tree().process_frame
 	await get_tree().process_frame
-	var g = GameScript.new(int(d["seed"]))
-	g.load_dict(d)
-	start_play(g)
+	if d.has("island") and int(d["island"]) >= 0 and d.has("zones"):
+		world = WorldScript.new()
+		world.load_dict(d)
+		start_play(world.game)
+	else:
+		world = null
+		var g = GameScript.new(int(d["seed"]))
+		g.load_dict(d)
+		start_play(g)
 	game.say("Game loaded (slot %d)." % slot)
 	refresh()
 
@@ -138,6 +148,14 @@ func read_slot(n: int) -> Dictionary:
 	if f == null:
 		return {}
 	var d = JSON.parse_string(f.get_as_text())
+	if d is Dictionary and d.has("world"):
+		var w: Dictionary = d["world"]
+		var gd: Dictionary = (w["game"] as Dictionary).duplicate()
+		gd["island"] = w["island"]
+		gd["zones"] = w["zones"]
+		gd["visited"] = w.get("visited", [])
+		gd["switches"] = w.get("switches", 0)
+		return gd
 	if d is Dictionary and d.has("game"):
 		return d["game"]
 	return {}
@@ -159,7 +177,11 @@ func save_slot(n: int) -> bool:
 	var f := FileAccess.open(slot_path(n), FileAccess.WRITE)
 	if f == null:
 		return false
-	f.store_string(JSON.stringify({"meta": meta, "game": game.save_dict()}))
+	if world != null:
+		world.game = game
+		f.store_string(JSON.stringify({"meta": meta, "world": world.save_dict()}))
+	else:
+		f.store_string(JSON.stringify({"meta": meta, "game": game.save_dict()}))
 	return true
 
 # ---------------------------------------------------------------- screens (title, pause, options, keys, saves, implants)
@@ -206,7 +228,20 @@ func open_screen(kind: String) -> void:
 		"implants":
 			screen.overlay = false
 			screen.part_sel = 0
+		"map":
+			screen.overlay = false
+			screen.world = world
+			_make_map()
 	_scroll_fix()
+
+func _make_map() -> void:
+	if world == null:
+		screen.map_tex = null
+		return
+	if map_tex == null or map_seed != world.seed_value:
+		map_tex = ImageTexture.create_from_image(world.island.overview_image(3))
+		map_seed = world.seed_value
+	screen.map_tex = map_tex
 
 func _fill_options() -> void:
 	screen.items = [
@@ -254,6 +289,8 @@ func back_from_screen() -> void:
 				open_screen("title")
 		"implants":
 			open_screen("pause")
+		"map":
+			resume_play()
 		"pause":
 			resume_play()
 		"title":
@@ -296,6 +333,7 @@ func activate(id: String) -> void:
 		"resume": resume_play()
 		"title":
 			game = null
+			world = null
 			screen_back = "title"
 			for c in play_nodes:
 				if is_instance_valid(c):
@@ -340,6 +378,10 @@ func screen_key(k: int) -> void:
 		_fill_keys()
 		screen.sel = keep
 		screen.scroll = sc
+		return
+	if mode == "map":
+		if k == KEY_ESCAPE or k == KEY_M or k == settings.binds["map"][0]:
+			back_from_screen()
 		return
 	if mode == "implants":
 		var n := IMP.PARTS.size()
@@ -390,6 +432,11 @@ func _unhandled_input(ev: InputEvent) -> void:
 			sfx.play("blip")
 
 func refresh() -> void:
+	if world != null and world.game == game and world.poll():
+		game = world.game
+		view.game = game
+		screen.game = game
+		sfx.play("select")
 	view.queue_redraw()
 	var g = game
 	var extra := ""
@@ -521,7 +568,7 @@ func show_inventory() -> void:
 	panel.visible = true
 
 func show_help() -> void:
-	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\n<  or  PgUp  go up (stairs, elevator, ladder; with jump jets, lift off or climb through open air)      >  or  PgDn  go down (or descend and land).  An elevator rides up to three floors.  Hunters follow you up and down stairs.\ne  get into or out of cars, gyros (flying) and mechs (armoured walkers).  Leap off an edge and you fall: 5 damage a floor.\nt   talk to the nearest person (vendors, fixers, ripperdocs)      p   pay 100 on the debt (Shift+P: 1000)\nWalk into a locked door to pick it.  Step onto a carriage while the train doors are open to ride; step onto a platform to get off.\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the target (Shift+F: at anyone)      Tab  cycle targets      a  aim (up to 3 turns, each steadier)\nr   reload / clear a jam      v  fire mode (single, burst, auto)      x  choose the next ammunition kind\nm   gunsmith: fit scopes, suppressors, magazines, grips, stocks, barrels (a scope helps at range, hurts up close)\ns   pickpocket an adjacent person (stealth and theft skill)\nw + direction   strike (reach weapons hit up to 2 away; they also strike hunters 2 cells off when you step toward them)      o + direction   shove (off an edge, too)      \\   swap to your previous weapon\nc   crouch      z   crawl (half speed, nearly invisible and silent)      Shift+direction   run two cells (noisy, tiring)      q + direction   jump (2 cells, 3 after a run)        e   get in or out of a car\nd   drop the wielded weapon\nEsc  menu: save, load, options (rebind keys, sound), implants        F3  implants        F2  switch tileset        F5  quick save        F9  quick load\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  People see in a cone in front of them and hear footsteps by stance.  Strike an unaware person from behind for a quiet kill.  Crates, dumpsters, planters, railings and cars give cover; crouch behind them.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
+	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\n<  or  PgUp  go up (stairs, elevator, ladder; with jump jets, lift off or climb through open air)      >  or  PgDn  go down (or descend and land).  An elevator rides up to three floors.  Hunters follow you up and down stairs.\ne  get into or out of cars, gyros (flying) and mechs (armoured walkers).  Leap off an edge and you fall: 5 damage a floor.\nt   talk to the nearest person (vendors, fixers, ripperdocs)      p   pay 100 on the debt (Shift+P: 1000)\nWalk into a locked door to pick it.  Step onto a carriage while the train doors are open to ride; step onto a platform to get off.\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the target (Shift+F: at anyone)      Tab  cycle targets      a  aim (up to 3 turns, each steadier)\nr   reload / clear a jam      v  fire mode (single, burst, auto)      x  choose the next ammunition kind\nF4  gunsmith: fit scopes, suppressors, magazines, grips, stocks, barrels (a scope helps at range, hurts up close)\ns   pickpocket an adjacent person (stealth and theft skill)\nw + direction   strike (reach weapons hit up to 2 away; they also strike hunters 2 cells off when you step toward them)      o + direction   shove (off an edge, too)      \\   swap to your previous weapon\nc   crouch      z   crawl (half speed, nearly invisible and silent)      Shift+direction   run two cells (noisy, tiring)      q + direction   jump (2 cells, 3 after a run)        e   get in or out of a car\nd   drop the wielded weapon\nEsc  menu: save, load, options (rebind keys, sound), implants        F3  implants        M  island map        F2  switch tileset        F5  quick save        F9  quick load\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  People see in a cone in front of them and hear footsteps by stance.  Strike an unaware person from behind for a quiet kill.  Crates, dumpsters, planters, railings and cars give cover; crouch behind them.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
 	panel.visible = true
 
 func dir_of(k: int) -> Vector2i:
@@ -540,7 +587,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 	if not (ev is InputEventKey) or not ev.pressed:
 		return
 	var k: int = ev.keycode
-	if mode in ["title", "loading", "pause", "options", "keys", "saves", "loads", "implants"]:
+	if mode in ["title", "loading", "pause", "options", "keys", "saves", "loads", "implants", "map"]:
 		if mode != "loading":
 			screen_key(k)
 		return
@@ -559,7 +606,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		refresh()
 		return
 	if mode == "mods":
-		if k == KEY_ESCAPE or k == KEY_M:
+		if k == KEY_ESCAPE or k == KEY_M or k == KEY_F4:
 			mode = "play"
 			panel.visible = false
 		else:
@@ -693,6 +740,9 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		"implants":
 			screen_back = "pause"
 			open_screen("implants")
+			return
+		"map":
+			open_screen("map")
 			return
 		"help":
 			mode = "help"

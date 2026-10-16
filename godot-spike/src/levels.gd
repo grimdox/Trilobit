@@ -83,6 +83,40 @@ static func build(c, seed: int) -> void:
 	c.works = _concat(c.works_g, c.works_t)
 	c.shops = _concat(c.shops_g, c.shops_t)
 
+## a wild zone: ground only (plus solid rock below so the level maths still holds), no towers, no subway
+static func flat(c, seed: int) -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed ^ 0x7a11
+	var s2: int = c.size * c.size
+	c.homes_g = c.homes.duplicate()
+	c.works_g = c.works.duplicate()
+	c.shops_g = c.shops.duplicate()
+	c.zmax = 0
+	c.nlev = 3
+	var rock := PackedByteArray()
+	rock.resize(s2)
+	rock.fill(CG.EARTH)
+	var all: PackedByteArray = c.tiles.duplicate()
+	for _z in 2:
+		all.append_array(rock)
+	var links := {}
+	c.tower_info = []
+	c.vaults = []
+	c.homes_t = PackedInt32Array()
+	c.works_t = PackedInt32Array()
+	c.shops_t = PackedInt32Array()
+	c.lairs = PackedInt32Array()
+	c.subway = {"ring": PackedInt32Array(), "stops": []}
+	c.movables = []
+	_props(c, all, links, rng)
+	c.tiles = all
+	c.links = links
+	c.haslink = PackedByteArray()
+	c.haslink.resize(all.size())
+	c.homes = c.homes_g
+	c.works = c.works_g
+	c.shops = c.shops_g
+
 static func _concat(a: PackedInt32Array, b: PackedInt32Array) -> PackedInt32Array:
 	var out := a.duplicate()
 	out.append_array(b)

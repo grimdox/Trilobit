@@ -13,6 +13,8 @@ var overlay: bool = false          # dim the game behind instead of the title ba
 var prompt: String = ""            # "Press a key..." while rebinding
 var game                           # for the implants screen
 var part_sel: int = 0
+var world = null
+var map_tex: ImageTexture = null
 var font: Font = ThemeDB.fallback_font
 var t: float = 0.0
 var skyline: Array = []
@@ -43,7 +45,7 @@ func _txt(s: String, pos: Vector2, size: int, col: Color, align: int = HORIZONTA
 func _draw() -> void:
 	var W: float = size.x if size.x > 0 else 1280.0
 	var H: float = size.y if size.y > 0 else 720.0
-	if kind == "implants":
+	if kind == "implants" or kind == "map":
 		draw_rect(Rect2(0, 0, W, H), BG)
 	elif overlay:
 		draw_rect(Rect2(0, 0, W, H), Color(0, 0, 0, 0.72))
@@ -52,6 +54,8 @@ func _draw() -> void:
 	match kind:
 		"implants":
 			_implants(W, H)
+		"map":
+			_map(W, H)
 		"title":
 			_title(W, H)
 		_:
@@ -235,3 +239,48 @@ func _implants(W: float, H: float) -> void:
 		if game != null and game.has_implant(d["id"]):
 			total_have += 1
 	_txt("%d of %d implants fitted" % [total_have, IMP.ALL.size()], Vector2(px + 20, H - 78), 16, Color(0.6, 0.75, 0.9))
+
+# ---------------------------------------------------------------- the island map
+func _map(W: float, H: float) -> void:
+	var cyan := Color(0.3, 0.9, 1.0)
+	draw_string(font, Vector2(24, 34), "ISLAND MAP", HORIZONTAL_ALIGNMENT_LEFT, -1, 24, cyan)
+	if world == null or map_tex == null:
+		draw_string(font, Vector2(24, 80), "No chart of this place.", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color.WHITE)
+		return
+	var isl = world.island
+	var sc: float = minf((W - 48.0) / float(isl.W), (H - 90.0) / float(isl.H))
+	var ox: float = (W - float(isl.W) * sc) * 0.5
+	var oy := 48.0
+	draw_texture_rect(map_tex, Rect2(ox, oy, float(isl.W) * sc, float(isl.H) * sc), false)
+	# unexplored zones sit under a haze; the grid shows the zones
+	for zx in isl.NZX:
+		for zy in isl.NZY:
+			var o: Vector2i = isl.zone_origin(zx, zy)
+			var r := Rect2(ox + float(o.x) * sc, oy + float(o.y) * sc, float(isl.ZS) * sc, float(isl.ZS) * sc)
+			var vis: bool = world.visited.has(world.key(Vector2i(zx, zy)))
+			if not vis:
+				var own := Rect2(ox + float(o.x + isl.OWN_INSET) * sc, oy + float(o.y + isl.OWN_INSET) * sc, float(isl.STRIDE) * sc, float(isl.STRIDE) * sc)
+				var clip := own.intersection(Rect2(ox, oy, float(isl.W) * sc, float(isl.H) * sc))
+				if zx == 0:
+					clip = Rect2(ox, clip.position.y, clip.end.x - ox, clip.size.y)
+				if zy == 0:
+					clip = Rect2(clip.position.x, oy, clip.size.x, clip.end.y - oy)
+				draw_rect(clip, Color(0.02, 0.03, 0.08, 0.45))
+			draw_rect(Rect2(ox + float(o.x + isl.OWN_INSET) * sc, oy + float(o.y + isl.OWN_INSET) * sc, float(isl.STRIDE) * sc, float(isl.STRIDE) * sc), Color(1, 1, 1, 0.08), false, 1.0)
+	for lm in isl.landmarks():
+		var p: Vector2 = Vector2(ox + float(lm["pos"].x) * sc, oy + float(lm["pos"].y) * sc)
+		var tw: float = font.get_string_size(lm["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
+		draw_string(font, p + Vector2(-tw * 0.5 + 1, 1), lm["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0, 0, 0, 0.9))
+		draw_string(font, p + Vector2(-tw * 0.5, 0), lm["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.95, 0.95, 1.0, 0.95))
+	# you are here
+	if game != null and game.island != null:
+		var gp: Vector2i = game.global_pos()
+		var pp := Vector2(ox + float(gp.x) * sc, oy + float(gp.y) * sc)
+		var pulse: float = 0.5 + 0.5 * sin(t * 6.0)
+		draw_circle(pp, 9.0 + 4.0 * pulse, Color(1.0, 0.2, 0.5, 0.25 + 0.2 * pulse))
+		draw_arc(pp, 8.0, 0.0, TAU, 24, Color(1.0, 0.3, 0.6), 2.0)
+		draw_circle(pp, 3.5, Color.WHITE)
+		draw_line(pp + Vector2(-14, 0), pp + Vector2(14, 0), Color(1, 0.3, 0.6, 0.8), 1.0)
+		draw_line(pp + Vector2(0, -14), pp + Vector2(0, 14), Color(1, 0.3, 0.6, 0.8), 1.0)
+		draw_string(font, pp + Vector2(12, -12), "YOU", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(1, 0.4, 0.7))
+		draw_string(font, Vector2(24, H - 14), "You are at (%d, %d) in %s.   Yellow line: highway.  Red line: railway.   M or Esc closes." % [gp.x, gp.y, isl.zone_name(game.zone)], HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.8, 0.9, 1.0))

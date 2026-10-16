@@ -235,6 +235,8 @@ func find_spot(kind: String, near: int, minr: int, maxr: int, tiles: Array, dir:
 				if not g.in_bounds(nx, ny):
 					continue
 				var a: int = (near / g.s2) * g.s2 + ny * g.size + nx
+				if not (int(g.city.tiles[a]) in tiles):
+					continue
 				if not fits(vi, a, dir):
 					continue
 				var ok := true
@@ -1084,6 +1086,38 @@ func _ai_uturn(vi: int) -> void:
 		v["turn_at"] = -1
 
 # ---------------------------------------------------------------- saving
+## take a vehicle out of this zone (to carry it to the next): returns its saved record
+func export_vehicle(vi: int) -> Dictionary:
+	var d: Dictionary = to_dict(g.vehicles[vi])
+	for k in g.vehicles.size():
+		lift(k)
+	g.vehicles.remove_at(vi)
+	g.veh_at.fill(-1)
+	for k in g.vehicles.size():
+		for c in cells(g.vehicles[k]):
+			g.veh_at[c] = k
+			g.sim.walk[c] = 0
+	if g.in_vehicle == vi:
+		g.in_vehicle = -1
+	elif g.in_vehicle > vi:
+		g.in_vehicle -= 1
+	return d
+
+## put an exported vehicle down with its seat at `anchor`; returns its index or -1
+func import_vehicle(d: Dictionary, anchor: int) -> int:
+	var o: Dictionary = from_dict(d)
+	o["cell"] = anchor
+	g.vehicles.append(o)
+	var vi: int = g.vehicles.size() - 1
+	for c in cells(o):
+		if c < 0 or c >= g.veh_at.size():
+			g.vehicles.pop_back()
+			return -1
+	for c in cells(o):
+		g.veh_at[c] = vi
+		g.sim.walk[c] = 0
+	return vi
+
 func to_dict(v: Dictionary) -> Dictionary:
 	var o: Dictionary = v.duplicate(true)
 	o["color"] = (v["color"] as Color).to_html()
