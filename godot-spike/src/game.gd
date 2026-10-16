@@ -195,7 +195,7 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) ->
 	transit.setup(self)
 	eco = EC.new()
 	eco.setup(self)
-	fov.compute(pc % size, pc / size, 18)
+	_compute_fov()
 	if island == null or zone == island.CITY_ZONE:
 		say("You step out onto the street.  Morning in the city.  [?] for keys.")
 
@@ -716,7 +716,9 @@ func _act_move_core(dx: int, dy: int, run: bool = false) -> bool:
 	var ny: int = pc / size + dy
 	if not in_bounds(nx, ny):
 		return false
-	facing = Vector2i(dx, dy)
+	if facing != Vector2i(dx, dy):
+		facing = Vector2i(dx, dy)
+		_compute_fov()
 	var c := ny * size + nx
 	var who: int = sim.at[c]
 	if who >= 0:
@@ -972,6 +974,21 @@ func cone_factor(i: int, cell: int, wide: bool = false) -> float:
 	if cs >= -0.2:
 		return 0.8 if wide else 0.4
 	return 0.35 if wide else 0.0
+
+## The player sees through a half circle in front of them; implants with an `arc` field widen it ("eyes in the back of your head").
+const BASE_ARC := 180.0
+func vision_arc() -> float:
+	return minf(360.0, BASE_ARC + IMP.sum(implants, "arc", func(d): return body.group_ok(body.group_of_part(String(d.get("part", "head"))))))
+
+func _compute_fov() -> void:
+	fov.compute(pc % size, pc / size, 18, vision_arc(), facing.x, facing.y)
+
+func turn_to(dx: int, dy: int) -> void:
+	if dx == 0 and dy == 0:
+		return
+	facing = Vector2i(dx, dy)
+	_compute_fov()
+	say("You turn to face %s." % ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"][DIR8.find([signi(dx), signi(dy)])])
 
 func _face_toward(i: int, cell: int) -> void:
 	var c: int = sim.pos[i]
@@ -2231,7 +2248,7 @@ func end_turn() -> void:
 		for l in BODY.LIMBS:                      # hurt limbs knit slowly; a disabled one needs a ripperdoc or a trauma patch
 			if body.ok(l) and int(body.hp[l]) < int(body.mx[l]):
 				body.heal(l, 1)
-	fov.compute(pc % size, pc / size, 18)
+	_compute_fov()
 	if hp <= 0 and not game_over:
 		game_over = true
 		say("You are dead.  Press [n] for a new life.")
@@ -2407,7 +2424,7 @@ func _ai() -> void:
 func _notice(i: int, d: int) -> void:
 	var c: int = sim.pos[i]
 	var st := astate[i]
-	var los: bool = d <= 16 and fov.visible[c] == 1 and sim._sees(c, pc, 16)
+	var los: bool = d <= 16 and fov.around[c] == 1 and sim._sees(c, pc, 16)
 	var cf: float = cone_factor(i, pc, st != UNAWARE) if los else 0.0
 	var sees: bool = cf > 0.0
 	var heard: bool = step_noise > 0 and d <= step_noise and z_of(c) == z_of(pc)
@@ -2464,7 +2481,7 @@ func _notice(i: int, d: int) -> void:
 
 func _hunt(i: int, d: int) -> void:
 	var c: int = sim.pos[i]
-	var sees: bool = d <= 18 and fov.visible[c] == 1 and sim._sees(c, pc, 20)
+	var sees: bool = d <= 18 and fov.around[c] == 1 and sim._sees(c, pc, 20)
 	if hpn[i] * 4 < hpmax[i]:
 		if rng.randf() < 0.6:
 			_flee(i, 30)
@@ -2711,6 +2728,9 @@ func _move_crit(ki: int, to: int) -> void:
 	crit_at[from] = -1
 	sim.walk[from] = 1 if city.walkable(city.tiles[from]) and veh_at[from] == -1 and thing_at[from] == -1 else 0
 	k["cell"] = to
+	var fi: int = DIR8.find([signi(to % size - from % size), signi(to / size - from / size)])
+	if fi >= 0:
+		k["face"] = fi
 	crit_at[to] = ki
 	sim.walk[to] = 0
 
@@ -3516,4 +3536,4 @@ func load_dict(d: Dictionary) -> void:
 	log = []
 	for l in d["log"]:
 		log.append(str(l))
-	fov.compute(pc % size, pc / size, 18)
+	_compute_fov()

@@ -26,3 +26,10 @@ A time-boxed test of whether Godot 4 can carry Trilobit instead of CDDA.  Three 
 - **Menus**: title, options (rebind keys, sound), Esc pause with save slots, load, implants body map (`F3`).
 - **Combat**: per-limb health (`src/body.gd`; head/chest at 0 is death, other limbs go offline), flat-deduction armor on worn items and implants that wears out, ranged accuracy from sights/scope/brain and eye implants, aim speed, cover, bullet dodge only from grade 3+ implants, melee accuracy/attack speed/dodge, parry and riposte hooks (`melee_arts`).  HP, armor and a body diagram are drawn top right.
 Tests: `./run_all.sh` (pockets, world, scale, levels, game, vertical, guns, stealth, zmove, melee, npcfall, things, menus, vehicles, island, combat).  Screenshots: `xvfb-run -a godot --path . --rendering-driver opengl3 -s tests/shot3.gd`.
+
+## Round six
+- Fixed a crash when stepping onto the railway in any zone without a subway (`transit.car_cell` took a modulo by an empty ring).
+- Exe icon (the splash-screen car, `trilobit-tools/gen_icon.py`) and version info are stamped by `tools/set_exe_icon.py`; `tools/build_windows.sh` exports, stamps and zips.
+- Loading screen shows とりろびつ (bundled kana subset of Noto Sans CJK JP, OFL); the title tag line is gone; menus take mouse hover, click, right-click back and wheel.
+- Everyone has an on-screen facing arrow (people, animals, you); the drawn vision-cone tint is removed.  The player sees a 180 degree half circle (`vision_arc()`; implants may add degrees with an `arc` field); `,` + direction turns without a step.  NPCs still look back at you all round (`fov.around`).
+- Windows SmartScreen only goes away with a trusted code-signing certificate; see README-FIRST.txt in the zip for the workaround.

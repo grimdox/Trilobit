@@ -36,6 +36,8 @@ func active() -> bool:
 
 ## absolute cell of carriage k (0 is the front)
 func car_cell(k: int) -> int:
+	if ring.is_empty():
+		return -1
 	return base + ring[(head - k + ring.size() * 4) % ring.size()]
 
 func car_cells() -> Array:
@@ -45,6 +47,8 @@ func car_cells() -> Array:
 	return out
 
 func car_at(cell: int) -> int:
+	if ring.is_empty():
+		return -1
 	for k in cars:
 		if car_cell(k) == cell:
 			return k

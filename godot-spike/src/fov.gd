@@ -5,20 +5,42 @@ var row_lo: int = 0       # the level being looked at: rows [row_lo, row_hi) of 
 var row_hi: int = 0
 var opaque: PackedByteArray
 var visible: PackedByteArray
+var around: PackedByteArray    # line of sight in every direction (what NPCs use to look back at the player), whatever the arc
+var _around_touched: PackedInt32Array = PackedInt32Array()
 var explored: PackedByteArray
 var touched: PackedInt32Array = PackedInt32Array()
+# a limited field of view: only cells within an arc around the facing direction are seen (and remembered)
+var arc_on: bool = false
+var arc_cos: float = 0.0       # cosine of half the arc: 0 for 180 degrees
+var face_dx: float = 0.0
+var face_dy: float = -1.0
+var _cx: int = 0
+var _cy: int = 0
 
 func setup(sz: int, opaque_map: PackedByteArray) -> void:
 	size = sz
 	opaque = opaque_map
 	visible = PackedByteArray(); visible.resize(opaque_map.size())
+	around = PackedByteArray(); around.resize(opaque_map.size())
 	explored = PackedByteArray(); explored.resize(opaque_map.size())
 	row_hi = size
 
-func compute(cx: int, cy: int, radius: int) -> void:
+## arc_deg 360 or more sees all round.  (fx, fy) is the direction faced.
+func compute(cx: int, cy: int, radius: int, arc_deg: float = 360.0, fx: int = 0, fy: int = -1) -> void:
+	_cx = cx
+	_cy = cy
+	arc_on = arc_deg < 359.5 and (fx != 0 or fy != 0)
+	if arc_on:
+		var fl: float = sqrt(float(fx * fx + fy * fy))
+		face_dx = fx / fl
+		face_dy = fy / fl
+		arc_cos = cos(deg_to_rad(arc_deg * 0.5))
 	for c in touched:
 		visible[c] = 0
 	touched.clear()
+	for c in _around_touched:
+		around[c] = 0
+	_around_touched.clear()
 	row_lo = (cy / size) * size       # one level at a time: cy is a row of the stacked map
 	row_hi = row_lo + size
 	_mark(cx, cy)
@@ -27,6 +49,14 @@ func compute(cx: int, cy: int, radius: int) -> void:
 
 func _mark(x: int, y: int) -> void:
 	var c := y * size + x
+	if around[c] == 0:
+		around[c] = 1
+		_around_touched.append(c)
+	if arc_on and (x != _cx or y != _cy):
+		var dx: float = x - _cx
+		var dy: float = y - _cy
+		if (dx * face_dx + dy * face_dy) / sqrt(dx * dx + dy * dy) < arc_cos - 0.0001:
+			return
 	if visible[c] == 0:
 		visible[c] = 1
 		explored[c] = 1

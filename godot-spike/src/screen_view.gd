@@ -16,6 +16,8 @@ var part_sel: int = 0
 var world = null
 var map_tex: ImageTexture = null
 var font: Font = ThemeDB.fallback_font
+var kana_font: Font = load("res://gfx/fonts/NotoSansJP-kana-subset.otf")
+var loading: bool = false          # the loading screen shows the name in hiragana
 var t: float = 0.0
 var skyline: Array = []
 
@@ -87,10 +89,13 @@ func _backdrop(W: float, H: float) -> void:
 
 func _title(W: float, H: float) -> void:
 	var glow := 0.75 + 0.25 * sin(t * 2.0)
-	_txt("TRILOBIT", Vector2(0, 150), 96, Color(1.0, 0.25, 0.65, 0.35 * glow), HORIZONTAL_ALIGNMENT_CENTER, W)
-	_txt("TRILOBIT", Vector2(3, 147), 96, CYAN, HORIZONTAL_ALIGNMENT_CENTER, W)
-	_txt("TRILOBIT", Vector2(0, 150), 96, Color(0.9, 0.97, 1.0), HORIZONTAL_ALIGNMENT_CENTER, W)
-	_txt(subtitle, Vector2(0, 190), 20, Color(0.7, 0.85, 1.0, 0.85), HORIZONTAL_ALIGNMENT_CENTER, W)
+	var name_txt := "とりろびつ" if loading else "TRILOBIT"
+	var f: Font = kana_font if (loading and kana_font != null) else font
+	draw_string(f, Vector2(0, 150), name_txt, HORIZONTAL_ALIGNMENT_CENTER, W, 96, Color(1.0, 0.25, 0.65, 0.35 * glow))
+	draw_string(f, Vector2(3, 147), name_txt, HORIZONTAL_ALIGNMENT_CENTER, W, 96, CYAN)
+	draw_string(f, Vector2(0, 150), name_txt, HORIZONTAL_ALIGNMENT_CENTER, W, 96, Color(0.9, 0.97, 1.0))
+	if subtitle != "":
+		_txt(subtitle, Vector2(0, 190), 20, Color(0.7, 0.85, 1.0, 0.85), HORIZONTAL_ALIGNMENT_CENTER, W)
 	var y := 290.0
 	for i in items.size():
 		var it: Dictionary = items[i]
@@ -103,6 +108,29 @@ func _title(W: float, H: float) -> void:
 		_txt(it["label"], Vector2(0, y), 30, col, HORIZONTAL_ALIGNMENT_CENTER, W)
 		y += 56.0
 	_txt(footer, Vector2(0, H - 28), 15, Color(0.6, 0.7, 0.8), HORIZONTAL_ALIGNMENT_CENTER, W)
+
+## Which menu row is under the mouse (-1 for none). Mirrors the layout in _title and _menu.
+func item_at_mouse(p: Vector2) -> int:
+	var W: float = size.x if size.x > 0 else 1280.0
+	var H: float = size.y if size.y > 0 else 720.0
+	if kind == "title":
+		for i in items.size():
+			var y := 290.0 + 56.0 * i
+			if Rect2(W * 0.5 - 170, y - 32, 340, 44).has_point(p):
+				return i
+		return -1
+	if kind == "implants" or kind == "map":
+		return -1
+	var bw := 760.0
+	var rows := 14
+	var bh := 150.0 + rows * 34.0
+	var x0 := (W - bw) * 0.5
+	var y0 := (H - bh) * 0.5
+	for k in mini(rows, items.size() - scroll):
+		var y := y0 + 118.0 + 34.0 * k
+		if Rect2(x0 + 14, y - 24, bw - 28, 32).has_point(p):
+			return scroll + k
+	return -1
 
 func _menu(W: float, H: float) -> void:
 	var bw := 760.0

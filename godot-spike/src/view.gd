@@ -187,6 +187,7 @@ func _draw() -> void:
 		var ky: int = (kc / size) % size - oy
 		if kx < 0 or ky < 0 or kx >= cols or ky >= rows:
 			continue
+		_facing_mark(Vector2(kx * T, ky * T), int(k.get("face", 0)), Color(0.95, 0.75, 0.4, 0.85))
 		if not _blit("mon_" + String(k["k"]), Vector2(kx * T, ky * T)):
 			draw_string(font, Vector2(kx * T + T * 0.3, ky * T + T * 0.7), "d" if k["k"] == "dog" else "c", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.9, 0.7, 0.4))
 	# vehicles: whole bodies, a tile for every tile of the footprint
@@ -207,6 +208,7 @@ func _draw() -> void:
 			continue
 		var pos := Vector2(wx * T, wy * T)
 		_blit(person_sprite(i), pos)
+		_facing_mark(pos, int(game.face[i]), Color(1, 0.35, 0.3) if (int(game.fac[i]) != 0 and int(game.astate[i]) >= 1) else Color(0.85, 0.9, 1.0, 0.85))
 		var glyph := ""
 		var col := Color.WHITE
 		match int(game.astate[i]):
@@ -236,33 +238,13 @@ func _draw() -> void:
 		_blit("player_male", centre)
 	else:
 		_blit("player_male", centre, Color(1, 1, 1, 0.9))
+	if game.in_vehicle < 0 and game.transit.riding < 0:
+		_facing_mark(centre, game.DIR8.find([signi(game.facing.x), signi(game.facing.y)]), Color(0.3, 0.95, 1.0, 0.9))
 	# the job target, if it is on this level
 	if not game.eco.job.is_empty() and int(game.eco.job["cell"]) / s2 == base / s2:
 		var jc: int = game.eco.job["cell"]
 		var jr := Rect2((game.lx(jc) - ox) * T, (game.ly(jc) - oy) * T, T, T)
 		draw_rect(jr, Color(1, 0.8, 0.2), false, 2.0)
-	# vision cones of the watchful (armed or hostile, still unaware)
-	for k in game.sim.near_list.size():
-		var i: int = game.sim.near_list[k]
-		if game.sim.alive[i] == 0 or int(game.fac[i]) == 0 or game.astate[i] > 2 or game.sim.pos[i] / s2 != base / s2:
-			continue
-		var pcell: int = game.sim.pos[i]
-		if game.fov.visible[pcell] == 0:
-			continue
-		var fd: Array = game.DIR8[game.face[i]]
-		var fl: float = sqrt(float(fd[0] * fd[0] + fd[1] * fd[1]))
-		var tint := Color(1, 0.85, 0.2, 0.13) if game.astate[i] == 0 else Color(1, 0.5, 0.1, 0.2)
-		for dy in range(-6, 7):
-			for dx in range(-6, 7):
-				if dx == 0 and dy == 0:
-					continue
-				var dl: float = sqrt(float(dx * dx + dy * dy))
-				if dl > 6.5 or float(fd[0] * dx + fd[1] * dy) / (fl * dl) < 0.5:
-					continue
-				var cc: int = pcell + dy * size + dx
-				if cc < 0 or cc >= game.total or game.fov.visible[cc] == 0 or not game.sim._sees(pcell, cc, 7):
-					continue
-				draw_rect(Rect2((game.lx(cc) - ox) * T, (game.ly(cc) - oy) * T, T, T), tint)
 	# target bracket
 	var tg: int = game.current_target()
 	if tg >= 0:
@@ -279,6 +261,15 @@ func _draw() -> void:
 		var pb := Vector2((b % size - ox + 0.5) * T, ((b / size) % size - oy + 0.5) * T)
 		draw_line(pa, pb, Color(1, 0.95, 0.5) if tr[2] else Color(0.8, 0.8, 0.8, 0.6), 2.0)
 	_draw_hud()
+
+## a small pointer on the edge of a tile showing which way someone faces (index into DIR8)
+func _facing_mark(pos: Vector2, fi: int, col: Color) -> void:
+	var d: Array = game.DIR8[fi % 8]
+	var T: float = float(tile())
+	var dir := Vector2(d[0], d[1]).normalized()
+	var c := pos + Vector2(T, T) * 0.5 + dir * T * 0.47
+	var side := Vector2(-dir.y, dir.x)
+	draw_colored_polygon(PackedVector2Array([c + dir * T * 0.14, c - dir * T * 0.1 + side * T * 0.14, c - dir * T * 0.1 - side * T * 0.14]), col)
 
 func _limb_color(f: float) -> Color:
 	if f <= 0.0:

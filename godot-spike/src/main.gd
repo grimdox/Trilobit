@@ -197,17 +197,18 @@ func open_screen(kind: String) -> void:
 	screen.subtitle = ""
 	screen.footer = "Up / Down  -  Enter selects  -  Esc goes back"
 	screen.game = game
+	screen.loading = false
 	match kind:
 		"title":
 			screen_back = "title"
 			screen.overlay = false
-			screen.subtitle = "A cyberpunk roguelike  -  Hokkaido-Sakhalin Freeport, 2088"
 			screen.items = [{"label": "New Game", "id": "new"}, {"label": "Load Game", "id": "load"}, {"label": "Options", "id": "options"}, {"label": "Exit", "id": "exit"}]
 			screen.footer = "Up / Down  -  Enter"
 		"loading":
 			screen.overlay = false
 			screen.items = []
 			screen.kind = "title"
+			screen.loading = true
 			screen.subtitle = "Generating the world..."
 			screen.footer = ""
 		"pause":
@@ -424,11 +425,44 @@ func screen_key(k: int) -> void:
 	_scroll_fix()
 
 func _unhandled_input(ev: InputEvent) -> void:
-	# the mouse picks body parts on the implants screen
 	if mode == "implants" and ev is InputEventMouseMotion:
 		var i: int = screen.part_at_mouse(ev.position)
 		if i >= 0 and i != screen.part_sel:
 			screen.part_sel = i
+			sfx.play("blip")
+	if not (mode in ["title", "pause", "options", "keys", "saves", "loads", "implants", "map"]):
+		return
+	# menus: hover highlights, left click chooses, right click goes back, wheel scrolls
+	if ev is InputEventMouseMotion and mode != "implants" and mode != "map" and rebinding == "":
+		var h: int = screen.item_at_mouse(ev.position)
+		if h >= 0 and h != screen.sel:
+			screen.sel = h
+			sfx.play("blip")
+	elif ev is InputEventMouseButton and ev.pressed:
+		if ev.button_index == MOUSE_BUTTON_LEFT:
+			if mode == "map":
+				back_from_screen()
+			elif mode != "implants" and rebinding == "":
+				var h: int = screen.item_at_mouse(ev.position)
+				if h >= 0:
+					screen.sel = h
+					var it: Dictionary = screen.items[h]
+					if it.get("disabled", false):
+						return
+					if it.get("id", "") == "volume":
+						settings.volume = snappedf(settings.volume + 0.1, 0.1) if settings.volume < 0.95 else 0.0
+						apply_audio()
+						settings.save()
+						_fill_options()
+						sfx.play("shot")
+					else:
+						activate(it["id"])
+		elif ev.button_index == MOUSE_BUTTON_RIGHT and mode != "title" and rebinding == "":
+			back_from_screen()
+		elif (ev.button_index == MOUSE_BUTTON_WHEEL_UP or ev.button_index == MOUSE_BUTTON_WHEEL_DOWN) and mode != "implants" and mode != "map" and screen.items.size() > 0:
+			var d: int = -1 if ev.button_index == MOUSE_BUTTON_WHEEL_UP else 1
+			screen.sel = clampi(screen.sel + d, 0, screen.items.size() - 1)
+			_scroll_fix()
 			sfx.play("blip")
 
 func refresh() -> void:
@@ -568,7 +602,7 @@ func show_inventory() -> void:
 	panel.visible = true
 
 func show_help() -> void:
-	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\n<  or  PgUp  go up (stairs, elevator, ladder; with jump jets, lift off or climb through open air)      >  or  PgDn  go down (or descend and land).  An elevator rides up to three floors.  Hunters follow you up and down stairs.\ne  get into or out of cars, gyros (flying) and mechs (armoured walkers).  Leap off an edge and you fall: 5 damage a floor.\nt   talk to the nearest person (vendors, fixers, ripperdocs)      p   pay 100 on the debt (Shift+P: 1000)\nWalk into a locked door to pick it.  Step onto a carriage while the train doors are open to ride; step onto a platform to get off.\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the target (Shift+F: at anyone)      Tab  cycle targets      a  aim (up to 3 turns, each steadier)\nr   reload / clear a jam      v  fire mode (single, burst, auto)      x  choose the next ammunition kind\nF4  gunsmith: fit scopes, suppressors, magazines, grips, stocks, barrels (a scope helps at range, hurts up close)\ns   pickpocket an adjacent person (stealth and theft skill)\nw + direction   strike (reach weapons hit up to 2 away; they also strike hunters 2 cells off when you step toward them)      o + direction   shove (off an edge, too)      \\   swap to your previous weapon\nc   crouch      z   crawl (half speed, nearly invisible and silent)      Shift+direction   run two cells (noisy, tiring)      q + direction   jump (2 cells, 3 after a run)        e   get in or out of a car\nd   drop the wielded weapon\nLimbs: each has its own health (top right).  A disabled leg slows you, a disabled arm rules out two-handed weapons; head or chest at 0 is death.  Armor is worn from the inventory and soaks damage until it breaks.  Trauma patches mend limbs; ripperdocs rebuild them.\nEsc  menu: save, load, options (rebind keys, sound), implants        F3  implants        M  island map        F2  switch tileset        F5  quick save        F9  quick load\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  People see in a cone in front of them and hear footsteps by stance.  Strike an unaware person from behind for a quiet kill.  Crates, dumpsters, planters, railings and cars give cover; crouch behind them.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
+	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\n<  or  PgUp  go up (stairs, elevator, ladder; with jump jets, lift off or climb through open air)      >  or  PgDn  go down (or descend and land).  An elevator rides up to three floors.  Hunters follow you up and down stairs.\ne  get into or out of cars, gyros (flying) and mechs (armoured walkers).  Leap off an edge and you fall: 5 damage a floor.\nt   talk to the nearest person (vendors, fixers, ripperdocs)      p   pay 100 on the debt (Shift+P: 1000)\nYou see a half circle in front of you: , + direction turns you to look without a step.  Walk into a locked door to pick it.  Step onto a carriage while the train doors are open to ride; step onto a platform to get off.\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the target (Shift+F: at anyone)      Tab  cycle targets      a  aim (up to 3 turns, each steadier)\nr   reload / clear a jam      v  fire mode (single, burst, auto)      x  choose the next ammunition kind\nF4  gunsmith: fit scopes, suppressors, magazines, grips, stocks, barrels (a scope helps at range, hurts up close)\ns   pickpocket an adjacent person (stealth and theft skill)\nw + direction   strike (reach weapons hit up to 2 away; they also strike hunters 2 cells off when you step toward them)      o + direction   shove (off an edge, too)      \\   swap to your previous weapon\nc   crouch      z   crawl (half speed, nearly invisible and silent)      Shift+direction   run two cells (noisy, tiring)      q + direction   jump (2 cells, 3 after a run)        e   get in or out of a car\nd   drop the wielded weapon\nLimbs: each has its own health (top right).  A disabled leg slows you, a disabled arm rules out two-handed weapons; head or chest at 0 is death.  Armor is worn from the inventory and soaks damage until it breaks.  Trauma patches mend limbs; ripperdocs rebuild them.\nEsc  menu: save, load, options (rebind keys, sound), implants        F3  implants        M  island map        F2  switch tileset        F5  quick save        F9  quick load\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  Small arrows on the edge of each tile show which way people and animals face.  People see in a cone in front of them and hear footsteps by stance.  Strike an unaware person from behind for a quiet kill.  Crates, dumpsters, planters, railings and cars give cover; crouch behind them.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
 	panel.visible = true
 
 func dir_of(k: int) -> Vector2i:
@@ -634,7 +668,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 					game.act_fit_engine(gvi, tgt["item"], tgt["ground"])
 		refresh()
 		return
-	if mode == "jump" or mode == "strike" or mode == "shove":
+	if mode == "jump" or mode == "strike" or mode == "shove" or mode == "turn":
 		var was: String = mode
 		mode = "play"
 		var jd := dir_of(k)
@@ -644,6 +678,8 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				game.act_jump(jd.x, jd.y)
 			elif was == "shove":
 				game.act_shove(jd.x, jd.y)
+			elif was == "turn":
+				game.turn_to(jd.x, jd.y)
 			else:
 				game.act_strike(jd.x, jd.y)
 		refresh()
@@ -722,6 +758,9 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		"strike":
 			mode = "strike"
 			g.say("Strike which way?  (direction key; a long weapon reaches further)")
+		"turn":
+			mode = "turn"
+			g.say("Turn which way?  You only see 180 degrees in front of you.  (direction key, Esc cancels)")
 		"shove":
 			mode = "shove"
 			g.say("Shove which way?  (direction key; people go over railings and off roofs)")

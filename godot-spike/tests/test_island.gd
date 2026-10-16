@@ -161,6 +161,19 @@ func run() -> Array:
 	check.call("it left the city: the city no longer has it", cg.vehicles.size() == 0 or not cg.vehicles.any(func(v): return v["color"] == Color.RED and v["kind"] == "car" and v["cell"] == wv["cell"]))
 	var img: Image = a.overview_image(4)
 	check.call("the map image covers the island and marks the city, harbor and town (%dx%d, %d landmarks)" % [img.get_width(), img.get_height(), a.landmarks().size()], img.get_width() == ISL.W / 4 and img.get_height() == ISL.H / 4 and a.landmarks().size() >= 6 and img.get_pixel(720 / 4, 720 / 4) != img.get_pixel(1500 / 4, 400 / 4))
+	# the railway through the mountain pass: a wild zone has no subway, and stepping onto the track used to crash (modulo by zero)
+	var wz = w.game
+	var wo: Vector2i = ISL.zone_origin(wz.zone.x, wz.zone.y)
+	var rail_row: int = (ISL.HWY_Y + 9 - wo.y) * wz.size
+	var rx: int = 300 - wo.x
+	check.call("the wild zone has no train", not wz.transit.active() and wz.transit.car_at(rail_row + rx) == -1 and wz.transit.car_cell(0) == -1 and wz.transit.car_cells() == [-1, -1, -1, -1])
+	wz.pc = rail_row - 3 * wz.size + rx
+	wz.sim.retier(wz.pc)
+	var crossed := 0
+	for k in 12:
+		if wz.act_move(0, 1):
+			crossed += 1
+	check.call("you can walk straight across the rails (%d of 12 steps)" % crossed, crossed == 12 and wz.transit.riding == -1 and wz.hp > 0)
 	# save and load the whole world
 	var d: Dictionary = JSON.parse_string(JSON.stringify(w.save_dict()))
 	var w2 = World.new()

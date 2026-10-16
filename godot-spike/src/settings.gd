@@ -29,6 +29,7 @@ const ACTIONS := [
 	["crawl", "Crawl", [KEY_Z]],
 	["strike", "Strike (then direction)", [KEY_W]],
 	["shove", "Shove (then direction)", [KEY_O]],
+	["turn", "Turn to look (then direction, no time)", [KEY_COMMA]],
 	["swap", "Swap weapon", [KEY_BACKSLASH]],
 	["jump", "Jump (then direction)", [KEY_Q]],
 	["vehicle", "Enter / leave vehicle (Shift: service)", [KEY_E]],
