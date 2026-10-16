@@ -8,7 +8,8 @@ const SettingsScript = preload("res://src/settings.gd")
 const SfxScript = preload("res://src/sfx.gd")
 const ScreenScript = preload("res://src/screen_view.gd")
 const IMP = preload("res://src/implants.gd")
-const TILESETS := ["Bouma_TopDown", "Mokuhanga_TopDown"]
+const UI_S := 1.5          # the interface is laid out for 1280x720 and drawn at 1.5x on the 1920x1080 canvas
+const TILESETS := ["Trilobit64", "Bouma_TopDown", "Mokuhanga_TopDown"]
 const SLOTS := 3
 
 var game
@@ -45,9 +46,13 @@ func _ready() -> void:
 	apply_audio()
 	var layer := CanvasLayer.new()
 	layer.layer = 10
+	layer.scale = Vector2(UI_S, UI_S)
 	add_child(layer)
 	screen = ScreenScript.new()
 	screen.visible = false
+	screen.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	screen.position = Vector2.ZERO
+	screen.size = Vector2(1280, 720)
 	layer.add_child(screen)
 	var args := OS.get_cmdline_user_args()
 	for a in args:
@@ -95,7 +100,7 @@ func start_play(g) -> void:
 			c.queue_free()
 	play_nodes = []
 	tileset = TilesetScript.new()
-	tileset.load_dir("res://gfx/" + TILESETS[ts_index])
+	_load_tileset()
 	game = g
 	view = ViewScript.new()
 	view.game = game
@@ -103,6 +108,7 @@ func start_play(g) -> void:
 	add_child(view)
 	play_nodes.append(view)
 	var layer := CanvasLayer.new()
+	layer.scale = Vector2(UI_S, UI_S)
 	add_child(layer)
 	play_nodes.append(layer)
 	status = Label.new()
@@ -110,15 +116,15 @@ func start_play(g) -> void:
 	status.add_theme_font_size_override("font_size", 16)
 	layer.add_child(status)
 	logbox = RichTextLabel.new()
-	logbox.position = Vector2(8, 620)
-	logbox.size = Vector2(1264, 96)
+	logbox.position = Vector2(8, 646)
+	logbox.size = Vector2(1264, 70)
 	logbox.bbcode_enabled = true
 	logbox.scroll_following = true
 	layer.add_child(logbox)
 	var bg := ColorRect.new()
 	bg.color = Color(0, 0, 0, 0.55)
-	bg.position = Vector2(0, 616)
-	bg.size = Vector2(1280, 104)
+	bg.position = Vector2(0, 640)
+	bg.size = Vector2(1280, 80)
 	bg.z_index = -1
 	layer.add_child(bg)
 	panel = RichTextLabel.new()
@@ -354,15 +360,24 @@ func activate(id: String) -> void:
 			settings.save()
 			_fill_keys()
 
+## the chosen tileset, with Bouma behind the original 64px art for anything not redrawn yet
+func _load_tileset() -> void:
+	tileset.fallback = null
+	if not tileset.load_dir("res://gfx/" + TILESETS[ts_index]):
+		tileset.load_dir("res://gfx/" + TILESETS[1])
+		return
+	if TILESETS[ts_index] == "Trilobit64":
+		var fb = TilesetScript.new()
+		if fb.load_dir("res://gfx/" + TILESETS[1]):
+			tileset.fallback = fb
+
 func _cycle_tileset(dir: int) -> void:
 	ts_index = (ts_index + dir + TILESETS.size()) % TILESETS.size()
 	settings.tileset = ts_index
 	settings.save()
 	if tileset != null:
-		tileset.textures.clear()
-		tileset.sheets.clear()
-		tileset.index.clear()
-		tileset.load_dir("res://gfx/" + TILESETS[ts_index])
+		tileset.clear()
+		_load_tileset()
 	_fill_options()
 
 func screen_key(k: int) -> void:
@@ -426,7 +441,7 @@ func screen_key(k: int) -> void:
 
 func _unhandled_input(ev: InputEvent) -> void:
 	if mode == "implants" and ev is InputEventMouseMotion:
-		var i: int = screen.part_at_mouse(ev.position)
+		var i: int = screen.part_at_mouse(ev.position / UI_S)
 		if i >= 0 and i != screen.part_sel:
 			screen.part_sel = i
 			sfx.play("blip")
@@ -434,7 +449,7 @@ func _unhandled_input(ev: InputEvent) -> void:
 		return
 	# menus: hover highlights, left click chooses, right click goes back, wheel scrolls
 	if ev is InputEventMouseMotion and mode != "implants" and mode != "map" and rebinding == "":
-		var h: int = screen.item_at_mouse(ev.position)
+		var h: int = screen.item_at_mouse(ev.position / UI_S)
 		if h >= 0 and h != screen.sel:
 			screen.sel = h
 			sfx.play("blip")
@@ -443,7 +458,7 @@ func _unhandled_input(ev: InputEvent) -> void:
 			if mode == "map":
 				back_from_screen()
 			elif mode != "implants" and rebinding == "":
-				var h: int = screen.item_at_mouse(ev.position)
+				var h: int = screen.item_at_mouse(ev.position / UI_S)
 				if h >= 0:
 					screen.sel = h
 					var it: Dictionary = screen.items[h]

@@ -10,6 +10,27 @@ const ARMOR_LAYER := {"trl_helmet": "helmet_ball", "trl_visor": "visor", "trl_he
 	"trl_backpack": "backpack", "trl_holster": "holster"}
 const MELEE_THUG := ["trl_mel_kastet", "trl_mel_finka", "trl_mel_topor", "trl_mel_tonfa", "trl_mel_lopata", "trl_mel_chekan", "trl_mel_kistien", "trl_mel_kinzhal"]
 const ORDER := ["backpack", "holster"]
+const SKINS := [Color(0.96, 0.8, 0.68), Color(0.88, 0.69, 0.53), Color(0.74, 0.54, 0.38), Color(0.55, 0.38, 0.27), Color(0.38, 0.26, 0.19)]
+const HAIRS := [Color(0.1, 0.09, 0.1), Color(0.22, 0.14, 0.09), Color(0.45, 0.3, 0.15), Color(0.72, 0.58, 0.3), Color(0.6, 0.62, 0.66), Color(0.8, 0.2, 0.3), Color(0.2, 0.75, 0.9)]
+const STYLES_M := ["short", "buzz", "mohawk", "short", "buzz"]
+const STYLES_F := ["long", "bob", "ponytail", "bun", "short"]
+
+## body and look: the layers every figure has, plus skin and hair tints
+static func look(h: int, fem: bool, fac: int) -> Dictionary:
+	var hs: int = (h >> 4) % 7
+	if fac == 3:
+		hs = 5 + (h >> 4) % 2
+	elif fac == 2:
+		hs = (h >> 4) % 4
+	var styles: Array = STYLES_F if fem else STYLES_M
+	return {"fem": fem, "skin": SKINS[(h >> 8) % SKINS.size()], "hair": HAIRS[hs], "style": styles[(h >> 12) % styles.size()]}
+
+static func base_layers(look: Dictionary, hair_hidden: bool) -> Array:
+	var sx: String = "f" if look["fem"] else "m"
+	var l: Array = ["d_shadow", "d_legs", "d_torso_" + sx, "d_arms_" + sx, "d_hands", "d_head_" + sx]
+	if not hair_hidden:
+		l.append("d_hair_" + String(look["style"]))
+	return l
 
 ## layers and the weapon id for person i (an NPC).  Returns {"layers": Array, "weapon": String}
 static func for_person(g, i: int) -> Dictionary:
@@ -62,7 +83,15 @@ static func for_person(g, i: int) -> Dictionary:
 	elif fac == 1 or fac == 3:
 		if not ("imp_mantis" in layers):
 			weapon = MELEE_THUG[h % MELEE_THUG.size()]
-	return {"layers": layers, "weapon": weapon}
+	var lk := look(h, g.fem[i] == 1, fac)
+	lk["hid"] = _hides_hair(layers)
+	return {"layers": layers, "weapon": weapon, "look": lk}
+
+static func _hides_hair(layers: Array) -> bool:
+	for l in layers:
+		if l == "helmet_ball" or l == "visor" or l == "helm_tac" or l == "balaclava":
+			return true
+	return false
 
 ## the player: worn armor and containers, implants that work, the wielded weapon
 static func for_player(g) -> Dictionary:
@@ -82,7 +111,9 @@ static func for_player(g) -> Dictionary:
 			layers.append(IMPLANT_LAYER[id])
 	# back and holster first, then the rest in the order worn, so a vest sits over a coat
 	layers.sort_custom(func(a, b): return _rank(a) < _rank(b))
-	return {"layers": layers, "weapon": (g.wield.id() if g.wield != null else "")}
+	var lk := look(7919, false, 0)
+	lk["hid"] = _hides_hair(layers)
+	return {"layers": layers, "weapon": (g.wield.id() if g.wield != null else ""), "look": lk}
 
 static func _rank(l: String) -> int:
 	if l == "backpack" or l == "holster":

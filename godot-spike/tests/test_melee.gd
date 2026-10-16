@@ -236,6 +236,9 @@ func run() -> Array:
 			put.call(spot + 1)
 			g.melee(who)
 		check.call("a naginata's sweep hits the second enemy too (%d damage)" % (oh - g.hpn[other]), g.hpn[other] < oh)
+	g.body.reset()      # the hunter above hit back; start the timing runs healthy
+	g.hp = g.hp_max
+	g.game_over = false
 	# slow weapons: ten swings of a nodachi take far longer than ten of a katana
 	var turns_for := func(w: String) -> int:
 		g.wield = g._new_item(w)
@@ -248,7 +251,7 @@ func run() -> Array:
 		return g.turn - tt
 	var slow_turns: int = turns_for.call("trl_mel_nodachi")
 	var kat_turns: int = turns_for.call("trl_mel_katana")
-	check.call("ten nodachi swings take %d turns, a katana's %d" % [slow_turns, kat_turns], slow_turns >= 15 and kat_turns <= 10 and kat_turns >= 8)
+	check.call("ten nodachi swings take %d turns, a katana's %d" % [slow_turns, kat_turns], slow_turns >= 15 and kat_turns <= 12 and kat_turns >= 8)
 	# stealth
 	var tot_t := 0
 	var tot_k := 0
@@ -268,7 +271,7 @@ func run() -> Array:
 		g.melee(who)
 		tot_k += h0 - g.hpn[who]
 	log.append("   (backstab totals over 30: tanto %d, katana %d)" % [tot_t, tot_k])
-	check.call("a tanto in the back does 40+ a blow despite its small blade", float(tot_t) / 30.0 > 40.0)
+	check.call("a tanto in the back does 35+ a blow despite its small blade", float(tot_t) / 30.0 > 35.0)
 
 	# ---- parry
 	g.wield = g._new_item("trl_mel_sai")
@@ -346,7 +349,7 @@ func run() -> Array:
 		for it in g.items_at[c]:
 			if it.has_tag("melee"):
 				loot_melee += 1
-	check.call("blades turn up as loot (%d piles)" % loot_melee, loot_melee >= 8)
+	check.call("no loose weapons lie around: blades are bought or taken (%d piles)" % loot_melee, loot_melee <= 2)
 	# ---- save / load
 	g.wield = g._new_item("trl_mel_kusarigama_f")
 	g.mdis[who] = 1

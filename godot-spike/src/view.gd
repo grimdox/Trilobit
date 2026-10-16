@@ -6,8 +6,10 @@ const DS = preload("res://src/dollspec.gd")
 var pd = PD.new()
 var game
 var tileset
-var cols: int = 40
-var rows: int = 19
+const TILE := 64            # screen pixels per cell: sprites are drawn at 64x64 whatever the tileset's own size
+const S := 2.0              # TILE / 32: scale for hand-placed pixel offsets
+var cols: int = 30
+var rows: int = 15
 var font: Font = ThemeDB.fallback_font
 
 const TERRAIN := {0: "t_sidewalk", 1: "t_pavement", 2: "t_wall", 3: "t_floor", 4: "t_door_c", 5: "t_water_dp", 6: "t_grass", 7: "",
@@ -18,19 +20,21 @@ const TERRAIN := {0: "t_sidewalk", 1: "t_pavement", 2: "t_wall", 3: "t_floor", 4
 const DARK := Color(0.38, 0.4, 0.55)
 
 func tile() -> int:
-	return tileset.tile_w
+	return TILE
 
 func _blit(id: String, pos: Vector2, mod: Color = Color.WHITE) -> bool:
 	if id.begins_with("icon:"):
 		if not pd.has(id):
 			return false
-		draw_texture_rect_region(pd.tex, Rect2(pos, Vector2(32, 32)), pd.rect(id), mod)
+		var ir: Rect2 = pd.rect(id)
+		draw_texture_rect_region(pd.tex, Rect2(pos, ir.size * pd.scale), ir, mod)
 		return true
 	var sp: Array = tileset.sprite(id)
 	if sp.is_empty():
 		return false
 	var r: Rect2 = sp[1]
-	draw_texture_rect_region(sp[0], Rect2(pos + sp[2], r.size), r, mod)
+	var k: float = sp[3]
+	draw_texture_rect_region(sp[0], Rect2(pos + sp[2] * k, r.size * k), r, mod)
 	return true
 
 func item_sprite(it) -> String:
@@ -45,12 +49,19 @@ func item_sprite(it) -> String:
 func person_sprite(i: int) -> String:
 	return "npc_female" if game.fem[i] == 1 else "npc_male"
 
-## the paper doll: layers over the base sprite, then the weapon in the hand, turned the way they face
+## the paper doll.  The 64px set has top-down layers (facing up, centred on the cell) that are stacked by z and turned to the facing.
+func doll_ready() -> bool:
+	return tileset != null and tileset.has("dl:d_legs")
+
 func _draw_doll(spec: Dictionary, pos: Vector2, face_dir: Vector2i, mod: Color = Color.WHITE) -> void:
+	if doll_ready():
+		_draw_doll64(spec, pos, face_dir, mod)
+		return
 	for l in spec["layers"]:
 		var key := "doll:" + String(l)
 		if pd.has(key):
-			draw_texture_rect_region(pd.tex, Rect2(pos + Vector2(0, -2), Vector2(32, 36)), pd.rect(key), mod)
+			var dr: Rect2 = pd.rect(key)
+			draw_texture_rect_region(pd.tex, Rect2(pos + Vector2(0, -2) * S, dr.size * pd.scale), dr, mod)
 	var w: String = spec["weapon"]
 	if w != "" and pd.has("icon:" + w):
 		var d := Vector2(face_dir.x, face_dir.y)
@@ -58,10 +69,49 @@ func _draw_doll(spec: Dictionary, pos: Vector2, face_dir: Vector2i, mod: Color =
 			d = Vector2(0, 1)
 		var ang: float = d.angle()
 		var left: bool = d.x < -0.1
-		var hand := pos + (Vector2(9, 22) if left else Vector2(23, 22))
+		var hand := pos + (Vector2(9, 22) if left else Vector2(23, 22)) * S
 		draw_set_transform(hand, ang, Vector2(1, -1) if left else Vector2(1, 1))
-		draw_texture_rect_region(pd.tex, Rect2(Vector2(-7, -14), Vector2(32, 32)), pd.rect("icon:" + w), mod)
+		var wr: Rect2 = pd.rect("icon:" + w)
+		draw_texture_rect_region(pd.tex, Rect2(Vector2(-7, -14) * S, wr.size * pd.scale), wr, mod)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+const DOLL_S := 0.95
+
+func _draw_doll64(spec: Dictionary, pos: Vector2, face_dir: Vector2i, mod: Color) -> void:
+	var lk: Dictionary = spec["look"]
+	var keys: Array = DS.base_layers(lk, bool(lk.get("hid", false)))
+	keys.append_array(spec["layers"])
+	var w: String = spec["weapon"]
+	if w != "" and tileset.has("dl:hold:" + w):
+		keys.append("hold:" + w)
+	var items: Array = []
+	for k in keys:
+		var key := String(k)
+		if not tileset.has("dl:" + key):
+			continue
+		var meta: Array = tileset.doll.get(key, [65, ""])
+		items.append([int(meta[0]), key, String(meta[1])])
+	items.sort_custom(func(a, b): return a[0] < b[0])
+	var d := Vector2(face_dir.x, face_dir.y)
+	if d == Vector2.ZERO:
+		d = Vector2(0, 1)
+	var centre := pos + Vector2(TILE, TILE) * 0.5
+	draw_set_transform(centre, d.angle() + PI / 2.0, Vector2(DOLL_S, DOLL_S))
+	for it in items:
+		var sp: Array = tileset.sprite("dl:" + String(it[1]))
+		var r: Rect2 = sp[1]
+		var c := mod
+		if it[2] == "skin":
+			c = mod * lk["skin"]
+		elif it[2] == "hair":
+			c = mod * lk["hair"]
+		if it[1] == "d_shadow":
+			draw_set_transform(centre + Vector2(3, 4), 0.0, Vector2(DOLL_S, DOLL_S))
+			draw_texture_rect_region(sp[0], Rect2(-r.size * 0.5, r.size), r, c)
+			draw_set_transform(centre, d.angle() + PI / 2.0, Vector2(DOLL_S, DOLL_S))
+			continue
+		draw_texture_rect_region(sp[0], Rect2(-r.size * 0.5, r.size), r, c)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 ## the first solid tile below an air cell, or -1 (what you would see looking down from a window or the roof edge)
 func _below(c: int) -> int:
@@ -89,9 +139,9 @@ func _fallback(t: int) -> Color:
 func _paint_marks(c: int, pos: Vector2, T: int, mod: Color, t: int) -> void:
 	var marks: PackedByteArray = game.city.marks
 	var m: int = marks[c] if c < marks.size() else 0
-	if m == 0:
+	if m == 0 or ((m == 5 or m == 6) and tileset.index.has("t_railroad_tie.v")):
 		return
-	var w := 5.0
+	var w := 5.0 * S
 	var size: int = game.size
 	var white := Color(0.92, 0.92, 0.95) * mod
 	var yellow := Color(0.98, 0.8, 0.15) * mod
@@ -110,12 +160,61 @@ func _paint_marks(c: int, pos: Vector2, T: int, mod: Color, t: int) -> void:
 			draw_rect(Rect2(pos.x, y2, T, w), yellow)
 		5:
 			for k in 4:
-				draw_rect(Rect2(pos.x + k * T / 4.0 + 2, pos.y + 2, 4, T - 4), Color(0.32, 0.2, 0.12) * mod)
-			draw_rect(Rect2(pos.x, pos.y + T * 0.5 - 2, T, 4), Color(0.7, 0.72, 0.78) * mod)
+				draw_rect(Rect2(pos.x + k * T / 4.0 + 2 * S, pos.y + 2 * S, 4 * S, T - 4 * S), Color(0.32, 0.2, 0.12) * mod)
+			draw_rect(Rect2(pos.x, pos.y + T * 0.5 - 2 * S, T, 4 * S), Color(0.7, 0.72, 0.78) * mod)
 		6:
 			for k in 4:
-				draw_rect(Rect2(pos.x + 2, pos.y + k * T / 4.0 + 2, T - 4, 4), Color(0.32, 0.2, 0.12) * mod)
-			draw_rect(Rect2(pos.x + T * 0.5 - 2, pos.y, 4, T), Color(0.7, 0.72, 0.78) * mod)
+				draw_rect(Rect2(pos.x + 2 * S, pos.y + k * T / 4.0 + 2 * S, T - 4 * S, 4 * S), Color(0.32, 0.2, 0.12) * mod)
+			draw_rect(Rect2(pos.x + T * 0.5 - 2 * S, pos.y, 4 * S, T), Color(0.7, 0.72, 0.78) * mod)
+
+## is the cell at (x, y) of the same level a wall, glass wall or door (what a wall segment joins up with)?
+func _joins(base: int, x: int, y: int) -> bool:
+	var size: int = game.size
+	if x < 0 or y < 0 or x >= size or y >= size:
+		return false
+	var t: int = game.city.tiles[base + y * size + x]
+	return t == 2 or t == 10 or t == 4 or t == 22
+
+## one terrain cell: variants for texture, autotiled walls, doors that face along their wall, rails that turn
+func _cell_art(t: int, c: int, wx: int, wy: int, pos: Vector2, mod: Color, ground: bool) -> void:
+	var T := TILE
+	var own: bool = tileset.index.has("t_wall.0")      # the Trilobit set has joined-up walls and doors
+	var base: int = (c / game.s2) * game.s2
+	if own and (t == 2 or t == 10):
+		var m := 0
+		if _joins(base, wx, wy - 1): m |= 1
+		if _joins(base, wx + 1, wy): m |= 2
+		if _joins(base, wx, wy + 1): m |= 4
+		if _joins(base, wx - 1, wy): m |= 8
+		_blit(tileset.pick("t_concrete", c), pos, mod)
+		_blit(("t_wall_glass." if t == 10 else "t_wall.") + str(m), pos, mod)
+		return
+	if own and (t == 4 or t == 22):
+		var vert: bool = _joins(base, wx, wy - 1) and _joins(base, wx, wy + 1) and not (_joins(base, wx - 1, wy) and _joins(base, wx + 1, wy))
+		_blit(tileset.pick("t_floor", c), pos, mod)
+		_blit(String(TERRAIN[t]) + (".v" if vert else ""), pos, mod)
+		return
+	if t == 14 and own:
+		var mk: int = game.city.marks[c] if ground and c < game.city.marks.size() else 5
+		_blit(String(TERRAIN[t]) + (".v" if mk == 6 else ""), pos, mod)
+		return
+	if t >= 23 and t <= 25:
+		_blit(TERRAIN[0], pos, mod)
+		if not _blit(tileset.pick(TERRAIN[t], c), pos, mod):
+			draw_rect(Rect2(pos + Vector2(4, 4) * S, Vector2(T - 8 * S, T - 8 * S)), Color(0.5, 0.4, 0.25) * mod)
+		return
+	if t == 29:
+		_blit(tileset.pick(TERRAIN[6], c), pos, mod)
+		_blit(tileset.pick(TERRAIN[t], c), pos, mod)
+		return
+	if t == 1 and not tileset.variants.has("t_pavement"):
+		draw_rect(Rect2(pos, Vector2(T, T)), Color(0.13, 0.13, 0.15) * mod)
+		if ((c * 7919) >> 3) % 11 == 0:
+			draw_rect(Rect2(pos.x + ((c % 5) * 5 + 3) * S, pos.y + ((c % 7) * 4 + 3) * S, 2 * S, 2 * S), Color(0.2, 0.2, 0.23) * mod)
+	elif not _blit(tileset.pick(TERRAIN[t], c), pos, mod):
+		draw_rect(Rect2(pos, Vector2(T, T)), _fallback(t) * mod)
+	if ground:
+		_paint_marks(c, pos, T, mod, t)
 
 func _draw() -> void:
 	if game == null or tileset == null:
@@ -138,8 +237,8 @@ func _draw() -> void:
 					var ot: int = game.outside_tile(wx, wy)
 					var opos := Vector2(sx * T, sy * T)
 					if ot == 29:
-						_blit(TERRAIN[6], opos, DARK)
-					if not _blit(TERRAIN[ot], opos, DARK):
+						_blit(tileset.pick(TERRAIN[6], wy * 4099 + wx), opos, DARK)
+					if not _blit(tileset.pick(TERRAIN[ot], wy * 4099 + wx), opos, DARK):
 						draw_rect(Rect2(opos, Vector2(T, T)), _fallback(ot) * DARK)
 				continue
 			var c := base + wy * size + wx
@@ -152,35 +251,19 @@ func _draw() -> void:
 			if t == 7:
 				var bt := _below(c)
 				if bt >= 0:
-					_blit(TERRAIN[bt], pos, mod * below_mod)
+					_blit(tileset.pick(TERRAIN[bt], c), pos, mod * below_mod)
 				continue
-			if t >= 23 and t <= 25:
-				_blit(TERRAIN[0], pos, mod)
-				if not _blit(TERRAIN[t], pos, mod):
-					draw_rect(Rect2(pos + Vector2(4, 4), Vector2(T - 8, T - 8)), Color(0.5, 0.4, 0.25) * mod)
-			elif t >= CG.EXTRA0:
+			if t >= CG.EXTRA0:
 				if t >= CG.EXTRA0 + 9:      # furniture stands on a floor
 					var under_t: int = game.city.under[c] if c < game.city.under.size() else 3
 					if under_t >= CG.EXTRA0:
-						_blit(String(CG.TILE_SPRITE.get(under_t, "t_floor")), pos, mod)
+						_blit(tileset.pick(String(CG.TILE_SPRITE.get(under_t, "t_floor")), c), pos, mod)
 					else:
-						_blit(String(TERRAIN.get(under_t, "t_floor")), pos, mod)
-				if not _blit(String(CG.TILE_SPRITE.get(t, "")), pos, mod):
-					draw_rect(Rect2(pos + Vector2(4, 4), Vector2(T - 8, T - 8)), Color(0.5, 0.4, 0.25) * mod)
-			elif t == 29:
-				_blit(TERRAIN[6], pos, mod)
-				_blit(TERRAIN[t], pos, mod)
-			elif t == 1:
-				draw_rect(Rect2(pos, Vector2(T, T)), Color(0.13, 0.13, 0.15) * mod)
-				if ((c * 7919) >> 3) % 11 == 0:
-					draw_rect(Rect2(pos.x + (c % 5) * 5 + 3, pos.y + (c % 7) * 4 + 3, 2, 2), Color(0.2, 0.2, 0.23) * mod)
-				if c < s2:
-					_paint_marks(c, pos, T, mod, t)
+						_blit(tileset.pick(String(TERRAIN.get(under_t, "t_floor")), c), pos, mod)
+				if not _blit(tileset.pick(String(CG.TILE_SPRITE.get(t, "")), c), pos, mod):
+					draw_rect(Rect2(pos + Vector2(4, 4) * S, Vector2(T - 8 * S, T - 8 * S)), Color(0.5, 0.4, 0.25) * mod)
 			else:
-				if not _blit(TERRAIN[t], pos, mod):
-					draw_rect(Rect2(pos, Vector2(T, T)), _fallback(t) * mod)
-				if c < s2:
-					_paint_marks(c, pos, T, mod, t)
+				_cell_art(t, c, wx, wy, pos, mod, c < s2)
 			if vis and game.items_at.has(c):
 				var arr: Array = game.items_at[c]
 				_blit(item_sprite(arr[arr.size() - 1]), pos)
@@ -191,10 +274,10 @@ func _draw() -> void:
 			var wx: int = c % size - ox
 			var wy: int = (c / size) % size - oy
 			if wx >= 0 and wy >= 0 and wx < cols and wy < rows and game.fov.visible[c] == 1:
-				var r := Rect2(wx * T + 2, wy * T + 2, T - 4, T - 4)
+				var r := Rect2(wx * T + 2 * S, wy * T + 2 * S, T - 4 * S, T - 4 * S)
 				draw_rect(r, Color(0.85, 0.2, 0.35) if k == 0 else Color(0.75, 0.78, 0.85))
-				draw_rect(r.grow(-5), Color(0.15, 0.2, 0.3))
-				draw_rect(Rect2(r.position.x + 4, r.position.y + 4, r.size.x - 8, 3), Color(1, 0.9, 0.5))
+				draw_rect(r.grow(-5 * S), Color(0.15, 0.2, 0.3))
+				draw_rect(Rect2(r.position.x + 4 * S, r.position.y + 4 * S, r.size.x - 8 * S, 3 * S), Color(1, 0.9, 0.5))
 			k += 1
 	# loose things and animals
 	for t in game.things:
@@ -209,7 +292,7 @@ func _draw() -> void:
 			continue
 		var tid: String = "f_" + String(t["k"]) + ("_c" if t["k"] == "crate" else "")
 		if not _blit(tid, Vector2(tx * T, ty * T)):
-			draw_rect(Rect2(tx * T + 6, ty * T + 6, T - 12, T - 12), Color(0.6, 0.45, 0.25))
+			draw_rect(Rect2(tx * T + 6 * S, ty * T + 6 * S, T - 12 * S, T - 12 * S), Color(0.6, 0.45, 0.25))
 	for k in game.critters:
 		if k["k"] == "":
 			continue
@@ -222,7 +305,7 @@ func _draw() -> void:
 			continue
 		_facing_mark(Vector2(kx * T, ky * T), int(k.get("face", 0)), Color(0.95, 0.75, 0.4, 0.85))
 		if not _blit("mon_" + String(k["k"]), Vector2(kx * T, ky * T)):
-			draw_string(font, Vector2(kx * T + T * 0.3, ky * T + T * 0.7), "d" if k["k"] == "dog" else "c", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.9, 0.7, 0.4))
+			draw_string(font, Vector2(kx * T + T * 0.3, ky * T + T * 0.7), "d" if k["k"] == "dog" else "c", HORIZONTAL_ALIGNMENT_LEFT, -1, 30, Color(0.9, 0.7, 0.4))
 	# vehicles: whole bodies, a tile for every tile of the footprint
 	for vi in game.vehicles.size():
 		var v: Dictionary = game.vehicles[vi]
@@ -240,7 +323,8 @@ func _draw() -> void:
 		if wx < 0 or wy < 0 or wx >= cols or wy >= rows or game.fov.visible[c] == 0:
 			continue
 		var pos := Vector2(wx * T, wy * T)
-		_blit(person_sprite(i), pos)
+		if not doll_ready():
+			_blit(person_sprite(i), pos)
 		var fd: Array = game.DIR8[int(game.face[i]) % 8]
 		_draw_doll(DS.for_person(game, i), pos, Vector2i(fd[0], fd[1]))
 		_facing_mark(pos, int(game.face[i]), Color(1, 0.35, 0.3) if (int(game.fac[i]) != 0 and int(game.astate[i]) >= 1) else Color(0.85, 0.9, 1.0, 0.85))
@@ -261,19 +345,20 @@ func _draw() -> void:
 				6: glyph = "+"; col = Color(0.4, 1, 0.8)
 				7, 8: glyph = "^"; col = Color(0.9, 0.85, 1)
 		if glyph != "":
-			draw_string(font, pos + Vector2(T * 0.3, -2), glyph, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, col)
+			draw_string(font, pos + Vector2(T * 0.3, -2 * S), glyph, HORIZONTAL_ALIGNMENT_LEFT, -1, 30, col)
 		elif game.meter[i] > 0 and game.astate[i] == 0:
-			draw_rect(Rect2(pos.x + 4, pos.y - 2, (T - 8) * game.meter[i] / 100.0, 3), Color(1, 0.9, 0.2))
+			draw_rect(Rect2(pos.x + 4 * S, pos.y - 2 * S, (T - 8 * S) * game.meter[i] / 100.0, 3 * S), Color(1, 0.9, 0.2))
 	# the player
 	var centre := Vector2((px - ox) * T, (py - oy) * T)
 	if game.in_vehicle >= 0:
 		draw_circle(centre + Vector2(T / 2.0, T / 2.0), T * 0.22, Color(0.95, 0.8, 0.65))
-		draw_arc(centre + Vector2(T / 2.0, T / 2.0), T * 0.22, PI, TAU, 12, Color(0.15, 0.1, 0.1), 3.0)
+		draw_arc(centre + Vector2(T / 2.0, T / 2.0), T * 0.22, PI, TAU, 12, Color(0.15, 0.1, 0.1), 3.0 * S)
 	elif game.transit.riding < 0:
 		if game.flying:
 			draw_circle(centre + Vector2(T / 2.0, T * 0.9), T * 0.28, Color(0, 0, 0, 0.35))
-			draw_circle(centre + Vector2(T / 2.0, T * 0.95), 5.0, Color(1, 0.7, 0.2, 0.9))
-		_blit("player_male", centre)
+			draw_circle(centre + Vector2(T / 2.0, T * 0.95), 5.0 * S, Color(1, 0.7, 0.2, 0.9))
+		if not doll_ready():
+			_blit("player_male", centre)
 		_draw_doll(DS.for_player(game), centre, game.facing)
 	else:
 		_blit("player_male", centre, Color(1, 1, 1, 0.9))
@@ -283,22 +368,22 @@ func _draw() -> void:
 	if not game.eco.job.is_empty() and int(game.eco.job["cell"]) / s2 == base / s2:
 		var jc: int = game.eco.job["cell"]
 		var jr := Rect2((game.lx(jc) - ox) * T, (game.ly(jc) - oy) * T, T, T)
-		draw_rect(jr, Color(1, 0.8, 0.2), false, 2.0)
+		draw_rect(jr, Color(1, 0.8, 0.2), false, 2.0 * S)
 	# target bracket
 	var tg: int = game.current_target()
 	if tg >= 0:
 		var c: int = game.sim.pos[tg]
 		var r := Rect2((c % size - ox) * T, ((c / size) % size - oy) * T, T, T)
-		draw_rect(r, Color(1, 0.2, 0.2), false, 2.0)
+		draw_rect(r, Color(1, 0.2, 0.2), false, 2.0 * S)
 		if game.aim_turns > 0:
-			draw_rect(r.grow(3), Color(1, 0.6, 0.2), false, 1.0)
+			draw_rect(r.grow(3 * S), Color(1, 0.6, 0.2), false, 1.0 * S)
 	# tracers from the last volley
 	for tr in game.tracers:
 		var a: int = tr[0]
 		var b: int = tr[1]
 		var pa := Vector2((a % size - ox + 0.5) * T, ((a / size) % size - oy + 0.5) * T)
 		var pb := Vector2((b % size - ox + 0.5) * T, ((b / size) % size - oy + 0.5) * T)
-		draw_line(pa, pb, Color(1, 0.95, 0.5) if tr[2] else Color(0.8, 0.8, 0.8, 0.6), 2.0)
+		draw_line(pa, pb, Color(1, 0.95, 0.5) if tr[2] else Color(0.8, 0.8, 0.8, 0.6), 2.0 * S)
 	_draw_hud()
 
 ## a small pointer on the edge of a tile showing which way someone faces (index into DIR8)
@@ -323,7 +408,8 @@ func _bar(x: float, y: float, w: float, h: float, f: float, col: Color, label: S
 
 ## health and armor bars and a body diagram, top right: each limb is coloured by its health, grey when disabled
 func _draw_hud() -> void:
-	var W: float = float(cols * tile())
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.5, 1.5))
+	var W: float = float(cols * tile()) / 1.5
 	var x0: float = W - 236.0
 	var y0: float = 6.0
 	draw_rect(Rect2(x0 - 6, y0 - 4, 238, 188), Color(0.03, 0.04, 0.08, 0.72))
@@ -358,6 +444,7 @@ func _draw_hud() -> void:
 		if not B.ok(l):
 			draw_string(font, Vector2(x0 + 190, by + 14), "OFF", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 0.4, 0.4))
 		k += 1
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 ## a vehicle drawn tile by tile from its template
 func _draw_body(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> void:
@@ -401,28 +488,28 @@ func _draw_body(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> void:
 			"C": cc = Color(0.17, 0.2, 0.26)
 			"K": cc = Color(0.35, 0.55, 0.7)
 		if airborne:
-			draw_rect(Rect2(px + 4, py + T * 0.55, T, T), shade)
+			draw_rect(Rect2(px + 4 * S, py + T * 0.55, T, T), shade)
 		draw_rect(r, cc)
 		# panel seams
 		match ch:
 			"E":
 				for k in 3:
-					var gx: float = px + 6 + k * (T - 12) / 2.0
+					var gx: float = px + 6 * S + k * (T - 12 * S) / 2.0
 					if dirn % 2 == 0:
-						draw_line(Vector2(gx, py + 5), Vector2(gx, py + T - 5), cc.darkened(0.4), 2.0)
+						draw_line(Vector2(gx, py + 5 * S), Vector2(gx, py + T - 5 * S), cc.darkened(0.4), 2.0 * S)
 					else:
-						draw_line(Vector2(px + 5, py + 6 + k * (T - 12) / 2.0), Vector2(px + T - 5, py + 6 + k * (T - 12) / 2.0), cc.darkened(0.4), 2.0)
+						draw_line(Vector2(px + 5 * S, py + 6 * S + k * (T - 12 * S) / 2.0), Vector2(px + T - 5 * S, py + 6 * S + k * (T - 12 * S) / 2.0), cc.darkened(0.4), 2.0 * S)
 			"T":
-				draw_rect(r.grow(-6), cc.darkened(0.12), false, 1.5)
+				draw_rect(r.grow(-6 * S), cc.darkened(0.12), false, 1.5 * S)
 			"C":
-				draw_rect(r.grow(-5), Color(0.28, 0.33, 0.42))
+				draw_rect(r.grow(-5 * S), Color(0.28, 0.33, 0.42))
 			"W":
-				var wr := Rect2(px + 6, py + 3, T - 12, T - 6) if dirn % 2 == 0 else Rect2(px + 3, py + 6, T - 6, T - 12)
+				var wr := Rect2(px + 6 * S, py + 3 * S, T - 12 * S, T - 6 * S) if dirn % 2 == 0 else Rect2(px + 3 * S, py + 6 * S, T - 6 * S, T - 12 * S)
 				draw_rect(wr, Color(0.06, 0.06, 0.07))
 			"L":
-				draw_rect(r.grow(-7), Color(0.15, 0.16, 0.19))
+				draw_rect(r.grow(-7 * S), Color(0.15, 0.16, 0.19))
 			"P":
-				draw_line(Vector2(px + 3, py + 3), Vector2(px + T - 3, py + T - 3), cc.darkened(0.25), 1.0)
+				draw_line(Vector2(px + 3 * S, py + 3 * S), Vector2(px + T - 3 * S, py + T - 3 * S), cc.darkened(0.25), 1.0 * S)
 			"H":
 				draw_circle(r.get_center(), T * 0.28, Color(0.9, 0.3, 0.2))
 		# the outer edge of the whole body
@@ -440,7 +527,7 @@ func _draw_body(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> void:
 					e1 = Vector2(px + T, py + T)
 				else:
 					e1 = Vector2(px, py + T)
-				draw_line(e0, e1, Color(0, 0, 0, 0.8), 2.0)
+				draw_line(e0, e1, Color(0, 0, 0, 0.8), 2.0 * S)
 		# lights: headlamps on the front tiles, brake lamps on the back
 		if kind == "car" or kind == "truck":
 			var f_axis: int = o[0] * front.x + o[1] * front.y
@@ -451,18 +538,18 @@ func _draw_body(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> void:
 				maxf = maxi(maxf, fa)
 				minf = mini(minf, fa)
 			if f_axis == maxf and (ch == "E"):
-				draw_circle(Vector2(px, py) + Vector2(T / 2.0, T / 2.0) + Vector2(front) * (T * 0.32), 3.5, Color(1, 1, 0.75))
+				draw_circle(Vector2(px, py) + Vector2(T / 2.0, T / 2.0) + Vector2(front) * (T * 0.32), 3.5 * S, Color(1, 1, 0.75))
 			elif f_axis == minf and ch == "T":
-				draw_circle(Vector2(px, py) + Vector2(T / 2.0, T / 2.0) - Vector2(front) * (T * 0.32), 3.0, Color(0.9, 0.15, 0.15))
+				draw_circle(Vector2(px, py) + Vector2(T / 2.0, T / 2.0) - Vector2(front) * (T * 0.32), 3.0 * S, Color(0.9, 0.15, 0.15))
 		# damage: cracks on tiles of a hurt part, smoke from a hurt engine
 		var part: String = String(game.vs.PART_OF.get(ch, "body"))
 		var pct: int = game.vs.part_pct(v, part)
 		if pct < 55 and not wreck:
-			draw_line(Vector2(px + 6, py + 8), Vector2(px + T * 0.55, py + T * 0.6), Color(0, 0, 0, 0.7), 1.5)
-			draw_line(Vector2(px + T * 0.55, py + T * 0.6), Vector2(px + T - 6, py + T - 10), Color(0, 0, 0, 0.7), 1.5)
+			draw_line(Vector2(px + 6 * S, py + 8 * S), Vector2(px + T * 0.55, py + T * 0.6), Color(0, 0, 0, 0.7), 1.5 * S)
+			draw_line(Vector2(px + T * 0.55, py + T * 0.6), Vector2(px + T - 6 * S, py + T - 10 * S), Color(0, 0, 0, 0.7), 1.5 * S)
 		if pct < 30 and ch == "E":
-			draw_circle(Vector2(px + T * 0.5, py + T * 0.3), 6.0, Color(0.15, 0.15, 0.15, 0.55))
-			draw_circle(Vector2(px + T * 0.62, py), 8.0, Color(0.2, 0.2, 0.2, 0.4))
+			draw_circle(Vector2(px + T * 0.5, py + T * 0.3), 6.0 * S, Color(0.15, 0.15, 0.15, 0.55))
+			draw_circle(Vector2(px + T * 0.62, py), 8.0 * S, Color(0.2, 0.2, 0.2, 0.4))
 		if wreck:
 			draw_rect(r, Color(0, 0, 0, 0.35))
 	# the rotor of a helicopter: a disc and two blades
@@ -475,8 +562,8 @@ func _draw_body(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> void:
 			draw_circle(Vector2(cx, cy), T * 3.0, Color(1, 1, 1, 0.06))
 			for k in 2:
 				var aa: float = ang + k * PI / 2.0
-				draw_line(Vector2(cx, cy) - Vector2(cos(aa), sin(aa)) * T * 3.0, Vector2(cx, cy) + Vector2(cos(aa), sin(aa)) * T * 3.0, Color(0.9, 0.92, 0.96, 0.75), 3.0)
+				draw_line(Vector2(cx, cy) - Vector2(cos(aa), sin(aa)) * T * 3.0, Vector2(cx, cy) + Vector2(cos(aa), sin(aa)) * T * 3.0, Color(0.9, 0.92, 0.96, 0.75), 3.0 * S)
 	if wreck:
 		var ctr := Vector2((float(ax - ox) + 0.5) * T, (float(ay - oy) + 0.5) * T)
-		draw_circle(ctr + Vector2(0, -T * 0.6), 9.0, Color(0.15, 0.15, 0.15, 0.5))
-		draw_circle(ctr + Vector2(T * 0.3, -T * 1.2), 12.0, Color(0.2, 0.2, 0.2, 0.35))
+		draw_circle(ctr + Vector2(0, -T * 0.6), 9.0 * S, Color(0.15, 0.15, 0.15, 0.5))
+		draw_circle(ctr + Vector2(T * 0.3, -T * 1.2), 12.0 * S, Color(0.2, 0.2, 0.2, 0.35))

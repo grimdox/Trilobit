@@ -1,0 +1,4 @@
+NAME: Trilobit 64
+VIEW: Trilobit 64
+JSON: tile_config.json
+TILESET: sheet_tiles.png

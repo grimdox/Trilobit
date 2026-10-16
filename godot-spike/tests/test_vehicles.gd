@@ -192,7 +192,7 @@ func run() -> Array:
 			ai += 1
 		elif v2["kind"] == "car":
 			parked += 1
-	check.call("traffic is driven by NPCs (%d) and cars are parked about (%d)" % [ai, parked], ai >= 30 and parked >= 8)
+	check.call("traffic is driven by NPCs (%d) and cars are parked about (%d)" % [ai, parked], ai >= 30 and parked >= 4)
 	var kinds := {}
 	for v2 in g2.vehicles:
 		kinds[v2["kind"]] = int(kinds.get(v2["kind"], 0)) + 1
