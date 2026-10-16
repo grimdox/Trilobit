@@ -329,10 +329,11 @@ func menu_for(i: int) -> Dictionary:
 			m["text"] = ["\"Let me see that stabiliser.\"  Service life: %dh." % (implant_left / 60)]
 			m["options"].append({"label": "Service the stabiliser  ¥%d  (resets to 96h)" % cost, "op": "service", "arg": cost})
 			m["options"].append({"label": "Trauma patch  ¥40", "op": "buy", "arg": ["trl_medkit", "trauma patch", 40]})
-			if not g.has_implant("legs"):
-				m["options"].append({"label": "Leg actuators  ¥%d  (long jumps, softer landings)" % (1200 if g.z_of(g.sim.pos[i]) < 0 else 1600), "op": "implant", "arg": ["legs", 1200 if g.z_of(g.sim.pos[i]) < 0 else 1600]})
-			if not g.has_implant("jets"):
-				m["options"].append({"label": "Dorsal jump jets  ¥%d  (short flight, no falling hurt)" % (2400 if g.z_of(g.sim.pos[i]) < 0 else 3000), "op": "implant", "arg": ["jets", 2400 if g.z_of(g.sim.pos[i]) < 0 else 3000]})
+			var under: bool = g.z_of(g.sim.pos[i]) < 0
+			for d in g.IMP.ALL:
+				if d["live"] and not g.has_implant(d["id"]):
+					var pr: int = g.IMP.price(d["id"], under)
+					m["options"].append({"label": "%s  ¥%d  (%s)" % [d["name"], pr, d["desc"]], "op": "implant", "arg": [d["id"], pr]})
 		FIXER:
 			if job.is_empty():
 				m["text"] = ["\"I have work, if you can climb.\""]
@@ -428,7 +429,7 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 			g.implants[im[0]] = true
 			if im[0] == "jets":
 				g.fuel = g.FUEL_MAX
-			g.say("The surgery takes an hour.  You wake with new hardware: %s." % ("leg actuators" if im[0] == "legs" else "jump jets"))
+			g.say("The surgery takes an hour.  You wake with new hardware: %s." % g.IMP.get_def(im[0]).get("name", im[0]))
 			m["text"] = ["\"Don't test it indoors.\""]
 			m["options"] = [{"label": "Leave", "op": "close", "arg": null}]
 			return m

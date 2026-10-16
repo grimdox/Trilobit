@@ -11,6 +11,7 @@ const LV = preload("res://src/levels.gd")
 const TR = preload("res://src/transit.gd")
 const EC = preload("res://src/economy.gd")
 const GP = preload("res://src/gunplay.gd")
+const IMP = preload("res://src/implants.gd")
 
 const UNAWARE := 0
 const CRAWL := 0
@@ -50,6 +51,7 @@ var eco
 var turn: int = 0
 var game_over: bool = false
 var log: Array = []
+var sfx_queue: Array = []             # sound events for the front end ("shot", "step", ...); drained after each key
 
 # the player
 var pc: int = 0                      # cell index
@@ -127,6 +129,10 @@ var pf_touched: PackedInt32Array = PackedInt32Array()
 
 func _init(seed: int = 1) -> void:
 	seed_value = seed
+
+func sfx(name: String) -> void:
+	if sfx_queue.size() < 12:
+		sfx_queue.append(name)
 
 func say(msg: String) -> void:
 	log.append(msg)
@@ -551,6 +557,7 @@ func act_pickup() -> bool:
 	else:
 		items_at[pc] = left
 	if took > 0:
+		sfx("pick")
 		end_turn()
 	return took > 0
 
@@ -653,6 +660,8 @@ func act_move(dx: int, dy: int, run: bool = false) -> bool:
 		if stance == RUNNING:
 			stance = WALKING
 	step_noise = [0, 1, 4, 9][stance]
+	if stance >= WALKING:
+		sfx("step")
 	if items_at.has(pc):
 		var names := []
 		for it in items_at[pc]:
@@ -1104,6 +1113,8 @@ func _bleed_tick() -> void:
 				kill(j)
 
 func hurt(i: int, dmg: int, by_player: bool) -> void:
+	if by_player:
+		sfx("hit")
 	hpn[i] -= dmg
 	if hpn[i] <= 0:
 		kill(i)
@@ -1306,6 +1317,10 @@ func hit_chance_on(t: int, shot_index: int = 0) -> int:
 ## model + stance + cover on the target
 func _shot_chance(st: Dictionary, t: int, aimed: int, shot_index: int) -> int:
 	var c: int = GP.hit_chance(st, cheb(sim.pos[t], pc), aimed, moved, crouch, skills["ranged"], eco.aim_penalty(), shot_index, stance == CRAWL)
+	if has_implant("smartlink"):
+		c += 8
+	if has_implant("optics") and cheb(sim.pos[t], pc) >= 5:
+		c += 5
 	return clampi(c - cover_vs(pc, sim.pos[t], false), 5, 95)
 
 ## one-line description of the wielded gun and what it is aimed at
@@ -1480,6 +1495,7 @@ func act_fire(any: bool = false) -> bool:
 				landed = 1
 				dmg_total = rng.randi_range(int(st["dmg"][0]), int(st["dmg"][1]))
 		tracers.append([pc, sim.pos[victim] if landed > 0 or st["blast"] > 0 else sim.pos[t], landed > 0])
+		sfx("shot" if int(st["noise"]) < 14 else "shot_big")
 		if st["blast"] > 0:
 			_explode(sim.pos[t] if landed > 0 else _scatter_cell(sim.pos[t]), int(st["blast"]), dmg_total)
 			hits_by[t] = hits_by.get(t, 0) + landed
@@ -1534,6 +1550,7 @@ func _scatter_cell(c: int) -> int:
 ## a blast: everyone within `radius` on the same level takes damage that falls off with distance, you included
 func _explode(c: int, radius: int, dmg: int) -> void:
 	say_if_seen(c, "BOOM.")
+	sfx("boom")
 	var victims: Array = []
 	for k in sim.near_list.size():
 		var j: int = sim.near_list[k]
@@ -1956,7 +1973,10 @@ func player_hurt(dmg: int, msg: String) -> void:
 		if v["hp"] <= 0:
 			_eject_mech()
 		return
+	if has_implant("dermal") and dmg > 2:
+		dmg -= 2
 	hp -= dmg
+	sfx("hurt")
 	say("%s (-%d)." % [msg, dmg])
 
 # ---------------------------------------------------------------- things and animals: whatever the floor acts on
@@ -2383,6 +2403,8 @@ func _fall_player(reason: String) -> void:
 		dmg += rng.randi_range(0, 3)
 	flying = false
 	pc = lc[0]
+	if levels > 0:
+		sfx("fall")
 	if in_vehicle >= 0:
 		_move_vehicle(in_vehicle, pc)
 	say("%s  You fall %d floor%s." % [reason, levels, "" if levels == 1 else "s"])
@@ -3098,7 +3120,7 @@ func save_dict() -> Dictionary:
 		var o: Dictionary = v.duplicate()
 		o["color"] = v["color"].to_html()
 		vs.append(o)
-	return {"seed": seed_value, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "xp": xp, "in_vehicle": in_vehicle,
+	return {"seed": seed_value, "people": sim.n, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "xp": xp, "in_vehicle": in_vehicle,
 			"rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 			"items_at": it_at, "vehicles": vs, "tick": sim.tick, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
@@ -3107,7 +3129,7 @@ func save_dict() -> Dictionary:
 
 func load_dict(d: Dictionary) -> void:
 	seed_value = int(d["seed"])
-	setup(sim.n if sim != null else 2000)             # regenerates the deterministic parts (map, markers, names, factions)
+	setup(int(d.get("people", sim.n if sim != null else 1500)))             # regenerates the deterministic parts (map, markers, names, factions)
 	turn = int(d["turn"])
 	pc = int(d["pc"])
 	hp = int(d["hp"])
