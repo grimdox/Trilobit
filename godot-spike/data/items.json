@@ -5258,6 +5258,20 @@
   "looks_like": "bandages"
  },
  {
+  "id": "trl_kit_repair",
+  "name": "field repair kit",
+  "desc": "Patch plates, hoses and wiring.  Restores 25 points to one vehicle part.",
+  "weight_g": 1500,
+  "volume_ml": 3000,
+  "length_mm": 350,
+  "price": 90,
+  "tags": [
+   "tool"
+  ],
+  "looks_like": "toolbox",
+  "repair": 25
+ },
+ {
   "id": "trl_credstick",
   "name": "credstick",
   "weight_g": 10,
@@ -5268,5 +5282,134 @@
    "card"
   ],
   "looks_like": "cash_card"
+ },
+ {
+  "id": "trl_eng_city",
+  "name": "Kuroda CE-120 city motor",
+  "desc": "Vehicle engine: top speed 4, 60 hp, fits car, truck.",
+  "weight_g": 38000,
+  "volume_ml": 19000,
+  "length_mm": 900,
+  "price": 420,
+  "tags": [
+   "engine"
+  ],
+  "looks_like": "engine_block",
+  "engine": {
+   "power": 4,
+   "drain": 4,
+   "hp": 60,
+   "fits": [
+    "car",
+    "truck"
+   ]
+  }
+ },
+ {
+  "id": "trl_eng_mini",
+  "name": "Hachiko 60 kW commuter motor",
+  "desc": "Vehicle engine: top speed 3, 40 hp, fits car.",
+  "weight_g": 22000,
+  "volume_ml": 11000,
+  "length_mm": 900,
+  "price": 180,
+  "tags": [
+   "engine"
+  ],
+  "looks_like": "engine_block",
+  "engine": {
+   "power": 3,
+   "drain": 6,
+   "hp": 40,
+   "fits": [
+    "car"
+   ]
+  }
+ },
+ {
+  "id": "trl_eng_sport",
+  "name": "Zaitsev ZS-300 sport motor",
+  "desc": "Vehicle engine: top speed 6, 55 hp, fits car.",
+  "weight_g": 46000,
+  "volume_ml": 23000,
+  "length_mm": 900,
+  "price": 1400,
+  "tags": [
+   "engine"
+  ],
+  "looks_like": "engine_block",
+  "engine": {
+   "power": 6,
+   "drain": 2,
+   "hp": 55,
+   "fits": [
+    "car"
+   ]
+  }
+ },
+ {
+  "id": "trl_eng_haul",
+  "name": "Uralmash HD-400 hauler",
+  "desc": "Vehicle engine: top speed 3, 120 hp, fits truck, car.",
+  "weight_g": 90000,
+  "volume_ml": 45000,
+  "length_mm": 900,
+  "price": 900,
+  "tags": [
+   "engine"
+  ],
+  "looks_like": "engine_block",
+  "engine": {
+   "power": 3,
+   "drain": 3,
+   "hp": 120,
+   "fits": [
+    "truck",
+    "car"
+   ]
+  }
+ },
+ {
+  "id": "trl_eng_rotor",
+  "name": "Mitsu T-700 turbine",
+  "desc": "Vehicle engine: top speed 3, 60 hp, fits heli, plane.",
+  "weight_g": 70000,
+  "volume_ml": 35000,
+  "length_mm": 900,
+  "price": 2600,
+  "tags": [
+   "engine"
+  ],
+  "looks_like": "engine_block",
+  "engine": {
+   "power": 3,
+   "drain": 3,
+   "hp": 60,
+   "fits": [
+    "heli",
+    "plane"
+   ]
+  }
+ },
+ {
+  "id": "trl_eng_reactor",
+  "name": "Kawasaki KR-9 mech core",
+  "desc": "Vehicle engine: top speed 2, 90 hp, fits mech.",
+  "weight_g": 120000,
+  "volume_ml": 60000,
+  "length_mm": 900,
+  "price": 3800,
+  "tags": [
+   "engine"
+  ],
+  "looks_like": "engine_block",
+  "engine": {
+   "power": 2,
+   "drain": 5,
+   "hp": 90,
+   "fits": [
+    "mech"
+   ]
+  }
  }
 ]

@@ -41,7 +41,7 @@ func run() -> Array:
 	var thug := -1
 	for _wait in 400:                      # let the morning commute put someone on a street
 		for i in g.sim.n:
-			if g.fac[i] == 1 and g.sim.alive[i] == 1 and g.sim.pos[i] < g.s2 and g.city.tiles[g.sim.pos[i]] == 1:
+			if g.fac[i] == 1 and g.sim.alive[i] == 1 and g.sim.pos[i] < g.s2 and g.city.tiles[g.sim.pos[i]] <= 1:
 				thug = i
 				break
 		if thug >= 0:
@@ -53,7 +53,7 @@ func run() -> Array:
 	for dy in range(-6, 7):
 		for dx in range(-6, 7):
 			var c: int = anchor + dy * g.size + dx
-			if c >= 0 and c < g.size * g.size and g.city.tiles[c] == 1 and g.sim.at[c] == -1 and maxi(absi(dx), absi(dy)) >= 4:
+			if c >= 0 and c < g.size * g.size and g.city.tiles[c] <= 1 and g.sim.at[c] == -1 and maxi(absi(dx), absi(dy)) >= 4:
 				placed = c
 				break
 		if placed >= 0:
@@ -65,7 +65,7 @@ func run() -> Array:
 	var hot := -1
 	for k in g.sim.near_list.size():
 		var j: int = g.sim.near_list[k]
-		if g.hostile(j) and g.sim.alive[j] == 1 and g.city.tiles[g.sim.pos[j]] == 1:
+		if g.hostile(j) and g.sim.alive[j] == 1 and g.city.tiles[g.sim.pos[j]] <= 1:
 			hot = j
 			break
 	check.call("a hostile agent is near the player after teleporting", hot >= 0)
@@ -73,7 +73,7 @@ func run() -> Array:
 	for dy in range(-6, 7):
 		for dx in range(-6, 7):
 			var c: int = g.sim.pos[hot] + dy * g.size + dx
-			if c >= 0 and c < g.size * g.size and g.city.tiles[c] == 1 and g.sim.at[c] == -1 and maxi(absi(dx), absi(dy)) >= 3 and g.sim._sees(c, g.sim.pos[hot], 12):
+			if c >= 0 and c < g.size * g.size and g.city.tiles[c] <= 1 and g.sim.at[c] == -1 and maxi(absi(dx), absi(dy)) >= 3 and g.sim._sees(c, g.sim.pos[hot], 12):
 				spot = c
 				break
 		if spot >= 0:

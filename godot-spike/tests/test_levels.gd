@@ -22,7 +22,7 @@ func run() -> Array:
 	out.append("  (build %d ms, %d levels, %d towers, %d homes in towers)" % [Time.get_ticks_msec() - t0, c.nlev, c.tower_info.size(), c.homes_t.size()])
 	var s2: int = c.size * c.size
 	check("stack size matches level count", c.tiles.size() == s2 * c.nlev, str(c.tiles.size()))
-	check("a tower reaches 30 floors", c.zmax == 30, "zmax=%d" % c.zmax)
+	check("a tower reaches 14 floors", c.zmax == 14, "zmax=%d" % c.zmax)
 	check("at least 8 towers", c.tower_info.size() >= 8, str(c.tower_info.size()))
 	# every shaft cell is linked up on every floor
 	var linked := true

@@ -148,7 +148,21 @@ items += [
     {"id": "trl_parcel", "name": "sealed parcel", "weight_g": 600, "volume_ml": 1500, "length_mm": 250, "price": 0, "tags": ["job"], "looks_like": "box_small"},
     {"id": "trl_datacase", "name": "encrypted data case", "weight_g": 1800, "volume_ml": 6000, "length_mm": 420, "price": 400, "tags": ["job"], "looks_like": "briefcase"},
     {"id": "trl_medkit", "name": "trauma patch", "weight_g": 120, "volume_ml": 100, "length_mm": 120, "price": 40, "tags": ["medical"], "looks_like": "bandages"},
+    {"id": "trl_kit_repair", "name": "field repair kit", "desc": "Patch plates, hoses and wiring.  Restores 25 points to one vehicle part.", "weight_g": 1500, "volume_ml": 3000, "length_mm": 350, "price": 90, "tags": ["tool"], "looks_like": "toolbox", "repair": 25},
     {"id": "trl_credstick", "name": "credstick", "weight_g": 10, "volume_ml": 4, "length_mm": 80, "price": 0, "tags": ["card"], "looks_like": "cash_card"},
 ]
+
+# vehicle engines: power = top speed in tiles a turn, drain = turns per battery point, hp = hit points of the engine part, fits = the vehicle kinds it can drive
+ENGINES = [
+    ("city", "Kuroda CE-120 city motor", 4, 4, 60, ["car", "truck"], 420, 38000),
+    ("mini", "Hachiko 60 kW commuter motor", 3, 6, 40, ["car"], 180, 22000),
+    ("sport", "Zaitsev ZS-300 sport motor", 6, 2, 55, ["car"], 1400, 46000),
+    ("haul", "Uralmash HD-400 hauler", 3, 3, 120, ["truck", "car"], 900, 90000),
+    ("rotor", "Mitsu T-700 turbine", 3, 3, 60, ["heli", "plane"], 2600, 70000),
+    ("reactor", "Kawasaki KR-9 mech core", 2, 5, 90, ["mech"], 3800, 120000),
+]
+for eid, ename, power, drain, hp, fits, price, wt in ENGINES:
+    items.append({"id": "trl_eng_" + eid, "name": ename, "desc": "Vehicle engine: top speed %d, %d hp, fits %s." % (power, hp, ", ".join(fits)), "weight_g": wt, "volume_ml": wt // 2, "length_mm": 900, "price": price,
+                  "tags": ["engine"], "looks_like": "engine_block", "engine": {"power": power, "drain": drain, "hp": hp, "fits": fits}})
 json.dump(items, open(os.path.join(HERE, "../data/items.json"), "w"), indent=1)
 print(len(items), "items exported")

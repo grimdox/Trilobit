@@ -10,7 +10,8 @@ var font: Font = ThemeDB.fallback_font
 const TERRAIN := {0: "t_sidewalk", 1: "t_pavement", 2: "t_wall", 3: "t_floor", 4: "t_door_c", 5: "t_water_dp", 6: "t_grass", 7: "",
 	8: "t_stairs_up", 9: "t_elevator", 10: "t_wall_glass", 11: "t_metal_flat_roof", 12: "t_rock_floor", 13: "t_concrete", 14: "t_railroad_tie",
 	15: "t_floor_metal_gangway", 16: "t_water_sh_murky_underground", 17: "t_rock", 18: "t_metal_floor", 19: "t_ladder_up_down", 20: "t_glass_railing",
-	21: "t_manhole_cover", 22: "t_door_metal_locked", 23: "f_crate_c", 24: "f_dumpster", 25: "f_planter"}
+	21: "t_manhole_cover", 22: "t_door_metal_locked", 23: "f_crate_c", 24: "f_dumpster", 25: "f_planter",
+	26: "t_trl_gravel", 27: "t_rock_red", 28: "t_rock", 29: "t_tree", 30: "t_rock_floor", 31: "t_grass_grazed", 32: "t_sand"}
 const DARK := Color(0.38, 0.4, 0.55)
 
 func tile() -> int:
@@ -50,6 +51,48 @@ func _below(c: int) -> int:
 			return t
 	return -1
 
+func _fallback(t: int) -> Color:
+	match t:
+		26: return Color(0.5, 0.48, 0.45)
+		27: return Color(0.45, 0.3, 0.25)
+		28: return Color(0.4, 0.4, 0.45)
+		30: return Color(0.5, 0.48, 0.42)
+		31: return Color(0.55, 0.62, 0.3)
+		32: return Color(0.85, 0.8, 0.55)
+	return Color(0.5, 0.5, 0.5)
+
+## lane lines on roads and the rails and ties on a railway
+func _paint_marks(c: int, pos: Vector2, T: int, mod: Color, t: int) -> void:
+	var marks: PackedByteArray = game.city.marks
+	var m: int = marks[c] if c < marks.size() else 0
+	if m == 0:
+		return
+	var w := 5.0
+	var size: int = game.size
+	var white := Color(0.92, 0.92, 0.95) * mod
+	var yellow := Color(0.98, 0.8, 0.15) * mod
+	match m:
+		1:   # white, vertical: on the outer edge, away from the black lane
+			var x: float = pos.x + (T - w if game.city.tiles[c - 1] == 1 else 0.0)
+			draw_rect(Rect2(x, pos.y, w, T), white)
+		2:   # double yellow: the two tiles hug the centre
+			var x2: float = pos.x + (T - w if marks[c + 1] == 2 else 0.0)
+			draw_rect(Rect2(x2, pos.y, w, T), yellow)
+		3:
+			var y: float = pos.y + (T - w if game.city.tiles[c - size] == 1 else 0.0)
+			draw_rect(Rect2(pos.x, y, T, w), white)
+		4:
+			var y2: float = pos.y + (T - w if marks[c + size] == 4 else 0.0)
+			draw_rect(Rect2(pos.x, y2, T, w), yellow)
+		5:
+			for k in 4:
+				draw_rect(Rect2(pos.x + k * T / 4.0 + 2, pos.y + 2, 4, T - 4), Color(0.32, 0.2, 0.12) * mod)
+			draw_rect(Rect2(pos.x, pos.y + T * 0.5 - 2, T, 4), Color(0.7, 0.72, 0.78) * mod)
+		6:
+			for k in 4:
+				draw_rect(Rect2(pos.x + 2, pos.y + k * T / 4.0 + 2, T - 4, 4), Color(0.32, 0.2, 0.12) * mod)
+			draw_rect(Rect2(pos.x + T * 0.5 - 2, pos.y, 4, T), Color(0.7, 0.72, 0.78) * mod)
+
 func _draw() -> void:
 	if game == null or tileset == null:
 		return
@@ -80,12 +123,24 @@ func _draw() -> void:
 				if bt >= 0:
 					_blit(TERRAIN[bt], pos, mod * below_mod)
 				continue
-			if t >= 23:
+			if t >= 23 and t <= 25:
 				_blit(TERRAIN[0], pos, mod)
 				if not _blit(TERRAIN[t], pos, mod):
 					draw_rect(Rect2(pos + Vector2(4, 4), Vector2(T - 8, T - 8)), Color(0.5, 0.4, 0.25) * mod)
-			else:
+			elif t == 29:
+				_blit(TERRAIN[6], pos, mod)
 				_blit(TERRAIN[t], pos, mod)
+			elif t == 1:
+				draw_rect(Rect2(pos, Vector2(T, T)), Color(0.13, 0.13, 0.15) * mod)
+				if ((c * 7919) >> 3) % 11 == 0:
+					draw_rect(Rect2(pos.x + (c % 5) * 5 + 3, pos.y + (c % 7) * 4 + 3, 2, 2), Color(0.2, 0.2, 0.23) * mod)
+				if c < s2:
+					_paint_marks(c, pos, T, mod, t)
+			else:
+				if not _blit(TERRAIN[t], pos, mod):
+					draw_rect(Rect2(pos, Vector2(T, T)), _fallback(t) * mod)
+				if c < s2:
+					_paint_marks(c, pos, T, mod, t)
 			if vis and game.items_at.has(c):
 				var arr: Array = game.items_at[c]
 				_blit(item_sprite(arr[arr.size() - 1]), pos)
@@ -127,18 +182,12 @@ func _draw() -> void:
 			continue
 		if not _blit("mon_" + String(k["k"]), Vector2(kx * T, ky * T)):
 			draw_string(font, Vector2(kx * T + T * 0.3, ky * T + T * 0.7), "d" if k["k"] == "dog" else "c", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.9, 0.7, 0.4))
-	# vehicles (they stay on the ground)
-	for v in game.vehicles:
-		var c: int = v["cell"]
-		if c / s2 != base / s2:
+	# vehicles: whole bodies, a tile for every tile of the footprint
+	for vi in game.vehicles.size():
+		var v: Dictionary = game.vehicles[vi]
+		if int(v["cell"]) / s2 != base / s2:
 			continue
-		var wx: int = c % size - ox
-		var wy: int = (c / size) % size - oy
-		if wx < 0 or wy < 0 or wx >= cols or wy >= rows:
-			continue
-		if game.fov.visible[c] == 0:
-			continue
-		_draw_vehicle(Vector2(wx * T + T / 2.0, wy * T + T / 2.0), v, T)
+		_draw_body(vi, v, ox, oy, T)
 	# people
 	for k in game.sim.near_list.size():
 		var i: int = game.sim.near_list[k]
@@ -171,7 +220,8 @@ func _draw() -> void:
 	# the player
 	var centre := Vector2((px - ox) * T, (py - oy) * T)
 	if game.in_vehicle >= 0:
-		_draw_vehicle(centre + Vector2(T / 2.0, T / 2.0), game.vehicles[game.in_vehicle], T)
+		draw_circle(centre + Vector2(T / 2.0, T / 2.0), T * 0.22, Color(0.95, 0.8, 0.65))
+		draw_arc(centre + Vector2(T / 2.0, T / 2.0), T * 0.22, PI, TAU, 12, Color(0.15, 0.1, 0.1), 3.0)
 	elif game.transit.riding < 0:
 		if game.flying:
 			draw_circle(centre + Vector2(T / 2.0, T * 0.9), T * 0.28, Color(0, 0, 0, 0.35))
@@ -222,34 +272,124 @@ func _draw() -> void:
 		var pb := Vector2((b % size - ox + 0.5) * T, ((b / size) % size - oy + 0.5) * T)
 		draw_line(pa, pb, Color(1, 0.95, 0.5) if tr[2] else Color(0.8, 0.8, 0.8, 0.6), 2.0)
 
-func _draw_vehicle(centre: Vector2, v: Dictionary, T: int) -> void:
-	var kind: String = String(v.get("kind", "car"))
-	if kind == "gyro":
-		var col: Color = v["color"]
-		if v.get("air", false):
-			draw_circle(centre + Vector2(0, T * 0.45), T * 0.3, Color(0, 0, 0, 0.3))
-		draw_circle(centre, T * 0.3, col)
-		draw_circle(centre, T * 0.16, col.darkened(0.5))
-		draw_line(centre - Vector2(T * 0.5, 0), centre + Vector2(T * 0.5, 0), Color(0.9, 0.9, 0.95), 2.0)
-		draw_line(centre - Vector2(0, T * 0.5), centre + Vector2(0, T * 0.5), Color(0.9, 0.9, 0.95), 2.0)
-	elif kind == "mech":
-		var col2: Color = v["color"]
-		draw_rect(Rect2(centre + Vector2(-T * 0.3, -T * 0.1), Vector2(T * 0.6, T * 0.45)), col2)
-		draw_rect(Rect2(centre + Vector2(-T * 0.15, -T * 0.4), Vector2(T * 0.3, T * 0.28)), col2.lightened(0.3))
-		draw_rect(Rect2(centre + Vector2(-T * 0.1, -T * 0.32), Vector2(T * 0.2, 4)), Color(1, 0.9, 0.3))
-		draw_rect(Rect2(centre + Vector2(-T * 0.4, T * 0.15), Vector2(T * 0.18, T * 0.3)), col2.darkened(0.3))
-		draw_rect(Rect2(centre + Vector2(T * 0.22, T * 0.15), Vector2(T * 0.18, T * 0.3)), col2.darkened(0.3))
-	else:
-		_draw_car(centre, int(v["dir"]), v["color"], T)
-
-func _draw_car(centre: Vector2, dir: int, col: Color, T: int) -> void:
-	var horiz := dir == 1 or dir == 3
-	var w := T * 0.9 if horiz else T * 0.55
-	var h := T * 0.55 if horiz else T * 0.9
-	var r := Rect2(centre - Vector2(w, h) / 2.0, Vector2(w, h))
-	draw_rect(r, Color(0, 0, 0, 0.5).lerp(col, 0.0) if false else col)
-	draw_rect(r.grow(-3), col.lightened(0.25))
-	# windscreen and headlights on the front end
-	var f := Vector2([0, 1, 0, -1][dir], [-1, 0, 1, 0][dir])
-	draw_circle(centre + f * (T * 0.4), 3.0, Color(1, 1, 0.7))
-	draw_rect(Rect2(centre + f * (T * 0.12) - Vector2(4, 4), Vector2(8, 8)), Color(0.1, 0.15, 0.25))
+## a vehicle drawn tile by tile from its template
+func _draw_body(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> void:
+	var size: int = game.size
+	var kind: String = v["kind"]
+	var dirn: int = int(v["dir"])
+	var offs: Array = game.vs.offsets(kind, dirn)
+	var a: int = int(v["cell"])
+	var ax: int = a % size
+	var ay: int = (a / size) % size
+	var base: int = (a / game.s2) * game.s2
+	var col: Color = v["color"]
+	var wreck: bool = v["wreck"]
+	var occupied := {}
+	var any_vis := false
+	for o in offs:
+		occupied[Vector2i(o[0], o[1])] = String(o[2])
+		var c: int = base + (ay + o[1]) * size + ax + o[0]
+		if c >= 0 and c < game.total and game.fov.visible[c] == 1:
+			any_vis = true
+	if not any_vis:
+		return
+	var shade := Color(0, 0, 0, 0.28)
+	var front: Vector2i = Vector2i(game.vs.DIR4[dirn][0], game.vs.DIR4[dirn][1])
+	# a soft shadow under anything in the air
+	var airborne: bool = bool(v.get("air", false))
+	for o in offs:
+		var px: float = float(ax + o[0] - ox) * T
+		var py: float = float(ay + o[1] - oy) * T
+		if px < -T or py < -T or px > cols * T or py > rows * T:
+			continue
+		var ch: String = String(o[2])
+		var r := Rect2(px, py, T, T)
+		var cc: Color = col
+		match ch:
+			"E": cc = col.darkened(0.18)
+			"T": cc = col.lightened(0.06)
+			"P": cc = col.lightened(0.25)
+			"H": cc = col.darkened(0.35)
+			"L": cc = Color(0.28, 0.3, 0.34)
+			"C": cc = Color(0.17, 0.2, 0.26)
+			"K": cc = Color(0.35, 0.55, 0.7)
+		if airborne:
+			draw_rect(Rect2(px + 4, py + T * 0.55, T, T), shade)
+		draw_rect(r, cc)
+		# panel seams
+		match ch:
+			"E":
+				for k in 3:
+					var gx: float = px + 6 + k * (T - 12) / 2.0
+					if dirn % 2 == 0:
+						draw_line(Vector2(gx, py + 5), Vector2(gx, py + T - 5), cc.darkened(0.4), 2.0)
+					else:
+						draw_line(Vector2(px + 5, py + 6 + k * (T - 12) / 2.0), Vector2(px + T - 5, py + 6 + k * (T - 12) / 2.0), cc.darkened(0.4), 2.0)
+			"T":
+				draw_rect(r.grow(-6), cc.darkened(0.12), false, 1.5)
+			"C":
+				draw_rect(r.grow(-5), Color(0.28, 0.33, 0.42))
+			"W":
+				var wr := Rect2(px + 6, py + 3, T - 12, T - 6) if dirn % 2 == 0 else Rect2(px + 3, py + 6, T - 6, T - 12)
+				draw_rect(wr, Color(0.06, 0.06, 0.07))
+			"L":
+				draw_rect(r.grow(-7), Color(0.15, 0.16, 0.19))
+			"P":
+				draw_line(Vector2(px + 3, py + 3), Vector2(px + T - 3, py + T - 3), cc.darkened(0.25), 1.0)
+			"H":
+				draw_circle(r.get_center(), T * 0.28, Color(0.9, 0.3, 0.2))
+		# the outer edge of the whole body
+		for d in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]:
+			if not occupied.has(Vector2i(o[0], o[1]) + d):
+				var e0 := Vector2(px, py)
+				var e1 := Vector2(px, py)
+				if d == Vector2i(0, -1):
+					e1 = Vector2(px + T, py)
+				elif d == Vector2i(1, 0):
+					e0 = Vector2(px + T, py)
+					e1 = Vector2(px + T, py + T)
+				elif d == Vector2i(0, 1):
+					e0 = Vector2(px, py + T)
+					e1 = Vector2(px + T, py + T)
+				else:
+					e1 = Vector2(px, py + T)
+				draw_line(e0, e1, Color(0, 0, 0, 0.8), 2.0)
+		# lights: headlamps on the front tiles, brake lamps on the back
+		if kind == "car" or kind == "truck":
+			var f_axis: int = o[0] * front.x + o[1] * front.y
+			var maxf := -99
+			var minf := 99
+			for o2 in offs:
+				var fa: int = o2[0] * front.x + o2[1] * front.y
+				maxf = maxi(maxf, fa)
+				minf = mini(minf, fa)
+			if f_axis == maxf and (ch == "E"):
+				draw_circle(Vector2(px, py) + Vector2(T / 2.0, T / 2.0) + Vector2(front) * (T * 0.32), 3.5, Color(1, 1, 0.75))
+			elif f_axis == minf and ch == "T":
+				draw_circle(Vector2(px, py) + Vector2(T / 2.0, T / 2.0) - Vector2(front) * (T * 0.32), 3.0, Color(0.9, 0.15, 0.15))
+		# damage: cracks on tiles of a hurt part, smoke from a hurt engine
+		var part: String = String(game.vs.PART_OF.get(ch, "body"))
+		var pct: int = game.vs.part_pct(v, part)
+		if pct < 55 and not wreck:
+			draw_line(Vector2(px + 6, py + 8), Vector2(px + T * 0.55, py + T * 0.6), Color(0, 0, 0, 0.7), 1.5)
+			draw_line(Vector2(px + T * 0.55, py + T * 0.6), Vector2(px + T - 6, py + T - 10), Color(0, 0, 0, 0.7), 1.5)
+		if pct < 30 and ch == "E":
+			draw_circle(Vector2(px + T * 0.5, py + T * 0.3), 6.0, Color(0.15, 0.15, 0.15, 0.55))
+			draw_circle(Vector2(px + T * 0.62, py), 8.0, Color(0.2, 0.2, 0.2, 0.4))
+		if wreck:
+			draw_rect(r, Color(0, 0, 0, 0.35))
+	# the rotor of a helicopter: a disc and two blades
+	if kind == "heli":
+		var cx: float = (float(ax - ox) + 0.5) * T
+		var cy: float = (float(ay - oy) + 1.2) * T
+		if dirn == 1: cx -= T * 0.5
+		var ang: float = float(game.turn) * 0.9
+		if not wreck:
+			draw_circle(Vector2(cx, cy), T * 3.0, Color(1, 1, 1, 0.06))
+			for k in 2:
+				var aa: float = ang + k * PI / 2.0
+				draw_line(Vector2(cx, cy) - Vector2(cos(aa), sin(aa)) * T * 3.0, Vector2(cx, cy) + Vector2(cos(aa), sin(aa)) * T * 3.0, Color(0.9, 0.92, 0.96, 0.75), 3.0)
+	if wreck:
+		var ctr := Vector2((float(ax - ox) + 0.5) * T, (float(ay - oy) + 0.5) * T)
+		draw_circle(ctr + Vector2(0, -T * 0.6), 9.0, Color(0.15, 0.15, 0.15, 0.5))
+		draw_circle(ctr + Vector2(T * 0.3, -T * 1.2), 12.0, Color(0.2, 0.2, 0.2, 0.35))

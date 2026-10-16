@@ -78,13 +78,13 @@ func run() -> Array:
 		g.stamina = 30
 		g.stance = g.WALKING
 		var hp1: int = g.hp
-		check.call("leaping over the railing into the void drops you thirty floors", g.act_jump(1, 0) and g.z_of(g.pc) == 0 and hp1 - g.hp >= 100)
+		check.call("leaping over the railing into the void drops you the whole height", g.act_jump(1, 0) and g.z_of(g.pc) == 0 and hp1 - g.hp >= 60)
 		g.pc = edge
 		g.implants["jets"] = true
 		g.fuel = 24
 		g.stamina = 30
 		g.sim.retier(g.pc)
-		check.call("with jump jets the same leap ends in flight, still thirty floors up", g.act_jump(1, 0) and g.flying and g.z_of(g.pc) == H)
+		check.call("with jump jets the same leap ends in flight, still at roof height", g.act_jump(1, 0) and g.flying and g.z_of(g.pc) == H)
 		var f0: int = g.fuel
 		g.act_move(1, 0)
 		check.call("flying costs fuel and moves you through open air (%d -> %d)" % [f0, g.fuel], g.flying and g.fuel < f0 and g.z_of(g.pc) == H)
@@ -185,91 +185,7 @@ func run() -> Array:
 		check.call("the hunter follows you up (now on floor %d, %d tiles away)" % [g.z_of(g.sim.pos[hunter]), g.cheb(g.sim.pos[hunter], g.pc)], g.sim.alive[hunter] == 0 or (g.z_of(g.sim.pos[hunter]) == 1 and g.cheb(g.sim.pos[hunter], g.pc) < 12))
 		check.call("and you can go back down the same way", g.act_vertical(-1) and g.z_of(g.pc) == 0)
 
-	# ---- gyro
-	var gy := -1
-	var roof_gy := 0
-	for k in g.vehicles.size():
-		if g.veh_kind(k) == "gyro":
-			if g.z_of(g.vehicles[k]["cell"]) > 0:
-				roof_gy += 1
-			elif gy < 0:
-				gy = k
-	check.call("there is a gyro on the street and gyros on the roofs (%d)" % roof_gy, gy >= 0 and roof_gy >= 1)
-	if gy >= 0:
-		var gcell: int = g.vehicles[gy]["cell"]
-		var stand := -1
-		for d in g.SIZE_DIRS:
-			var c: int = gcell + d[1] * g.size + d[0]
-			if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.veh_at[c] == -1 and stand < 0:
-				stand = c
-		g.pc = stand
-		g.sim.retier(g.pc)
-		g.in_vehicle = -1
-		check.call("you can strap into the gyro", g.act_vehicle() and g.in_gyro())
-		check.call("it will not taxi along the ground", not g.act_move(1, 0))
-		check.call("[<] lifts it into the air", g.act_vertical(1) and g.vehicles[gy].get("air", false) and g.z_of(g.pc) == 1)
-		g.act_vertical(1)
-		var gx: int = g.pc % g.size
-		var moved := false
-		for d in [[1, 0], [-1, 0], [0, 1], [0, -1]]:
-			if g.act_move(d[0], d[1]):
-				moved = true
-				break
-		check.call("it flies through open air at height (moved %s)" % str(moved), moved and g.z_of(g.pc) == 2 and g.vehicles[gy]["cell"] == g.pc)
-		# fly back to the column and land
-		g.pc = gcell + 2 * g.s2
-		g._move_vehicle(gy, g.pc)
-		g.act_vertical(-1)
-		var landed: bool = g.act_vertical(-1)
-		check.call("it can set down where it started", landed and not g.vehicles[gy]["air"] and g.z_of(g.pc) == 0)
-		g.act_vertical(1)
-		var hp3: int = g.hp
-		g.act_vehicle()
-		check.call("bailing out in mid-air means a fall (hp -%d)" % (hp3 - g.hp), g.in_vehicle == -1 and g.z_of(g.pc) == 0 and not g.vehicles[gy]["air"])
-
-	# ---- mech
-	var mi := -1
-	for k in g.vehicles.size():
-		if g.veh_kind(k) == "mech" and mi < 0 and g.z_of(g.vehicles[k]["cell"]) == 0:
-			mi = k
-	check.call("there are mechs on the street", mi >= 0)
-	if mi >= 0:
-		var mc: int = g.vehicles[mi]["cell"]
-		var stand2 := -1
-		for d in g.SIZE_DIRS:
-			var c: int = mc + d[1] * g.size + d[0]
-			if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.veh_at[c] == -1 and stand2 < 0:
-				stand2 = c
-		g.pc = stand2
-		g.sim.retier(g.pc)
-		g.in_vehicle = -1
-		check.call("you can climb into the mech", g.act_vehicle() and g.in_mech())
-		var fr0: int = g.vehicles[mi]["hp"]
-		var hp4: int = g.hp
-		g.player_hurt(50, "Test")
-		check.call("armour takes the blow: frame %d -> %d, you lose %d" % [fr0, g.vehicles[mi]["hp"], hp4 - g.hp], g.vehicles[mi]["hp"] == fr0 - 50 and hp4 - g.hp == 10)
-		# step over a crate
-		var op2: int = _open_cell(g, g.pc, 4)
-		g.pc = op2
-		g._move_vehicle(mi, op2)
-		g.sim.retier(g.pc)
-		g.city.tiles[op2 + 1] = CG.CRATE
-		g.sim.tiles[op2 + 1] = CG.CRATE
-		g.sim.walk[op2 + 1] = 0
-		check.call("it walks straight over a crate, crushing it", g.act_move(1, 0) and g.pc == op2 + 1 and g.city.tiles[op2 + 1] == CG.GROUND and g.vehicles[mi]["cell"] == g.pc)
-		g.pc = op2
-		g._move_vehicle(mi, op2)
-		g.stance = g.WALKING
-		for q in range(1, 7):
-			if g.thing_at[op2 + q] >= 0:
-				g._remove_thing(g.thing_at[op2 + q])
-			if q >= 2:
-				g.city.tiles[op2 + q] = CG.GROUND
-				g.sim.tiles[op2 + q] = CG.GROUND
-				g.sim.walk[op2 + q] = 1
-		check.call("it jumps five cells", g.act_jump(1, 0) and g.pc == op2 + 5 and g.veh_at[g.pc] == mi)
-		g.player_hurt(500, "Test")
-		check.call("a wrecked mech throws you clear", g.in_vehicle == -1 and g.vehicles[mi]["hp"] <= 0)
+	# (helicopters and mechs: see test_vehicles.gd)
 
 	# ---- save / load
 	g.implants["jets"] = true
@@ -282,6 +198,5 @@ func run() -> Array:
 	var g2 = GameScript.new(31)
 	g2.setup(1200)
 	g2.load_dict(dd)
-	check.call("save and load keep implants, fuel, flight and special vehicles", g2.has_implant("jets") and g2.has_implant("legs") and g2.fuel == 17 and g2.flying and g2.pc == g.pc
-		and g2.vehicles.size() == g.vehicles.size() and g2.veh_kind(mi) == "mech" and g2.vehicles[mi]["hp"] == g.vehicles[mi]["hp"])
+	check.call("save and load keep implants, fuel and flight", g2.has_implant("jets") and g2.has_implant("legs") and g2.fuel == 17 and g2.flying and g2.pc == g.pc and g2.vehicles.size() == g.vehicles.size())
 	return [st[0], st[1], log]

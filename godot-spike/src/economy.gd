@@ -377,6 +377,10 @@ func _stock(i: int = 0) -> Array:
 			var forged: bool = n % 2 == 1 or kind == 1 and n >= 3
 			var id: String = w + ("_f" if forged else "")
 			out.append([id, g.db.defs[id]["name"], int(g.db.defs[id]["price"]) * 3 / 2])
+	out.append(["trl_kit_repair", "field repair kit", 110])
+	if kind == 2:
+		for eid in ["trl_eng_mini", "trl_eng_city", "trl_eng_sport"]:
+			out.append([eid, g.db.defs[eid]["name"], int(g.db.defs[eid]["price"]) * 3 / 2])
 	return out
 
 func _rumor(i: int) -> String:

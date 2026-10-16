@@ -82,12 +82,12 @@ func setup(city, count: int, seed: int) -> void:
 	walk.resize(tiles.size())
 	opaque.resize(tiles.size())
 	var lut := PackedByteArray()
-	for t in 32:
+	for t in 40:
 		lut.append(1 if (t < city.WALK.size() and city.WALK[t] == 1) else 0)
 	for i in tiles.size():
 		var t := tiles[i]
 		walk[i] = lut[t]
-		opaque[i] = 1 if (t == 2 or t == 17) else 0
+		opaque[i] = 1 if (t == 2 or t == 17 or t == 27 or t == 28 or t == 29) else 0
 	fields = [FF.build(tiles, size, walk, homes, links, haslink), FF.build(tiles, size, walk, works, links, haslink), FF.build(tiles, size, walk, shops, links, haslink)]
 	n = count
 	pos = PackedInt32Array(); pos.resize(n)

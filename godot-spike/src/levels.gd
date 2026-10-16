@@ -28,10 +28,10 @@ static func build(c, seed: int) -> void:
 		if w < 9 or hgt < 9:
 			continue
 		var d: float = Vector2((int(t["x0"]) + int(t["x1"])) * 0.5, (int(t["y0"]) + int(t["y1"])) * 0.5).distance_to(centre) / (size * 0.5)
-		var hh: int = int(lerpf(30.0, 5.0, clampf(d / 0.45, 0.0, 1.0))) + rng.randi_range(-4, 3)
+		var hh: int = int(lerpf(float(c.max_floors), 5.0, clampf(d / 0.45, 0.0, 1.0))) + rng.randi_range(-4, 3)
 		if rng.randf() < 0.12:
 			hh = rng.randi_range(2, 5)
-		t["h"] = clampi(hh, 2, 30)
+		t["h"] = clampi(hh, 2, c.max_floors)
 		t["d"] = d
 		cands.append(t)
 	if not cands.is_empty():
@@ -39,7 +39,7 @@ static func build(c, seed: int) -> void:
 		for t in cands:
 			if float(t["d"]) < float(best["d"]):
 				best = t
-		best["h"] = 30
+		best["h"] = c.max_floors
 	var zmax := 0
 	for t in cands:
 		zmax = maxi(zmax, int(t["h"]))
@@ -103,7 +103,7 @@ static func _props(c, all: PackedByteArray, links: Dictionary, rng: RandomNumber
 	for k in links:
 		skip[k] = 1
 	# ground
-	for _n in 5000:
+	for _n in size * size / 13:
 		var x: int = rng.randi_range(2, size - 3)
 		var y: int = rng.randi_range(2, size - 3)
 		_prop_try(c, all, skip, y * size + x, size, rng)
@@ -440,10 +440,10 @@ static func _underground(c, all: PackedByteArray, links: Dictionary, rng: Random
 			var sc: int = mid + off
 			var tc: int = ring[sc % ring_len]
 			for sgn in [1, -1]:
-				for dist in [1, 2]:
+				for dist in range(1, 12):
 					var p: int = tc + (sgn * dist * size if horiz else sgn * dist)
 					var g: int = all[p]
-					if (g == CG.ROAD or g == CG.GROUND or g == CG.PARK) and not placed:
+					if (g == CG.GROUND or g == CG.PARK) and not placed:
 						placed = true
 						stops.append(sc % ring_len)
 						_station(c, all, ring, sc, horiz, size, l1)
@@ -463,11 +463,11 @@ static func _underground(c, all: PackedByteArray, links: Dictionary, rng: Random
 	# the sewers: three wide under every road line (a wet channel in the middle, dry catwalks either side)
 	for lx in c.xs:
 		for y in range(4, size - 4):
-			for k in rw:
+			for k in range(rw / 2 - 2, rw / 2 + 3):
 				_sewer_cell(all, l2, size, int(lx) + k, y, k == rw / 2, c)
 	for ly in c.ys:
 		for x in range(4, size - 4):
-			for k in rw:
+			for k in range(rw / 2 - 2, rw / 2 + 3):
 				_sewer_cell(all, l2, size, x, int(ly) + k, k == rw / 2, c)
 	# ladders tunnel <-> sewer, manholes street -> sewer
 	var shared: Array = []

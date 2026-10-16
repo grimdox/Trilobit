@@ -15,6 +15,7 @@ var kind: String = ""                      # ammunition kind loaded ("" when emp
 var mods: Array = []                       # installed mod items
 var jammed: bool = false
 var mode: int = 0                          # index into gun.modes
+var cond: int = -1                         # wear: hit points left on an engine (-1 = as new)
 
 func _init(d: Dictionary, n: int = 1) -> void:
 	def = d
@@ -148,6 +149,8 @@ func to_dict() -> Dictionary:
 		cs.append(arr)
 	if not def.get("pockets", []).is_empty():
 		out["contents"] = cs
+	if cond >= 0:
+		out["cond"] = cond
 	if def.has("gun"):
 		out["gun"] = {"loaded": loaded, "kind": kind, "jammed": jammed, "mode": mode, "mods": mods.map(func(m): return m.to_dict())}
 	return out
@@ -158,6 +161,7 @@ static func from_dict(d: Dictionary, db):
 		for i in d["contents"].size():
 			for sub in d["contents"][i]:
 				it.pockets[i].append(from_dict(sub, db))
+	it.cond = int(d.get("cond", -1))
 	if d.has("gun"):
 		var gd: Dictionary = d["gun"]
 		it.loaded = int(gd["loaded"])

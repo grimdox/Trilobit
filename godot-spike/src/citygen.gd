@@ -28,11 +28,30 @@ const LOCKED := 22      # a locked door: people with keys walk through, the play
 const CRATE := 23       # low cover: blocks movement, not sight; can be jumped
 const DUMPSTER := 24
 const PLANTER := 25
+const BALLAST := 26     # gravel either side of a railway
+const CLIFF := 27       # a sheer drop: impassable, opaque
+const MOUNTAIN := 28    # a mountain wall: impassable, opaque
+const TREE := 29        # a dense tree: impassable, blocks sight
+const ROCKS := 30       # rough rocky ground along the coast
+const FIELD := 31       # ploughed or planted field
+const SAND := 32        # beach
 const LOW_COVER := [20, 23, 24, 25]
 ## 1 where a tile can be walked on (indexed by tile id)
-const WALK := [1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0]
+const WALK := [1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1]
+const OPAQUE := [2, 17, 27, 28, 29]
 
-var size: int = 256
+## lane markings painted over ROAD tiles on the ground level (a road is two lanes of six tiles: white edge, four black, yellow centre)
+const M_WHITE_V := 1
+const M_YELLOW_V := 2
+const M_WHITE_H := 3
+const M_YELLOW_H := 4
+const M_RAIL_H := 5     # rail orientation, painted over TRACK tiles
+const M_RAIL_V := 6
+
+var size: int = 512
+var marks: PackedByteArray             # ground-level overlay: lane lines and rail orientation (see M_*), size*size
+var max_floors: int = 14               # tallest tower
+var grid_margin: int = 40              # outskirts around the street grid
 var tiles: PackedByteArray
 var homes: PackedInt32Array
 var works: PackedInt32Array
@@ -40,7 +59,8 @@ var shops: PackedInt32Array
 var buildings: int = 0
 var xs: Array = []                     # x of each vertical road line (left edge), y of each horizontal one
 var ys: Array = []
-var rw: int = 2
+var rw: int = 12                       # road width: two lanes of six
+const LANE := 6
 var towers: Array = []                 # {x0,y0,x1,y1,door} of every core building: candidates for a tall tower
 # the vertical world (filled in by levels.gd): all levels stacked in one array, ground first, so a cell index says which level it is on
 var zmax: int = 0                      # roof level of the tallest tower
@@ -75,44 +95,38 @@ func z_of(cell: int) -> int:
 func lvl_of_z(z: int) -> int:
 	return z if z >= 0 else zmax - z
 
-func generate(seed: int, harbor_dir: Vector2, sz: int = 256) -> void:
+func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> void:
 	size = sz
 	rng.seed = seed
 	tiles = PackedByteArray()
 	tiles.resize(size * size)
-	tiles.fill(GROUND)
+	tiles.fill(PARK)
+	marks = PackedByteArray()
+	marks.resize(size * size)
 	homes = PackedInt32Array()
 	works = PackedInt32Array()
 	shops = PackedInt32Array()
 	buildings = 0
 	towers = []
-	var dir := harbor_dir.normalized() if harbor_dir.length() > 0.01 else Vector2(1, 0)
-	# water: the side facing the harbor, with a wavy edge
-	var nw := FastNoiseLite.new()
-	nw.seed = seed ^ 0xA7E5
-	nw.frequency = 0.04
-	var water_w := rng.randi_range(18, 30)
-	var water := PackedByteArray()
-	water.resize(size * size)
-	for y in size:
-		for x in size:
-			var p := Vector2(x - size * 0.5, y - size * 0.5)
-			var proj := p.dot(dir)                         # distance along the harbor direction from the centre
-			if proj > size * 0.5 - water_w + nw.get_noise_2d(x, y) * 10.0:
-				water[y * size + x] = 1
-				tiles[y * size + x] = WATER
-	# road lines with varying block widths
-	xs = _lines()
-	ys = _lines()
-	rw = rng.randi_range(2, 3)
+	var m := mini(grid_margin, size / 6)
+	# the paved city area
+	for y in range(m, size - m):
+		for x in range(m, size - m):
+			tiles[y * size + x] = GROUND
+	# road lines: the main east-west street runs through the middle and out to both edges (the highway joins it)
+	xs = _lines(m, size - m)
+	ys = _lines_around(size / 2 - rw / 2, m, size - m)
 	for lx in xs:
-		for y in size:
+		for y in range(m, size - m):
 			for k in rw:
-				_set_road(lx + k, y, water)
+				_set_road(lx + k, y)
 	for ly in ys:
-		for x in size:
+		var x0 := 0 if ly == size / 2 - rw / 2 else m
+		var x1 := size if ly == size / 2 - rw / 2 else size - m
+		for x in range(x0, x1):
 			for k in rw:
-				_set_road(x, ly + k, water)
+				_set_road(x, ly + k)
+	_paint_lanes()
 	# blocks between the lines
 	var centre := Vector2(size * 0.5, size * 0.5)
 	for i in xs.size() - 1:
@@ -121,41 +135,93 @@ func generate(seed: int, harbor_dir: Vector2, sz: int = 256) -> void:
 			var x1: int = xs[i + 1] - 1
 			var y0: int = ys[j] + rw
 			var y1: int = ys[j + 1] - 1
-			if x1 - x0 < 6 or y1 - y0 < 6:
-				continue
-			if _water_in(water, x0, y0, x1, y1):
+			if x1 - x0 < 12 or y1 - y0 < 12:
 				continue
 			var d := Vector2((x0 + x1) * 0.5, (y0 + y1) * 0.5).distance_to(centre) / (size * 0.5)
 			var r := rng.randf()
-			if r < 0.07 + d * 0.12:
+			if r < 0.06 + d * 0.12:
 				_park(x0, y0, x1, y1)
-			elif d < 0.42:
+			elif d < 0.58:
 				_core_block(x0, y0, x1, y1)
 			else:
 				_suburb_block(x0, y0, x1, y1)
 
-func _lines() -> Array:
+## vertical road lines (left edge x) between lo and hi, block interiors of 34-48 tiles
+func _lines(lo: int, hi: int) -> Array:
 	var out := []
-	var p := rng.randi_range(2, 6)
-	while p < size - 8:
+	var p := lo + rng.randi_range(0, 6)
+	while p + rw + 34 < hi:
 		out.append(p)
-		p += rng.randi_range(14, 24)
-	out.append(size - 3)
+		p += rw + rng.randi_range(34, 48)
+	out.append(hi - rw)
 	return out
 
-func _set_road(x: int, y: int, water: PackedByteArray) -> void:
+## horizontal lines: one fixed line (the main street) and the others spaced outwards from it
+func _lines_around(mid: int, lo: int, hi: int) -> Array:
+	var out := [mid]
+	var p := mid
+	while true:
+		p -= rw + rng.randi_range(34, 48)
+		if p < lo + 4:
+			break
+		out.append(p)
+	out.append(lo)
+	p = mid
+	while true:
+		p += rw + rng.randi_range(34, 48)
+		if p + rw > hi - 4:
+			break
+		out.append(p)
+	out.append(hi - rw)
+	out.sort()
+	# drop lines that ended up too close to a neighbour
+	var keep := []
+	for v in out:
+		if keep.is_empty() or int(v) - int(keep[keep.size() - 1]) >= rw + 30:
+			keep.append(v)
+		elif v == mid:
+			keep[keep.size() - 1] = v
+	return keep
+
+func _set_road(x: int, y: int) -> void:
 	if x < 0 or y < 0 or x >= size or y >= size:
-		return
-	if water[y * size + x] == 1:
 		return
 	tiles[y * size + x] = ROAD
 
-func _water_in(water: PackedByteArray, x0: int, y0: int, x1: int, y1: int) -> bool:
-	for y in [y0, y1, (y0 + y1) / 2]:
-		for x in [x0, x1, (x0 + x1) / 2]:
-			if water[y * size + x] == 1:
-				return true
-	return false
+## white edge line, four black tiles, a double yellow centre: painted on the marks overlay, except where two roads cross
+func _paint_lanes() -> void:
+	var vcol := PackedByteArray()
+	vcol.resize(size)
+	var hrow := PackedByteArray()
+	hrow.resize(size)
+	for lx in xs:
+		for k in rw:
+			if lx + k < size:
+				vcol[lx + k] = 1
+	for ly in ys:
+		for k in rw:
+			if ly + k < size:
+				hrow[ly + k] = 1
+	for lx in xs:
+		for y in size:
+			for k in rw:
+				var x: int = lx + k
+				if x >= size or tiles[y * size + x] != ROAD or hrow[y] == 1:
+					continue
+				if k == 0 or k == rw - 1:
+					marks[y * size + x] = M_WHITE_V
+				elif k == LANE - 1 or k == LANE:
+					marks[y * size + x] = M_YELLOW_V
+	for ly in ys:
+		for x in size:
+			for k in rw:
+				var y: int = ly + k
+				if y >= size or tiles[y * size + x] != ROAD or vcol[x] == 1:
+					continue
+				if k == 0 or k == rw - 1:
+					marks[y * size + x] = M_WHITE_H
+				elif k == LANE - 1 or k == LANE:
+					marks[y * size + x] = M_YELLOW_H
 
 func _park(x0: int, y0: int, x1: int, y1: int) -> void:
 	for y in range(y0, y1 + 1):
@@ -164,24 +230,28 @@ func _park(x0: int, y0: int, x1: int, y1: int) -> void:
 
 ## one big mixed-use building filling the block, BSP rooms, doors on the street side
 func _core_block(x0: int, y0: int, x1: int, y1: int) -> void:
-	var bx0 := x0 + 1
-	var by0 := y0 + 1
-	var bx1 := x1 - 1
-	var by1 := y1 - 1
+	var bx0 := x0 + 2
+	var by0 := y0 + 2
+	var bx1 := x1 - 2
+	var by1 := y1 - 2
 	_building(bx0, by0, bx1, by1, "core")
 
 func _suburb_block(x0: int, y0: int, x1: int, y1: int) -> void:
-	# a row of houses along the north edge and another along the south edge of the block, yards between
-	var y_rows := [[y0 + 1, y0 + 8], [y1 - 8, y1 - 1]] if y1 - y0 >= 19 else [[y0 + 1, mini(y0 + 8, y1 - 1)]]
-	for row in y_rows:
-		var x := x0 + 1
-		while x + 7 <= x1 - 1:
-			var wdt := rng.randi_range(7, 10)
-			if x + wdt > x1 - 1:
+	# rows of houses along the north and south edges of the block (a third through the middle of a deep one), yards between
+	var depth := 11
+	var rows := [[y0 + 2, y0 + 2 + depth - 1], [y1 - 2 - depth + 1, y1 - 2]]
+	if y1 - y0 >= 46:
+		var mid := (y0 + y1) / 2
+		rows.append([mid - depth / 2, mid + depth / 2])
+	for row in rows:
+		var x := x0 + 2
+		while x + 9 <= x1 - 2:
+			var wdt := rng.randi_range(10, 15)
+			if x + wdt > x1 - 2:
 				break
-			if rng.randf() < 0.88:
+			if rng.randf() < 0.9:
 				_building(x, row[0], x + wdt, row[1], "house")
-			x += wdt + rng.randi_range(2, 4)
+			x += wdt + rng.randi_range(3, 6)
 
 func _building(bx0: int, by0: int, bx1: int, by1: int, kind: String) -> void:
 	if bx1 - bx0 < 5 or by1 - by0 < 5:
@@ -261,7 +331,7 @@ func _street_side(bx0: int, by0: int, bx1: int, by1: int) -> int:
 		var d := 0
 		var x: int = c[1]
 		var y: int = c[2]
-		while d < 12 and x >= 0 and y >= 0 and x < size and y < size and tiles[y * size + x] != ROAD:
+		while d < 24 and x >= 0 and y >= 0 and x < size and y < size and tiles[y * size + x] != ROAD:
 			x += c[4]
 			y += c[3]
 			d += 1
@@ -359,6 +429,10 @@ func reachable_fraction() -> float:
 
 func save_png(path: String, scale: int = 3) -> void:
 	var pal := [Color("#6b6b73"), Color("#2a2a30"), Color("#d8d8e0"), Color("#9a8f7a"), Color("#e0a030"), Color("#1d4f91"), Color("#4a9a4a")]
+	pal.resize(40)
+	for k in 40:
+		if pal[k] == null:
+			pal[k] = Color("#554455")
 	var img := Image.create(size * scale, size * scale, false, Image.FORMAT_RGBA8)
 	for y in size:
 		for x in size:

@@ -36,9 +36,9 @@ func run() -> Array:
 	check.call("an elevator rides three floors at a time", g.z_of(g.pc) == 3)
 	for k in 12:
 		g.act_vertical(1)
-	check.call("the elevator takes you to the roof of the 30-storey tower", g.z_of(g.pc) == 30 and g.city.tiles[g.pc] == CG.ELEVATOR)
+	check.call("the elevator takes you to the roof of the 14-storey tower", g.z_of(g.pc) == 14 and g.city.tiles[g.pc] == CG.ELEVATOR)
 	check.call("there is no way up from the roof", not g.act_vertical(1))
-	check.call("the roof is 30 storeys up", int(tall["h"]) == 30)
+	check.call("the roof is 14 storeys up", int(tall["h"]) == 14)
 	# --- people on upper floors become real agents when you arrive
 	var res := -1
 	for i in g.sim.n:

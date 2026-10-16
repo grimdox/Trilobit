@@ -16,7 +16,7 @@ var view
 var status: Label
 var logbox: RichTextLabel
 var panel: RichTextLabel
-var mode: String = "title"           # title, play, inventory, help, talk, mods, jump, strike, shove, pause, options, keys, saves, loads, implants, loading
+var mode: String = "title"           # title, play, garage, inventory, help, talk, mods, jump, strike, shove, pause, options, keys, saves, loads, implants, loading
 var menu: Dictionary = {}
 var ts_index: int = 0
 var inv_map: Dictionary = {}
@@ -394,7 +394,8 @@ func refresh() -> void:
 	var g = game
 	var extra := ""
 	if g.in_vehicle >= 0:
-		extra = "  [%s %d%%%s]" % [g.veh_kind(g.in_vehicle).to_upper(), g.vehicles[g.in_vehicle]["charge"], ("  frame %d" % g.vehicles[g.in_vehicle]["hp"]) if g.in_mech() else ("  AIRBORNE" if g.airborne() else "")]
+		var vv: Dictionary = g.vehicles[g.in_vehicle]
+		extra = "  [%s  batt %d%%  speed %d  %s%s]" % [g.vs.KINDS[vv["kind"]]["name"].to_upper(), vv["charge"], absi(int(vv["spd"])), g.vs.status_text(g.in_vehicle), "  AIRBORNE" if g.airborne() else ""]
 	if g.flying:
 		extra += "  [FLYING fuel %d]" % g.fuel
 	elif g.has_implant("jets") and g.fuel < g.FUEL_MAX:
@@ -425,6 +426,8 @@ func refresh() -> void:
 		show_talk()
 	elif mode == "mods":
 		show_mods()
+	elif mode == "garage":
+		show_garage()
 
 func show_talk() -> void:
 	var t := "[b]%s[/b]   (1-9 chooses, Esc leaves)   ¥%d\n\n" % [menu["title"], game.yen]
@@ -435,6 +438,41 @@ func show_talk() -> void:
 	for o in menu["options"]:
 		t += "%d) %s\n" % [k, o["label"]]
 		k += 1
+	panel.text = t
+	panel.visible = true
+
+func show_garage() -> void:
+	inv_map.clear()
+	var g = game
+	var vi: int = g.vs.near_vehicle()
+	if vi < 0 or g.in_vehicle >= 0:
+		panel.text = "[b]Vehicle service[/b]\n\nStand next to a vehicle (and be out of it) to open its engine bay."
+		panel.visible = true
+		return
+	var v: Dictionary = g.vehicles[vi]
+	var ed: Dictionary = g.vs.eng_def(v)
+	var t := "[b]%s[/b]  %s   (a-z fits an engine, 1-4 patches a part with a repair kit, Esc closes)\n" % [g.vs.KINDS[v["kind"]]["name"].capitalize(), "[color=#ff6666]WRECK[/color]" if v["wreck"] else ""]
+	t += "engine: %s   power %s  battery use 1 per %s turns   battery %d%%\n\n" % [g.db.defs[v["eng"]["id"]]["name"], str(ed.get("power", "?")), str(ed.get("drain", "?")), v["charge"]]
+	var k := 1
+	for part in ["engine", "body", "drive", "cabin"]:
+		var pct: int = g.vs.part_pct(v, part)
+		var bar := "#".repeat(pct / 5) + "-".repeat(20 - pct / 5)
+		var label: String = g.vs.KINDS[v["kind"]]["drive"] if part == "drive" else part
+		t += "%d) %-8s [%s] %3d%%  (%d/%d)\n" % [k, label, bar, pct, v["parts"][part], v["pmax"][part]]
+		inv_map[str(k)] = part
+		k += 1
+	t += "\nrepair kits: %d\n\n[b]Engines you can fit[/b]\n" % g.repair_kits().size()
+	var j := 0
+	for e in g.engines_available():
+		var it = e["item"]
+		var d: Dictionary = it.def["engine"]
+		var fits: bool = v["kind"] in d["fits"]
+		var key := char(97 + j)
+		t += "%s) %s  [color=#8899aa]power %d, %d hp%s%s%s[/color]\n" % [key, it.def["name"], d["power"], d["hp"], ", worn to %d" % it.cond if it.cond >= 0 else "", ", on the ground" if e["ground"] else "", "" if fits else ", does not fit"]
+		inv_map[key] = e
+		j += 1
+	if j == 0:
+		t += "(none carried or lying at your feet)\n"
 	panel.text = t
 	panel.visible = true
 
@@ -534,6 +572,21 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 					game.act_mod_install(v)
 		refresh()
 		return
+	if mode == "garage":
+		if k == KEY_ESCAPE:
+			mode = "play"
+			panel.visible = false
+		else:
+			var gk: String = OS.get_keycode_string(k).to_lower()
+			var gvi: int = game.vs.near_vehicle()
+			if inv_map.has(gk) and gvi >= 0:
+				var tgt = inv_map[gk]
+				if tgt is String:
+					game.act_repair(gvi, tgt)
+				else:
+					game.act_fit_engine(gvi, tgt["item"], tgt["ground"])
+		refresh()
+		return
 	if mode == "jump" or mode == "strike" or mode == "shove":
 		var was: String = mode
 		mode = "play"
@@ -629,7 +682,12 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		"jump":
 			mode = "jump"
 			g.say("Jump which way?  (direction key, Esc cancels)")
-		"vehicle": g.act_vehicle()
+		"vehicle":
+			if ev.shift_pressed:
+				mode = "garage"
+			else:
+				g.act_vehicle()
+		"service": mode = "garage"
 		"drop": g.act_drop_wield()
 		"inventory": mode = "inventory"
 		"implants":
