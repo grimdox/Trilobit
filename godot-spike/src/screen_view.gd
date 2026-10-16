@@ -15,6 +15,7 @@ var game                           # for the implants screen
 var part_sel: int = 0
 var world = null
 var map_tex: ImageTexture = null
+var ow_tex: Texture2D = null
 var font: Font = ThemeDB.fallback_font
 var kana_font: Font = load("res://gfx/fonts/NotoSansJP-kana-subset.otf")
 var loading: bool = false          # the loading screen shows the name in hiragana
@@ -284,34 +285,44 @@ func _map(W: float, H: float) -> void:
 		draw_string(font, Vector2(24, 80), "No chart of this place.", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color.WHITE)
 		return
 	var isl = world.island
-	var sc: float = minf((W - 48.0) / float(isl.W), (H - 90.0) / float(isl.H))
-	var ox: float = (W - float(isl.W) * sc) * 0.5
+	if ow_tex == null:
+		ow_tex = load("res://gfx/overworld.png") as Texture2D
+	var ow: Texture2D = ow_tex
+	var iw: float = 1680.0
+	var ih: float = 1050.0
+	var sc: float = minf((W - 48.0) / iw, (H - 90.0) / ih)
+	var ox: float = (W - iw * sc) * 0.5
 	var oy := 48.0
-	draw_texture_rect(map_tex, Rect2(ox, oy, float(isl.W) * sc, float(isl.H) * sc), false)
+	if ow != null:
+		draw_texture_rect(ow, Rect2(ox, oy, iw * sc, ih * sc), false)
+	else:
+		draw_texture_rect(map_tex, Rect2(ox, oy, float(isl.W) * sc * iw / float(isl.W), ih * sc), false)
+	# the drawn map is not to scale: island coordinates are matched to it by landmarks (port, city, town, coasts)
+	var gx_a := [0.0, 215.0, 704.0, 1152.0, 2304.0]
+	var ix_a := [0.0, 195.0, 640.0, 967.0, 1680.0]
+	var gy_a := [0.0, 704.0, 1408.0]
+	var iy_a := [0.0, 548.0, 1050.0]
+	var P := func(gx: float, gy: float) -> Vector2:
+		return Vector2(ox + _pw(gx_a, ix_a, gx) * sc, oy + _pw(gy_a, iy_a, gy) * sc)
 	# unexplored zones sit under a haze; the grid shows the zones
 	for zx in isl.NZX:
 		for zy in isl.NZY:
 			var o: Vector2i = isl.zone_origin(zx, zy)
-			var r := Rect2(ox + float(o.x) * sc, oy + float(o.y) * sc, float(isl.ZS) * sc, float(isl.ZS) * sc)
+			var a0: Vector2 = P.call(float(o.x + isl.OWN_INSET), float(o.y + isl.OWN_INSET))
+			var a1: Vector2 = P.call(float(o.x + isl.OWN_INSET + isl.STRIDE), float(o.y + isl.OWN_INSET + isl.STRIDE))
+			if zx == 0:
+				a0.x = ox
+			if zy == 0:
+				a0.y = oy
+			var own := Rect2(a0, a1 - a0).intersection(Rect2(ox, oy, iw * sc, ih * sc))
 			var vis: bool = world.visited.has(world.key(Vector2i(zx, zy)))
 			if not vis:
-				var own := Rect2(ox + float(o.x + isl.OWN_INSET) * sc, oy + float(o.y + isl.OWN_INSET) * sc, float(isl.STRIDE) * sc, float(isl.STRIDE) * sc)
-				var clip := own.intersection(Rect2(ox, oy, float(isl.W) * sc, float(isl.H) * sc))
-				if zx == 0:
-					clip = Rect2(ox, clip.position.y, clip.end.x - ox, clip.size.y)
-				if zy == 0:
-					clip = Rect2(clip.position.x, oy, clip.size.x, clip.end.y - oy)
-				draw_rect(clip, Color(0.02, 0.03, 0.08, 0.45))
-			draw_rect(Rect2(ox + float(o.x + isl.OWN_INSET) * sc, oy + float(o.y + isl.OWN_INSET) * sc, float(isl.STRIDE) * sc, float(isl.STRIDE) * sc), Color(1, 1, 1, 0.08), false, 1.0)
-	for lm in isl.landmarks():
-		var p: Vector2 = Vector2(ox + float(lm["pos"].x) * sc, oy + float(lm["pos"].y) * sc)
-		var tw: float = font.get_string_size(lm["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
-		draw_string(font, p + Vector2(-tw * 0.5 + 1, 1), lm["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0, 0, 0, 0.9))
-		draw_string(font, p + Vector2(-tw * 0.5, 0), lm["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.95, 0.95, 1.0, 0.95))
+				draw_rect(own, Color(0.02, 0.03, 0.08, 0.35))
+			draw_rect(own, Color(1, 1, 1, 0.08), false, 1.0)
 	# you are here
 	if game != null and game.island != null:
 		var gp: Vector2i = game.global_pos()
-		var pp := Vector2(ox + float(gp.x) * sc, oy + float(gp.y) * sc)
+		var pp: Vector2 = P.call(float(gp.x), float(gp.y))
 		var pulse: float = 0.5 + 0.5 * sin(t * 6.0)
 		draw_circle(pp, 9.0 + 4.0 * pulse, Color(1.0, 0.2, 0.5, 0.25 + 0.2 * pulse))
 		draw_arc(pp, 8.0, 0.0, TAU, 24, Color(1.0, 0.3, 0.6), 2.0)
@@ -319,4 +330,12 @@ func _map(W: float, H: float) -> void:
 		draw_line(pp + Vector2(-14, 0), pp + Vector2(14, 0), Color(1, 0.3, 0.6, 0.8), 1.0)
 		draw_line(pp + Vector2(0, -14), pp + Vector2(0, 14), Color(1, 0.3, 0.6, 0.8), 1.0)
 		draw_string(font, pp + Vector2(12, -12), "YOU", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(1, 0.4, 0.7))
-		draw_string(font, Vector2(24, H - 14), "You are at (%d, %d) in %s.   Yellow line: highway.  Red line: railway.   M or Esc closes." % [gp.x, gp.y, isl.zone_name(game.zone)], HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.8, 0.9, 1.0))
+		draw_string(font, Vector2(24, H - 14), "You are at (%d, %d) in %s.   M or Esc closes." % [gp.x, gp.y, isl.zone_name(game.zone)], HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.8, 0.9, 1.0))
+
+## piecewise-linear map of v through matching anchor lists
+func _pw(from: Array, to: Array, v: float) -> float:
+	for k in range(1, from.size()):
+		if v <= from[k] or k == from.size() - 1:
+			var f: float = (v - from[k - 1]) / (from[k] - from[k - 1])
+			return lerpf(to[k - 1], to[k], f)
+	return v
