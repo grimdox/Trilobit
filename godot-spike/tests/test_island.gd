@@ -117,8 +117,28 @@ func run() -> Array:
 	var hg = w.game
 	check.call("same spot on the island (%s -> %s)" % [str(gp), str(hg.global_pos())], hg.global_pos().x == 448 + 20 and hg.global_pos().y == 448 + yrow)
 	check.call("the player's goods came along (¥%d, %d items)" % [hg.yen, hg.worn.size()], hg.yen == 777 and hg.worn.size() == 2 and hg.wield != null)
-	check.call("the harbor has people, trucks, a mech and buildings", hg.sim.n == 50 and hg.vehicles.any(func(v): return v["kind"] == "truck") and hg.vehicles.any(func(v): return v["kind"] == "mech") and hg.city.buildings >= 4)
-	check.call("no traffic of NPC drivers in the wilds", not hg.vehicles.any(func(v): return v["ai"]))
+	check.call("the harbor has people, trucks, a mech and buildings", hg.sim.n == 220 and hg.vehicles.any(func(v): return v["kind"] == "truck") and hg.vehicles.any(func(v): return v["kind"] == "mech") and hg.city.buildings >= 4)
+	var ai_trucks: int = hg.vehicles.filter(func(v): return v["ai"] and v["kind"] == "truck").size()
+	check.call("trucks haul goods up and down the quay road all day (%d AI trucks)" % ai_trucks, ai_trucks >= 3)
+	check.call("six gantry cranes stand over the quay road", hg.city.cranes.size() == 6)
+	var containers := 0
+	for cc in hg.s2:
+		if hg.city.tiles[cc] == hg.city.TID["container"]:
+			containers += 1
+	check.call("container stacks fill the yard (%d cells)" % containers, containers > 400)
+	var north := 0
+	var south := 0
+	var civ := 0
+	var oh: Vector2i = hg.island.zone_origin(0, 1)
+	for i in hg.sim.n:
+		var dy: int = hg.sim.pos[i] / hg.size + oh.y - hg.island.PORT.y
+		if hg.fac[i] == hg.GANG and dy < -54:
+			north += 1
+		elif hg.fac[i] == hg.BRATVA and dy > 54:
+			south += 1
+		elif hg.fac[i] == hg.CIV and absi(dy) <= 54:
+			civ += 1
+	check.call("criminals in the north (%d), Bratva in the south (%d), workers in the middle (%d)" % [north, south, civ], north >= 20 and south >= 15 and civ >= 30)
 	check.call("you stand on walkable ground", hg.sim.walk[hg.pc] == 1)
 	hg.yen = 123
 	check.call("walking back hands the city back", not w.poll())

@@ -5,7 +5,7 @@ import sys, os, json, importlib
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from PIL import Image
 
-MODULES = ['t64_terrain', 't64_furn', 't64_things', 't64_items']      # each: sprites() -> (list of (id, image[, sheet]), variants dict)
+MODULES = ['t64_terrain', 't64_furn', 't64_harbor', 't64_things', 't64_items']      # each: sprites() -> (list of (id, image[, sheet]), variants dict)
 
 
 def main(out, items_path):

@@ -18,7 +18,7 @@ func people_for(z: Vector2i) -> int:
 	if z == ISL.CITY_ZONE:
 		return 1500
 	if z == Vector2i(0, 1):
-		return 50
+		return 220
 	if z == Vector2i(2, 1):
 		return 90
 	return 0

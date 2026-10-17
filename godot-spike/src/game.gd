@@ -34,7 +34,8 @@ const CIV := 0
 const BRATVA := 1
 const NAP := 2
 const NASIM := 3
-const FAC_NAMES := ["resident", "Bratva thug", "NAP officer", "Nasim runner"]
+const GANG := 4            # unaffiliated criminals (the harbor's north end)
+const FAC_NAMES := ["resident", "Bratva thug", "NAP officer", "Nasim runner", "unaffiliated criminal"]
 const FIRST := ["Hanako", "Ryo", "Mika", "Daichi", "Yuna", "Kenji", "Aiko", "Sora", "Natsu", "Taro", "Rin", "Haru", "Emi", "Jiro", "Saki", "Koji", "Ayumi", "Shin", "Noa", "Leo", "Mei", "Ivan", "Dasha", "Pavel", "Lena", "Misha", "Zhenya", "Tamsin"]
 const SIZE_DIRS := [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]]
 const DIR4 := [[0, -1], [1, 0], [0, 1], [-1, 0]]
@@ -187,6 +188,8 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) ->
 	thing_at = PackedInt32Array(); thing_at.resize(total); thing_at.fill(-1)
 	crit_at = PackedInt32Array(); crit_at.resize(total); crit_at.fill(-1)
 	_people()
+	if island != null and zone == Vector2i(0, 1):
+		_port_people()
 	_roads_and_cars()
 	_loot()
 	_vault_loot()
@@ -232,9 +235,11 @@ func _people() -> void:
 		elif r < 0.105:
 			f = NASIM
 		fac[i] = f
-		hpmax[i] = [25, 40, 45, 30][f]
+		hpmax[i] = [25, 40, 45, 30, 35][f]
 		hpn[i] = hpmax[i]
 		yenn[i] = rng.randi_range(5, 90) if f == CIV else rng.randi_range(40, 260)
+		if f == CIV:
+			yenn[i] = int(yenn[i] * [0.5, 1.0, 2.4][city.wealth_at(int(sim.home_cell[i]))])
 		fem[i] = 1 if rng.randf() < 0.5 else 0
 		nname[i] = FIRST[rng.randi() % FIRST.size()]
 		if f == BRATVA:
@@ -243,6 +248,51 @@ func _people() -> void:
 			gunc[i] = 1 if rng.randf() < 0.8 else 2
 		elif f == NASIM:
 			gunc[i] = 1 if rng.randf() < 0.2 else 0
+
+## the harbor's people: dock workers in the middle (they commute between their dorms and the quay and yard), unaffiliated criminals
+## loitering about the warehouses in the north, the Bratva about the dormitories in the south
+func _port_people() -> void:
+	var o: Vector2i = island.zone_origin(zone.x, zone.y)
+	var rx: int = int(island.west_x(island.PORT.y)) + 6 - o.x
+	for i in sim.n:
+		var roll: int = i % 20
+		var band := 0
+		if roll >= 11 and roll < 16:
+			band = -1
+		elif roll >= 16:
+			band = 1
+		var f := CIV
+		if band == -1:
+			f = GANG if rng.randf() < 0.75 else BRATVA
+		elif band == 1:
+			f = BRATVA if rng.randf() < 0.7 else GANG
+		fac[i] = f
+		hpmax[i] = [25, 40, 45, 30, 35][f]
+		hpn[i] = hpmax[i]
+		if f == CIV:
+			yenn[i] = rng.randi_range(5, 60)
+			gunc[i] = 0
+			for _t in 30:                                   # on the job: at one of the quay and yard work spots
+				var wc: int = city.works[rng.randi() % city.works.size()]
+				if sim.walk[wc] == 1 and sim.at[wc] == -1 and city.tiles[wc] != CG.FLOOR:
+					sim.place(i, wc)
+					break
+			continue
+		yenn[i] = rng.randi_range(40, 260)
+		gunc[i] = 1 if rng.randf() < 0.4 else 0
+		var lo: int = island.PORT.y - 118 if band == -1 else island.PORT.y + 58
+		var hi: int = island.PORT.y - 58 if band == -1 else island.PORT.y + 108
+		for _t in 80:
+			var cx: int = rx - 20 + rng.randi_range(0, 150)
+			var cy: int = rng.randi_range(lo, hi) - o.y
+			if cx < 0 or cx >= size or cy < 0 or cy >= size:
+				continue
+			var c: int = cy * size + cx
+			var tt: int = city.tiles[c]
+			if (tt == CG.GROUND or tt == CG.PARK or tt == CG.PLATFORM or tt == CG.FLOOR) and sim.walk[c] == 1 and sim.at[c] == -1:
+				sim.place(i, c)
+				sim.sticky[i] = 1
+				break
 
 func _roads_and_cars() -> void:
 	road_walk = PackedByteArray(); road_walk.resize(size * size)
@@ -324,6 +374,35 @@ func _spawn_vehicles() -> void:
 
 var special_dir := 0
 
+## trucks driving up and down the harbor's quay road all day, hauling goods between the cranes and the yard
+func _spawn_dock_trucks(cols: Array) -> void:
+	var o: Vector2i = island.zone_origin(zone.x, zone.y)
+	var e: int = int(island.west_x(island.PORT.y)) + 6 - o.x
+	var py: int = island.PORT.y - o.y
+	var placed := 0
+	var tries := 0
+	while placed < 7 and tries < 200:
+		tries += 1
+		var hi_lane: bool = placed % 2 == 0
+		var dir: int = 0 if hi_lane else 2
+		var cx2: int = VS.lane_hi2(e) if hi_lane else VS.lane_lo2(e)
+		var cy2: int = (py + rng.randi_range(-46, 46)) * 2
+		var kind := "truck" if rng.randf() < 0.75 else "car"
+		var a: int = vs.anchor_for(kind, dir, cx2, cy2, 0)
+		var vi: int = vs.spawn(kind, a, dir, cols[rng.randi() % cols.size()], true)
+		if vi < 0:
+			continue
+		var ok := true
+		for c in vs.cells(vehicles[vi]):
+			if city.tiles[c] != CG.ROAD:
+				ok = false
+		if not ok:
+			vs.lift(vi)
+			vehicles.pop_back()
+			continue
+		vehicles[vi]["charge"] = 100
+		placed += 1
+
 ## park something at the first free spot of the right ground near a local position
 func _place(kind: String, near_x: int, near_y: int, minr: int, maxr: int, tiles: Array, dir: int, color: Color) -> void:
 	var cell: int = vs.find_spot(kind, clampi(near_y, 0, size - 1) * size + clampi(near_x, 0, size - 1), minr, maxr, tiles, dir)
@@ -337,8 +416,9 @@ func _spawn_zone_vehicles() -> void:
 	if zone == Vector2i(0, 1):
 		var qx: int = int(island.west_x(island.PORT.y)) + 6 - o.x
 		var py: int = island.PORT.y - o.y
-		for k in 3:
-			_place("truck", qx + 3, py - 60 + k * 30, 0, 60, [CG.PLATFORM, CG.PARK, CG.SAND], 0, cols[rng.randi() % cols.size()])
+		for k in 2:
+			_place("truck", qx + 30, py - 40 + k * 60, 0, 60, [CG.PLATFORM, CG.PARK, CG.SAND], 0, cols[rng.randi() % cols.size()])
+		_spawn_dock_trucks(cols)
 		_place("mech", qx + 4, py - 20, 0, 60, [CG.PLATFORM, CG.PARK, CG.SAND], 1, Color("#c0583a"))
 		for k in 2:
 			_place("car", qx + 24, py + 40 + k * 10, 0, 80, [CG.PLATFORM, CG.PARK], 1, cols[rng.randi() % cols.size()])
@@ -377,7 +457,7 @@ func _spawn_special_vehicles() -> void:
 	special_dir = 0
 	var hs: int = vs.find_spot("heli", start, 8, 60, [CG.GROUND, CG.PARK, CG.ROAD], 0)
 	_add_special("heli", hs, Color("#7fd6e8"))
-	_add_special("mech", vs.find_spot("mech", start, 10, 60, [CG.GROUND, CG.PARK], 0), Color("#c0583a"))
+	_add_special("mech", vs.find_spot("mech", start, 10, 160, [CG.GROUND, CG.PARK], 0), Color("#c0583a"))
 	var towers: Array = city.tower_info.duplicate()
 	towers.sort_custom(func(a, b): return int(a["h"]) > int(b["h"]))
 	for k in mini(2, towers.size()):
@@ -388,7 +468,7 @@ func _spawn_special_vehicles() -> void:
 	for k in 2:
 		var c2: int = rng.randi_range(size / 4, size * 3 / 4) * size + rng.randi_range(size / 4, size * 3 / 4)
 		special_dir = 0
-		_add_special("mech", vs.find_spot("mech", c2, 1, 60, [CG.GROUND, CG.PARK], 0), Color("#c0583a"))
+		_add_special("mech", vs.find_spot("mech", c2, 1, 160, [CG.GROUND, CG.PARK], 0), Color("#c0583a"))
 
 func _weighted(table: Array) -> String:
 	var total := 0
@@ -525,12 +605,18 @@ func ly(c: int) -> int:
 
 func zname(c: int) -> String:
 	var z := z_of(c)
+	var dist := ""
+	if z >= 0 and zone == island_city_zone():
+		dist = " (%s district)" % CG.DISTRICTS[city.wealth_at(c)]
 	if z > 0:
-		return "Floor %d" % z
+		return "Floor %d%s" % [z, dist]
 	match z:
-		0: return "Street level"
+		0: return "Street level" + dist
 		-1: return "Subway & tunnels"
 		_: return "Sewers"
+
+func island_city_zone() -> Vector2i:
+	return island.CITY_ZONE if island != null else Vector2i(-1, -1)
 
 ## the tower whose footprint contains the cell's x,y (any level), or {}
 func tower_at(c: int) -> Dictionary:
@@ -546,7 +632,7 @@ func in_bounds(x: int, y: int) -> bool:
 
 func hostile(i: int) -> bool:
 	match fac[i]:
-		BRATVA: return true
+		BRATVA, GANG: return true
 		NAP: return heat >= 30
 		_: return false
 
@@ -1159,6 +1245,7 @@ func player_melee_dodge() -> int:
 func npc_armor(i: int) -> int:
 	match fac[i]:
 		BRATVA: return 1
+		GANG: return 1
 		NAP: return 3
 		NASIM: return 2
 	return 0
@@ -1166,6 +1253,7 @@ func npc_armor(i: int) -> int:
 func npc_melee_dodge(i: int) -> int:
 	match fac[i]:
 		BRATVA: return 8
+		GANG: return 6
 		NAP: return 10
 		NASIM: return 22
 	return 4
@@ -1401,7 +1489,7 @@ func npc_melee_stats(i: int) -> Dictionary:
 	return db.defs[id]["melee"]
 
 func _melee_pools() -> void:
-	melee_pool = {BRATVA: [], NAP: [], NASIM: []}
+	melee_pool = {BRATVA: [], NAP: [], NASIM: [], GANG: []}
 	var ids: Array = []
 	for k in db.defs:
 		if "melee" in db.defs[k].get("tags", []) and not (k.ends_with("_f") or k.ends_with("_m")):
@@ -1412,6 +1500,7 @@ func _melee_pools() -> void:
 		var ru: bool = db.defs[k]["culture"] == "Russian"
 		if ru:
 			melee_pool[BRATVA].append(k)
+			melee_pool[GANG].append(k)
 		elif name in ["wakizashi", "tanto", "katana", "tonfa", "bo", "jitte"]:
 			melee_pool[NAP].append(k)
 		elif name in ["kama", "nunchaku", "sai", "kunai", "jo", "tessen"]:
@@ -2439,7 +2528,7 @@ func _ai() -> void:
 			sim.ctl[i] = 1
 			continue
 		# who is worth watching: armed or hostile factions, or anyone already worked up
-		var capable := fac[i] == BRATVA or fac[i] == NAP or (fac[i] == NASIM and noticed_you[i] == 1)
+		var capable := fac[i] == BRATVA or fac[i] == GANG or fac[i] == NAP or (fac[i] == NASIM and noticed_you[i] == 1)
 		if st == UNAWARE and (not capable or d > 24 or not hostile(i)):
 			continue
 		if st == UNAWARE or st == SUSPICIOUS or st == SEARCHING or st == RETURNING:

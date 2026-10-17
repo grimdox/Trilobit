@@ -33,3 +33,9 @@ Tests: `./run_all.sh` (pockets, world, scale, levels, game, vertical, guns, stea
 - Loading screen shows とりろびつ (bundled kana subset of Noto Sans CJK JP, OFL); the title tag line is gone; menus take mouse hover, click, right-click back and wheel.
 - Everyone has an on-screen facing arrow (people, animals, you); the drawn vision-cone tint is removed.  The player sees a 180 degree half circle (`vision_arc()`; implants may add degrees with an `arc` field); `;` + direction turns without a step.  NPCs still look back at you all round (`fov.around`).
 - Windows SmartScreen only goes away with a trusted code-signing certificate; see README-FIRST.txt in the zip for the workaround.
+
+## City layout, districts and the harbor
+- The city's blocks are merged into bigger buildings: mega-towers fill 2-3 blocks each way (4-9 blocks) in the centre, the ring around them has buildings 1-2 blocks wide (1-4 blocks), and houses/venues sit in the outer suburbs.  Mega-towers are always among the tallest.
+- Wealth districts (`CityGen.wealth`, lower / middle / upper): bare concrete and dingy tint, plain, or marble and bright tint; venue tier, residents' cash and clothes follow the district.  The HUD shows the district name.
+- The harbor: north end = unaffiliated criminals (faction GANG) around derelict warehouses, centre = the working port (quay road with AI trucks, six animated gantry cranes, container yard, dock workers in hard hats), south end = Bratva around the dormitories.
+- `trilobit-tools/gen_tiles64.py` draws the whole 64x64 tileset (terrain, furniture, harbor props, items, animals, top-down paper dolls); `tools/build_windows.sh` runs it.

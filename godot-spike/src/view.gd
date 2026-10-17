@@ -176,8 +176,16 @@ func _joins(base: int, x: int, y: int) -> bool:
 	return t == 2 or t == 10 or t == 4 or t == 22
 
 ## one terrain cell: variants for texture, autotiled walls, doors that face along their wall, rails that turn
+const WEALTH_TINT := [Color(0.80, 0.75, 0.70), Color(1, 1, 1), Color(1.10, 1.13, 1.22)]
+
 func _cell_art(t: int, c: int, wx: int, wy: int, pos: Vector2, mod: Color, ground: bool) -> void:
 	var T := TILE
+	var wl: int = game.city.wealth_at(c)
+	if wl != 1 and (t == 0 or t == 2 or t == 3 or t == 4 or t == 10):
+		mod = mod * WEALTH_TINT[wl]
+		if t == 3 and tileset.has("t_trl_marble") and tileset.has("t_concrete"):
+			_blit(tileset.pick("t_trl_marble" if wl == 2 else "t_concrete", c), pos, mod)
+			return
 	var own: bool = tileset.index.has("t_wall.0")      # the Trilobit set has joined-up walls and doors
 	var base: int = (c / game.s2) * game.s2
 	if own and (t == 2 or t == 10):
@@ -364,6 +372,7 @@ func _draw() -> void:
 		_blit("player_male", centre, Color(1, 1, 1, 0.9))
 	if game.in_vehicle < 0 and game.transit.riding < 0:
 		_facing_mark(centre, game.DIR8.find([signi(game.facing.x), signi(game.facing.y)]), Color(0.3, 0.95, 1.0, 0.9))
+	_draw_cranes(ox, oy, base)
 	# the job target, if it is on this level
 	if not game.eco.job.is_empty() and int(game.eco.job["cell"]) / s2 == base / s2:
 		var jc: int = game.eco.job["cell"]
@@ -567,3 +576,33 @@ func _draw_body(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> void:
 		var ctr := Vector2((float(ax - ox) + 0.5) * T, (float(ay - oy) + 0.5) * T)
 		draw_circle(ctr + Vector2(0, -T * 0.6), 9.0 * S, Color(0.15, 0.15, 0.15, 0.5))
 		draw_circle(ctr + Vector2(T * 0.3, -T * 1.2), 12.0 * S, Color(0.2, 0.2, 0.2, 0.35))
+
+
+## the harbor's gantry cranes: a beam across the quay road with a trolley that runs back and forth carrying a container
+func _draw_cranes(ox: int, oy: int, base: int) -> void:
+	if base != 0 or game.city.cranes.is_empty():
+		return
+	var T := TILE
+	var turn_f: float = float(game.turn) * 0.045
+	for k in game.city.cranes.size():
+		var cr: Dictionary = game.city.cranes[k]
+		var cy: int = int(cr["y"]) - oy
+		if cy < -2 or cy > rows + 1:
+			continue
+		var x0: int = int(cr["x0"])
+		var x1: int = int(cr["x1"])
+		if x1 - ox < -1 or x0 - ox > cols:
+			continue
+		for x in range(x0 + 1, x1):
+			var sx: int = x - ox
+			if sx >= 0 and sx < cols:
+				_blit("f_trl_crane_beam", Vector2(sx * T, cy * T))
+		var u: float = 0.5 + 0.5 * sin(turn_f + float(k) * 1.7)
+		var tx: float = (float(x0 + 1) + u * float(x1 - x0 - 2) - float(ox)) * T
+		var carrying: bool = cos(turn_f + float(k) * 1.7) > 0.0
+		if carrying and tileset.has("f_trl_container.0"):
+			var sp: Array = tileset.sprite("f_trl_container." + str(k % 4))
+			if not sp.is_empty():
+				var r: Rect2 = sp[1]
+				draw_texture_rect_region(sp[0], Rect2(Vector2(tx + 8, cy * T + 12), r.size * 0.8), r, Color(1, 1, 1, 0.95))
+		_blit("f_trl_crane_trolley", Vector2(tx, cy * T))

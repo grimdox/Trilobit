@@ -39,6 +39,8 @@ static func for_person(g, i: int) -> Dictionary:
 	var h: int = (i * 2654435761) & 0x7fffffff
 	var fac: int = int(g.fac[i])
 	var extra: Array = g.eco.look.get(i, []) if g.eco != null else []
+	if extra.is_empty() and fac == 0 and g.island != null and g.zone == Vector2i(0, 1):
+		extra = ["overalls"] + (["helmet_ball"] if h % 2 == 0 else [])      # dock workers
 	if not extra.is_empty():
 		layers = extra.duplicate()
 	else:
@@ -65,8 +67,21 @@ static func for_person(g, i: int) -> Dictionary:
 					layers.append("imp_cortex")
 				if h % 5 == 0:
 					layers.append("imp_legs")
+			4:   # unaffiliated criminals: whatever they scavenged
+				layers = ["jacket_%d" % (h % 6)]
+				if h % 3 == 0:
+					layers.append("bracers")
+				if h % 4 == 0:
+					layers.append("balaclava")
+				if h % 5 == 0:
+					layers.append("vest")
 			_:   # residents: a jacket in one of six colours, now and then a backpack, a coat or a hood
 				layers = ["jacket_%d" % (h % 6)]
+				var wl: int = g.city.wealth_at(int(g.sim.home_cell[i]))
+				if wl == 2 and h % 3 != 0:
+					layers = ["suit"]
+				elif wl == 0 and h % 3 == 0:
+					layers = ["overalls"]
 				if h % 9 == 0:
 					layers = ["coat"]
 				elif h % 6 == 0:
@@ -80,7 +95,7 @@ static func for_person(g, i: int) -> Dictionary:
 		var arr: Array = g.gun_ids.get(tag, [])
 		if not arr.is_empty():
 			weapon = arr[h % arr.size()]
-	elif fac == 1 or fac == 3:
+	elif fac == 1 or fac == 3 or fac == 4:
 		if not ("imp_mantis" in layers):
 			weapon = MELEE_THUG[h % MELEE_THUG.size()]
 	var lk := look(h, g.fem[i] == 1, fac)

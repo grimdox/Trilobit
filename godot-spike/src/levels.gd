@@ -29,7 +29,9 @@ static func build(c, seed: int) -> void:
 			continue
 		var d: float = Vector2((int(t["x0"]) + int(t["x1"])) * 0.5, (int(t["y0"]) + int(t["y1"])) * 0.5).distance_to(centre) / (size * 0.5)
 		var hh: int = int(lerpf(float(c.max_floors), 5.0, clampf(d / 0.45, 0.0, 1.0))) + rng.randi_range(-4, 3)
-		if rng.randf() < 0.12:
+		if w * hgt >= 3600:               # a mega-tower (2-3 blocks wide) is always among the tallest
+			hh = c.max_floors - rng.randi_range(0, 4)
+		elif rng.randf() < 0.12:
 			hh = rng.randi_range(2, 5)
 		t["h"] = clampi(hh, 2, c.max_floors)
 		t["d"] = d

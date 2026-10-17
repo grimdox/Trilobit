@@ -39,6 +39,19 @@ func run() -> Array:
 		if c.tiles[e] != CG.ELEVATOR and z > 0:
 			linked = false
 	check("tallest tower: stairs and elevator linked floor by floor", linked)
+	# city layout: mega-towers 2-3 blocks wide, ring buildings 1-2 blocks, three wealth tiers
+	var big := 0
+	var areas := []
+	for t in c.tower_info:
+		var ar: int = (int(t["x1"]) - int(t["x0"]) + 1) * (int(t["y1"]) - int(t["y0"]) + 1)
+		areas.append(ar)
+		if ar >= 3600:
+			big += 1
+	check("there are several mega-towers (2+ blocks each way) among %d towers" % c.tower_info.size(), big >= 2, str(areas))
+	var wc := [0, 0, 0]
+	for i in c.size * c.size:
+		wc[c.wealth_at(i)] += 1
+	check("lower, middle and upper districts each cover a fair share of the city %s" % str(wc), wc[0] > c.size * c.size / 6 and wc[1] > c.size * c.size / 6 and wc[2] > c.size * c.size / 6)
 	check("roof is open walkable roof", c.tiles[int(tall["h"]) * s2 + (int(tall["y0"]) + 3) * c.size + int(tall["x0"]) + 4] in [CG.ROOF, CG.WALL, CG.STAIRS, CG.ELEVATOR])
 	check("tower floors hold markers", c.homes_t.size() > 200 and c.works_t.size() > 200, "%d %d" % [c.homes_t.size(), c.works_t.size()])
 	check("subway has four stations", c.subway["stops"].size() == 4, str(c.subway["stops"].size()))

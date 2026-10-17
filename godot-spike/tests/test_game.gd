@@ -109,9 +109,10 @@ func run() -> Array:
 	var ok := 0
 	var tries := 0
 	var y0: int = g.yen
-	for k in g.sim.near_list.size():
-		var j: int = g.sim.near_list[k]
-		if g.fac[j] != 0 or g.sim.alive[j] == 0 or tries >= 12:
+	var snap: PackedInt32Array = g.sim.near_list.duplicate()
+	for k in snap.size():
+		var j: int = snap[k]
+		if g.sim.near[j] == 0 or g.fac[j] != 0 or g.sim.alive[j] == 0 or tries >= 12:
 			continue
 		var nb := -1
 		for d in g.SIZE_DIRS:

@@ -56,6 +56,7 @@ const EXTRA := [
 	["lantern_stone", "f_trl_lantern_stone", 0, 0], ["chozuya", "f_trl_chozuya", 0, 0], ["ema_rack", "f_trl_ema_rack", 0, 0], ["torii", "f_trl_torii", 1, 0],
 	["shimenawa", "f_trl_shimenawa_pole", 0, 0], ["bonsai", "f_trl_bonsai", 0, 0], ["fern", "f_trl_fern", 0, 0], ["aquarium", "f_trl_aquarium", 0, 0],
 	["charm_counter", "f_trl_charm_counter", 0, 1], ["cabinet", "f_trl_cabinet_lacquer", 0, 1], ["neon", "f_trl_neon_pink", 0, 0],
+	["crane_leg", "f_trl_crane_leg", 0, 0], ["container", "f_trl_container", 0, 1], ["bollard", "f_trl_bollard", 0, 0],
 ]
 const EXTRA0 := 33
 static var TID: Dictionary = _tids()
@@ -135,6 +136,40 @@ var rng := RandomNumberGenerator.new()
 var venues: Array = []                 # {kind, style, tier, x0, y0, x1, y1, door, keeper: cell, name}: shops, clinics, churches, shrines
 var venue_plan: Array = []             # kinds still to place while the suburbs are laid out
 var under: PackedByteArray = PackedByteArray()   # ground level: the floor tile under each piece of furniture
+var cranes: Array = []                           # harbor gantry cranes: {x0, x1, y} in local coordinates (drawn as moving overlays)
+var wealth: PackedByteArray = PackedByteArray()  # per column of the map: 0 poor, 1 middle, 2 rich (empty = everything middle)
+const DISTRICTS := ["lower", "middle", "upper"]
+
+## which part of town a cell is in: 0 lower, 1 middle, 2 upper
+func wealth_at(c: int) -> int:
+	if wealth.is_empty():
+		return 1
+	return wealth[c % wealth.size()]
+
+## smooth districts: a few tens of tiles across, the middle of the city leaning rich and the edges poor, with all three always present
+func _make_wealth(seed_v: int) -> void:
+	wealth = PackedByteArray()
+	wealth.resize(size * size)
+	var nz := FastNoiseLite.new()
+	nz.seed = seed_v ^ 0x3a17
+	nz.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	nz.frequency = 0.011
+	nz.fractal_octaves = 2
+	var vals := PackedFloat32Array()
+	vals.resize(size * size)
+	var centre := Vector2(size * 0.5, size * 0.5)
+	for y in size:
+		for x in size:
+			var d: float = Vector2(x, y).distance_to(centre) / (size * 0.5)
+			vals[y * size + x] = nz.get_noise_2d(x, y) * 0.8 + (0.45 - d) * 0.5
+	# thresholds at the 33rd and 70th percentile so each tier covers a fair share of the map
+	var sorted := vals.duplicate()
+	sorted.sort()
+	var lo: float = sorted[int(sorted.size() * 0.33)]
+	var hi: float = sorted[int(sorted.size() * 0.70)]
+	for i in size * size:
+		wealth[i] = 0 if vals[i] < lo else (2 if vals[i] >= hi else 1)
+
 
 func walkable(t: int) -> bool:
 	return WALK[t] == 1
@@ -166,6 +201,7 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 	towers = []
 	venues = []
 	venue_plan = VN.city_plan(rng)
+	_make_wealth(seed)
 	under = PackedByteArray()
 	under.resize(size * size)
 	var m := mini(grid_margin, size / 6)
@@ -187,24 +223,91 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 			for k in rw:
 				_set_road(x, ly + k)
 	_paint_lanes()
-	# blocks between the lines
+	# blocks between the lines.  Where the towers stand: the middle of the city has mega-towers that fill 2-3 blocks each way (4 to 9 blocks in
+	# all); the ring around it has buildings 1-2 blocks wide (1 to 4 blocks); beyond that the suburbs.
 	var centre := Vector2(size * 0.5, size * 0.5)
+	var grid: Array = []                      # grid[i][j] = block rect or null
 	for i in xs.size() - 1:
+		var col: Array = []
 		for j in ys.size() - 1:
 			var x0: int = xs[i] + rw
 			var x1: int = xs[i + 1] - 1
 			var y0: int = ys[j] + rw
 			var y1: int = ys[j + 1] - 1
 			if x1 - x0 < 12 or y1 - y0 < 12:
-				continue
-			var d := Vector2((x0 + x1) * 0.5, (y0 + y1) * 0.5).distance_to(centre) / (size * 0.5)
-			var r := rng.randf()
-			if r < 0.06 + d * 0.12:
-				_park(x0, y0, x1, y1)
-			elif d < 0.58:
-				_core_block(x0, y0, x1, y1)
+				col.append(null)
 			else:
-				_suburb_block(x0, y0, x1, y1)
+				col.append({"r": Rect2i(x0, y0, x1 - x0, y1 - y0), "d": Vector2((x0 + x1) * 0.5, (y0 + y1) * 0.5).distance_to(centre) / (size * 0.5), "used": false})
+		grid.append(col)
+	var order: Array = []
+	for i in grid.size():
+		for j in grid[i].size():
+			if grid[i][j] != null:
+				order.append([i, j])
+	order.sort_custom(func(a, b): return grid[a[0]][a[1]]["d"] < grid[b[0]][b[1]]["d"])
+	var mid_line: int = size / 2 - rw / 2
+	var mega_zone := 0.30
+	var tower_zone := 0.58
+	for ij in order:
+		var b: Dictionary = grid[ij[0]][ij[1]]
+		if b["used"]:
+			continue
+		var d: float = b["d"]
+		var r := rng.randf()
+		if r < 0.06 + d * 0.12:
+			b["used"] = true
+			var rr: Rect2i = b["r"]
+			_park(rr.position.x, rr.position.y, rr.end.x, rr.end.y)
+		elif d < tower_zone:
+			var shapes: Array = []
+			if d < mega_zone and rng.randf() < 0.8:
+				shapes = [[3, 3], [3, 2], [2, 3], [2, 2]] if rng.randf() < 0.5 else [[2, 2], [3, 2], [2, 3], [3, 3]]
+			elif d < tower_zone:
+				var pick := rng.randf()
+				shapes = [[2, 2], [2, 1], [1, 2], [1, 1]] if pick < 0.2 else ([[2, 1], [1, 1]] if pick < 0.45 else ([[1, 2], [1, 1]] if pick < 0.7 else [[1, 1]]))
+			var done := false
+			for sh in shapes:
+				if _try_merge(grid, ij[0], ij[1], sh[0], sh[1], mid_line, mega_zone if sh[0] * sh[1] >= 4 and d < mega_zone else tower_zone):
+					done = true
+					break
+			if not done:
+				b["used"] = true
+				var rr2: Rect2i = b["r"]
+				_core_block(rr2.position.x, rr2.position.y, rr2.end.x, rr2.end.y)
+		else:
+			b["used"] = true
+			var rr3: Rect2i = b["r"]
+			_suburb_block(rr3.position.x, rr3.position.y, rr3.end.x, rr3.end.y)
+
+## fill w x h blocks starting at grid[i][j] with ONE building (the streets between them are built over).  False when they do not all fit.
+func _try_merge(grid: Array, i: int, j: int, w: int, h: int, mid_line: int, dmax: float) -> bool:
+	if i + w > grid.size() or j + h > grid[0].size():
+		return false
+	for a in w:
+		for b in h:
+			var blk = grid[i + a][j + b]
+			if blk == null or blk["used"] or float(blk["d"]) > dmax + 0.12:
+				return false
+	# never over the main street, and the blocks must be next to each other (no skipped line)
+	for b in h - 1:
+		if ys[j + b + 1] == mid_line:
+			return false
+	if ys[j] == mid_line and h > 1 and false:
+		return false
+	for a in w:
+		for b in h:
+			grid[i + a][j + b]["used"] = true
+	var r0: Rect2i = grid[i][j]["r"]
+	var r1: Rect2i = grid[i + w - 1][j + h - 1]["r"]
+	if w * h > 1:
+		for y in range(r0.position.y, r1.end.y + 1):
+			for x in range(r0.position.x, r1.end.x + 1):
+				var t: int = tiles[y * size + x]
+				if t == ROAD:
+					tiles[y * size + x] = GROUND
+				marks[y * size + x] = 0
+	_building(r0.position.x + 2, r0.position.y + 2, r1.end.x - 2, r1.end.y - 2, "core")
+	return true
 
 ## vertical road lines (left edge x) between lo and hi, block interiors of 34-48 tiles
 func _lines(lo: int, hi: int) -> Array:
@@ -313,7 +416,7 @@ func _suburb_block(x0: int, y0: int, x1: int, y1: int) -> void:
 			if rid < 2 and wdt >= 12 and not venue_plan.is_empty() and rng.randf() < 0.6:
 				var kind: String = venue_plan.pop_front()
 				var d := Vector2((x + x + wdt) * 0.5, (row[0] + row[1]) * 0.5).distance_to(Vector2(size * 0.5, size * 0.5)) / (size * 0.5)
-				VN.stamp(self, kind, x, row[0], x + wdt, row[1], 0 if rid == 0 else 1, 0 if d > 0.8 else 1)
+				VN.stamp(self, kind, x, row[0], x + wdt, row[1], 0 if rid == 0 else 1, 0 if wealth_at(row[0] * size + x) == 0 else 1)
 			elif rng.randf() < 0.9:
 				_building(x, row[0], x + wdt, row[1], "house")
 			x += wdt + rng.randi_range(3, 6)

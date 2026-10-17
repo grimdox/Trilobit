@@ -336,7 +336,17 @@ func _decorate_city(c) -> void:
 		_rect(c, yx0 + 4 + k * 10, 276, yx0 + 9 + k * 10, 279, CG.CRATE)
 		_rect(c, yx0 + 4 + k * 10, 286, yx0 + 9 + k * 10, 289, CG.CRATE)
 
-## the harbor: quays on the shore, piers into the water, warehouses, container stacks, a freight yard on the railway, and a few dormitories
+## The harbor.  Three zones from north to south:
+##   north (dy < -54)  derelict warehouses and loose crates: unaffiliated criminals
+##   centre            the working port: a quay road with trucks, gantry cranes over it, container stacks, a freight siding, dock workers
+##   south (dy > 54)   dormitories and sheds: the Bratva
+## (dy is the row relative to PORT.y).  The harbor is the one place on the island with a lot of freight moving.
+const PORT_NORTH := -54
+const PORT_SOUTH := 54
+
+static func port_band(dy: int) -> int:
+	return -1 if dy < PORT_NORTH else (1 if dy > PORT_SOUTH else 0)
+
 func _port(c) -> void:
 	var o := zone_origin(0, 1)
 	var sx_mid := int(west_x(PORT.y))
@@ -351,33 +361,71 @@ func _port(c) -> void:
 			var t: int = c.tiles[ly * ZS + lx]
 			if t == CG.WATER or t == CG.SAND or t == CG.PARK or t == CG.ROCKS or t == CG.TREE or t == CG.FIELD:
 				c.tiles[ly * ZS + lx] = CG.PLATFORM
-	# piers
+	# piers (the outer two belong to the smugglers)
 	for py in [PORT.y - 70, PORT.y - 36, PORT.y + 26, PORT.y + 60]:
 		var sx2 := int(west_x(py))
 		_rect(c, sx2 - 26 - o.x, py - o.y, sx2 + 4 - o.x, py - o.y + 5, CG.PLATFORM, [CG.WATER, CG.SAND, CG.PLATFORM])
-	_clear_growth(c, sx_mid + 8 - o.x, 610 - o.y, 330 - o.x, 800 - o.y)
-	# a siding and the container yard south of the rails
-	var rx0 := sx_mid + 14
-	for x in range(rx0, 334):
+	_clear_growth(c, sx_mid + 8 - o.x, PORT.y - 120 - o.y, 340 - o.x, PORT.y + 110 - o.y)
+	# ---- the working centre
+	var rx: int = sx_mid + 6 - o.x                 # left edge (local) of the north-south quay road, 12 wide
+	var y_top: int = PORT.y - 52 - o.y
+	var y_bot: int = PORT.y + 52 - o.y
+	for y in range(y_top, y_bot + 1):
+		for k in 12:
+			var m: int = CG.M_WHITE_V if (k == 0 or k == 11) else (CG.M_YELLOW_V if (k == 5 or k == 6) else 0)
+			if c.tiles[y * ZS + rx + k] != CG.ROAD:
+				_put_t(c, rx + k, y, CG.ROAD, m)
+	c.xs = [rx]
+	c.ys = [HWY_Y - 6 - o.y]
+	# gantry cranes straddling the road: a leg on each side, a beam overhead drawn by the view
+	c.cranes = []
+	for dy in [-44, -32, -20, 20, 32, 44]:
+		var gy2: int = PORT.y + dy - o.y
+		_put_t(c, rx - 1, gy2, CG.TID["crane_leg"])
+		_put_t(c, rx + 12, gy2, CG.TID["crane_leg"])
+		c.cranes.append({"x0": rx - 1, "x1": rx + 12, "y": gy2})
+	_rect(c, rx + 13, y_top, 316 - o.x, y_bot, CG.PLATFORM, [CG.PARK, CG.GROUND, CG.FIELD, CG.SAND, CG.ROCKS, CG.TREE])     # the paved yard
+	# a siding east of the road and the container yard: stacks with aisles, north and south of the rails
+	for x in range(rx + 14, 334 - o.x):
 		for k in 4:
 			var t2 := CG.BALLAST if (k == 0 or k == 3) else CG.TRACK
-			_put_t(c, x - o.x, PORT.y + 14 + k - o.y, t2, CG.M_RAIL_H if t2 == CG.TRACK else 0)
-	var cy0 := PORT.y + 22
-	for row in 3:
-		var x := rx0 + 4
-		while x + 6 < 316:
-			if (x / 8 + row) % 5 != 0:
-				_rect(c, x - o.x, cy0 + row * 6 - o.y, x + 5 - o.x, cy0 + row * 6 + 2 - o.y, CG.CRATE)
-			x += 8
-	# warehouses north of the highway, dormitories and a depot south of the yard
-	var w0 := int(west_x(PORT.y - 60)) + 16
-	c._building(w0 - o.x, 640 - o.y, mini(w0 + 52, 308) - o.x, 686 - o.y, "core")
-	c._building(w0 - o.x, 590 - o.y, mini(w0 + 40, 308) - o.x, 628 - o.y, "core")
-	var d0 := int(west_x(PORT.y + 90)) + 16
-	c._building(d0 - o.x, 770 - o.y, mini(d0 + 14, 308) - o.x, 784 - o.y, "house")
-	c._building(d0 + 20 - o.x, 770 - o.y, mini(d0 + 34, 308) - o.x, 784 - o.y, "house")
-	c.xs = []
-	c.ys = [HWY_Y - 6 - o.y]
+			_put_t(c, x, PORT.y + 12 + k - o.y, t2, CG.M_RAIL_H if t2 == CG.TRACK else 0)
+	var cont: int = CG.TID["container"]
+	for band in [[-46, -10], [20, 50]]:
+		var by: int = PORT.y + int(band[0]) - o.y
+		var rows: int = (int(band[1]) - int(band[0])) / 8
+		for r in rows:
+			var x := rx + 18
+			while x + 6 < 316 - o.x:
+				if (x / 8 + r * 3) % 7 != 0:
+					for yy in 3:
+						for xx in 6:
+							_put_t(c, x + xx, by + r * 8 + yy, cont)
+				x += 9
+	# dock workers: work spots along both sides of the road and in the stack aisles; two dormitories at the east end
+	for k in 60:
+		var wy: int = PORT.y - 50 + (k * 37) % 100 - o.y
+		var wx: int = rx - 3 if k % 2 == 0 else rx + 14
+		if wx >= 0 and wx < ZS and wy >= 0 and wy < ZS and c.walkable(c.tiles[wy * ZS + wx]):
+			c.works.append(wy * ZS + wx)
+	c._building(rx + 150, PORT.y - 28 - o.y, rx + 166, PORT.y - 14 - o.y, "house")
+	c._building(rx + 150, PORT.y + 22 - o.y, rx + 166, PORT.y + 36 - o.y, "house")
+	# ---- north: three derelict warehouses and loose cargo
+	var wn: int = int(west_x(PORT.y - 90)) + 16 - o.x
+	c._building(wn, PORT.y - 112 - o.y, mini(wn + 44, 300 - o.x), PORT.y - 84 - o.y, "core")
+	c._building(wn + 56, PORT.y - 108 - o.y, mini(wn + 92, 330 - o.x), PORT.y - 70 - o.y, "core")
+	c._building(wn, PORT.y - 76 - o.y, mini(wn + 30, 300 - o.x), PORT.y - 60 - o.y, "house")
+	for k in 14:
+		_rect(c, wn + 100 + (k * 13) % 80, PORT.y - 118 - o.y + (k * 7) % 56, wn + 101 + (k * 13) % 80, PORT.y - 117 - o.y + (k * 7) % 56, CG.CRATE, [CG.PARK, CG.GROUND])
+	# ---- south: dormitories and sheds
+	var ws: int = int(west_x(PORT.y + 80)) + 16 - o.x
+	c._building(ws, PORT.y + 66 - o.y, ws + 16, PORT.y + 80 - o.y, "house")
+	c._building(ws + 22, PORT.y + 66 - o.y, ws + 38, PORT.y + 80 - o.y, "house")
+	c._building(ws + 44, PORT.y + 66 - o.y, ws + 60, PORT.y + 80 - o.y, "house")
+	c._building(ws, PORT.y + 90 - o.y, ws + 34, PORT.y + 106 - o.y, "core")
+	for k in 10:
+		_rect(c, ws + 70 + (k * 11) % 60, PORT.y + 62 - o.y + (k * 5) % 40, ws + 71 + (k * 11) % 60, PORT.y + 63 - o.y + (k * 5) % 40, CG.CRATE, [CG.PARK, CG.GROUND])
+	c._paint_lanes()
 
 ## the town: a crossing of the highway with one main street, four blocks of small houses, a store at the crossroads
 func _town(c) -> void:
