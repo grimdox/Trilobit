@@ -112,39 +112,67 @@ func run() -> Array:
 		tr.step()
 		waits += 1
 	check.call("the train stops at a station (%d steps)" % waits, tr.dwell > 0)
-	var car: int = tr.car_cell(1)
+	# find an open tdoor with a platform beside it
+	var occ: Dictionary = tr.occupancy()
+	var tdoor := -1
 	var plat := -1
-	for nb in [car - 1, car + 1, car - g.size, car + g.size]:
-		if g.city.tiles[nb] == CG.PLATFORM:
-			plat = nb
-	check.call("a platform lies beside a stopped carriage", plat >= 0)
+	var dj := 0
+	for c in occ:
+		var inf: Array = tr.occ_unpack(int(occ[c]))
+		if tr.dwell_of(int(inf[0])) > 0 and int(inf[2]) == tr.DOOR_A and (int(inf[3]) == 0 or int(inf[3]) == 3):
+			for nb in [c - 1, c + 1, c - g.size, c + g.size]:
+				if g.city.tiles[nb] == CG.PLATFORM and not occ.has(nb) and tdoor < 0:
+					tdoor = c
+					plat = nb
+					dj = int(inf[0])
+	check.call("a platform lies beside an open door of a stopped train", plat >= 0)
 	g.pc = plat
 	g.sim.retier(g.pc)
-	var board_dx: int = (car % g.size) - (plat % g.size)
-	var board_dy: int = ((car / g.size) % g.size) - ((plat / g.size) % g.size)
-	g.act_move(board_dx, board_dy)
-	check.call("stepping onto an open carriage boards", tr.riding >= 0 and g.pc == tr.car_cell(tr.riding))
+	g.act_move((tdoor % g.size) - (plat % g.size), ((tdoor / g.size) % g.size) - ((plat / g.size) % g.size))
+	check.call("stepping through an open door boards", tr.riding >= 0 and g.pc == tdoor)
 	var start_cell: int = g.pc
+	# step inside, onto the floor
+	var inner: int = -1
+	for nb in [tdoor - 1, tdoor + 1, tdoor - g.size, tdoor + g.size]:
+		var ri2: Array = tr.car_on(nb)
+		if not ri2.is_empty() and int(ri2[0]) == dj and (int(ri2[3]) == 1 or int(ri2[3]) == 2):
+			inner = nb
+	g.act_move((inner % g.size) - (tdoor % g.size), ((inner / g.size) % g.size) - ((tdoor / g.size) % g.size))
+	check.call("you can walk inside the carriage", g.pc == inner and tr.riding >= 0)
+	start_cell = g.pc
 	var guard := 0
-	while (tr.dwell > 0 or guard < 3) and guard < 60:
+	while (tr.dwell_of(dj) > 0 or guard < 3) and guard < 60:
 		g.act_wait()
 		guard += 1
-	var after_dwell_pc: int = g.pc
-	var moved_ok: bool = tr.riding >= 0 and g.pc == tr.car_cell(tr.riding)
+	var moved_ok: bool = tr.riding >= 0 and g.pc == tr.seat_cell()
 	check.call("while riding, you travel with the train", moved_ok)
 	var rides := 0
-	while tr.dwell == 0 and rides < 200:
+	while tr.dwell_of(dj) == 0 and rides < 200:
 		g.act_wait()
 		rides += 1
 	var far: int = g.cheb(g.pc, start_cell)
-	check.call("it carries you to the next station (%d cells in %d turns)" % [far, rides], tr.dwell > 0 and far > 30 and g.hp > 0)
-	var exit_dx := 0
-	var exit_dy := 0
-	for d in [[1, 0], [-1, 0], [0, 1], [0, -1]]:
-		if g.city.tiles[g.pc + d[1] * g.size + d[0]] == CG.PLATFORM:
-			exit_dx = d[0]
-			exit_dy = d[1]
-	g.act_move(exit_dx, exit_dy)
+	check.call("it carries you to the next station (%d cells in %d turns)" % [far, rides], tr.dwell_of(dj) > 0 and far > 30 and g.hp > 0)
+	# walk to a tdoor and off onto the platform
+	var exit_to := -1
+	var exit_door := -1
+	var occ2: Dictionary = tr.occupancy()
+	for c in occ2:
+		var inf2: Array = tr.occ_unpack(int(occ2[c]))
+		if int(inf2[0]) == dj and int(inf2[2]) == tr.DOOR_A and int(inf2[1]) == tr.riding and (int(inf2[3]) == 0 or int(inf2[3]) == 3):
+			for nb in [c - 1, c + 1, c - g.size, c + g.size]:
+				if g.city.tiles[nb] == CG.PLATFORM and not occ2.has(nb) and exit_to < 0:
+					exit_to = nb
+					exit_door = c
+	check.call("a door with a platform beyond it is in your carriage", exit_to >= 0)
+	var wtries := 0
+	while g.pc != exit_door and wtries < 20 and exit_door >= 0:
+		var dx: int = signi((exit_door % g.size) - (g.pc % g.size))
+		var dy: int = signi(((exit_door / g.size) % g.size) - ((g.pc / g.size) % g.size))
+		if dx != 0 and dy != 0:
+			dy = 0
+		g.act_move(dx, dy)
+		wtries += 1
+	g.act_move((exit_to % g.size) - (g.pc % g.size), ((exit_to / g.size) % g.size) - ((g.pc / g.size) % g.size))
 	check.call("you can step off onto the platform", tr.riding < 0 and g.city.tiles[g.pc] == CG.PLATFORM)
 	var hp_before: int = g.hp
 	var guard2 := 0

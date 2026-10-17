@@ -34,26 +34,36 @@ func run() -> Array:
 		heads[t.head_of(j)] = true
 	check.call("%d trains run it, spaced round the loop" % TR.TRAINS, TR.TRAINS >= 3 and heads.size() == TR.TRAINS)
 	var bad := 0
+	var narrow := 0
 	for i in n:
-		var c: int = t.cell_of[i]
-		if c >= 0:
-			var tt: int = g.city.tiles[c]
-			if tt != CG.TRACK and tt != CG.PLATFORM:
+		for l in [1, 2]:
+			var c: int = t.lane_cell[l][i]
+			if c >= 0 and g.city.tiles[c] != CG.TRACK:
 				bad += 1
-	check.call("the whole line is laid on track in the city zone (%d cells off)" % bad, bad == 0)
+		for l in [0, 3]:
+			var c3: int = t.lane_cell[l][i]
+			if c3 >= 0:
+				var tt: int = g.city.tiles[c3]
+				if tt == CG.EARTH or tt == CG.WALL or not g.sim.walk[c3 % g.s2 + 0] == g.sim.walk[c3 % g.s2 + 0]:
+					narrow += 1
+	check.call("both tiles of the track are laid in the city zone (%d cells off)" % bad, bad == 0)
+	check.call("the wall lanes of the train have room beside the track (%d solid)" % narrow, narrow < 40)
 	# the harbor game sees the same line and its terminal platform
 	var hz = w._make(Vector2i(0, 1))
-	var term: int = hz.transit.stop_cell(hz.transit.stop_names.find("Harbor Terminal"))
-	var plat := false
+	var ti: int = hz.transit.stop_names.find("Harbor Terminal")
+	var term: int = hz.transit.stop_cell(ti)
+	var plat := 0
 	if term >= 0:
-		for nb in [term - hz.size, term + hz.size, term - 1, term + 1]:
-			if hz.city.tiles[nb] == CG.PLATFORM:
-				plat = true
-	check.call("the terminal is in the harbor zone, with a platform beside the track", term >= 0 and plat and hz.city.tiles[term] == CG.TRACK)
+		for dd in range(-12, 12):
+			for off in range(1, 5):
+				if hz.city.tiles[term + dd + off * hz.size] == CG.PLATFORM:
+					plat += 1
+	check.call("the terminal is in the harbor zone, with a long platform beside the track (%d platform tiles)" % plat, term >= 0 and plat >= 24 and hz.city.tiles[term] == CG.TRACK)
 	var onrail := 0
 	for i in n:
 		var c2: int = hz.transit.cell_of[i]
-		if c2 >= 0 and hz.city.tiles[c2] != CG.TRACK and TR.unpack(t.path[i]).z == 0:
+		var c2b: int = hz.transit.lane_cell[2][i]
+		if c2 >= 0 and TR.unpack(t.path[i]).z == 0 and (hz.city.tiles[c2] != CG.TRACK or (c2b >= 0 and hz.city.tiles[c2b] != CG.TRACK)):
 			onrail += 1
 	check.call("every harbor-zone cell of the line is track (%d off)" % onrail, onrail == 0 and hz.transit.any_here)
 	# every stop is served: its doors open every lap
@@ -69,17 +79,26 @@ func run() -> Array:
 		t.clock += 1
 		guard += 1
 	check.call("a train stands at Harbor Gate (%d turns wait)" % guard, t.turns_to(stop_i) == 0)
-	var mid: int = t.stop_cell(stop_i)
-	var car: Array = t.car_on(mid)
-	check.call("a carriage is at the platform", not car.is_empty())
+	var occ: Dictionary = t.occupancy()
+	var door_cell := -1
 	var plat2 := -1
-	for nb in [mid - 1, mid + 1, mid - g.size, mid + g.size]:
-		if g.city.tiles[nb] == CG.PLATFORM:
-			plat2 = nb
+	for c in occ:
+		var inf: Array = TR.occ_unpack(int(occ[c]))
+		if t.dwell_of(int(inf[0])) > 0 and t.stop_of(int(inf[0])) == stop_i and int(inf[2]) == TR.DOOR_A and (int(inf[3]) == 0 or int(inf[3]) == 3):
+			for nb in [c - 1, c + 1, c - g.size, c + g.size]:
+				if g.city.tiles[nb] == CG.PLATFORM and not occ.has(nb) and door_cell < 0:
+					door_cell = c
+					plat2 = nb
+	check.call("a platform lies beside an open door", door_cell >= 0)
+	var tiles0 := 0
+	for c in occ:
+		if int(TR.occ_unpack(int(occ[c]))[0]) == 0:
+			tiles0 += 1
+	check.call("a train is four tiles wide and 24 long (%d tiles)" % tiles0, tiles0 >= 4 * TR.TRAIN_LEN - 8 and tiles0 <= 4 * TR.TRAIN_LEN)
 	g.pc = plat2
 	g.sim.retier(g.pc)
-	g.act_move((mid % g.size) - (plat2 % g.size), ((mid / g.size) % g.size) - ((plat2 / g.size) % g.size))
-	check.call("the player boards", t.riding >= 0)
+	g.act_move((door_cell % g.size) - (plat2 % g.size), ((door_cell / g.size) % g.size) - ((plat2 / g.size) % g.size))
+	check.call("the player boards through the door", t.riding >= 0 and g.pc == door_cell)
 	var visited_harbor := false
 	var back_in_city := false
 	var seat_ok := true

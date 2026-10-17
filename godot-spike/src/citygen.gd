@@ -113,6 +113,7 @@ var shops: PackedInt32Array
 var buildings: int = 0
 var xs: Array = []                     # x of each vertical road line (left edge), y of each horizontal one
 var ys: Array = []
+var rail_row: int = -1                 # island city: the row of the railway tunnel's mouth (the subway keeps a station clear of it)
 var rw: int = 12                       # road width: two lanes of six
 const LANE := 6
 var towers: Array = []                 # {x0,y0,x1,y1,door} of every core building: candidates for a tall tower

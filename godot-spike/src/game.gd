@@ -846,9 +846,11 @@ func _act_move_core(dx: int, dy: int, run: bool = false) -> bool:
 		return false
 	if sim.walk[c] == 0:
 		return false
-	if city.tiles[c] == CG.TRACK and transit.try_board(c):
-		end_turn()
-		return true
+	if transit.occupied(c):
+		if transit.try_board(c):
+			end_turn()
+			return true
+		return false
 	pc = c
 	var ran := false
 	if run and stamina >= 2 and stance >= WALKING:

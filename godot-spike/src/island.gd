@@ -123,16 +123,17 @@ func _corridor(x: int, y: int) -> int:
 	if dy >= -6 and dy <= 5:
 		return CG.ROAD
 	if x <= RAIL_X1:
-		# the track follows the winding pass: where the road steps more than a row between columns the rails fill the gap
-		var ya := pass_yc(x - 1) - hy
-		var yb := pass_yc(x + 1) - hy
-		var lo := mini(0, mini(ya, yb)) + 9
-		var hi := maxi(0, maxi(ya, yb)) + 10
-		if dy >= lo and dy <= hi:
+		# a two-track line: each track two tiles wide (rows +9..+10 north, +13..+14 south), ballast between and around.  Where the road
+		# steps more than a row between columns the rails fill the gap.
+		var ya := mini(pass_yc(x - 1), pass_yc(x - 2)) - hy
+		var yb := maxi(pass_yc(x + 1), pass_yc(x + 2)) - hy
+		var lo := mini(0, mini(ya, yb))
+		var hi := maxi(0, maxi(ya, yb))
+		if (dy >= 9 + lo and dy <= 10 + hi) or (dy >= 13 + lo and dy <= 14 + hi):
 			return CG.TRACK
-		if dy == lo - 1 or dy == hi + 1:
+		if dy >= 8 + lo and dy <= 15 + hi:
 			return CG.BALLAST
-	if x >= PASS_X0 - 14 and x <= PASS_X1 + 40 and dy >= -9 and dy <= 14:
+	if x >= PASS_X0 - 14 and x <= PASS_X1 + 40 and dy >= -9 and dy <= 21:
 		return CG.ROCKS
 	return -1
 
@@ -288,6 +289,7 @@ func build_zone(zx: int, zy: int):
 	var z := Vector2i(zx, zy)
 	if z == CITY_ZONE:
 		c.grid_margin = MARGIN_ZONE
+		c.rail_row = HWY_Y + 11 - zone_origin(zx, zy).y
 		c.generate(seed_value, Vector2.ZERO, ZS)
 		_decorate_city(c)
 	else:
@@ -339,41 +341,36 @@ func _decorate_city(c) -> void:
 				c.marks[i] = mk
 	# the freight yard where the line ends: a loading apron south of the rails, a few containers
 	var yx0 := RAIL_X1 - o.x - 36
-	_rect(c, yx0, 268, RAIL_X1 - o.x, 300, CG.PLATFORM)
+	_rect(c, yx0, 278, RAIL_X1 - o.x, 306, CG.PLATFORM)
 	for k in 3:
-		_rect(c, yx0 + 4 + k * 10, 276, yx0 + 9 + k * 10, 279, CG.CRATE)
-		_rect(c, yx0 + 4 + k * 10, 286, yx0 + 9 + k * 10, 289, CG.CRATE)
+		_rect(c, yx0 + 4 + k * 10, 284, yx0 + 9 + k * 10, 287, CG.CRATE)
+		_rect(c, yx0 + 4 + k * 10, 294, yx0 + 9 + k * 10, 297, CG.CRATE)
 
-## the railway enters the city through a tunnel mouth, and a twin-track tunnel under the margin joins the subway loop
+## the railway enters the city through a tunnel mouth, and a twin-track tunnel (each track two tiles wide, a train four wide) under the margin joins the subway loop
 func rail_portal(c) -> void:
 	var o := zone_origin(CITY_ZONE.x, CITY_ZONE.y)
 	var ring: PackedInt32Array = c.subway["ring"]
 	if ring.is_empty():
 		return
-	var y_out: int = HWY_Y + 10 - o.y
-	var y_ret: int = y_out - 1
+	var y_out: int = HWY_Y + 13 - o.y                 # path row of the outbound (south) track; its second tile is the row below
+	var y_ret: int = HWY_Y + 9 - o.y                  # ... of the return (north) track
 	var xl := -1
 	for cell in ring:
 		if cell / ZS == y_out and (xl < 0 or cell % ZS < xl):
 			xl = cell % ZS
 	if xl < 0:
 		return
-	var px := 62                                   # TR.PORTAL_X
+	var px := 62                                   # transit.gd PORTAL_X
 	var l1: int = c.lvl_of_z(-1) * ZS * ZS
-	# surface: two more lengths of track, ballast either side, and the tunnel mouth
-	for x in range(RAIL_X1 - o.x + 1, px + 1):
-		_put_t(c, x, y_ret - 1, CG.BALLAST, 0)
-		_put_t(c, x, y_ret, CG.TRACK, CG.M_RAIL_H)
-		_put_t(c, x, y_out, CG.TRACK, CG.M_RAIL_H)
-		_put_t(c, x, y_out + 1, CG.BALLAST, 0)
-	for y in range(y_ret - 1, y_out + 2):
+	# the tunnel mouth: a wall across both tracks
+	for y in range(y_ret - 1, y_out + 3):
 		for x in [px + 1, px + 2]:
 			_put_t(c, x, y, CG.WALL, 0)
-	# underground: rock-cut tunnel from the portal to the ring
+	# underground: rock-cut tunnel from the portal to the ring: catwalks, the two tracks, ballast-width gap between
 	for x in range(px, xl):
-		for y in range(y_ret - 1, y_out + 2):
+		for y in range(y_ret - 2, y_out + 4):
 			var t: int = CG.TUNNEL
-			if y == y_ret or y == y_out:
+			if y == y_ret or y == y_ret + 1 or y == y_out or y == y_out + 1:
 				t = CG.TRACK
 			c.tiles[l1 + y * ZS + x] = t
 
@@ -428,13 +425,18 @@ func _port(c) -> void:
 	_rect(c, rx + 13, y_top, 316 - o.x, y_bot, CG.PLATFORM, [CG.PARK, CG.GROUND, CG.FIELD, CG.SAND, CG.ROCKS, CG.TREE])     # the paved yard
 	# a siding east of the road and the container yard: stacks with aisles, north and south of the rails
 	for x in range(rx + 14, PASS_X0 - 6 - o.x):
-		for k in 4:
-			var t2 := CG.BALLAST if (k == 0 or k == 3) else CG.TRACK
+		for k in 8:
+			var t2: int = CG.TRACK if (k == 1 or k == 2 or k == 5 or k == 6) else CG.BALLAST
 			_put_t(c, x, PORT.y + 8 + k - o.y, t2, CG.M_RAIL_H if t2 == CG.TRACK else 0)
+	# the tracks join at the buffer end (a loop for the trains to turn on)
+	for y in range(PORT.y + 9, PORT.y + 15):
+		for x in [rx + 16, rx + 17]:
+			_put_t(c, x, y - o.y, CG.TRACK, CG.M_RAIL_V)
 	# the Harbor Terminal: a platform along the outbound track at the buffer end of the siding
 	var tx: int = rx + 16
-	for x in range(tx - 2, tx + 12):
-		_put_t(c, x, PORT.y + 11 - o.y, CG.PLATFORM, 0)
+	for x in range(tx - 2, tx + 29):
+		for yy in [16, 17]:
+			_put_t(c, x, PORT.y + yy - o.y, CG.PLATFORM, 0)
 	var cont: int = CG.TID["container"]
 	for band in [[-46, -10], [20, 50]]:
 		var by: int = PORT.y + int(band[0]) - o.y
@@ -470,6 +472,12 @@ func _port(c) -> void:
 	c._building(ws, PORT.y + 90 - o.y, ws + 34, PORT.y + 106 - o.y, "core")
 	for k in 10:
 		_rect(c, ws + 70 + (k * 11) % 60, PORT.y + 62 - o.y + (k * 5) % 40, ws + 71 + (k * 11) % 60, PORT.y + 63 - o.y + (k * 5) % 40, CG.CRATE, [CG.PARK, CG.GROUND])
+	# the railway through the pass runs on into the harbor zone: lay it over whatever the zone put there
+	for x in range(PASS_X0 - 6 - o.x, ZS):
+		for gy in range(HWY_Y + 5 - o.y - 10, HWY_Y + 30 - o.y):
+			var tt := _corridor(x + o.x, gy + o.y)
+			if tt == CG.TRACK or tt == CG.BALLAST:
+				_put_t(c, x, gy, tt, CG.M_RAIL_H if tt == CG.TRACK else 0)
 	c._paint_lanes()
 
 ## the town: a crossing of the highway with one main street, four blocks of small houses, a store at the crossroads

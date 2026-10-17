@@ -20,7 +20,7 @@ func _initialize() -> void:
 		t.clock += 1
 		guard += 1
 	var mid: int = t.stop_cell(si)
-	g.pc = mid + g.size * 2 - 3
+	g.pc = mid + g.size * 4 + 2
 	g.facing = Vector2i(0, -1)
 	g.sim.retier(g.pc)
 	g.fov.compute(g.pc % g.size, g.pc / g.size, 18)

@@ -454,42 +454,61 @@ static func _underground(c, all: PackedByteArray, links: Dictionary, rng: Random
 		ring.append(yb * size + x)
 	for y in range(yb, yt, -1):
 		ring.append(y * size + xl)
-	for cell in ring:
-		all[l1 + cell] = CG.TRACK
-	for cell in ring:
-		for nb in [cell - 1, cell + 1, cell - size, cell + size]:
-			if all[l1 + nb] == CG.EARTH:
-				all[l1 + nb] = CG.TUNNEL
+	# the line is two tiles of track wide (the ring cell and its right/lower neighbour); a train is four wide, so the tunnel
+	# is carved six wide: a catwalk, the body (wall, two floor tiles, wall) over the tracks, and a catwalk
+	var catwalk: Array = []
+	for i in ring.size():
+		var cell: int = ring[i]
+		var horiz_cell: bool = _ring_horiz(ring, i, size)
+		for off in range(-2, 4):
+			var q: int = cell + (off * size if horiz_cell else off)
+			if off == 0 or off == 1:
+				all[l1 + q] = CG.TRACK
+			elif all[l1 + q] == CG.EARTH or all[l1 + q] == CG.TUNNEL:
+				all[l1 + q] = CG.TUNNEL
+				catwalk.append(q)
 	# four stations, one on each side of the ring, each with an entrance on a street tile
 	var w := xr - xl
 	var hh := yb - yt
 	var sides := [[0, w, true], [w, hh, false], [w + hh, w, true], [2 * w + hh, hh, false]]
 	var stops: Array = []
 	var ring_len := ring.size()
+	var si := 0
 	for sd in sides:
 		var mid: int = int(sd[0]) + int(sd[1]) / 2
 		var horiz: bool = sd[2]
 		var placed := false
-		for off in [0, 5, -5, 10, -10, 15, -15]:
+		for off in [0, 5, -5, 10, -10, 15, -15, 20, -20, 25, -25, 30, -30, 40, -40]:
 			if placed:
 				break
 			var sc: int = mid + off
 			var tc: int = ring[sc % ring_len]
+			if si == 3 and c.rail_row >= 0 and absi(tc / size - c.rail_row) < 26:
+				continue                      # keep the station clear of the tunnel to the railway
 			for sgn in [1, -1]:
-				for dist in range(1, 12):
+				if placed:
+					break
+				for dist in range(5, 26):
 					var p: int = tc + (sgn * dist * size if horiz else sgn * dist)
 					var g: int = all[p]
-					if (g == CG.GROUND or g == CG.PARK) and not placed:
+					if (g == CG.GROUND or g == CG.PARK):
 						placed = true
 						stops.append(sc % ring_len)
 						_station(c, all, ring, sc, horiz, size, l1)
+						# a passage from the platform edge out to the stairs
+						for d in range(2, dist + 1):
+							var q: int = tc + (sgn * d * size if horiz else sgn * d)
+							if all[l1 + q] == CG.EARTH:
+								all[l1 + q] = CG.TUNNEL
 						all[p] = CG.STAIRS
 						all[l1 + p] = CG.STAIRS
 						_link(links, p, l1 + p)
+						break
+		si += 1
 	c.subway = {"ring": ring, "stops": stops}
 	# hatches from the street into the maintenance tunnels
 	var hatch: Array = []
-	for cell in ring:
+	for cell in catwalk:
 		if all[cell] == CG.ROAD and all[l1 + cell] == CG.TUNNEL:
 			hatch.append(cell)
 	for cell in _pick_spaced(hatch, 5, 28, size, rng):
@@ -546,13 +565,20 @@ static func _sewer_cell(all: PackedByteArray, l2: int, size: int, x: int, y: int
 ## platform tiles on both sides of the track around ring index sc
 static func _station(c, all: PackedByteArray, ring: PackedInt32Array, sc: int, horiz: bool, size: int, l1: int) -> void:
 	var n := ring.size()
-	for k in range(-5, 6):
+	# a platform along both sides of the train (30 tiles: a 24-tile train and room to walk), two tiles deep, flush with the car walls
+	for k in range(-15, 15):
 		var tc: int = ring[(sc + k + n) % n]
-		for sgn in [1, -1]:
-			for dist in [1, 2]:
-				var p: int = tc + (sgn * dist * size if horiz else sgn * dist)
-				if all[l1 + p] == CG.TUNNEL or all[l1 + p] == CG.EARTH:
-					all[l1 + p] = CG.PLATFORM
+		for off in [-3, -2, 3, 4]:
+			var p: int = tc + (off * size if horiz else off)
+			if all[l1 + p] == CG.TUNNEL or all[l1 + p] == CG.EARTH:
+				all[l1 + p] = CG.PLATFORM
+
+## is the ring running east-west at index i (a cell's neighbours decide; corners count as horizontal)
+static func _ring_horiz(ring: PackedInt32Array, i: int, size: int) -> bool:
+	var n := ring.size()
+	var a: int = ring[(i - 1 + n) % n]
+	var b: int = ring[(i + 1) % n]
+	return absi(b % size - a % size) >= absi(b / size - a / size)
 
 ## up to `count` cells at least `gap` apart (chebyshev), chosen at random
 static func _pick_spaced(cells: Array, count: int, gap: int, size: int, rng: RandomNumberGenerator) -> Array:
