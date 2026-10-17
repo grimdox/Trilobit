@@ -15,6 +15,7 @@ const GP = preload("res://src/gunplay.gd")
 const VS = preload("res://src/vehicles.gd")
 const IMP = preload("res://src/implants.gd")
 const BODY = preload("res://src/body.gd")
+const SK = preload("res://src/skills.gd")
 
 const UNAWARE := 0
 const CRAWL := 0
@@ -81,8 +82,9 @@ var fuel: int = 24
 var flying: bool = false
 var followers: Array = []                      # hunters climbing after you
 var step_noise: int = 0                        # how far this turn's footsteps carry
-var skills := {"melee": 2, "ranged": 2, "stealth": 2, "theft": 1}
-var xp := {"melee": 0, "ranged": 0, "stealth": 0, "theft": 0}
+var attrs: Dictionary = SK.default_attrs()      # Strength, Perception, Agility, Cognition, Endurance (start at 10)
+var skills: Dictionary = SK.default_skills()    # BASE levels, raised by skill XP (see skills.gd for the effective level)
+var xp: Dictionary = SK.default_skills()        # skill-specific XP towards the next base level
 var worn: Array = []
 var wield = null
 var in_vehicle: int = -1
@@ -652,15 +654,59 @@ func time_text() -> String:
 func sees_cell(c: int) -> bool:
 	return fov.visible[c] == 1
 
+## the effective level of one of your skills: base level plus the bonus from its governing attributes
+func lvl(id: String) -> int:
+	return SK.level(attrs, skills, id)
+
+## an NPC's effective skill (attributes and skills come from faction and person index; see skills.gd)
+func npc_lvl(i: int, id: String) -> int:
+	return SK.npc_level(fac[i], seed_value, i, id)
+
+func npc_attr_set(i: int) -> Dictionary:
+	return SK.npc_attrs(fac[i], seed_value, i)
+
+func discipline(id: String) -> bool:
+	for s in SK.SKILLS:
+		for d in s["disc"]:
+			if d["id"] == id:
+				return lvl(s["id"]) >= int(d["req"])
+	return false
+
 func skill_up(skill: String, difficulty: int) -> void:
 	# gain comes from risk, not repetition: easy successes (difficulty below your level) teach nothing
+	if not skills.has(skill) or skills[skill] >= SK.BASE_MAX:
+		return
 	if difficulty < skills[skill] - 1:
 		return
 	xp[skill] += 1 + maxi(0, difficulty - skills[skill])
-	if xp[skill] >= 6 + skills[skill] * 4:
+	if xp[skill] >= SK.xp_needed(skills[skill]):
 		xp[skill] = 0
 		skills[skill] += 1
-		say("Your %s skill rises to %d." % [skill, skills[skill]])
+		say("Your %s skill rises to %d (level %d with attributes)." % [SK.skill(skill)["name"], skills[skill], lvl(skill)])
+
+## which skill a strike uses: weapons use Melee; fists, kicks and implanted blades use Unarmed
+func melee_skill_id() -> String:
+	if body.arms_ok() > 0 and wield != null and wield.def.has("melee") and can_use_weapon(wield, false):
+		return "melee"
+	return "unarmed"
+
+var _crit_n: int = 0
+var crits: bool = true                         # tests that need exact damage switch critical hits off
+## a critical hit is decided by the defender's Grit and rolled without touching the game's random stream (so it is the same on every replay of a seed)
+func crit_roll(grit_lvl: int, a: int, b: int) -> bool:
+	_crit_n += 1
+	if not crits:
+		return false
+	return hash([seed_value, turn, a, b, _crit_n]) % 100 < SK.crit_chance(grit_lvl)
+
+## damage a person takes from the player: their Grit cuts it (never below 1), and a crit adds half again
+func npc_take(i: int, dmg: int) -> int:
+	var g_l: int = npc_lvl(i, "grit")
+	dmg = maxi(1, dmg - SK.grit_cut(g_l))
+	if crit_roll(g_l, pc, i):
+		dmg = dmg * 3 / 2
+		say("Critical hit on %s!" % name_of(i))
+	return dmg
 
 # ---------------------------------------------------------------- inventory
 func stow(it) -> bool:
@@ -930,12 +976,12 @@ func act_wait() -> void:
 ## the lock on a door: theft skill against the floor's security
 func _pick_lock(c: int) -> bool:
 	var z := absi(z_of(c))
-	var chance := clampi(28 + skills["theft"] * 9 - z * 2, 10, 90)
+	var chance := clampi(28 + lvl("engineering") * 9 - z * 2, 10, 90)
 	if rng.randi() % 100 < chance:
 		city.tiles[c] = CG.DOOR
 		sim.tiles[c] = CG.DOOR
 		say("You work the lock open.")
-		skill_up("theft", 3 + z / 6)
+		skill_up("engineering", 3 + z / 6)
 		_noise(c, 5)
 	else:
 		say("The lock holds.  You fumble with it.")
@@ -1275,6 +1321,11 @@ func player_hurt(dmg: int, msg: String, dtype: String = "phys", limb: String = "
 		vs.damage(in_vehicle, "body", dmg)
 		return
 	var l: String = limb if limb != "" else body.pick(rng)
+	var my_grit: int = lvl("grit")
+	dmg = maxi(1, dmg - SK.grit_cut(my_grit))
+	if crit_roll(my_grit, -1, l.hash()):
+		dmg = dmg * 3 / 2
+		say("A critical hit!")
 	var ab: Dictionary = absorb(l, dmg, pen, dtype)
 	var through2: int = int(ab["through"])
 	for b in ab["broke"]:
@@ -1283,19 +1334,20 @@ func player_hurt(dmg: int, msg: String, dtype: String = "phys", limb: String = "
 		sfx("hurt")
 		_limb_hit(l, through2)
 		hp -= through2
+		skill_up("grit", 2 + through2 / 4)
 		say("%s in the %s (-%d%s)." % [msg, limb_name(l), through2, (", armor soaks %d" % int(ab["absorbed"])) if int(ab["absorbed"]) > 0 else ""])
 	else:
 		say("%s in the %s, but your armor stops it (%d)." % [msg, limb_name(l), int(ab["absorbed"])])
 
 ## bullets can only be dodged with high-grade implants (grade 3 and up)
 func player_bullet_dodge() -> int:
-	var d: float = imp_sum("dodge_bullet")
+	var d: float = imp_sum("dodge_bullet") + SK.bullet_dodge(lvl("dodge"))
 	if body.legs_ok() < 2:
 		d *= 0.5 if body.legs_ok() == 1 else 0.0
 	return clampi(int(d), 0, 40)
 
 func player_melee_dodge() -> int:
-	var d: float = 4.0 + float(skills["melee"]) + imp_sum("dodge_melee") + (3.0 if crouch else 0.0) + (4.0 if bless_left > 0 else 0.0)
+	var d: float = float(SK.melee_dodge(lvl("dodge"))) + imp_sum("dodge_melee") + (3.0 if crouch else 0.0) + (4.0 if bless_left > 0 else 0.0)
 	if body.legs_ok() < 2:
 		d *= 0.5 if body.legs_ok() == 1 else 0.0
 	return clampi(int(d), 0, 45)
@@ -1310,15 +1362,10 @@ func npc_armor(i: int) -> int:
 	return 0
 
 func npc_melee_dodge(i: int) -> int:
-	match fac[i]:
-		BRATVA: return 8
-		GANG: return 6
-		NAP: return 10
-		NASIM: return 22
-	return 4
+	return SK.melee_dodge(npc_lvl(i, "dodge"))
 
 func npc_bullet_dodge(i: int) -> int:
-	return 12 if fac[i] == NASIM else 0
+	return SK.bullet_dodge(npc_lvl(i, "dodge"))
 
 # ---- hands, aim speed and what broken limbs do
 func weapon_hands(it) -> int:
@@ -1360,7 +1407,7 @@ func _arm_acc_pen() -> int:
 ## aim levels gained per aim action: skill, the gun's class and optic, implants; broken arms and a hurt head slow it
 func aim_rate() -> float:
 	var st: Dictionary = gun_stats()
-	var r: float = 1.0 + 0.08 * float(skills["ranged"]) - 0.16
+	var r: float = 1.0 + 0.08 * float(lvl("ranged")) + (0.25 if discipline("steady_aim") else 0.0)
 	r += float(st.get("aim_rate", 0.0))
 	r += imp_sum("aim")
 	if body.arms_ok() < 2:
@@ -1376,7 +1423,7 @@ func melee_cost(ms: Dictionary) -> int:
 		c = 100.0 - 60.0 * float(ms["fast"])
 	if ms.get("slow", false):
 		c = 180.0
-	c -= float(skills["melee"]) * 2.0 + imp_sum("atk_speed")
+	c -= float(lvl(melee_skill_id())) * 2.0 + imp_sum("atk_speed")
 	if body.arms_ok() < 2:
 		c += 25.0
 	return clampi(int(c), 40, 260)
@@ -1391,7 +1438,7 @@ func _spend_ap(ms: Dictionary) -> void:
 
 ## melee arts are skills the player can learn later (parry, riposte).  The hooks are here and working; nothing grants them yet.
 func has_art(id: String) -> bool:
-	return id in melee_arts
+	return id in melee_arts or discipline(id)
 
 func learn_art(id: String) -> void:
 	if not (id in melee_arts):
@@ -1399,7 +1446,7 @@ func learn_art(id: String) -> void:
 
 ## a blow aimed at the player did not land.  how = "dodge" or "parry".  Returns true if the player got a free counter-strike.
 func _melee_arts_on_miss(i: int, how: String) -> bool:
-	if how == "parry" and has_art("riposte") and sim.alive[i] == 1 and cheb(sim.pos[i], pc) <= 1 and rng.randf() < 0.5 + 0.05 * float(skills["melee"]):
+	if how == "parry" and has_art("riposte") and sim.alive[i] == 1 and cheb(sim.pos[i], pc) <= 1 and rng.randf() < 0.5 + 0.05 * float(lvl("melee")):
 		say("Riposte!  You turn the parry into a strike.")
 		var ms: Dictionary = melee_stats()
 		var dmg: int = rng.randi_range(int(ms["dmg"][0]), int(ms["dmg"][1]))
@@ -1412,7 +1459,7 @@ func parry_chance(nm: Dictionary) -> int:
 		return 0
 	var p: int = int(melee_stats().get("parry", 0))
 	if has_art("parry"):
-		p += 12 + 2 * skills["melee"]
+		p += 12 + 2 * lvl("melee")
 	return p
 
 ## trauma patch: 25 health and the worst limb mended a little (a disabled limb comes back)
@@ -1584,8 +1631,9 @@ func _line_clear(a: int, b: int) -> bool:
 ## accuracy: skill + weapon - a missing arm; then the target's dodge; attack speed is paid for afterwards in action points (_spend_ap).
 func melee(i: int, dist: int = 1) -> void:
 	var ms: Dictionary = melee_stats()
+	var msk: String = melee_skill_id()
 	var sneak := astate[i] == UNAWARE or astate[i] == RETURNING
-	var chance: int = 72 + skills["melee"] * 3 + int(ms.get("acc", 0)) - (0 if sneak else 12) - 4 * (dist - 1) - (10 if body.arms_ok() < 2 else 0)
+	var chance: int = 72 + lvl(msk) * 3 + int(ms.get("acc", 0)) - (0 if sneak else 12) - 4 * (dist - 1) - (10 if body.arms_ok() < 2 else 0)
 	if astate[i] == SURRENDERED:
 		chance = 100
 	if sim.alive[i] == 0:
@@ -1599,7 +1647,7 @@ func melee(i: int, dist: int = 1) -> void:
 		say("%s dodges your %s." % [name_of(i), String(ms.get("verb", "blow"))])
 		_alert(i)
 		return
-	var dmg: int = rng.randi_range(int(ms["dmg"][0]), int(ms["dmg"][1])) + skills["melee"] / 2
+	var dmg: int = rng.randi_range(int(ms["dmg"][0]), int(ms["dmg"][1])) + lvl(msk) / 2 + (2 if msk == "unarmed" and discipline("iron_fist") else 0)
 	var behind: bool = sneak and cone_factor(i, pc) == 0.0
 	if behind:
 		dmg *= int(ms.get("sneak", 4))
@@ -1615,7 +1663,11 @@ func melee(i: int, dist: int = 1) -> void:
 	_silent = false
 	if sim.alive[i] == 1:
 		_melee_effects(i, ms)
-	skill_up("melee", 3 if hpmax[i] >= 40 else 1)
+		if msk == "unarmed" and discipline("pressure_points") and rng.randf() < 0.2:
+			stun[i] = 3
+			sim.ctl[i] = 1
+			say("%s is staggered by a nerve strike." % name_of(i))
+	skill_up(msk, 3 if hpmax[i] >= 40 else 1)
 	if ms.get("sweep", false):
 		_sweep_others(i, ms)
 
@@ -1627,6 +1679,7 @@ func _melee_damage(i: int, dmg: int, ms: Dictionary) -> void:
 		_alert(i)
 		return
 	dmg -= cut
+	dmg = npc_take(i, dmg)
 	hpn[i] -= dmg
 	if hpn[i] <= 0:
 		kill(i)
@@ -1712,7 +1765,7 @@ func act_strike(dx: int, dy: int) -> bool:
 		var c2: int = ny2 * size + nx2
 		if z_of(c2) != z_of(pc):
 			break
-		var dmg: int = rng.randi_range(int(ms["dmg"][0]), int(ms["dmg"][1])) + skills["melee"] / 2
+		var dmg: int = rng.randi_range(int(ms["dmg"][0]), int(ms["dmg"][1])) + lvl(melee_skill_id()) / 2
 		if crit_at[c2] != -1:
 			facing = Vector2i(dx, dy)
 			crit_hit(crit_at[c2], dmg)
@@ -1871,7 +1924,7 @@ func act_steal() -> bool:
 		say("There is no one next to you to rob.")
 		return false
 	var aware := astate[target] != UNAWARE and astate[target] != RETURNING
-	var chance: int = 38 + skills["theft"] * 7 + skills["stealth"] * 3 + (12 if crouch else 0)
+	var chance: int = 46 + lvl("deception") * 7 + (12 if crouch else 0)
 	if aware:
 		chance -= 40
 	if astate[target] == SURRENDERED:
@@ -1884,13 +1937,13 @@ func act_steal() -> bool:
 		yenn[target] = 0
 		yen += take
 		say("You lift ¥%d from %s without a sound." % [take, name_of(target)])
-		skill_up("theft", 4 if not aware else 6)
+		skill_up("deception", 4 if not aware else 6)
 		if fac[target] == NAP:
 			_witness(sim.pos[target], 8, 6, target)
 		end_turn()
 		return true
 	say("%s catches your hand!" % name_of(target))
-	skill_up("theft", 3)
+	skill_up("deception", 3)
 	_alert(target)
 	heat = mini(100, heat + 4)
 	end_turn()
@@ -1970,10 +2023,12 @@ func hit_chance_on(t: int, shot_index: int = 0) -> int:
 ## model + stance + cover on the target
 func _shot_chance(st: Dictionary, t: int, aimed: int, shot_index: int) -> int:
 	var d: int = cheb(sim.pos[t], pc)
-	var c: int = GP.hit_chance(st, d, aimed, moved, crouch, skills["ranged"], eco.aim_penalty(), shot_index, stance == CRAWL)
+	var c: int = GP.hit_chance(st, d, aimed, moved, crouch, lvl("ranged"), eco.aim_penalty(), shot_index, stance == CRAWL)
 	c += int(imp_sum("acc"))                         # brain and eye implants, the palm link
 	if d >= 5:
 		c += int(imp_sum("acc_far"))
+		if discipline("marksman"):
+			c += 6
 	c -= _arm_acc_pen()
 	if bless_left > 0:
 		c += 6
@@ -2073,6 +2128,7 @@ func act_reload() -> bool:
 	if wield.jammed:
 		wield.jammed = false
 		say("You clear the jam.")
+		skill_up("engineering", 2)
 		end_turn()
 		return true
 	var cal: String = st["cal"]
@@ -2214,7 +2270,7 @@ func act_fire(any: bool = false) -> bool:
 		skill_up("ranged", 2 + d / 5)
 	if dmg_by.is_empty() and st["blast"] == 0:
 		_alert(t)
-	if rng.randf() * 100.0 < float(st["jam"]) * float(shots) and wield.loaded > 0:
+	if rng.randf() * 100.0 < float(st["jam"]) * float(shots) * maxf(0.5, 1.0 - 0.04 * float(lvl("engineering"))) and wield.loaded > 0:
 		wield.jammed = true
 		say("The %s jams." % wield.def["name"])
 	end_turn()
@@ -2225,6 +2281,7 @@ func _damage_npc(v: int, dmg: int) -> void:
 		return
 	var st: Dictionary = gun_stats()
 	_silent = (not st.is_empty() and st["suppressed"]) and (astate[v] == UNAWARE or astate[v] == RETURNING)
+	dmg = npc_take(v, dmg)
 	hpn[v] -= dmg
 	if hpn[v] <= 0:
 		kill(v)
@@ -2717,10 +2774,11 @@ func _hunt(i: int, d: int) -> void:
 	if g > 0 and sees and cool[i] == 0 and d >= 2 and d <= (8 if g == 1 else 14):
 		cool[i] = 2
 		var stance_pen: int = [18, 10, 0, 6][stance]
-		var chance := clampi(62 - 4 * maxi(0, d - 2) - stance_pen - (15 if in_vehicle >= 0 else 0) - cover_vs(c, pc, crouch), 8, 85)
+		var chance := clampi(62 + 2 * (npc_lvl(i, "ranged") - 3) - 4 * maxi(0, d - 2) - stance_pen - (15 if in_vehicle >= 0 else 0) - cover_vs(c, pc, crouch), 8, 85)
 		if rng.randi() % 100 < chance:
 			if rng.randi() % 100 < player_bullet_dodge():
 				say("You twist aside and the round cracks past!")
+				skill_up("dodge", 5)
 			else:
 				var dmg := rng.randi_range(5, 9) if g == 1 else rng.randi_range(6, 11)
 				player_hurt(dmg, "%s shoots you" % name_of(i), "phys", "", 1 if fac[i] == NAP else 0)
@@ -2730,10 +2788,11 @@ func _hunt(i: int, d: int) -> void:
 		return
 	if d <= 1:
 		var nm: Dictionary = npc_melee_stats(i)
-		var hit_c: int = 60 + int(nm.get("acc", 0)) / 2
+		var hit_c: int = 60 + int(nm.get("acc", 0)) / 2 + 3 * (npc_lvl(i, "melee" if not nm.is_empty() else "unarmed") - 3)
 		if rng.randi() % 100 < hit_c:
 			if rng.randi() % 100 < player_melee_dodge():
 				say("You slip %s's blow." % name_of(i))
+				skill_up("dodge", 2 + npc_lvl(i, "melee") / 2)
 				_melee_arts_on_miss(i, "dodge")
 			elif rng.randi() % 100 < parry_chance(nm):
 				say("You turn %s's blow aside." % name_of(i))
@@ -2876,8 +2935,9 @@ func _bump_thing(c: int, dx: int, dy: int) -> bool:
 	step_noise = maxi(step_noise, 4)
 	ran_this_turn = false
 	end_turn()
-	if THING_WEIGHT.get(kind, 1) >= 3 and not game_over:
-		end_turn()                       # a table takes a heave
+	skill_up("manual", THING_WEIGHT.get(kind, 1))
+	if THING_WEIGHT.get(kind, 1) >= 3 and not game_over and lvl("manual") < 3:
+		end_turn()                       # a table takes a heave (a practised hauler does not need the extra turn)
 	return true
 
 func thing_hit(ti: int, dmg: int) -> void:
@@ -3575,9 +3635,24 @@ func outside_tile(x: int, y: int) -> int:
 ## everything about the player that travels between zones
 func player_dict() -> Dictionary:
 	return {"hp": hp, "hp_max": hp_max, "yen": yen, "heat": heat, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
-		"skills": skills.duplicate(), "xp": xp.duplicate(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
+		"attrs": attrs.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 		"stamina": stamina, "stance": stance, "turn": turn, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "flying": flying,
 		"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
+
+## attributes, skills and XP from a save; saves from before the attribute system (or with the old skill names) keep what still exists and start the rest at the defaults
+func _load_skills(d: Dictionary) -> void:
+	attrs = SK.default_attrs()
+	skills = SK.default_skills()
+	xp = SK.default_skills()
+	for k in d.get("attrs", {}):
+		if attrs.has(k):
+			attrs[k] = int(d["attrs"][k])
+	for k in d.get("skills", {}):
+		if skills.has(k):
+			skills[k] = int(d["skills"][k])
+	for k in d.get("xp", {}):
+		if xp.has(k):
+			xp[k] = int(d["xp"][k])
 
 func _load_body(d: Dictionary) -> void:
 	body = BODY.new()
@@ -3604,8 +3679,7 @@ func apply_player(d: Dictionary) -> void:
 	fuel = int(d["fuel"])
 	ammo_pool = d["ammo"]
 	want_kind = d["want_kind"]
-	skills = d["skills"]
-	xp = d["xp"]
+	_load_skills(d)
 	worn = []
 	for x in d["worn"]:
 		worn.append(ItemScript.from_dict(x, db))
@@ -3641,7 +3715,7 @@ func save_dict() -> Dictionary:
 	var vlist := []
 	for v in vehicles:
 		vlist.append(vs.to_dict(v))
-	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "xp": xp, "in_vehicle": in_vehicle,
+	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "attrs": attrs, "xp": xp, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate(),
 			"rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 			"items_at": it_at, "vehicles": vlist, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
@@ -3674,10 +3748,7 @@ func load_dict(d: Dictionary) -> void:
 	fuel = int(d.get("fuel", FUEL_MAX))
 	flying = bool(d.get("flying", false))
 	followers = []
-	skills = d["skills"]
-	for k in skills:
-		skills[k] = int(skills[k])
-	xp = d["xp"]
+	_load_skills(d)
 	in_vehicle = int(d["in_vehicle"])
 	_load_body(d)
 	rng.state = int(d["rng_state"])

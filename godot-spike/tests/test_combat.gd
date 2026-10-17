@@ -4,6 +4,7 @@ const GameScript = preload("res://src/game.gd")
 const GP = preload("res://src/gunplay.gd")
 const IMP = preload("res://src/implants.gd")
 const BODY = preload("res://src/body.gd")
+const SK = preload("res://src/skills.gd")
 
 func _open_line(g, from: int, len: int) -> int:
 	for r in range(0, 140):
@@ -34,8 +35,10 @@ func run() -> Array:
 			st[0] += 1
 		log.append(("  PASS " if cond else "  FAIL ") + name)
 	var g = GameScript.new(5)
+	g.crits = false                          # these tests count exact damage
 	g.setup(600)
 	var fresh = func() -> void:
+		g.skills = SK.default_skills()
 		g.body.reset()
 		g.hp = 60
 		g.hp_max = 60
@@ -300,6 +303,7 @@ func run() -> Array:
 	g.wield = g._new_item("trl_mel_kastet")
 	check.call("melee dodge for the player: skill + implants", g.player_melee_dodge() >= 4 and (func(): g.implants["synapse"] = true; var d: int = g.player_melee_dodge(); g.implants = {}; return d > 18).call())
 	# arts: parry and riposte are hooks the player can learn
+	g.skills = SK.default_skills()           # the strikes above taught some Melee; start the arts check from a clean sheet
 	check.call("no melee arts known at the start", g.melee_arts.is_empty() and not g.has_art("parry"))
 	g.wield = g._new_item("trl_mel_katana")
 	var p0: int = g.parry_chance({})

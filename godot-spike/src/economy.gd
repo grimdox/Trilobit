@@ -291,7 +291,8 @@ func _pay_job(msg: String) -> void:
 	g.yen += r
 	earned += r
 	jobs_done += 1
-	g.skill_up("stealth", 2)
+	g.skill_up("streetwise" if job.get("kind", "") == "courier" else "research", 2)
+	g.skill_up("negotiation", 2)
 	g.say("%s  +¥%d." % [msg, r])
 	job = {}
 
@@ -378,7 +379,7 @@ func menu_for(i: int) -> Dictionary:
 		VENDOR:
 			m["text"] = ["\"Cash only.  Cards are for banks.\""]
 			for e in _stock(i):
-				m["options"].append({"label": "Buy %s  ¥%d" % [e[1], e[2]], "op": "buy", "arg": e})
+				m["options"].append(_buy_opt(i, e))
 		RIPPER:
 			var rv: Dictionary = venue_of.get(i, {})
 			var cheap: bool = g.z_of(g.sim.pos[i]) < 0 or (not rv.is_empty() and int(rv["tier"]) == 0)
@@ -387,7 +388,7 @@ func menu_for(i: int) -> Dictionary:
 			var cost: int = 350 if cheap else 700
 			m["text"] = ["\"Let me see that stabiliser.\"  Service life: %dh." % (implant_left / 60)]
 			m["options"].append({"label": "Service the stabiliser  ¥%d  (resets to 96h)" % cost, "op": "service", "arg": cost})
-			m["options"].append({"label": "Trauma patch  ¥40", "op": "buy", "arg": ["trl_medkit", "trauma patch", 40]})
+			m["options"].append(_buy_opt(i, ["trl_medkit", "trauma patch", 40], "Trauma patch"))
 			var wrecked := 0
 			for l in g.BODY.LIMBS:
 				if int(g.body.hp[l]) < int(g.body.mx[l]):
@@ -407,14 +408,14 @@ func menu_for(i: int) -> Dictionary:
 			m["text"] = [st["greet"], "(%s.  A meal heals and is eaten here.)" % st["name"]]
 			for fid in st["menu"]:
 				var d: Dictionary = g.db.defs["trl_food_" + fid]
-				var pr: int = int(d["price"]) * (2 if int(v.get("tier", 1)) >= 1 else 1) + 4
+				var pr: int = haggle(i, int(d["price"]) * (2 if int(v.get("tier", 1)) >= 1 else 1) + 4)
 				m["options"].append({"label": "%s  ¥%d  (heals %d)" % [d["name"], pr, int(d["food"]["hp"])], "op": "dine", "arg": ["trl_food_" + fid, d["name"], pr]})
 		GROCER:
 			var gv: Dictionary = venue_of.get(i, {})
 			m["title"] = "%s - %s" % [who, gv.get("name", "grocery")]
 			m["text"] = ["\"Take a basket.  Cash at the counter.\""]
 			for e in _grocery_stock(i):
-				m["options"].append({"label": "Buy %s  ¥%d" % [e[1], e[2]], "op": "buy", "arg": e})
+				m["options"].append(_buy_opt(i, e))
 		DOCTOR:
 			var dv: Dictionary = venue_of.get(i, {})
 			m["title"] = "%s - %s" % [who, dv.get("name", "clinic")]
@@ -434,7 +435,7 @@ func menu_for(i: int) -> Dictionary:
 				m["options"].append({"label": "Full recovery (health and every limb)  ¥%d" % c2, "op": "treat", "arg": [c2, 1.0]})
 			else:
 				m["text"].append("\"Nothing wrong with you that I can see.\"")
-			m["options"].append({"label": "Trauma patch  ¥35", "op": "buy", "arg": ["trl_medkit", "trauma patch", 35]})
+			m["options"].append(_buy_opt(i, ["trl_medkit", "trauma patch", 35], "Trauma patch"))
 		PRIEST:
 			m["title"] = "%s - %s" % [who, venue_of.get(i, {}).get("name", "church")]
 			m["text"] = ["\"Peace be with you.  Come in, stay as long as you need.\""]
@@ -442,13 +443,13 @@ func menu_for(i: int) -> Dictionary:
 			m["options"].append({"label": "Confession  ¥150  (heat cleared)", "op": "pray", "arg": [150, 0, 100, 0, "You speak for a long time.  The priest absolves you.  Your heat is gone."]})
 			m["options"].append({"label": "Donation for the roof  ¥100  (a blessing, health +10)", "op": "pray", "arg": [100, 10, 0, 480, "The priest makes a cross over you.  You feel lighter and luckier."]})
 			for e in [["trl_faith_candle", "church candle", 20], ["trl_faith_icon", "small icon", 120], ["trl_faith_gospel", "pocket gospel", 60]]:
-				m["options"].append({"label": "Buy %s  ¥%d" % [e[1], e[2]], "op": "buy", "arg": e})
+				m["options"].append(_buy_opt(i, e))
 		MIKO:
 			m["title"] = "%s - %s" % [who, venue_of.get(i, {}).get("name", "shrine")]
 			m["text"] = ["\"Welcome.  Clap twice, bow, and ask quietly.\""]
 			m["options"].append({"label": "Offering at the saisen box  ¥50  (a blessing, health +8)", "op": "pray", "arg": [50, 8, 0, 360, "You throw the coin, clap twice and bow.  The air feels clean."]})
 			for e in [["trl_faith_omamori", "omamori charm", 150], ["trl_faith_ofuda", "ofuda paper ward", 90], ["trl_faith_ema", "ema plaque", 50]]:
-				m["options"].append({"label": "Buy %s  ¥%d" % [e[1], e[2]], "op": "buy", "arg": e})
+				m["options"].append(_buy_opt(i, e))
 		FIXER:
 			if job.is_empty():
 				m["text"] = ["\"I have work, if you can climb.\""]
@@ -458,8 +459,24 @@ func menu_for(i: int) -> Dictionary:
 				m["text"] = ["\"Finish what you took first.\""]
 		_:
 			m["text"] = [_rumor(i)]
+			for k in mini(3, g.lvl("research") / 3):
+				m["text"].append(_rumor(i, 1 + k))
+			g.skill_up("research", 1)
 	m["options"].append({"label": "Leave", "op": "close", "arg": null})
 	return m
+
+## the price a seller asks you: Negotiation takes 1.5% a level off, and Streetwise (low-district stalls) or Etiquette (upscale shops) another 2% a level; never more than 30% off
+func haggle(i: int, price: int) -> int:
+	var v: Dictionary = venue_of.get(i, {})
+	var upscale: bool = not v.is_empty() and int(v.get("tier", 0)) >= 1 and g.z_of(g.sim.pos[i]) >= 0
+	var social: int = g.lvl("etiquette") if upscale else g.lvl("streetwise")
+	var off: float = minf(0.30, 0.015 * float(g.lvl("negotiation")) + 0.02 * float(social))
+	return maxi(1, int(round(float(price) * (1.0 - off))))
+
+func _buy_opt(i: int, e: Array, nm: String = "") -> Dictionary:
+	var ee: Array = [e[0], e[1], haggle(i, int(e[2]))]
+	var label: String = ("Buy %s" % e[1]) if nm == "" else nm
+	return {"label": "%s  ¥%d" % [label, ee[2]], "op": "buy", "arg": ee}
 
 func _stock(i: int = 0) -> Array:
 	var out: Array = [["trl_ration", "cyber ration bar", 12], ["trl_water_bottle", "bottled water", 8], ["trl_ammo", "9mm ball box (12 rounds)", 22]]
@@ -515,7 +532,7 @@ func _grocery_stock(i: int) -> Array:
 			out.append(e)
 	return out
 
-func _rumor(i: int) -> String:
+func _rumor(i: int, shift: int = 0) -> String:
 	var lines: Array = []
 	lines.append("\"The Ring Line runs under the roads.  Four stations, a train every few minutes.\"")
 	lines.append("\"Kuroda's collectors come after the second missed installment.  Don't miss two.\"")
@@ -526,7 +543,7 @@ func _rumor(i: int) -> String:
 	lines.append("\"The big towers have glass bridges between them.  Safer than the street.\"")
 	lines.append("\"Locked rooms on the office floors.  Someone's keeping something in there.\"")
 	lines.append("\"Fixers pay well for parcels to the high floors.  Elevators help.\"")
-	return lines[(i * 7 + g.turn / 90) % lines.size()]
+	return lines[(i * 7 + g.turn / 90 + shift * 3) % lines.size()]
 
 ## run option k of a menu; returns the next menu, or {} to close
 func choose(m: Dictionary, k: int) -> Dictionary:
@@ -555,6 +572,7 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 					g.say("No room; it falls at your feet.")
 			g.yen -= int(e[2])
 			g.say("You buy the %s (¥%d)." % [e[1], e[2]])
+			_haggle_xp(m, int(e[2]))
 			return m
 		"dine":
 			var de: Array = o["arg"]
@@ -565,6 +583,7 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 			var meal = g._new_item(de[0])
 			g.eat_now(meal)
 			g.say("You order the %s (¥%d) and eat it at the counter." % [de[1], de[2]])
+			_haggle_xp(m, int(de[2]))
 			return m
 		"treat":
 			var tr: Array = o["arg"]
@@ -633,6 +652,7 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 			if j.is_empty():
 				g.say("The fixer shrugs.  Nothing today.")
 				return m
+			j["reward"] = int(j["reward"]) * (100 + 2 * g.lvl("negotiation")) / 100
 			job = j
 			if j["kind"] == "courier":
 				var p = g._new_item("trl_parcel")
@@ -642,6 +662,16 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 			g.say("Job accepted: %s.  ¥%d." % [j["where"], j["reward"]])
 			return {}
 	return m
+
+## buying teaches Negotiation, and the social skill of the seller's side of town
+func _haggle_xp(m: Dictionary, spent: int) -> void:
+	var i: int = int(m.get("who", -1))
+	if i < 0:
+		return
+	var v: Dictionary = venue_of.get(i, {})
+	var upscale: bool = not v.is_empty() and int(v.get("tier", 0)) >= 1 and g.z_of(g.sim.pos[i]) >= 0
+	g.skill_up("negotiation", 1 + spent / 120)
+	g.skill_up("etiquette" if upscale else "streetwise", 1 + spent / 150)
 
 func status_text() -> String:
 	var d := ""

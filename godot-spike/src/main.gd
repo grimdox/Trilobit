@@ -8,6 +8,7 @@ const SettingsScript = preload("res://src/settings.gd")
 const SfxScript = preload("res://src/sfx.gd")
 const ScreenScript = preload("res://src/screen_view.gd")
 const IMP = preload("res://src/implants.gd")
+const SK = preload("res://src/skills.gd")
 const UI_S := 1.5          # the interface is laid out for 1280x720 and drawn at 1.5x on the 1920x1080 canvas
 const TILESETS := ["Trilobit64", "Bouma_TopDown", "Mokuhanga_TopDown"]
 const SLOTS := 3
@@ -18,7 +19,7 @@ var view
 var status: Label
 var logbox: RichTextLabel
 var panel: RichTextLabel
-var mode: String = "title"           # title, play, garage, inventory, help, talk, mods, jump, strike, shove, pause, options, keys, saves, loads, implants, loading
+var mode: String = "title"           # title, play, garage, inventory, help, talk, mods, jump, strike, shove, pause, options, keys, saves, loads, implants, skills, loading
 var menu: Dictionary = {}
 var ts_index: int = 0
 var inv_map: Dictionary = {}
@@ -244,7 +245,7 @@ func open_screen(kind: String) -> void:
 		"pause":
 			screen.overlay = true
 			screen.title = "PAUSED"
-			screen.items = [{"label": "Resume", "id": "resume"}, {"label": "Save Game", "id": "save"}, {"label": "Load Game", "id": "load"}, {"label": "Implants", "id": "implants"},
+			screen.items = [{"label": "Resume", "id": "resume"}, {"label": "Save Game", "id": "save"}, {"label": "Load Game", "id": "load"}, {"label": "Implants", "id": "implants"}, {"label": "Attributes & Skills", "id": "skills"},
 				{"label": "Options", "id": "options"}, {"label": "Quit to Title", "id": "title"}, {"label": "Exit to Desktop", "id": "exit"}]
 		"options":
 			screen.title = "OPTIONS"
@@ -259,6 +260,9 @@ func open_screen(kind: String) -> void:
 		"implants":
 			screen.overlay = false
 			screen.part_sel = 0
+		"skills":
+			screen.overlay = false
+			screen.sk_sel = 0
 		"map":
 			screen.overlay = false
 			screen.world = world
@@ -318,7 +322,7 @@ func back_from_screen() -> void:
 				open_screen("options")
 			else:
 				open_screen("title")
-		"implants":
+		"implants", "skills":
 			open_screen("pause")
 		"map":
 			resume_play()
@@ -361,6 +365,7 @@ func activate(id: String) -> void:
 			open_screen("options")
 		"keys": open_screen("keys")
 		"implants": open_screen("implants")
+		"skills": open_screen("skills")
 		"resume": resume_play()
 		"title":
 			game = null
@@ -423,6 +428,21 @@ func screen_key(k: int) -> void:
 		if k == KEY_ESCAPE or k == KEY_M or k == settings.binds["map"][0]:
 			back_from_screen()
 		return
+	if mode == "skills":
+		if k == KEY_ESCAPE or k == settings.binds["skills"][0]:
+			back_from_screen()
+			return
+		var dv := Vector2i.ZERO
+		match settings.action_for(k):
+			"north": dv = Vector2i(0, -1)
+			"south": dv = Vector2i(0, 1)
+			"west": dv = Vector2i(-1, 0)
+			"east": dv = Vector2i(1, 0)
+		if k == KEY_TAB:
+			dv = Vector2i(1, 0)
+		if dv != Vector2i.ZERO and screen.sk_move(dv):
+			sfx.play("blip")
+		return
 	if mode == "implants":
 		var n := IMP.PARTS.size()
 		if k == KEY_ESCAPE or k == settings.binds["implants"][0]:
@@ -464,6 +484,13 @@ func screen_key(k: int) -> void:
 	_scroll_fix()
 
 func _unhandled_input(ev: InputEvent) -> void:
+	if mode == "skills" and ev is InputEventMouseMotion:
+		var si: int = screen.sk_at_mouse(ev.position / UI_S)
+		if si >= 0 and si != screen.sk_sel:
+			screen.sk_sel = si
+			sfx.play("blip")
+	elif mode == "skills" and ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+		back_from_screen()
 	if mode == "implants" and ev is InputEventMouseMotion:
 		var i: int = screen.part_at_mouse(ev.position / UI_S)
 		if i >= 0 and i != screen.part_sel:
@@ -640,7 +667,7 @@ func show_inventory() -> void:
 	panel.visible = true
 
 func show_help() -> void:
-	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\n<  or  PgUp  go up (stairs, elevator, ladder; with jump jets, lift off or climb through open air)      >  or  PgDn  go down (or descend and land).  An elevator rides up to three floors.  Hunters follow you up and down stairs.\ne  get into or out of cars, gyros (flying) and mechs (armoured walkers).  Leap off an edge and you fall: 5 damage a floor.\nt   talk to the nearest person (vendors, fixers, ripperdocs)      p   pay 100 on the debt (Shift+P: 1000)\nYou see a half circle in front of you: ; + direction turns you to look without a step.  Walk into a locked door to pick it.  Step onto a carriage while the train doors are open to ride; step onto a platform to get off.\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the target (Shift+F: at anyone)      Tab  cycle targets      a  aim (up to 3 turns, each steadier)\nr   reload / clear a jam      v  fire mode (single, burst, auto)      x  choose the next ammunition kind\nF4  gunsmith: fit scopes, suppressors, magazines, grips, stocks, barrels (a scope helps at range, hurts up close)\ns   pickpocket an adjacent person (stealth and theft skill)\nw + direction   strike (reach weapons hit up to 2 away; they also strike hunters 2 cells off when you step toward them)      o + direction   shove (off an edge, too)      \\   swap to your previous weapon\nc   crouch      z   crawl (half speed, nearly invisible and silent)      Shift+direction   run two cells (noisy, tiring)      q + direction   jump (2 cells, 3 after a run)        e   get in or out of a car\nd   drop the wielded weapon\nLimbs: each has its own health (right-hand panel).  Go 24 hours without food and you are Hungry, 4 hours without a drink and you are Thirsty: each costs 20% of your walking speed.  A disabled leg slows you, a disabled arm rules out two-handed weapons; head or chest at 0 is death.  Armor is worn from the inventory and soaks damage until it breaks.  Trauma patches mend limbs; ripperdocs rebuild them.\nEsc  menu: save, load, options (rebind keys, sound), implants        F3  implants        M  island map        F2  switch tileset        F5  quick save        F9  quick load        F11 or Alt+Enter  fullscreen (covers the taskbar)\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  Small arrows on the edge of each tile show which way people and animals face.  People see in a cone in front of them and hear footsteps by stance.  Strike an unaware person from behind for a quiet kill.  Crates, dumpsters, planters, railings and cars give cover; crouch behind them.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
+	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\n<  or  PgUp  go up (stairs, elevator, ladder; with jump jets, lift off or climb through open air)      >  or  PgDn  go down (or descend and land).  An elevator rides up to three floors.  Hunters follow you up and down stairs.\ne  get into or out of cars, gyros (flying) and mechs (armoured walkers).  Leap off an edge and you fall: 5 damage a floor.\nt   talk to the nearest person (vendors, fixers, ripperdocs)      p   pay 100 on the debt (Shift+P: 1000)\nYou see a half circle in front of you: ; + direction turns you to look without a step.  Walk into a locked door to pick it.  Step onto a carriage while the train doors are open to ride; step onto a platform to get off.\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the target (Shift+F: at anyone)      Tab  cycle targets      a  aim (up to 3 turns, each steadier)\nr   reload / clear a jam      v  fire mode (single, burst, auto)      x  choose the next ammunition kind\nF4  gunsmith: fit scopes, suppressors, magazines, grips, stocks, barrels (a scope helps at range, hurts up close)\ns   pickpocket an adjacent person (Deception skill)\nw + direction   strike (reach weapons hit up to 2 away; they also strike hunters 2 cells off when you step toward them)      o + direction   shove (off an edge, too)      \\   swap to your previous weapon\nc   crouch      z   crawl (half speed, nearly invisible and silent)      Shift+direction   run two cells (noisy, tiring)      q + direction   jump (2 cells, 3 after a run)        e   get in or out of a car\nd   drop the wielded weapon\nLimbs: each has its own health (right-hand panel).  Go 24 hours without food and you are Hungry, 4 hours without a drink and you are Thirsty: each costs 20% of your walking speed.  A disabled leg slows you, a disabled arm rules out two-handed weapons; head or chest at 0 is death.  Armor is worn from the inventory and soaks damage until it breaks.  Trauma patches mend limbs; ripperdocs rebuild them.\nEsc  menu: save, load, options (rebind keys, sound), implants, attributes & skills        F3  implants        F7  attributes & skills (arrows or numpad or the mouse choose a line)        M  island map        F2  switch tileset        F5  quick save        F9  quick load        F11 or Alt+Enter  fullscreen (covers the taskbar)\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  Small arrows on the edge of each tile show which way people and animals face.  People see in a cone in front of them and hear footsteps by stance.  Strike an unaware person from behind for a quiet kill.  Crates, dumpsters, planters, railings and cars give cover; crouch behind them.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
 	panel.visible = true
 
 func dir_of(k: int) -> Vector2i:
@@ -659,7 +686,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 	if not (ev is InputEventKey) or not ev.pressed:
 		return
 	var k: int = ev.keycode
-	if mode in ["title", "loading", "pause", "options", "keys", "saves", "loads", "implants", "map"]:
+	if mode in ["title", "loading", "pause", "options", "keys", "saves", "loads", "implants", "skills", "map"]:
 		if mode != "loading":
 			screen_key(k)
 		return
@@ -817,6 +844,10 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		"implants":
 			screen_back = "pause"
 			open_screen("implants")
+			return
+		"skills":
+			screen_back = "pause"
+			open_screen("skills")
 			return
 		"map":
 			open_screen("map")

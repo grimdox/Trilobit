@@ -93,7 +93,7 @@ func run() -> Array:
 	g.pc = from
 	var dx2: int = (door % g.size) - (from % g.size)
 	var dy2: int = ((door / g.size) % g.size) - ((from / g.size) % g.size)
-	g.skills["theft"] = 6
+	g.skills["engineering"] = 6
 	var tries := 0
 	while g.city.tiles[door] == CG.LOCKED and tries < 40:
 		g.pc = from

@@ -104,6 +104,44 @@ func _initialize() -> void:
 	check("legs carry the installed actuators", m.IMP.PARTS[m.screen.part_sel]["id"] == "legs" and m.game.has_implant("legs"))
 	key(m, KEY_ESCAPE)
 	check("Esc leaves the body map", m.mode == "pause")
+	# attributes and skills screen
+	check("the pause menu lists Attributes & Skills", m.screen.items.any(func(i): return i["id"] == "skills"))
+	m.screen_back = "pause"
+	m.open_screen("skills")
+	check("the skills screen opens", m.mode == "skills" and m.screen.kind == "skills" and m.screen.sk_sel == 0)
+	key(m, KEY_RIGHT)
+	check("Right moves along the attributes", m.screen.sk_sel == 1)
+	key(m, KEY_KP_2)
+	check("numpad 2 moves down into the skills", m.screen.sk_sel >= 5)
+	var sel0: int = m.screen.sk_sel
+	key(m, KEY_DOWN)
+	check("Down moves to the next skill", m.screen.sk_sel == sel0 + 1)
+	var rc: Rect2 = m.screen.sk_rects(1280.0, 720.0)[12]
+	var mm := InputEventMouseMotion.new()
+	mm.position = rc.get_center() * m.UI_S
+	m._unhandled_input(mm)
+	check("the mouse highlights a line", m.screen.sk_sel == 12)
+	await process_frame
+	key(m, KEY_ESCAPE)
+	check("Esc leaves the skills screen back to the pause menu", m.mode == "pause")
+	m.screen_back = "pause"
+	m.open_screen("skills")
+	var f7 := InputEventKey.new()
+	f7.keycode = KEY_F7
+	f7.pressed = true
+	m._unhandled_key_input(f7)
+	check("F7 also closes it", m.mode == "pause")
+	m.resume_play()
+	m._unhandled_key_input(f7)
+	check("F7 opens the screen from play", m.mode == "skills")
+	m._unhandled_key_input(f7)
+	key(m, KEY_ESCAPE)
+	check("and Esc then Esc is back in the game", m.mode == "play")
+	var esc := InputEventKey.new()
+	esc.keycode = KEY_ESCAPE
+	esc.pressed = true
+	m._unhandled_key_input(esc)
+	check("Esc in play opens the pause menu again", m.mode == "pause")
 	# change the world, then load slot 2
 	m.game.yen = 1
 	m.game.pc = pc0

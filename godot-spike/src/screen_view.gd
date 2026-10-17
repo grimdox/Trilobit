@@ -2,6 +2,7 @@ extends Control
 ## Full-screen menus drawn in code: the title screen, pause menu, options, key bindings, save slots and the implants body map.
 ## main.gd owns the state (kind, items, selection) and keys; this only draws.
 const IMP = preload("res://src/implants.gd")
+const SK = preload("res://src/skills.gd")
 var kind: String = "title"
 var title: String = ""
 var subtitle: String = ""
@@ -13,6 +14,7 @@ var overlay: bool = false          # dim the game behind instead of the title ba
 var prompt: String = ""            # "Press a key..." while rebinding
 var game                           # for the implants screen
 var part_sel: int = 0
+var sk_sel: int = 0                # the highlighted line of the attributes & skills screen (0-4 attributes, then the skills)
 var world = null
 var map_tex: ImageTexture = null
 var ow_tex: Texture2D = null
@@ -48,7 +50,7 @@ func _txt(s: String, pos: Vector2, size: int, col: Color, align: int = HORIZONTA
 func _draw() -> void:
 	var W: float = size.x if size.x > 0 else 1280.0
 	var H: float = size.y if size.y > 0 else 720.0
-	if kind == "implants" or kind == "map":
+	if kind == "implants" or kind == "map" or kind == "skills":
 		draw_rect(Rect2(0, 0, W, H), BG)
 	elif overlay:
 		draw_rect(Rect2(0, 0, W, H), Color(0, 0, 0, 0.72))
@@ -57,6 +59,8 @@ func _draw() -> void:
 	match kind:
 		"implants":
 			_implants(W, H)
+		"skills":
+			_skills(W, H)
 		"map":
 			_map(W, H)
 		"title":
@@ -339,3 +343,196 @@ func _pw(from: Array, to: Array, v: float) -> float:
 			var f: float = (v - from[k - 1]) / (from[k] - from[k - 1])
 			return lerpf(to[k - 1], to[k], f)
 	return v
+
+
+# ---------------------------------------------------------------- attributes and skills
+## one line per attribute (0-4) then per skill, in the order of SK.SKILLS
+func sk_entries() -> Array:
+	var out: Array = []
+	for a in SK.ATTRS:
+		out.append({"kind": "attr", "id": a["id"]})
+	for sd in SK.SKILLS:
+		out.append({"kind": "skill", "id": sd["id"]})
+	return out
+
+const SK_TOP := 50.0
+const SK_TOP_H := 158.0
+const SK_ROW := 34.0
+
+func sk_box_rect(group: int, W: float, H: float) -> Rect2:
+	var y0: float = SK_TOP + SK_TOP_H + 10.0
+	var bw: float = (W - 80.0 - 16.0) * 0.5
+	var bh: float = (H - y0 - 34.0 - 12.0) * 0.5
+	return Rect2(40.0 + (group % 2) * (bw + 16.0), y0 + (group / 2) * (bh + 12.0), bw, bh)
+
+## the clickable rectangle of every entry, in the order of sk_entries()
+func sk_rects(W: float, H: float) -> Array:
+	var out: Array = []
+	for k in SK.ATTRS.size():
+		out.append(Rect2(52.0 + k * 108.0, SK_TOP + 52.0, 100.0, 70.0))
+	for g in SK.GROUPS.size():
+		var box := sk_box_rect(g, W, H)
+		var rows: Array = SK.skills_in(SK.GROUPS[g])
+		for r in rows.size():
+			out.append(Rect2(box.position.x + 8.0, box.position.y + 40.0 + r * SK_ROW, box.size.x - 16.0, SK_ROW - 2.0))
+	return out
+
+func sk_at_mouse(p: Vector2) -> int:
+	var W: float = size.x if size.x > 0 else 1280.0
+	var H: float = size.y if size.y > 0 else 720.0
+	var rects := sk_rects(W, H)
+	for i in rects.size():
+		if (rects[i] as Rect2).has_point(p):
+			return i
+	return -1
+
+## move the highlight to the nearest line in a direction; false if there is none
+func sk_move(dir: Vector2i) -> bool:
+	var W: float = size.x if size.x > 0 else 1280.0
+	var H: float = size.y if size.y > 0 else 720.0
+	var rects := sk_rects(W, H)
+	var c: Vector2 = (rects[sk_sel] as Rect2).get_center()
+	var best := -1
+	var bs := 1.0e9
+	var band: float = 18.0 if dir.x != 0 else 40.0          # first look for a line in the same row (or column)
+	for pass_i in 2:
+		for i in rects.size():
+			if i == sk_sel:
+				continue
+			var d: Vector2 = (rects[i] as Rect2).get_center() - c
+			var along: float = d.x * dir.x + d.y * dir.y
+			if along < 6.0:
+				continue
+			var across: float = absf(d.y) if dir.x != 0 else absf(d.x)
+			if pass_i == 0 and across > band:
+				continue
+			var score: float = along + 3.0 * across
+			if score < bs:
+				bs = score
+				best = i
+		if best >= 0:
+			break
+	if best < 0:
+		return false
+	sk_sel = best
+	return true
+
+func _skills(W: float, H: float) -> void:
+	for gx in range(0, int(W), 32):
+		draw_line(Vector2(gx, 0), Vector2(gx, H), Color(0.3, 0.9, 1.0, 0.05))
+	for gy in range(0, int(H), 32):
+		draw_line(Vector2(0, gy), Vector2(W, gy), Color(0.3, 0.9, 1.0, 0.05))
+	var entries := sk_entries()
+	var rects := sk_rects(W, H)
+	sk_sel = clampi(sk_sel, 0, entries.size() - 1)
+	var sel: Dictionary = entries[sk_sel]
+	var attrs: Dictionary = game.attrs if game != null else SK.default_attrs()
+	var base: Dictionary = game.skills if game != null else SK.default_skills()
+	var xps: Dictionary = game.xp if game != null else SK.default_skills()
+	var gov: Array = []                                     # attributes governing the selected skill
+	if sel["kind"] == "skill":
+		gov = SK.skill(sel["id"])["attrs"]
+	_txt("ATTRIBUTES & SKILLS", Vector2(40, 36), 30, Color.WHITE)
+	_rtxt("Arrows / numpad / mouse choose  -  Esc closes", W - 40, 34, 15, Color(0.6, 0.75, 0.9))
+	# the attribute box: one line, five attributes
+	var abox := Rect2(40, SK_TOP + 8.0, 580, SK_TOP_H - 8.0)
+	_panel(abox)
+	_txt("ATTRIBUTES", Vector2(abox.position.x + 14, abox.position.y + 26), 16, CYAN)
+	_rtxt("+1 to each skill it governs per 2 points over 10", abox.end.x - 14, abox.position.y + 26, 14, Color(0.6, 0.72, 0.85))
+	for k in SK.ATTRS.size():
+		var ad: Dictionary = SK.ATTRS[k]
+		var r: Rect2 = rects[k]
+		var on: bool = sk_sel == k
+		var lit: bool = ad["id"] in gov
+		draw_rect(r, Color(0.3, 0.9, 1.0, 0.2) if on else Color(1, 1, 1, 0.04))
+		if on or lit:
+			draw_rect(r, MAGENTA if on else Color(1.0, 0.8, 0.25), false, 2.0)
+		_txt((ad["name"] as String).substr(0, 3).to_upper(), Vector2(r.position.x, r.position.y + 22), 16, Color(0.75, 0.88, 1.0), HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
+		var v: int = int(attrs.get(ad["id"], 10))
+		_txt(str(v), Vector2(r.position.x, r.position.y + 56), 32, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
+		var bn: int = SK.attr_bonus(v)
+		if bn > 0:
+			_rtxt("+%d" % bn, r.end.x - 8, r.position.y + 20, 15, Color(1.0, 0.8, 0.25))
+	# the detail box
+	var dbox := Rect2(632, SK_TOP + 8.0, W - 632 - 40, SK_TOP_H - 8.0)
+	_panel(dbox)
+	_skill_detail(dbox, sel, attrs, base)
+	# the four skill boxes
+	for g in SK.GROUPS.size():
+		var box := sk_box_rect(g, W, H)
+		_panel(box)
+		_txt((SK.GROUPS[g] as String).to_upper(), Vector2(box.position.x + 14, box.position.y + 26), 18, CYAN)
+		var rows: Array = SK.skills_in(SK.GROUPS[g])
+		for rr in rows.size():
+			var sd: Dictionary = rows[rr]
+			var idx: int = 5 + SK.skill_ids().find(sd["id"])
+			var r: Rect2 = rects[idx]
+			var on: bool = sk_sel == idx
+			var lit: bool = sel["kind"] == "attr" and sel["id"] in sd["attrs"]
+			if on:
+				draw_rect(r, Color(0.3, 0.9, 1.0, 0.18))
+				draw_rect(Rect2(r.position.x, r.position.y, 4, r.size.y), MAGENTA)
+			elif lit:
+				draw_rect(r, Color(1.0, 0.8, 0.25, 0.1))
+			var col := Color.WHITE if sd["live"] else Color(0.55, 0.62, 0.72)
+			var b: int = int(base.get(sd["id"], 0))
+			var eff: int = SK.level(attrs, base, sd["id"])
+			var ty: float = r.position.y + 22.0
+			_txt(sd["name"], Vector2(r.position.x + 14, ty), 18, col)
+			_txt(str(eff), Vector2(r.position.x + 170, ty), 22, Color(1.0, 0.8, 0.25) if eff > b else col, HORIZONTAL_ALIGNMENT_RIGHT, 40.0)
+			var need: int = SK.xp_needed(b)
+			var have: int = int(xps.get(sd["id"], 0))
+			var bx: float = r.position.x + 226.0
+			var bw: float = r.end.x - bx - 70.0
+			draw_rect(Rect2(bx, ty - 12.0, bw, 10.0), Color(1, 1, 1, 0.1))
+			var f: float = 1.0 if b >= SK.BASE_MAX else clampf(float(have) / float(need), 0.0, 1.0)
+			draw_rect(Rect2(bx, ty - 12.0, bw * f, 10.0), CYAN if sd["live"] else Color(0.4, 0.5, 0.6))
+			_rtxt("%d/%d" % [have, need] if b < SK.BASE_MAX else "max", r.end.x - 8.0, ty - 2.0, 14, Color(0.65, 0.78, 0.9))
+
+## text whose right edge sits at right_x
+func _rtxt(s: String, right_x: float, y: float, size_px: int, col: Color) -> void:
+	var w: float = font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, size_px).x
+	draw_string(font, Vector2(right_x - w, y), s, HORIZONTAL_ALIGNMENT_LEFT, -1, size_px, col)
+
+func _panel(r: Rect2) -> void:
+	draw_rect(r, Color(0.04, 0.06, 0.11, 0.9))
+	draw_rect(r, CYAN, false, 1.5)
+	draw_rect(Rect2(r.position.x, r.position.y, r.size.x, 3), MAGENTA)
+
+func _skill_detail(r: Rect2, sel: Dictionary, attrs: Dictionary, base: Dictionary) -> void:
+	var x: float = r.position.x + 14.0
+	var y: float = r.position.y + 24.0
+	var w: float = r.size.x - 28.0
+	var dim := Color(0.7, 0.82, 0.92)
+	if sel["kind"] == "attr":
+		var ad: Dictionary = SK.attr(sel["id"])
+		var v: int = int(attrs.get(ad["id"], 10))
+		_txt("%s  %d" % [ad["name"].to_upper(), v], Vector2(x, y), 20, Color.WHITE)
+		draw_multiline_string(font, Vector2(x, y + 22.0), ad["desc"], HORIZONTAL_ALIGNMENT_LEFT, w, 15, 2, dim)
+		var names: Array = []
+		for sd in SK.skills_of_attr(ad["id"]):
+			names.append(sd["name"])
+		draw_multiline_string(font, Vector2(x, y + 62.0), "Governs: " + ", ".join(names), HORIZONTAL_ALIGNMENT_LEFT, w, 14, 3, Color(1.0, 0.8, 0.25))
+		return
+	var sd: Dictionary = SK.skill(sel["id"])
+	var b: int = int(base.get(sd["id"], 0))
+	var eff: int = SK.level(attrs, base, sd["id"])
+	var parts: Array = []
+	for a in sd["attrs"]:
+		parts.append("%s %d (+%d)" % [SK.attr(a)["name"], int(attrs.get(a, 10)), SK.attr_bonus(int(attrs.get(a, 10)))])
+	_txt("%s   level %d" % [sd["name"].to_upper(), eff], Vector2(x, y), 20, Color.WHITE)
+	_rtxt("base %d" % b, r.end.x - 14.0, y, 15, dim)
+	draw_multiline_string(font, Vector2(x, y + 20.0), sd["desc"], HORIZONTAL_ALIGNMENT_LEFT, w, 14, 3, dim)
+	_txt("Governed by: " + ", ".join(parts), Vector2(x, y + 80.0), 14, Color(1.0, 0.8, 0.25))
+	var dl: Array = sd["disc"]
+	var line: String = ""
+	if dl.is_empty():
+		line = "Disciplines: none"
+	else:
+		var bits: Array = []
+		for d in dl:
+			bits.append("%s%s (level %d)" % ["" if eff >= int(d["req"]) else "locked: ", d["name"], int(d["req"])])
+		line = "Disciplines: " + "; ".join(bits)
+	_txt(line, Vector2(x, y + 98.0), 14, Color(0.5, 1.0, 0.7) if (not dl.is_empty() and eff >= int(dl[0]["req"])) else dim)
+	var note: String = sd["note"] if sd["live"] else "Not in play yet: " + sd["note"]
+	_txt(note, Vector2(x, y + 116.0), 13, Color(0.6, 0.75, 0.9) if sd["live"] else Color(0.9, 0.55, 0.45))

@@ -37,6 +37,7 @@ const ACTIONS := [
 	["drop", "Drop wielded", [KEY_D]],
 	["inventory", "Inventory", [KEY_I]],
 	["implants", "Implants screen", [KEY_F3]],
+	["skills", "Attributes & skills screen", [KEY_F7]],
 	["map", "Island map", [KEY_M]],
 	["help", "Help", [KEY_QUESTION]],
 ]
