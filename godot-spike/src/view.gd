@@ -414,44 +414,246 @@ func _bar(x: float, y: float, w: float, h: float, f: float, col: Color, label: S
 	draw_rect(Rect2(x, y, w, h), Color(1, 1, 1, 0.35), false, 1.0)
 	draw_string(font, Vector2(x + 4, y + h - 3), label, HORIZONTAL_ALIGNMENT_LEFT, -1, int(h) - 2, Color.WHITE)
 
-## health and armor bars and a body diagram, top right: each limb is coloured by its health, grey when disabled
+# ---------------------------------------------------------------- the side panel (UI units: 1280x720, drawn at 1.5x)
+const PANEL_W := 252.0
+const PANEL_H := 640.0
+var hud_extra: String = ""            # vehicle / jet-pack line, set by main
+const C_CYAN := Color(0.35, 0.85, 0.95)
+const C_DIM := Color(0.55, 0.62, 0.72)
+
+func _txt(x: float, y: float, t: String, size: int = 13, col: Color = Color(0.9, 0.93, 0.98), w: float = -1.0, align: int = HORIZONTAL_ALIGNMENT_LEFT) -> void:
+	draw_string(font, Vector2(x, y), t, align, w, size, col)
+
+## a tapered capsule from a to b (radius ra at a, rb at b) as a polygon, with round ends
+func _capsule_pts(a: Vector2, b: Vector2, ra: float, rb: float) -> PackedVector2Array:
+	var ang: float = (b - a).angle()
+	var pts := PackedVector2Array()
+	var n := 8
+	for i in range(n + 1):
+		var t: float = ang - PI * 0.5 + PI * float(i) / n
+		pts.append(b + Vector2(cos(t), sin(t)) * rb)
+	for i in range(n + 1):
+		var t2: float = ang + PI * 0.5 + PI * float(i) / n
+		pts.append(a + Vector2(cos(t2), sin(t2)) * ra)
+	return pts
+
+## one limb of the figure: shaded body colour, a highlight along the lit side, an outline, and an armour shell when it is armoured
+func _limb(a: Vector2, b: Vector2, ra: float, rb: float, col: Color, armour: bool, off: bool) -> void:
+	var pts := _capsule_pts(a, b, ra, rb)
+	var base: Color = col.darkened(0.45)
+	draw_colored_polygon(pts, base)
+	var side: Vector2 = (b - a).normalized().orthogonal() * -0.28
+	var hl := _capsule_pts(a + side * ra, b + side * rb, ra * 0.62, rb * 0.62)
+	draw_colored_polygon(hl, col)
+	var core := _capsule_pts(a + side * ra * 1.2, b + side * rb * 1.2, ra * 0.28, rb * 0.28)
+	draw_colored_polygon(core, col.lightened(0.35))
+	var oc := Color(0.02, 0.05, 0.08, 0.95)
+	var ring := pts.duplicate()
+	ring.append(pts[0])
+	draw_polyline(ring, oc, 1.6)
+	if armour:
+		draw_polyline(ring, Color(0.45, 0.8, 1.0, 0.9), 1.0)
+	if off:
+		var m: Vector2 = (a + b) * 0.5
+		draw_line(m + Vector2(-ra, -ra), m + Vector2(ra, ra), Color(1, 0.3, 0.3), 2.0)
+		draw_line(m + Vector2(-ra, ra), m + Vector2(ra, -ra), Color(1, 0.3, 0.3), 2.0)
+
+func _poly(pts: Array, col: Color, outline: bool = true) -> void:
+	var pa := PackedVector2Array(pts)
+	draw_colored_polygon(pa, col)
+	if outline:
+		var ring := pa.duplicate()
+		ring.append(pa[0])
+		draw_polyline(ring, Color(0.02, 0.05, 0.08, 0.95), 1.6)
+
+## the vitals figure: a front-facing anatomical silhouette, every limb tinted by its health
+func _draw_person(cx: float, y0: float, u: float) -> void:
+	var B = game.body
+	var ar := func(l: String) -> bool: return game.armor_value(l) > 0
+	var P := func(x: float, y: float) -> Vector2: return Vector2(cx + x * u, y0 + y * u)
+	var cc: Color = _limb_color(B.frac("chest"))
+	var hc: Color = _limb_color(B.frac("head"))
+	# hologram stand: a faint ring under the feet and a scan grid behind
+	draw_colored_polygon(_ellipse_pts(P.call(0.0, 8.15), 1.9 * u, 0.28 * u), Color(0.2, 0.7, 0.85, 0.12))
+	draw_polyline(_ellipse_pts(P.call(0.0, 8.15), 1.9 * u, 0.28 * u, true), Color(0.3, 0.85, 0.95, 0.5), 1.0)
+	# legs (behind the torso): thigh then shin then foot
+	for side in [-1, 1]:
+		var lname: String = "r_leg" if side < 0 else "l_leg"
+		var lc: Color = _limb_color(B.frac(lname))
+		var off: bool = not B.ok(lname)
+		var a: bool = ar.call(lname)
+		_limb(P.call(side * 0.42, 3.95), P.call(side * 0.5, 5.85), 0.46 * u, 0.3 * u, lc, a, false)
+		_limb(P.call(side * 0.5, 5.85), P.call(side * 0.52, 7.55), 0.28 * u, 0.2 * u, lc, a, off)
+		_poly([P.call(side * 0.52 - 0.2, 7.45), P.call(side * 0.52 + 0.2, 7.45), P.call(side * 0.52 + 0.28 + side * 0.18, 8.0), P.call(side * 0.52 - 0.2 + side * 0.1, 8.02)], lc.darkened(0.3))
+	# arms: upper arm, forearm, hand
+	for side in [-1, 1]:
+		var aname: String = "r_arm" if side < 0 else "l_arm"
+		var ac: Color = _limb_color(B.frac(aname))
+		var off2: bool = not B.ok(aname)
+		var a2: bool = ar.call(aname)
+		_limb(P.call(side * 0.98, 1.6), P.call(side * 1.28, 3.05), 0.34 * u, 0.26 * u, ac, a2, false)
+		_limb(P.call(side * 1.28, 3.05), P.call(side * 1.46, 4.45), 0.25 * u, 0.17 * u, ac, a2, off2)
+		_limb(P.call(side * 1.46, 4.45), P.call(side * 1.52, 4.95), 0.17 * u, 0.13 * u, ac.darkened(0.2), false, false)
+	# pelvis and torso
+	_poly([P.call(-0.78, 3.45), P.call(0.78, 3.45), P.call(0.66, 4.15), P.call(0.0, 4.35), P.call(-0.66, 4.15)], cc.darkened(0.5))
+	var torso := [P.call(-0.98, 1.5), P.call(-0.45, 1.38), P.call(0.45, 1.38), P.call(0.98, 1.5), P.call(0.9, 2.3), P.call(0.66, 3.25), P.call(0.74, 3.6), P.call(-0.74, 3.6), P.call(-0.66, 3.25), P.call(-0.9, 2.3)]
+	_poly(torso, cc.darkened(0.45))
+	_poly([P.call(-0.62, 1.55), P.call(0.0, 1.5), P.call(0.0, 2.55), P.call(-0.74, 2.45)], cc, false)         # lit side of the chest
+	_poly([P.call(0.0, 1.5), P.call(0.62, 1.55), P.call(0.74, 2.45), P.call(0.0, 2.55)], cc.darkened(0.2), false)
+	_poly([P.call(-0.46, 2.65), P.call(-0.03, 2.65), P.call(-0.03, 3.5), P.call(-0.5, 3.4)], cc.darkened(0.12), false)   # abdomen
+	_poly([P.call(0.03, 2.65), P.call(0.46, 2.65), P.call(0.5, 3.4), P.call(0.03, 3.5)], cc.darkened(0.3), false)
+	draw_line(P.call(0.0, 1.5), P.call(0.0, 3.55), Color(0, 0, 0, 0.45), 1.0)                                   # sternum / midline
+	draw_line(P.call(-0.55, 2.62), P.call(0.55, 2.62), Color(0, 0, 0, 0.35), 1.0)                               # ribs / belt line
+	var tor: Array = torso.duplicate()
+	tor.append(torso[0])
+	draw_polyline(PackedVector2Array(tor), Color(0.02, 0.05, 0.08, 0.95), 1.8)
+	if ar.call("chest"):
+		draw_polyline(PackedVector2Array(tor), Color(0.45, 0.8, 1.0, 0.9), 1.0)
+	# collar, neck and head
+	_limb(P.call(0.0, 1.0), P.call(0.0, 1.42), 0.2 * u, 0.26 * u, hc.darkened(0.25), false, false)
+	var hp_ := _ellipse_pts(P.call(0.0, 0.5), 0.36 * u, 0.5 * u)
+	draw_colored_polygon(hp_, hc.darkened(0.45))
+	draw_colored_polygon(_ellipse_pts(P.call(-0.07, 0.44), 0.24 * u, 0.4 * u), hc)
+	draw_colored_polygon(_ellipse_pts(P.call(-0.12, 0.34), 0.1 * u, 0.16 * u), hc.lightened(0.35))
+	draw_colored_polygon(PackedVector2Array([P.call(-0.2, 0.62), P.call(0.2, 0.62), P.call(0.13, 0.9), P.call(0.0, 0.98), P.call(-0.13, 0.9)]), hc.darkened(0.2))   # jaw
+	var eye := Color(0.02, 0.05, 0.08, 0.9)
+	draw_rect(Rect2(P.call(-0.2, 0.46), Vector2(0.14 * u, 0.05 * u)), eye)
+	draw_rect(Rect2(P.call(0.06, 0.46), Vector2(0.14 * u, 0.05 * u)), eye)
+	var hr := hp_.duplicate()
+	hr.append(hp_[0])
+	draw_polyline(hr, Color(0.02, 0.05, 0.08, 0.95), 1.8)
+	if ar.call("head"):
+		draw_polyline(hr, Color(0.45, 0.8, 1.0, 0.9), 1.0)
+		draw_arc(P.call(0.0, 0.5), 0.42 * u, PI * 1.05, PI * 1.95, 14, Color(0.45, 0.8, 1.0, 0.9), 1.6)           # helmet brow
+	if not B.ok("head") or not B.ok("chest"):
+		_txt(cx - 20, y0 + 4.9 * u, "CRITICAL", 11, Color(1, 0.3, 0.3), 40, HORIZONTAL_ALIGNMENT_CENTER)
+	# scanlines over the whole figure
+	var k := 0.0
+	while k < 8.2:
+		draw_line(P.call(-2.0, k), P.call(2.0, k), Color(0.4, 0.9, 1.0, 0.045), 1.0)
+		k += 0.12
+
+func _ellipse_pts(c: Vector2, rx: float, ry: float, closed: bool = false) -> PackedVector2Array:
+	var pts := PackedVector2Array()
+	for i in 24:
+		var t: float = TAU * float(i) / 24.0
+		pts.append(c + Vector2(cos(t) * rx, sin(t) * ry))
+	if closed:
+		pts.append(pts[0])
+	return pts
+
+func _meter(x: float, y: float, w: float, h: float, f: float, col: Color, label: String, right: String = "") -> void:
+	draw_rect(Rect2(x, y, w, h), Color(0, 0, 0, 0.7))
+	draw_rect(Rect2(x + 1, y + 1, (w - 2) * clampf(f, 0.0, 1.0), h - 2), col)
+	draw_rect(Rect2(x + 1, y + 1, (w - 2) * clampf(f, 0.0, 1.0), (h - 2) * 0.4), Color(1, 1, 1, 0.14))
+	draw_rect(Rect2(x, y, w, h), Color(1, 1, 1, 0.3), false, 1.0)
+	_txt(x + 4, y + h - 3, label, int(h) - 3, Color.WHITE)
+	if right != "":
+		_txt(x, y + h - 3, right, int(h) - 3, Color.WHITE, w - 4, HORIZONTAL_ALIGNMENT_RIGHT)
+
+## the right-hand panel, in the spirit of the CDDA sidebar: where and when, the (purchasable) nav slot, the body, the meters, status effects and gear.
+## There is deliberately no minimap: that is an implant to buy.
 func _draw_hud() -> void:
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.5, 1.5))
 	var W: float = float(cols * tile()) / 1.5
-	var x0: float = W - 236.0
-	var y0: float = 6.0
-	draw_rect(Rect2(x0 - 6, y0 - 4, 238, 188), Color(0.03, 0.04, 0.08, 0.72))
-	_bar(x0, y0, 224, 16, float(game.hp) / float(maxi(1, game.hp_max)), _limb_color(float(game.hp) / float(maxi(1, game.hp_max))), "HP  %d / %d" % [game.hp, game.hp_max])
-	var ar: Dictionary = game.armor_status()
+	var x0: float = W - PANEL_W
+	var xi: float = x0 + 10.0
+	var wi: float = PANEL_W - 20.0
+	draw_rect(Rect2(x0, 0, PANEL_W, PANEL_H), Color(0.03, 0.04, 0.08, 0.86))
+	draw_rect(Rect2(x0, 0, 2, PANEL_H), Color(0.25, 0.8, 0.95, 0.55))
+	draw_rect(Rect2(x0, PANEL_H - 2, PANEL_W, 2), Color(0.25, 0.8, 0.95, 0.35))
+	var B = game.body
+	# where and when
+	var where: String = game.zname(game.pc)
+	var tw: Dictionary = game.tower_at(game.pc) if game.z_of(game.pc) > 0 else {}
+	if not tw.is_empty():
+		where += " (%d)" % int(tw["h"])
+	_txt(xi, 17, where.to_upper(), 12, C_CYAN, wi)
+	_txt(xi, 36, game.time_text(), 16, Color.WHITE)
+	_txt(xi + 52, 36, "Day %d   Turn %d" % [game.sim.tick / 1440 + 1, game.turn], 11, C_DIM)
+	_txt(xi, 36, "¥%d" % game.yen, 14, Color(0.95, 0.85, 0.4), wi, HORIZONTAL_ALIGNMENT_RIGHT)
+	# the nav slot: an empty implant bay
+	var ny := 44.0
+	draw_rect(Rect2(xi, ny, wi, 50), Color(0.02, 0.03, 0.06, 0.9))
+	var dash := 0.0
+	while dash < wi:
+		draw_line(Vector2(xi + dash, ny), Vector2(xi + minf(dash + 6.0, wi), ny), Color(0.35, 0.5, 0.6, 0.7), 1.0)
+		draw_line(Vector2(xi + dash, ny + 50), Vector2(xi + minf(dash + 6.0, wi), ny + 50), Color(0.35, 0.5, 0.6, 0.7), 1.0)
+		dash += 10.0
+	_txt(xi, ny + 21, "NAV IMPLANT: NOT INSTALLED", 12, C_DIM, wi, HORIZONTAL_ALIGNMENT_CENTER)
+	_txt(xi, ny + 37, "minimap available from a ripperdoc", 11, Color(0.4, 0.46, 0.55), wi, HORIZONTAL_ALIGNMENT_CENTER)
+	# the figure and the limb readouts
+	var fy: float = 100.0
+	_draw_person(x0 + 62.0, fy, 21.0)
+	var names := {"head": "HEAD", "chest": "CHEST", "l_arm": "L ARM", "r_arm": "R ARM", "l_leg": "L LEG", "r_leg": "R LEG"}
+	var k := 0
+	for l in game.BODY.LIMBS:
+		var by: float = fy + 6.0 + float(k) * 30.0
+		var av: int = game.armor_value(l)
+		var f: float = B.frac(l)
+		_txt(x0 + 124, by + 8, names[l], 11, C_DIM)
+		if av > 0:
+			_txt(x0 + 124, by + 8, "armor %d" % av, 11, Color(0.5, 0.78, 1.0), 118, HORIZONTAL_ALIGNMENT_RIGHT)
+		_meter(x0 + 124, by + 11, 118, 13, f, _limb_color(f), "OFF" if not B.ok(l) else "", "%d/%d" % [int(B.hp[l]), int(B.mx[l])])
+		k += 1
+	# the meters
+	var my: float = fy + 190.0
+	var hpf: float = float(game.hp) / float(maxi(1, game.hp_max))
+	_meter(xi, my, wi, 16, hpf, _limb_color(hpf), "HEALTH", "%d / %d" % [game.hp, game.hp_max])
+	var ars: Dictionary = game.armor_status()
 	var broken := false
 	for l in game.BODY.LIMBS:
 		for p in game.armor_pieces(l):
 			if int(p["left"]) <= 0:
 				broken = true
-	var af: float = float(ar["left"]) / float(maxi(1, int(ar["max"])))
-	_bar(x0, y0 + 20, 224, 16, af if int(ar["max"]) > 0 else 0.0, Color(0.35, 0.65, 0.95) if not broken else Color(0.9, 0.55, 0.2), "ARMOR %d   %d / %d%s" % [int(ar["value"]), int(ar["left"]), int(ar["max"]), "  BROKEN!" if broken else ""])
-	# the figure
-	var fx: float = x0 + 34.0
-	var fy: float = y0 + 46.0
-	var B = game.body
-	draw_circle(Vector2(fx, fy + 8), 8.0, _limb_color(B.frac("head")))
-	draw_rect(Rect2(fx - 10, fy + 18, 20, 32), _limb_color(B.frac("chest")))
-	draw_rect(Rect2(fx - 20, fy + 19, 8, 28), _limb_color(B.frac("r_arm")))
-	draw_rect(Rect2(fx + 12, fy + 19, 8, 28), _limb_color(B.frac("l_arm")))
-	draw_rect(Rect2(fx - 9, fy + 52, 8, 34), _limb_color(B.frac("r_leg")))
-	draw_rect(Rect2(fx + 1, fy + 52, 8, 34), _limb_color(B.frac("l_leg")))
-	for r in [Rect2(fx - 20, fy + 19, 8, 28), Rect2(fx + 12, fy + 19, 8, 28), Rect2(fx - 9, fy + 52, 8, 34), Rect2(fx + 1, fy + 52, 8, 34), Rect2(fx - 10, fy + 18, 20, 32)]:
-		draw_rect(r, Color(1, 1, 1, 0.3), false, 1.0)
-	# per-limb bars with the armor on each
-	var names := {"head": "HEAD", "chest": "CHEST", "l_arm": "L ARM", "r_arm": "R ARM", "l_leg": "L LEG", "r_leg": "R LEG"}
-	var k := 0
-	for l in game.BODY.LIMBS:
-		var by: float = y0 + 44.0 + float(k) * 22.0
-		var av: int = game.armor_value(l)
-		_bar(x0 + 74, by, 150, 18, B.frac(l), _limb_color(B.frac(l)), "%s %d/%d%s" % [names[l], int(B.hp[l]), int(B.mx[l]), ("  [%d]" % av) if av > 0 else ""])
-		if not B.ok(l):
-			draw_string(font, Vector2(x0 + 190, by + 14), "OFF", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 0.4, 0.4))
-		k += 1
+	var amax: int = int(ars["max"])
+	_meter(xi, my + 20, wi, 16, (float(ars["left"]) / float(maxi(1, amax))) if amax > 0 else 0.0, Color(0.35, 0.65, 0.95) if not broken else Color(0.9, 0.55, 0.2), "ARMOR %d" % int(ars["value"]), ("BROKEN" if broken else "%d / %d" % [int(ars["left"]), amax]))
+	var stf: float = float(game.stamina) / float(game.STAMINA_MAX)
+	_meter(xi, my + 40, wi, 16, stf, Color(0.9, 0.78, 0.25) if stf > 0.25 else Color(0.9, 0.45, 0.2), "STAMINA", "%s" % game.stance_name())
+	# hunger and thirst: full when you have just eaten or drunk, empty (and a status effect) when the clock runs out
+	var nt: Array = game.need_timers()
+	var ff: float = float(nt[0]) / float(game.HUNGER_AFTER)
+	var tf: float = float(nt[1]) / float(game.THIRST_AFTER)
+	_meter(xi, my + 62, wi * 0.5 - 3, 14, ff, Color(0.75, 0.55, 0.25) if not game.hungry() else Color(0.8, 0.2, 0.2), "FOOD", "HUNGRY" if game.hungry() else "%dh" % int(ceil(float(nt[0]) / 60.0)))
+	_meter(xi + wi * 0.5 + 3, my + 62, wi * 0.5 - 3, 14, tf, Color(0.3, 0.6, 0.9) if not game.thirsty() else Color(0.8, 0.2, 0.2), "WATER", "THIRSTY" if game.thirsty() else "%dh%02d" % [nt[1] / 60, nt[1] % 60])
+	# status effects
+	var ey: float = my + 94.0
+	var fx: float = xi
+	var effects: Array = []
+	for e in game.status_effects():
+		effects.append([e + " -20%", Color(0.95, 0.5, 0.3)])
+	if game.drunk_left > 0:
+		effects.append(["Drunk", Color(0.9, 0.75, 0.3)])
+	if game.bless_left > 0:
+		effects.append(["Blessed", Color(0.7, 0.9, 1.0)])
+	if game.transit.riding >= 0:
+		effects.append(["On train", C_CYAN])
+	if game.heat >= 30:
+		effects.append(["Wanted", Color(1, 0.35, 0.35)])
+	if effects.is_empty():
+		_txt(xi, ey + 11, "No status effects", 11, Color(0.4, 0.46, 0.55))
+	for e in effects:
+		var tw2: float = font.get_string_size(String(e[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 12.0
+		if fx + tw2 > xi + wi:
+			fx = xi
+			ey += 18.0
+		draw_rect(Rect2(fx, ey, tw2, 15), Color(0.1, 0.12, 0.18, 0.95))
+		draw_rect(Rect2(fx, ey, 3, 15), e[1])
+		_txt(fx + 7, ey + 12, String(e[0]), 12, e[1])
+		fx += tw2 + 4.0
+	# gear and movement
+	var gy: float = ey + 30.0
+	draw_line(Vector2(xi, gy - 8), Vector2(xi + wi, gy - 8), Color(0.3, 0.45, 0.55, 0.5), 1.0)
+	var mv: String = game.stance_name()
+	_txt(xi, gy + 4, "SPEED", 11, C_DIM)
+	_txt(xi, gy + 4, "%d%%  (%s)" % [int(round(game.speed_mult() * 100.0)), mv], 12, Color(1, 0.6, 0.4) if game.speed_mult() < 1.0 else Color.WHITE, wi, HORIZONTAL_ALIGNMENT_RIGHT)
+	_txt(xi, gy + 20, "HEAT", 11, C_DIM)
+	_meter(xi + 40, gy + 11, wi - 40, 10, float(game.heat) / 60.0, Color(0.9, 0.3, 0.25) if game.heat >= 30 else Color(0.9, 0.7, 0.3), "", "%d" % game.heat)
+	_txt(xi, gy + 38, "CARRY", 11, C_DIM)
+	_txt(xi, gy + 38, "%.1f kg" % game.total_weight_kg(), 12, Color.WHITE, wi, HORIZONTAL_ALIGNMENT_RIGHT)
+	_txt(xi, gy + 56, game.gun_line(), 12, Color(0.95, 0.88, 0.7), wi)
+	if hud_extra != "":
+		_txt(xi, gy + 73, hud_extra.strip_edges(), 11, C_CYAN, wi)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 ## a vehicle drawn tile by tile from its template

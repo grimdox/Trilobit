@@ -44,6 +44,7 @@ func _ready() -> void:
 	sfx = SfxScript.new()
 	add_child(sfx)
 	apply_audio()
+	apply_window()
 	var layer := CanvasLayer.new()
 	layer.layer = 10
 	layer.scale = Vector2(UI_S, UI_S)
@@ -62,6 +63,29 @@ func _ready() -> void:
 		begin_new(pending_seed if pending_seed >= 0 else int(Time.get_unix_time_from_system()) % 100000)
 	else:
 		open_screen("title")
+
+## Fullscreen is the exclusive kind, which on Windows takes over the whole monitor and covers the taskbar (the plain borderless kind can leave it showing).
+## F11 or Alt+Enter toggles it from any screen; the choice is remembered.
+func apply_window() -> void:
+	if DisplayServer.get_name() == "headless":
+		return
+	var want: bool = settings.fullscreen or "--fullscreen" in OS.get_cmdline_args()
+	var cur := DisplayServer.window_get_mode()
+	if want and cur != DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
+	elif not want and (cur == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN or cur == DisplayServer.WINDOW_MODE_FULLSCREEN):
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+
+func toggle_fullscreen() -> void:
+	settings.fullscreen = not settings.fullscreen
+	settings.save()
+	apply_window()
+
+func _input(ev: InputEvent) -> void:
+	if ev is InputEventKey and ev.pressed and not ev.echo:
+		if ev.keycode == KEY_F11 or (ev.alt_pressed and (ev.keycode == KEY_ENTER or ev.keycode == KEY_KP_ENTER)):
+			toggle_fullscreen()
+			get_viewport().set_input_as_handled()
 
 func apply_audio() -> void:
 	sfx.enabled = settings.sound_on
@@ -496,11 +520,9 @@ func refresh() -> void:
 		extra += "  [FLYING fuel %d]" % g.fuel
 	elif g.has_implant("jets") and g.fuel < g.FUEL_MAX:
 		extra += "  [jets %d]" % g.fuel
-	var line1 := "HP %d/%d   ¥%d   Heat %d   %s%s   %s   Turn %d   Carry %.1f kg%s" % [g.hp, g.hp_max, g.yen, g.heat, g.gun_line(),
-		"  [%s %d]" % [g.stance_name(), g.stamina] if g.stance != 2 or g.stamina < 30 else "", g.time_text(), g.turn, g.total_weight_kg(), extra]
+	view.hud_extra = extra
 	var tw: Dictionary = g.tower_at(g.pc) if g.z_of(g.pc) > 0 else {}
-	var where: String = g.zname(g.pc) + (" of %d" % tw["h"] if not tw.is_empty() else "")
-	var line2: String = "%s   |   %s" % [where, g.eco.status_text()]
+	var line2: String = g.eco.status_text()
 	if g.transit.active():
 		var na: Dictionary = g.transit.next_arrival()
 		if g.transit.riding >= 0 or int(na.get("dist", 99)) < 30:
@@ -512,7 +534,7 @@ func refresh() -> void:
 		var cov: int = g.cover_vs(g.pc, g.sim.pos[tgt], false)
 		line2 += "   |   Target: %s, %d tiles, %d%%%s" % [g.name_of(tgt), g.cheb(g.sim.pos[tgt], g.pc), g.hit_chance_on(tgt), (" (in cover)" if cov > 0 else "")]
 	var jt: String = g.eco.job_text()
-	status.text = line1 + "\n" + line2 + ("\n" + jt if jt != "" else "")
+	status.text = line2 + ("\n" + jt if jt != "" else "")
 	var lines: Array = g.log.slice(-5)
 	logbox.text = "\n".join(lines)
 	status.add_theme_color_override("font_color", Color(1, 0.4, 0.4) if g.hp < g.hp_max / 3 else Color.WHITE)
@@ -618,7 +640,7 @@ func show_inventory() -> void:
 	panel.visible = true
 
 func show_help() -> void:
-	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\n<  or  PgUp  go up (stairs, elevator, ladder; with jump jets, lift off or climb through open air)      >  or  PgDn  go down (or descend and land).  An elevator rides up to three floors.  Hunters follow you up and down stairs.\ne  get into or out of cars, gyros (flying) and mechs (armoured walkers).  Leap off an edge and you fall: 5 damage a floor.\nt   talk to the nearest person (vendors, fixers, ripperdocs)      p   pay 100 on the debt (Shift+P: 1000)\nYou see a half circle in front of you: ; + direction turns you to look without a step.  Walk into a locked door to pick it.  Step onto a carriage while the train doors are open to ride; step onto a platform to get off.\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the target (Shift+F: at anyone)      Tab  cycle targets      a  aim (up to 3 turns, each steadier)\nr   reload / clear a jam      v  fire mode (single, burst, auto)      x  choose the next ammunition kind\nF4  gunsmith: fit scopes, suppressors, magazines, grips, stocks, barrels (a scope helps at range, hurts up close)\ns   pickpocket an adjacent person (stealth and theft skill)\nw + direction   strike (reach weapons hit up to 2 away; they also strike hunters 2 cells off when you step toward them)      o + direction   shove (off an edge, too)      \\   swap to your previous weapon\nc   crouch      z   crawl (half speed, nearly invisible and silent)      Shift+direction   run two cells (noisy, tiring)      q + direction   jump (2 cells, 3 after a run)        e   get in or out of a car\nd   drop the wielded weapon\nLimbs: each has its own health (top right).  A disabled leg slows you, a disabled arm rules out two-handed weapons; head or chest at 0 is death.  Armor is worn from the inventory and soaks damage until it breaks.  Trauma patches mend limbs; ripperdocs rebuild them.\nEsc  menu: save, load, options (rebind keys, sound), implants        F3  implants        M  island map        F2  switch tileset        F5  quick save        F9  quick load\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  Small arrows on the edge of each tile show which way people and animals face.  People see in a cone in front of them and hear footsteps by stance.  Strike an unaware person from behind for a quiet kill.  Crates, dumpsters, planters, railings and cars give cover; crouch behind them.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
+	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\n<  or  PgUp  go up (stairs, elevator, ladder; with jump jets, lift off or climb through open air)      >  or  PgDn  go down (or descend and land).  An elevator rides up to three floors.  Hunters follow you up and down stairs.\ne  get into or out of cars, gyros (flying) and mechs (armoured walkers).  Leap off an edge and you fall: 5 damage a floor.\nt   talk to the nearest person (vendors, fixers, ripperdocs)      p   pay 100 on the debt (Shift+P: 1000)\nYou see a half circle in front of you: ; + direction turns you to look without a step.  Walk into a locked door to pick it.  Step onto a carriage while the train doors are open to ride; step onto a platform to get off.\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the target (Shift+F: at anyone)      Tab  cycle targets      a  aim (up to 3 turns, each steadier)\nr   reload / clear a jam      v  fire mode (single, burst, auto)      x  choose the next ammunition kind\nF4  gunsmith: fit scopes, suppressors, magazines, grips, stocks, barrels (a scope helps at range, hurts up close)\ns   pickpocket an adjacent person (stealth and theft skill)\nw + direction   strike (reach weapons hit up to 2 away; they also strike hunters 2 cells off when you step toward them)      o + direction   shove (off an edge, too)      \\   swap to your previous weapon\nc   crouch      z   crawl (half speed, nearly invisible and silent)      Shift+direction   run two cells (noisy, tiring)      q + direction   jump (2 cells, 3 after a run)        e   get in or out of a car\nd   drop the wielded weapon\nLimbs: each has its own health (right-hand panel).  Go 24 hours without food and you are Hungry, 4 hours without a drink and you are Thirsty: each costs 20% of your walking speed.  A disabled leg slows you, a disabled arm rules out two-handed weapons; head or chest at 0 is death.  Armor is worn from the inventory and soaks damage until it breaks.  Trauma patches mend limbs; ripperdocs rebuild them.\nEsc  menu: save, load, options (rebind keys, sound), implants        F3  implants        M  island map        F2  switch tileset        F5  quick save        F9  quick load        F11 or Alt+Enter  fullscreen (covers the taskbar)\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  Small arrows on the edge of each tile show which way people and animals face.  People see in a cone in front of them and hear footsteps by stance.  Strike an unaware person from behind for a quiet kill.  Crates, dumpsters, planters, railings and cars give cover; crouch behind them.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
 	panel.visible = true
 
 func dir_of(k: int) -> Vector2i:

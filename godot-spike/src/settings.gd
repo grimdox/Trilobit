@@ -46,6 +46,7 @@ var binds: Dictionary = {}          # action -> Array of keycodes
 var sound_on: bool = true
 var volume: float = 0.7
 var tileset: int = 0
+var fullscreen: bool = false
 
 func _init() -> void:
 	reset_keys()
@@ -82,7 +83,7 @@ func rebind(action: String, keycode: int) -> void:
 	binds[action] = [keycode]
 
 func to_dict() -> Dictionary:
-	return {"binds": binds, "sound": sound_on, "volume": volume, "tileset": tileset}
+	return {"binds": binds, "sound": sound_on, "volume": volume, "tileset": tileset, "fullscreen": fullscreen}
 
 func from_dict(d: Dictionary) -> void:
 	var b: Dictionary = d.get("binds", {})
@@ -92,6 +93,7 @@ func from_dict(d: Dictionary) -> void:
 	sound_on = bool(d.get("sound", true))
 	volume = clampf(float(d.get("volume", 0.7)), 0.0, 1.0)
 	tileset = int(d.get("tileset", 0))
+	fullscreen = bool(d.get("fullscreen", false))
 
 func save() -> void:
 	var f := FileAccess.open(path, FileAccess.WRITE)
