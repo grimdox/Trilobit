@@ -21,7 +21,7 @@ func _initialize() -> void:
 	var ty := 0
 	match mode:
 		"bridge":
-			var e: int = ISL.BRIDGES_Y[1]
+			var e: int = isl.bridges_y[1]
 			var sp: Vector2i = g.island.river_span(o.y + e + 12)
 			tx = (sp.x + sp.y) / 2 - o.x - 4
 			ty = e + 20

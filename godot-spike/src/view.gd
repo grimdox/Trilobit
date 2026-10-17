@@ -802,6 +802,13 @@ func _draw_train_tile(p: Vector2, info: Array, tr) -> void:
 	var open: bool = tr.dwell_of(j) > 0
 	var door: bool = (l == 0 or l == 3) and (i == tr.DOOR_A or i == tr.DOOR_B)
 	var wall: bool = l == 0 or l == 3
+	if _draw_train_sprite(p, j, k, i, l, horiz, fwd, col, open and door):
+		if k == 0 and i == 0 and (l == 1 or l == 2):
+			var nose0: Vector2 = p + Vector2(T, T) * 0.5 + Vector2(fwd) * (T * 0.46)
+			draw_circle(nose0, 5.0 * S, Color(1, 0.95, 0.6))
+			draw_circle(nose0, 11.0 * S, Color(1, 0.95, 0.6, 0.22))
+		_draw_passenger(p, j, k, i, l, tr)
+		return
 	# `a` runs along the train, `c` across it: build rects in train space, then map to the screen
 	var along: Vector2 = Vector2(1, 0) if horiz else Vector2(0, 1)
 	var across: Vector2 = Vector2(0, 1) if horiz else Vector2(1, 0)
@@ -845,6 +852,44 @@ func _draw_train_tile(p: Vector2, info: Array, tr) -> void:
 		var nose: Vector2 = p + Vector2(T, T) * 0.5 + Vector2(fwd) * (T * 0.46)
 		draw_circle(nose, 5.0 * S, Color(1, 0.95, 0.6))
 		draw_circle(nose, 11.0 * S, Color(1, 0.95, 0.6, 0.22))
+
+## a commuter standing in a carriage cell (see Transit.passenger), drawn as a person facing across the aisle
+func _draw_passenger(p: Vector2, j: int, k: int, i: int, l: int, tr) -> void:
+	var h: int = tr.passenger(j, k, i, l)
+	if h < 0 or not doll_ready():
+		return
+	var faces := [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]
+	_draw_doll(DS.for_commuter(h), p, faces[(h >> 6) % 4])
+
+## the painted carriage (veh_train_* / veh_trainopen_*: the u, p and o layers, the paint tinted with the train's livery): one 64 px tile of it, turned
+## to the train's heading.  Sprite tile (lane, position): north and east take (l, i), south and west (3 - l, i); turned 0, 90, 180 and -90 degrees.
+func _draw_train_sprite(p: Vector2, j: int, k: int, i: int, l: int, horiz: bool, fwd: Vector2i, col: Color, doorway: bool) -> bool:
+	var kind := "trainopen" if doorway else "train"
+	var tu = _veh_tex(kind, "u")
+	var tp = _veh_tex(kind, "p")
+	var to = _veh_tex(kind, "o")
+	if tu == null or tp == null or to == null:
+		return false
+	var ang: float = 0.0
+	var sx: int = l
+	if horiz:
+		ang = PI / 2.0 if fwd.x >= 0 else -PI / 2.0
+		sx = l if fwd.x >= 0 else 3 - l
+	elif fwd.y > 0:
+		ang = PI
+		sx = 3 - l
+	var T: float = float(TILE)
+	var kk: float = T / 64.0
+	var src := Rect2(float(sx) * 64.0, float(i) * 64.0, 64.0, 64.0)
+	var tint: Color = col * 1.12
+	tint.a = 1.0
+	draw_set_transform(p + Vector2(T, T) * 0.5, ang, Vector2(kk, kk))
+	var dst := Rect2(-32.0, -32.0, 64.0, 64.0)
+	draw_texture_rect_region(tu, dst, src)
+	draw_texture_rect_region(tp, dst, src, tint)
+	draw_texture_rect_region(to, dst, src)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	return true
 
 ## the bulkhead at each end of a carriage
 func _train_end_marks(R: Callable, i: int, k: int, l: int, tr) -> void:

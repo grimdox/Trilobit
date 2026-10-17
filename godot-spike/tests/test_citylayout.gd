@@ -96,7 +96,7 @@ func run() -> Array:
 	var bridges_ok := 0
 	var bridge_rail := 0
 	var marks_ok := 0
-	for e in ISL.BRIDGES_Y:
+	for e in isl.bridges_y:
 		var sp2: Vector2i = isl.river_span(o.y + e + 12)
 		var sx: int = (sp2.x + sp2.y) / 2 - o.x
 		var run_up := 0
@@ -324,7 +324,7 @@ func run() -> Array:
 	check.call("riding carries the player across the river on the rail bridge (%d turns)" % turns, over_river)
 
 	# ---- traffic: a car drives over a four-lane bridge
-	var e2: int = ISL.BRIDGES_Y[1]
+	var e2: int = isl.bridges_y[1]
 	var sp3: Vector2i = isl.river_span(o.y + e2 + 12)
 	for vi in g.vehicles.size():
 		g.vs.lift(vi)

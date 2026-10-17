@@ -102,6 +102,19 @@ static func for_person(g, i: int) -> Dictionary:
 	lk["hid"] = _hides_hair(layers)
 	return {"layers": layers, "weapon": weapon, "look": lk}
 
+## a commuter on a train: a resident's clothes, picked by a hash (see Transit.passenger)
+static func for_commuter(h: int) -> Dictionary:
+	var layers: Array = ["jacket_%d" % (h % 6)]
+	if h % 5 == 0:
+		layers = ["suit"]
+	elif h % 7 == 0:
+		layers = ["coat"]
+	elif h % 4 == 0:
+		layers.insert(0, "backpack")
+	var lk := look(h, (h >> 20) % 2 == 1, 0)
+	lk["hid"] = false
+	return {"layers": layers, "weapon": "", "look": lk}
+
 static func _hides_hair(layers: Array) -> bool:
 	for l in layers:
 		if l == "helmet_ball" or l == "visor" or l == "helm_tac" or l == "balaclava":

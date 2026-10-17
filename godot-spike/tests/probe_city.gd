@@ -5,13 +5,17 @@ const CG = preload("res://src/citygen.gd")
 const LV = preload("res://src/levels.gd")
 func _init() -> void:
 	var out := "/tmp/claude-0/city_probe.png"
-	for a in OS.get_cmdline_user_args():
-		out = a
+	var sd := 7
+	var args := OS.get_cmdline_user_args()
+	if args.size() > 0:
+		out = args[0]
+	if args.size() > 1:
+		sd = int(args[1])
 	var t0 := Time.get_ticks_msec()
-	var isl = ISL.new(7)
+	var isl = ISL.new(sd)
 	var c = isl.build_zone(1, 1)
 	print("generate ms ", Time.get_ticks_msec() - t0)
-	LV.build(c, 7)
+	LV.build(c, sd)
 	isl.rail_portal(c)
 	print("total ms ", Time.get_ticks_msec() - t0, " size ", c.size, " buildings ", c.buildings, " towers ", c.towers.size(), " zmax ", c.zmax)
 	print("stops ", c.subway["stops"].size(), " homes ", c.homes.size(), " works ", c.works.size(), " shops ", c.shops.size(), " venues ", c.venues.size())

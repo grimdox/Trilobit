@@ -3,6 +3,7 @@ extends RefCounted
 ## The player (and the vehicle being driven) is carried across.  Zones that are not live are kept as save dictionaries in `cache`.
 const GameScript = preload("res://src/game.gd")
 const ISL = preload("res://src/island.gd")
+const CITY_PEOPLE := 2000             # the city is big and packed: two thousand people (the performance budget in the design notes)
 
 var island
 var game
@@ -17,10 +18,10 @@ static func key(z: Vector2i) -> String:
 
 func people_for(z: Vector2i) -> int:
 	if z == ISL.CITY_ZONE:
-		return 1500
+		return CITY_PEOPLE
 	if z == Vector2i(0, 1):
 		return 220
-	if z == Vector2i(2, 1):
+	if z == ISL.TOWN_ZONE:
 		return 90
 	return 0
 
@@ -142,7 +143,7 @@ func save_dict() -> Dictionary:
 func load_dict(d: Dictionary) -> void:
 	if int(d.get("layout", 1)) != ISL.LAYOUT_VER:
 		# the map was rebuilt since this save (a different city, a wider highway): its cell numbers mean nothing now, so start afresh on the same island
-		start(int(d["island"]), 1500)
+		start(int(d["island"]), CITY_PEOPLE)
 		game.say("That save was made before the city was rebuilt; you start again on the same island.")
 		return
 	seed_value = int(d["island"])

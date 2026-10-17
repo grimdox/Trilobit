@@ -17,7 +17,6 @@ var part_sel: int = 0
 var sk_sel: int = 0                # the highlighted line of the attributes & skills screen (0-4 attributes, then the skills)
 var world = null
 var map_tex: ImageTexture = null
-var ow_tex: Texture2D = null
 var font: Font = ThemeDB.fallback_font
 var kana_font: Font = load("res://gfx/fonts/NotoSansJP-kana-subset.otf")
 var loading: bool = false          # the loading screen shows the name in hiragana
@@ -289,25 +288,14 @@ func _map(W: float, H: float) -> void:
 		draw_string(font, Vector2(24, 80), "No chart of this place.", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color.WHITE)
 		return
 	var isl = world.island
-	if ow_tex == null:
-		ow_tex = load("res://gfx/overworld.png") as Texture2D
-	var ow: Texture2D = ow_tex
-	var iw: float = 1680.0
-	var ih: float = 1050.0
+	var iw: float = float(isl.W)
+	var ih: float = float(isl.H)
 	var sc: float = minf((W - 48.0) / iw, (H - 90.0) / ih)
 	var ox: float = (W - iw * sc) * 0.5
 	var oy := 48.0
-	if ow != null:
-		draw_texture_rect(ow, Rect2(ox, oy, iw * sc, ih * sc), false)
-	else:
-		draw_texture_rect(map_tex, Rect2(ox, oy, float(isl.W) * sc * iw / float(isl.W), ih * sc), false)
-	# the drawn map is not to scale: island coordinates are matched to it by landmarks (port, city, town, coasts)
-	var gx_a := [0.0, 215.0, 800.0, 1240.0, 2304.0]
-	var ix_a := [0.0, 195.0, 640.0, 967.0, 1680.0]
-	var gy_a := [0.0, 704.0, 1408.0]
-	var iy_a := [0.0, 548.0, 1050.0]
+	draw_texture_rect(map_tex, Rect2(ox, oy, iw * sc, ih * sc), false)       # the chart is drawn from this island's own seed (Island.overview_image)
 	var P := func(gx: float, gy: float) -> Vector2:
-		return Vector2(ox + _pw(gx_a, ix_a, gx) * sc, oy + _pw(gy_a, iy_a, gy) * sc)
+		return Vector2(ox + gx * sc, oy + gy * sc)
 	# unexplored zones sit under a haze; the grid shows the zones
 	for zx in isl.NZX:
 		for zy in isl.NZY:
@@ -324,17 +312,11 @@ func _map(W: float, H: float) -> void:
 			if not vis:
 				draw_rect(own, Color(0.02, 0.03, 0.08, 0.35))
 			draw_rect(own, Color(1, 1, 1, 0.08), false, 1.0)
-	# the river and the highway, drawn over the chart (the picture predates them)
-	var rpts := PackedVector2Array()
-	for gy in range(isl.RIVER_Y0, isl.H, 24):
-		rpts.append(P.call(float(isl.river_span(gy).x + isl.river_span(gy).y) * 0.5, float(gy)))
-	if rpts.size() > 1:
-		draw_polyline(rpts, Color(0.25, 0.6, 0.95, 0.9), maxf(2.0, 3.0 * sc))
-	var hpts := PackedVector2Array()
-	for gx in range(isl._hx0, isl.HWY_X1 + 1, 24):
-		hpts.append(P.call(float(gx), float(isl.pass_yc(gx))))
-	if hpts.size() > 1:
-		draw_polyline(hpts, Color(1.0, 0.82, 0.3, 0.85), maxf(1.5, 2.0 * sc))
+	# place names
+	for lm in isl.landmarks():
+		var lp: Vector2 = P.call(float(lm["pos"].x), float(lm["pos"].y))
+		_txt(lm["name"], lp + Vector2(-30, 0), 13, Color(1, 1, 1, 0.9))
+	_rtxt("Island seed %d" % isl.seed_value, W - 24, 34, 16, Color(0.6, 0.85, 1.0))
 	# you are here
 	if game != null and game.island != null:
 		var gp: Vector2i = game.global_pos()
@@ -347,15 +329,6 @@ func _map(W: float, H: float) -> void:
 		draw_line(pp + Vector2(0, -14), pp + Vector2(0, 14), Color(1, 0.3, 0.6, 0.8), 1.0)
 		draw_string(font, pp + Vector2(12, -12), "YOU", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(1, 0.4, 0.7))
 		draw_string(font, Vector2(24, H - 14), "You are at (%d, %d) in %s.   M or Esc closes." % [gp.x, gp.y, isl.zone_name(game.zone)], HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.8, 0.9, 1.0))
-
-## piecewise-linear map of v through matching anchor lists
-func _pw(from: Array, to: Array, v: float) -> float:
-	for k in range(1, from.size()):
-		if v <= from[k] or k == from.size() - 1:
-			var f: float = (v - from[k - 1]) / (from[k] - from[k - 1])
-			return lerpf(to[k - 1], to[k], f)
-	return v
-
 
 # ---------------------------------------------------------------- attributes and skills
 ## one line per attribute (0-4) then per skill, in the order of SK.SKILLS

@@ -8,7 +8,7 @@ func _init() -> void:
 		var cnt := {}
 		for v in c.venues:
 			cnt[v["kind"]] = cnt.get(v["kind"], 0) + 1
-		var t = isl.build_zone(2, 1)
+		var t = isl.build_zone(ISL.TOWN_ZONE.x, ISL.TOWN_ZONE.y)
 		var tc := {}
 		for v in t.venues:
 			tc[v["kind"]] = tc.get(v["kind"], 0) + 1

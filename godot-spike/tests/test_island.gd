@@ -88,8 +88,8 @@ func run() -> Array:
 				q.append(nx)
 	check.call("you can walk from the port to the city through the pass", reached)
 	# zones
-	check.call("zone ownership: the city owns its middle, the harbor the west", ISL.zone_owner(720, 720) == Vector2i(1, 1) and ISL.zone_owner(200, 700) == Vector2i(0, 1) and ISL.zone_owner(1150, 700) == Vector2i(2, 1) and ISL.zone_owner(2290, 1400) == Vector2i(4, 2))
-	check.call("the city's territory is its big square: 480-1119 by 384-1023, and its neighbours take over outside it", ISL.zone_owner(480, 700) == Vector2i(1, 1) and ISL.zone_owner(1119, 700) == Vector2i(1, 1) and ISL.zone_owner(479, 700) == Vector2i(0, 1) and ISL.zone_owner(1120, 700) == Vector2i(2, 1) and ISL.zone_owner(700, 383) == Vector2i(1, 0) and ISL.zone_owner(700, 1024) == Vector2i(1, 2))
+	check.call("zone ownership: the city owns its middle, the harbor the west", ISL.zone_owner(720, 720) == Vector2i(1, 1) and ISL.zone_owner(200, 700) == Vector2i(0, 1) and ISL.zone_owner(1450, 700) == ISL.TOWN_ZONE and ISL.zone_owner(2290, 1400) == Vector2i(4, 2))
+	check.call("the city's territory is its big square: 480-1439 by 224-1183, and its neighbours take over outside it", ISL.zone_owner(480, 700) == Vector2i(1, 1) and ISL.zone_owner(1439, 700) == Vector2i(1, 1) and ISL.zone_owner(479, 700) == Vector2i(0, 1) and ISL.zone_owner(1440, 700) == ISL.TOWN_ZONE and ISL.zone_owner(700, 223) == Vector2i(1, 0) and ISL.zone_owner(700, 1184) == Vector2i(1, 2))
 	var tiled := true
 	for k in 600:
 		var px: int = (k * 389) % ISL.W
@@ -113,15 +113,15 @@ func run() -> Array:
 	check.call("play starts in the city zone on a road", g.zone == ISL.CITY_ZONE and g.city.tiles[g.pc] == CG.ROAD)
 	check.call("the city leaves its edges empty (no building within 60 of the border)", _clear_edges(g))
 	var gp: Vector2i = g.global_pos()
-	check.call("global position is the city origin plus local (%s)" % str(gp), gp.x >= 448 and gp.x < 448 + ISL.CZS and gp.y >= 352 and gp.y < 352 + ISL.CZS and g.size == ISL.CZS)
+	check.call("global position is the city origin plus local (%s)" % str(gp), gp.x >= 448 and gp.x < 448 + ISL.CZS and gp.y >= 192 and gp.y < 192 + ISL.CZS and g.size == ISL.CZS)
 	# freight yard and rail in the city's west margin
 	var rails := 0
 	for x in range(0, 60):
-		if g.city.tiles[(a.rail_ret(ISL.RAIL_X1) - 352) * g.size + x] == CG.TRACK:
+		if g.city.tiles[(a.rail_ret(ISL.RAIL_X1) - 192) * g.size + x] == CG.TRACK:
 			rails += 1
 	check.call("the railway runs into the city's freight yard (%d track tiles)" % rails, rails >= 30)
 	# walk west across the border
-	var yrow: int = ISL.HWY_Y - 352 + 2
+	var yrow: int = ISL.HWY_Y - 192 + 2
 	g.yen = 777
 	g.pc = yrow * g.size + 40
 	check.call("no change of zone mid-city", not w.poll())
@@ -130,7 +130,7 @@ func run() -> Array:
 	check.call("crossing the border hands over to the harbor zone", w.poll() and w.game.zone == Vector2i(0, 1))
 	log.append("  (zone switch incl. generating the harbor: %d ms)" % (Time.get_ticks_msec() - t0))
 	var hg = w.game
-	check.call("same spot on the island (%s -> %s)" % [str(gp), str(hg.global_pos())], hg.global_pos().x == 448 + 20 and hg.global_pos().y == 352 + yrow)
+	check.call("same spot on the island (%s -> %s)" % [str(gp), str(hg.global_pos())], hg.global_pos().x == 448 + 20 and hg.global_pos().y == 192 + yrow)
 	check.call("the player's goods came along (¥%d, %d items)" % [hg.yen, hg.worn.size()], hg.yen == 777 and hg.worn.size() == 2 and hg.wield != null)
 	check.call("the harbor has people, trucks, a mech and buildings", hg.sim.n == 220 and hg.vehicles.any(func(v): return v["kind"] == "truck") and hg.vehicles.any(func(v): return v["kind"] == "mech") and hg.city.buildings >= 4)
 	var ai_trucks: int = hg.vehicles.filter(func(v): return v["ai"] and v["kind"] == "truck").size()
@@ -159,9 +159,9 @@ func run() -> Array:
 	check.call("walking back hands the city back", not w.poll())
 	hg.pc = hg.pc + 1 * 0
 	# back east, further than the hysteresis
-	var back: int = (448 + yrow - 448) * hg.size + 495
+	var back: int = (yrow) * hg.size + 495
 	hg.pc = yrow * hg.size + 0 + 495
-	hg.pc = (hg.global_pos().y - 448) * hg.size + 495
+	hg.pc = (hg.global_pos().y - 192) * hg.size + 495
 	check.call("and over again returns to the city", w.poll() and w.game.zone == ISL.CITY_ZONE)
 	check.call("the city is the one you left (cached), with your new yen", w.game.yen == 123 and w.game != g and w.game.sim.n == g.sim.n)
 	# driving across with a car

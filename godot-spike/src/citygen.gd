@@ -121,6 +121,7 @@ var ys_w: Dictionary = {}              # horizontal road line (top row) -> its w
 var plan: Dictionary = {}              # the island city's layout (see island.city_plan); empty = the old square grid
 var centre_pt := Vector2(-1.0, -1.0)   # the downtown's heart (the old city: the middle of the map) and the radius the district tests are scaled by
 var rad: float = -1.0
+var block_stats: Dictionary = {}       # how many blocks became what (null: nothing fits, park, core, merged, suburb): for the tests and the tuning
 var dash_ofs: int = 0                  # global column of local column 0: keeps the dashes of a wide road in step with the island's own
 const LANE := 6
 var towers: Array = []                 # {x0,y0,x1,y1,door} of every core building: candidates for a tall tower
@@ -170,11 +171,13 @@ func _make_wealth(seed_v: int) -> void:
 	var mask: PackedByteArray = plan.get("mask", PackedByteArray())
 	var sample := PackedFloat32Array()
 	for y in size:
+		var dy: float = float(y) - centre.y
 		for x in size:
-			var d: float = Vector2(x, y).distance_to(centre) / rr
+			var dx: float = float(x) - centre.x
+			var d: float = sqrt(dx * dx + dy * dy) / rr
 			var v: float = nz.get_noise_2d(x, y) * 0.8 + (0.45 - d) * 0.5
 			vals[y * size + x] = v
-			if mask.is_empty() or mask[y * size + x] == 1:
+			if (x + y) % 3 == 0 and (mask.is_empty() or mask[y * size + x] == 1):
 				sample.append(v)
 	# thresholds at the 33rd and 70th percentile so each tier covers a fair share of the city
 	sample.sort()
@@ -273,6 +276,7 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 	dn.seed = seed ^ 0x6d2b
 	dn.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	dn.frequency = 0.018
+	block_stats = {"null_list": []}
 	var grid: Array = []                      # grid[i][j] = block rect or null
 	for i in xs.size() - 1:
 		var col: Array = []
@@ -285,6 +289,7 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 			if planned:
 				var fr = _fit_rect(x0, y0, x1, y1)
 				if fr == null:
+					block_stats["null_list"].append(Rect2i(x0, y0, x1 - x0, y1 - y0))
 					col.append(null)
 					_leave_park(x0, y0, x1, y1, null)
 					continue
@@ -314,16 +319,23 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 	var mega_zone := 0.30
 	var tower_zone := 0.58
 	if planned:
-		mega_zone = 0.32
-		tower_zone = 0.62
+		mega_zone = 0.34
+		tower_zone = 0.72
+	for k in ["null", "park", "core", "merged", "suburb", "exurb"]:
+		block_stats[k] = 0
+	for i in grid.size():
+		for j in grid[i].size():
+			if grid[i][j] == null:
+				block_stats["null"] += 1
 	for ij in order:
 		var b: Dictionary = grid[ij[0]][ij[1]]
 		if b["used"]:
 			continue
 		var d: float = b["d"]
 		var r := rng.randf()
-		if r < (0.04 + d * 0.06 if planned else 0.06 + d * 0.12):
+		if r < (0.015 + d * 0.025 if planned else 0.06 + d * 0.12):
 			b["used"] = true
+			block_stats["park"] += 1
 			var rr: Rect2i = b["r"]
 			_park(rr.position.x, rr.position.y, rr.end.x, rr.end.y)
 		elif d < tower_zone:
@@ -338,15 +350,22 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 				if _try_merge(grid, ij[0], ij[1], sh[0], sh[1], mid_line, mega_zone if sh[0] * sh[1] >= 4 and d < mega_zone else tower_zone):
 					done = true
 					break
-			if not done:
+			if done:
+				block_stats["merged"] += 1
+			else:
 				b["used"] = true
+				block_stats["core"] += 1
 				var rr2: Rect2i = b["r"]
 				_core_block(rr2.position.x, rr2.position.y, rr2.end.x, rr2.end.y)
 		else:
 			b["used"] = true
 			var rr3: Rect2i = b["r"]
 			# the far edge of town (exurbs) is thinly built
-			_suburb_block(rr3.position.x, rr3.position.y, rr3.end.x, rr3.end.y, 0.55 if (planned and d > 0.86 and rr3.position.x > int(plan["river"].y)) else 0.9)
+			var exurb: bool = planned and d > 1.0 and rr3.position.x > int(plan["river"].y)
+			block_stats["exurb" if exurb else "suburb"] += 1
+			_suburb_block(rr3.position.x, rr3.position.y, rr3.end.x, rr3.end.y, 0.7 if exurb else 0.97)
+	if planned:
+		_paint_boulevards()
 
 ## the island city has a ragged edge: a street is kept only where it serves a block (or is an avenue or the highway), so the grid stops where the
 ## town does instead of running on into the fields
@@ -616,26 +635,53 @@ func _core_block(x0: int, y0: int, x1: int, y1: int) -> void:
 	_building(bx0, by0, bx1, by1, "core")
 
 func _suburb_block(x0: int, y0: int, x1: int, y1: int, density: float = 0.9) -> void:
-	# rows of houses along the north and south edges of the block (a third through the middle of a deep one), yards between
+	# rows of houses along the north and south edges of the block (a third through the middle of a deep one), yards between.  The island city packs
+	# them: three rows wherever the block is deep enough, houses close together.
 	var depth := 11
+	var h: int = y1 - y0 + 1
+	var packed: bool = not plan.is_empty()
 	var rows := [[y0 + 2, y0 + 2 + depth - 1], [y1 - 2 - depth + 1, y1 - 2]]
-	if y1 - y0 >= 46:
+	if (h >= 40) if packed else (y1 - y0 >= 46):
+		var free: int = (y1 - 2 - depth) - (y0 + 2 + depth)          # the rows between the north and the south row
+		var md: int = mini(depth - 1, free - 4) if packed else depth
 		var mid := (y0 + y1) / 2
-		rows.append([mid - depth / 2, mid + depth / 2])
+		rows.append([mid - md / 2, mid - md / 2 + md - 1])
 	for row in rows:
 		var x := x0 + 2
 		while x + 9 <= x1 - 2:
-			var wdt := rng.randi_range(10, 15)
+			var wdt := rng.randi_range(9, 13) if packed else rng.randi_range(10, 15)
 			if x + wdt > x1 - 2:
 				break
 			var rid: int = rows.find(row)
 			if rid < 2 and wdt >= 12 and not venue_plan.is_empty() and rng.randf() < 0.6:
 				var kind: String = venue_plan.pop_front()
-				var d := Vector2((x + x + wdt) * 0.5, (row[0] + row[1]) * 0.5).distance_to(Vector2(size * 0.5, size * 0.5)) / (size * 0.5)
 				VN.stamp(self, kind, x, row[0], x + wdt, row[1], 0 if rid == 0 else 1, 0 if wealth_at(row[0] * size + x) == 0 else 1)
 			elif rng.randf() < density:
 				_building(x, row[0], x + wdt, row[1], "house")
-			x += wdt + rng.randi_range(3, 6)
+			x += wdt + (rng.randi_range(2, 4) if packed else rng.randi_range(3, 6))
+
+## the riverside boulevards (island city): a two-lane street along each bank, white edges and a double yellow centre, painted wherever there is not
+## already a street (the crossings keep the cross street's own paint)
+func _paint_boulevards() -> void:
+	for key in ["blv_w", "blv_e"]:
+		var band: PackedInt32Array = plan[key]
+		for y in size:
+			var bx: int = band[y]
+			if bx < 0:
+				continue
+			for k in rw:
+				var x: int = bx + k
+				var i: int = y * size + x
+				var t: int = tiles[i]
+				if t == ROAD or t == WATER or t == SAND or t == WALL or t == FLOOR or t == DOOR:
+					continue
+				tiles[i] = ROAD
+				if k == 0 or k == rw - 1:
+					marks[i] = M_WHITE_V
+				elif k == LANE - 1 or k == LANE:
+					marks[i] = M_YELLOW_V
+				else:
+					marks[i] = 0
 
 func _building(bx0: int, by0: int, bx1: int, by1: int, kind: String) -> void:
 	if bx1 - bx0 < 5 or by1 - by0 < 5:

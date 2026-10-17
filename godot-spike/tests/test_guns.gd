@@ -164,6 +164,26 @@ func run() -> Array:
 		g.wield = gun2
 		g.pool_add("9mm", "fmj", 100)
 		gun2.mode = 2                                          # auto
+		var refresh := func() -> void:                          # the target may have stepped about: keep it hunting, and put the player back in sight of it
+			g.astate[found] = g.HUNTING
+			g.sim.near[found] = 1
+			var tcc: int = g.sim.pos[found]
+			if not g.sim._sees(g.pc, tcc, 20):
+				for rr in range(3, 9):
+					for ddy in range(-rr, rr + 1):
+						for ddx in range(-rr, rr + 1):
+							if maxi(absi(ddx), absi(ddy)) != rr:
+								continue
+							var nx2: int = tcc % g.size + ddx
+							var ny2: int = tcc / g.size + ddy
+							if not g.in_bounds(nx2, ny2):
+								continue
+							var c2: int = ny2 * g.size + nx2
+							if g.city.walkable(g.city.tiles[c2]) and g.sim.at[c2] == -1 and g.veh_at[c2] == -1 and g.sim._sees(c2, tcc, 20):
+								g.pc = c2
+								g.last_pc = c2
+								break
+			g.fov.compute(g.pc % g.size, g.pc / g.size, 18)
 		var before: int = gun2.loaded
 		var hp_before: int = g.hpn[found]
 		var tgt: int = g.current_target(true)
@@ -180,12 +200,14 @@ func run() -> Array:
 			var h0: int = g.hpn[found]
 			g.hp = g.hp_max
 			g.body.reset()
+			refresh.call()
 			g.act_fire(true)
 			dmg_total += h0 - g.hpn[found]
 			trials += 1
 		check.call("shooting at a target in view deals damage over a few volleys (%d dmg in %d volleys)" % [dmg_total, trials], dmg_total > 0)
 		# aiming takes turns and shows in the HUD line
 		g.hpn[found] = 400
+		refresh.call()
 		var aims := 0
 		while g.aim_turns < 2 and aims < 6:
 			g.act_aim(true)
@@ -211,6 +233,7 @@ func run() -> Array:
 		g.hp = g.hp_max
 		g.hpn[found] = 400
 		var hpf: int = g.hpn[found]
+		refresh.call()
 		var fired: bool = g.act_fire(true)
 		check.call("a grenade fired at a target in view explodes and spends the round", fired and gl.loaded == 0)
 	return [st[0], st[1], log]

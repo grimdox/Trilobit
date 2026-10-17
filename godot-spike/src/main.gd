@@ -97,7 +97,7 @@ func begin_new(seed: int) -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	world = WorldScript.new()
-	world.start(seed, 1500)
+	world.start(seed, WorldScript.CITY_PEOPLE)
 	start_play(world.game)
 
 func begin_load(slot: int) -> void:
@@ -275,7 +275,7 @@ func _make_map() -> void:
 		screen.map_tex = null
 		return
 	if map_tex == null or map_seed != world.seed_value:
-		map_tex = ImageTexture.create_from_image(world.island.overview_image(3))
+		map_tex = ImageTexture.create_from_image(world.island.overview_image(2))
 		map_seed = world.seed_value
 	screen.map_tex = map_tex
 

@@ -159,14 +159,18 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) ->
 						gun_ids[t] = []
 					gun_ids[t].append(k)
 	_melee_pools()
+	var _t0 := Time.get_ticks_msec()
 	if isl != null:
 		island = isl
 		zone = zn
 		city = island.build_zone(zn.x, zn.y)
+		_prof("build_zone", _t0)
 		if zn == island.CITY_ZONE:
 			LV.build(city, island.seed_value)
+			_prof("levels", _t0)
 			if zone == island.CITY_ZONE:
 				island.rail_portal(city)
+				_prof("rail_portal", _t0)
 		else:
 			LV.flat(city, seed_value)
 	else:
@@ -182,6 +186,7 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) ->
 	sim = SIM.new()
 	sim.perception_standin = false
 	sim.setup(city, n_people, seed_value ^ 0x5eed)
+	_prof("sim.setup", _t0)
 	sim.tick = 7 * 60 - 20
 	last_ate = sim.tick
 	last_drank = sim.tick
@@ -196,17 +201,28 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) ->
 	_people()
 	if island != null and zone == Vector2i(0, 1):
 		_port_people()
+	_prof("people", _t0)
 	_roads_and_cars()
+	_prof("cars", _t0)
 	_loot()
 	_vault_loot()
+	_prof("loot", _t0)
 	_start_player()
 	transit = TR.new()
 	transit.setup(self)
+	_prof("transit", _t0)
 	eco = EC.new()
 	eco.setup(self)
+	_prof("eco", _t0)
 	_compute_fov()
+	_prof("fov", _t0)
 	if island == null or zone == island.CITY_ZONE:
 		say("You step out onto the street.  Morning in the city.  [?] for keys.")
+
+## TRL_PROF=1 prints how long each stage of building a zone took (milliseconds since the start of setup)
+func _prof(label: String, t0: int) -> void:
+	if OS.get_environment("TRL_PROF") != "":
+		print("PROF %s %d" % [label, Time.get_ticks_msec() - t0])
 
 func _people() -> void:
 	var n: int = sim.n
@@ -323,7 +339,10 @@ func _spawn_vehicles() -> void:
 	var cols: Array = _car_colors()
 	var placed := 0
 	var tries := 0
-	while placed < 46 and tries < 600:
+	var traffic: float = float(size * size) / 262144.0              # cars and parked cars scale with the map: the 512 city is the reference (46 and 26)
+	var n_moving: int = int(round(46.0 * traffic))
+	var n_parked: int = int(round(26.0 * traffic))
+	while placed < n_moving and tries < n_moving * 14:
 		tries += 1
 		var vertical: bool = rng.randf() < 0.5
 		var lines: Array = city.xs if vertical else city.ys
@@ -362,7 +381,7 @@ func _spawn_vehicles() -> void:
 	# parked cars: any free 4x6 patch of pavement, along the streets
 	var parked := 0
 	tries = 0
-	while parked < 26 and tries < 400:
+	while parked < n_parked and tries < n_parked * 16:
 		tries += 1
 		var c: int = rng.randi_range(0, s2 - 1)
 		if city.tiles[c] != CG.GROUND:
@@ -380,6 +399,33 @@ func _spawn_vehicles() -> void:
 				continue
 			vehicles[vi2]["charge"] = rng.randi_range(30, 100)
 			parked += 1
+	# traffic on the riverside boulevards (they are curved, so they are not among the grid's lines): a few cars on each bank
+	for key in ["blv_w", "blv_e"]:
+		var band: PackedInt32Array = city.plan.get(key, PackedInt32Array())
+		var rows: Array = []
+		for y in band.size():
+			if band[y] >= 0:
+				rows.append(y)
+		var made := 0
+		tries = 0
+		while made < 8 and tries < 120 and not rows.is_empty():
+			tries += 1
+			var row: int = rows[rng.randi() % rows.size()]
+			var hi: bool = made % 2 == 0
+			var vb: int = vs.anchor_for("car", 0 if hi else 2, VS.lane_k2(band[row], 1 if hi else 0), row * 2, 0)
+			var vb_i: int = vs.spawn("car", vb, 0 if hi else 2, cols[rng.randi() % cols.size()], true)
+			if vb_i < 0:
+				continue
+			var fits := true
+			for c in vs.cells(vehicles[vb_i]):
+				if city.tiles[c] != CG.ROAD:
+					fits = false
+			if not fits:
+				vs.lift(vb_i)
+				vehicles.pop_back()
+				continue
+			vehicles[vb_i]["charge"] = rng.randi_range(40, 100)
+			made += 1
 	_spawn_special_vehicles()
 
 var special_dir := 0
@@ -432,14 +478,14 @@ func _spawn_zone_vehicles() -> void:
 		_place("mech", qx + 4, py - 20, 0, 60, [CG.PLATFORM, CG.PARK, CG.SAND], 1, Color("#c0583a"))
 		for k in 2:
 			_place("car", qx + 24, py + 40 + k * 10, 0, 80, [CG.PLATFORM, CG.PARK], 1, cols[rng.randi() % cols.size()])
-	elif zone == Vector2i(2, 1):
+	elif zone == island.TOWN_ZONE:
 		var cx: int = island.TOWN.x - o.x
 		var cy: int = island.TOWN.y - o.y
 		for k in 5:
 			_place("car", cx + rng.randi_range(-60, 60), cy + rng.randi_range(-50, 60), 0, 60, [CG.GROUND], rng.randi() % 2, cols[rng.randi() % cols.size()])
 		_place("heli", cx + 40, cy - 100, 0, 100, [CG.GROUND, CG.PARK], 0, Color("#7fd6e8"))
-	elif zone == Vector2i(3, 1):
-		var x0: int = 1480 - o.x
+	elif zone == island.AIR_ZONE:
+		var x0: int = island.AIR_X0 - o.x
 		var y0: int = island.AIR_Y - o.y
 		_place("plane", x0 + 20, y0 + 8, 0, 6, [CG.GROUND, CG.ROAD], 1, Color("#e8e8ee"))
 		_place("car", x0 + 24, y0 + 23, 0, 12, [CG.GROUND], 0, cols[rng.randi() % cols.size()])

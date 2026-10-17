@@ -1066,6 +1066,9 @@ func _ai_car(vi: int) -> void:
 		if road_ok:
 			put(vi, a, dir)
 			v["stuck"] = 0
+		elif pr.is_empty() and _ai_slide(vi, dir, a):
+			v["stuck"] = 0                              # the road bends here (a riverside boulevard): followed one column sideways
+			continue
 		else:
 			v["stuck"] = int(v["stuck"]) + 1
 			var t: String = String(pr.get("t", "road_end"))
@@ -1077,6 +1080,25 @@ func _ai_car(vi: int) -> void:
 			break
 	if g.cheb(v["cell"], g.pc) < 30 and g.rng.randf() < 0.05:
 		g._noise_gentle(v["cell"], 5)
+
+## the way ahead is open but for the edge of the road: step forward and one column across to whichever side is still road (a bend of a curved street)
+func _ai_slide(vi: int, dir: int, ahead: int) -> bool:
+	var v: Dictionary = g.vehicles[vi]
+	for sh in [1, -1] if g.rng.randf() < 0.5 else [-1, 1]:
+		var a2: int = ahead + (sh if dir % 2 == 0 else sh * g.size)
+		if (a2 % g.size) - (ahead % g.size) != (sh if dir % 2 == 0 else 0):
+			continue                                      # the step wrapped round the edge of the map
+		if not probe(vi, a2, dir).is_empty():
+			continue
+		var ok := true
+		for c in cells_at(v["kind"], a2, dir):
+			if g.city.tiles[c] != CG.ROAD:
+				ok = false
+				break
+		if ok:
+			put(vi, a2, dir)
+			return true
+	return false
 
 func _ai_uturn(vi: int) -> void:
 	var v: Dictionary = g.vehicles[vi]
@@ -1091,6 +1113,14 @@ func _ai_uturn(vi: int) -> void:
 		if lat2 >= 2 * int(e) and lat2 <= 2 * int(e) + 2 * lw:
 			mirrored = 2 * (2 * int(e) + lw) - lat2
 			break
+	if mirrored == lat2 and dir % 2 == 0 and not g.city.plan.is_empty():
+		# on a riverside boulevard: its left edge at this row, twelve wide
+		var row: int = clampi(ctr.y / 2, 0, g.size - 1)
+		for key in ["blv_w", "blv_e"]:
+			var bx: int = (g.city.plan[key] as PackedInt32Array)[row]
+			if bx >= 0 and lat2 >= 2 * bx and lat2 <= 2 * (bx + g.city.rw):
+				mirrored = 2 * (2 * bx + g.city.rw) - lat2
+				break
 	var nx2: int = mirrored if dir % 2 == 0 else ctr.x
 	var ny2: int = ctr.y if dir % 2 == 0 else mirrored
 	var a: int = anchor_for(v["kind"], nd, nx2, ny2, int(v["cell"]))

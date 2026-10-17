@@ -21,7 +21,7 @@ const HWY_Y := 704                     # centre row of the highway.  Six lanes o
 const PASS_X0 := 335
 const PASS_X1 := 448
 const PORT := Vector2i(215, 704)
-const TOWN := Vector2i(1240, 704)
+const TOWN := Vector2i(1640, 704)
 const HWY_X0 := 150
 const HWY_X1 := 2232                   # ... and on east to the clifftop at the coast
 const HWY_N := 18                      # rows above HWY_Y that the wide highway covers, and below (HWY_S) it
@@ -30,12 +30,14 @@ const RAIL_BASE := 4                   # the return track's first row is this fa
 const RAIL_X1 := 510                   # the railway ends at the city's freight yard
 const CITY_ZONE := Vector2i(1, 1)
 const OWN_INSET := 32
-const LAYOUT_VER := 2                 # bumped when the map changes shape so old saves are not read against it (1: before the city revamp)
-const CZS := 704                       # the city's own map is larger than the wild zones' (every other zone is ZS x ZS)
-const CITY_ORIGIN := Vector2i(448, 352)   # ... and is placed so the highway runs along its middle row
-const CITY_OWN := Rect2i(480, 384, 640, 640)   # the ground the city zone owns: its whole map less 32 tiles all round
+const LAYOUT_VER := 3                 # bumped when the map changes shape so old saves are not read against it (1: before the city revamp, 2: before the big seeded city)
+const TOWN_ZONE := Vector2i(3, 1)      # the city now owns the ground the town stood on; the town moved east, and the airstrip beyond it
+const AIR_ZONE := Vector2i(4, 1)
+const AIR_X0 := 1930                   # the runway's west end
+const CZS := 1024                      # the city's own map is larger than the wild zones' (every other zone is ZS x ZS)
+const CITY_ORIGIN := Vector2i(448, 192)   # ... and is placed so the highway runs along its middle row
+const CITY_OWN := Rect2i(480, 224, 960, 960)   # the ground the city zone owns: its whole map less 32 tiles all round
 const MARGIN_ZONE := 68                # the city keeps this much empty ground at its edge (32 are the next zone's, then room to see across the border)
-const BRIDGES_Y := [164, 250, 436]     # city-local top rows of the three four-lane (24 wide) bridge avenues
 const AVENUE_W := 24
 const AIR_Y := HWY_Y - 68             # the airstrip runs north of the highway
 const BANK := 3                        # sand either side of the river
@@ -53,6 +55,23 @@ var _nr := FastNoiseLite.new()
 var _bay_depth: int = 70
 var _pass_phase: float = 0.0
 var _hx0: int = HWY_X0                 # the first highway column (just inland of the quay)
+# the parts of the city's layout that the seed chooses (see _seed_layout): the river's course, the three bridge avenues, the downtown
+var river_pts: Array = []
+var bridges_y: Array = []              # city-local top rows of the three four-lane (24 wide) bridge avenues
+var downtown := Vector2.ZERO           # city-local heart of the downtown
+var city_ring := Rect2i()              # the subway loop round it
+var _blv: Dictionary = {}              # the riverside boulevards (see boulevards())
+# terrain() runs for every tile of every zone: what depends on one column or one row alone is tabulated once (see _tabulate)
+var _c_hy := PackedInt32Array()        # per column: the highway's centre row, its rows above and below it, the first row of the return rail
+var _c_hn := PackedInt32Array()
+var _c_hs := PackedInt32Array()
+var _c_rr := PackedInt32Array()
+var _c_ny := PackedFloat64Array()      # per column: the north and south coasts
+var _c_sy := PackedFloat64Array()
+var _r_wx := PackedFloat64Array()      # per row: the west and east coasts and the mountain range's edges
+var _r_ex := PackedFloat64Array()
+var _r_mw := PackedFloat64Array()
+var _r_me := PackedFloat64Array()
 
 func _init(sd: int = 1) -> void:
 	seed_value = sd
@@ -76,7 +95,12 @@ func _init(sd: int = 1) -> void:
 	_bay_depth = rng.randi_range(60, 80)
 	_pass_phase = rng.randf_range(0.0, TAU)
 	_hx0 = int(west_x(HWY_Y)) + 6
+	_tabulate()
+	var lay := RandomNumberGenerator.new()           # its own stream: the layout draws do not disturb the terrain noise above
+	lay.seed = sd ^ 0x7a11c0
+	_seed_layout_river(lay)
 	_build_river()
+	_seed_layout_city(lay)
 
 # ------------------------------------------------------------------------------------------------ zones
 static func zone_origin(zx: int, zy: int) -> Vector2i:
@@ -109,12 +133,52 @@ static func zone_name(z: Vector2i) -> String:
 		return "the city"
 	if z == Vector2i(0, 1):
 		return "the harbor"
-	if z == Vector2i(2, 1):
+	if z == TOWN_ZONE:
 		return "the town"
+	if z == AIR_ZONE:
+		return "the airstrip"
 	return "the wilds"
 
 # ------------------------------------------------------------------------------------------------ the shape
+func _tabulate() -> void:
+	var hy := PackedInt32Array()
+	var hn := PackedInt32Array()
+	var hs := PackedInt32Array()
+	var rr := PackedInt32Array()
+	var ny := PackedFloat64Array()
+	var sy := PackedFloat64Array()
+	for x in W:                          # (the lookups below are still empty while these are computed, so every call computes)
+		var yc: int = pass_yc(x)
+		var s: int = hwy_s(x)
+		hy.append(yc)
+		hn.append(hwy_n(x))
+		hs.append(s)
+		rr.append(yc + s + RAIL_BASE)
+		ny.append(north_y(x))
+		sy.append(south_y(x))
+	var wx := PackedFloat64Array()
+	var ex := PackedFloat64Array()
+	var mw := PackedFloat64Array()
+	var me := PackedFloat64Array()
+	for y in H:
+		wx.append(west_x(y))
+		ex.append(east_x(y))
+		mw.append(mtn_west(y))
+		me.append(mtn_east(y))
+	_c_hy = hy
+	_c_hn = hn
+	_c_hs = hs
+	_c_rr = rr
+	_c_ny = ny
+	_c_sy = sy
+	_r_wx = wx
+	_r_ex = ex
+	_r_mw = mw
+	_r_me = me
+
 func west_x(y: int) -> float:
+	if y >= 0 and y < H and not _r_wx.is_empty():
+		return _r_wx[y]
 	var x := 128.0 + 48.0 * _nw.get_noise_1d(y) + 4.0 * _nj.get_noise_2d(7.0, y)
 	var d := absf(float(y - PORT.y))
 	if d < 110.0:
@@ -123,16 +187,24 @@ func west_x(y: int) -> float:
 	return x
 
 func north_y(x: int) -> float:
+	if x >= 0 and x < W and not _c_ny.is_empty():
+		return _c_ny[x]
 	return 150.0 + 66.0 * _nn.get_noise_1d(x) + 6.0 * _nj.get_noise_2d(x, 3.0)
 
 func south_y(x: int) -> float:
+	if x >= 0 and x < W and not _c_sy.is_empty():
+		return _c_sy[x]
 	return float(H) - 150.0 + 66.0 * _ns.get_noise_1d(x) + 6.0 * _nj.get_noise_2d(x, 9.0)
 
 func east_x(y: int) -> float:
+	if y >= 0 and y < H and not _r_ex.is_empty():
+		return _r_ex[y]
 	return float(W) - 56.0 + 7.0 * _ne.get_noise_1d(y)
 
 ## the highway's centre row at column x (it winds only inside the mountain pass)
 func pass_yc(x: int) -> int:
+	if x >= 0 and x < W and not _c_hy.is_empty():
+		return _c_hy[x]
 	if x <= PASS_X0 - 6 or x >= PASS_X1:
 		return HWY_Y
 	var t := float(x - (PASS_X0 - 6)) / float(PASS_X1 - PASS_X0 + 6)
@@ -140,9 +212,13 @@ func pass_yc(x: int) -> int:
 	return HWY_Y + int(round(24.0 * env * sin(t * TAU * 1.25 + _pass_phase)))
 
 func mtn_west(y: int) -> float:
+	if y >= 0 and y < H and not _r_mw.is_empty():
+		return _r_mw[y]
 	return 340.0 + 22.0 * _nm.get_noise_1d(y)
 
 func mtn_east(y: int) -> float:
+	if y >= 0 and y < H and not _r_me.is_empty():
+		return _r_me[y]
 	return 436.0 + 12.0 * _nm.get_noise_1d(y + 5000)
 
 # ------------------------------------------------------------------------------------------------ the highway and the rail beside it
@@ -159,13 +235,19 @@ func hwy_wide(x: int) -> float:
 	return 1.0
 
 func hwy_n(x: int) -> int:
+	if x >= 0 and x < W and not _c_hn.is_empty():
+		return _c_hn[x]
 	return 6 + int(round(float(HWY_N - 6) * hwy_wide(x)))
 
 func hwy_s(x: int) -> int:
+	if x >= 0 and x < W and not _c_hs.is_empty():
+		return _c_hs[x]
 	return 5 + int(round(float(HWY_S - 5) * hwy_wide(x)))
 
 ## the first row of the return (north) track at column x; the outbound track is four rows below it
 func rail_ret(x: int) -> int:
+	if x >= 0 and x < W and not _c_rr.is_empty():
+		return _c_rr[x]
 	return pass_yc(x) + hwy_s(x) + RAIL_BASE
 
 func rail_out(x: int) -> int:
@@ -175,8 +257,19 @@ func rail_out(x: int) -> int:
 ## It rises in the mountains north-west of the city, runs south-east out of the foothills, through the city (west of the downtown) and on to the
 ## south coast.  The centre line and the half-width are tabulated per row at start-up, so terrain() stays a cheap lookup.
 const RIVER_Y0 := 238
-const RIVER_PTS := [[238, 408.0, 3.0], [330, 478.0, 5.0], [410, 548.0, 7.0], [470, 606.0, 9.0], [540, 640.0, 13.0], [620, 660.0, 16.0], [704, 668.0, 17.0],
-	[800, 674.0, 17.0], [900, 666.0, 18.0], [960, 672.0, 19.0], [1050, 692.0, 22.0], [1150, 712.0, 26.0], [1250, 722.0, 30.0], [1350, 730.0, 34.0]]
+const RIVER_PTS := [[238, 408.0, 3.0], [330, 490.0, 5.0], [410, 590.0, 7.0], [470, 660.0, 9.0], [540, 706.0, 13.0], [620, 732.0, 16.0], [704, 742.0, 17.0],
+	[800, 748.0, 17.0], [900, 740.0, 18.0], [960, 746.0, 19.0], [1050, 764.0, 22.0], [1150, 784.0, 26.0], [1250, 794.0, 30.0], [1350, 802.0, 34.0]]
+## the control points as this seed drew them: the whole middle of the river slides east or west, each bend wanders and the width varies, but it
+## always rises in the mountains, runs through the city and reaches the south coast
+func _seed_layout_river(r: RandomNumberGenerator) -> void:
+	var shift: float = r.randf_range(-56.0, 64.0)
+	river_pts = []
+	for k in RIVER_PTS.size():
+		var p: Array = RIVER_PTS[k]
+		var t: float = clampf(float(int(p[0]) - RIVER_Y0) / 360.0, 0.0, 1.0)      # 0 at the source, 1 once the river is in the city
+		var jx: float = r.randf_range(-24.0, 24.0) * t
+		var jw: float = 1.0 + r.randf_range(-0.14, 0.14)
+		river_pts.append([p[0], float(p[1]) + shift * t + jx, float(p[2]) * jw])
 var _rv_x := PackedFloat32Array()       # per row: the centre line
 var _rv_w := PackedFloat32Array()       # ... the half-width of the water measured across the row (so a diagonal reach is wider)
 var _city_mask := PackedByteArray()
@@ -186,7 +279,7 @@ func _build_river() -> void:
 	_rv_w.resize(H)
 	_rv_x.fill(-1000.0)
 	_rv_w.fill(0.0)
-	var pts: Array = RIVER_PTS
+	var pts: Array = river_pts
 	var cx := PackedFloat32Array()
 	var cw := PackedFloat32Array()
 	cx.resize(H)
@@ -242,14 +335,16 @@ static func _hash(x: int, y: int) -> int:
 func _corridor(x: int, y: int) -> int:
 	if x < _hx0 or x > HWY_X1:
 		return -1
-	var hy := pass_yc(x)
+	var hy: int = _c_hy[x]
 	var dy := y - hy
-	if dy >= -hwy_n(x) and dy <= hwy_s(x):
+	if dy >= -_c_hn[x] and dy <= _c_hs[x]:
 		return CG.ROAD
+	if x > RAIL_X1 and (x < PASS_X0 - 14 or x > PASS_X1 + 40):
+		return -1                                # open ground beyond the railway's end: nothing but the highway
 	if x <= RAIL_X1:
 		# a two-track line: each track two tiles wide (the return track's rows r..r+1, the outbound track's r+4..r+5), ballast between and
 		# around.  Where the road steps more than a row between columns (the pass, and the taper where the road narrows) the rails fill the gap.
-		var r := rail_ret(x)
+		var r: int = _c_rr[x]
 		var ya := mini(rail_ret(x - 1), rail_ret(x - 2))
 		var yb := maxi(rail_ret(x + 1), rail_ret(x + 2))
 		var lo := mini(r, mini(ya, yb))
@@ -265,24 +360,30 @@ func _corridor(x: int, y: int) -> int:
 func mark(x: int, y: int) -> int:
 	if x < _hx0 or x > HWY_X1:
 		return 0
-	var hy := pass_yc(x)
-	var dy := y - hy
-	var n := hwy_n(x)
-	var sb := hwy_s(x)
+	var dy: int = y - _c_hy[x]
+	var n: int = _c_hn[x]
+	var sb: int = _c_hs[x]
 	if dy >= -n and dy <= sb:
 		return highway_mark(x, dy + n, n + sb + 1)
 	if x <= RAIL_X1 and _corridor(x, y) == CG.TRACK:
 		return CG.M_RAIL_H
 	return 0
 
-static func highway_mark(x: int, k: int, w: int) -> int:
+func highway_mark(x: int, k: int, w: int) -> int:
 	return CG._wide_mark(x, k, w) if w > 12 else (CG.M_WHITE_H if (k == 0 or k == w - 1) else (CG.M_YELLOW_H if (k == 5 or k == 6) else 0))
 
 func terrain(x: int, y: int) -> int:
 	if x < 0 or y < 0 or x >= W or y >= H:
 		return CG.WATER
 	var cor := _corridor(x, y)
-	var rv := river_tile(x, y)
+	var rv := 0                                  # the river (river_tile, inlined: this runs for every tile of the island)
+	if y >= RIVER_Y0:
+		var dd: float = absf(float(x) - _rv_x[y])
+		var hwr: float = _rv_w[y]
+		if dd < hwr:
+			rv = 1
+		elif dd < hwr + float(BANK):
+			rv = 2
 	if cor >= 0:
 		if cor != CG.ROAD and rv == 1:
 			return CG.WATER
@@ -290,21 +391,21 @@ func terrain(x: int, y: int) -> int:
 	if rv != 0:
 		# the highway's deck is railed where it crosses the river
 		if x >= _hx0 and x <= HWY_X1:
-			var dyh := y - pass_yc(x)
-			if dyh == -hwy_n(x) - 1 or dyh == hwy_s(x) + 1:
+			var dyh: int = y - _c_hy[x]
+			if dyh == -_c_hn[x] - 1 or dyh == _c_hs[x] + 1:
 				return CG.RAILING
 		return CG.WATER if rv == 1 else CG.SAND
-	var ex := east_x(y)
+	var ex: float = _r_ex[y]
 	if float(x) >= ex:
 		return CG.WATER
 	if float(x) > ex - 10.0:
 		return CG.CLIFF
-	var wx := west_x(y)
+	var wx: float = _r_wx[y]
 	var d_w := float(x) - wx
 	if d_w < 0.0:
 		return CG.WATER
-	var d_n := float(y) - north_y(x)
-	var d_s := south_y(x) - float(y)
+	var d_n := float(y) - _c_ny[x]
+	var d_s: float = _c_sy[x] - float(y)
 	if d_w < 190.0:                      # round the west corners
 		var k := (190.0 - d_w) / 190.0
 		d_n -= 110.0 * k * k
@@ -321,16 +422,17 @@ func terrain(x: int, y: int) -> int:
 	if d_w < 5.0:
 		return CG.SAND
 	# the mountain range
-	var xa := mtn_west(y)
-	var xb := mtn_east(y)
-	if float(x) >= xa - 22.0 and float(x) <= xb + 16.0:
-		if float(x) >= xa and float(x) <= xb:
-			var edge := minf(float(x) - xa, xb - float(x))
-			if edge > 5.0 + 4.0 * _nj.get_noise_2d(x, y):
-				return CG.MOUNTAIN
-			return CG.ROCKS if _hash(x, y) % 5 != 0 else CG.MOUNTAIN
-		if _nj.get_noise_2d(x, y) > -0.2:
-			return CG.ROCKS if _hash(x, y) % 4 != 0 else CG.TREE
+	if x < 470:
+		var xa: float = _r_mw[y]
+		var xb: float = _r_me[y]
+		if float(x) >= xa - 22.0 and float(x) <= xb + 16.0:
+			if float(x) >= xa and float(x) <= xb:
+				var edge := minf(float(x) - xa, xb - float(x))
+				if edge > 5.0 + 4.0 * _nj.get_noise_2d(x, y):
+					return CG.MOUNTAIN
+				return CG.ROCKS if _hash(x, y) % 5 != 0 else CG.MOUNTAIN
+			if _nj.get_noise_2d(x, y) > -0.2:
+				return CG.ROCKS if _hash(x, y) % 4 != 0 else CG.TREE
 	# the plains: grass, planted fields in parcels, and woods
 	if x > 990:
 		var fx := (x / 30) * 30
@@ -365,7 +467,7 @@ func landmarks() -> Array:
 		{"name": "THE PASS", "pos": Vector2i(390, HWY_Y + 70), "kind": "pass"},
 		{"name": "THE CITY", "pos": CITY_ORIGIN + Vector2i(CZS / 2, CZS / 2), "kind": "city"},
 		{"name": "TOWN", "pos": Vector2i(TOWN.x, TOWN.y - 85), "kind": "town"},
-		{"name": "AIRSTRIP", "pos": Vector2i(1585, AIR_Y - 22), "kind": "air"},
+		{"name": "AIRSTRIP", "pos": Vector2i(AIR_X0 + 105, AIR_Y - 22), "kind": "air"},
 		{"name": "THE RIVER", "pos": Vector2i(int(_rv_x[1000]) + 40, 1000), "kind": "river"},
 		{"name": "COAST ROAD", "pos": Vector2i(2100, HWY_Y - 60), "kind": "road"},
 		{"name": "PLAINS", "pos": Vector2i(1900, 420), "kind": "plain"},
@@ -394,7 +496,7 @@ func overview_image(step: int = 3) -> Image:
 		var px := x / step
 		if px < iw:
 			img.set_pixel(px, rail_ret(x) / step, Color("#ff5a5a"))
-	# the city: its outline, a grid of streets
+	# the city: its outline, shaded by district (towers at the heart, mid-rise, suburbs, exurbs), the street grid over it
 	var o := zone_origin(CITY_ZONE.x, CITY_ZONE.y)
 	var cm := city_mask()
 	for py in range(o.y / step, (o.y + CZS) / step):
@@ -406,8 +508,30 @@ func overview_image(step: int = 3) -> Image:
 			var t0 := terrain(px * step + step / 2, py * step + step / 2)
 			if t0 == CG.ROAD:
 				continue
-			var grid := ((px * step) % 42 < 6) or ((py * step) % 42 < 6)
-			img.set_pixel(px, py, Color("#3a3f58") if grid else Color("#7b86b8"))
+			var dd: float = Vector2(lx, ly).distance_to(downtown) / CITY_RAD
+			var base := Color("#e8f0ff") if dd < 0.34 else (Color("#9aa6d8") if dd < 0.72 else (Color("#6f7aa8") if dd < 1.0 else Color("#58627f")))
+			var grid := ((px * step) % 54 < 4) or ((py * step) % 54 < 4)
+			img.set_pixel(px, py, base.darkened(0.45) if grid else base)
+	# the subway loop round the downtown, the bridges, the riverside boulevards
+	var rr := Rect2i(city_ring.position + Vector2i(o), city_ring.size)
+	for x in range(rr.position.x, rr.end.x, step):
+		for yy in [rr.position.y, rr.end.y]:
+			img.set_pixel(clampi(x / step, 0, iw - 1), clampi(yy / step, 0, ih - 1), Color("#40e0d0"))
+	for y in range(rr.position.y, rr.end.y, step):
+		for xx in [rr.position.x, rr.end.x]:
+			img.set_pixel(clampi(xx / step, 0, iw - 1), clampi(y / step, 0, ih - 1), Color("#40e0d0"))
+	for by in bridges_y:
+		var gy: int = int(by) + o.y + 12
+		var sp: Vector2i = river_span(gy)
+		for x in range(sp.x - 6, sp.y + 7, step):
+			for k in range(-1, 2):
+				img.set_pixel(clampi(x / step, 0, iw - 1), clampi(gy / step + k, 0, ih - 1), Color("#ffd24a"))
+	var bl := boulevards()
+	for side in ["w", "e"]:
+		var arr: PackedInt32Array = bl[side]
+		for y in range(0, arr.size(), step):
+			if arr[y] >= 0:
+				img.set_pixel(clampi((arr[y] + BLV_W / 2 + o.x) / step, 0, iw - 1), clampi((y + o.y) / step, 0, ih - 1), Color("#ffe9a0"))
 	# the harbor quays and the town
 	for k in 3:
 		var pyy := (PORT.y - 70 + k * 45) / step
@@ -438,8 +562,8 @@ func build_zone(zx: int, zy: int):
 		fill_terrain(c, zx, zy)
 		match z:
 			Vector2i(0, 1): _port(c)
-			Vector2i(2, 1): _town(c)
-			Vector2i(3, 1): _airstrip(c)
+			TOWN_ZONE: _town(c)
+			AIR_ZONE: _airstrip(c)
 	return c
 
 func _put_t(c, x: int, y: int, t: int, m: int = 0) -> void:
@@ -469,8 +593,117 @@ func _clear_growth(c, x0: int, y0: int, x1: int, y1: int) -> void:
 ## ------------------------------------------------------------------------------------------------ the city's layout
 ## Local coordinates (the city zone's own 512 x 512 map).  The outline is a rounded square with a ragged edge; the river runs through the
 ## west third, the downtown lies east of it, and everything is planned here so citygen only has to fill it in.
-const DOWNTOWN := Vector2(440.0, 352.0)
-const CITY_RAD := 250.0
+const CITY_RAD := 360.0                # the district tests (towers, mid-rise, suburbs, exurbs) are fractions of this distance from the downtown
+const BLV_W := 12                      # a riverside boulevard is a two-lane street ...
+const BLV_GAP := 4                     # ... this far back from the bank (room for the quay and a promenade)
+const RING_W := 200
+const RING_H := 230
+
+## what the seed decides about the city: which three rows the bridge avenues take, where the downtown stands and the subway loop round it
+func _seed_layout_city(r: RandomNumberGenerator) -> void:
+	var trunk: int = HWY_Y - HWY_N - CITY_ORIGIN.y
+	var hw: int = HWY_N + HWY_S + 1
+	# the rows where the river runs inside the city's outline (a bridge needs water to cross): from where it enters to where it leaves
+	var mask := city_mask()
+	var first := -1
+	var last := -1
+	for y in range(MARGIN_ZONE, CZS - MARGIN_ZONE):
+		var sp := river_span(CITY_ORIGIN.y + y)
+		if sp.x < 0:
+			continue
+		var cx: int = (sp.x + sp.y) / 2 - CITY_ORIGIN.x
+		if cx - 30 >= 0 and cx + 30 < CZS and mask[y * CZS + cx - 30] == 1 and mask[y * CZS + cx + 30] == 1:
+			if first < 0:
+				first = y
+			last = y
+	first = maxi(first, MARGIN_ZONE + 20) if first >= 0 else trunk - 250
+	last = mini(last, CZS - MARGIN_ZONE - 60) if last >= 0 else trunk + hw + 250
+	var n_lo: int = first + 10                 # avenues north of the highway lie between the river's entry and the highway ...
+	var n_hi: int = trunk - 90
+	var s_lo: int = trunk + hw + 90            # ... and south of it between the highway and the river's exit
+	var s_hi: int = last - 34
+	if n_hi - n_lo < 120:
+		n_lo = n_hi - 120
+	if s_hi - s_lo < 120:
+		s_hi = s_lo + 120
+	if r.randi() % 2 == 0:                  # two avenues north of the highway and one south ...
+		var b2: int = n_hi - r.randi_range(0, 24)
+		var b1: int = n_lo + r.randi_range(0, maxi(0, (b2 - 100) - n_lo))
+		var b3: int = s_lo + r.randi_range(0, maxi(0, (s_hi - s_lo) * 6 / 10))
+		bridges_y = [b1, b2, b3]
+	else:                                    # ... or one north and two south
+		var b1: int = n_lo + r.randi_range(0, maxi(0, (n_hi - n_lo) * 7 / 10))
+		var b2: int = s_lo + r.randi_range(0, 30)
+		var b3: int = b2 + 100 + r.randi_range(0, maxi(0, s_hi - (b2 + 100)))
+		bridges_y = [b1, b2, b3]
+	var yc: int = 520 + r.randi_range(-52, 72)
+	var rx_e := 0.0
+	for y in range(yc - RING_H / 2 - 20, yc + RING_H / 2 + 21):
+		var sp := river_span(CITY_ORIGIN.y + y)
+		if sp.x >= 0:
+			rx_e = maxf(rx_e, float(sp.y - CITY_ORIGIN.x))
+	var xc: float = rx_e + 52.0 + float(RING_W) * 0.5 + r.randf_range(8.0, 120.0)
+	downtown = Vector2(xc, float(yc))
+	city_ring = Rect2i(int(xc) - RING_W / 2, yc - RING_H / 2, RING_W, RING_H)
+
+## the riverside boulevards: a street 12 wide on each bank that follows the water (a smoothed copy of the bank, so it curves where the grid does not).
+## {"w": west bank, "e": east bank}, each the left column of the band at every city-local row (-1 where there is none).  They stop at the outline of
+## the city, at the highway and at the rail bridge.
+func boulevards() -> Dictionary:
+	if not _blv.is_empty():
+		return _blv
+	var o := CITY_ORIGIN
+	var mask := city_mask()
+	var rb := rail_bridge()
+	var skip_lo: int = HWY_Y - HWY_N - o.y - 2
+	var skip_hi: int = int(rb["y_out"]) + 8
+	for side in 2:
+		var raw := PackedFloat32Array()
+		raw.resize(CZS)
+		raw.fill(-1.0)
+		for y in range(MARGIN_ZONE, CZS - MARGIN_ZONE):
+			var sp := river_span(o.y + y)
+			if sp.x >= 0:
+				raw[y] = float(sp.x - o.x - BLV_GAP - BLV_W) if side == 0 else float(sp.y - o.x + 1 + BLV_GAP)
+		var out := PackedInt32Array()
+		out.resize(CZS)
+		out.fill(-1)
+		var prev := -1
+		for y in range(MARGIN_ZONE, CZS - MARGIN_ZONE):
+			if raw[y] < 0.0:
+				prev = -1
+				continue
+			var acc := 0.0
+			var n := 0
+			for d in range(-8, 9):
+				var yy: int = y + d
+				if yy >= 0 and yy < CZS and raw[yy] >= 0.0:
+					acc += raw[yy]
+					n += 1
+			var v: int = int(round(acc / float(n)))
+			if prev >= 0:
+				v = clampi(v, prev - 1, prev + 1)       # the band moves at most a column a row: a car can follow it
+			prev = v
+			if y >= skip_lo and y <= skip_hi:
+				continue
+			if v < 0 or v + BLV_W >= CZS or mask[y * CZS + v] == 0 or mask[y * CZS + v + BLV_W - 1] == 0:
+				continue
+			out[y] = v
+		# a stub of fewer than 40 rows is not a boulevard
+		var y2 := 0
+		while y2 < CZS:
+			if out[y2] < 0:
+				y2 += 1
+				continue
+			var y3 := y2
+			while y3 < CZS and out[y3] >= 0:
+				y3 += 1
+			if y3 - y2 < 40:
+				for yy in range(y2, y3):
+					out[yy] = -1
+			y2 = y3
+		_blv["w" if side == 0 else "e"] = out
+	return _blv
 
 ## 1 where the city stands
 func city_mask() -> PackedByteArray:
@@ -482,17 +715,26 @@ func city_mask() -> PackedByteArray:
 	nz.frequency = 0.05
 	_city_mask.resize(CZS * CZS)
 	var half: float = float(CZS) * 0.5 - float(MARGIN_ZONE)
+	# the radius of the outline at each angle: 0.70 .. 1.0 of the full half-width, so the coast of the city has bays and spurs; tabulated once
+	var nang := 2048
+	var fr := PackedFloat32Array()
+	fr.resize(nang)
+	for k in nang:
+		var ang: float = (float(k) + 0.5) / float(nang) * TAU - PI
+		var big: float = clampf(nz.get_noise_2d(cos(ang) * 14.0, sin(ang) * 14.0) * 1.6, -1.0, 1.0)
+		var fine: float = nz.get_noise_2d(cos(ang) * 46.0 + 300.0, sin(ang) * 46.0)
+		var f: float = clampf(0.89 + 0.13 * big + 0.03 * fine, 0.70, 1.0)
+		fr[k] = f * f * f
 	for y in CZS:
+		var v: float = (float(y) + 0.5 - float(CZS) * 0.5) / half
+		var v3: float = pow(absf(v), 3.0)
 		for x in CZS:
 			var u: float = (float(x) + 0.5 - float(CZS) * 0.5) / half
-			var v: float = (float(y) + 0.5 - float(CZS) * 0.5) / half
-			var ang: float = atan2(v, u)
-			# the radius of the outline at this angle: 0.80 .. 1.0 of the full half-width, so the coast of the city has bays and spurs
-			var big: float = clampf(nz.get_noise_2d(cos(ang) * 14.0, sin(ang) * 14.0) * 1.6, -1.0, 1.0)
-			var fine: float = nz.get_noise_2d(cos(ang) * 46.0 + 300.0, sin(ang) * 46.0)
-			var f: float = clampf(0.89 + 0.13 * big + 0.03 * fine, 0.70, 1.0)
-			var q: float = pow(absf(u), 3.0) + pow(absf(v), 3.0)
-			_city_mask[y * CZS + x] = 1 if q <= f * f * f else 0
+			var q: float = pow(absf(u), 3.0) + v3
+			if q > 1.0:
+				continue
+			var k2: int = clampi(int((atan2(v, u) + PI) / TAU * float(nang)), 0, nang - 1)
+			_city_mask[y * CZS + x] = 1 if q <= fr[k2] else 0
 	return _city_mask
 
 ## rows and columns of the rail where it comes up to cross the river: the return track's first row (local), the outbound track's, and the mouths
@@ -527,22 +769,28 @@ func city_plan(rng: RandomNumberGenerator) -> Dictionary:
 				rmax = maxi(rmax, sp.y - o.x)
 	# vertical streets about every 52 tiles; a line that would run mostly through the river is dropped (the others simply stop at the bank)
 	var cand: Array = []
-	_span_lines(cand, MARGIN_ZONE + 6, CZS - MARGIN_ZONE - 28, 52.0, rng)
+	_span_lines(cand, MARGIN_ZONE + 6, CZS - MARGIN_ZONE - 28, 54.0, rng)
+	var blv := boulevards()
 	var xs: Array = []
 	for lx in cand:
 		var wet := 0
+		var beside := 0                 # rows where a riverside boulevard runs on top of the line
 		for y in range(MARGIN_ZONE, CZS - MARGIN_ZONE):
 			for k in 12:
 				if water[y * CZS + int(lx) + k] != 0:
 					wet += 1
 					break
-		if float(wet) / float(CZS - 2 * MARGIN_ZONE) < 0.30:
+			for key in ["w", "e"]:
+				var bx: int = (blv[key] as PackedInt32Array)[y]
+				if bx >= 0 and bx < int(lx) + 15 and bx + BLV_W > int(lx) - 3:
+					beside += 1
+		if float(wet) / float(CZS - 2 * MARGIN_ZONE) < 0.30 and beside < 120:
 			xs.append(lx)
 	# horizontal streets: the highway (six lanes), the three bridge avenues (four lanes) and ordinary streets in between
 	var fixed: Array = []
 	var trunk: int = HWY_Y - HWY_N - o.y
 	fixed.append([MARGIN_ZONE + 8, 12])
-	for e in BRIDGES_Y:
+	for e in bridges_y:
 		fixed.append([int(e), AVENUE_W])
 	fixed.append([trunk, HWY_N + HWY_S + 1])
 	fixed.append([CZS - MARGIN_ZONE - 36, 12])
@@ -562,7 +810,7 @@ func city_plan(rng: RandomNumberGenerator) -> Dictionary:
 			var a_end: int = e + w
 			var b_start: int = fixed[k + 1][0]
 			var g: int = b_start - a_end
-			var nb: int = clampi(int(round(float(g + 12) / 53.0)), 1, 9)
+			var nb: int = clampi(int(round(float(g + 12) / 54.0)), 1, 12)
 			while nb > 1 and (g - (nb - 1) * 12) / nb < 30:
 				nb -= 1
 			var block: float = float(g - (nb - 1) * 12) / float(nb)
@@ -580,6 +828,13 @@ func city_plan(rng: RandomNumberGenerator) -> Dictionary:
 	for y in range(int(rb["y_ret"]) - 3, int(rb["y_ret"]) + 52):
 		for x in range(0, 67):
 			res[y * CZS + x] = 1
+	# the riverside boulevards are streets: nothing is built on them
+	for key in ["w", "e"]:
+		var bw: PackedInt32Array = blv[key]
+		for y in CZS:
+			if bw[y] >= 0:
+				for x in range(maxi(bw[y] - 2, 0), mini(bw[y] + BLV_W + 2, CZS)):
+					res[y * CZS + x] = 1
 	# water is no place for a building, nor is its bank
 	for y in CZS:
 		for x in CZS:
@@ -591,7 +846,7 @@ func city_plan(rng: RandomNumberGenerator) -> Dictionary:
 						if yy >= 0 and yy < CZS and xx >= 0 and xx < CZS:
 							res[yy * CZS + xx] = 1
 	return {"mask": mask, "water": water, "reserve": res, "xs": xs, "ys": ys, "ys_w": ys_w, "decks": decks, "trunk": trunk,
-		"centre": DOWNTOWN, "rad": CITY_RAD, "ring": Rect2i(366, 262, 154, 180), "river": Vector2i(rmin, rmax), "rail": rb}
+		"centre": downtown, "rad": CITY_RAD, "ring": city_ring, "river": Vector2i(rmin, rmax), "rail": rb, "blv_w": blv["w"], "blv_e": blv["e"]}
 
 ## vertical lines from `first` to `last` (left edges) about `gap` apart, evenly spread with a little jitter
 func _span_lines(out: Array, first: int, last: int, gap: float, rng: RandomNumberGenerator) -> void:
@@ -635,21 +890,24 @@ func _decorate_city(c) -> void:
 func _embankment(c) -> void:
 	var water: PackedByteArray = c.plan["water"]
 	var n: int = c.size
+	var o := zone_origin(CITY_ZONE.x, CITY_ZONE.y)
+	var offs := [[2, 0], [-2, 0], [0, 2], [0, -2], [1, 1], [-1, -1], [1, -1], [-1, 1], [1, 0], [-1, 0], [0, 1], [0, -1]]
+	# every open tile within two of the water becomes quay: walk the water (only the rows the river crosses) and mark its neighbours
 	for y in range(2, n - 2):
-		for x in range(2, n - 2):
+		var sp := river_span(o.y + y)
+		if sp.x < 0:
+			continue
+		for x in range(maxi(sp.x - o.x - 2, 2), mini(sp.y - o.x + 3, n - 2)):
 			var i := y * n + x
-			if water[i] != 0:
+			if water[i] == 0:
 				continue
-			var t: int = c.tiles[i]
-			if t != CG.GROUND and t != CG.PARK:
-				continue
-			var near := false
-			for d in [[2, 0], [-2, 0], [0, 2], [0, -2], [1, 1], [-1, -1], [1, -1], [-1, 1], [1, 0], [-1, 0], [0, 1], [0, -1]]:
-				if water[(y + d[1]) * n + x + d[0]] != 0:
-					near = true
-					break
-			if near:
-				c.tiles[i] = CG.PLATFORM
+			for d in offs:
+				var j: int = i + d[1] * n + d[0]
+				if water[j] != 0:
+					continue
+				var t: int = c.tiles[j]
+				if t == CG.GROUND or t == CG.PARK:
+					c.tiles[j] = CG.PLATFORM
 
 ## a railing along each side of a deck where the road crosses the river
 func _bridge_rails(c, o: Vector2i) -> void:
@@ -698,6 +956,8 @@ func rail_portal(c) -> void:
 				if y == y_ret or y == y_ret + 1 or y == y_out or y == y_out + 1:
 					t = CG.TRACK
 				c.tiles[l1 + y * CZS + x] = t
+	# the West Bank station: platforms along both trains in the tunnel under the west bank, a stair to the street from each
+	rb["xst"] = _west_station(c, y_ret, y_out, px, xw)
 	# in the daylight: both tracks on ballast over the land, and a railed deck over the water and its banks
 	var water: PackedByteArray = c.plan["water"]
 	for x in range(xw, xe + 1):
@@ -711,6 +971,64 @@ func rail_portal(c) -> void:
 			elif y == y_ret - 2 or y == y_out + 3:
 				t2 = CG.RAILING if over_water else CG.BALLAST
 			_put_t(c, x, y, t2, mk)
+
+## The West Bank station in the tunnel between the harbor portal and the rail bridge: a platform (two tiles deep, 30 long) beside each train, flush with the
+## car walls, and a stair from each platform up to the street (the north one comes up on the pavement just south of the highway, the south one through a
+## short passage under the block).  Returns the local column of the middle of the platforms, or -1 when no street tile suits.
+func _west_station(c, y_ret: int, y_out: int, px: int, xw: int) -> int:
+	var l1: int = c.lvl_of_z(-1) * CZS * CZS
+	var xc0: int = (px + xw) / 2
+	for off in [0, 10, -10, 20, -20, 30, -30, 40, -40]:
+		var xc: int = xc0 + off
+		if xc - 17 <= px + 4 or xc + 17 >= xw - 4:
+			continue
+		var xn := -1                                     # a street tile above the north platform's outer row
+		for dx in range(-9, 10):
+			var tn: int = c.tiles[(y_ret - 3) * CZS + xc + dx]
+			if tn == CG.GROUND or tn == CG.PARK:
+				xn = xc + dx
+				break
+		if xn < 0:
+			continue
+		var xs2 := -1                                    # ... and one south of the south platform, up to 40 tiles away
+		var ys2 := -1
+		for dist in range(1, 41):
+			for dx in range(-9, 10):
+				var ts: int = c.tiles[(y_out + 4 + dist) * CZS + xc + dx]
+				if ts == CG.GROUND or ts == CG.PARK:
+					xs2 = xc + dx
+					ys2 = y_out + 4 + dist
+					break
+			if xs2 >= 0:
+				break
+		if xs2 < 0:
+			continue
+		for x in range(xc - 15, xc + 15):
+			for yy in [y_ret - 3, y_ret - 2, y_out + 3, y_out + 4]:
+				var q: int = l1 + yy * CZS + x
+				if c.tiles[q] == CG.EARTH or c.tiles[q] == CG.TUNNEL:
+					c.tiles[q] = CG.PLATFORM
+		# north stair: the surface tile and the platform's outer row at the same place
+		_stair(c, l1, xn, y_ret - 3)
+		# south stair: a passage from the south platform's outer row to under the stair
+		for yy in range(y_out + 5, ys2):
+			var q2: int = l1 + yy * CZS + xs2
+			if c.tiles[q2] == CG.EARTH:
+				c.tiles[q2] = CG.TUNNEL
+		_stair(c, l1, xs2, ys2)
+		return xc
+	return -1
+
+func _stair(c, l1: int, x: int, y: int) -> void:
+	var up: int = y * CZS + x
+	var down: int = l1 + up
+	c.tiles[up] = CG.STAIRS
+	c.tiles[down] = CG.STAIRS
+	for pair in [[up, down], [down, up]]:
+		if not c.links.has(pair[0]):
+			c.links[pair[0]] = []
+		c.links[pair[0]].append(pair[1])
+		c.haslink[pair[0]] = 1
 
 ## The harbor.  Three zones from north to south:
 ##   north (dy < -54)  derelict warehouses and loose crates: unaffiliated criminals
@@ -822,7 +1140,7 @@ func _port(c) -> void:
 
 ## the town: a crossing of the highway with one main street, four blocks of small houses, a store at the crossroads
 func _town(c) -> void:
-	var o := zone_origin(2, 1)
+	var o := zone_origin(TOWN_ZONE.x, TOWN_ZONE.y)
 	var cx := TOWN.x - o.x - 6          # left edge of the cross street (local)
 	var hy := HWY_Y - HWY_N - o.y       # top row of the highway (local)
 	var hw := HWY_N + HWY_S + 1         # ... and its width
@@ -851,9 +1169,9 @@ func _town(c) -> void:
 
 ## a runway on the plains east of the town
 func _airstrip(c) -> void:
-	var o := zone_origin(3, 1)
-	var x0 := 1480 - o.x
-	var x1 := 1690 - o.x
+	var o := zone_origin(AIR_ZONE.x, AIR_ZONE.y)
+	var x0 := AIR_X0 - o.x
+	var x1 := AIR_X0 + 210 - o.x
 	var y0 := AIR_Y - o.y
 	_clear_growth(c, x0 - 8, y0 - 14, x1 + 8, y0 + 30)
 	_rect(c, x0, y0, x1, y0 + 15, CG.GROUND)

@@ -48,6 +48,9 @@ var tab_head: PackedInt32Array
 var tab_dwell: PackedInt32Array
 var tab_stop: PackedInt32Array        # the stop being approached or stood at
 var arrivals: Array = []              # per stop: the table indices at which the doors open
+var _arr_all := PackedInt32Array()    # every table index at which a train's doors open, in order (passengers change at each)
+var _ep_clock: int = -1               # the clock the cached epochs belong to
+var _ep := PackedInt32Array()         # per train: how many times its doors have opened (see epoch_of)
 var offsets: PackedInt32Array
 var cell_of: PackedInt32Array         # path index -> absolute cell of the first track tile in THIS game, or -1
 var lane_cell: Array = []             # 4 arrays: lane -> path index -> absolute cell here, or -1
@@ -127,7 +130,10 @@ static func build_line(city, island, zone: Vector2i) -> Dictionary:
 		out.append(pack(o.x + x, o.y + y_o, -1))
 	for x in range(xe, xw - 1, -1):
 		out.append(pack(o.x + x, o.y + y_o, 0))
+	var xst: int = int(city.plan["rail"].get("xst", -1))          # the West Bank station (see island._west_station)
 	for x in range(xw, PORTAL_X - 1, -1):
+		if x == xst:
+			stops.append([out.size() + TRAIN_LEN / 2, "West Bank"])
 		out.append(pack(o.x + x, o.y + y_o, -1))
 	# the daylight run on the outbound (south) track: rows follow the winding pass
 	var xt: int = int(island.west_x(island.PORT.y)) + 6 + 16
@@ -163,6 +169,8 @@ static func build_line(city, island, zone: Vector2i) -> Dictionary:
 		prev2 = gy2
 		gx2 += 1
 	for x in range(PORTAL_X, xw + 1):
+		if x == xst:
+			stops.append([out.size() + TRAIN_LEN / 2, "West Bank"])
 		out.append(pack(o.x + x, o.y + y_r, -1))
 	for x in range(xw, xe + 1):
 		out.append(pack(o.x + x, o.y + y_r, 0))
@@ -172,7 +180,7 @@ static func build_line(city, island, zone: Vector2i) -> Dictionary:
 	var order_names := ["Old Market", "Ninth Street", "Kuroda Plaza", "Harbor Gate"]
 	var ci := 0
 	for s in stops:
-		if s[1] != "Harbor Terminal":
+		if s[1] != "Harbor Terminal" and s[1] != "West Bank":
 			s[1] = order_names[ci % order_names.size()]
 			ci += 1
 	return {"path": out, "stops": stops}
@@ -304,6 +312,12 @@ func _tabulate() -> void:
 		if done:
 			break
 	period = tab_head.size()
+	var all: Array = []
+	for lst in arrivals:
+		all.append_array(lst)
+	all.sort()
+	_arr_all = PackedInt32Array(all)
+	_ep_clock = -1
 	offsets = PackedInt32Array()
 	for j in TRAINS:
 		offsets.append((period * j) / TRAINS)
@@ -543,6 +557,10 @@ func ride_move(dx: int, dy: int) -> bool:
 		var l: int = int(r[3])
 		var i: int = int(r[2])
 		var open: bool = dwell_of(rtrain) > 0
+		var who: int = passenger(int(r[0]), int(r[1]), i, l)
+		if who >= 0:
+			g.say(COMMUTER_LINES[who % COMMUTER_LINES.size()])
+			return true
 		if l == 1 or l == 2 or (open and (i == DOOR_A or i == DOOR_B)):
 			riding = int(r[1])
 			ri = i
@@ -583,6 +601,63 @@ func try_board(to: int) -> bool:
 		return true
 	g.say("The doors are further along the carriage.")
 	return false
+
+# ------------------------------------------------------------------------------------------------ passengers
+## Commuters ride the trains.  They are not simulated people: who stands where in a carriage is a pure function of the seed, the train, the cell and
+## how many times that train's doors have opened (`epoch_of`), so people get on and off only while the doors are open, nothing needs saving, and
+## every zone game agrees.  They stand on the floor lanes (never in the doorways or the aisle by the doors, so a boarding player always has room),
+## in a share of cells that follows the hour: packed at the rush hours, nearly empty at night.
+const COMMUTER_LINES := ["A commuter shifts aside without looking up from a cracked phone.", "\"Watch it,\" mutters a commuter, one hand locked on the rail.",
+	"A commuter in a rain-spotted coat is in your way and does not move.", "A sleeping commuter fills the seat.  You leave them be.",
+	"A commuter with a heavy bag blocks the aisle and pretends not to notice you.", "The commuter stares through you and keeps still."]
+
+## how many times train j's doors have opened since the clock began (laps of the timetable times the stops of a lap, plus the stops done this lap)
+func epoch_of(j: int) -> int:
+	if _ep_clock != clock or _ep.size() != TRAINS:
+		_ep = PackedInt32Array()
+		for tj in TRAINS:
+			var u: int = _u(tj)
+			var lap: int = (clock + int(offsets[tj])) / period
+			var done := 0
+			for a in _arr_all:
+				if int(a) <= u:
+					done += 1
+			_ep.append(lap * _arr_all.size() + done)
+		_ep_clock = clock
+	return _ep[j]
+
+## the share of passenger cells that are taken, in percent, at the game's time of day
+func load_pct() -> int:
+	var hour: int = (int(g.sim.tick) / 60) % 24
+	if (hour >= 7 and hour <= 9) or (hour >= 17 and hour <= 19):
+		return 36
+	if hour >= 22 or hour <= 4:
+		return 6
+	if hour >= 11 and hour <= 15:
+		return 20
+	return 14
+
+## the passenger in a carriage cell: a hash that also picks their looks, or -1 for nobody
+func passenger(j: int, k: int, i: int, l: int) -> int:
+	if line.is_empty() or l == 0 or l == 3 or i == DOOR_A or i == DOOR_B:
+		return -1
+	if riding == k and rtrain == j and ri == i and rl == l:
+		return -1                                   # the player is standing there
+	var h: int = (((j * 4 + k) * 6 + i) * 4 + l + 1) * 2654435761
+	h = h ^ (epoch_of(j) * 40503 + int(g.seed_value) * 97 + 12345)
+	h = ((h ^ (h >> 15)) * 2246822509) & 0x7fffffff
+	h = (h ^ (h >> 13)) & 0x7fffffff
+	return h if (h % 100) < load_pct() else -1
+
+## how many floor cells of train j hold a passenger right now (for the tests)
+func passengers_on(j: int) -> int:
+	var n := 0
+	for k in cars:
+		for i in CAR_LEN:
+			for l in [1, 2]:
+				if passenger(j, k, i, l) >= 0:
+					n += 1
+	return n
 
 func save() -> Dictionary:
 	var pl: Array = []

@@ -251,8 +251,100 @@ def plane():
     return v
 
 
+# ------------------------------------------------------------------------------------------------ train carriage 4x6, a cutaway
+# Lanes across (64 px each): 0 and 3 are the side walls (windows, sliding doors at positions 2-3 along the car), 1 and 2 the floor (benches
+# along the walls, handrails by the doors).  Position 0 (the top) is the front.  The game draws one 64 px tile of this per carriage cell, turned
+# to the train's heading.  'train' has the doors shut; 'trainopen' shows the doorways while the train is stopped.
+def train(open_doors=False):
+    v = V(256, 384)
+    u, p, o = v.u, v.p, v.o
+    body = p.rrect(2, 2, 252, 380, 12)
+    u.shadow(body, 3, 5, 6, 0.55)
+    # the floor: deck plates with seams, a darker aisle, hazard-striped door thresholds
+    u.shade(u.rect(60, 2, 136, 380), '#3b414b', bevel=2.0, strength=0.3, grain=0.14, seed=31)
+    for k in range(1, 12):
+        u.fill(u.rect(60, k * 32, 136, 1.4), '#15181d', 0.5)
+    u.fill(u.rect(112, 6, 32, 372), '#2f343d', 0.55)
+    for y in (128, 240):
+        for k in range(8):
+            u.fill(u.poly([(64 + k * 16, y), (72 + k * 16, y), (64 + k * 16, y + 16), (56 + k * 16, y + 16)]), '#e0b020', 0.55)
+    # the wall strips: dark under-skin (the thickness of the car side) on both edges
+    for (x0, x1) in ((0, 64), (192, 256)):
+        u.shade(u.rect(x0, 2, 64, 380), '#262a31', bevel=2.0, strength=0.5, grain=0.12, seed=x0 + 3)
+    # benches: along the wall side of each floor lane, between the door positions
+    for (y0, y1) in ((8, 120), (264, 376)):
+        for (bx, flip) in ((64, False), (152, True)):
+            seat = u.rrect(bx + 2, y0, 38, y1 - y0, 7)
+            u.shade(seat, '#232a3a', bevel=4.0, strength=0.6, spec=0.2, grain=0.1, seed=y0 + bx)
+            cush = p.rrect(bx + (7 if not flip else 12), y0 + 6, 24, y1 - y0 - 12, 6)
+            paint(v, cush, bevel=5, strength=0.55, base='#c9d0da', seed=y0 + bx + 1)
+            for k in range(3):
+                o.fill(o.rect(bx + (8 if not flip else 13), y0 + 6 + (k + 1) * (y1 - y0 - 12) / 4.0, 22, 1.6), '#0b0d12', 0.5)
+    # the side walls: livery skin, a lighter roof-rail edge, window band, door leaves
+    for (x0, flip) in ((0, False), (192, True)):
+        pieces = [(2, 380)] if not open_doors else [(2, 124), (258, 124)]       # with the doors open there is no skin across the doorway
+        for (py0, ph) in pieces:
+            skin = p.rrect(x0 + (2 if not flip else 0), py0, 62, ph, 6)
+            paint(v, skin, bevel=7, strength=0.7, base='#eceff2', seed=x0 + 5 + py0)
+            o.fill(o.rect(x0 + (2 if not flip else 56), py0, 6, ph), '#0b0c10', 0.55)
+            # livery stripe along the car
+            sx = x0 + (30 if not flip else 22)
+            o.fill(o.rect(sx, py0 + 4, 6, ph - 8), '#101216', 0.28)
+        for y0 in (0, 64, 256, 320):
+            win = o.rrect(x0 + (14 if not flip else 14), y0 + 9, 36, 46, 5)
+            glass(v, win)
+            o.fill(o.line(x0 + 18, y0 + 14, x0 + 44, y0 + 12, 2.4), '#7fd3ee', 0.45)
+            o.fill(o.rect(x0 + 14, y0 + 54, 36, 1.6), '#06080b', 0.6)
+        if open_doors:
+            for y0 in (128, 192):
+                # the doorway: the floor shows through, a livery sill on the outer edge
+                u.shade(u.rect(x0 + 2, y0 + 4, 60, 56), '#363c46', bevel=1.5, strength=0.3, grain=0.12, seed=x0 + y0)
+                o.fill(o.rect(x0 + (2 if not flip else 56), y0 + 4, 6, 56), '#101216', 0.5)
+                o.fill(o.rect(x0 + (52 if not flip else 2), y0 + 4, 8, 56), '#f0f2f4', 0.14)
+            for y0 in (124, 252):
+                o.fill(o.rect(x0 + 4, y0, 58, 4), '#0b0c10', 0.8)           # door frame ends
+        else:
+            for y0 in (128, 192):
+                leaf = o.rrect(x0 + 6, y0 + 6, 52, 52, 5)
+                o.shade(leaf, '#69727f', bevel=3.0, strength=0.5, spec=0.5)
+                glass(v, o.rrect(x0 + 14, y0 + 14, 36, 14, 4))
+                o.fill(o.line(x0 + 20, y0 + 18, x0 + 40, y0 + 17, 1.8), '#7fd3ee', 0.5)
+                o.fill(o.rect(x0 + 8, y0 + 44, 48, 2), '#0b0c10', 0.5)
+            o.fill(o.rect(x0 + 4, 191, 56, 2.6), '#07080b', 0.85)            # the meeting seam of the two leaves
+            for y0 in (136, 214):
+                o.shade(o.rrect(x0 + (44 if not flip else 14), y0, 6, 20, 3), '#aab3bd', bevel=2, strength=0.6, spec=0.8)
+    # handrails by the doors
+    for (hx, hy) in ((92, 150), (92, 234), (164, 150), (164, 234)):
+        o.shade(o.ellipse(hx, hy, 6), '#aab3bd', bevel=3, strength=0.7, spec=0.9)
+        o.fill(o.ellipse(hx + 2, hy + 3, 7), '#000000', 0.18)
+    o.fill(o.line(92, 150, 92, 234, 2.6), '#c9d1da', 0.7)
+    o.fill(o.line(164, 150, 164, 234, 2.6), '#c9d1da', 0.7)
+    # the roof ribs seen through the cutaway, and the ends: bulkheads with a connecting door, a coupler
+    for y in (0, 378):
+        o.shade(o.rect(2, y, 252, 6), '#0f1116', bevel=1.2, strength=0.5)
+        o.shade(o.rrect(88, y - (0 if y == 0 else 2), 80, 8, 3), '#2a2f38', bevel=2.5, strength=0.7, spec=0.5)
+    o.fill(o.rect(126, 4, 4, 28), '#050608', 0.8)
+    o.fill(o.rect(126, 352, 4, 28), '#050608', 0.8)
+    # lit panels and neon trim (Bouma): a cyan light strip along each wall's inner edge, a magenta route sign at the ends
+    o.shade(o.rect(60, 14, 3, 360), CY, bevel=0.8, strength=0.1, emit=0.8)
+    o.shade(o.rect(193, 14, 3, 360), CY, bevel=0.8, strength=0.1, emit=0.8)
+    for y in (46, 322):
+        o.shade(o.rrect(108, y, 40, 8, 3), MG, bevel=1.2, strength=0.1, emit=0.9)
+        o.glow(128, y + 4, 22, MG, 0.35)
+    # grime: dirt along the floor edges and the door zones, scratches on the skin
+    v.u.speckle(u.rect(60, 2, 136, 380), '#0a0b0d', 14.0, 41, size=2.0, alpha=0.22)
+    v.o.speckle(o.rect(0, 0, 256, 384), '#0a0b0d', 6.0, 43, size=1.4, alpha=0.18)
+    edge(v, body)
+    return v
+
+
+def trainopen():
+    return train(True)
+
+
 BUILD = {'car': car, 'truck': truck, 'mech': mech, 'heli': heli, 'plane': plane}
-SIZES = {'car': (4, 6), 'truck': (6, 12), 'mech': (5, 5), 'heli': (6, 9), 'plane': (12, 10)}
+BUILD.update({'train': train, 'trainopen': trainopen})
+SIZES = {'car': (4, 6), 'truck': (6, 12), 'mech': (5, 5), 'heli': (6, 9), 'plane': (12, 10), 'train': (4, 6), 'trainopen': (4, 6)}
 
 
 def sprites(items=None):

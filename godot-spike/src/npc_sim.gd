@@ -84,11 +84,42 @@ func setup(city, count: int, seed: int) -> void:
 	var lut := PackedByteArray()
 	for t in 128:
 		lut.append(1 if (t < city.WALK.size() and city.WALK[t] == 1) else 0)
-	for i in tiles.size():
-		var t := tiles[i]
-		walk[i] = lut[t]
-		opaque[i] = 1 if (t == 2 or t == 17 or t == 27 or t == 28 or t == 29) else 0
-	fields = [FF.build(tiles, size, walk, homes, links, haslink), FF.build(tiles, size, walk, works, links, haslink), FF.build(tiles, size, walk, shops, links, haslink)]
+	# walkable / opaque per cell.  The upper levels are open air nearly everywhere (walk 0, opaque 0, which is what the arrays start as), so a
+	# run of 64 air cells is skipped by one comparison instead of 64 steps.
+	var seg := 64
+	var air_seg := PackedByteArray()
+	air_seg.resize(seg)
+	air_seg.fill(7)
+	var nlev: int = tiles.size() / s2
+	for lvl in nlev:
+		var upper: bool = lvl >= 1 and lvl <= city.zmax and size % seg == 0
+		for row in size:
+			var rb: int = lvl * s2 + row * size
+			if not upper:
+				for i in range(rb, rb + size):
+					var t := tiles[i]
+					walk[i] = lut[t]
+					opaque[i] = 1 if (t == 2 or t == 17 or t == 27 or t == 28 or t == 29) else 0
+				continue
+			for x0 in range(0, size, seg):
+				var a: int = rb + x0
+				if tiles.slice(a, a + seg) == air_seg:
+					continue
+				for i in range(a, a + seg):
+					var t := tiles[i]
+					walk[i] = lut[t]
+					opaque[i] = 1 if (t == 2 or t == 17 or t == 27 or t == 28 or t == 29) else 0
+	# the three distance fields (to home, work, shop) are independent: one thread each
+	var srcs := [homes, works, shops]
+	var made := [PackedInt32Array(), PackedInt32Array(), PackedInt32Array()]
+	var ths: Array = []
+	for k in 3:
+		var th := Thread.new()
+		th.start(func(): made[k] = FF.build(tiles, size, walk, srcs[k], links, haslink))
+		ths.append(th)
+	for th in ths:
+		th.wait_to_finish()
+	fields = made
 	n = count
 	pos = PackedInt32Array(); pos.resize(n)
 	dest = PackedInt32Array(); dest.resize(n)

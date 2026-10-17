@@ -17,7 +17,7 @@ func run() -> Array:
 	w.start(5, 300)
 	var g = w.game
 	var t = g.transit
-	check.call("the city has the line (%d cells, %d stops)" % [t.path.size(), t.stop_heads.size()], t.active() and t.stop_heads.size() == 5)
+	check.call("the city has the line (%d cells, %d stops)" % [t.path.size(), t.stop_heads.size()], t.active() and t.stop_heads.size() == 7)
 	check.call("the last stop is the Harbor Terminal", t.stop_names.has("Harbor Terminal") and t.stop_names.has("Harbor Gate"))
 	var gaps := 0
 	var n: int = t.path.size()

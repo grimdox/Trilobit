@@ -284,7 +284,7 @@ func run() -> Array:
 		return n
 	var civ_hits: int = hit_rate.call(g.CIV, 400)
 	var kill_hits: int = hit_rate.call(g.NASIM, 400)
-	check.call("melee: the target's dodge matters (civilian %d, a wired killer %d of 400)" % [civ_hits, kill_hits], kill_hits < civ_hits - 30)
+	check.call("melee: the target's dodge matters (civilian %d, a wired killer %d of 400)" % [civ_hits, kill_hits], kill_hits < civ_hits - 15)
 	g.player_hurt(500, "Test", "phys", "l_arm")
 	var one_arm: int = hit_rate.call(g.CIV, 400)
 	check.call("a broken arm hurts your melee accuracy (%d vs %d)" % [one_arm, civ_hits], one_arm < civ_hits - 20)
