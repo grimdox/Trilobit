@@ -476,6 +476,8 @@ func _draw_body(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> void:
 			any_vis = true
 	if not any_vis:
 		return
+	if _draw_body_sprite(vi, v, ox, oy, T):
+		return
 	var shade := Color(0, 0, 0, 0.28)
 	var front: Vector2i = Vector2i(game.vs.DIR4[dirn][0], game.vs.DIR4[dirn][1])
 	# a soft shadow under anything in the air
@@ -606,3 +608,58 @@ func _draw_cranes(ox: int, oy: int, base: int) -> void:
 				var r: Rect2 = sp[1]
 				draw_texture_rect_region(sp[0], Rect2(Vector2(tx + 8, cy * T + 12), r.size * 0.8), r, Color(1, 1, 1, 0.95))
 		_blit("f_trl_crane_trolley", Vector2(tx, cy * T))
+
+
+var veh_tex: Dictionary = {}
+const HELI_MAST := Vector2(0, -70)     # where the helicopter's rotor mast is, in sprite pixels from the middle of the body
+
+func _veh_tex(kind: String, layer: String):
+	var key := "veh_%s_%s" % [kind, layer]
+	if not veh_tex.has(key):
+		veh_tex[key] = tileset._load_tex("res://gfx/Trilobit64/veh/%s.png" % key) if tileset != null and tileset.has("t_trl_marble") else null
+	return veh_tex[key]
+
+## the painted vehicle: shadow/wheels, the tinted paint, glass and lights; the whole stack is turned to the vehicle's heading
+func _draw_body_sprite(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> bool:
+	var kind: String = v["kind"]
+	var tu = _veh_tex(kind, "u")
+	var tp = _veh_tex(kind, "p")
+	var to = _veh_tex(kind, "o")
+	if tu == null or tp == null or to == null:
+		return false
+	var dirn: int = int(v["dir"])
+	var wreck: bool = v["wreck"]
+	var c2: Vector2i = game.vs.center2(kind, int(v["cell"]), dirn)
+	var ctr := Vector2((float(c2.x) * 0.5 - float(ox)) * T, (float(c2.y) * 0.5 - float(oy)) * T)
+	var k: float = float(T) / 64.0
+	var tint: Color = Color(0.32, 0.30, 0.30) if wreck else (v["color"] as Color) * 1.12
+	tint.a = 1.0
+	var plain := Color(0.34, 0.32, 0.32) if wreck else Color.WHITE
+	var airborne: bool = bool(v.get("air", false))
+	if airborne:
+		draw_set_transform(ctr + Vector2(10, 24) * k, float(dirn) * PI / 2.0, Vector2(k, k))
+		draw_texture(tu, -tu.get_size() * 0.5, Color(0, 0, 0, 0.35))
+	draw_set_transform(ctr, float(dirn) * PI / 2.0, Vector2(k, k))
+	draw_texture(tu, -tu.get_size() * 0.5, plain)
+	draw_texture(tp, -tp.get_size() * 0.5, tint)
+	draw_texture(to, -to.get_size() * 0.5, plain)
+	# damage: soot over the paint and smoke from a hurt engine
+	var body_pct: int = game.vs.part_pct(v, "body")
+	if body_pct < 55 and not wreck:
+		draw_texture(tp, -tp.get_size() * 0.5, Color(0, 0, 0, 0.35))
+	if kind == "heli" and not wreck:
+		var ang: float = float(game.turn) * 0.9
+		var r := 3.3 * 64.0
+		draw_circle(HELI_MAST, r, Color(1, 1, 1, 0.05))
+		for b in 2:
+			var aa: float = ang + float(b) * PI / 2.0
+			var d := Vector2(cos(aa), sin(aa)) * r
+			draw_line(HELI_MAST - d, HELI_MAST + d, Color(0.1, 0.11, 0.13, 0.55), 9.0)
+			draw_line(HELI_MAST - d, HELI_MAST + d, Color(0.85, 0.88, 0.93, 0.55), 5.0)
+		draw_circle(HELI_MAST, 12.0, Color(0.18, 0.2, 0.24))
+		draw_circle(HELI_MAST, 6.0, Color(0.6, 0.63, 0.68))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	if wreck or game.vs.part_pct(v, "engine") < 30:
+		draw_circle(ctr + Vector2(0, -T * 0.6), 9.0 * S, Color(0.15, 0.15, 0.15, 0.5))
+		draw_circle(ctr + Vector2(T * 0.3, -T * 1.2), 12.0 * S, Color(0.2, 0.2, 0.2, 0.35))
+	return true

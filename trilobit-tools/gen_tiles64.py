@@ -52,6 +52,8 @@ def main(out, items_path):
         cfg['tiles-new'].append({'file': fn, 'sprite_width': w, 'sprite_height': h, 'sprite_offset_x': ox, 'sprite_offset_y': oy, 'tiles': tiles})
         fg += cols * rows
         print('%s: %d sprites, %dx%d' % (fn, len(lst), im.width, im.height))
+    import t64_vehicles
+    t64_vehicles.write(os.path.join(out, 'veh'))
     json.dump(cfg, open(os.path.join(out, 'tile_config.json'), 'w'))
     open(os.path.join(out, 'tileset.txt'), 'w').write('NAME: Trilobit 64\nVIEW: Trilobit 64\nJSON: tile_config.json\nTILESET: sheet_tiles.png\n')
 
