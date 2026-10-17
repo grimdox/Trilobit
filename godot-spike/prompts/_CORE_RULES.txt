@@ -5,9 +5,22 @@ PROJECT: Trilobit, a gritty cyberpunk roguelike. Custom Godot 4.3 / GDScript
 game in /home/claude/trilobit/godot-spike, tools in /home/claude/trilobit/trilobit-tools,
 GitHub grimdox/Trilobit, branch main. Design docs live in the "Trilobit Creation"
 project (Design Document v0.16, Updates 0.17/0.18/0.19, Faction Quest Trees,
-Gun List, Godot Spike Plan, Playtest Checklist). READ the ones named in the
+Gun List, Godot Spike Plan, Playtest Checklist). READ the linked documents below and the ones named in the
 task BEFORE working. If a doc and this block disagree, the NEWER update wins;
 report the conflict, do not silently pick.
+
+LINKED DOCUMENTS (Trilobit Creation project; read with the Projects tool,
+project_read, path exactly as written)
+ ALWAYS READ FIRST (every task):
+   claude/Trilobit Design Document.md            <- master design document
+   claude/Trilobit Design Document Update 0.19.md <- newest update (wins over older)
+ Then read what the task type needs:
+   Gameplay: Update 0.18, Update 0.17, Godot Spike Plan, Gun List, Playtest Checklist
+   Visuals:  Design Document tileset section, Update 0.19 (scale), Godot Spike Plan
+   Quests:   Faction Quest Trees, Design Document faction/rank section, Gun List
+ Order of authority: Update 0.19 > 0.18 > 0.17 > Design Document v0.16.
+ If you cannot open a linked document, say so in the report; do not guess its
+ contents.
 
 PILLARS (never break these)
  1. Many ways to fight: stealth OR open combat must both stay viable.
