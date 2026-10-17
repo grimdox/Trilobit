@@ -1,0 +1,75 @@
+TRILOBIT CORE RULES  (the three prompts below each paste this block at the top;
+edit it HERE first, then copy the changed text into all three)
+=====================================================================
+PROJECT: Trilobit, a gritty cyberpunk roguelike. Custom Godot 4.3 / GDScript
+game in /home/claude/trilobit/godot-spike, tools in /home/claude/trilobit/trilobit-tools,
+GitHub grimdox/Trilobit, branch main. Design docs live in the "Trilobit Creation"
+project (Design Document v0.16, Updates 0.17/0.18/0.19, Faction Quest Trees,
+Gun List, Godot Spike Plan, Playtest Checklist). READ the ones named in the
+task BEFORE working. If a doc and this block disagree, the NEWER update wins;
+report the conflict, do not silently pick.
+
+PILLARS (never break these)
+ 1. Many ways to fight: stealth OR open combat must both stay viable.
+ 2. Death is permanent; ghosts can move between shells.
+ 3. Staying human is a choice. Fully human characters get no cyberware and
+    cannot be hacked.
+ 4. Open world with a way out. Two cities in one: gleaming high-rises vs
+    street-level scum.
+ 5. Tone: gritty, stylized, grit on every tile. Mood references only (Ghost in
+    the Shell, Anarchy Online): NO names, art, characters, logos, brands or
+    real-world text copied from anything. Originality is required.
+
+FIXED FACTS (do not rename or renumber)
+ - Currency: yen. One turn = one minute.
+ - Factions: Bratva (id trl_bratva), NAP (trl_nap), Nasim (trl_nasim); also
+   CIV and GANG in the sim. Ranks -10..+10. IDs never change.
+   Bratva = Russian-style syndicate (low districts, debts, trucks, family).
+   NAP = Japanese/American-style police-corporate force. Nasim = hacker/zealot
+   sect (hostile to implanted PCs below rank +7).
+ - Guns: ONLY real-style guns made in Russia, China, Japan, America, plus the
+   25 original guns in the Gun List. Melee: Japanese or Russian blades/arms.
+   No "makeshift", "improvised" or "broken" items.
+ - Nanohacks cost Control Value (CV). Cyberbrain Mk I-V give CV limits
+   4/8/14/22/32; hack costs 1-6.
+ - Androids = frame + role + modules + firmware.
+ - Scale: lane 6 tiles, road 12, cars 4x6, trucks 6x12, helicopter 6x9,
+   plane 12x10, mech 5x5, train 4 wide x 6-long carriages x4. Tiles 64 px;
+   canvas 1920x1080; UI authored 1280x720 and scaled 1.5x (UI_S).
+ - Tilesets: Bouma (default, classic cyberpunk) and Mokuhanga (black/white/neon
+   print look, at most 3 inks). Readability first.
+
+QUALITY BAR
+ - Data first, code second. New content goes in data tables/generators, not
+   hard-coded in scattered places.
+ - Every new thing has: a stable id, a test, a save/load story, and a line in
+   the README or work log.
+ - No placeholder text ("TODO", "lorem", "test item") in anything shipped.
+ - Names are original, short, and fit the faction/district. No duplicates.
+ - Don't fake numbers: balance values must be justified against existing
+   values (state the comparison in the report).
+
+PROCESS (every task)
+ 1. Restate the task in 2-3 lines and list the docs/files you read.
+ 2. Make a task list. Work independently; do NOT ask questions unless the
+    choice is irreversible AND could reasonably go either way, or the field
+    says "NEEDS ERIC".
+ 3. DEFAULTS RULE: for every open point, pick the sensible default, apply it,
+    and list it under "Defaults I chose" in the report. Eric overrides later.
+ 4. Scope rule: do exactly what is asked and what its Definition of Done
+    needs. Do NOT refactor unrelated code, rename ids, or add extra features.
+    Note good ideas under "Suggestions", don't build them.
+ 5. Validate: `bash run_all.sh` must pass and the soak must print
+    "SOAK 6000/6000". Add/extend tests for what you built.
+ 6. Commit + `git push -q origin main`. Commit messages end with:
+      Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+      Claude-Session: <current session URL>
+ 7. Add ONE line to the work log. Rebuild Windows zip
+    (tools/build_windows.sh) only if the task says "BUILD: yes".
+ 8. Finish with the REPORT FORMAT below. Never claim done without having run
+    the checks.
+
+REPORT FORMAT (keep under ~15 lines)
+ - What was made (files/ids).   - Checks run + results.
+ - Defaults I chose.            - Conflicts found in the docs.
+ - Suggestions (not built).     - Needs Eric (only if truly blocked).

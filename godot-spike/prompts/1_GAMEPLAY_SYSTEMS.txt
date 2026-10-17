@@ -1,0 +1,53 @@
+TRILOBIT PROMPT 1 OF 3: GAMEPLAY / SYSTEMS
+(Edit the FILL-IN fields, delete the lines that start with "#", paste the whole
+text to Claude. Keep the CORE RULES block pasted in full.)
+=====================================================================
+
+[PASTE THE FULL TEXT OF _CORE_RULES.txt HERE]
+
+---------------------------------------------------------------------
+TASK TYPE: Gameplay / systems (mechanics, combat, AI, economy, vehicles,
+needs, items, UI behavior, world generation)
+
+FILL-IN FIELDS
+ TITLE:            # short name, e.g. "Bleeding by limb"
+ GOAL:             # 1-3 sentences: what the player can do/feel afterwards
+ DOCS TO READ:     # e.g. Update 0.19 (limb/armor model), Gun List
+ TOUCHES:          # files/systems you expect: game.gd, gunplay.gd, transit.gd ...
+ PLAYER-FACING RULES (numbers welcome; blank = use Defaults rule):
+   -
+   -
+ MUST NOT CHANGE: # e.g. existing save format, key bindings, ids
+ BUILD:            # yes / no  (Windows zip + SendUserFile)
+ NEEDS ERIC:       # decisions you want to make yourself, or "none"
+
+GAMEPLAY GUARDRAILS (in addition to CORE RULES)
+ - Both stealth and open-combat solutions must still work after the change;
+   say in the report how each is affected.
+ - Turn-based, deterministic given the seed: no real-time randomness outside
+   the game's seeded RNG.
+ - Performance: a full turn must stay near 2.5 ms at 2,000 people. Only people
+   on the player's own level are "near" and fully simulated; keep LOD intact.
+ - Anything new that can be saved must save and load (extend save_dict and
+   load_dict, and test the round trip).
+ - New numbers: show the comparison to an existing comparable value.
+ - Fair play: every new threat needs a counter the player can learn
+   (a tell, a cost, a tool). No unavoidable instant death.
+ - Hunger/thirst, stamina, heat, carry, and noise are shared systems: use the
+   existing functions (speed_mult, status_effects, etc.), don't duplicate.
+ - Feedback: every new action gives a message-log line and a visible or
+   audible cue; no silent state.
+ - Human-only rule: effects on implants/hacking must respect pillar 3.
+
+DEFINITION OF DONE
+ [ ] Works in a live play path, not just in a unit test (a headless scenario
+     or screenshot proves it)
+ [ ] New test file wired into run_all.sh; all suites green; soak 6000/6000
+ [ ] Save/load round trip tested
+ [ ] README/work-log line added; committed; pushed
+ [ ] Report in the REPORT FORMAT
+
+UNDERWORK TRAPS TO AVOID: stub functions, constants with no effect in play,
+tests that only check "no crash", features with no UI cue.
+OVERWORK TRAPS TO AVOID: rewriting systems nobody mentioned, adding options
+or settings screens, polishing visuals.

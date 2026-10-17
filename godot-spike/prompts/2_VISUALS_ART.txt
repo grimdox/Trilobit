@@ -1,0 +1,61 @@
+TRILOBIT PROMPT 2 OF 3: VISUALS / ART
+(Edit the FILL-IN fields, delete the lines that start with "#", paste the whole
+text to Claude. Keep the CORE RULES block pasted in full.)
+=====================================================================
+
+[PASTE THE FULL TEXT OF _CORE_RULES.txt HERE]
+
+---------------------------------------------------------------------
+TASK TYPE: Visuals / art (tiles, sprites, vehicles, characters, HUD, effects,
+lighting, UI layout)
+
+FILL-IN FIELDS
+ TITLE:            # e.g. "Painted train sprite"
+ GOAL:             # what should be visible/recognizable, in plain words
+ SUBJECT DETAIL:   # shape, size in tiles (use the SCALE list), colors, wear
+ WHERE IT APPEARS: # tileset(s): Bouma / Mokuhanga / both; zone/district
+ FACTION / DISTRICT FEEL: # e.g. Bratva low district: rust, tarps, red paint
+ MOOD (original words only): # e.g. "wet neon, sodium-orange alleys"
+ DOCS TO READ:     # Design Document tileset section, Update 0.19 (scale)
+ BUILD:            # yes / no
+ NEEDS ERIC:       # e.g. "approve the palette" or "none"
+
+ART GUARDRAILS (in addition to CORE RULES)
+ - 100% original art, generated in code (trilobit-tools/gen_tiles64.py,
+   t64_* modules, art64.Art) into gfx/Trilobit64, then
+   `godot --headless --path . --import`. No traced, copied or
+   "in the style of <named artwork>" output. No known characters, logos,
+   brands, signage with real names, or real-world text.
+ - Readability first: at 64 px the thing must be identifiable at a glance,
+   walkable vs blocking must be clear, and it must not be confused with a
+   neighbouring tile type.
+ - Grit on every tile: wear, grime, patches, stains. Nothing pristine except
+   upper-district glass, and even that gets a smudge/reflection.
+ - Bouma = rich classic cyberpunk palette. Mokuhanga = black/white/neon
+   print, MAX 3 inks, bold outlines, flat fills. Provide both unless told
+   "Bouma only".
+ - Sizes follow the SCALE list exactly (tile multiples). Multi-tile sprites
+   align to the 64 px grid and rotate/layer like the existing vehicles
+   (3 painted layers).
+ - Colour-blind safe: do not rely on red vs green alone for danger/loot.
+ - Faction colours stay consistent with what is already in the game
+   (check existing tiles/sprites before choosing).
+ - UI: authored at 1280x720 and multiplied by UI_S (1.5). Text must stay
+   legible; no text baked into sprites.
+ - Performance: no per-frame generation; art is baked to files.
+
+DEFINITION OF DONE
+ [ ] Generated through the existing pipeline (script committed, rerunnable,
+     deterministic)
+ [ ] Screenshot(s) at 1920x1080 via xvfb (shotN.gd) showing it in context,
+     sent to Eric with SendUserFile
+ [ ] Checked at game scale AND zoomed; compared against neighbours
+ [ ] Both tilesets done (or "Bouma only" stated)
+ [ ] All suites green; committed; pushed; work-log line
+ [ ] Report in the REPORT FORMAT, with "Looks wrong / known weak spots"
+     added honestly
+
+UNDERWORK TRAPS TO AVOID: flat recolours, one-tile placeholders for
+multi-tile things, art that was never looked at in-game.
+OVERWORK TRAPS TO AVOID: redoing other tiles, new engine rendering features,
+animation systems not requested.
