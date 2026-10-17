@@ -59,7 +59,7 @@ func run() -> Array:
 			mt += 1
 	check.call("a mountain range runs the length of the island (%d of 90 rows)" % mt, mt >= 80)
 	var yc: int = a.pass_yc(390)
-	check.call("the pass is open ground with road and rail", a.terrain(390, yc) == CG.ROAD and a.terrain(390, yc + 9) == CG.TRACK and a.terrain(390, yc + 10) == CG.TRACK and [a.terrain(390, yc + 7), a.terrain(390, yc + 8), a.terrain(390, yc + 11), a.terrain(390, yc + 12), a.terrain(390, yc + 13)].has(CG.BALLAST) and a.terrain(390, yc + 14) in [CG.ROCKS, CG.BALLAST])
+	check.call("the pass is open ground with road and a two-track railway", a.terrain(390, yc) == CG.ROAD and a.terrain(390, yc + 9) == CG.TRACK and a.terrain(390, yc + 10) == CG.TRACK and a.terrain(390, yc + 13) == CG.TRACK and a.terrain(390, yc + 14) == CG.TRACK and a.terrain(390, yc + 8) in [CG.BALLAST, CG.TRACK])
 	check.call("it is thin: walls of mountain close in beside it", a.terrain(390, yc - 30) == CG.MOUNTAIN and a.terrain(390, yc + 40) == CG.MOUNTAIN)
 	var wind := 0
 	for x in range(ISL.PASS_X0, ISL.PASS_X1):
