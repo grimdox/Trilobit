@@ -102,7 +102,7 @@ func run() -> Array:
 	check.call("picking the lock opens the door (%d tries)" % tries, g.city.tiles[door] == CG.DOOR)
 	# --- the subway
 	var tr = g.transit
-	check.call("subway runs on a ring with four stops", tr.active() and tr.stops.size() == 4)
+	check.call("subway runs on a ring with four stops", tr.active() and tr.stop_heads.size() == 4 and tr.TRAINS >= 2)
 	var h0: int = tr.head
 	for k in 20:
 		tr.step()
@@ -147,9 +147,12 @@ func run() -> Array:
 	g.act_move(exit_dx, exit_dy)
 	check.call("you can step off onto the platform", tr.riding < 0 and g.city.tiles[g.pc] == CG.PLATFORM)
 	var hp_before: int = g.hp
-	var track_cell: int = tr.ring[(tr.head + 1) % tr.ring.size()] + tr.base
+	var guard2 := 0
+	while guard2 < 3000 and not (tr.tab_dwell[tr._u(0)] == 0 and tr.tab_dwell[(tr._u(0) + 1) % tr.period] == 0 and tr.dwell_of(0) == 0):
+		tr.step()
+		guard2 += 1
+	var track_cell: int = tr.cell_of[(tr.head_of(0) + 3) % tr.path.size()]
 	g.pc = track_cell
-	tr.dwell = 0
 	tr.step()
 	check.call("standing on the track when the train comes through hurts", g.hp < hp_before)
 	# --- debt

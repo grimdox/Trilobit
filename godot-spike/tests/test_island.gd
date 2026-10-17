@@ -186,7 +186,7 @@ func run() -> Array:
 	var wo: Vector2i = ISL.zone_origin(wz.zone.x, wz.zone.y)
 	var rail_row: int = (ISL.HWY_Y + 9 - wo.y) * wz.size
 	var rx: int = 300 - wo.x
-	check.call("the wild zone has no train", not wz.transit.active() and wz.transit.car_at(rail_row + rx) == -1 and wz.transit.car_cell(0) == -1 and wz.transit.car_cells() == [-1, -1, -1, -1])
+	check.call("the harbor shares the rail line with the city (%d cells of it here)" % wz.transit.cell_of.count(-1), wz.transit.active() and wz.transit.line.size() > 0 and wz.transit.path.size() == cg.transit.path.size())
 	wz.pc = rail_row - 3 * wz.size + rx
 	wz.sim.retier(wz.pc)
 	var crossed := 0

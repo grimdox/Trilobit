@@ -9,6 +9,7 @@ var game
 var cache: Dictionary = {}          # "x,y" -> save_dict of a zone that has been visited
 var seed_value: int = 0
 var switches: int = 0
+var line: Dictionary = {}           # the rail line (see transit.gd), shared by every zone game
 var visited: Dictionary = {}        # "x,y" -> true (for the map)
 
 static func key(z: Vector2i) -> String:
@@ -83,6 +84,7 @@ func enter(dest: Vector2i) -> bool:
 	var ly: int = clampi(p.y - o.y, 1, ng.size - 2)
 	var cell: int = ly * ng.size + lx
 	ng.apply_player(carry)
+	ng.transit.adopt(g.transit)
 	if not veh.is_empty():
 		var vi: int = ng.vs.import_vehicle(veh, cell)
 		if vi >= 0:
@@ -93,7 +95,12 @@ func enter(dest: Vector2i) -> bool:
 		else:
 			veh = {}
 	if veh.is_empty():
-		cell = _free_cell(ng, cell)
+		var seat: int = ng.transit.seat_cell()
+		if seat >= 0:
+			cell = seat
+		else:
+			ng.transit.riding = -1
+			cell = _free_cell(ng, cell)
 		ng.pc = cell
 		ng.in_vehicle = -1
 	ng.last_pc = ng.pc

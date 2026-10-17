@@ -501,9 +501,10 @@ func refresh() -> void:
 	var tw: Dictionary = g.tower_at(g.pc) if g.z_of(g.pc) > 0 else {}
 	var where: String = g.zname(g.pc) + (" of %d" % tw["h"] if not tw.is_empty() else "")
 	var line2: String = "%s   |   %s" % [where, g.eco.status_text()]
-	if g.z_of(g.pc) == -1 and g.transit.active():
+	if g.transit.active():
 		var na: Dictionary = g.transit.next_arrival()
-		line2 += "   |   Train: %s %s in %d" % ["boarding at" if na["dwelling"] else "next stop", na["name"], na["turns"]]
+		if g.transit.riding >= 0 or int(na.get("dist", 99)) < 30:
+			line2 += "   |   Train: %s %s in %d" % ["boarding at" if na["dwelling"] else "next stop", na["name"], na["turns"]]
 	if g.transit.riding >= 0:
 		line2 += "   [ON THE TRAIN]"
 	var tgt: int = g.current_target()

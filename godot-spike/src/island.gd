@@ -23,7 +23,7 @@ const PORT := Vector2i(215, 704)
 const TOWN := Vector2i(1152, 704)
 const HWY_X0 := 150
 const HWY_X1 := 1330
-const RAIL_X1 := 506                   # the railway ends at the city's freight yard
+const RAIL_X1 := 510                   # the railway ends at the city's freight yard
 const CITY_ZONE := Vector2i(1, 1)
 const MARGIN_ZONE := 72                # the city leaves this much empty ground at its edge so the next zone never shows a half-built city
 const OWN_INSET := 32
@@ -122,8 +122,16 @@ func _corridor(x: int, y: int) -> int:
 	var dy := y - hy
 	if dy >= -6 and dy <= 5:
 		return CG.ROAD
-	if x <= RAIL_X1 and dy >= 8 and dy <= 11:
-		return CG.BALLAST if (dy == 8 or dy == 11) else CG.TRACK
+	if x <= RAIL_X1:
+		# the track follows the winding pass: where the road steps more than a row between columns the rails fill the gap
+		var ya := pass_yc(x - 1) - hy
+		var yb := pass_yc(x + 1) - hy
+		var lo := mini(0, mini(ya, yb)) + 9
+		var hi := maxi(0, maxi(ya, yb)) + 10
+		if dy >= lo and dy <= hi:
+			return CG.TRACK
+		if dy == lo - 1 or dy == hi + 1:
+			return CG.BALLAST
 	if x >= PASS_X0 - 14 and x <= PASS_X1 + 40 and dy >= -9 and dy <= 14:
 		return CG.ROCKS
 	return -1
@@ -139,7 +147,7 @@ func mark(x: int, y: int) -> int:
 		if dy == -1 or dy == 0:
 			return CG.M_YELLOW_H
 		return 0
-	if x <= RAIL_X1 and (dy == 9 or dy == 10):
+	if x <= RAIL_X1 and _corridor(x, y) == CG.TRACK:
 		return CG.M_RAIL_H
 	return 0
 
@@ -336,6 +344,39 @@ func _decorate_city(c) -> void:
 		_rect(c, yx0 + 4 + k * 10, 276, yx0 + 9 + k * 10, 279, CG.CRATE)
 		_rect(c, yx0 + 4 + k * 10, 286, yx0 + 9 + k * 10, 289, CG.CRATE)
 
+## the railway enters the city through a tunnel mouth, and a twin-track tunnel under the margin joins the subway loop
+func rail_portal(c) -> void:
+	var o := zone_origin(CITY_ZONE.x, CITY_ZONE.y)
+	var ring: PackedInt32Array = c.subway["ring"]
+	if ring.is_empty():
+		return
+	var y_out: int = HWY_Y + 10 - o.y
+	var y_ret: int = y_out - 1
+	var xl := -1
+	for cell in ring:
+		if cell / ZS == y_out and (xl < 0 or cell % ZS < xl):
+			xl = cell % ZS
+	if xl < 0:
+		return
+	var px := 62                                   # TR.PORTAL_X
+	var l1: int = c.lvl_of_z(-1) * ZS * ZS
+	# surface: two more lengths of track, ballast either side, and the tunnel mouth
+	for x in range(RAIL_X1 - o.x + 1, px + 1):
+		_put_t(c, x, y_ret - 1, CG.BALLAST, 0)
+		_put_t(c, x, y_ret, CG.TRACK, CG.M_RAIL_H)
+		_put_t(c, x, y_out, CG.TRACK, CG.M_RAIL_H)
+		_put_t(c, x, y_out + 1, CG.BALLAST, 0)
+	for y in range(y_ret - 1, y_out + 2):
+		for x in [px + 1, px + 2]:
+			_put_t(c, x, y, CG.WALL, 0)
+	# underground: rock-cut tunnel from the portal to the ring
+	for x in range(px, xl):
+		for y in range(y_ret - 1, y_out + 2):
+			var t: int = CG.TUNNEL
+			if y == y_ret or y == y_out:
+				t = CG.TRACK
+			c.tiles[l1 + y * ZS + x] = t
+
 ## The harbor.  Three zones from north to south:
 ##   north (dy < -54)  derelict warehouses and loose crates: unaffiliated criminals
 ##   centre            the working port: a quay road with trucks, gantry cranes over it, container stacks, a freight siding, dock workers
@@ -386,10 +427,14 @@ func _port(c) -> void:
 		c.cranes.append({"x0": rx - 1, "x1": rx + 12, "y": gy2})
 	_rect(c, rx + 13, y_top, 316 - o.x, y_bot, CG.PLATFORM, [CG.PARK, CG.GROUND, CG.FIELD, CG.SAND, CG.ROCKS, CG.TREE])     # the paved yard
 	# a siding east of the road and the container yard: stacks with aisles, north and south of the rails
-	for x in range(rx + 14, 334 - o.x):
+	for x in range(rx + 14, PASS_X0 - 6 - o.x):
 		for k in 4:
 			var t2 := CG.BALLAST if (k == 0 or k == 3) else CG.TRACK
-			_put_t(c, x, PORT.y + 12 + k - o.y, t2, CG.M_RAIL_H if t2 == CG.TRACK else 0)
+			_put_t(c, x, PORT.y + 8 + k - o.y, t2, CG.M_RAIL_H if t2 == CG.TRACK else 0)
+	# the Harbor Terminal: a platform along the outbound track at the buffer end of the siding
+	var tx: int = rx + 16
+	for x in range(tx - 2, tx + 12):
+		_put_t(c, x, PORT.y + 11 - o.y, CG.PLATFORM, 0)
 	var cont: int = CG.TID["container"]
 	for band in [[-46, -10], [20, 50]]:
 		var by: int = PORT.y + int(band[0]) - o.y

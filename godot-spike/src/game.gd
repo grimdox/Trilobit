@@ -163,6 +163,8 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) ->
 		city = island.build_zone(zn.x, zn.y)
 		if zn == island.CITY_ZONE:
 			LV.build(city, island.seed_value)
+			if zone == island.CITY_ZONE:
+				island.rail_portal(city)
 		else:
 			LV.flat(city, seed_value)
 	else:

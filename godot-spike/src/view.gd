@@ -275,18 +275,17 @@ func _draw() -> void:
 			if vis and game.items_at.has(c):
 				var arr: Array = game.items_at[c]
 				_blit(item_sprite(arr[arr.size() - 1]), pos)
-	# the train
-	if game.transit.active() and game.z_of(game.pc) == -1:
-		var k := 0
-		for c in game.transit.car_cells():
+	# the trains
+	if game.transit.active():
+		for tc in game.transit.all_cars():
+			var c: int = tc[2]
+			if c / s2 != base / s2:
+				continue
 			var wx: int = c % size - ox
 			var wy: int = (c / size) % size - oy
-			if wx >= 0 and wy >= 0 and wx < cols and wy < rows and game.fov.visible[c] == 1:
-				var r := Rect2(wx * T + 2 * S, wy * T + 2 * S, T - 4 * S, T - 4 * S)
-				draw_rect(r, Color(0.85, 0.2, 0.35) if k == 0 else Color(0.75, 0.78, 0.85))
-				draw_rect(r.grow(-5 * S), Color(0.15, 0.2, 0.3))
-				draw_rect(Rect2(r.position.x + 4 * S, r.position.y + 4 * S, r.size.x - 8 * S, 3 * S), Color(1, 0.9, 0.5))
-			k += 1
+			if wx < 0 or wy < 0 or wx >= cols or wy >= rows or game.fov.visible[c] != 1:
+				continue
+			_draw_train_car(Vector2(wx * T, wy * T), game.transit.car_dir(tc[0], tc[1]), int(tc[1]) == 0, int(tc[0]))
 	# loose things and animals
 	for t in game.things:
 		if t["k"] == "":
@@ -581,6 +580,31 @@ func _draw_body(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> void:
 
 
 ## the harbor's gantry cranes: a beam across the quay road with a trolley that runs back and forth carrying a container
+## one carriage of a train: a long body with a roof stripe, windows, a lit nose on the front car
+const TRAIN_LIVERY := [Color(0.85, 0.2, 0.35), Color(0.2, 0.62, 0.85), Color(0.9, 0.7, 0.2)]
+func _draw_train_car(p: Vector2, dir: Vector2i, front: bool, train: int) -> void:
+	var T: float = float(TILE)
+	var horiz: bool = absi(dir.x) >= absi(dir.y)
+	var body := Rect2(p + Vector2(0, 5 * S), Vector2(T, T - 10 * S)) if horiz else Rect2(p + Vector2(5 * S, 0), Vector2(T - 10 * S, T))
+	var col: Color = TRAIN_LIVERY[train % TRAIN_LIVERY.size()]
+	draw_rect(body.grow(1.5 * S), Color(0.05, 0.06, 0.09))
+	draw_rect(body, Color(0.78, 0.8, 0.86))
+	var stripe := Rect2(body.position + (Vector2(0, body.size.y * 0.62) if horiz else Vector2(body.size.x * 0.62, 0)), Vector2(body.size.x, 5 * S) if horiz else Vector2(5 * S, body.size.y))
+	draw_rect(stripe, col)
+	var n := 3
+	for k in n:
+		var wr: Rect2
+		if horiz:
+			wr = Rect2(body.position + Vector2((k + 0.3) * T / n, 5 * S), Vector2(T / n * 0.5, body.size.y * 0.3))
+		else:
+			wr = Rect2(body.position + Vector2(5 * S, (k + 0.3) * T / n), Vector2(body.size.x * 0.3, T / n * 0.5))
+		draw_rect(wr, Color(0.15, 0.25, 0.4))
+		draw_rect(Rect2(wr.position, wr.size * Vector2(1, 0.35) if horiz else wr.size * Vector2(0.35, 1)), Color(0.45, 0.7, 0.9))
+	if front:
+		var nose: Vector2 = p + Vector2(T, T) * 0.5 + Vector2(dir) * (T * 0.42)
+		draw_circle(nose, 4.0 * S, Color(1, 0.95, 0.6))
+		draw_circle(nose, 8.0 * S, Color(1, 0.95, 0.6, 0.25))
+
 func _draw_cranes(ox: int, oy: int, base: int) -> void:
 	if base != 0 or game.city.cranes.is_empty():
 		return
