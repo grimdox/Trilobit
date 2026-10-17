@@ -65,7 +65,7 @@ func run() -> Array:
 	for x in range(ISL.PASS_X0, ISL.PASS_X1):
 		wind = maxi(wind, absi(a.pass_yc(x) - ISL.HWY_Y))
 	check.call("and it winds (up to %d rows off line)" % wind, wind >= 12)
-	check.call("the highway meets the city's main street exactly", a.pass_yc(ISL.CITY_ZONE.x * ISL.STRIDE) == ISL.HWY_Y and a.terrain(460, ISL.HWY_Y - 6) == CG.ROAD and a.terrain(460, ISL.HWY_Y + 5) == CG.ROAD and a.terrain(460, ISL.HWY_Y + 6) != CG.ROAD)
+	check.call("the highway is six lanes wide (36 rows) out on the plains and narrows to twelve in the pass", a.pass_yc(500) == ISL.HWY_Y and a.terrain(500, ISL.HWY_Y - 18) == CG.ROAD and a.terrain(500, ISL.HWY_Y + 17) == CG.ROAD and a.terrain(500, ISL.HWY_Y - 19) != CG.ROAD and a.terrain(500, ISL.HWY_Y + 18) != CG.ROAD and a.terrain(390, a.pass_yc(390) - 7) != CG.ROAD and a.terrain(390, a.pass_yc(390) + 6) != CG.ROAD)
 	# walk the pass: flood fill over the analytic map from the quay to the city edge
 	var seen := {}
 	var start := Vector2i(a._hx0 + 2, ISL.HWY_Y)
@@ -89,6 +89,21 @@ func run() -> Array:
 	check.call("you can walk from the port to the city through the pass", reached)
 	# zones
 	check.call("zone ownership: the city owns its middle, the harbor the west", ISL.zone_owner(720, 720) == Vector2i(1, 1) and ISL.zone_owner(200, 700) == Vector2i(0, 1) and ISL.zone_owner(1150, 700) == Vector2i(2, 1) and ISL.zone_owner(2290, 1400) == Vector2i(4, 2))
+	check.call("the city's territory is its big square: 480-1119 by 384-1023, and its neighbours take over outside it", ISL.zone_owner(480, 700) == Vector2i(1, 1) and ISL.zone_owner(1119, 700) == Vector2i(1, 1) and ISL.zone_owner(479, 700) == Vector2i(0, 1) and ISL.zone_owner(1120, 700) == Vector2i(2, 1) and ISL.zone_owner(700, 383) == Vector2i(1, 0) and ISL.zone_owner(700, 1024) == Vector2i(1, 2))
+	var tiled := true
+	for k in 600:
+		var px: int = (k * 389) % ISL.W
+		var py: int = (k * 241) % ISL.H
+		var oz: Vector2i = ISL.zone_owner(px, py)
+		var orc: Rect2i = ISL.own_rect(oz.x, oz.y)
+		var zo: Vector2i = ISL.zone_origin(oz.x, oz.y)
+		var zs: int = ISL.zone_size(oz.x, oz.y)
+		# every point belongs to a zone whose own map holds it (with at least 30 tiles to spare unless it is at the island's edge)
+		if px < zo.x or py < zo.y or px >= zo.x + zs or py >= zo.y + zs:
+			tiled = false
+		if px >= zo.x + zs - 30 and zo.x + zs < ISL.W or px < zo.x + 30 and zo.x > 0:
+			tiled = false
+	check.call("every spot on the island belongs to a zone whose map holds it with room to spare", tiled)
 	# the world
 	var t0 := Time.get_ticks_msec()
 	var w = World.new()
@@ -96,17 +111,17 @@ func run() -> Array:
 	log.append("  (world start incl. the city zone: %d ms)" % (Time.get_ticks_msec() - t0))
 	var g = w.game
 	check.call("play starts in the city zone on a road", g.zone == ISL.CITY_ZONE and g.city.tiles[g.pc] == CG.ROAD)
-	check.call("the city leaves its edges empty (no building within 70 of the border)", _clear_edges(g))
+	check.call("the city leaves its edges empty (no building within 60 of the border)", _clear_edges(g))
 	var gp: Vector2i = g.global_pos()
-	check.call("global position is the city origin plus local (%s)" % str(gp), gp.x >= 448 and gp.x < 960 and gp.y >= 448 and gp.y < 960)
+	check.call("global position is the city origin plus local (%s)" % str(gp), gp.x >= 448 and gp.x < 448 + ISL.CZS and gp.y >= 352 and gp.y < 352 + ISL.CZS and g.size == ISL.CZS)
 	# freight yard and rail in the city's west margin
 	var rails := 0
 	for x in range(0, 60):
-		if g.city.tiles[(ISL.HWY_Y + 9 - 448) * g.size + x] == CG.TRACK:
+		if g.city.tiles[(a.rail_ret(ISL.RAIL_X1) - 352) * g.size + x] == CG.TRACK:
 			rails += 1
 	check.call("the railway runs into the city's freight yard (%d track tiles)" % rails, rails >= 30)
 	# walk west across the border
-	var yrow: int = ISL.HWY_Y - 448 + 2
+	var yrow: int = ISL.HWY_Y - 352 + 2
 	g.yen = 777
 	g.pc = yrow * g.size + 40
 	check.call("no change of zone mid-city", not w.poll())
@@ -115,7 +130,7 @@ func run() -> Array:
 	check.call("crossing the border hands over to the harbor zone", w.poll() and w.game.zone == Vector2i(0, 1))
 	log.append("  (zone switch incl. generating the harbor: %d ms)" % (Time.get_ticks_msec() - t0))
 	var hg = w.game
-	check.call("same spot on the island (%s -> %s)" % [str(gp), str(hg.global_pos())], hg.global_pos().x == 448 + 20 and hg.global_pos().y == 448 + yrow)
+	check.call("same spot on the island (%s -> %s)" % [str(gp), str(hg.global_pos())], hg.global_pos().x == 448 + 20 and hg.global_pos().y == 352 + yrow)
 	check.call("the player's goods came along (¥%d, %d items)" % [hg.yen, hg.worn.size()], hg.yen == 777 and hg.worn.size() == 2 and hg.wield != null)
 	check.call("the harbor has people, trucks, a mech and buildings", hg.sim.n == 220 and hg.vehicles.any(func(v): return v["kind"] == "truck") and hg.vehicles.any(func(v): return v["kind"] == "mech") and hg.city.buildings >= 4)
 	var ai_trucks: int = hg.vehicles.filter(func(v): return v["ai"] and v["kind"] == "truck").size()
@@ -156,8 +171,8 @@ func run() -> Array:
 	cg.vehicles.clear()
 	cg.veh_at.fill(-1)
 	cg.in_vehicle = -1
-	var e: int = cg.city.ys[cg.city.ys.find(250)] if cg.city.ys.has(250) else 250
-	var cy2: int = VS.lane_lo2(e)
+	var e: int = int(cg.city.plan["trunk"])
+	var cy2: int = VS.lane_k2(e, 1)
 	var anchor: int = cg.vs.anchor_for("car", 3, 2 * 40, cy2, 0)
 	var vi2: int = cg.vs.spawn("car", anchor, 3, Color.RED)
 	check.call("a car stands in the westbound lane of the main street", vi2 >= 0)
@@ -184,7 +199,7 @@ func run() -> Array:
 	# the railway through the mountain pass: a wild zone has no subway, and stepping onto the track used to crash (modulo by zero)
 	var wz = w.game
 	var wo: Vector2i = ISL.zone_origin(wz.zone.x, wz.zone.y)
-	var rail_row: int = (ISL.HWY_Y + 9 - wo.y) * wz.size
+	var rail_row: int = (a.rail_ret(300) - wo.y) * wz.size
 	var rx: int = 300 - wo.x
 	check.call("the harbor shares the rail line with the city (%d cells of it here)" % wz.transit.cell_of.count(-1), wz.transit.active() and wz.transit.line.size() > 0 and wz.transit.path.size() == cg.transit.path.size())
 	wz.pc = rail_row - 3 * wz.size + rx
@@ -202,9 +217,11 @@ func run() -> Array:
 	return [st[0], st[1], log]
 
 func _clear_edges(g) -> bool:
-	for k in 8:
-		var x: int = (k * 37) % 60
-		for y in range(0, g.size, 5):
+	var m: int = ISL.MARGIN_ZONE - 8
+	for y in range(0, g.size, 3):
+		for x in range(0, g.size, 3):
+			if x >= m and x < g.size - m and y >= m and y < g.size - m:
+				continue
 			var t: int = g.city.tiles[y * g.size + x]
 			if t == CG.WALL or t == CG.FLOOR or t == CG.DOOR:
 				return false

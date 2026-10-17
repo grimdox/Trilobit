@@ -55,7 +55,8 @@ func poll() -> bool:
 	if owner == g.zone:
 		return false
 	var o: Vector2i = ISL.zone_origin(g.zone.x, g.zone.y)
-	var centre := Vector2i(o.x + ISL.ZS / 2, o.y + ISL.ZS / 2)
+	var half: int = ISL.zone_size(g.zone.x, g.zone.y) / 2
+	var centre := Vector2i(o.x + half, o.y + half)
 	var back := Vector2i(p.x + signi(centre.x - p.x) * 3, p.y + signi(centre.y - p.y) * 3)
 	if ISL.zone_owner(back.x, back.y) == g.zone:
 		return false
@@ -136,9 +137,14 @@ func save_dict() -> Dictionary:
 	var zones := {}
 	for k in cache:
 		zones[k] = cache[k]
-	return {"island": seed_value, "zone": [game.zone.x, game.zone.y], "game": game.save_dict(), "zones": zones, "visited": visited.keys(), "switches": switches}
+	return {"layout": ISL.LAYOUT_VER, "island": seed_value, "zone": [game.zone.x, game.zone.y], "game": game.save_dict(), "zones": zones, "visited": visited.keys(), "switches": switches}
 
 func load_dict(d: Dictionary) -> void:
+	if int(d.get("layout", 1)) != ISL.LAYOUT_VER:
+		# the map was rebuilt since this save (a different city, a wider highway): its cell numbers mean nothing now, so start afresh on the same island
+		start(int(d["island"]), 1500)
+		game.say("That save was made before the city was rebuilt; you start again on the same island.")
+		return
 	seed_value = int(d["island"])
 	island = ISL.new(seed_value)
 	cache = d.get("zones", {})

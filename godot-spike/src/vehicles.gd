@@ -1012,6 +1012,18 @@ static func lane_lo2(e: int) -> int:
 static func lane_hi2(e: int) -> int:
 	return 2 * e + 18
 
+## lane k (0 = the lowest) of a road of width w, in doubled coordinates: lanes are six tiles, the low half runs one way and the high half the other
+static func lane_k2(e: int, k: int) -> int:
+	return 2 * e + 6 + 12 * k
+
+## the lane a car turns right from / left from on a road (left edge e, width w) it crosses: the kerb lane on its right, the median lane on its left
+static func turn_lanes(e: int, w: int, hi_first: bool) -> Vector2i:
+	var outer_hi: int = 2 * (e + w) - 6
+	var inner_hi: int = 2 * (e + w / 2) + 6
+	var outer_lo: int = 2 * e + 6
+	var inner_lo: int = 2 * (e + w / 2) - 6
+	return Vector2i(outer_hi, inner_lo) if hi_first else Vector2i(outer_lo, inner_hi)
+
 func _ai_car(vi: int) -> void:
 	var v: Dictionary = g.vehicles[vi]
 	var dir: int = int(v["dir"])
@@ -1028,8 +1040,9 @@ func _ai_car(vi: int) -> void:
 			for e in cross:
 				# traffic keeps to the right: the first cross lane met is the one a right turn joins
 				var hi_first: bool = dir == 0 or dir == 3
-				var right_c: int = lane_hi2(int(e)) if hi_first else lane_lo2(int(e))
-				var left_c: int = lane_lo2(int(e)) if hi_first else lane_hi2(int(e))
+				var tl := turn_lanes(int(e), g.city.line_w(int(e), dir % 2 == 0), hi_first)
+				var right_c: int = tl.x
+				var left_c: int = tl.y
 				if fwd2 == right_c and g.rng.randf() < 0.28:
 					turn = 1
 					break
@@ -1074,8 +1087,9 @@ func _ai_uturn(vi: int) -> void:
 	var lines: Array = g.city.xs if dir % 2 == 0 else g.city.ys
 	var mirrored := lat2
 	for e in lines:
-		if lat2 >= 2 * int(e) and lat2 <= 2 * int(e) + 2 * g.city.rw:
-			mirrored = 2 * (2 * int(e) + g.city.rw) - lat2
+		var lw: int = g.city.line_w(int(e), dir % 2 != 0)
+		if lat2 >= 2 * int(e) and lat2 <= 2 * int(e) + 2 * lw:
+			mirrored = 2 * (2 * int(e) + lw) - lat2
 			break
 	var nx2: int = mirrored if dir % 2 == 0 else ctr.x
 	var ny2: int = ctr.y if dir % 2 == 0 else mirrored

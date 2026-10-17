@@ -15,7 +15,8 @@ static func build(c, seed: int) -> void:
 	rng.seed = seed ^ 0x7a11
 	var size: int = c.size
 	var s2 := size * size
-	var centre := Vector2(size * 0.5, size * 0.5)
+	var centre: Vector2 = c.centre_pt if c.rad > 0.0 else Vector2(size * 0.5, size * 0.5)
+	var dscale: float = c.rad if c.rad > 0.0 else size * 0.5
 	c.homes_g = c.homes.duplicate()
 	c.works_g = c.works.duplicate()
 	c.shops_g = c.shops.duplicate()
@@ -27,7 +28,7 @@ static func build(c, seed: int) -> void:
 		var hgt: int = int(t["y1"]) - int(t["y0"]) + 1
 		if w < 9 or hgt < 9:
 			continue
-		var d: float = Vector2((int(t["x0"]) + int(t["x1"])) * 0.5, (int(t["y0"]) + int(t["y1"])) * 0.5).distance_to(centre) / (size * 0.5)
+		var d: float = Vector2((int(t["x0"]) + int(t["x1"])) * 0.5, (int(t["y0"]) + int(t["y1"])) * 0.5).distance_to(centre) / dscale
 		var hh: int = int(lerpf(float(c.max_floors), 5.0, clampf(d / 0.45, 0.0, 1.0))) + rng.randi_range(-4, 3)
 		if w * hgt >= 3600:               # a mega-tower (2-3 blocks wide) is always among the tallest
 			hh = c.max_floors - rng.randi_range(0, 4)
@@ -444,6 +445,12 @@ static func _underground(c, all: PackedByteArray, links: Dictionary, rng: Random
 	if yb - yt < 30:
 		yt = int(size * 0.27)
 		yb = int(size * 0.73)
+	if not c.plan.is_empty():
+		var rr: Rect2i = c.plan["ring"]                 # the island city: the loop runs round the downtown, east of the river
+		xl = rr.position.x
+		xr = rr.end.x
+		yt = rr.position.y
+		yb = rr.end.y
 	# the subway ring, clockwise from the top-left corner
 	var ring := PackedInt32Array()
 	for x in range(xl, xr):
@@ -521,9 +528,10 @@ static func _underground(c, all: PackedByteArray, links: Dictionary, rng: Random
 			for k in range(rw / 2 - 2, rw / 2 + 3):
 				_sewer_cell(all, l2, size, int(lx) + k, y, k == rw / 2, c)
 	for ly in c.ys:
+		var lw: int = c.line_w(int(ly), true)
 		for x in range(4, size - 4):
-			for k in range(rw / 2 - 2, rw / 2 + 3):
-				_sewer_cell(all, l2, size, x, int(ly) + k, k == rw / 2, c)
+			for k in range(lw / 2 - 2, lw / 2 + 3):
+				_sewer_cell(all, l2, size, x, int(ly) + k, k == lw / 2, c)
 	# ladders tunnel <-> sewer, manholes street -> sewer
 	var shared: Array = []
 	var down: Array = []
@@ -560,6 +568,10 @@ static func _sewer_cell(all: PackedByteArray, l2: int, size: int, x: int, y: int
 		return
 	if all[y * size + x] == CG.WATER:
 		return
+	if not c.plan.is_empty():
+		var wt: PackedByteArray = c.plan["water"]
+		if all[y * size + x] != CG.ROAD or wt[y * size + x] != 0:        # sewers lie under the streets only, never under the river
+			return
 	all[l2 + y * size + x] = CG.SLUDGE if channel else CG.SEWER
 
 ## platform tiles on both sides of the track around ring index sc

@@ -101,6 +101,8 @@ const M_WHITE_H := 3
 const M_YELLOW_H := 4
 const M_RAIL_H := 5     # rail orientation, painted over TRACK tiles
 const M_RAIL_V := 6
+const M_DASH_H := 7     # dashed white lane line between two lanes that run the same way (wide roads)
+const M_DASH_V := 8
 
 var size: int = 512
 var marks: PackedByteArray             # ground-level overlay: lane lines and rail orientation (see M_*), size*size
@@ -115,6 +117,11 @@ var xs: Array = []                     # x of each vertical road line (left edge
 var ys: Array = []
 var rail_row: int = -1                 # island city: the row of the railway tunnel's mouth (the subway keeps a station clear of it)
 var rw: int = 12                       # road width: two lanes of six
+var ys_w: Dictionary = {}              # horizontal road line (top row) -> its width when it is not rw (four lanes 24, six lanes 36)
+var plan: Dictionary = {}              # the island city's layout (see island.city_plan); empty = the old square grid
+var centre_pt := Vector2(-1.0, -1.0)   # the downtown's heart (the old city: the middle of the map) and the radius the district tests are scaled by
+var rad: float = -1.0
+var dash_ofs: int = 0                  # global column of local column 0: keeps the dashes of a wide road in step with the island's own
 const LANE := 6
 var towers: Array = []                 # {x0,y0,x1,y1,door} of every core building: candidates for a tall tower
 # the vertical world (filled in by levels.gd): all levels stacked in one array, ground first, so a cell index says which level it is on
@@ -158,16 +165,21 @@ func _make_wealth(seed_v: int) -> void:
 	nz.fractal_octaves = 2
 	var vals := PackedFloat32Array()
 	vals.resize(size * size)
-	var centre := Vector2(size * 0.5, size * 0.5)
+	var centre := centre_pt if rad > 0.0 else Vector2(size * 0.5, size * 0.5)
+	var rr: float = rad if rad > 0.0 else size * 0.5
+	var mask: PackedByteArray = plan.get("mask", PackedByteArray())
+	var sample := PackedFloat32Array()
 	for y in size:
 		for x in size:
-			var d: float = Vector2(x, y).distance_to(centre) / (size * 0.5)
-			vals[y * size + x] = nz.get_noise_2d(x, y) * 0.8 + (0.45 - d) * 0.5
-	# thresholds at the 33rd and 70th percentile so each tier covers a fair share of the map
-	var sorted := vals.duplicate()
-	sorted.sort()
-	var lo: float = sorted[int(sorted.size() * 0.33)]
-	var hi: float = sorted[int(sorted.size() * 0.70)]
+			var d: float = Vector2(x, y).distance_to(centre) / rr
+			var v: float = nz.get_noise_2d(x, y) * 0.8 + (0.45 - d) * 0.5
+			vals[y * size + x] = v
+			if mask.is_empty() or mask[y * size + x] == 1:
+				sample.append(v)
+	# thresholds at the 33rd and 70th percentile so each tier covers a fair share of the city
+	sample.sort()
+	var lo: float = sample[int(sample.size() * 0.33)]
+	var hi: float = sample[int(sample.size() * 0.70)]
 	for i in size * size:
 		wealth[i] = 0 if vals[i] < lo else (2 if vals[i] >= hi else 1)
 
@@ -202,60 +214,115 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 	towers = []
 	venues = []
 	venue_plan = VN.city_plan(rng)
+	var planned: bool = not plan.is_empty()
+	if planned:
+		centre_pt = plan["centre"]
+		rad = float(plan["rad"])
 	_make_wealth(seed)
 	under = PackedByteArray()
 	under.resize(size * size)
 	var m := mini(grid_margin, size / 6)
+	var mask: PackedByteArray = plan.get("mask", PackedByteArray())
+	var water: PackedByteArray = plan.get("water", PackedByteArray())
 	# the paved city area
-	for y in range(m, size - m):
-		for x in range(m, size - m):
-			tiles[y * size + x] = GROUND
-	# road lines: the main east-west street runs through the middle and out to both edges (the highway joins it)
-	xs = _lines(m, size - m)
-	ys = _lines_around(size / 2 - rw / 2, m, size - m)
-	for lx in xs:
+	if planned:
+		for i in size * size:
+			if mask[i] == 1:
+				tiles[i] = GROUND
+			if water[i] == 1:
+				tiles[i] = WATER
+			elif water[i] == 2:
+				tiles[i] = SAND
+	else:
 		for y in range(m, size - m):
+			for x in range(m, size - m):
+				tiles[y * size + x] = GROUND
+	# road lines: the main east-west street runs through the middle and out to both edges (the highway joins it)
+	var mid_line: int = size / 2 - rw / 2
+	if planned:
+		xs = plan["xs"]
+		ys = plan["ys"]
+		ys_w = plan["ys_w"]
+		mid_line = int(plan["trunk"])
+	else:
+		xs = _lines(m, size - m)
+		ys = _lines_around(mid_line, m, size - m)
+		ys_w = {}
+	var decks: Array = plan.get("decks", [])
+	for lx in xs:
+		for y in range(0 if not planned else 0, size):
+			if not planned and (y < m or y >= size - m):
+				continue
 			for k in rw:
-				_set_road(lx + k, y)
+				_road_cell(lx + k, y, false, false)
 	for ly in ys:
-		var x0 := 0 if ly == size / 2 - rw / 2 else m
-		var x1 := size if ly == size / 2 - rw / 2 else size - m
+		var w: int = int(ys_w.get(ly, rw))
+		var trunk: bool = ly == mid_line
+		var deck: bool = trunk or decks.has(ly)
+		var x0 := 0 if trunk else m
+		var x1 := size if trunk else size - m
 		for x in range(x0, x1):
-			for k in rw:
-				_set_road(x, ly + k)
+			for k in w:
+				_road_cell(x, ly + k, deck, trunk)
 	_paint_lanes()
 	# blocks between the lines.  Where the towers stand: the middle of the city has mega-towers that fill 2-3 blocks each way (4 to 9 blocks in
 	# all); the ring around it has buildings 1-2 blocks wide (1 to 4 blocks); beyond that the suburbs.
-	var centre := Vector2(size * 0.5, size * 0.5)
+	var centre := centre_pt if planned else Vector2(size * 0.5, size * 0.5)
+	var radius: float = rad if planned else size * 0.5
+	var dn := FastNoiseLite.new()
+	dn.seed = seed ^ 0x6d2b
+	dn.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	dn.frequency = 0.018
 	var grid: Array = []                      # grid[i][j] = block rect or null
 	for i in xs.size() - 1:
 		var col: Array = []
 		for j in ys.size() - 1:
 			var x0: int = xs[i] + rw
 			var x1: int = xs[i + 1] - 1
-			var y0: int = ys[j] + rw
+			var y0: int = int(ys[j]) + int(ys_w.get(ys[j], rw))
 			var y1: int = ys[j + 1] - 1
+			var full := true
+			if planned:
+				var fr = _fit_rect(x0, y0, x1, y1)
+				if fr == null:
+					col.append(null)
+					_leave_park(x0, y0, x1, y1, null)
+					continue
+				full = fr == Rect2i(x0, y0, x1 - x0, y1 - y0)
+				if not full:
+					_leave_park(x0, y0, x1, y1, fr)
+				x0 = fr.position.x
+				y0 = fr.position.y
+				x1 = fr.end.x
+				y1 = fr.end.y
 			if x1 - x0 < 12 or y1 - y0 < 12:
 				col.append(null)
 			else:
-				col.append({"r": Rect2i(x0, y0, x1 - x0, y1 - y0), "d": Vector2((x0 + x1) * 0.5, (y0 + y1) * 0.5).distance_to(centre) / (size * 0.5), "used": false})
+				var dd: float = Vector2((x0 + x1) * 0.5, (y0 + y1) * 0.5).distance_to(centre) / radius
+				if planned:
+					dd *= 1.0 + 0.16 * dn.get_noise_2d((x0 + x1) * 0.5, (y0 + y1) * 0.5)       # a ragged district edge
+				col.append({"r": Rect2i(x0, y0, x1 - x0, y1 - y0), "d": dd, "used": false, "full": full})
 		grid.append(col)
+	if planned:
+		_prune_streets(grid)
 	var order: Array = []
 	for i in grid.size():
 		for j in grid[i].size():
 			if grid[i][j] != null:
 				order.append([i, j])
 	order.sort_custom(func(a, b): return grid[a[0]][a[1]]["d"] < grid[b[0]][b[1]]["d"])
-	var mid_line: int = size / 2 - rw / 2
 	var mega_zone := 0.30
 	var tower_zone := 0.58
+	if planned:
+		mega_zone = 0.32
+		tower_zone = 0.62
 	for ij in order:
 		var b: Dictionary = grid[ij[0]][ij[1]]
 		if b["used"]:
 			continue
 		var d: float = b["d"]
 		var r := rng.randf()
-		if r < 0.06 + d * 0.12:
+		if r < (0.04 + d * 0.06 if planned else 0.06 + d * 0.12):
 			b["used"] = true
 			var rr: Rect2i = b["r"]
 			_park(rr.position.x, rr.position.y, rr.end.x, rr.end.y)
@@ -278,7 +345,129 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 		else:
 			b["used"] = true
 			var rr3: Rect2i = b["r"]
-			_suburb_block(rr3.position.x, rr3.position.y, rr3.end.x, rr3.end.y)
+			# the far edge of town (exurbs) is thinly built
+			_suburb_block(rr3.position.x, rr3.position.y, rr3.end.x, rr3.end.y, 0.55 if (planned and d > 0.86 and rr3.position.x > int(plan["river"].y)) else 0.9)
+
+## the island city has a ragged edge: a street is kept only where it serves a block (or is an avenue or the highway), so the grid stops where the
+## town does instead of running on into the fields
+func _prune_streets(grid: Array) -> void:
+	var nx: int = xs.size()
+	var ny: int = ys.size()
+	var blk := func(i: int, j: int) -> bool:
+		return i >= 0 and j >= 0 and i < grid.size() and j < grid[0].size() and grid[i][j] != null
+	var wide := func(j: int) -> bool:
+		return int(ys_w.get(ys[j], rw)) != rw
+	var vu: Array = []                      # vu[i][j]: the stretch of vertical street i between horizontal lines j and j+1
+	for i in nx:
+		var col: Array = []
+		for j in ny - 1:
+			col.append(blk.call(i - 1, j) or blk.call(i, j))
+		vu.append(col)
+	var hu: Array = []                      # hu[j][i]: the stretch of horizontal street j between vertical lines i and i+1
+	for j in ny:
+		var row: Array = []
+		for i in nx - 1:
+			row.append(wide.call(j) or blk.call(i, j - 1) or blk.call(i, j))
+		hu.append(row)
+	var erase := func(x0: int, y0: int, x1: int, y1: int) -> void:
+		for y in range(maxi(y0, 0), mini(y1, size - 1) + 1):
+			for x in range(maxi(x0, 0), mini(x1, size - 1) + 1):
+				var k := y * size + x
+				if tiles[k] == ROAD:
+					tiles[k] = PARK
+					marks[k] = 0
+	var last_y: int = int(ys[ny - 1]) + int(ys_w.get(ys[ny - 1], rw))
+	for i in nx:
+		var x0: int = xs[i]
+		erase.call(x0, 0, x0 + rw - 1, int(ys[0]) - 1)
+		erase.call(x0, last_y, x0 + rw - 1, size - 1)
+		for j in ny - 1:
+			if not vu[i][j]:
+				erase.call(x0, int(ys[j]) + int(ys_w.get(ys[j], rw)), x0 + rw - 1, int(ys[j + 1]) - 1)
+	for j in ny:
+		if wide.call(j):
+			continue
+		var y0: int = ys[j]
+		erase.call(0, y0, int(xs[0]) - 1, y0 + rw - 1)
+		erase.call(int(xs[nx - 1]) + rw, y0, size - 1, y0 + rw - 1)
+		for i in nx - 1:
+			if not hu[j][i]:
+				erase.call(int(xs[i]) + rw, y0, int(xs[i + 1]) - 1, y0 + rw - 1)
+	# a crossing none of whose four arms is left
+	for i in nx:
+		for j in ny:
+			if wide.call(j):
+				continue
+			var any: bool = (j > 0 and vu[i][j - 1]) or (j < ny - 1 and vu[i][j]) or (i > 0 and hu[j][i - 1]) or (i < nx - 1 and hu[j][i])
+			if not any:
+				erase.call(int(xs[i]), int(ys[j]), int(xs[i]) + rw - 1, int(ys[j]) + rw - 1)
+
+## is this cell somewhere a building may not stand?  (outside the city's outline, in or beside the river, on the rail strip)
+func _bad(x: int, y: int) -> bool:
+	if x < 0 or y < 0 or x >= size or y >= size:
+		return true
+	var i := y * size + x
+	var mask: PackedByteArray = plan["mask"]
+	if mask[i] == 0:
+		return true
+	var res: PackedByteArray = plan["reserve"]
+	return res[i] == 1
+
+## the largest rectangle inside [x0..x1] x [y0..y1] (inclusive) with no bad cell, as Rect2i(x, y, w, h) with the same inclusive-end convention
+## as the blocks; null when it would be smaller than 12 either way
+func _fit_rect(x0: int, y0: int, x1: int, y1: int):
+	var w := x1 - x0 + 1
+	var h := y1 - y0 + 1
+	if w < 16 or h < 16:
+		return null
+	var heights := PackedInt32Array()
+	heights.resize(w)
+	var best_area := 0
+	var best := Rect2i()
+	for row in h:
+		var y := y0 + row
+		for cx in w:
+			heights[cx] = 0 if _bad(x0 + cx, y) else heights[cx] + 1
+		# largest rectangle in the histogram ending on this row
+		var stack: Array = []
+		for cx in w + 1:
+			var cur: int = heights[cx] if cx < w else 0
+			var start := cx
+			while not stack.is_empty() and int(stack[stack.size() - 1][1]) >= cur:
+				var top: Array = stack.pop_back()
+				var area: int = int(top[1]) * (cx - int(top[0]))
+				if area > best_area and int(top[1]) >= 16 and cx - int(top[0]) >= 16:
+					best_area = area
+					best = Rect2i(x0 + int(top[0]), y - int(top[1]) + 1, cx - int(top[0]) - 1, int(top[1]) - 1)
+				start = int(top[0])
+			stack.append([start, cur])
+	if best_area == 0:
+		return null
+	return best
+
+## the part of a block that no building uses becomes grass (the river bank, the edge of town) rather than bare paving
+func _leave_park(x0: int, y0: int, x1: int, y1: int, keep) -> void:
+	for y in range(y0, y1 + 1):
+		for x in range(x0, x1 + 1):
+			if keep != null and x >= keep.position.x and x <= keep.end.x and y >= keep.position.y and y <= keep.end.y:
+				continue
+			var i := y * size + x
+			if tiles[i] == GROUND:
+				tiles[i] = PARK
+
+## a road tile, except on water (a deck carries the road over it) and outside the city's outline (the trunk road, the highway, runs on)
+func _road_cell(x: int, y: int, deck: bool, trunk: bool) -> void:
+	if x < 0 or y < 0 or x >= size or y >= size:
+		return
+	var i := y * size + x
+	if not plan.is_empty():
+		var mask: PackedByteArray = plan["mask"]
+		if mask[i] == 0 and not trunk:
+			return
+		var t: int = tiles[i]
+		if (t == WATER or t == SAND) and not deck:
+			return
+	tiles[i] = ROAD
 
 ## fill w x h blocks starting at grid[i][j] with ONE building (the streets between them are built over).  False when they do not all fit.
 func _try_merge(grid: Array, i: int, j: int, w: int, h: int, mid_line: int, dmax: float) -> bool:
@@ -289,9 +478,11 @@ func _try_merge(grid: Array, i: int, j: int, w: int, h: int, mid_line: int, dmax
 			var blk = grid[i + a][j + b]
 			if blk == null or blk["used"] or float(blk["d"]) > dmax + 0.12:
 				return false
-	# never over the main street, and the blocks must be next to each other (no skipped line)
+			if not plan.is_empty() and not bool(blk["full"]):
+				return false
+	# never over the main street (or any avenue or the highway), and the blocks must be next to each other (no skipped line)
 	for b in h - 1:
-		if ys[j + b + 1] == mid_line:
+		if ys[j + b + 1] == mid_line or int(ys_w.get(ys[j + b + 1], rw)) != rw:
 			return false
 	if ys[j] == mid_line and h > 1 and false:
 		return false
@@ -347,12 +538,17 @@ func _lines_around(mid: int, lo: int, hi: int) -> Array:
 			keep[keep.size() - 1] = v
 	return keep
 
+## the width of the road whose left (or top) edge is `e`: the grid's twelve, or a wider avenue or highway
+func line_w(e: int, horizontal: bool) -> int:
+	return int(ys_w.get(e, rw)) if horizontal else rw
+
 func _set_road(x: int, y: int) -> void:
 	if x < 0 or y < 0 or x >= size or y >= size:
 		return
 	tiles[y * size + x] = ROAD
 
-## white edge line, four black tiles, a double yellow centre: painted on the marks overlay, except where two roads cross
+## white edge line, four black tiles, a double yellow centre: painted on the marks overlay, except where two roads cross.  Wider roads (four
+## and six lanes) get a dashed white line between the lanes of one direction.
 func _paint_lanes() -> void:
 	var vcol := PackedByteArray()
 	vcol.resize(size)
@@ -363,7 +559,7 @@ func _paint_lanes() -> void:
 			if lx + k < size:
 				vcol[lx + k] = 1
 	for ly in ys:
-		for k in rw:
+		for k in int(ys_w.get(ly, rw)):
 			if ly + k < size:
 				hrow[ly + k] = 1
 	for lx in xs:
@@ -377,15 +573,34 @@ func _paint_lanes() -> void:
 				elif k == LANE - 1 or k == LANE:
 					marks[y * size + x] = M_YELLOW_V
 	for ly in ys:
+		var w: int = int(ys_w.get(ly, rw))
 		for x in size:
-			for k in rw:
+			for k in w:
 				var y: int = ly + k
-				if y >= size or tiles[y * size + x] != ROAD or vcol[x] == 1:
+				if y >= size or tiles[y * size + x] != ROAD:
 					continue
-				if k == 0 or k == rw - 1:
-					marks[y * size + x] = M_WHITE_H
-				elif k == LANE - 1 or k == LANE:
-					marks[y * size + x] = M_YELLOW_H
+				# a vertical street crossing here (it may have been clipped by the river or pruned: then there is no crossing to leave clear)
+				if vcol[x] == 1 and (ly == 0 or tiles[(ly - 1) * size + x] == ROAD or ly + w >= size or tiles[(ly + w) * size + x] == ROAD):
+					continue
+				var mk := 0
+				if w == rw:
+					if k == 0 or k == rw - 1:
+						mk = M_WHITE_H
+					elif k == LANE - 1 or k == LANE:
+						mk = M_YELLOW_H
+				else:
+					mk = _wide_mark(x + dash_ofs, k, w)
+				marks[y * size + x] = mk
+
+## the paint across a road of width w that runs east-west: white edges, a double yellow centre, dashes between the lanes of one direction
+static func _wide_mark(gx: int, k: int, w: int) -> int:
+	if k == 0 or k == w - 1:
+		return M_WHITE_H
+	if k == w / 2 - 1 or k == w / 2:
+		return M_YELLOW_H
+	if k % LANE == 0 and (gx / 3) % 2 == 0:
+		return M_DASH_H
+	return 0
 
 func _park(x0: int, y0: int, x1: int, y1: int) -> void:
 	for y in range(y0, y1 + 1):
@@ -400,7 +615,7 @@ func _core_block(x0: int, y0: int, x1: int, y1: int) -> void:
 	var by1 := y1 - 2
 	_building(bx0, by0, bx1, by1, "core")
 
-func _suburb_block(x0: int, y0: int, x1: int, y1: int) -> void:
+func _suburb_block(x0: int, y0: int, x1: int, y1: int, density: float = 0.9) -> void:
 	# rows of houses along the north and south edges of the block (a third through the middle of a deep one), yards between
 	var depth := 11
 	var rows := [[y0 + 2, y0 + 2 + depth - 1], [y1 - 2 - depth + 1, y1 - 2]]
@@ -418,7 +633,7 @@ func _suburb_block(x0: int, y0: int, x1: int, y1: int) -> void:
 				var kind: String = venue_plan.pop_front()
 				var d := Vector2((x + x + wdt) * 0.5, (row[0] + row[1]) * 0.5).distance_to(Vector2(size * 0.5, size * 0.5)) / (size * 0.5)
 				VN.stamp(self, kind, x, row[0], x + wdt, row[1], 0 if rid == 0 else 1, 0 if wealth_at(row[0] * size + x) == 0 else 1)
-			elif rng.randf() < 0.9:
+			elif rng.randf() < density:
 				_building(x, row[0], x + wdt, row[1], "house")
 			x += wdt + rng.randi_range(3, 6)
 

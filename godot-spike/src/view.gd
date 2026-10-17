@@ -158,6 +158,10 @@ func _paint_marks(c: int, pos: Vector2, T: int, mod: Color, t: int) -> void:
 		4:
 			var y2: float = pos.y + (T - w if marks[c + size] == 4 else 0.0)
 			draw_rect(Rect2(pos.x, y2, T, w), yellow)
+		7:   # a dashed lane line between lanes of the same direction (east-west road)
+			draw_rect(Rect2(pos.x + 2 * S, pos.y, T - 4 * S, w * 0.6), white)
+		8:
+			draw_rect(Rect2(pos.x, pos.y + 2 * S, w * 0.6, T - 4 * S), white)
 		5:
 			for k in 4:
 				draw_rect(Rect2(pos.x + k * T / 4.0 + 2 * S, pos.y + 2 * S, 4 * S, T - 4 * S), Color(0.32, 0.2, 0.12) * mod)

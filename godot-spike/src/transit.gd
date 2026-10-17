@@ -81,9 +81,14 @@ static func build_line(city, island, zone: Vector2i) -> Dictionary:
 	var stop_ring: Array = sw["stops"]
 	var iO := -1
 	var iR := -1
-	if island != null:
-		var y_out: int = island.HWY_Y + 13 - o.y
-		var y_ret: int = island.HWY_Y + 9 - o.y
+	var xw := 0
+	var xe := 0
+	if island != null and not city.plan.is_empty():
+		var rb: Dictionary = city.plan["rail"]
+		var y_out: int = rb["y_out"]
+		var y_ret: int = rb["y_ret"]
+		xw = rb["xw"]
+		xe = rb["xe"]
 		var xl := size
 		for cell in ring:
 			xl = mini(xl, cell % size)
@@ -117,15 +122,19 @@ static func build_line(city, island, zone: Vector2i) -> Dictionary:
 		var pi: int = order.find(int(stop_ring[k]))
 		if pi >= 0:
 			stops.append([(pi + TRAIN_LEN / 2) % out.size(), names[k % names.size()]])
-	# the tunnel west to the portal
-	for x in range(xl2 - 1, PORTAL_X - 1, -1):
+	# the tunnel west under the downtown to the bridge portal, the rail bridge over the river in the daylight, and the tunnel on to the island portal
+	for x in range(xl2 - 1, xe - 1, -1):
+		out.append(pack(o.x + x, o.y + y_o, -1))
+	for x in range(xe, xw - 1, -1):
+		out.append(pack(o.x + x, o.y + y_o, 0))
+	for x in range(xw, PORTAL_X - 1, -1):
 		out.append(pack(o.x + x, o.y + y_o, -1))
 	# the daylight run on the outbound (south) track: rows follow the winding pass
 	var xt: int = int(island.west_x(island.PORT.y)) + 6 + 16
 	var gx: int = o.x + PORTAL_X
 	var prev_y := -1
 	while gx >= xt:
-		var gy: int = island.pass_yc(gx) + 13
+		var gy: int = island.rail_out(gx)
 		if prev_y >= 0:
 			var stepv: int = signi(gy - prev_y)
 			var yy: int = prev_y + stepv
@@ -137,14 +146,14 @@ static func build_line(city, island, zone: Vector2i) -> Dictionary:
 		gx -= 1
 	stops.append([out.size() - 1, "Harbor Terminal"])
 	# round the buffers (up the connecting tracks) and back on the return track
-	var ys: int = island.pass_yc(xt) + 13
-	var yn: int = island.pass_yc(xt) + 9
+	var ys: int = island.rail_out(xt)
+	var yn: int = island.rail_ret(xt)
 	for yy in range(ys - 1, yn - 1, -1):
 		out.append(pack(xt, yy, 0))
 	var gx2: int = xt + 1
 	var prev2: int = yn
 	while gx2 <= o.x + PORTAL_X:
-		var gy2: int = island.pass_yc(gx2) + 9
+		var gy2: int = island.rail_ret(gx2)
 		var sv: int = signi(gy2 - prev2)
 		var y3: int = prev2 + sv
 		while sv != 0 and y3 != gy2:
@@ -153,7 +162,11 @@ static func build_line(city, island, zone: Vector2i) -> Dictionary:
 		out.append(pack(gx2, gy2, 0))
 		prev2 = gy2
 		gx2 += 1
-	for x in range(PORTAL_X, xl2 + 1):
+	for x in range(PORTAL_X, xw + 1):
+		out.append(pack(o.x + x, o.y + y_r, -1))
+	for x in range(xw, xe + 1):
+		out.append(pack(o.x + x, o.y + y_r, 0))
+	for x in range(xe, xl2 + 1):
 		out.append(pack(o.x + x, o.y + y_r, -1))
 	stops.sort_custom(func(a, b): return int(a[0]) < int(b[0]))
 	var order_names := ["Old Market", "Ninth Street", "Kuroda Plaza", "Harbor Gate"]

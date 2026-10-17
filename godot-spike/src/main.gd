@@ -184,6 +184,7 @@ func read_slot(n: int) -> Dictionary:
 		var gd: Dictionary = (w["game"] as Dictionary).duplicate()
 		gd["island"] = w["island"]
 		gd["zones"] = w["zones"]
+		gd["layout"] = w.get("layout", 1)
 		gd["visited"] = w.get("visited", [])
 		gd["switches"] = w.get("switches", 0)
 		return gd

@@ -330,16 +330,20 @@ func _spawn_vehicles() -> void:
 		var e: int = lines[rng.randi() % lines.size()]
 		var hi_lane: bool = rng.randf() < 0.5
 		var along: int = rng.randi_range(city.grid_margin + 10, size - city.grid_margin - 10)
+		var nl: int = city.line_w(e, not vertical) / city.LANE        # lanes across this road (2 for a street, 4 for an avenue, 6 for the highway)
+		var lane_k: int = (nl / 2 if hi_lane else 0)
+		if nl > 2:
+			lane_k += rng.randi() % (nl / 2)                 # any lane of the carriageway
 		var dir: int
 		var cx2: int
 		var cy2: int
 		if vertical:
 			dir = 0 if hi_lane else 2                      # northbound in the east lane, southbound in the west lane
-			cx2 = VS.lane_hi2(e) if hi_lane else VS.lane_lo2(e)
+			cx2 = VS.lane_k2(e, lane_k)
 			cy2 = along * 2
 		else:
 			dir = 1 if hi_lane else 3                      # eastbound in the south lane, westbound in the north lane
-			cy2 = VS.lane_hi2(e) if hi_lane else VS.lane_lo2(e)
+			cy2 = VS.lane_k2(e, lane_k)
 			cx2 = along * 2
 		var kind := "car" if rng.randf() < 0.88 else "truck"
 		var a: int = vs.anchor_for(kind, dir, cx2, cy2, 0)
@@ -436,7 +440,7 @@ func _spawn_zone_vehicles() -> void:
 		_place("heli", cx + 40, cy - 100, 0, 100, [CG.GROUND, CG.PARK], 0, Color("#7fd6e8"))
 	elif zone == Vector2i(3, 1):
 		var x0: int = 1480 - o.x
-		var y0: int = island.HWY_Y - 8 - o.y
+		var y0: int = island.AIR_Y - o.y
 		_place("plane", x0 + 20, y0 + 8, 0, 6, [CG.GROUND, CG.ROAD], 1, Color("#e8e8ee"))
 		_place("car", x0 + 24, y0 + 23, 0, 12, [CG.GROUND], 0, cols[rng.randi() % cols.size()])
 var island = null                      # the Island (shared by every zone) or null for a stand-alone city

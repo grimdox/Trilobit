@@ -302,7 +302,7 @@ func _map(W: float, H: float) -> void:
 	else:
 		draw_texture_rect(map_tex, Rect2(ox, oy, float(isl.W) * sc * iw / float(isl.W), ih * sc), false)
 	# the drawn map is not to scale: island coordinates are matched to it by landmarks (port, city, town, coasts)
-	var gx_a := [0.0, 215.0, 704.0, 1152.0, 2304.0]
+	var gx_a := [0.0, 215.0, 800.0, 1240.0, 2304.0]
 	var ix_a := [0.0, 195.0, 640.0, 967.0, 1680.0]
 	var gy_a := [0.0, 704.0, 1408.0]
 	var iy_a := [0.0, 548.0, 1050.0]
@@ -312,8 +312,9 @@ func _map(W: float, H: float) -> void:
 	for zx in isl.NZX:
 		for zy in isl.NZY:
 			var o: Vector2i = isl.zone_origin(zx, zy)
-			var a0: Vector2 = P.call(float(o.x + isl.OWN_INSET), float(o.y + isl.OWN_INSET))
-			var a1: Vector2 = P.call(float(o.x + isl.OWN_INSET + isl.STRIDE), float(o.y + isl.OWN_INSET + isl.STRIDE))
+			var orc: Rect2i = isl.own_rect(zx, zy)
+			var a0: Vector2 = P.call(float(orc.position.x), float(orc.position.y))
+			var a1: Vector2 = P.call(float(orc.end.x), float(orc.end.y))
 			if zx == 0:
 				a0.x = ox
 			if zy == 0:
@@ -323,6 +324,17 @@ func _map(W: float, H: float) -> void:
 			if not vis:
 				draw_rect(own, Color(0.02, 0.03, 0.08, 0.35))
 			draw_rect(own, Color(1, 1, 1, 0.08), false, 1.0)
+	# the river and the highway, drawn over the chart (the picture predates them)
+	var rpts := PackedVector2Array()
+	for gy in range(isl.RIVER_Y0, isl.H, 24):
+		rpts.append(P.call(float(isl.river_span(gy).x + isl.river_span(gy).y) * 0.5, float(gy)))
+	if rpts.size() > 1:
+		draw_polyline(rpts, Color(0.25, 0.6, 0.95, 0.9), maxf(2.0, 3.0 * sc))
+	var hpts := PackedVector2Array()
+	for gx in range(isl._hx0, isl.HWY_X1 + 1, 24):
+		hpts.append(P.call(float(gx), float(isl.pass_yc(gx))))
+	if hpts.size() > 1:
+		draw_polyline(hpts, Color(1.0, 0.82, 0.3, 0.85), maxf(1.5, 2.0 * sc))
 	# you are here
 	if game != null and game.island != null:
 		var gp: Vector2i = game.global_pos()
