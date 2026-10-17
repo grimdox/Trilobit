@@ -125,7 +125,7 @@ def main(exe, ico, product, desc, ver, company):
     sh = pe + 24 + opt
     for i in range(nsec):
         name, vs, va, rsz, rptr = struct.unpack_from('<8sIIII', d, sh + i * 40)
-        if va <= rva < va + max(vs, rsz):
+        if va <= rva < va + vs:          # virtual size only: an embedded .pck section has a big raw size that overlaps later sections in address space
             break
     rs = bytes(d[rptr: rptr + rsz])
     tree = load_data(rs, parse_dir(rs, 0), va)
