@@ -18,6 +18,9 @@ TRILOBIT - how to run
    (The build is not code-signed yet, so Windows does not know the publisher.  It is only that warning.)
    To avoid it: right-click the downloaded .zip, choose Properties, tick "Unblock", OK, and only then unzip.
 T
-rm -f build/Trilobit-windows.zip
-(cd build && zip -q Trilobit-windows.zip Trilobit.exe README-FIRST.txt)
-ls -la build/Trilobit-windows.zip
+# the zip is named with the date (yymmdd) and the hour and minute: Trilobit-windows-261017_0749.zip (America/New_York, as Eric reads the clock)
+STAMP=$(TZ=America/New_York date +%y%m%d_%H%M)
+ZIP="Trilobit-windows-${STAMP}.zip"
+rm -f build/Trilobit-windows*.zip
+(cd build && zip -q "$ZIP" Trilobit.exe README-FIRST.txt)
+ls -la "build/$ZIP"
