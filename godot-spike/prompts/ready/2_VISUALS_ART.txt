@@ -1,0 +1,136 @@
+TRILOBIT PROMPT 2 OF 3: VISUALS / ART
+(Edit the FILL-IN fields, delete the lines that start with "#", paste the whole
+text to Claude. Keep the CORE RULES block pasted in full.)
+=====================================================================
+
+TRILOBIT CORE RULES  (the three prompts below each paste this block at the top;
+edit it HERE first, then copy the changed text into all three)
+=====================================================================
+PROJECT: Trilobit, a gritty cyberpunk roguelike. Custom Godot 4.3 / GDScript
+game in /home/claude/trilobit/godot-spike, tools in /home/claude/trilobit/trilobit-tools,
+GitHub grimdox/Trilobit, branch main. Design docs live in the "Trilobit Creation"
+project (Design Document v0.16, Updates 0.17/0.18/0.19, Faction Quest Trees,
+Gun List, Godot Spike Plan, Playtest Checklist). READ the ones named in the
+task BEFORE working. If a doc and this block disagree, the NEWER update wins;
+report the conflict, do not silently pick.
+
+PILLARS (never break these)
+ 1. Many ways to fight: stealth OR open combat must both stay viable.
+ 2. Death is permanent; ghosts can move between shells.
+ 3. Staying human is a choice. Fully human characters get no cyberware and
+    cannot be hacked.
+ 4. Open world with a way out. Two cities in one: gleaming high-rises vs
+    street-level scum.
+ 5. Tone: gritty, stylized, grit on every tile. Mood references only (Ghost in
+    the Shell, Anarchy Online): NO names, art, characters, logos, brands or
+    real-world text copied from anything. Originality is required.
+
+FIXED FACTS (do not rename or renumber)
+ - Currency: yen. One turn = one minute.
+ - Factions: Bratva (id trl_bratva), NAP (trl_nap), Nasim (trl_nasim); also
+   CIV and GANG in the sim. Ranks -10..+10. IDs never change.
+   Bratva = Russian-style syndicate (low districts, debts, trucks, family).
+   NAP = Japanese/American-style police-corporate force. Nasim = hacker/zealot
+   sect (hostile to implanted PCs below rank +7).
+ - Guns: ONLY real-style guns made in Russia, China, Japan, America, plus the
+   25 original guns in the Gun List. Melee: Japanese or Russian blades/arms.
+   No "makeshift", "improvised" or "broken" items.
+ - Nanohacks cost Control Value (CV). Cyberbrain Mk I-V give CV limits
+   4/8/14/22/32; hack costs 1-6.
+ - Androids = frame + role + modules + firmware.
+ - Scale: lane 6 tiles, road 12, cars 4x6, trucks 6x12, helicopter 6x9,
+   plane 12x10, mech 5x5, train 4 wide x 6-long carriages x4. Tiles 64 px;
+   canvas 1920x1080; UI authored 1280x720 and scaled 1.5x (UI_S).
+ - Tilesets: Bouma (default, classic cyberpunk) and Mokuhanga (black/white/neon
+   print look, at most 3 inks). Readability first.
+
+QUALITY BAR
+ - Data first, code second. New content goes in data tables/generators, not
+   hard-coded in scattered places.
+ - Every new thing has: a stable id, a test, a save/load story, and a line in
+   the README or work log.
+ - No placeholder text ("TODO", "lorem", "test item") in anything shipped.
+ - Names are original, short, and fit the faction/district. No duplicates.
+ - Don't fake numbers: balance values must be justified against existing
+   values (state the comparison in the report).
+
+PROCESS (every task)
+ 1. Restate the task in 2-3 lines and list the docs/files you read.
+ 2. Make a task list. Work independently; do NOT ask questions unless the
+    choice is irreversible AND could reasonably go either way, or the field
+    says "NEEDS ERIC".
+ 3. DEFAULTS RULE: for every open point, pick the sensible default, apply it,
+    and list it under "Defaults I chose" in the report. Eric overrides later.
+ 4. Scope rule: do exactly what is asked and what its Definition of Done
+    needs. Do NOT refactor unrelated code, rename ids, or add extra features.
+    Note good ideas under "Suggestions", don't build them.
+ 5. Validate: `bash run_all.sh` must pass and the soak must print
+    "SOAK 6000/6000". Add/extend tests for what you built.
+ 6. Commit + `git push -q origin main`. Commit messages end with:
+      Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+      Claude-Session: <current session URL>
+ 7. Add ONE line to the work log. Rebuild Windows zip
+    (tools/build_windows.sh) only if the task says "BUILD: yes".
+ 8. Finish with the REPORT FORMAT below. Never claim done without having run
+    the checks.
+
+REPORT FORMAT (keep under ~15 lines)
+ - What was made (files/ids).   - Checks run + results.
+ - Defaults I chose.            - Conflicts found in the docs.
+ - Suggestions (not built).     - Needs Eric (only if truly blocked).
+
+
+---------------------------------------------------------------------
+TASK TYPE: Visuals / art (tiles, sprites, vehicles, characters, HUD, effects,
+lighting, UI layout)
+
+FILL-IN FIELDS
+ TITLE:            # e.g. "Painted train sprite"
+ GOAL:             # what should be visible/recognizable, in plain words
+ SUBJECT DETAIL:   # shape, size in tiles (use the SCALE list), colors, wear
+ WHERE IT APPEARS: # tileset(s): Bouma / Mokuhanga / both; zone/district
+ FACTION / DISTRICT FEEL: # e.g. Bratva low district: rust, tarps, red paint
+ MOOD (original words only): # e.g. "wet neon, sodium-orange alleys"
+ DOCS TO READ:     # Design Document tileset section, Update 0.19 (scale)
+ BUILD:            # yes / no
+ NEEDS ERIC:       # e.g. "approve the palette" or "none"
+
+ART GUARDRAILS (in addition to CORE RULES)
+ - 100% original art, generated in code (trilobit-tools/gen_tiles64.py,
+   t64_* modules, art64.Art) into gfx/Trilobit64, then
+   `godot --headless --path . --import`. No traced, copied or
+   "in the style of <named artwork>" output. No known characters, logos,
+   brands, signage with real names, or real-world text.
+ - Readability first: at 64 px the thing must be identifiable at a glance,
+   walkable vs blocking must be clear, and it must not be confused with a
+   neighbouring tile type.
+ - Grit on every tile: wear, grime, patches, stains. Nothing pristine except
+   upper-district glass, and even that gets a smudge/reflection.
+ - Bouma = rich classic cyberpunk palette. Mokuhanga = black/white/neon
+   print, MAX 3 inks, bold outlines, flat fills. Provide both unless told
+   "Bouma only".
+ - Sizes follow the SCALE list exactly (tile multiples). Multi-tile sprites
+   align to the 64 px grid and rotate/layer like the existing vehicles
+   (3 painted layers).
+ - Colour-blind safe: do not rely on red vs green alone for danger/loot.
+ - Faction colours stay consistent with what is already in the game
+   (check existing tiles/sprites before choosing).
+ - UI: authored at 1280x720 and multiplied by UI_S (1.5). Text must stay
+   legible; no text baked into sprites.
+ - Performance: no per-frame generation; art is baked to files.
+
+DEFINITION OF DONE
+ [ ] Generated through the existing pipeline (script committed, rerunnable,
+     deterministic)
+ [ ] Screenshot(s) at 1920x1080 via xvfb (shotN.gd) showing it in context,
+     sent to Eric with SendUserFile
+ [ ] Checked at game scale AND zoomed; compared against neighbours
+ [ ] Both tilesets done (or "Bouma only" stated)
+ [ ] All suites green; committed; pushed; work-log line
+ [ ] Report in the REPORT FORMAT, with "Looks wrong / known weak spots"
+     added honestly
+
+UNDERWORK TRAPS TO AVOID: flat recolours, one-tile placeholders for
+multi-tile things, art that was never looked at in-game.
+OVERWORK TRAPS TO AVOID: redoing other tiles, new engine rendering features,
+animation systems not requested.

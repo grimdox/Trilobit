@@ -1,0 +1,143 @@
+TRILOBIT PROMPT 3 OF 3: QUESTS / STORY / CONTENT
+(Edit the FILL-IN fields, delete the lines that start with "#", paste the whole
+text to Claude. Keep the CORE RULES block pasted in full.)
+=====================================================================
+
+TRILOBIT CORE RULES  (the three prompts below each paste this block at the top;
+edit it HERE first, then copy the changed text into all three)
+=====================================================================
+PROJECT: Trilobit, a gritty cyberpunk roguelike. Custom Godot 4.3 / GDScript
+game in /home/claude/trilobit/godot-spike, tools in /home/claude/trilobit/trilobit-tools,
+GitHub grimdox/Trilobit, branch main. Design docs live in the "Trilobit Creation"
+project (Design Document v0.16, Updates 0.17/0.18/0.19, Faction Quest Trees,
+Gun List, Godot Spike Plan, Playtest Checklist). READ the ones named in the
+task BEFORE working. If a doc and this block disagree, the NEWER update wins;
+report the conflict, do not silently pick.
+
+PILLARS (never break these)
+ 1. Many ways to fight: stealth OR open combat must both stay viable.
+ 2. Death is permanent; ghosts can move between shells.
+ 3. Staying human is a choice. Fully human characters get no cyberware and
+    cannot be hacked.
+ 4. Open world with a way out. Two cities in one: gleaming high-rises vs
+    street-level scum.
+ 5. Tone: gritty, stylized, grit on every tile. Mood references only (Ghost in
+    the Shell, Anarchy Online): NO names, art, characters, logos, brands or
+    real-world text copied from anything. Originality is required.
+
+FIXED FACTS (do not rename or renumber)
+ - Currency: yen. One turn = one minute.
+ - Factions: Bratva (id trl_bratva), NAP (trl_nap), Nasim (trl_nasim); also
+   CIV and GANG in the sim. Ranks -10..+10. IDs never change.
+   Bratva = Russian-style syndicate (low districts, debts, trucks, family).
+   NAP = Japanese/American-style police-corporate force. Nasim = hacker/zealot
+   sect (hostile to implanted PCs below rank +7).
+ - Guns: ONLY real-style guns made in Russia, China, Japan, America, plus the
+   25 original guns in the Gun List. Melee: Japanese or Russian blades/arms.
+   No "makeshift", "improvised" or "broken" items.
+ - Nanohacks cost Control Value (CV). Cyberbrain Mk I-V give CV limits
+   4/8/14/22/32; hack costs 1-6.
+ - Androids = frame + role + modules + firmware.
+ - Scale: lane 6 tiles, road 12, cars 4x6, trucks 6x12, helicopter 6x9,
+   plane 12x10, mech 5x5, train 4 wide x 6-long carriages x4. Tiles 64 px;
+   canvas 1920x1080; UI authored 1280x720 and scaled 1.5x (UI_S).
+ - Tilesets: Bouma (default, classic cyberpunk) and Mokuhanga (black/white/neon
+   print look, at most 3 inks). Readability first.
+
+QUALITY BAR
+ - Data first, code second. New content goes in data tables/generators, not
+   hard-coded in scattered places.
+ - Every new thing has: a stable id, a test, a save/load story, and a line in
+   the README or work log.
+ - No placeholder text ("TODO", "lorem", "test item") in anything shipped.
+ - Names are original, short, and fit the faction/district. No duplicates.
+ - Don't fake numbers: balance values must be justified against existing
+   values (state the comparison in the report).
+
+PROCESS (every task)
+ 1. Restate the task in 2-3 lines and list the docs/files you read.
+ 2. Make a task list. Work independently; do NOT ask questions unless the
+    choice is irreversible AND could reasonably go either way, or the field
+    says "NEEDS ERIC".
+ 3. DEFAULTS RULE: for every open point, pick the sensible default, apply it,
+    and list it under "Defaults I chose" in the report. Eric overrides later.
+ 4. Scope rule: do exactly what is asked and what its Definition of Done
+    needs. Do NOT refactor unrelated code, rename ids, or add extra features.
+    Note good ideas under "Suggestions", don't build them.
+ 5. Validate: `bash run_all.sh` must pass and the soak must print
+    "SOAK 6000/6000". Add/extend tests for what you built.
+ 6. Commit + `git push -q origin main`. Commit messages end with:
+      Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+      Claude-Session: <current session URL>
+ 7. Add ONE line to the work log. Rebuild Windows zip
+    (tools/build_windows.sh) only if the task says "BUILD: yes".
+ 8. Finish with the REPORT FORMAT below. Never claim done without having run
+    the checks.
+
+REPORT FORMAT (keep under ~15 lines)
+ - What was made (files/ids).   - Checks run + results.
+ - Defaults I chose.            - Conflicts found in the docs.
+ - Suggestions (not built).     - Needs Eric (only if truly blocked).
+
+
+---------------------------------------------------------------------
+TASK TYPE: Quests / story / content (factions, contacts, dialogue, missions,
+jobs, item and gun lists, lore, names, shop stock, flavour text)
+
+FILL-IN FIELDS
+ TITLE:            # e.g. "Bratva side tree S4: The Night Ferry"
+ FACTION(S):       # Bratva / NAP / Nasim / civilian / none
+ GIVER (NPC):      # existing named NPC, or "invent one" + role
+ LENGTH:           # e.g. 4 beats, or 12 items, or 30 lines of dialogue
+ PLACE:            # zone/district/building type (city, harbor, town, airstrip,
+                   # pass, subway, sewers, towers)
+ TONE NOTES:       # original words, e.g. "tired, dry humour, no heroes"
+ DOCS TO READ:     # Faction Quest Trees, Design Document faction/rank section
+ MUST CONNECT TO:  # existing beats/NPCs, or "standalone"
+ DELIVERABLE:      # design text only / data tables (JSON/py) / implemented in
+                   # game with tests
+ BUILD:            # yes / no
+ NEEDS ERIC:       # e.g. "approve the ending twist", or "none"
+
+STORY GUARDRAILS (in addition to CORE RULES)
+ - Original names, places and plot. No borrowed characters, lines or
+   settings. Mood references only.
+ - Use the established structure: main lines have 7 beats and a choice that
+   changes the city; side trees have ~4 beats run by a secondary NPC; beats
+   map to hooks the engine has (dialogue topics, spawn NPC, go-to location,
+   map markers, faction rank). Standing gates: beats 1-2 Neutral, 3-5 Known,
+   6-7 Trusted.
+ - Every quest offers at least two real approaches (e.g. fight / stealth /
+   talk / hack), with consequences, and at least one non-violent route.
+ - Betrayal is always possible and always remembered: opposing faction gains
+   standing, betrayed faction turns hostile in its districts.
+ - Faction triangle: helping one raises the other two's suspicion a step.
+ - Rank changes use the Defaults table (kill member -2 / +1 to its enemies;
+   quest +1 or +2 and -1 with main enemy; robbing/hacking -1; crimes seen -1).
+ - Rewards: yen, rank, faction gear, or a unique item. Amounts must be
+   compared to existing prices/jobs (state the comparison).
+ - Quests are given by NAMED NPCs, not terminals. Terminals/fixers handle
+   generic jobs (courier, retrieval).
+ - Respect pillar 3: a fully human PC must be able to finish every quest or be
+   offered a human route; implants/hacking add options, never gate main lines.
+ - Writing quality: short, concrete, specific to place and person; dialogue
+   sounds like a person (verbal habits, wants, secrets); no lore dumps, no
+   "As you know", no chosen-one cliches, no real-world slurs or brands.
+ - Items/guns: obey the guns rule (RU/CN/JP/US + the 25 originals), the
+   melee rule, no "makeshift"/"broken" items, stable ids.
+
+DEFINITION OF DONE
+ [ ] Each beat lists: trigger, what the PC does, branches, outcomes, rank
+     deltas, reward, fail state
+ [ ] Cast sheet: name, age/role, want, secret, speech habit
+ [ ] Consistent with existing quest docs (conflicts listed in the report)
+ [ ] If DELIVERABLE includes data/implementation: ids stable, loads with no
+     errors, test proves a run-through of every branch, run_all.sh green
+ [ ] Design text also saved to the Trilobit Creation project (new doc or
+     updated doc, full content)
+ [ ] Committed; pushed; work-log line; REPORT FORMAT
+
+UNDERWORK TRAPS TO AVOID: linear fetch quests, one-sentence beats, endings
+with no consequence, reward numbers pulled from nowhere.
+OVERWORK TRAPS TO AVOID: rewriting existing faction lore, building dialogue
+engines or UI, adding more quests than LENGTH.

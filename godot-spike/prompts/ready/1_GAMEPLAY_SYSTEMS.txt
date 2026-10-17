@@ -1,0 +1,128 @@
+TRILOBIT PROMPT 1 OF 3: GAMEPLAY / SYSTEMS
+(Edit the FILL-IN fields, delete the lines that start with "#", paste the whole
+text to Claude. Keep the CORE RULES block pasted in full.)
+=====================================================================
+
+TRILOBIT CORE RULES  (the three prompts below each paste this block at the top;
+edit it HERE first, then copy the changed text into all three)
+=====================================================================
+PROJECT: Trilobit, a gritty cyberpunk roguelike. Custom Godot 4.3 / GDScript
+game in /home/claude/trilobit/godot-spike, tools in /home/claude/trilobit/trilobit-tools,
+GitHub grimdox/Trilobit, branch main. Design docs live in the "Trilobit Creation"
+project (Design Document v0.16, Updates 0.17/0.18/0.19, Faction Quest Trees,
+Gun List, Godot Spike Plan, Playtest Checklist). READ the ones named in the
+task BEFORE working. If a doc and this block disagree, the NEWER update wins;
+report the conflict, do not silently pick.
+
+PILLARS (never break these)
+ 1. Many ways to fight: stealth OR open combat must both stay viable.
+ 2. Death is permanent; ghosts can move between shells.
+ 3. Staying human is a choice. Fully human characters get no cyberware and
+    cannot be hacked.
+ 4. Open world with a way out. Two cities in one: gleaming high-rises vs
+    street-level scum.
+ 5. Tone: gritty, stylized, grit on every tile. Mood references only (Ghost in
+    the Shell, Anarchy Online): NO names, art, characters, logos, brands or
+    real-world text copied from anything. Originality is required.
+
+FIXED FACTS (do not rename or renumber)
+ - Currency: yen. One turn = one minute.
+ - Factions: Bratva (id trl_bratva), NAP (trl_nap), Nasim (trl_nasim); also
+   CIV and GANG in the sim. Ranks -10..+10. IDs never change.
+   Bratva = Russian-style syndicate (low districts, debts, trucks, family).
+   NAP = Japanese/American-style police-corporate force. Nasim = hacker/zealot
+   sect (hostile to implanted PCs below rank +7).
+ - Guns: ONLY real-style guns made in Russia, China, Japan, America, plus the
+   25 original guns in the Gun List. Melee: Japanese or Russian blades/arms.
+   No "makeshift", "improvised" or "broken" items.
+ - Nanohacks cost Control Value (CV). Cyberbrain Mk I-V give CV limits
+   4/8/14/22/32; hack costs 1-6.
+ - Androids = frame + role + modules + firmware.
+ - Scale: lane 6 tiles, road 12, cars 4x6, trucks 6x12, helicopter 6x9,
+   plane 12x10, mech 5x5, train 4 wide x 6-long carriages x4. Tiles 64 px;
+   canvas 1920x1080; UI authored 1280x720 and scaled 1.5x (UI_S).
+ - Tilesets: Bouma (default, classic cyberpunk) and Mokuhanga (black/white/neon
+   print look, at most 3 inks). Readability first.
+
+QUALITY BAR
+ - Data first, code second. New content goes in data tables/generators, not
+   hard-coded in scattered places.
+ - Every new thing has: a stable id, a test, a save/load story, and a line in
+   the README or work log.
+ - No placeholder text ("TODO", "lorem", "test item") in anything shipped.
+ - Names are original, short, and fit the faction/district. No duplicates.
+ - Don't fake numbers: balance values must be justified against existing
+   values (state the comparison in the report).
+
+PROCESS (every task)
+ 1. Restate the task in 2-3 lines and list the docs/files you read.
+ 2. Make a task list. Work independently; do NOT ask questions unless the
+    choice is irreversible AND could reasonably go either way, or the field
+    says "NEEDS ERIC".
+ 3. DEFAULTS RULE: for every open point, pick the sensible default, apply it,
+    and list it under "Defaults I chose" in the report. Eric overrides later.
+ 4. Scope rule: do exactly what is asked and what its Definition of Done
+    needs. Do NOT refactor unrelated code, rename ids, or add extra features.
+    Note good ideas under "Suggestions", don't build them.
+ 5. Validate: `bash run_all.sh` must pass and the soak must print
+    "SOAK 6000/6000". Add/extend tests for what you built.
+ 6. Commit + `git push -q origin main`. Commit messages end with:
+      Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+      Claude-Session: <current session URL>
+ 7. Add ONE line to the work log. Rebuild Windows zip
+    (tools/build_windows.sh) only if the task says "BUILD: yes".
+ 8. Finish with the REPORT FORMAT below. Never claim done without having run
+    the checks.
+
+REPORT FORMAT (keep under ~15 lines)
+ - What was made (files/ids).   - Checks run + results.
+ - Defaults I chose.            - Conflicts found in the docs.
+ - Suggestions (not built).     - Needs Eric (only if truly blocked).
+
+
+---------------------------------------------------------------------
+TASK TYPE: Gameplay / systems (mechanics, combat, AI, economy, vehicles,
+needs, items, UI behavior, world generation)
+
+FILL-IN FIELDS
+ TITLE:            # short name, e.g. "Bleeding by limb"
+ GOAL:             # 1-3 sentences: what the player can do/feel afterwards
+ DOCS TO READ:     # e.g. Update 0.19 (limb/armor model), Gun List
+ TOUCHES:          # files/systems you expect: game.gd, gunplay.gd, transit.gd ...
+ PLAYER-FACING RULES (numbers welcome; blank = use Defaults rule):
+   -
+   -
+ MUST NOT CHANGE: # e.g. existing save format, key bindings, ids
+ BUILD:            # yes / no  (Windows zip + SendUserFile)
+ NEEDS ERIC:       # decisions you want to make yourself, or "none"
+
+GAMEPLAY GUARDRAILS (in addition to CORE RULES)
+ - Both stealth and open-combat solutions must still work after the change;
+   say in the report how each is affected.
+ - Turn-based, deterministic given the seed: no real-time randomness outside
+   the game's seeded RNG.
+ - Performance: a full turn must stay near 2.5 ms at 2,000 people. Only people
+   on the player's own level are "near" and fully simulated; keep LOD intact.
+ - Anything new that can be saved must save and load (extend save_dict and
+   load_dict, and test the round trip).
+ - New numbers: show the comparison to an existing comparable value.
+ - Fair play: every new threat needs a counter the player can learn
+   (a tell, a cost, a tool). No unavoidable instant death.
+ - Hunger/thirst, stamina, heat, carry, and noise are shared systems: use the
+   existing functions (speed_mult, status_effects, etc.), don't duplicate.
+ - Feedback: every new action gives a message-log line and a visible or
+   audible cue; no silent state.
+ - Human-only rule: effects on implants/hacking must respect pillar 3.
+
+DEFINITION OF DONE
+ [ ] Works in a live play path, not just in a unit test (a headless scenario
+     or screenshot proves it)
+ [ ] New test file wired into run_all.sh; all suites green; soak 6000/6000
+ [ ] Save/load round trip tested
+ [ ] README/work-log line added; committed; pushed
+ [ ] Report in the REPORT FORMAT
+
+UNDERWORK TRAPS TO AVOID: stub functions, constants with no effect in play,
+tests that only check "no crash", features with no UI cue.
+OVERWORK TRAPS TO AVOID: rewriting systems nobody mentioned, adding options
+or settings screens, polishing visuals.
