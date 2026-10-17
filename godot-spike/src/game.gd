@@ -181,6 +181,8 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) ->
 	sim.perception_standin = false
 	sim.setup(city, n_people, seed_value ^ 0x5eed)
 	sim.tick = 7 * 60 - 20
+	last_ate = sim.tick
+	last_drank = sim.tick
 	fov = FOV.new()
 	fov.setup(size, sim.opaque)
 	pf = PackedInt32Array(); pf.resize(total); pf.fill(FF.UNREACHED)
@@ -790,6 +792,15 @@ func act_move(dx: int, dy: int, run: bool = false) -> bool:
 	if ok and on_foot and legs < 2 and pc != before and not game_over:
 		for _k in (1 if legs == 1 else 2):
 			end_turn()
+	if ok and on_foot and pc != before and not game_over:
+		var sm: float = speed_mult()
+		if sm < 1.0:
+			move_debt += 1.0 / sm - 1.0
+			while move_debt >= 1.0 and not game_over:
+				move_debt -= 1.0
+				end_turn()
+		else:
+			move_debt = 0.0
 	return ok
 
 func _act_move_core(dx: int, dy: int, run: bool = false) -> bool:
@@ -874,6 +885,42 @@ func _act_move_core(dx: int, dy: int, run: bool = false) -> bool:
 	if stance == CRAWL and not game_over:
 		end_turn()                       # crawling is half speed
 	return true
+
+## --- hunger and thirst (placeholder mechanics: two status effects that slow you down, to be built on later)
+func hungry() -> bool:
+	return sim.tick - last_ate >= HUNGER_AFTER
+
+func thirsty() -> bool:
+	return sim.tick - last_drank >= THIRST_AFTER
+
+func speed_mult() -> float:
+	return (NEED_SLOW if hungry() else 1.0) * (NEED_SLOW if thirsty() else 1.0)
+
+## minutes until the next need bites: [until hungry, until thirsty] (0 when already)
+func need_timers() -> Array:
+	return [maxi(0, HUNGER_AFTER - (sim.tick - last_ate)), maxi(0, THIRST_AFTER - (sim.tick - last_drank))]
+
+func status_effects() -> Array:
+	var out: Array = []
+	if hungry():
+		out.append("Hungry")
+	if thirsty():
+		out.append("Thirsty")
+	return out
+
+func _needs_tick() -> void:
+	var h: bool = hungry()
+	var t: bool = thirsty()
+	if h and not _was_hungry:
+		say("Your stomach growls.  You are hungry: -20% movement speed.")
+	if t and not _was_thirsty:
+		say("Your mouth is dry.  You are thirsty: -20% movement speed.")
+	if _was_hungry and not h:
+		say("You are no longer hungry.")
+	if _was_thirsty and not t:
+		say("You are no longer thirsty.")
+	_was_hungry = h
+	_was_thirsty = t
 
 func act_wait() -> void:
 	end_turn()
@@ -1099,6 +1146,14 @@ var armor_worn: Array = []                     # armor items worn over the body 
 var imp_dur: Dictionary = {}                   # implant id -> armor durability left (absent = as new)
 var melee_arts: Array = []                     # learned melee arts: "parry", "riposte" (see _melee_arts_on_miss); empty until the player learns some
 var bless_left: int = 0                        # turns of blessing left: a little luck (+6% to hit, +4% to dodge a blade)
+const HUNGER_AFTER := 24 * 60                   # turns (a turn is a minute) without food before you are Hungry
+const THIRST_AFTER := 4 * 60                    # ... without a drink before you are Thirsty
+const NEED_SLOW := 0.8                          # each of Hungry / Thirsty cuts walking speed to 80% (they stack)
+var last_ate: int = 0                           # sim.tick of the last meal and the last drink
+var last_drank: int = 0
+var move_debt: float = 0.0                      # fractions of a turn owed for walking slowly
+var _was_hungry: bool = false
+var _was_thirsty: bool = false
 var drunk_left: int = 0                        # turns of drink left: -8% to hit
 var atk_debt: int = 0                          # action cost of strikes not yet paid for in turns
 var aim_last: int = -10
@@ -1394,6 +1449,10 @@ func _consume_one(it) -> void:
 ## the effect of a meal or drink: health, stamina; strong drink dulls the aim for a while
 func eat_now(it) -> void:
 	var f: Dictionary = it.def.get("food", {})
+	if f.get("drink", false):
+		last_drank = sim.tick
+	else:
+		last_ate = sim.tick
 	hp = mini(hp_max, hp + int(f.get("hp", 0)))
 	stamina = mini(STAMINA_MAX, stamina + int(f.get("stam", 0)))
 	if f.get("alcohol", false):
@@ -2397,6 +2456,7 @@ func end_turn() -> void:
 		bless_left -= 1
 	if drunk_left > 0:
 		drunk_left -= 1
+	_needs_tick()
 	if turn % 12 == 0 and hp < hp_max and in_vehicle < 0:
 		hp += 1
 	if turn % 40 == 0:
@@ -3514,7 +3574,7 @@ func outside_tile(x: int, y: int) -> int:
 func player_dict() -> Dictionary:
 	return {"hp": hp, "hp_max": hp_max, "yen": yen, "heat": heat, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
 		"skills": skills.duplicate(), "xp": xp.duplicate(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
-		"stamina": stamina, "stance": stance, "turn": turn, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "eco": eco.save(), "flying": flying,
+		"stamina": stamina, "stance": stance, "turn": turn, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "flying": flying,
 		"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
 
 func _load_body(d: Dictionary) -> void:
@@ -3551,9 +3611,13 @@ func apply_player(d: Dictionary) -> void:
 	stamina = int(d["stamina"])
 	bless_left = int(d.get("bless", 0))
 	drunk_left = int(d.get("drunk", 0))
+	last_ate = int(d.get("ate", int(d.get("tick", 0))))
+	last_drank = int(d.get("drank", int(d.get("tick", 0))))
 	stance = int(d["stance"])
 	turn = int(d["turn"])
 	sim.tick = int(d["tick"])
+	_was_hungry = hungry()
+	_was_thirsty = thirsty()
 	eco.load_from(JSON.parse_string(JSON.stringify(d["eco"])))
 	eco.job = {}
 	flying = bool(d.get("flying", false))
@@ -3578,7 +3642,7 @@ func save_dict() -> Dictionary:
 	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "xp": xp, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate(),
 			"rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
-			"items_at": it_at, "vehicles": vlist, "tick": sim.tick, "log": log.slice(-30),
+			"items_at": it_at, "vehicles": vlist, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
 					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc),
 					"mdis": Array(mdis), "noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle)}}
@@ -3655,6 +3719,10 @@ func load_dict(d: Dictionary) -> void:
 		for f in ["hp", "mood", "stun"]:
 			critters[ki][f] = int(k[f])
 	sim.tick = int(d["tick"])
+	last_ate = int(d.get("ate", sim.tick))
+	last_drank = int(d.get("drank", sim.tick))
+	_was_hungry = hungry()
+	_was_thirsty = thirsty()
 	transit.load_from(d["transit"])
 	eco.load_from(d["eco"])
 	var nn: Dictionary = d["npc"]
