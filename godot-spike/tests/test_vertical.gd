@@ -186,19 +186,19 @@ func run() -> Array:
 	# --- debt
 	g.hp = g.hp_max
 	var debt0: int = g.eco.debt
-	g.sim.tick = 1440 * 2 - 1
+	g.sim.tick = 14400 * 2 - 1
 	g.end_turn()
 	check.call("interest accrues at midnight", g.eco.debt > debt0)
 	g.yen = 1000
 	var d1: int = g.eco.debt
 	g.act_pay(500)
 	check.call("paying reduces debt and cash", g.eco.debt == d1 - 500 and g.yen == 500)
-	g.sim.tick = 3 * 1440 + 8 * 60 - 1
+	g.sim.tick = 3 * 14400 + 8 * 600 - 1
 	var arrears0: int = g.eco.arrears
 	g.eco.paid_cycle = 0
 	g.end_turn()
 	check.call("a missed installment adds arrears and a fee", g.eco.arrears == arrears0 + 1)
-	g.sim.tick = 6 * 1440 + 8 * 60 - 1
+	g.sim.tick = 6 * 14400 + 8 * 600 - 1
 	g.end_turn()
 	var collectors := 0
 	for i in g.sim.n:
@@ -217,7 +217,7 @@ func run() -> Array:
 	g.yen = 2000
 	var m: Dictionary = g.eco.menu_for(ripper)
 	g.eco.choose(m, 0)
-	check.call("servicing resets the implant to 96h", g.eco.implant_left == 96 * 60 and g.yen < 2000)
+	check.call("servicing resets the implant to 96h", g.eco.implant_left == 96 * 600 and g.yen < 2000)
 	# --- vendors and jobs
 	var vendor := -1
 	var fixer := -1

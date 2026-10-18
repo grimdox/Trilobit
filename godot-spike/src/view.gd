@@ -3,6 +3,7 @@ extends Node2D
 const CG = preload("res://src/citygen.gd")
 const PD = preload("res://src/paperdoll.gd")
 const DS = preload("res://src/dollspec.gd")
+const CLK = preload("res://src/clock.gd")
 var pd = PD.new()
 var game
 var tileset
@@ -237,8 +238,8 @@ func _draw() -> void:
 	var base: int = (game.pc / s2) * s2
 	var px: int = game.lx(game.pc)
 	var py: int = game.ly(game.pc)
-	var ox := px - cols / 2
-	var oy := py - rows / 2
+	var ox := px - cols / 2 + (look_off.x if look_on else 0)
+	var oy := py - rows / 2 + (look_off.y if look_on else 0)
 	var below_mod := Color(0.5, 0.55, 0.75)
 	for sy in rows:
 		for sx in cols:
@@ -398,6 +399,13 @@ func _draw() -> void:
 		var pa := Vector2((a % size - ox + 0.5) * T, ((a / size) % size - oy + 0.5) * T)
 		var pb := Vector2((b % size - ox + 0.5) * T, ((b / size) % size - oy + 0.5) * T)
 		draw_line(pa, pb, Color(1, 0.95, 0.5) if tr[2] else Color(0.8, 0.8, 0.8, 0.6), 2.0 * S)
+	if look_on:
+		var lr := Rect2((px + look_off.x - ox) * T, (py + look_off.y - oy) * T, T, T)
+		draw_rect(lr, Color(0.3, 0.95, 1.0), false, 3.0 * S)
+		draw_rect(lr.grow(4 * S), Color(0.3, 0.95, 1.0, 0.45), false, 1.0 * S)
+		if look_off != Vector2i.ZERO:
+			var pr := Rect2((px - ox) * T, (py - oy) * T, T, T)
+			draw_line(pr.get_center(), lr.get_center(), Color(0.3, 0.95, 1.0, 0.35), 2.0 * S)
 	_draw_hud()
 
 ## a small pointer on the edge of a tile showing which way someone faces (index into DIR8)
@@ -423,6 +431,8 @@ func _bar(x: float, y: float, w: float, h: float, f: float, col: Color, label: S
 # ---------------------------------------------------------------- the side panel (UI units: 1280x720, drawn at 1.5x)
 const PANEL_W := 252.0
 const PANEL_H := 640.0
+var look_on: bool = false              # the look cursor is out: the view is centred on it, not on the player
+var look_off := Vector2i.ZERO          # ... this many tiles from the player
 var hud_extra: String = ""            # vehicle / jet-pack line, set by main
 const C_CYAN := Color(0.35, 0.85, 0.95)
 const C_DIM := Color(0.55, 0.62, 0.72)
@@ -576,7 +586,7 @@ func _draw_hud() -> void:
 		where += " (%d)" % int(tw["h"])
 	_txt(xi, 17, where.to_upper(), 12, C_CYAN, wi)
 	_txt(xi, 36, game.time_text(), 16, Color.WHITE)
-	_txt(xi + 52, 36, "Day %d   Turn %d" % [game.sim.tick / 1440 + 1, game.turn], 11, C_DIM)
+	_txt(xi + 80, 36, "Day %d   Turn %d" % [CLK.day_of(game.sim.tick), game.turn], 11, C_DIM)
 	_txt(xi, 36, "¥%d" % game.yen, 14, Color(0.95, 0.85, 0.4), wi, HORIZONTAL_ALIGNMENT_RIGHT)
 	# the nav slot: an empty implant bay
 	var ny := 44.0
@@ -620,8 +630,8 @@ func _draw_hud() -> void:
 	var nt: Array = game.need_timers()
 	var ff: float = float(nt[0]) / float(game.HUNGER_AFTER)
 	var tf: float = float(nt[1]) / float(game.THIRST_AFTER)
-	_meter(xi, my + 62, wi * 0.5 - 3, 14, ff, Color(0.75, 0.55, 0.25) if not game.hungry() else Color(0.8, 0.2, 0.2), "FOOD", "HUNGRY" if game.hungry() else "%dh" % int(ceil(float(nt[0]) / 60.0)))
-	_meter(xi + wi * 0.5 + 3, my + 62, wi * 0.5 - 3, 14, tf, Color(0.3, 0.6, 0.9) if not game.thirsty() else Color(0.8, 0.2, 0.2), "WATER", "THIRSTY" if game.thirsty() else "%dh%02d" % [nt[1] / 60, nt[1] % 60])
+	_meter(xi, my + 62, wi * 0.5 - 3, 14, ff, Color(0.75, 0.55, 0.25) if not game.hungry() else Color(0.8, 0.2, 0.2), "FOOD", "HUNGRY" if game.hungry() else CLK.span_text(nt[0]))
+	_meter(xi + wi * 0.5 + 3, my + 62, wi * 0.5 - 3, 14, tf, Color(0.3, 0.6, 0.9) if not game.thirsty() else Color(0.8, 0.2, 0.2), "WATER", "THIRSTY" if game.thirsty() else CLK.span_text(nt[1]))
 	# status effects
 	var ey: float = my + 94.0
 	var fx: float = xi

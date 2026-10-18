@@ -150,7 +150,7 @@ items += [
     {"id": "trl_yen", "name": "yen notes", "weight_g": 1, "volume_ml": 1, "length_mm": 0, "price": 1, "tags": ["money"], "looks_like": "money_bundle_hundred"},
     {"id": "trl_ammo", "name": "ammo box", "weight_g": 120, "volume_ml": 70, "length_mm": 60, "price": 20, "tags": ["ammo"], "looks_like": "9mm", "ammo": {"cal": "9mm", "kind": "fmj", "rounds": 12}},
     {"id": "trl_water", "name": "water", "weight_g": 1, "volume_ml": 1, "length_mm": 0, "price": 0, "tags": ["liquid"], "per_unit": True},
-    {"id": "trl_ration", "name": "cyber ration bar", "weight_g": 90, "volume_ml": 80, "length_mm": 150, "price": 15, "tags": ["food"], "looks_like": "granola", "food": {"hp": 3, "stam": 6, "drink": False, "alcohol": False}},
+    {"id": "trl_ration", "name": "cyber ration bar", "weight_g": 90, "volume_ml": 80, "length_mm": 150, "price": 15, "tags": ["food"], "looks_like": "granola", "food": {"hp": 3, "stam": 6, "drink": False, "alcohol": False, "kcal": 500}},
     {"id": "trl_parcel", "name": "sealed parcel", "weight_g": 600, "volume_ml": 1500, "length_mm": 250, "price": 0, "tags": ["job"], "looks_like": "box_small"},
     {"id": "trl_datacase", "name": "encrypted data case", "weight_g": 1800, "volume_ml": 6000, "length_mm": 420, "price": 400, "tags": ["job"], "looks_like": "briefcase"},
     {"id": "trl_medkit", "name": "trauma patch", "weight_g": 120, "volume_ml": 100, "length_mm": 120, "price": 40, "tags": ["medical"], "looks_like": "bandages", "desc": "Heals 25 and mends your worst limb a little."},
@@ -207,9 +207,22 @@ FOODS = [
     ("glucose", "glucose cube", 9, 1, 14, "trl_cf_glucose_cube", ""), ("hydrogel", "hydration gel", 10, 1, 12, "trl_cf_hydration_gel", "drink"),
     ("chocolate", "chocolate bar", 7, 1, 8, "chocolate", ""), ("cheese", "cheese wedge", 12, 3, 4, "cheese", ""),
 ]
+# Energy and water.  kcal: every food and drink has one (2,500 kcal = 24 hours of not being hungry).  ml: a drink's millilitres (500 mL of water = 4 hours of not
+# being thirsty); hydr: how much of that counts as water (1.0 for tea, soft drinks and milk; strong drink dehydrates).  Figures are typical servings.
+KCAL = {"cup_ramen": 420, "gyoza": 320, "onigiri": 190, "sashimi": 280, "yakitori": 280, "katsu": 780, "unagi": 650, "miso": 60, "okonomiyaki": 450, "takoyaki": 330,
+        "pelmeni": 520, "borscht": 220, "blini": 360, "caviar_blini": 410, "solyanka": 260, "piroshki": 310, "kotleta": 640, "chow_mein": 600, "fried_rice": 520,
+        "hamburger": 550, "taco": 210, "fries": 365, "crepe": 260, "sencha": 5, "oolong": 5, "kan_coffee": 40, "kvass": 60, "kompot": 90, "cola": 140, "beer": 150,
+        "vodka": 90, "sake": 190, "black_bread": 520, "tushonka": 590, "herring": 240, "natto": 100, "mochi": 130, "apple": 95, "orange": 62, "banana": 105,
+        "milk": 150, "protein": 350, "glucose": 100, "hydrogel": 20, "chocolate": 230, "cheese": 200}
+ML = {"sencha": 250, "oolong": 250, "kan_coffee": 190, "kvass": 330, "kompot": 330, "cola": 330, "beer": 350, "vodka": 40, "sake": 180, "milk": 250, "hydrogel": 200}
+HYDR = {"beer": 0.5, "vodka": 0.0, "sake": 0.3}
 for fid, nm, pr, hp, st, spr, kind in FOODS:
-    items.append({"id": "trl_food_" + fid, "name": nm, "desc": "%s.  Heals %d, restores %d stamina." % (nm.capitalize(), hp, st), "weight_g": 250, "volume_ml": 300, "length_mm": 120,
-                  "price": pr, "tags": ["food"] + (["drink"] if kind else []), "looks_like": spr, "food": {"hp": hp, "stam": st, "drink": kind != "", "alcohol": kind == "alcohol"}})
+    fd = {"hp": hp, "stam": st, "drink": kind != "", "alcohol": kind == "alcohol", "kcal": KCAL[fid]}
+    if kind:
+        fd["ml"] = ML[fid]
+        fd["hydr"] = HYDR.get(fid, 1.0)
+    items.append({"id": "trl_food_" + fid, "name": nm, "desc": "%s.  %d kcal%s.  Heals %d, restores %d stamina." % (nm.capitalize(), KCAL[fid], (", %d mL" % ML[fid]) if kind else "", hp, st), "weight_g": 250, "volume_ml": 300, "length_mm": 120,
+                  "price": pr, "tags": ["food"] + (["drink"] if kind else []), "looks_like": spr, "food": fd})
 
 # ---- faith items (church and shrine shops); `use` is what they do when used
 FAITH = [

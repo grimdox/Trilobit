@@ -19,7 +19,8 @@ const DOCTOR := 6        # clinic doctors: treat wounds
 const PRIEST := 7        # church: candles, confession, a blessing
 const MIKO := 8          # shrine keeper: charms and offerings
 const VN = preload("res://src/venues.gd")
-const DAY := 1440
+const CLK = preload("res://src/clock.gd")
+const DAY := CLK.DAY
 
 var g
 var role: PackedByteArray
@@ -28,7 +29,7 @@ var look: Dictionary = {}              # agent -> paper-doll layers for a fixed 
 var debt: int = 4000
 var arrears: int = 0
 var paid_cycle: int = 0
-var implant_left: int = 96 * 60      # turns (a turn is a minute) until the stabiliser fails
+var implant_left: int = 96 * CLK.HOUR      # turns (a turn is six seconds) until the stabiliser fails
 var job: Dictionary = {}
 var jobs_done: int = 0
 var earned: int = 0
@@ -172,20 +173,20 @@ func step() -> void:
 		if debt > 0:
 			debt += add
 			g.say("Midnight.  Kuroda Lending adds ¥%d interest.  You owe ¥%d." % [add, debt])
-	if t >= DAY * 3 and t % (DAY * 3) == 8 * 60 and debt > 0:
+	if t >= DAY * 3 and t % (DAY * 3) == 8 * CLK.HOUR and debt > 0:
 		_due()
 	# the implant
 	if implant_left > 0:
 		implant_left -= 1
 		match implant_left:
-			24 * 60: g.say("Your stabiliser throws a warning: 24 hours of service life left.")
-			12 * 60: g.say("Your hands begin to tremble.  Twelve hours left on the stabiliser.")
-			3 * 60: g.say("The stabiliser is failing.  Three hours.")
+			24 * CLK.HOUR: g.say("Your stabiliser throws a warning: 24 hours of service life left.")
+			12 * CLK.HOUR: g.say("Your hands begin to tremble.  Twelve hours left on the stabiliser.")
+			3 * CLK.HOUR: g.say("The stabiliser is failing.  Three hours.")
 			0: g.say("The stabiliser dies.  Your nerves misfire.  Find a ripperdoc.")
-	elif g.turn % 10 == 0:
+	elif g.turn % (10 * CLK.MIN) == 0:
 		g._raw_hurt(2, "chest")
 		g.say("A seizure grips you (-2).")
-	if implant_left < 12 * 60 and implant_left > 0 and g.turn % 40 == 0:
+	if implant_left < 12 * CLK.HOUR and implant_left > 0 and g.turn % (40 * CLK.MIN) == 0:
 		g.say(["Your fingers jitter.", "A static hiss floods your ears.", "The edges of your vision flicker."][g.rng.randi() % 3])
 	_job_step()
 
@@ -224,7 +225,7 @@ func pay(amount: int) -> bool:
 func aim_penalty() -> int:
 	if implant_left <= 0:
 		return 28
-	if implant_left < 12 * 60:
+	if implant_left < 12 * CLK.HOUR:
 		return 10
 	return 0
 
@@ -328,7 +329,7 @@ func job_text() -> String:
 		var dx: int = g.lx(int(job["cell"])) - g.lx(here)
 		var dy: int = g.ly(int(job["cell"])) - g.ly(here)
 		hint = " [%d%s %d%s%s]" % [absi(dx), "E" if dx > 0 else "W", absi(dy), "S" if dy > 0 else "N", ("  %d floors %s" % [absi(dz), "up" if dz > 0 else "down"]) if dz != 0 else ""]
-	return "Job: %s - %s%s  ¥%d, %dh%02dm" % [job["kind"], where, hint, job["reward"], left / 60, left % 60]
+	return "Job: %s - %s%s  ¥%d, %s" % [job["kind"], where, hint, job["reward"], CLK.span_text(maxi(0, left))]
 
 func _make_courier() -> Dictionary:
 	var city = g.city
@@ -386,7 +387,7 @@ func menu_for(i: int) -> Dictionary:
 			if not rv.is_empty():
 				m["title"] = "%s - %s" % [who, rv["name"]]
 			var cost: int = 350 if cheap else 700
-			m["text"] = ["\"Let me see that stabiliser.\"  Service life: %dh." % (implant_left / 60)]
+			m["text"] = ["\"Let me see that stabiliser.\"  Service life: %dh." % (implant_left / CLK.HOUR)]
 			m["options"].append({"label": "Service the stabiliser  ¥%d  (resets to 96h)" % cost, "op": "service", "arg": cost})
 			m["options"].append(_buy_opt(i, ["trl_medkit", "trauma patch", 40], "Trauma patch"))
 			var wrecked := 0
@@ -608,7 +609,7 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 			if int(pa[2]) > 0:
 				g.heat = maxi(0, g.heat - int(pa[2]))
 			if int(pa[3]) > 0:
-				g.bless_left = maxi(g.bless_left, int(pa[3]))
+				g.bless_left = maxi(g.bless_left, int(pa[3]) * CLK.MIN)       # the data gives minutes
 			g.say(String(pa[4]))
 			return m
 		"implant":
@@ -630,7 +631,7 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 				g.say("You can't afford the service.")
 				return m
 			g.yen -= cost
-			implant_left = 96 * 60
+			implant_left = 96 * CLK.HOUR
 			g.say("The stabiliser hums back to life.  96 hours.")
 			m["text"] = ["\"Come back in four days.\""]
 			return m
@@ -677,22 +678,22 @@ func status_text() -> String:
 	var d := ""
 	if debt > 0:
 		var t: int = g.sim.tick
-		var due_at: int = DAY * 3 + 8 * 60 if t < DAY * 3 + 8 * 60 else 8 * 60 + ((t - 8 * 60) / (DAY * 3) + 1) * DAY * 3
+		var due_at: int = DAY * 3 + 8 * CLK.HOUR if t < DAY * 3 + 8 * CLK.HOUR else 8 * CLK.HOUR + ((t - 8 * CLK.HOUR) / (DAY * 3) + 1) * DAY * 3
 		var due: int = due_at - t
-		d = "Debt ¥%d  (min ¥%d in %dd%02dh%s)" % [debt, min_payment(), due / DAY, (due % DAY) / 60, ", arrears %d" % arrears if arrears > 0 else ""]
+		d = "Debt ¥%d  (min ¥%d in %dd%02dh%s)" % [debt, min_payment(), due / DAY, (due % DAY) / CLK.HOUR, ", arrears %d" % arrears if arrears > 0 else ""]
 	else:
 		d = "Debt-free"
-	var im := "Implant %dh" % (implant_left / 60) if implant_left > 0 else "IMPLANT DEAD"
+	var im := "Implant %dh" % (implant_left / CLK.HOUR) if implant_left > 0 else "IMPLANT DEAD"
 	return d + "   " + im
 
 func save() -> Dictionary:
-	return {"debt": debt, "arrears": arrears, "paid": paid_cycle, "implant": implant_left, "job": job, "done": jobs_done, "earned": earned, "free": debt_free}
+	return {"debt": debt, "arrears": arrears, "paid": paid_cycle, "implant": implant_left, "tv": CLK.SAVE_VERSION, "job": job, "done": jobs_done, "earned": earned, "free": debt_free}
 
 func load_from(d: Dictionary) -> void:
 	debt = int(d["debt"])
 	arrears = int(d["arrears"])
 	paid_cycle = int(d["paid"])
-	implant_left = int(d["implant"])
+	implant_left = int(d["implant"]) * (1 if int(d.get("tv", 1)) >= CLK.SAVE_VERSION else CLK.OLD_TO_NEW)
 	job = d["job"]
 	for k in ["cell", "z", "reward", "deadline"]:
 		if job.has(k):

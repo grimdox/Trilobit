@@ -1,0 +1,58 @@
+extends RefCounted
+## The game clock.  One turn is six seconds; everything that is measured in minutes, hours or days is measured here, in turns.
+##   10 turns = 1 minute     600 turns = 1 hour     14,400 turns = 1 day
+## (Before 2026-10-18 a turn was a minute: saves with no "tv" key are converted by OLD_TO_NEW.)
+const TURN_SEC := 6
+const MIN := 10
+const HOUR := 600
+const DAY := 14400
+const START_TICK := 7 * HOUR - 20 * MIN       # a new game begins at 06:40
+const OLD_TO_NEW := 10                        # a turn used to be a minute
+const SAVE_VERSION := 2
+
+## the wait menu: [label, turns] for fixed spans, [label, hour of day] for "until"
+const WAITS := [
+	["1 turn (6 seconds)", 1],
+	["10 turns (1 minute)", 10],
+	["100 turns (10 minutes)", 100],
+	["600 turns (1 hour)", 600],
+]
+const WAIT_UNTIL := [
+	["Wait until 6am", 6],
+	["Wait until noon", 12],
+	["Wait until 6pm", 18],
+	["Wait until midnight", 0],
+]
+
+static func hour_of(tick: int) -> int:
+	return (tick / HOUR) % 24
+
+static func minute_of(tick: int) -> int:
+	return (tick / MIN) % 60
+
+static func second_of(tick: int) -> int:
+	return (tick % MIN) * TURN_SEC
+
+static func day_of(tick: int) -> int:
+	return tick / DAY + 1
+
+## "06:40:06"
+static func text(tick: int) -> String:
+	return "%02d:%02d:%02d" % [hour_of(tick), minute_of(tick), second_of(tick)]
+
+## turns from `tick` until the next time the clock reads `hour`:00 (a full day if it already does)
+static func turns_until(tick: int, hour: int) -> int:
+	var t: int = hour * HOUR - (tick % DAY)
+	if t <= 0:
+		t += DAY
+	return t
+
+## a span of turns for people: "4h", "1h05", "35m", "50s"
+static func span_text(turns: int) -> String:
+	if turns >= HOUR:
+		var h: int = turns / HOUR
+		var m: int = (turns % HOUR) / MIN
+		return "%dh%02d" % [h, m] if m > 0 else "%dh" % h
+	if turns >= MIN:
+		return "%dm" % (turns / MIN)
+	return "%ds" % (turns * TURN_SEC)

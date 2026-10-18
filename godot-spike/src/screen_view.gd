@@ -23,6 +23,7 @@ var loading: bool = false          # the loading screen shows the name in hiraga
 var t: float = 0.0
 var skyline: Array = []
 
+const TITLE_NAME := "とりろびつ"      # the name in hiragana (to-ri-ro-bi-tsu), on the title screen and the loading screen alike
 const CYAN := Color(0.3, 0.9, 1.0)
 const MAGENTA := Color(1.0, 0.25, 0.65)
 const BG := Color(0.03, 0.04, 0.08)
@@ -45,6 +46,31 @@ func _process(delta: float) -> void:
 
 func _txt(s: String, pos: Vector2, size: int, col: Color, align: int = HORIZONTAL_ALIGNMENT_LEFT, width: float = -1.0) -> void:
 	draw_string(font, pos, s, align, width, size, col)
+
+## the room a menu row gives its label and its value, in pixels: [label_room, value_room, value_x] for a box of width bw at x0 (the key list gives labels more)
+func rooms(bw: float, x0: float, has_value: bool) -> Array:
+	var vx: float = x0 + bw * (0.56 if kind == "keys" else 0.47)
+	if not has_value:
+		return [bw - 70.0, 0.0, vx]
+	return [vx - 14.0 - (x0 + 34.0), x0 + bw - 22.0 - vx, vx]
+
+## the font size `s` is drawn at to fit `max_w` pixels (down to 12; below that the end is cut)
+func fit_size(s: String, fsize: int, max_w: float) -> int:
+	var sz: int = fsize
+	while sz > 12 and font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz).x > max_w:
+		sz -= 1
+	return sz
+
+## draw text that fits in `max_w` pixels: the font size comes down (to 12) until it does, then the end is cut with an ellipsis
+func _fit(s: String, pos: Vector2, fsize: int, col: Color, max_w: float) -> void:
+	var sz: int = fit_size(s, fsize, max_w)
+	var out := s
+	while out.length() > 1 and font.get_string_size(out, HORIZONTAL_ALIGNMENT_LEFT, -1, sz).x > max_w:
+		out = out.substr(0, out.length() - 1)
+		if font.get_string_size(out + "…", HORIZONTAL_ALIGNMENT_LEFT, -1, sz).x <= max_w:
+			out += "…"
+			break
+	_txt(out, pos, sz, col)
 
 func _draw() -> void:
 	var W: float = size.x if size.x > 0 else 1280.0
@@ -93,8 +119,8 @@ func _backdrop(W: float, H: float) -> void:
 
 func _title(W: float, H: float) -> void:
 	var glow := 0.75 + 0.25 * sin(t * 2.0)
-	var name_txt := "とりろびつ" if loading else "TRILOBIT"
-	var f: Font = kana_font if (loading and kana_font != null) else font
+	var name_txt := TITLE_NAME
+	var f: Font = kana_font if kana_font != null else font
 	draw_string(f, Vector2(0, 150), name_txt, HORIZONTAL_ALIGNMENT_CENTER, W, 96, Color(1.0, 0.25, 0.65, 0.35 * glow))
 	draw_string(f, Vector2(3, 147), name_txt, HORIZONTAL_ALIGNMENT_CENTER, W, 96, CYAN)
 	draw_string(f, Vector2(0, 150), name_txt, HORIZONTAL_ALIGNMENT_CENTER, W, 96, Color(0.9, 0.97, 1.0))
@@ -158,9 +184,12 @@ func _menu(W: float, H: float) -> void:
 			draw_rect(Rect2(x0 + 14, y - 24, bw - 28, 32), Color(0.3, 0.9, 1.0, 0.16))
 			draw_rect(Rect2(x0 + 14, y - 24, 4, 32), CYAN)
 		var col := Color(0.5, 0.55, 0.62) if it.get("disabled", false) else (Color.WHITE if on else Color(0.72, 0.84, 0.95))
-		_txt(it["label"], Vector2(x0 + 34, y), 22, col)
-		if it.has("value"):
-			_txt(str(it["value"]), Vector2(x0 + bw * 0.47, y), 22, CYAN if on else Color(0.55, 0.8, 0.95))
+		# the label gets the room up to the value column and the value the room after it; text too long for its room is shrunk, never drawn over its neighbour
+		var has_v: bool = it.has("value")
+		var rm: Array = rooms(bw, x0, has_v)
+		_fit(it["label"], Vector2(x0 + 34, y), 22, col, rm[0])
+		if has_v:
+			_fit(str(it["value"]), Vector2(rm[2], y), 22, CYAN if on else Color(0.55, 0.8, 0.95), rm[1])
 		y += 34.0
 	if scroll > 0:
 		_txt("^ more", Vector2(x0 + bw - 100, y0 + 100), 14, Color(0.6, 0.7, 0.8))

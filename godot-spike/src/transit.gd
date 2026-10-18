@@ -14,6 +14,7 @@ extends RefCounted
 ## `table[(clock + offset_j) % period]` says.  `clock` is a turn counter that travels with the player from zone to zone, so each zone game
 ## draws only the part of the line that lies inside it and a train that leaves the city simply turns up in the harbor game.
 ## The line is a list of GLOBAL cells (gx, gy, z), so it does not care which zone a cell belongs to.
+const CLK = preload("res://src/clock.gd")
 const CG = preload("res://src/citygen.gd")
 const ISL = preload("res://src/island.gd")
 
@@ -628,7 +629,7 @@ func epoch_of(j: int) -> int:
 
 ## the share of passenger cells that are taken, in percent, at the game's time of day
 func load_pct() -> int:
-	var hour: int = (int(g.sim.tick) / 60) % 24
+	var hour: int = CLK.hour_of(int(g.sim.tick))
 	if (hour >= 7 and hour <= 9) or (hour >= 17 and hour <= 19):
 		return 36
 	if hour >= 22 or hour <= 4:

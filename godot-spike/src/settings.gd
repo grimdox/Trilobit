@@ -6,12 +6,13 @@ const ACTIONS := [
 	["north", "Move north", [KEY_UP, KEY_KP_8, KEY_K]],
 	["south", "Move south", [KEY_DOWN, KEY_KP_2, KEY_J]],
 	["west", "Move west", [KEY_LEFT, KEY_KP_4, KEY_H]],
-	["east", "Move east", [KEY_RIGHT, KEY_KP_6, KEY_L]],
+	["east", "Move east", [KEY_RIGHT, KEY_KP_6]],
 	["nw", "Move north-west", [KEY_KP_7, KEY_Y]],
 	["ne", "Move north-east", [KEY_KP_9, KEY_U]],
 	["sw", "Move south-west", [KEY_KP_1, KEY_B]],
 	["se", "Move south-east", [KEY_KP_3, KEY_N]],
-	["wait", "Wait / brake", [KEY_PERIOD, KEY_KP_5, KEY_SPACE]],
+	["wait", "Wait one turn / brake", [KEY_PERIOD, KEY_KP_5, KEY_SPACE]],
+	["waitmenu", "Wait for a chosen time", [KEY_ENTER, KEY_KP_ENTER]],
 	["up", "Up (stairs, lift off)", [KEY_LESS, KEY_PAGEUP, KEY_BRACKETLEFT]],
 	["down", "Down (stairs, descend)", [KEY_GREATER, KEY_PAGEDOWN, KEY_BRACKETRIGHT]],
 	["talk", "Talk", [KEY_T]],
@@ -39,15 +40,26 @@ const ACTIONS := [
 	["implants", "Implants screen", [KEY_F3]],
 	["skills", "Attributes & skills screen", [KEY_F7]],
 	["map", "Island map", [KEY_M]],
-	["help", "Help", [KEY_QUESTION]],
+	["look", "Look (move the cursor, Esc ends)", [KEY_L]],
+	["consume", "Consume food or drink", [KEY_F8, KEY_APOSTROPHE]],
+	["fullscreen", "Toggle fullscreen", [KEY_F11]],
+	["keysscreen", "Key bindings screen", [KEY_QUESTION]],
 ]
+
+## keys that cannot be rebound but belong to an action, shown after its own keys
+const FIXED_KEYS := {"fullscreen": ["Alt+Enter"]}
+
+## display modes and the window sizes offered for the windowed mode
+const WINDOW_MODES := ["Windowed", "Borderless fullscreen", "Fullscreen"]
+const RESOLUTIONS := [Vector2i(1280, 720), Vector2i(1366, 768), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440), Vector2i(3840, 2160)]
 
 var path: String = "user://trilobit_settings.json"
 var binds: Dictionary = {}          # action -> Array of keycodes
 var sound_on: bool = true
 var volume: float = 0.7
 var tileset: int = 0
-var fullscreen: bool = false
+var window_mode: int = 0                # index into WINDOW_MODES
+var resolution: Vector2i = Vector2i(1920, 1080)
 
 func _init() -> void:
 	reset_keys()
@@ -75,7 +87,36 @@ func key_text(action: String) -> String:
 	var out := []
 	for k in ks:
 		out.append(OS.get_keycode_string(k))
+	for f in FIXED_KEYS.get(action, []):
+		out.append(f)
 	return ", ".join(out) if not out.is_empty() else "(unbound)"
+
+## what the window should be: the DisplayServer mode and size for the chosen display mode on a screen of this size
+func window_plan(screen: Vector2i, force_fullscreen: bool = false) -> Dictionary:
+	var m: int = 2 if force_fullscreen else window_mode
+	if m == 1:
+		return {"mode": DisplayServer.WINDOW_MODE_FULLSCREEN, "size": screen}
+	if m == 2:
+		return {"mode": DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN, "size": screen}
+	return {"mode": DisplayServer.WINDOW_MODE_WINDOWED, "size": Vector2i(mini(resolution.x, screen.x), mini(resolution.y, screen.y))}
+
+func resolution_index() -> int:
+	return RESOLUTIONS.find(resolution)
+
+func resolution_text() -> String:
+	return "%d x %d" % [resolution.x, resolution.y]
+
+## the next (dir = 1) or previous window size on the list; a size not on the list steps to the nearest one in that direction
+func step_resolution(dir: int) -> void:
+	var i: int = resolution_index()
+	if i < 0:
+		i = 0
+		for k in RESOLUTIONS.size():
+			if RESOLUTIONS[k].x * RESOLUTIONS[k].y <= resolution.x * resolution.y:
+				i = k
+		resolution = RESOLUTIONS[i]
+		return
+	resolution = RESOLUTIONS[clampi(i + dir, 0, RESOLUTIONS.size() - 1)]
 
 ## bind a key to an action: it replaces whatever the action had, and is taken away from any other action that used it
 func rebind(action: String, keycode: int) -> void:
@@ -84,17 +125,27 @@ func rebind(action: String, keycode: int) -> void:
 	binds[action] = [keycode]
 
 func to_dict() -> Dictionary:
-	return {"binds": binds, "sound": sound_on, "volume": volume, "tileset": tileset, "fullscreen": fullscreen}
+	return {"binds": binds, "sound": sound_on, "volume": volume, "tileset": tileset, "window_mode": window_mode, "resolution": [resolution.x, resolution.y]}
 
 func from_dict(d: Dictionary) -> void:
 	var b: Dictionary = d.get("binds", {})
 	for a in b:
 		if binds.has(a):
 			binds[a] = (b[a] as Array).map(func(k): return int(k))
+	# an action added since this file was written keeps its default keys: they are taken away from whatever the old file gave them to
+	for ac in ACTIONS:
+		if not b.has(ac[0]):
+			for k in ac[2]:
+				for other in binds:
+					if other != ac[0]:
+						binds[other] = (binds[other] as Array).filter(func(x): return x != k)
 	sound_on = bool(d.get("sound", true))
 	volume = clampf(float(d.get("volume", 0.7)), 0.0, 1.0)
 	tileset = int(d.get("tileset", 0))
-	fullscreen = bool(d.get("fullscreen", false))
+	window_mode = clampi(int(d.get("window_mode", 2 if bool(d.get("fullscreen", false)) else 0)), 0, WINDOW_MODES.size() - 1)
+	var r = d.get("resolution", [1920, 1080])
+	if r is Array and r.size() == 2:
+		resolution = Vector2i(clampi(int(r[0]), 640, 7680), clampi(int(r[1]), 360, 4320))
 
 func save() -> void:
 	var f := FileAccess.open(path, FileAccess.WRITE)

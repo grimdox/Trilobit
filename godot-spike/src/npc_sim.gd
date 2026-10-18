@@ -5,6 +5,7 @@ extends RefCounted
 ##  far: abstract.  Only a goal, a destination and an arrival tick; nothing is computed until it arrives or the player comes close,
 ##  when its position is reconstructed by walking the field for the elapsed time (capped).
 ## Struct-of-arrays storage, a bucketed arrival queue, and a rolling slice for tier checks keep the per-tick cost bounded.
+const CLK = preload("res://src/clock.gd")
 const FF = preload("res://src/flowfield.gd")
 const HOME := 0
 const WORK := 1
@@ -189,7 +190,7 @@ func _bucket(t: int, i: int) -> void:
 	buckets[t].append(i)
 
 func _schedule() -> void:
-	var hour := (tick / 60) % 24
+	var hour := (tick / CLK.HOUR) % 24
 	for i in n:
 		var r := rng.randf()
 		var g := int(goal[i])
@@ -325,7 +326,7 @@ func retier(player_cell: int) -> void:
 
 func step(player_cell: int) -> void:
 	player = player_cell
-	if tick % 60 == 0:
+	if tick % CLK.HOUR == 0:
 		_schedule()
 	for _c in churn_per_tick:
 		set_goal(rng.randi() % n, rng.randi() % 3)

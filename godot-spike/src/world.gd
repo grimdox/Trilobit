@@ -107,7 +107,7 @@ func enter(dest: Vector2i) -> bool:
 		ng.in_vehicle = -1
 	ng.last_pc = ng.pc
 	ng.sim.retier(ng.pc)
-	ng.fov.compute(ng.pc % ng.size, ng.pc / ng.size, 18)
+	ng.fov.compute(ng.pc % ng.size, ng.pc / ng.size, ng.sight_radius())
 	cache[key(from_zone)] = saved
 	game = ng
 	switches += 1

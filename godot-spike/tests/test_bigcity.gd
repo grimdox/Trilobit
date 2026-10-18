@@ -91,9 +91,9 @@ func run() -> Array:
 			door = door and t.passenger(0, k, TR.DOOR_A, l) == -1 and t.passenger(0, k, TR.DOOR_B, l) == -1
 	check.call("passengers never stand in the doorways", door)
 	var tick0: int = g.sim.tick
-	g.sim.tick = 8 * 60
+	g.sim.tick = 8 * 600
 	var rush: int = t.passengers_on(0) + t.passengers_on(1) + t.passengers_on(2)
-	g.sim.tick = 3 * 60
+	g.sim.tick = 3 * 600
 	var night: int = t.passengers_on(0) + t.passengers_on(1) + t.passengers_on(2)
 	g.sim.tick = tick0
 	check.call("the carriages are fuller at rush hour than at night (%d vs %d)" % [rush, night], rush > night * 2 and p1 == p2)

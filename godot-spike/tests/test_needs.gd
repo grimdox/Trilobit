@@ -31,7 +31,7 @@ func run() -> Array:
 	g.sim.retier(g.pc)
 	check.call("a fresh character is neither hungry nor thirsty", not g.hungry() and not g.thirsty() and g.status_effects().is_empty() and is_equal_approx(g.speed_mult(), 1.0))
 	var t0: int = g.sim.tick
-	g.sim.tick = t0 + 4 * 60 - 1
+	g.sim.tick = t0 + 4 * 600 - 1
 	check.call("just under 4 hours: not thirsty", not g.thirsty())
 	g.end_turn()
 	check.call("after 4 hours without a drink you are Thirsty", g.thirsty() and not g.hungry() and g.status_effects() == ["Thirsty"])
@@ -51,11 +51,11 @@ func run() -> Array:
 	var drink = ItemScript.new(db.defs[drink_id], 1)
 	g.eat_now(drink)
 	check.call("drinking (%s) quenches thirst" % drink_id, drink_id != "" and not g.thirsty())
-	g.sim.tick = g.last_ate + 24 * 60
+	g.sim.tick = g.last_ate + 24 * 600
 	g.last_drank = g.sim.tick
 	g.end_turn()
 	check.call("after 24 hours without food you are Hungry", g.hungry() and not g.thirsty() and g.status_effects() == ["Hungry"])
-	g.sim.tick = g.last_drank + 4 * 60
+	g.sim.tick = g.last_drank + 4 * 600
 	g.end_turn()
 	check.call("both at once stack to 64% speed", g.hungry() and g.thirsty() and is_equal_approx(g.speed_mult(), 0.64))
 	turn0 = g.turn

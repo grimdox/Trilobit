@@ -4,7 +4,7 @@ cd "$(dirname "$0")"
 python3 tools/export_items.py
 python3 ../trilobit-tools/gen_paperdoll.py data/items.json gfx/paperdoll
 rc=0
-for t in pockets world scale levels game vertical guns stealth zmove melee npcfall things menus vehicles island combat facing trains needs skills citylayout bigcity remake; do
+for t in pockets world scale levels game vertical guns stealth zmove melee npcfall things menus vehicles island combat facing trains needs skills citylayout bigcity remake timeui; do
   out=$(timeout -s KILL 280 godot --headless --path . -s tests/run_$t.gd 2>&1)
   echo "$out" | grep -E "FAIL|SCRIPT ERROR|^[A-Z]+ [0-9]+/[0-9]+|^\s+\("
   line=$(echo "$out" | grep -E "^[A-Z]+ [0-9]+/[0-9]+" | tail -1)

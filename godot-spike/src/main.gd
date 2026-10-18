@@ -9,9 +9,12 @@ const SfxScript = preload("res://src/sfx.gd")
 const ScreenScript = preload("res://src/screen_view.gd")
 const IMP = preload("res://src/implants.gd")
 const SK = preload("res://src/skills.gd")
+const CLK = preload("res://src/clock.gd")
 const UI_S := 1.5          # the interface is laid out for 1280x720 and drawn at 1.5x on the 1920x1080 canvas
 const TILESETS := ["Trilobit64", "Bouma_TopDown", "Mokuhanga_TopDown"]
 const SLOTS := 3
+const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "implants", "skills", "map"]
+const MOUSE_MODES := ["title", "pause", "options", "visuals", "keys", "saves", "loads", "implants", "map"]
 
 var game
 var tileset
@@ -19,7 +22,10 @@ var view
 var status: Label
 var logbox: RichTextLabel
 var panel: RichTextLabel
-var mode: String = "title"           # title, play, garage, inventory, help, talk, mods, jump, strike, shove, pause, options, keys, saves, loads, implants, skills, loading
+var mode: String = "title"           # title, play, garage, inventory, talk, mods, jump, strike, shove, turn, look, waitmenu, waiting, consume, pause, options, visuals, keys, saves, loads, implants, skills, map, loading
+var menu_sel: int = 0                 # the highlighted line of the wait menu
+var consume_list: Array = []          # what the consume menu offers (see Game.consumables)
+var look_off := Vector2i.ZERO         # the look cursor, in tiles from the player
 var menu: Dictionary = {}
 var ts_index: int = 0
 var inv_map: Dictionary = {}
@@ -65,26 +71,30 @@ func _ready() -> void:
 	else:
 		open_screen("title")
 
-## Fullscreen is the exclusive kind, which on Windows takes over the whole monitor and covers the taskbar (the plain borderless kind can leave it showing).
-## F11 or Alt+Enter toggles it from any screen; the choice is remembered.
+## The window: windowed at a chosen size, borderless fullscreen (a screen-sized window, so alt-tab and the taskbar behave) or exclusive fullscreen
+## (which on Windows takes over the whole monitor).  F11 or Alt+Enter flips between windowed and fullscreen from any screen; the choice is remembered.
 func apply_window() -> void:
 	if DisplayServer.get_name() == "headless":
 		return
-	var want: bool = settings.fullscreen or "--fullscreen" in OS.get_cmdline_args()
-	var cur := DisplayServer.window_get_mode()
-	if want and cur != DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
-	elif not want and (cur == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN or cur == DisplayServer.WINDOW_MODE_FULLSCREEN):
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	var scr: int = DisplayServer.window_get_current_screen()
+	var plan: Dictionary = settings.window_plan(DisplayServer.screen_get_size(scr), "--fullscreen" in OS.get_cmdline_args())
+	DisplayServer.window_set_mode(plan["mode"])
+	if plan["mode"] == DisplayServer.WINDOW_MODE_WINDOWED:
+		DisplayServer.window_set_size(plan["size"])
+		var at: Vector2i = DisplayServer.screen_get_position(scr) + (DisplayServer.screen_get_size(scr) - Vector2i(plan["size"])) / 2
+		DisplayServer.window_set_position(at)
+	DisplayServer.window_set_title("とりろびつ")
 
 func toggle_fullscreen() -> void:
-	settings.fullscreen = not settings.fullscreen
+	settings.window_mode = 2 if settings.window_mode == 0 else 0
 	settings.save()
 	apply_window()
+	if screen != null and (mode == "visuals"):
+		_fill_visuals()
 
 func _input(ev: InputEvent) -> void:
-	if ev is InputEventKey and ev.pressed and not ev.echo:
-		if ev.keycode == KEY_F11 or (ev.alt_pressed and (ev.keycode == KEY_ENTER or ev.keycode == KEY_KP_ENTER)):
+	if ev is InputEventKey and ev.pressed and not ev.echo and rebinding == "":
+		if settings.action_for(ev.keycode) == "fullscreen" or (ev.alt_pressed and (ev.keycode == KEY_ENTER or ev.keycode == KEY_KP_ENTER)):
 			toggle_fullscreen()
 			get_viewport().set_input_as_handled()
 
@@ -251,6 +261,9 @@ func open_screen(kind: String) -> void:
 		"options":
 			screen.title = "OPTIONS"
 			_fill_options()
+		"visuals":
+			screen.title = "VISUALS"
+			_fill_visuals()
 		"keys":
 			screen.title = "KEY BINDINGS"
 			screen.subtitle = "Enter on an action, then press the new key.  Esc cancels."
@@ -284,9 +297,17 @@ func _fill_options() -> void:
 		{"label": "Sound", "value": "ON" if settings.sound_on else "OFF", "id": "sound"},
 		{"label": "Volume", "value": "%d%%" % int(settings.volume * 100.0), "id": "volume"},
 		{"label": "Tileset", "value": TILESETS[ts_index].replace("_TopDown", ""), "id": "tileset"},
+		{"label": "Visuals...", "id": "visuals"},
 		{"label": "Key bindings...", "id": "keys"},
 		{"label": "Back", "id": "back"}]
 	screen.footer = "Left / Right changes a value  -  Enter selects  -  Esc goes back"
+
+func _fill_visuals() -> void:
+	screen.items = [
+		{"label": "Display mode", "value": settings.WINDOW_MODES[settings.window_mode], "id": "wmode"},
+		{"label": "Window size", "value": settings.resolution_text() + ("" if settings.window_mode == 0 else "  (used when windowed)"), "id": "res"},
+		{"label": "Back", "id": "back"}]
+	screen.footer = "Left / Right changes a value  -  Alt+Enter or F11 toggles fullscreen  -  Esc goes back"
 
 func _fill_keys() -> void:
 	var items := []
@@ -315,8 +336,11 @@ func _scroll_fix() -> void:
 
 func back_from_screen() -> void:
 	match mode:
-		"options", "keys", "saves", "loads":
-			var prev := "options" if mode == "keys" else screen_back
+		"options", "visuals", "keys", "saves", "loads":
+			if mode == "keys" and screen_back == "play":
+				resume_play()
+				return
+			var prev := "options" if (mode == "keys" or mode == "visuals") else screen_back
 			if prev == "pause" and game != null:
 				open_screen("pause")
 			elif prev == "options":
@@ -365,6 +389,20 @@ func activate(id: String) -> void:
 			screen_back = "pause" if mode == "pause" else "title"
 			open_screen("options")
 		"keys": open_screen("keys")
+		"visuals": open_screen("visuals")
+		"wmode":
+			settings.window_mode = (settings.window_mode + 1) % settings.WINDOW_MODES.size()
+			settings.save()
+			apply_window()
+			_fill_visuals()
+		"res":
+			var before: Vector2i = settings.resolution
+			settings.step_resolution(1)
+			if settings.resolution == before:
+				settings.resolution = settings.RESOLUTIONS[0]
+			settings.save()
+			apply_window()
+			_fill_visuals()
 		"implants": open_screen("implants")
 		"skills": open_screen("skills")
 		"resume": resume_play()
@@ -478,6 +516,18 @@ func screen_key(k: int) -> void:
 				activate("sound")
 			elif id == "tileset":
 				_cycle_tileset(step)
+			elif id == "wmode":
+				settings.window_mode = (settings.window_mode + step + settings.WINDOW_MODES.size()) % settings.WINDOW_MODES.size()
+				settings.save()
+				apply_window()
+				_fill_visuals()
+				sfx.play("blip")
+			elif id == "res":
+				settings.step_resolution(step)
+				settings.save()
+				apply_window()
+				_fill_visuals()
+				sfx.play("blip")
 		KEY_ENTER, KEY_KP_ENTER, KEY_SPACE:
 			var it: Dictionary = screen.items[screen.sel]
 			if not it.get("disabled", false):
@@ -497,7 +547,7 @@ func _unhandled_input(ev: InputEvent) -> void:
 		if i >= 0 and i != screen.part_sel:
 			screen.part_sel = i
 			sfx.play("blip")
-	if not (mode in ["title", "pause", "options", "keys", "saves", "loads", "implants", "map"]):
+	if not (mode in MOUSE_MODES):
 		return
 	# menus: hover highlights, left click chooses, right click goes back, wheel scrolls
 	if ev is InputEventMouseMotion and mode != "implants" and mode != "map" and rebinding == "":
@@ -531,6 +581,21 @@ func _unhandled_input(ev: InputEvent) -> void:
 			screen.sel = clampi(screen.sel + d, 0, screen.items.size() - 1)
 			_scroll_fix()
 			sfx.play("blip")
+
+## a wait under way: spend turns for a few milliseconds a frame so the screen stays alive and Esc can stop it
+func _process(_delta: float) -> void:
+	if mode != "waiting" or game == null:
+		return
+	var t0: int = Time.get_ticks_usec()
+	while game.waiting() and Time.get_ticks_usec() - t0 < 12000:
+		game.wait_step(8)
+	if not game.waiting():
+		mode = "play"
+		refresh()
+		return
+	refresh()
+	var done: int = game.wait_total - game.wait_left
+	logbox.text = "Waiting...  %d%%   (%s of %s)   it is %s     [Esc stops]" % [100 * done / maxi(1, game.wait_total), CLK.span_text(done), CLK.span_text(game.wait_total), game.time_text()]
 
 func refresh() -> void:
 	if world != null and world.game == game and world.poll():
@@ -573,6 +638,10 @@ func refresh() -> void:
 		show_talk()
 	elif mode == "mods":
 		show_mods()
+	elif mode == "waitmenu":
+		show_wait()
+	elif mode == "consume":
+		show_consume()
 	elif mode == "garage":
 		show_garage()
 
@@ -667,9 +736,89 @@ func show_inventory() -> void:
 	panel.text = t
 	panel.visible = true
 
-func show_help() -> void:
-	panel.text = "[b]Keys[/b]\n\nMove: arrows, numpad, h j k l y u b n (n is also 'new life' when dead)\n.  or  Space   wait / brake\n<  or  PgUp  go up (stairs, elevator, ladder; with jump jets, lift off or climb through open air)      >  or  PgDn  go down (or descend and land).  An elevator rides up to three floors.  Hunters follow you up and down stairs.\ne  get into or out of cars, gyros (flying) and mechs (armoured walkers).  Leap off an edge and you fall: 5 damage a floor.\nt   talk to the nearest person (vendors, fixers, ripperdocs)      p   pay 100 on the debt (Shift+P: 1000)\nYou see a half circle in front of you: ; + direction turns you to look without a step.  Walk into a locked door to pick it.  Step onto a carriage while the train doors are open to ride; step onto a platform to get off.\ng   pick up        i   inventory (a-z wields a gun)\nf   fire at the target (Shift+F: at anyone)      Tab  cycle targets      a  aim (up to 3 turns, each steadier)\nr   reload / clear a jam      v  fire mode (single, burst, auto)      x  choose the next ammunition kind\nF4  gunsmith: fit scopes, suppressors, magazines, grips, stocks, barrels (a scope helps at range, hurts up close)\ns   pickpocket an adjacent person (Deception skill)\nw + direction   strike (reach weapons hit up to 2 away; they also strike hunters 2 cells off when you step toward them)      o + direction   shove (off an edge, too)      \\   swap to your previous weapon\nc   crouch      z   crawl (half speed, nearly invisible and silent)      Shift+direction   run two cells (noisy, tiring)      q + direction   jump (2 cells, 3 after a run)        e   get in or out of a car\nd   drop the wielded weapon\nLimbs: each has its own health (right-hand panel).  Go 24 hours without food and you are Hungry, 4 hours without a drink and you are Thirsty: each costs 20% of your walking speed.  A disabled leg slows you, a disabled arm rules out two-handed weapons; head or chest at 0 is death.  Armor is worn from the inventory and soaks damage until it breaks.  Trauma patches mend limbs; ripperdocs rebuild them.\nEsc  menu: save, load, options (rebind keys, sound), implants, attributes & skills        F3  implants        F7  attributes & skills (arrows or numpad or the mouse choose a line)        M  island map        F2  switch tileset        F5  quick save        F9  quick load        F11 or Alt+Enter  fullscreen (covers the taskbar)\n\n[b]Tips[/b]\nThe bar over a person's head fills as they notice you.  ? = looking, ! = hunting.  Small arrows on the edge of each tile show which way people and animals face.  People see in a cone in front of them and hear footsteps by stance.  Strike an unaware person from behind for a quiet kill.  Crates, dumpsters, planters, railings and cars give cover; crouch behind them.\nThugs (red coats) are hostile.  Officers turn on you when your heat reaches 30.  Cars are electric: watch the battery."
+## the wait menu: fixed spans and "until" times (see clock.gd)
+func show_wait() -> void:
+	var g = game
+	var t := "[b]Wait[/b]   (1-8 or Up / Down and Enter chooses, Esc leaves)   it is %s\n\n" % CLK.text(g.sim.tick)
+	var rows: Array = wait_rows()
+	for i in rows.size():
+		var line := "%d) %s" % [i + 1, rows[i]["label"]]
+		if rows[i].has("hour"):
+			line += "   [color=#8899aa](%s)[/color]" % CLK.span_text(rows[i]["turns"])
+		t += ("[color=#4de6ff]> %s[/color]\n" % line) if i == menu_sel else ("  %s\n" % line)
+	t += "\nWaiting stops early if you are hurt, get hungry or thirsty, or a hostile you can see is on to you.  Esc stops a wait under way."
+	panel.text = t
 	panel.visible = true
+
+func wait_rows() -> Array:
+	var rows: Array = []
+	for w in CLK.WAITS:
+		rows.append({"label": w[0], "turns": w[1]})
+	for w in CLK.WAIT_UNTIL:
+		rows.append({"label": w[0], "turns": CLK.turns_until(game.sim.tick, w[1]), "hour": w[1]})
+	return rows
+
+func choose_wait(i: int) -> void:
+	var rows: Array = wait_rows()
+	if i < 0 or i >= rows.size():
+		return
+	panel.visible = false
+	if game.wait_for(rows[i]["turns"]):
+		if rows[i].has("hour"):
+			game.say("(until %02d:00)" % rows[i]["hour"])
+		mode = "waiting"
+	else:
+		mode = "play"
+	refresh()
+
+## the consume menu: food and drink in your pack or within one tile
+func show_consume() -> void:
+	var g = game
+	var t := "[b]Consume[/b]   (a-z chooses, Esc leaves)\nFood %s of 24h   Water %s of 4h\n\n" % [CLK.span_text(g.food_left()), CLK.span_text(g.drink_left())]
+	for k in consume_list.size():
+		var e: Dictionary = consume_list[k]
+		t += "%s) %s   [color=#8899aa]%s[/color]\n" % [char(97 + k) if k < 26 else "?", g.consumable_label(e), e["where"]]
+	panel.text = t
+	panel.visible = true
+
+func open_consume() -> void:
+	consume_list = game.consumables()
+	if consume_list.is_empty():
+		game.say("You have nothing to eat or drink, and nothing edible within one tile.")
+		return
+	mode = "consume"
+	show_consume()
+
+## the look cursor, as a cell on the player's level; the view re-centres on it
+func look_cell() -> int:
+	var g = game
+	var base: int = (g.pc / g.s2) * g.s2
+	return base + (g.ly(g.pc) + look_off.y) * g.size + (g.lx(g.pc) + look_off.x)
+
+func look_move(d: Vector2i, steps: int) -> void:
+	var g = game
+	var n: Vector2i = look_off + d * steps
+	var x: int = g.lx(g.pc) + n.x
+	var y: int = g.ly(g.pc) + n.y
+	if x < 0 or y < 0 or x >= g.size or y >= g.size or not g.look_cell_ok(n.x, n.y):
+		g.say("That is as far as you can see.")
+		return
+	look_off = n
+	look_refresh()
+
+func look_refresh() -> void:
+	view.look_on = true
+	view.look_off = look_off
+	var d: String = game.describe_at(look_cell())
+	logbox.text = "[b]LOOK[/b]  %s\n[color=#8899aa]Move the cursor (Shift: 5 tiles).  Enter logs this.  L or Esc ends.  You see %d tiles.[/color]" % [d, game.sight_radius()]
+	view.queue_redraw()
+
+func look_end() -> void:
+	look_off = Vector2i.ZERO
+	view.look_on = false
+	view.look_off = Vector2i.ZERO
+	mode = "play"
+	refresh()
 
 func dir_of(k: int) -> Vector2i:
 	match settings.action_for(k):
@@ -687,7 +836,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 	if not (ev is InputEventKey) or not ev.pressed:
 		return
 	var k: int = ev.keycode
-	if mode in ["title", "loading", "pause", "options", "keys", "saves", "loads", "implants", "skills", "map"]:
+	if mode in SCREEN_MODES:
 		if mode != "loading":
 			screen_key(k)
 		return
@@ -761,10 +910,55 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				panel.visible = false
 		refresh()
 		return
-	if mode == "help":
-		mode = "play"
-		panel.visible = false
+	if mode == "waiting":
+		if k == KEY_ESCAPE or k == KEY_SPACE or k == KEY_ENTER:
+			game.wait_cancel("You stop waiting.")
+			mode = "play"
+			refresh()
+		return
+	if mode == "waitmenu":
+		var rows_n: int = wait_rows().size()
+		if k == KEY_ESCAPE:
+			mode = "play"
+			panel.visible = false
+		elif k >= KEY_1 and k < KEY_1 + rows_n:
+			choose_wait(k - KEY_1)
+			return
+		elif k == KEY_UP or k == KEY_K:
+			menu_sel = (menu_sel + rows_n - 1) % rows_n
+		elif k == KEY_DOWN or k == KEY_J:
+			menu_sel = (menu_sel + 1) % rows_n
+		elif k == KEY_ENTER or k == KEY_KP_ENTER:
+			choose_wait(menu_sel)
+			return
 		refresh()
+		return
+	if mode == "consume":
+		if k == KEY_ESCAPE or settings.action_for(k) == "consume":
+			mode = "play"
+			panel.visible = false
+		else:
+			var ck: String = OS.get_keycode_string(k).to_lower()
+			var ci: int = ck.unicode_at(0) - 97 if ck.length() == 1 else -1
+			if ci >= 0 and ci < consume_list.size():
+				var e: Dictionary = consume_list[ci]
+				mode = "play"
+				panel.visible = false
+				game.act_consume(e)
+		refresh()
+		return
+	if mode == "look":
+		var act_l: String = settings.action_for(k)
+		if k == KEY_ESCAPE or act_l == "look":
+			look_end()
+			return
+		if k == KEY_ENTER or k == KEY_KP_ENTER:
+			game.say("You look: " + game.describe_at(look_cell()))
+			look_refresh()
+			return
+		var ld := dir_of(k)
+		if ld != Vector2i.ZERO:
+			look_move(ld, 5 if ev.shift_pressed else 1)
 		return
 	if k == KEY_ESCAPE:
 		open_screen("pause")
@@ -775,8 +969,8 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 			begin_new(randi() % 100000)
 		return
 	var act: String = settings.action_for(k)
-	if k == KEY_QUESTION or (k == KEY_SLASH and ev.shift_pressed):
-		act = "help"
+	if k == KEY_SLASH and ev.shift_pressed:
+		act = "keysscreen"
 	var acted := true
 	g.tracers.clear()
 	var run: bool = ev.shift_pressed
@@ -853,10 +1047,25 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		"map":
 			open_screen("map")
 			return
-		"help":
-			mode = "help"
-			show_help()
+		"keysscreen":
+			screen_back = "play"
+			open_screen("keys")
 			return
+		"look":
+			mode = "look"
+			look_off = Vector2i.ZERO
+			look_refresh()
+			return
+		"consume":
+			open_consume()
+			return
+		"waitmenu":
+			mode = "waitmenu"
+			menu_sel = 0
+			show_wait()
+			return
+		"fullscreen":
+			pass
 		_:
 			match k:
 				KEY_F2: _cycle_tileset(1)

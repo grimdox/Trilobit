@@ -16,6 +16,8 @@ const VS = preload("res://src/vehicles.gd")
 const IMP = preload("res://src/implants.gd")
 const BODY = preload("res://src/body.gd")
 const SK = preload("res://src/skills.gd")
+const CLK = preload("res://src/clock.gd")
+const LOOK = preload("res://src/look.gd")
 
 const UNAWARE := 0
 const CRAWL := 0
@@ -187,7 +189,7 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) ->
 	sim.perception_standin = false
 	sim.setup(city, n_people, seed_value ^ 0x5eed)
 	_prof("sim.setup", _t0)
-	sim.tick = 7 * 60 - 20
+	sim.tick = CLK.START_TICK
 	last_ate = sim.tick
 	last_drank = sim.tick
 	fov = FOV.new()
@@ -706,8 +708,7 @@ func name_of(i: int) -> String:
 	return "%s the %s" % [nname[i], FAC_NAMES[fac[i]]]
 
 func time_text() -> String:
-	var m: int = sim.tick % (24 * 60)
-	return "%02d:%02d" % [m / 60, m % 60]
+	return CLK.text(sim.tick)
 
 func sees_cell(c: int) -> bool:
 	return fov.visible[c] == 1
@@ -1002,7 +1003,7 @@ func thirsty() -> bool:
 func speed_mult() -> float:
 	return (NEED_SLOW if hungry() else 1.0) * (NEED_SLOW if thirsty() else 1.0)
 
-## minutes until the next need bites: [until hungry, until thirsty] (0 when already)
+## turns until the next need bites: [until hungry, until thirsty] (0 when already)
 func need_timers() -> Array:
 	return [maxi(0, HUNGER_AFTER - (sim.tick - last_ate)), maxi(0, THIRST_AFTER - (sim.tick - last_drank))]
 
@@ -1030,6 +1031,124 @@ func _needs_tick() -> void:
 
 func act_wait() -> void:
 	end_turn()
+
+## --- waiting.  `wait_for(turns)` sets a wait going; wait_step() spends turns on it (a few at a time so the screen stays alive) and
+## stops it early when you are hurt, a hostile you can see is on to you, or a need bites.  Tests and scripts use act_wait_turns().
+var wait_left: int = 0
+var wait_total: int = 0
+var wait_why: String = ""
+var wait_hp: int = 0
+
+func wait_for(turns: int) -> bool:
+	if turns <= 0 or game_over:
+		return false
+	if in_vehicle >= 0 and absi(int(vehicles[in_vehicle]["spd"])) > 0:
+		say("You can't wait while the vehicle is moving.")
+		return false
+	wait_left = turns
+	wait_total = turns
+	wait_why = ""
+	wait_hp = hp
+	say("You wait %s." % CLK.span_text(turns))
+	return true
+
+func wait_until(hour: int) -> bool:
+	var n: int = CLK.turns_until(sim.tick, hour)
+	if not wait_for(n):
+		return false
+	say("(until %02d:00)" % hour)
+	return true
+
+func waiting() -> bool:
+	return wait_left > 0
+
+func wait_cancel(why: String = "You stop waiting.") -> void:
+	if wait_left > 0:
+		var done: int = wait_total - wait_left
+		wait_left = 0
+		wait_why = "stopped"
+		say("%s  (%s passed)" % [why, CLK.span_text(done)])
+
+func _wait_threat() -> String:
+	for i in sim.near_list:
+		if sim.alive[i] == 1 and hostile(i) and int(astate[i]) >= SEARCHING and fov.visible[sim.pos[i]] == 1:
+			return "%s is on to you" % name_of(i)
+	return ""
+
+## run up to `max_turns` of the current wait; returns the turns spent
+func wait_step(max_turns: int) -> int:
+	var spent := 0
+	while wait_left > 0 and spent < max_turns and not game_over:
+		var hp0: int = wait_hp
+		var h0: bool = hungry()
+		var t0: bool = thirsty()
+		wait_left -= 1
+		end_turn()
+		spent += 1
+		wait_hp = mini(wait_hp, hp)
+		var why := ""
+		if hp < hp0 or hp < wait_hp:
+			why = "You are hurt"
+		elif hungry() and not h0:
+			why = "You are hungry"
+		elif thirsty() and not t0:
+			why = "You are thirsty"
+		else:
+			why = _wait_threat()
+		if why != "":
+			wait_cancel("%s: you stop waiting." % why)
+			break
+	if wait_left == 0 and spent > 0 and wait_total > 0 and wait_why == "":
+		wait_why = "done"
+		say("You finish waiting.  It is %s." % time_text())
+		wait_total = 0
+	return spent
+
+## the whole wait in one go (headless)
+func act_wait_turns(turns: int) -> int:
+	if not wait_for(turns):
+		return 0
+	var n := 0
+	while wait_left > 0 and not game_over:
+		n += wait_step(600)
+	return n
+
+## --- looking.  The look cursor moves over what you can see (or remember) up to your sight range; describe_at() says what is there.
+func look_cell_ok(dx: int, dy: int) -> bool:
+	var r: int = sight_radius()
+	return maxi(absi(dx), absi(dy)) <= r
+
+func describe_at(c: int) -> String:
+	if c < 0 or c >= size * rows:
+		return "Nothing there."
+	var x: int = c % size
+	var y: int = (c / size) % size
+	var seen: bool = fov.visible[c] == 1
+	if not seen and fov.explored[c] == 0:
+		return "You can't see that far or that way."
+	var bits: Array = []
+	var t: int = city.tiles[c]
+	bits.append(LOOK.terrain_name(t))
+	if seen:
+		if sim.at[c] >= 0:
+			bits.append(name_of(sim.at[c]) + ((" (" + ["unaware", "suspicious", "searching", "hunting you"][int(astate[sim.at[c]])] + ")") if hostile(sim.at[c]) else ""))
+		if c == pc:
+			bits.append("you")
+		if veh_at[c] >= 0:
+			bits.append("a " + String(vs.KINDS[vehicles[veh_at[c]]["kind"]]["name"]))
+		if thing_at[c] >= 0:
+			bits.append("a " + String(things[thing_at[c]]["k"]))
+		if crit_at[c] >= 0:
+			bits.append("a " + String(critters[crit_at[c]]["k"]))
+		if items_at.has(c):
+			var names: Array = []
+			for it in items_at[c]:
+				names.append(item_label(it))
+			bits.append("on the ground: " + ", ".join(names))
+	else:
+		bits.append("(remembered, out of sight)")
+	var d: int = cheb(c, pc)
+	return "%s, %d tile%s away." % [", ".join(bits), d, "" if d == 1 else "s"]
 
 ## the lock on a door: theft skill against the floor's security
 func _pick_lock(c: int) -> bool:
@@ -1225,8 +1344,16 @@ const BASE_ARC := 180.0
 func vision_arc() -> float:
 	return minf(360.0, BASE_ARC + IMP.sum(implants, "arc", func(d): return body.group_ok(body.group_of_part(String(d.get("part", "head"))))))
 
+## how far you can see, in tiles.  Doubled from 18 to 36 (2026-10-18); implants and scopes will add to it later through sight_bonus().
+const BASE_SIGHT := 36
+func sight_bonus() -> int:
+	return 0
+
+func sight_radius() -> int:
+	return BASE_SIGHT + sight_bonus()
+
 func _compute_fov() -> void:
-	fov.compute(pc % size, pc / size, 18, vision_arc(), facing.x, facing.y)
+	fov.compute(pc % size, pc / size, sight_radius(), vision_arc(), facing.x, facing.y)
 
 func turn_to(dx: int, dy: int) -> void:
 	if dx == 0 and dy == 0:
@@ -1252,8 +1379,12 @@ var armor_worn: Array = []                     # armor items worn over the body 
 var imp_dur: Dictionary = {}                   # implant id -> armor durability left (absent = as new)
 var melee_arts: Array = []                     # learned melee arts: "parry", "riposte" (see _melee_arts_on_miss); empty until the player learns some
 var bless_left: int = 0                        # turns of blessing left: a little luck (+6% to hit, +4% to dodge a blade)
-const HUNGER_AFTER := 24 * 60                   # turns (a turn is a minute) without food before you are Hungry
-const THIRST_AFTER := 4 * 60                    # ... without a drink before you are Thirsty
+const HUNGER_AFTER := 24 * CLK.HOUR             # turns (a turn is six seconds) without food before you are Hungry: a full stomach is 2,500 kcal = 24 hours
+const THIRST_AFTER := 4 * CLK.HOUR              # ... without a drink before you are Thirsty: 500 mL of water = 4 hours
+const KCAL_FULL := 2500
+const ML_FULL := 500
+const TURNS_PER_KCAL := float(HUNGER_AFTER) / float(KCAL_FULL)       # 5.76 turns (34.6 s) of not being hungry per kcal
+const TURNS_PER_ML := float(THIRST_AFTER) / float(ML_FULL)           # 4.8 turns (28.8 s) of not being thirsty per mL of water
 const NEED_SLOW := 0.8                          # each of Hungry / Thirsty cuts walking speed to 80% (they stack)
 var last_ate: int = 0                           # sim.tick of the last meal and the last drink
 var last_drank: int = 0
@@ -1553,26 +1684,158 @@ func _consume_one(it) -> void:
 	elif items_at.has(pc) and items_at[pc].has(it):
 		items_at[pc].erase(it)
 
-## the effect of a meal or drink: health, stamina; strong drink dulls the aim for a while
-func eat_now(it) -> void:
+## --- food and drink.  A meal's kcal and a drink's millilitres are turned into time: 2,500 kcal = 24 hours before you are Hungry, 500 mL of water = 4 hours before you are Thirsty.
+## A full stomach holds exactly that much, so eating more than you have room for is wasted.
+func food_left() -> int:
+	return clampi(HUNGER_AFTER - (sim.tick - last_ate), 0, HUNGER_AFTER)
+
+func drink_left() -> int:
+	return clampi(THIRST_AFTER - (sim.tick - last_drank), 0, THIRST_AFTER)
+
+## a need's "time of last fill" after adding `gain` turns of supply, never past full
+func _filled(span: int, left: int, gain: int) -> int:
+	return sim.tick - (span - mini(span, left + gain))
+
+func kcal_turns(kcal: int) -> int:
+	return int(round(float(kcal) * TURNS_PER_KCAL))
+
+func ml_turns(ml: int, hydr: float = 1.0) -> int:
+	return int(round(float(ml) * hydr * TURNS_PER_ML))
+
+## the effect of a meal or drink: hunger and thirst clocks, health, stamina; strong drink dulls the aim for a while.  Returns the turns of food and drink it added.
+func eat_now(it) -> Array:
 	var f: Dictionary = it.def.get("food", {})
+	var got_food: int = 0
+	var got_drink: int = 0
+	var kcal: int = int(f.get("kcal", 0))
+	if kcal > 0:
+		got_food = kcal_turns(kcal)
+		last_ate = _filled(HUNGER_AFTER, food_left(), got_food)
 	if f.get("drink", false):
-		last_drank = sim.tick
-	else:
-		last_ate = sim.tick
+		got_drink = ml_turns(int(f.get("ml", 0)), float(f.get("hydr", 1.0)))
+		last_drank = _filled(THIRST_AFTER, drink_left(), got_drink)
 	hp = mini(hp_max, hp + int(f.get("hp", 0)))
 	stamina = mini(STAMINA_MAX, stamina + int(f.get("stam", 0)))
 	if f.get("alcohol", false):
-		drunk_left = mini(240, drunk_left + 60)
+		drunk_left = mini(240 * CLK.MIN, drunk_left + 60 * CLK.MIN)
+	return [got_food, got_drink]
+
+func _eat_report(it, before_food: int, before_drink: int) -> String:
+	var f: Dictionary = it.def.get("food", {})
+	var parts: Array = []
+	if int(f.get("kcal", 0)) > 0:
+		parts.append("%d kcal, food for %s more" % [int(f["kcal"]), CLK.span_text(food_left() - before_food)] if food_left() > before_food else "%d kcal wasted: you are full" % int(f["kcal"]))
+	if f.get("drink", false) and int(f.get("ml", 0)) > 0:
+		parts.append("%d mL, water for %s more" % [int(f["ml"]), CLK.span_text(drink_left() - before_drink)] if drink_left() > before_drink else "%d mL wasted: you are not thirsty" % int(f["ml"]))
+	if int(f.get("hp", 0)) > 0:
+		parts.append("health +%d" % int(f["hp"]))
+	if int(f.get("stam", 0)) > 0:
+		parts.append("stamina +%d" % int(f["stam"]))
+	return ", ".join(parts)
 
 func act_eat(it) -> bool:
 	var f: Dictionary = it.def.get("food", {})
 	if f.is_empty():
 		say("You can't eat that.")
 		return false
+	var bf: int = food_left()
+	var bd: int = drink_left()
 	_consume_one(it)
 	eat_now(it)
-	say("You %s the %s.  (health +%d, stamina +%d)" % ["drink" if f.get("drink", false) else "eat", it.def["name"], int(f.get("hp", 0)), int(f.get("stam", 0))])
+	say("You %s the %s.  (%s)" % ["drink" if f.get("drink", false) else "eat", it.def["name"], _eat_report(it, bf, bd)])
+	sfx("pick")
+	end_turn()
+	return true
+
+## --- the consume menu: food, drink and bottled water in your pack, or within one tile of you (the ground around you)
+## [{item, parent, cell, label, kind}] kind: "food" | "drink" | "water"
+func consumables() -> Array:
+	var out: Array = []
+	for e in inventory_list():
+		_add_consumable(out, e["item"], e["parent"], -1, "in your pack" if e["depth"] > 0 or e["where"] == "worn" else e["where"])
+	var cx: int = pc % size
+	var cy: int = (pc / size) % size
+	var base: int = (pc / (size * size)) * size * size
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			var x: int = cx + dx
+			var y: int = cy + dy
+			if x < 0 or y < 0 or x >= size or y >= size:
+				continue
+			var c: int = base + y * size + x
+			if not items_at.has(c) or (dx != 0 or dy != 0) and not fov.visible[c] == 1:
+				continue
+			for it in items_at[c]:
+				_collect_ground(out, it, null, c, "here" if (dx == 0 and dy == 0) else "next to you")
+	return out
+
+func _collect_ground(out: Array, it, parent, cell: int, where: String) -> void:
+	_add_consumable(out, it, parent, cell, where)
+	for p in it.pockets:
+		for sub in p:
+			_collect_ground(out, sub, it, cell, where)
+
+func _add_consumable(out: Array, it, parent, cell: int, where: String) -> void:
+	if it.has_tag("food"):
+		out.append({"item": it, "parent": parent, "cell": cell, "kind": "drink" if it.def.get("food", {}).get("drink", false) else "food", "where": where})
+	elif it.is_liquid() and it.def["id"] == "trl_water" and it.count > 0:
+		out.append({"item": it, "parent": parent, "cell": cell, "kind": "water", "where": where})
+
+func consumable_label(e: Dictionary) -> String:
+	var it = e["item"]
+	var f: Dictionary = it.def.get("food", {})
+	match e["kind"]:
+		"water":
+			return "water, %d mL  (%s of thirst)" % [it.count, CLK.span_text(ml_turns(it.count))]
+		"drink":
+			return "%s%s  (%d mL, %d kcal)" % [it.def["name"], " x%d" % it.count if it.count > 1 else "", int(f.get("ml", 0)), int(f.get("kcal", 0))]
+	return "%s%s  (%d kcal)" % [it.def["name"], " x%d" % it.count if it.count > 1 else "", int(f.get("kcal", 0))]
+
+## remove one of an item from wherever it is (your pack, or the ground)
+func _take_one(e: Dictionary) -> void:
+	var it = e["item"]
+	if it.count > 1:
+		it.count -= 1
+		return
+	if e["cell"] >= 0:
+		if e["parent"] != null:
+			e["parent"].remove(it)
+		elif items_at.has(e["cell"]):
+			items_at[e["cell"]].erase(it)
+			if items_at[e["cell"]].is_empty():
+				items_at.erase(e["cell"])
+	else:
+		_consume_one(it)
+
+func act_consume(e: Dictionary) -> bool:
+	var it = e["item"]
+	if e["kind"] == "water":
+		var room: int = int(ceil(float(THIRST_AFTER - drink_left()) / TURNS_PER_ML))
+		if room < 25:
+			say("You are not thirsty: you are carrying all the water you can hold (%s)." % CLK.span_text(drink_left()))
+			return false
+		var ml: int = mini(it.count, room)
+		it.count -= ml
+		if it.count <= 0:
+			if e["parent"] != null:
+				e["parent"].remove(it)
+			elif e["cell"] >= 0 and items_at.has(e["cell"]):
+				items_at[e["cell"]].erase(it)
+		last_drank = _filled(THIRST_AFTER, drink_left(), ml_turns(ml))
+		say("You drink %d mL of water.  (water for %s more; %s in all)" % [ml, CLK.span_text(ml_turns(ml)), CLK.span_text(drink_left())])
+		sfx("pick")
+		end_turn()
+		return true
+	var f: Dictionary = it.def.get("food", {})
+	if f.is_empty():
+		say("You can't consume that.")
+		return false
+	var bf: int = food_left()
+	var bd: int = drink_left()
+	_take_one(e)
+	eat_now(it)
+	say("You %s the %s.  (%s)" % ["drink" if e["kind"] == "drink" else "eat", it.def["name"], _eat_report(it, bf, bd)])
+	sfx("pick")
 	end_turn()
 	return true
 
@@ -1586,7 +1849,7 @@ func act_use_charm(it) -> bool:
 	if u.has("hp"):
 		hp = mini(hp_max, hp + int(u["hp"]))
 	if u.has("bless"):
-		bless_left = maxi(bless_left, int(u["bless"]))
+		bless_left = maxi(bless_left, int(u["bless"]) * CLK.MIN)       # data gives minutes
 	say(String(u.get("msg", "You use it.")))
 	end_turn()
 	return true
@@ -2567,16 +2830,16 @@ func end_turn() -> void:
 	ran_this_turn = false
 	_jet_tick()
 	_process_followers()
-	if turn % 20 == 0 and heat > 0:
+	if turn % (20 * CLK.MIN) == 0 and heat > 0:
 		heat -= 1
 	if bless_left > 0:
 		bless_left -= 1
 	if drunk_left > 0:
 		drunk_left -= 1
 	_needs_tick()
-	if turn % 12 == 0 and hp < hp_max and in_vehicle < 0:
+	if turn % (12 * CLK.MIN) == 0 and hp < hp_max and in_vehicle < 0:
 		hp += 1
-	if turn % 40 == 0:
+	if turn % (40 * CLK.MIN) == 0:
 		for l in BODY.LIMBS:                      # hurt limbs knit slowly; a disabled one needs a ripperdoc or a trauma patch
 			if body.ok(l) and int(body.hp[l]) < int(body.mx[l]):
 				body.heal(l, 1)
@@ -3694,7 +3957,7 @@ func outside_tile(x: int, y: int) -> int:
 func player_dict() -> Dictionary:
 	return {"hp": hp, "hp_max": hp_max, "yen": yen, "heat": heat, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
 		"attrs": attrs.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
-		"stamina": stamina, "stance": stance, "turn": turn, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "flying": flying,
+		"stamina": stamina, "stance": stance, "turn": turn, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "flying": flying,
 		"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
 
 ## attributes, skills and XP from a save; saves from before the attribute system (or with the old skill names) keep what still exists and start the rest at the defaults
@@ -3743,13 +4006,14 @@ func apply_player(d: Dictionary) -> void:
 		worn.append(ItemScript.from_dict(x, db))
 	wield = ItemScript.from_dict(d["wield"], db) if d["wield"] != null else null
 	stamina = int(d["stamina"])
-	bless_left = int(d.get("bless", 0))
-	drunk_left = int(d.get("drunk", 0))
-	last_ate = int(d.get("ate", int(d.get("tick", 0))))
-	last_drank = int(d.get("drank", int(d.get("tick", 0))))
+	var tk: int = time_scale(d)          # saves from before the six-second turn count in minutes
+	bless_left = int(d.get("bless", 0)) * tk
+	drunk_left = int(d.get("drunk", 0)) * tk
+	last_ate = int(d.get("ate", int(d.get("tick", 0)))) * tk
+	last_drank = int(d.get("drank", int(d.get("tick", 0)))) * tk
 	stance = int(d["stance"])
-	turn = int(d["turn"])
-	sim.tick = int(d["tick"])
+	turn = int(d["turn"]) * tk
+	sim.tick = int(d["tick"]) * tk
 	_was_hungry = hungry()
 	_was_thirsty = thirsty()
 	eco.load_from(JSON.parse_string(JSON.stringify(d["eco"])))
@@ -3763,6 +4027,10 @@ func zone_cross(_dx: int, _dy: int) -> bool:
 	return false
 
 # ---------------------------------------------------------------- save / load
+## 1 for a save made with six-second turns, 10 for an older one (its turns were minutes)
+func time_scale(d: Dictionary) -> int:
+	return 1 if int(d.get("tv", 1)) >= CLK.SAVE_VERSION else CLK.OLD_TO_NEW
+
 func save_dict() -> Dictionary:
 	var it_at := {}
 	for c in items_at:
@@ -3776,7 +4044,7 @@ func save_dict() -> Dictionary:
 	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "attrs": attrs, "xp": xp, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate(),
 			"rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
-			"items_at": it_at, "vehicles": vlist, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
+			"items_at": it_at, "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
 					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc),
 					"mdis": Array(mdis), "noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle)}}
@@ -3789,7 +4057,7 @@ func load_dict(d: Dictionary) -> void:
 		setup(int(d.get("people", 0)), isl, Vector2i(int(d["zone"][0]), int(d["zone"][1])))
 	else:
 		setup(int(d.get("people", sim.n if sim != null else 1500)))             # regenerates the deterministic parts (map, markers, names, factions)
-	turn = int(d["turn"])
+	turn = int(d["turn"]) * time_scale(d)
 	pc = int(d["pc"])
 	hp = int(d["hp"])
 	yen = int(d["yen"])
@@ -3849,9 +4117,12 @@ func load_dict(d: Dictionary) -> void:
 		var ki: int = _add_critter(String(k["k"]), int(k["cell"]))
 		for f in ["hp", "mood", "stun"]:
 			critters[ki][f] = int(k[f])
-	sim.tick = int(d["tick"])
-	last_ate = int(d.get("ate", sim.tick))
-	last_drank = int(d.get("drank", sim.tick))
+	var tk2: int = time_scale(d)
+	bless_left = int(d.get("bless", 0)) * tk2
+	drunk_left = int(d.get("drunk", 0)) * tk2
+	sim.tick = int(d["tick"]) * tk2
+	last_ate = int(d.get("ate", int(d["tick"]))) * tk2
+	last_drank = int(d.get("drank", int(d["tick"]))) * tk2
 	_was_hungry = hungry()
 	_was_thirsty = thirsty()
 	transit.load_from(d["transit"])
@@ -3866,8 +4137,8 @@ func load_dict(d: Dictionary) -> void:
 		sim.dest[i] = int(nn["dest"][i])
 		sim.goal[i] = int(nn["goal"][i])
 		sim.alive[i] = int(nn["alive"][i])
-		sim.depart[i] = int(nn["depart"][i])
-		sim.arrive[i] = int(nn["arrive"][i])
+		sim.depart[i] = int(nn["depart"][i]) * tk2
+		sim.arrive[i] = int(nn["arrive"][i]) * tk2 if int(nn["arrive"][i]) >= 0 else -1
 		sim.ctl[i] = int(nn["ctl"][i])
 		sim.idle[i] = int(nn["idle"][i])
 		sim.near[i] = int(nn["near"][i])
