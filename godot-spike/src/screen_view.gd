@@ -3,6 +3,8 @@ extends Control
 ## main.gd owns the state (kind, items, selection) and keys; this only draws.
 const IMP = preload("res://src/implants.gd")
 const SK = preload("res://src/skills.gd")
+const CR = preload("res://src/creation.gd")
+const DS = preload("res://src/dollspec.gd")
 var kind: String = "title"
 var title: String = ""
 var subtitle: String = ""
@@ -16,6 +18,9 @@ var game                           # for the implants screen
 var part_sel: int = 0
 var sk_sel: int = 0                # the highlighted line of the attributes & skills screen (0-4 attributes, then the skills)
 var world = null
+var cc: Dictionary = {}            # the character being made on the create screen: {app, attrs}
+var cc_sel: int = 0                # the highlighted row of the create screen (see cc_row_rect)
+var cc_tileset = null              # the 64px tileset, for the doll preview
 var map_tex: ImageTexture = null
 var font: Font = ThemeDB.fallback_font
 var kana_font: Font = load("res://gfx/fonts/NotoSansJP-kana-subset.otf")
@@ -75,7 +80,7 @@ func _fit(s: String, pos: Vector2, fsize: int, col: Color, max_w: float) -> void
 func _draw() -> void:
 	var W: float = size.x if size.x > 0 else 1280.0
 	var H: float = size.y if size.y > 0 else 720.0
-	if kind == "implants" or kind == "map" or kind == "skills":
+	if kind == "implants" or kind == "map" or kind == "skills" or kind == "create":
 		draw_rect(Rect2(0, 0, W, H), BG)
 	elif overlay:
 		draw_rect(Rect2(0, 0, W, H), Color(0, 0, 0, 0.72))
@@ -86,6 +91,8 @@ func _draw() -> void:
 			_implants(W, H)
 		"skills":
 			_skills(W, H)
+		"create":
+			_create(W, H)
 		"map":
 			_map(W, H)
 		"title":
@@ -550,3 +557,208 @@ func _skill_detail(r: Rect2, sel: Dictionary, attrs: Dictionary, base: Dictionar
 	_txt(line, Vector2(x, y + 98.0), 14, Color(0.5, 1.0, 0.7) if (not dl.is_empty() and eff >= int(dl[0]["req"])) else dim)
 	var note: String = sd["note"] if sd["live"] else "Not in play yet: " + sd["note"]
 	_txt(note, Vector2(x, y + 116.0), 13, Color(0.6, 0.75, 0.9) if sd["live"] else Color(0.9, 0.55, 0.45))
+
+
+# ---------------------------------------------------------------------------------------------- character creation
+## rows: 0-4 appearance (CR.LOOK_ROWS), 5-9 attributes (SK.ATTRS), 10 Begin, 11 Back.  Everything fits one 1280x720 screen.
+const CC_LOOK_X := 40.0
+const CC_LOOK_Y := 396.0
+const CC_ATTR_X := 752.0
+const CC_ATTR_Y := 170.0
+const CC_ATTR_H := 80.0
+
+func cc_row_rect(i: int) -> Rect2:
+	if i < CR.LOOK_ROWS.size():
+		return Rect2(CC_LOOK_X, CC_LOOK_Y + i * 40.0, 360.0, 34.0)
+	var a: int = i - CR.LOOK_ROWS.size()
+	if a < SK.ATTRS.size():
+		return Rect2(CC_ATTR_X, CC_ATTR_Y + a * (CC_ATTR_H + 4.0), 488.0, CC_ATTR_H)
+	if a == SK.ATTRS.size():
+		return Rect2(864, 640, 190, 46)
+	return Rect2(1066, 640, 190, 46)
+
+func cc_rows() -> int:
+	return CR.LOOK_ROWS.size() + SK.ATTRS.size() + 2
+
+## which row the mouse is on and which way it would move: {row, dir}; dir -1 / +1 for the arrow zones at either end of a row, 0 elsewhere
+func cc_hit(p: Vector2) -> Dictionary:
+	for i in cc_rows():
+		var r: Rect2 = cc_row_rect(i)
+		if r.has_point(p):
+			var dir := 0
+			if i < CR.LOOK_ROWS.size() + SK.ATTRS.size():
+				if p.x < r.position.x + 56.0:
+					dir = -1
+				elif p.x > r.end.x - 56.0:
+					dir = 1
+			return {"row": i, "dir": dir}
+	return {"row": -1, "dir": 0}
+
+func _tri(c: Vector2, right: bool, on: bool) -> void:
+	var d: float = 9.0 if right else -9.0
+	draw_colored_polygon(PackedVector2Array([c + Vector2(d, 0), c + Vector2(-d * 0.6, -9), c + Vector2(-d * 0.6, 9)]), CYAN if on else Color(0.3, 0.38, 0.45))
+
+func _create(W: float, H: float) -> void:
+	for gx in range(0, int(W), 32):
+		draw_line(Vector2(gx, 0), Vector2(gx, H), Color(0.3, 0.9, 1.0, 0.05))
+	for gy in range(0, int(H), 32):
+		draw_line(Vector2(0, gy), Vector2(W, gy), Color(0.3, 0.9, 1.0, 0.05))
+	var app: Dictionary = cc.get("app", CR.default_app())
+	var attrs: Dictionary = cc.get("attrs", CR.start_attrs())
+	var look: Dictionary = CR.look_of(app)
+	_txt("CREATE CHARACTER", Vector2(40, 46), 32, Color.WHITE)
+	_rtxt("Up / Down choose  -  Left / Right change  -  Enter begins  -  Esc back", W - 40, 42, 15, Color(0.6, 0.75, 0.9))
+	# ---- appearance
+	var pa := Rect2(24, 66, 392, 560)
+	_panel(pa)
+	_txt("1  APPEARANCE", Vector2(pa.position.x + 16, pa.position.y + 28), 18, CYAN)
+	draw_rect(Rect2(40, 108, 360, 276), Color(0.02, 0.03, 0.06))
+	draw_rect(Rect2(40, 108, 360, 276), Color(0.3, 0.9, 1.0, 0.35), false, 1.0)
+	_cc_doll(Vector2(128, 250), 2.0, look)
+	_cc_portrait(Vector2(300, 214), 50.0, look)
+	_txt("in game, seen from above", Vector2(52, 130), 12, Color(0.5, 0.62, 0.72))
+	_txt("face (stand-in drawing)", Vector2(236, 130), 12, Color(0.5, 0.62, 0.72))
+	_txt("Sprites you supply replace both pictures.", Vector2(46, 376), 12, Color(0.5, 0.62, 0.72))
+	for i in CR.LOOK_ROWS.size():
+		var row: Dictionary = CR.LOOK_ROWS[i]
+		var r: Rect2 = cc_row_rect(i)
+		var on: bool = cc_sel == i
+		draw_rect(r, Color(0.3, 0.9, 1.0, 0.2) if on else Color(1, 1, 1, 0.04))
+		if on:
+			draw_rect(Rect2(r.position.x, r.position.y, 4, r.size.y), MAGENTA)
+		_txt(row["label"], Vector2(r.position.x + 14, r.position.y + 23), 16, Color(0.75, 0.88, 1.0))
+		_tri(Vector2(r.position.x + 150, r.position.y + 17), false, true)
+		_tri(Vector2(r.end.x - 14, r.position.y + 17), true, true)
+		var vx: float = r.position.x + 166.0
+		var sw: Color = CR.option_color(app, row["id"])
+		if sw.a > 0.0:
+			draw_rect(Rect2(vx, r.position.y + 7, 20, 20), sw)
+			draw_rect(Rect2(vx, r.position.y + 7, 20, 20), Color(1, 1, 1, 0.6), false, 1.0)
+			vx += 28.0
+		_fit(CR.option_name(app, row["id"]), Vector2(vx, r.position.y + 23), 17, Color.WHITE, r.end.x - 34.0 - vx)
+	# ---- background and goals (placeholder)
+	var pb := Rect2(432, 66, 288, 560)
+	_panel(pb)
+	_txt("2  BACKGROUND & GOALS", Vector2(pb.position.x + 16, pb.position.y + 28), 17, CYAN)
+	var bgd: Dictionary = CR.BACKGROUNDS[0]
+	for k in 2:
+		var box := Rect2(pb.position.x + 16, pb.position.y + 52 + k * 150, pb.size.x - 32, 134)
+		draw_rect(box, Color(1, 1, 1, 0.03))
+		draw_rect(box, Color(0.4, 0.5, 0.6, 0.6), false, 1.0)
+		_txt("BACKGROUND" if k == 0 else "GOALS", Vector2(box.position.x + 12, box.position.y + 24), 15, Color(0.55, 0.65, 0.75))
+		_txt(String(bgd["name"]) if k == 0 else "None yet", Vector2(box.position.x + 12, box.position.y + 54), 20, Color(0.7, 0.78, 0.86))
+		draw_multiline_string(font, Vector2(box.position.x + 12, box.position.y + 80), "Coming in a later update." if k == 0 else "You will pick what you are after here.", HORIZONTAL_ALIGNMENT_LEFT, box.size.x - 24, 14, 3, Color(0.5, 0.6, 0.7))
+	draw_multiline_string(font, Vector2(pb.position.x + 16, pb.position.y + 370), String(bgd["desc"]), HORIZONTAL_ALIGNMENT_LEFT, pb.size.x - 32, 14, 4, Color(0.6, 0.72, 0.85))
+	# ---- attributes
+	var pt := Rect2(736, 66, 520, 560)
+	_panel(pt)
+	_txt("3  ATTRIBUTES", Vector2(pt.position.x + 16, pt.position.y + 28), 18, CYAN)
+	_rtxt("%d to %d each, %d points in all" % [CR.ATTR_MIN, CR.ATTR_MAX, CR.total()], pt.end.x - 16, pt.position.y + 26, 14, Color(0.6, 0.72, 0.85))
+	var free: int = CR.free_points(attrs)
+	var fc := Color(1.0, 0.8, 0.25) if free > 0 else Color(0.5, 1.0, 0.7)
+	_txt("FREE POINTS", Vector2(CC_ATTR_X, 118), 16, Color(0.75, 0.88, 1.0))
+	_txt(str(free), Vector2(CC_ATTR_X + 150, 126), 40, fc)
+	_rtxt(CR.pool_text(attrs), CC_ATTR_X + 488, 118, 15, fc)
+	_txt("Lower one attribute to free a point; spend it on another.", Vector2(CC_ATTR_X, 148), 13, Color(0.55, 0.68, 0.8))
+	for k in SK.ATTRS.size():
+		var ad: Dictionary = SK.ATTRS[k]
+		var i: int = CR.LOOK_ROWS.size() + k
+		var r: Rect2 = cc_row_rect(i)
+		var on: bool = cc_sel == i
+		var v: int = int(attrs.get(ad["id"], SK.ATTR_START))
+		draw_rect(r, Color(0.3, 0.9, 1.0, 0.2) if on else Color(1, 1, 1, 0.04))
+		if on:
+			draw_rect(Rect2(r.position.x, r.position.y, 4, r.size.y), MAGENTA)
+		_tri(Vector2(r.position.x + 20, r.position.y + 22), false, CR.can_lower(attrs, ad["id"]))
+		_tri(Vector2(r.end.x - 20, r.position.y + 22), true, CR.can_raise(attrs, ad["id"]))
+		_txt(String(ad["name"]).to_upper(), Vector2(r.position.x + 40, r.position.y + 28), 20, Color.WHITE)
+		_txt(str(v), Vector2(r.end.x - 150, r.position.y + 34), 36, Color.WHITE, HORIZONTAL_ALIGNMENT_RIGHT, 70.0)
+		var dv: int = v - SK.ATTR_START
+		if dv != 0:
+			_txt("%+d" % dv, Vector2(r.end.x - 74, r.position.y + 30), 16, Color(0.5, 1.0, 0.7) if dv > 0 else Color(1.0, 0.55, 0.45), HORIZONTAL_ALIGNMENT_LEFT, 30.0)
+		_fit(String(ad["desc"]), Vector2(r.position.x + 40, r.position.y + 46), 13, Color(0.62, 0.75, 0.88), r.size.x - 70.0)
+		var names: Array = []
+		for sd in SK.skills_of_attr(ad["id"]):
+			names.append(sd["name"])
+		var bn: int = SK.attr_bonus(v)
+		if names.size() > 4:
+			names = names.slice(0, 3) + ["%d more" % (names.size() - 3)]
+		_fit("Skills +%d:  %s" % [bn, ", ".join(names)], Vector2(r.position.x + 40, r.position.y + 72), 13, Color(1.0, 0.8, 0.25) if bn > 0 else Color(0.5, 0.6, 0.7), r.size.x - 56.0)
+		# the 6..14 track: nine cells, the start (10) marked
+		for c in range(CR.ATTR_MIN, CR.ATTR_MAX + 1):
+			var cx: float = r.position.x + 40.0 + float(c - CR.ATTR_MIN) * 16.0
+			draw_rect(Rect2(cx, r.position.y + 53.0, 13, 5), (CYAN if c <= v else Color(1, 1, 1, 0.12)))
+			if c == SK.ATTR_START:
+				draw_rect(Rect2(cx + 5, r.position.y + 50.0, 3, 2), Color(1, 1, 1, 0.8))
+	# ---- buttons
+	var valid: bool = CR.attrs_valid(attrs)
+	var rb: Rect2 = cc_row_rect(CR.LOOK_ROWS.size() + SK.ATTRS.size())
+	var rk: Rect2 = cc_row_rect(CR.LOOK_ROWS.size() + SK.ATTRS.size() + 1)
+	for pair in [[rb, "BEGIN", valid, cc_sel == CR.LOOK_ROWS.size() + SK.ATTRS.size()], [rk, "BACK", true, cc_sel == CR.LOOK_ROWS.size() + SK.ATTRS.size() + 1]]:
+		var br: Rect2 = pair[0]
+		var okb: bool = pair[2]
+		draw_rect(br, Color(0.3, 0.9, 1.0, 0.22) if pair[3] else Color(1, 1, 1, 0.05))
+		draw_rect(br, (MAGENTA if pair[3] else (CYAN if okb else Color(0.4, 0.45, 0.5))), false, 2.0)
+		_txt(pair[1], Vector2(br.position.x, br.position.y + 31), 22, (Color.WHITE if okb else Color(0.5, 0.55, 0.6)), HORIZONTAL_ALIGNMENT_CENTER, br.size.x)
+	var msg: String = prompt if prompt != "" else ("" if valid else "Spend your free points to begin")
+	_txt(msg, Vector2(40, 664), 16, Color(1.0, 0.8, 0.25))
+
+## the doll in the tileset, unrotated, at `k` times its drawn size, centred on c (stand-in art: the supplied sprites will replace the tileset layers)
+func _cc_doll(c: Vector2, k: float, look: Dictionary) -> void:
+	if cc_tileset == null or not cc_tileset.has("dl:d_legs"):
+		return
+	var items: Array = []
+	for key in DS.base_layers(look, false):
+		if cc_tileset.has("dl:" + String(key)) and String(key) != "d_shadow":
+			var meta: Array = cc_tileset.doll.get(String(key), [65, ""])
+			items.append([int(meta[0]), String(key), String(meta[1])])
+	items.sort_custom(func(a, b): return a[0] < b[0])
+	draw_set_transform(c, 0.0, Vector2(k, k))
+	for it in items:
+		var sp: Array = cc_tileset.sprite("dl:" + String(it[1]))
+		var r: Rect2 = sp[1]
+		var tint := Color.WHITE
+		if it[2] == "skin":
+			tint = look["skin"]
+		elif it[2] == "hair":
+			tint = look["hair"]
+		draw_texture_rect_region(sp[0], Rect2(-r.size * 0.5, r.size), r, tint)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+## a drawn face so skin, hair and eye colour can be judged together (the game's doll is seen from above and shows no eyes)
+func _cc_portrait(c: Vector2, rr: float, look: Dictionary) -> void:
+	var skin: Color = look["skin"]
+	var hair: Color = look["hair"]
+	var style: String = look["style"]
+	var fem: bool = look["fem"]
+	draw_rect(Rect2(c.x - rr * 1.1, c.y + rr * 0.85, rr * 2.2, rr * 1.0), skin.darkened(0.25))                # shoulders
+	draw_rect(Rect2(c.x - rr * 0.32, c.y + rr * 0.6, rr * 0.64, rr * 0.5), skin.darkened(0.12))               # neck
+	if style == "long" or style == "bob":
+		draw_rect(Rect2(c.x - rr * 1.12, c.y - rr * 0.3, rr * 2.24, rr * (1.9 if style == "long" else 1.15)), hair.darkened(0.15))
+	if style == "ponytail":
+		draw_rect(Rect2(c.x + rr * 0.85, c.y - rr * 0.5, rr * 0.5, rr * 1.7), hair.darkened(0.1))
+	draw_circle(c, rr, skin)
+	draw_circle(c + Vector2(-rr * 0.98, rr * 0.1), rr * 0.16, skin.darkened(0.08))
+	draw_circle(c + Vector2(rr * 0.98, rr * 0.1), rr * 0.16, skin.darkened(0.08))
+	var top: float = c.y - rr
+	match style:
+		"buzz":
+			draw_arc(c, rr * 0.99, PI * 1.12, PI * 1.88, 24, hair, rr * 0.16)
+		"mohawk":
+			draw_rect(Rect2(c.x - rr * 0.14, top - rr * 0.34, rr * 0.28, rr * 0.7), hair)
+		"bun":
+			draw_circle(Vector2(c.x, top - rr * 0.1), rr * 0.3, hair)
+			draw_arc(c, rr * 0.99, PI * 1.08, PI * 1.92, 24, hair, rr * 0.3)
+		_:
+			draw_arc(c, rr * 0.98, PI * 1.02, PI * 1.98, 24, hair, rr * 0.44)
+			draw_rect(Rect2(c.x - rr * 0.98, c.y - rr * 0.72, rr * 1.96, rr * 0.3), hair)
+	var ey: float = c.y - rr * 0.08
+	var iris: Color = look["eyes"]
+	for sx in [-1.0, 1.0]:
+		var ex: float = c.x + sx * rr * 0.4
+		draw_rect(Rect2(ex - rr * 0.2, ey - rr * 0.1, rr * 0.4, rr * 0.2), Color(0.95, 0.95, 0.95))
+		draw_circle(Vector2(ex, ey), rr * 0.095, iris)
+		draw_circle(Vector2(ex, ey), rr * 0.04, Color(0.04, 0.04, 0.05))
+		draw_line(Vector2(ex - rr * 0.22, ey - rr * 0.22), Vector2(ex + rr * 0.2, ey - rr * 0.2 - (0.04 if fem else 0.0) * rr), hair.darkened(0.3), 2.0)
+	draw_line(Vector2(c.x, ey + rr * 0.12), Vector2(c.x - rr * 0.06, ey + rr * 0.42), skin.darkened(0.3), 2.0)
+	draw_line(Vector2(c.x - rr * 0.22, c.y + rr * 0.58), Vector2(c.x + rr * 0.22, c.y + rr * 0.58), skin.darkened(0.55), 2.0)

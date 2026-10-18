@@ -10,12 +10,13 @@ const SfxScript = preload("res://src/sfx.gd")
 const ScreenScript = preload("res://src/screen_view.gd")
 const IMP = preload("res://src/implants.gd")
 const SK = preload("res://src/skills.gd")
+const CR = preload("res://src/creation.gd")
 const CLK = preload("res://src/clock.gd")
 const UI_S := 1.5          # the interface is laid out for 1280x720 and drawn at 1.5x on the 1920x1080 canvas
 const TILESETS := ["Trilobit64"]      # Trilobit's own 64px art (tools/content/gen_tiles64.py); more sets can be added here
 const SLOTS := 3
-const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "implants", "skills", "map"]
-const MOUSE_MODES := ["title", "pause", "options", "visuals", "keys", "saves", "loads", "implants", "map"]
+const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "implants", "skills", "map", "create"]
+const MOUSE_MODES := ["title", "pause", "options", "visuals", "keys", "saves", "loads", "implants", "map", "create"]
 
 var game
 var tileset
@@ -38,6 +39,9 @@ var screen_back: String = "title"     # where Esc on a sub-screen goes
 var rebinding: String = ""            # action waiting for a key
 var key_scroll_items: Array = []
 var pending_seed: int = -1
+var cc: Dictionary = {}               # the character being created: {app, attrs} (creation.gd)
+var cc_sel: int = 0                   # the highlighted row of the creation screen
+var cc_tileset = null                 # tileset for the doll preview on that screen
 var world = null                      # the island (zone games); null for a stand-alone city
 var map_tex: ImageTexture = null
 var map_seed: int = -1
@@ -103,12 +107,14 @@ func apply_audio() -> void:
 	sfx.enabled = settings.sound_on
 	sfx.volume = settings.volume
 
-func begin_new(seed: int) -> void:
+func begin_new(seed: int, profile: Dictionary = {}) -> void:
 	open_screen("loading")
 	await get_tree().process_frame
 	await get_tree().process_frame
 	world = WorldScript.new()
 	world.start(seed, WorldScript.CITY_PEOPLE)
+	if not profile.is_empty():
+		CR.apply(world.game, profile)          # the attributes and look chosen on the creation screen
 	start_play(world.game)
 
 func begin_load(slot: int) -> void:
@@ -282,6 +288,11 @@ func open_screen(kind: String) -> void:
 			screen.overlay = false
 			screen.world = world
 			_make_map()
+		"create":
+			screen.overlay = false
+			screen.cc = cc
+			screen.cc_sel = cc_sel
+			screen.cc_tileset = cc_tileset
 	_scroll_fix()
 
 func _make_map() -> void:
@@ -348,6 +359,8 @@ func back_from_screen() -> void:
 				open_screen("options")
 			else:
 				open_screen("title")
+		"create":
+			open_screen("title")
 		"implants", "skills":
 			open_screen("pause")
 		"map":
@@ -379,7 +392,7 @@ func activate(id: String) -> void:
 			begin_load(n)
 		return
 	match id:
-		"new": begin_new(int(Time.get_unix_time_from_system()) % 100000)
+		"new": open_creation()
 		"load":
 			screen_back = "pause" if mode == "pause" else "title"
 			open_screen("loads")
@@ -444,6 +457,88 @@ func _cycle_tileset(dir: int) -> void:
 		_load_tileset()
 	_fill_options()
 
+## New Game: the creation screen first; Begin builds the world and applies the choices
+func open_creation() -> void:
+	cc = CR.new_profile()
+	cc_sel = 0
+	if cc_tileset == null:
+		cc_tileset = TilesetScript.new()
+		if not cc_tileset.load_dir("res://gfx/" + TILESETS[ts_index]):
+			cc_tileset.load_dir("res://gfx/" + TILESETS[0])
+	open_screen("create")
+
+## rows of the creation screen: appearance, attributes, Begin, Back
+func cc_rows() -> Array:
+	var rows: Array = []
+	for r in CR.LOOK_ROWS:
+		rows.append({"kind": "look", "id": r["id"]})
+	for a in SK.ATTRS:
+		rows.append({"kind": "attr", "id": a["id"]})
+	rows.append({"kind": "begin", "id": "begin"})
+	rows.append({"kind": "back", "id": "back"})
+	return rows
+
+func _cc_sync() -> void:
+	screen.cc = cc
+	screen.cc_sel = cc_sel
+
+## change the highlighted row one step (dir -1 / +1): an appearance row steps its option, an attribute row moves a point
+func cc_step(dir: int) -> void:
+	var row: Dictionary = cc_rows()[cc_sel]
+	if row["kind"] == "look":
+		cc["app"] = CR.cycle(cc["app"], row["id"], dir)
+		sfx.play("blip")
+	elif row["kind"] == "attr":
+		var before: Dictionary = cc["attrs"]
+		cc["attrs"] = CR.change(before, row["id"], dir)
+		if cc["attrs"] == before:
+			screen.prompt = "%s cannot go %s: %s" % [SK.attr(row["id"])["name"], "up" if dir > 0 else "down", ("no free points (lower another attribute first)" if (dir > 0 and int(before[row["id"]]) < CR.ATTR_MAX) else ("it is at %d" % (CR.ATTR_MAX if dir > 0 else CR.ATTR_MIN)))]
+			sfx.play("hit")
+		else:
+			screen.prompt = ""
+			sfx.play("blip")
+	_cc_sync()
+
+func cc_begin() -> void:
+	if not CR.profile_valid(cc):
+		screen.prompt = "Spend your %d free point%s first." % [CR.free_points(cc["attrs"]), "" if CR.free_points(cc["attrs"]) == 1 else "s"]
+		sfx.play("hit")
+		return
+	begin_new(int(Time.get_unix_time_from_system()) % 100000, cc)
+
+func _cc_key(k: int) -> void:
+	var n: int = cc_rows().size()
+	var act: String = settings.action_for(k)
+	if k == KEY_ESCAPE:
+		back_from_screen()
+	elif k == KEY_UP or k == KEY_K or act == "north":
+		cc_sel = (cc_sel + n - 1) % n
+		screen.prompt = ""
+		sfx.play("blip")
+	elif k == KEY_DOWN or k == KEY_J or act == "south":
+		cc_sel = (cc_sel + 1) % n
+		screen.prompt = ""
+		sfx.play("blip")
+	elif k == KEY_TAB:
+		# jump between the appearance block, the attributes and the buttons
+		var nl: int = CR.LOOK_ROWS.size()
+		var na: int = SK.ATTRS.size()
+		cc_sel = nl if cc_sel < nl else (nl + na if cc_sel < nl + na else 0)
+		sfx.play("blip")
+	elif k == KEY_LEFT or k == KEY_H or act == "west" or k == KEY_MINUS or k == KEY_KP_SUBTRACT:
+		cc_step(-1)
+	elif k == KEY_RIGHT or k == KEY_L or act == "east" or k == KEY_EQUAL or k == KEY_KP_ADD:
+		cc_step(1)
+	elif k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
+		var kind: String = cc_rows()[cc_sel]["kind"]
+		if kind == "begin":
+			cc_begin()
+		elif kind == "back":
+			back_from_screen()
+		else:
+			cc_step(1)
+	_cc_sync()
+
 func screen_key(k: int) -> void:
 	# waiting for a new key binding
 	if rebinding != "":
@@ -462,6 +557,9 @@ func screen_key(k: int) -> void:
 	if mode == "map":
 		if k == KEY_ESCAPE or k == KEY_M or k == settings.binds["map"][0]:
 			back_from_screen()
+		return
+	if mode == "create":
+		_cc_key(k)
 		return
 	if mode == "skills":
 		if k == KEY_ESCAPE or k == settings.binds["skills"][0]:
@@ -530,6 +628,34 @@ func screen_key(k: int) -> void:
 				activate(it["id"])
 	_scroll_fix()
 
+func _cc_mouse(ev: InputEvent) -> void:
+	if ev is InputEventMouseMotion:
+		var h: Dictionary = screen.cc_hit(ev.position / UI_S)
+		if h["row"] >= 0 and h["row"] != cc_sel:
+			cc_sel = h["row"]
+			sfx.play("blip")
+			_cc_sync()
+	elif ev is InputEventMouseButton and ev.pressed:
+		if ev.button_index == MOUSE_BUTTON_RIGHT:
+			back_from_screen()
+		elif ev.button_index == MOUSE_BUTTON_LEFT or ev.button_index == MOUSE_BUTTON_WHEEL_UP or ev.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			var h: Dictionary = screen.cc_hit(ev.position / UI_S)
+			if h["row"] < 0:
+				return
+			cc_sel = h["row"]
+			var kind: String = cc_rows()[cc_sel]["kind"]
+			if ev.button_index == MOUSE_BUTTON_WHEEL_UP:
+				cc_step(1)
+			elif ev.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				cc_step(-1)
+			elif kind == "begin":
+				cc_begin()
+			elif kind == "back":
+				back_from_screen()
+			elif h["dir"] != 0:
+				cc_step(h["dir"])
+			_cc_sync()
+
 func _unhandled_input(ev: InputEvent) -> void:
 	if mode == "skills" and ev is InputEventMouseMotion:
 		var si: int = screen.sk_at_mouse(ev.position / UI_S)
@@ -543,6 +669,9 @@ func _unhandled_input(ev: InputEvent) -> void:
 		if i >= 0 and i != screen.part_sel:
 			screen.part_sel = i
 			sfx.play("blip")
+	if mode == "create":
+		_cc_mouse(ev)
+		return
 	if not (mode in MOUSE_MODES):
 		return
 	# menus: hover highlights, left click chooses, right click goes back, wheel scrolls
@@ -962,7 +1091,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 	var g = game
 	if g.game_over:
 		if k == KEY_N:
-			begin_new(randi() % 100000)
+			open_creation()          # a new character starts at the creation screen too
 		return
 	var act: String = settings.action_for(k)
 	if k == KEY_SLASH and ev.shift_pressed:

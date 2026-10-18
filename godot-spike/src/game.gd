@@ -16,6 +16,7 @@ const VS = preload("res://src/vehicles.gd")
 const IMP = preload("res://src/implants.gd")
 const BODY = preload("res://src/body.gd")
 const SK = preload("res://src/skills.gd")
+const CR = preload("res://src/creation.gd")
 const CLK = preload("res://src/clock.gd")
 const LOOK = preload("res://src/look.gd")
 
@@ -90,6 +91,7 @@ var fuel: int = 24
 var flying: bool = false
 var followers: Array = []                      # hunters climbing after you
 var step_noise: int = 0                        # how far this turn's footsteps carry
+var app: Dictionary = {"sprite": 0, "skin": 0, "hair": 4, "style": 1, "eyes": 0, "bg": "none"}      # how the player looks (creation.gd); saved with the player
 var attrs: Dictionary = SK.default_attrs()      # Strength, Perception, Agility, Cognition, Endurance (start at 10)
 var skills: Dictionary = SK.default_skills()    # BASE levels, raised by skill XP (see skills.gd for the effective level)
 var xp: Dictionary = SK.default_skills()        # skill-specific XP towards the next base level
@@ -4289,12 +4291,13 @@ func outside_tile(x: int, y: int) -> int:
 ## everything about the player that travels between zones
 func player_dict() -> Dictionary:
 	return {"hp": hp, "hp_max": hp_max, "yen": yen, "heat": heat, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
-		"attrs": attrs.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
+		"attrs": attrs.duplicate(), "app": app.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 		"stamina": stamina, "stam_v": 2, "ap": ap, "stance": stance, "turn": turn, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "flying": flying,
 		"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
 
 ## attributes, skills and XP from a save; saves from before the attribute system (or with the old skill names) keep what still exists and start the rest at the defaults
 func _load_skills(d: Dictionary) -> void:
+	app = CR.sanitize(d.get("app", {}))          # saves from before character creation get the figure the game always drew
 	attrs = SK.default_attrs()
 	skills = SK.default_skills()
 	xp = SK.default_skills()
@@ -4376,7 +4379,7 @@ func save_dict() -> Dictionary:
 	var vlist := []
 	for v in vehicles:
 		vlist.append(vs.to_dict(v))
-	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "attrs": attrs, "xp": xp, "in_vehicle": in_vehicle,
+	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "attrs": attrs, "app": app, "xp": xp, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
 			"rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 			"items_at": it_at, "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),

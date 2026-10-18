@@ -139,7 +139,7 @@ static func for_player(g) -> Dictionary:
 			layers.append(IMPLANT_LAYER[id])
 	# back and holster first, then the rest in the order worn, so a vest sits over a coat
 	layers.sort_custom(func(a, b): return _rank(a) < _rank(b))
-	var lk := look(7919, false, 0)
+	var lk: Dictionary = load("res://src/creation.gd").look_of(g.app)      # loaded here, not preloaded: creation.gd reads this file's colour tables
 	lk["hid"] = _hides_hair(layers)
 	return {"layers": layers, "weapon": (g.wield.id() if g.wield != null else ""), "look": lk}
 
