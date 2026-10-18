@@ -89,3 +89,6 @@ Tests: `./run_all.sh` (pockets, world, scale, levels, game, vertical, guns, stea
 - Guns: `tools/content/guns.py` is the only gun source (class table plus a row per gun: maker, weight, price, accuracy, damage, magazine, rarity, description).  `gen_gunset.py` and `data/source/gunset.json`, which built each gun on a CDDA base gun, are removed.  Stats in play are unchanged; descriptions are rewritten.
 - Items no longer carry `looks_like` (CDDA sprite ids); sprites are found by item id.
 - The removed files are kept, unchanged, on the `cdda-archive` branch.
+
+## Standing paper dolls (2026-10-18)
+- `tools/content/t64_figure.py` draws people standing (three-quarter turn, readied pose) as 64x64 layers that stack pixel for pixel (shadow, body, underwear, armor, arms, arm armor, held, hands) with five skin ramps (`skin_pale`, `skin_fair`, `skin_tan`, `skin_brown`, `skin_deep`); base body approved, not yet drawn in game; previews by `preview_figures.py` / `preview_skins.py`, checks by `check_figures.py` (in `run_all.sh`).
