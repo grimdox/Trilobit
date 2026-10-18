@@ -705,10 +705,17 @@ func hostile(i: int) -> bool:
 ## how a person stands towards the player, for the facing arrow: 0 friendly (green), 1 neutral (blue), 2 hostile (red).
 ## Nobody is friendly yet: recruited allies will put their index in `allies`.
 var allies: Dictionary = {}
+## unaffiliated people (citizens, shopkeepers, ...) you have shot at, hit or robbed in view: they now count as marked, with a red arrow
+var provoked: Dictionary = {}
+
+## people with no faction show no indicator at all; a faction member, or anyone you have provoked, is marked (glow and arrow)
+func marked(i: int) -> bool:
+	return fac[i] != CIV or provoked.has(i) or allies.has(i)
+
 func attitude(i: int) -> int:
 	if allies.has(i):
 		return 0
-	if hostile(i) or int(astate[i]) == HUNTING:
+	if provoked.has(i) or hostile(i) or int(astate[i]) == HUNTING:
 		return 2
 	return 1
 
@@ -2163,6 +2170,8 @@ func hurt(i: int, dmg: int, by_player: bool) -> void:
 func _alert(i: int) -> void:
 	noticed_you[i] = 1
 	var f := fac[i]
+	if f == CIV:
+		provoked[i] = 1
 	if f == CIV or (f == NAP and heat < 30 and false):
 		_flee(i, 25)
 		return
@@ -2184,6 +2193,7 @@ func _set_state(i: int, s: int) -> void:
 	astate[i] = s
 
 func kill(i: int) -> void:
+	provoked.erase(i)
 	say("%s goes down." % name_of(i))
 	var c: int = sim.pos[i]
 	var carried: int = yenn[i]
@@ -4057,7 +4067,7 @@ func save_dict() -> Dictionary:
 			"items_at": it_at, "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
 					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc),
-					"mdis": Array(mdis), "noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle)}}
+					"prov": provoked.keys(), "mdis": Array(mdis), "noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle)}}
 
 func load_dict(d: Dictionary) -> void:
 	seed_value = int(d["seed"])
@@ -4138,6 +4148,9 @@ func load_dict(d: Dictionary) -> void:
 	transit.load_from(d["transit"])
 	eco.load_from(d["eco"])
 	var nn: Dictionary = d["npc"]
+	provoked = {}
+	for k in nn.get("prov", []):
+		provoked[int(k)] = 1
 	# rebuild the agent structures from the saved arrays
 	sim.near_list = PackedInt32Array()
 	sim.at.fill(-1)

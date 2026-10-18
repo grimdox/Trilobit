@@ -31,9 +31,10 @@ func _initialize() -> void:
 			g.sim.pos[j] = c2
 			g.sim.at[c2] = j
 			picks.append(j)
+	g.provoked[picks[4]] = 1   # a citizen who has been shot at
 	g.fov.compute(g.pc % g.size, g.pc / g.size, 18)
 	print("picked ", picks.size(), " near ", g.sim.near_list.size(), " turn ", g.turn, " z ", g.z_of(g.pc))
-	var setup := [[0, 0], [0, 1], [1, 1], [3, 1], [3, 0], [0, 4]]   # [awareness, faction]
+	var setup := [[0, 0], [0, 1], [1, 1], [3, 2], [3, 0], [0, 4]]   # [awareness, faction]
 	for n in picks.size():
 		g.astate[picks[n]] = setup[n][0]
 		g.fac[picks[n]] = setup[n][1]

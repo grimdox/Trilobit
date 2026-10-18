@@ -317,7 +317,8 @@ func _draw() -> void:
 		var ky: int = (kc / size) % size - oy
 		if kx < 0 or ky < 0 or kx >= cols or ky >= rows:
 			continue
-		_facing_mark(Vector2(kx * T, ky * T), int(k.get("face", 0)), ATT_COL[2] if int(k.get("mood", 0)) == 1 else ATT_COL[1])
+		if int(k.get("mood", 0)) == 1:         # only an angry animal is marked; ordinary dogs and cats show nothing
+			_facing_mark(Vector2(kx * T, ky * T), int(k.get("face", 0)), ATT_COL[2])
 		if not _blit("mon_" + String(k["k"]), Vector2(kx * T, ky * T)):
 			draw_string(font, Vector2(kx * T + T * 0.3, ky * T + T * 0.7), "d" if k["k"] == "dog" else "c", HORIZONTAL_ALIGNMENT_LEFT, -1, 30, Color(0.9, 0.7, 0.4))
 	# vehicles: whole bodies, a tile for every tile of the footprint
@@ -341,8 +342,9 @@ func _draw() -> void:
 			_blit(person_sprite(i), pos)
 		var fd: Array = game.DIR8[int(game.face[i]) % 8]
 		_draw_doll(DS.for_person(game, i), pos, Vector2i(fd[0], fd[1]))
-		_awareness_glow(pos, int(game.astate[i]))
-		_facing_mark(pos, int(game.face[i]), ATT_COL[game.attitude(i)])
+		if game.marked(i):                     # unaffiliated people show no indicator at all
+			_awareness_glow(pos, int(game.astate[i]))
+			_facing_mark(pos, int(game.face[i]), ATT_COL[game.attitude(i)])
 		var glyph := ""
 		var col := Color.WHITE
 		match int(game.astate[i]):
