@@ -21,7 +21,7 @@ func run() -> Array:
 		if "gun" in d["tags"]:
 			guns += 1
 			var b: Dictionary = d["gun"]
-			for f in ["cal", "mag", "modes", "slots", "max_aim", "aim_loss", "noise", "reload", "pellets", "jam", "dmg", "range", "acc"]:
+			for f in ["cal", "mag", "modes", "slots", "max_aim", "aim_loss", "noise", "reload", "pellets", "jam", "range", "acc"]:
 				if not b.has(f):
 					complete = false
 			if not GP.KINDS_BY_CAL.has(b["cal"]):

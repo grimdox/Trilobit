@@ -12,10 +12,21 @@ items = guns.records()
 AMMO = [("9mm", ["fmj", "ap", "hp"], 18, 14), (".357", ["fmj", "ap", "hp"], 12, 18), ("5.56", ["fmj", "ap", "hp"], 20, 24), ("12ga", ["shot", "slug"], 10, 20),
         (".338", ["fmj", "ap"], 10, 40), ("7.62", ["fmj", "ap"], 30, 30), ("12.7", ["fmj", "ap"], 20, 50), ("40mm", ["he"], 3, 45), ("cell", ["cell"], 20, 30)]
 KINDN = {"fmj": "ball", "ap": "armor-piercing", "hp": "hollow-point", "shot": "buckshot", "slug": "slug", "he": "HE grenade", "cell": "charge pack"}
+# Bullets carry ALL the damage (guns have none).  BULLETS: caliber -> (damage min, damage max of a ball/standard round, effective range in tiles).
+# Past its effective range a bullet loses 1/effective-range of its damage for every tile (so it is spent at twice that distance).  Numbers started from the
+# averages of the guns that fire the caliber (the old per-gun damage); effective range from the old per-class range (SMG 12, pistol/revolver 10, rifle 18,
+# shotgun 6, sniper 30, MG 16, heavy MG 20, launcher 14, laser 15).  KIND_DMG scales a kind from the standard round (armor-piercing 0.9, hollow-point 1.25).
+BULLETS = {"9mm": (9, 13, 12), ".357": (14, 22, 10), "5.56": (16, 24, 18), "12ga": (20, 34, 6), ".338": (30, 48, 30), "7.62": (12, 18, 16), "12.7": (16, 23, 20),
+           "40mm": (40, 70, 14), "cell": (14, 23, 15)}
+KIND_DMG = {"fmj": 1.0, "ap": 0.9, "hp": 1.25, "shot": 1.0, "slug": 1.0, "he": 1.0, "cell": 1.0}
+KIND_ER = {("12ga", "slug"): 12}      # a slug carries much farther than buckshot
 for cal, kinds, rounds, price in AMMO:
     for k in kinds:
+        lo, hi, er = BULLETS[cal]
+        m = KIND_DMG[k]
         items.append({"id": "trl_ammo_%s_%s" % (cal.replace(".", ""), k), "name": "%s %s box" % (cal, KINDN[k]), "weight_g": rounds * 10, "volume_ml": rounds * 6, "length_mm": 80,
-                      "price": price * (2 if k == "ap" else 1), "tags": ["ammo"], "ammo": {"cal": cal, "kind": k, "rounds": rounds}})
+                      "price": price * (2 if k == "ap" else 1), "tags": ["ammo"],
+                      "ammo": {"cal": cal, "kind": k, "rounds": rounds, "dmg": [max(1, round(lo * m)), max(1, round(hi * m))], "eff_range": KIND_ER.get((cal, k), er)}})
 # gun mods.  effects: acc (flat, percentage points; 5 points = 1 on the 2d10 roll), max_aim (more aim points can be banked), aim_speed (change to the aim points gained per aiming turn; optics are slower to settle but allow range precision through rangepen_pct), hip (bonus when not aiming), range_pct, rangepen_pct (less accuracy lost per tile),
 # close_pen (penalty inside 4 tiles), recoil_pct (less aim lost per bullet), noise_cap (shots are heard no further than this), dmg_pct, mag_pct, jam (percentage points), reload (turns), spread_pct
 MODS = [

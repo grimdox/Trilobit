@@ -14,10 +14,6 @@
   "maker": "Hoshikawa Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    7,
-    11
-   ],
    "range": [
     4,
     9
@@ -69,10 +65,6 @@
   "maker": "Sakurada Precision",
   "rare": false,
   "gun": {
-   "dmg": [
-    8,
-    12
-   ],
    "range": [
     4,
     9
@@ -124,10 +116,6 @@
   "maker": "Volkov Works",
   "rare": false,
   "gun": {
-   "dmg": [
-    7,
-    11
-   ],
    "range": [
     4,
     9
@@ -179,10 +167,6 @@
   "maker": "Zarya Combine",
   "rare": false,
   "gun": {
-   "dmg": [
-    7,
-    11
-   ],
    "range": [
     4,
     9
@@ -234,10 +218,6 @@
   "maker": "Granite Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    8,
-    11
-   ],
    "range": [
     4,
     9
@@ -289,10 +269,6 @@
   "maker": "Longhai Ordnance",
   "rare": false,
   "gun": {
-   "dmg": [
-    8,
-    12
-   ],
    "range": [
     4,
     9
@@ -344,10 +320,6 @@
   "maker": "Feng-Xu Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    6,
-    10
-   ],
    "range": [
     4,
     9
@@ -399,10 +371,6 @@
   "maker": "Sakurada Precision",
   "rare": false,
   "gun": {
-   "dmg": [
-    11,
-    15
-   ],
    "range": [
     3,
     7
@@ -445,10 +413,6 @@
   "maker": "Zarya Combine",
   "rare": false,
   "gun": {
-   "dmg": [
-    11,
-    15
-   ],
    "range": [
     3,
     7
@@ -491,10 +455,6 @@
   "maker": "Feng-Xu Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    11,
-    17
-   ],
    "range": [
     3,
     7
@@ -537,10 +497,6 @@
   "maker": "Hoshikawa Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    13,
-    21
-   ],
    "range": [
     3,
     7
@@ -582,10 +538,6 @@
   "maker": "Granite Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    9,
-    16
-   ],
    "range": [
     3,
     7
@@ -628,10 +580,6 @@
   "maker": "Longhai Ordnance",
   "rare": false,
   "gun": {
-   "dmg": [
-    11,
-    17
-   ],
    "range": [
     3,
     7
@@ -674,10 +622,6 @@
   "maker": "Volkov Works",
   "rare": false,
   "gun": {
-   "dmg": [
-    15,
-    23
-   ],
    "range": [
     3,
     7
@@ -719,10 +663,6 @@
   "maker": "Sakurada Precision",
   "rare": false,
   "gun": {
-   "dmg": [
-    13,
-    23
-   ],
    "range": [
     3,
     7
@@ -764,10 +704,6 @@
   "maker": "Granite Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    15,
-    23
-   ],
    "range": [
     3,
     7
@@ -809,10 +745,6 @@
   "maker": "Hoshikawa Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    16,
-    24
-   ],
    "range": [
     10,
     15
@@ -861,10 +793,6 @@
   "maker": "Sakurada Precision",
   "rare": false,
   "gun": {
-   "dmg": [
-    16,
-    24
-   ],
    "range": [
     10,
     15
@@ -913,10 +841,6 @@
   "maker": "Volkov Works",
   "rare": false,
   "gun": {
-   "dmg": [
-    16,
-    23
-   ],
    "range": [
     10,
     15
@@ -965,10 +889,6 @@
   "maker": "Zarya Combine",
   "rare": false,
   "gun": {
-   "dmg": [
-    17,
-    25
-   ],
    "range": [
     10,
     15
@@ -1017,10 +937,6 @@
   "maker": "Granite Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    16,
-    25
-   ],
    "range": [
     10,
     15
@@ -1069,10 +985,6 @@
   "maker": "Longhai Ordnance",
   "rare": false,
   "gun": {
-   "dmg": [
-    15,
-    23
-   ],
    "range": [
     10,
     15
@@ -1121,10 +1033,6 @@
   "maker": "Feng-Xu Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    17,
-    23
-   ],
    "range": [
     10,
     15
@@ -1173,10 +1081,6 @@
   "maker": "Granite Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    15,
-    25
-   ],
    "range": [
     10,
     15
@@ -1225,10 +1129,6 @@
   "maker": "Volkov Works",
   "rare": false,
   "gun": {
-   "dmg": [
-    15,
-    25
-   ],
    "range": [
     10,
     15
@@ -1277,10 +1177,6 @@
   "maker": "Longhai Ordnance",
   "rare": false,
   "gun": {
-   "dmg": [
-    16,
-    24
-   ],
    "range": [
     10,
     15
@@ -1329,10 +1225,6 @@
   "maker": "Hoshikawa Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    19,
-    34
-   ],
    "range": [
     3,
     7
@@ -1375,10 +1267,6 @@
   "maker": "Zarya Combine",
   "rare": false,
   "gun": {
-   "dmg": [
-    20,
-    34
-   ],
    "range": [
     3,
     7
@@ -1421,10 +1309,6 @@
   "maker": "Granite Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    21,
-    34
-   ],
    "range": [
     3,
     7
@@ -1467,10 +1351,6 @@
   "maker": "Longhai Ordnance",
   "rare": false,
   "gun": {
-   "dmg": [
-    19,
-    35
-   ],
    "range": [
     3,
     7
@@ -1513,10 +1393,6 @@
   "maker": "Sakurada Precision",
   "rare": false,
   "gun": {
-   "dmg": [
-    20,
-    33
-   ],
    "range": [
     3,
     7
@@ -1559,10 +1435,6 @@
   "maker": "Feng-Xu Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    21,
-    34
-   ],
    "range": [
     3,
     7
@@ -1605,10 +1477,6 @@
   "maker": "Sakurada Precision",
   "rare": false,
   "gun": {
-   "dmg": [
-    29,
-    47
-   ],
    "range": [
     20,
     30
@@ -1652,10 +1520,6 @@
   "maker": "Volkov Works",
   "rare": false,
   "gun": {
-   "dmg": [
-    30,
-    47
-   ],
    "range": [
     20,
     30
@@ -1699,10 +1563,6 @@
   "maker": "Zarya Combine",
   "rare": true,
   "gun": {
-   "dmg": [
-    31,
-    48
-   ],
    "range": [
     20,
     30
@@ -1746,10 +1606,6 @@
   "maker": "Feng-Xu Arms",
   "rare": true,
   "gun": {
-   "dmg": [
-    30,
-    48
-   ],
    "range": [
     20,
     30
@@ -1793,10 +1649,6 @@
   "maker": "Hoshikawa Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    29,
-    48
-   ],
    "range": [
     20,
     30
@@ -1840,10 +1692,6 @@
   "maker": "Granite Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    31,
-    49
-   ],
    "range": [
     20,
     30
@@ -1887,10 +1735,6 @@
   "maker": "Longhai Ordnance",
   "rare": true,
   "gun": {
-   "dmg": [
-    31,
-    49
-   ],
    "range": [
     20,
     30
@@ -1934,10 +1778,6 @@
   "maker": "Volkov Works",
   "rare": true,
   "gun": {
-   "dmg": [
-    16,
-    23
-   ],
    "range": [
     12,
     18
@@ -1982,10 +1822,6 @@
   "maker": "Zarya Combine",
   "rare": false,
   "gun": {
-   "dmg": [
-    13,
-    18
-   ],
    "range": [
     9,
     13
@@ -2032,10 +1868,6 @@
   "maker": "Granite Arms",
   "rare": true,
   "gun": {
-   "dmg": [
-    15,
-    23
-   ],
    "range": [
     12,
     18
@@ -2080,10 +1912,6 @@
   "maker": "Hoshikawa Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    13,
-    19
-   ],
    "range": [
     9,
     13
@@ -2130,10 +1958,6 @@
   "maker": "Longhai Ordnance",
   "rare": false,
   "gun": {
-   "dmg": [
-    11,
-    17
-   ],
    "range": [
     9,
     13
@@ -2180,10 +2004,6 @@
   "maker": "Granite Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    40,
-    70
-   ],
    "range": [
     8,
     14
@@ -2224,10 +2044,6 @@
   "maker": "Zarya Combine",
   "rare": false,
   "gun": {
-   "dmg": [
-    40,
-    70
-   ],
    "range": [
     8,
     14
@@ -2268,10 +2084,6 @@
   "maker": "Feng-Xu Arms",
   "rare": true,
   "gun": {
-   "dmg": [
-    39,
-    71
-   ],
    "range": [
     8,
     14
@@ -2312,10 +2124,6 @@
   "maker": "Hoshikawa Arms",
   "rare": false,
   "gun": {
-   "dmg": [
-    15,
-    23
-   ],
    "range": [
     8,
     13
@@ -2360,10 +2168,6 @@
   "maker": "Sakurada Precision",
   "rare": true,
   "gun": {
-   "dmg": [
-    15,
-    23
-   ],
    "range": [
     8,
     13
@@ -2408,10 +2212,6 @@
   "maker": "Feng-Xu Arms",
   "rare": true,
   "gun": {
-   "dmg": [
-    13,
-    22
-   ],
    "range": [
     8,
     13
@@ -2454,7 +2254,12 @@
   "ammo": {
    "cal": "9mm",
    "kind": "fmj",
-   "rounds": 18
+   "rounds": 18,
+   "dmg": [
+    9,
+    13
+   ],
+   "eff_range": 12
   }
  },
  {
@@ -2470,7 +2275,12 @@
   "ammo": {
    "cal": "9mm",
    "kind": "ap",
-   "rounds": 18
+   "rounds": 18,
+   "dmg": [
+    8,
+    12
+   ],
+   "eff_range": 12
   }
  },
  {
@@ -2486,7 +2296,12 @@
   "ammo": {
    "cal": "9mm",
    "kind": "hp",
-   "rounds": 18
+   "rounds": 18,
+   "dmg": [
+    11,
+    16
+   ],
+   "eff_range": 12
   }
  },
  {
@@ -2502,7 +2317,12 @@
   "ammo": {
    "cal": ".357",
    "kind": "fmj",
-   "rounds": 12
+   "rounds": 12,
+   "dmg": [
+    14,
+    22
+   ],
+   "eff_range": 10
   }
  },
  {
@@ -2518,7 +2338,12 @@
   "ammo": {
    "cal": ".357",
    "kind": "ap",
-   "rounds": 12
+   "rounds": 12,
+   "dmg": [
+    13,
+    20
+   ],
+   "eff_range": 10
   }
  },
  {
@@ -2534,7 +2359,12 @@
   "ammo": {
    "cal": ".357",
    "kind": "hp",
-   "rounds": 12
+   "rounds": 12,
+   "dmg": [
+    18,
+    28
+   ],
+   "eff_range": 10
   }
  },
  {
@@ -2550,7 +2380,12 @@
   "ammo": {
    "cal": "5.56",
    "kind": "fmj",
-   "rounds": 20
+   "rounds": 20,
+   "dmg": [
+    16,
+    24
+   ],
+   "eff_range": 18
   }
  },
  {
@@ -2566,7 +2401,12 @@
   "ammo": {
    "cal": "5.56",
    "kind": "ap",
-   "rounds": 20
+   "rounds": 20,
+   "dmg": [
+    14,
+    22
+   ],
+   "eff_range": 18
   }
  },
  {
@@ -2582,7 +2422,12 @@
   "ammo": {
    "cal": "5.56",
    "kind": "hp",
-   "rounds": 20
+   "rounds": 20,
+   "dmg": [
+    20,
+    30
+   ],
+   "eff_range": 18
   }
  },
  {
@@ -2598,7 +2443,12 @@
   "ammo": {
    "cal": "12ga",
    "kind": "shot",
-   "rounds": 10
+   "rounds": 10,
+   "dmg": [
+    20,
+    34
+   ],
+   "eff_range": 6
   }
  },
  {
@@ -2614,7 +2464,12 @@
   "ammo": {
    "cal": "12ga",
    "kind": "slug",
-   "rounds": 10
+   "rounds": 10,
+   "dmg": [
+    20,
+    34
+   ],
+   "eff_range": 12
   }
  },
  {
@@ -2630,7 +2485,12 @@
   "ammo": {
    "cal": ".338",
    "kind": "fmj",
-   "rounds": 10
+   "rounds": 10,
+   "dmg": [
+    30,
+    48
+   ],
+   "eff_range": 30
   }
  },
  {
@@ -2646,7 +2506,12 @@
   "ammo": {
    "cal": ".338",
    "kind": "ap",
-   "rounds": 10
+   "rounds": 10,
+   "dmg": [
+    27,
+    43
+   ],
+   "eff_range": 30
   }
  },
  {
@@ -2662,7 +2527,12 @@
   "ammo": {
    "cal": "7.62",
    "kind": "fmj",
-   "rounds": 30
+   "rounds": 30,
+   "dmg": [
+    12,
+    18
+   ],
+   "eff_range": 16
   }
  },
  {
@@ -2678,7 +2548,12 @@
   "ammo": {
    "cal": "7.62",
    "kind": "ap",
-   "rounds": 30
+   "rounds": 30,
+   "dmg": [
+    11,
+    16
+   ],
+   "eff_range": 16
   }
  },
  {
@@ -2694,7 +2569,12 @@
   "ammo": {
    "cal": "12.7",
    "kind": "fmj",
-   "rounds": 20
+   "rounds": 20,
+   "dmg": [
+    16,
+    23
+   ],
+   "eff_range": 20
   }
  },
  {
@@ -2710,7 +2590,12 @@
   "ammo": {
    "cal": "12.7",
    "kind": "ap",
-   "rounds": 20
+   "rounds": 20,
+   "dmg": [
+    14,
+    21
+   ],
+   "eff_range": 20
   }
  },
  {
@@ -2726,7 +2611,12 @@
   "ammo": {
    "cal": "40mm",
    "kind": "he",
-   "rounds": 3
+   "rounds": 3,
+   "dmg": [
+    40,
+    70
+   ],
+   "eff_range": 14
   }
  },
  {
@@ -2742,7 +2632,12 @@
   "ammo": {
    "cal": "cell",
    "kind": "cell",
-   "rounds": 20
+   "rounds": 20,
+   "dmg": [
+    14,
+    23
+   ],
+   "eff_range": 15
   }
  },
  {

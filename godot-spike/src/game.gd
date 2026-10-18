@@ -158,6 +158,7 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) ->
 	rng.seed = seed_value
 	db = DB.new()
 	db.load_file("res://data/items.json")
+	GP.load_ammo(db.defs)
 	for k in db.defs:
 		var d: Dictionary = db.defs[k]
 		if "gun" in d.get("tags", []):
@@ -2797,6 +2798,11 @@ func act_fire(any: bool = false) -> bool:
 				landed = true
 				var wmax: int = int(st["dmg"][1])
 				var base: int = SK.melee_base(rng.randi_range(int(st["dmg"][0]), wmax), wmax, skill, crit)
+				var fall: float = GP.falloff(int(st["eff_range"]), vd)
+				if fall < 1.0:
+					base = int(round(float(base) * fall))
+					if s == 0:
+						say("The round is spent: %d%% of its damage left at %d tiles." % [int(round(fall * 100.0)), vd])
 				if st["blast"] > 0:
 					dmg = base
 				else:
@@ -3416,8 +3422,10 @@ func _hunt_act(i: int, d: int, sees: bool) -> void:
 			skill_up("dodge", 5)
 		else:
 			var crit: bool = out == "crit"
-			var wmax: int = int(ng["dmg"][1])
-			var dmg: int = SK.melee_base(rng.randi_range(int(ng["dmg"][0]), wmax), wmax, skill, crit)
+			var nb: Dictionary = GP.bullet(String(ng["cal"]), "fmj")
+			var wmax: int = int(nb["dmg"][1])
+			var dmg: int = SK.melee_base(rng.randi_range(int(nb["dmg"][0]), wmax), wmax, skill, crit)
+			dmg = int(round(float(dmg) * GP.falloff(int(nb["eff_range"]), d)))
 			player_melee_hurt(dmg, "%s shoots you" % name_of(i), 1 if fac[i] == NAP else 0, crit)
 		return
 	if d <= 1:

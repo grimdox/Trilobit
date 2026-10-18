@@ -62,6 +62,23 @@ func run() -> Array:
 	for r in by_cls["sniper"]:
 		spec_ok = spec_ok and r == [5, 20, 30]
 	check.call("unmodded pistols and shotguns: max aim 2, range 3-7; rifles 3, 10-15; snipers 5, 20-30 (%d classes)" % by_cls.size(), spec_ok)
+	# ---- damage lives on the bullet
+	var no_gun_dmg := true
+	for k in g.db.defs:
+		if "gun" in g.db.defs[k]["tags"] and g.db.defs[k]["gun"].has("dmg"):
+			no_gun_dmg = false
+	var bullets_ok := GP.AMMO.size() >= 19
+	for kk in GP.AMMO:
+		var bl: Dictionary = GP.AMMO[kk]
+		bullets_ok = bullets_ok and bl["dmg"][1] >= bl["dmg"][0] and int(bl["eff_range"]) >= 1
+	check.call("no gun carries damage; all %d bullet types carry a damage range and an effective range" % GP.AMMO.size(), no_gun_dmg and bullets_ok)
+	var ps = g._new_item(g.gun_ids["pistol"][0])
+	check.call("a gun's damage is its loaded bullet's (pistol with %s: %s)" % [ps.kind, str(GP.stats(ps)["dmg"])], int(GP.stats(ps)["dmg"][0]) == int(GP.bullet("9mm", "fmj")["dmg"][0]) and int(GP.stats(ps)["dmg"][1]) == int(GP.bullet("9mm", "fmj")["dmg"][1]))
+	ps.kind = "hp"
+	ps.loaded = 3
+	check.call("hollow-points swap in their own numbers (%s)" % str(GP.stats(ps)["dmg"]), int(GP.stats(ps)["dmg"][1]) == int(GP.bullet("9mm", "hp")["dmg"][1]) and GP.stats(ps)["eff_range"] == 12)
+	check.call("damage is full inside the effective range and loses 1/range a tile past it (12: %.2f, 18: %.2f, 24: %.2f, 40: %.2f)" % [GP.falloff(12, 12), GP.falloff(12, 18), GP.falloff(12, 24), GP.falloff(12, 40)],
+		GP.falloff(12, 12) == 1.0 and absf(GP.falloff(12, 18) - 0.5) < 0.001 and GP.falloff(12, 24) == 0.0 and GP.falloff(12, 40) == 0.0 and absf(GP.falloff(30, 31) - (1.0 - 1.0 / 30.0)) < 0.001)
 	# ---- the hit model against hand-computed cases
 	var flat := {"acc": 65, "sights": 0, "hip": 0, "range_lo": 5, "range_hi": 5, "rangepen": 1.0, "pellets": 1, "spread": 1.0, "close_pen": 0, "max_aim": 2, "aim_loss": 1.0}
 	check.call("on the natural range with no bonus: 55%% (%d), +2 aim 72%% (%d)" % [GP.hit_chance(flat, 5, 0, false, false, 0, 0), GP.hit_chance(flat, 5, 2, false, false, 0, 0)], GP.hit_chance(flat, 5, 0, false, false, 0, 0) == 55 and GP.hit_chance(flat, 5, 2, false, false, 0, 0) == 72)
@@ -230,6 +247,40 @@ func run() -> Array:
 		if g.body.total() < 164:
 			nhit += 1
 	check.call("a gunman's bullets hurt the player's limbs (%d of 200)" % nhit, nhit > 20 and nhit < 150)
+	# ---- a long shot loses damage past the effective range (pistol rounds: full to 12 tiles)
+	var far_spot: int = _open_line(g, spot, 18)
+	if far_spot >= 0:
+		g.pc = far_spot
+		g.last_pc = far_spot
+		var fall_ok := true
+		var seen_hit := false
+		var sp2: Dictionary = GP.stats(pis)
+		for _t in 300:
+			g.sim.place(who, far_spot + 16)
+			g.sim.near[who] = 1
+			g.hpn[who] = 50000
+			g.hpmax[who] = 50000
+			g.fac[who] = g.BRATVA
+			g.astate[who] = g.HUNTING
+			g.skills = SK.default_skills()
+			g.body.reset()
+			g.hp = g.hp_max
+			g.game_over = false
+			g.aim_turns = 2
+			g.stamina = g.STAMINA_MAX
+			g.ap = 199
+			pis.loaded = 10
+			pis.jammed = false
+			pis.kind = "fmj"
+			g.fov.compute(g.pc % g.size, g.pc / g.size, 18)
+			g.sim.retier(g.pc)
+			g.sim.near[who] = 1
+			g.act_fire(true)
+			if g.last_roll["outcome"] == "hit":
+				seen_hit = true
+				var cap: int = int(round(float(int(sp2["dmg"][1])) * GP.falloff(int(sp2["eff_range"]), 16)))
+				fall_ok = fall_ok and int(g.last_roll["dmg"]) <= cap
+		check.call("at 16 tiles a 9mm round has a third less punch (damage never above %d, max %d close up)" % [int(round(float(int(sp2["dmg"][1])) * GP.falloff(int(sp2["eff_range"]), 16))), sp2["dmg"][1]], seen_hit and fall_ok)
 	# ---- save and load
 	g.aimn[who] = 2
 	var dd: Dictionary = JSON.parse_string(JSON.stringify(g.save_dict()))

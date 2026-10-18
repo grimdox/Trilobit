@@ -8,23 +8,44 @@ const SK = preload("res://src/skills.gd")
 const AIM_FLOOR_DROP := 5
 ## what a gunman in the street carries, by the sim's gun code (1 pistol, 2 SMG, 3 rifle): the same fields as a gun's data (damage as before)
 const NPC_GUN := {
-	1: {"name": "pistol", "dmg": [5, 9], "range": [3, 7], "max_aim": 2, "want": 1, "noise": 14},
-	2: {"name": "SMG", "dmg": [6, 11], "range": [4, 9], "max_aim": 2, "want": 1, "noise": 16},
-	3: {"name": "rifle", "dmg": [6, 11], "range": [10, 15], "max_aim": 3, "want": 2, "noise": 20},
+	1: {"name": "pistol", "cal": "9mm", "range": [3, 7], "max_aim": 2, "want": 1, "noise": 14},
+	2: {"name": "SMG", "cal": "9mm", "range": [4, 9], "max_aim": 2, "want": 1, "noise": 16},
+	3: {"name": "rifle", "cal": "5.56", "range": [10, 15], "max_aim": 3, "want": 2, "noise": 20},
 }
+
+## every bullet's numbers, from the ammunition items (data/items.json): "cal|kind" -> {dmg [min, max], eff_range, ...}; filled by the game at setup
+static var AMMO := {}
+static func load_ammo(defs: Dictionary) -> void:
+	AMMO = {}
+	for k in defs:
+		var d: Dictionary = defs[k]
+		if "ammo" in d.get("tags", []) and d.has("ammo") and d["ammo"].has("dmg"):
+			AMMO[pool_key(String(d["ammo"]["cal"]), String(d["ammo"]["kind"]))] = d["ammo"]
+
+static func pool_key(cal: String, kind: String) -> String:
+	return cal + "|" + kind
+
+static func bullet(cal: String, kind: String) -> Dictionary:
+	return AMMO[pool_key(cal, kind)]
+
+## the fraction of its damage a bullet still has at distance d: full inside the effective range, then 1/effective-range less for every tile past it
+static func falloff(eff_range: int, d: int) -> float:
+	if d <= eff_range:
+		return 1.0
+	return maxf(0.0, 1.0 - float(d - eff_range) / float(maxi(1, eff_range)))
 const AP_FIRE := 50          # action points to pull the trigger (a volley is one action); aiming costs a full 100
 const STAM_FIRE := 2
 const STAM_AIM := 1
 
-## ammunition kinds: damage multiplier, armour penetration (reserved for armoured targets), pellet override, blast radius
+## ammunition kinds: armour penetration, pellet override, blast radius (damage and effective range live on the bullet items, see AMMO)
 const KIND := {
-	"fmj": {"dmg": 1.0, "pen": 1, "label": "ball"},
-	"ap": {"dmg": 0.9, "pen": 3, "label": "armor-piercing"},
-	"hp": {"dmg": 1.25, "pen": 0, "label": "hollow-point"},
-	"shot": {"dmg": 1.0, "pen": 0, "label": "buckshot"},
-	"slug": {"dmg": 1.0, "pen": 2, "label": "slug", "pellets": 1},
-	"he": {"dmg": 1.0, "pen": 0, "label": "HE", "blast": 2},
-	"cell": {"dmg": 1.0, "pen": 2, "label": "charge"},
+	"fmj": {"pen": 1, "label": "ball"},
+	"ap": {"pen": 3, "label": "armor-piercing"},
+	"hp": {"pen": 0, "label": "hollow-point"},
+	"shot": {"pen": 0, "label": "buckshot"},
+	"slug": {"pen": 2, "label": "slug", "pellets": 1},
+	"he": {"pen": 0, "label": "HE", "blast": 2},
+	"cell": {"pen": 2, "label": "charge"},
 }
 const KINDS_BY_CAL := {"9mm": ["fmj", "ap", "hp"], ".357": ["fmj", "ap", "hp"], "5.56": ["fmj", "ap", "hp"], "12ga": ["shot", "slug"], ".338": ["fmj", "ap"],
 	"7.62": ["fmj", "ap"], "12.7": ["fmj", "ap"], "40mm": ["he"], "cell": ["cell"]}
@@ -56,14 +77,16 @@ static func stats(gun) -> Dictionary:
 	var f: Dictionary = fx(gun)
 	var kind: String = gun.kind if gun.loaded > 0 and gun.kind != "" else default_kind(b["cal"])
 	var km: Dictionary = KIND[kind]
-	var dm: float = float(km["dmg"]) * (1.0 + float(f["dmg_pct"]) / 100.0)
+	var bl: Dictionary = bullet(String(b["cal"]), kind)
+	var dm: float = 1.0 + float(f["dmg_pct"]) / 100.0
 	var s := {}
 	s["name"] = gun.def["name"]
 	s["cal"] = b["cal"]
 	s["kind"] = kind
 	s["label"] = km["label"]
-	s["dmg"] = [maxi(1, int(round(float(b["dmg"][0]) * dm))), maxi(1, int(round(float(b["dmg"][1]) * dm)))]
+	s["dmg"] = [maxi(1, int(round(float(bl["dmg"][0]) * dm))), maxi(1, int(round(float(bl["dmg"][1]) * dm)))]
 	var rm: float = 1.0 + float(f["range_pct"]) / 100.0
+	s["eff_range"] = maxi(1, int(round(float(bl["eff_range"]) * rm)))
 	s["range_lo"] = maxi(1, int(round(float(b["range"][0]) * rm)))
 	s["range_hi"] = maxi(int(s["range_lo"]), int(round(float(b["range"][1]) * rm)))
 	s["range"] = s["range_hi"]
@@ -160,8 +183,8 @@ static func hit_chance(s: Dictionary, d: int, aim: int, moved: bool, crouch: boo
 
 ## the visible stat block of a gun, shown on the gunsmith screen: damage, natural range, max aim, clip size, mod slots and more
 static func stat_line(s: Dictionary, aim_rate: float) -> String:
-	return "dmg %d-%d   natural range %d-%d   max aim %d   clip %d   mod slots %d   aim loss %.2f a bullet   aim %.2f a turn   report %d   reload %d   ammo %s %s" % [
-		s["dmg"][0], s["dmg"][1], s["range_lo"], s["range_hi"], s["max_aim"], s["mag"], s["slots"].size(), s["aim_loss"], aim_rate, s["noise"], s["reload"], s["cal"], s["label"]]
+	return "bullet dmg %d-%d (full to %d tiles)   natural range %d-%d   max aim %d   clip %d   mod slots %d   aim loss %.2f a bullet   aim %.2f a turn   report %d   reload %d   ammo %s %s" % [
+		s["dmg"][0], s["dmg"][1], s["eff_range"], s["range_lo"], s["range_hi"], s["max_aim"], s["mag"], s["slots"].size(), s["aim_loss"], aim_rate, s["noise"], s["reload"], s["cal"], s["label"]]
 
 ## average damage of one hit, for display
 static func avg_dmg(s: Dictionary) -> float:
