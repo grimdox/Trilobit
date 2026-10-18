@@ -254,6 +254,7 @@ func _people() -> void:
 	stamn = PackedByteArray(); stamn.resize(n); stamn.fill(STAMINA_MAX)
 	stamt = PackedInt32Array(); stamt.resize(n)
 	aimn = PackedByteArray(); aimn.resize(n)
+	limbn = PackedInt32Array(); limbn.resize(n * 6); limbn.fill(-1)
 	for i in n:
 		face[i] = (i * 5 + 3) & 7
 	fem = PackedByteArray(); fem.resize(n)
@@ -1142,7 +1143,7 @@ func describe_at(c: int) -> String:
 	bits.append(LOOK.terrain_name(t))
 	if seen:
 		if sim.at[c] >= 0:
-			bits.append(name_of(sim.at[c]) + ((" (" + ["unaware", "suspicious", "searching", "hunting you"][int(astate[sim.at[c]])] + ")") if hostile(sim.at[c]) else ""))
+			bits.append(name_of(sim.at[c]) + ((" (" + ["unaware", "suspicious", "searching", "hunting you"][int(astate[sim.at[c]])] + ")") if hostile(sim.at[c]) else "") + ((" - " + npc_wound_text(sim.at[c])) if npc_wound_text(sim.at[c]) != "" else ""))
 		if c == pc:
 			bits.append("you")
 		if veh_at[c] >= 0:
@@ -1409,6 +1410,7 @@ var _free_swing := false                       # a free counter-attack is in pro
 var apn: PackedInt32Array                      # every person's banked action points (only fighters use them)
 var stamn: PackedByteArray                     # every person's stamina in percent, brought up to date when they fight (stamt = the turn it was last brought up)
 var stamt: PackedInt32Array
+var limbn: PackedInt32Array                    # six limb health values per person (BODY.LIMBS order), -1 = untouched and still full: filled in on the first wound
 var aimn: PackedByteArray                      # every gunman's banked aim points (they aim for a turn, then fire for half a turn)
 var last_roll: Dictionary = {}                 # the last melee roll, for the HUD line and the tests: {who, nat, total, outcome, loc, dmg}
 const ARMOR_TYPES := ["phys"]
@@ -1604,6 +1606,86 @@ func player_melee_hurt(dmg: int, msg: String, pen: int, crit: bool) -> void:
 		say("%s in the %s, but armor and grit stop it%s." % [msg, limb_name(l), tail])
 
 ## NPCs: armor, and dodge.  Bratva carry little, the NAP wear vests, Nasim's killers are wired (and the only ones who can dodge bullets).
+# ---- NPC body parts: the same six limbs as yours (src/body.gd), scaled to the person's health (a 60-point person has exactly your limbs)
+## only the wounded are saved: {person: [six limb values]}
+func _limbs_save() -> Dictionary:
+	var out := {}
+	for i in sim.n:
+		if limbn[i * 6] != -1:
+			out[str(i)] = [limbn[i * 6], limbn[i * 6 + 1], limbn[i * 6 + 2], limbn[i * 6 + 3], limbn[i * 6 + 4], limbn[i * 6 + 5]]
+	return out
+
+func npc_limb_max(i: int, l: String) -> int:
+	return maxi(3, int(round(float(BODY.BASE[l]) * float(hpmax[i]) / 60.0)))
+
+func _limb_slot(l: String) -> int:
+	return BODY.LIMBS.find(l)
+
+func _npc_limbs_init(i: int) -> void:
+	if limbn[i * 6] != -1:
+		return
+	for k in 6:
+		limbn[i * 6 + k] = npc_limb_max(i, BODY.LIMBS[k])
+
+func npc_limb_hp(i: int, l: String) -> int:
+	var v: int = limbn[i * 6 + _limb_slot(l)]
+	return npc_limb_max(i, l) if (limbn[i * 6] == -1) else v
+
+func npc_limb_ok(i: int, l: String) -> bool:
+	return npc_limb_hp(i, l) > 0
+
+func npc_arms_ok(i: int) -> int:
+	return (1 if npc_limb_ok(i, "l_arm") else 0) + (1 if npc_limb_ok(i, "r_arm") else 0)
+
+func npc_legs_ok(i: int) -> int:
+	return (1 if npc_limb_ok(i, "l_leg") else 0) + (1 if npc_limb_ok(i, "r_leg") else 0)
+
+## a hurt head costs accuracy, as it does for you (under half health)
+func npc_head_hurt(i: int) -> bool:
+	return limbn[i * 6] != -1 and npc_limb_hp(i, "head") * 2 < npc_limb_max(i, "head")
+
+## a blow or bullet lands on one of their limbs.  A limb at 0 is disabled (their arms drop their grip, their legs slow them and halve their dodge);
+## a head or chest at 0 kills.  Returns true if that killed them.  The caller still takes the damage off their overall health, as for you.
+func npc_limb_hit(i: int, loc: String, dmg: int) -> bool:
+	if loc == "" or dmg <= 0 or sim.alive[i] == 0:
+		return false
+	_npc_limbs_init(i)
+	var k: int = _limb_slot(loc)
+	var before: int = limbn[i * 6 + k]
+	var after: int = maxi(0, before - dmg)
+	limbn[i * 6 + k] = after
+	if before > 0 and after == 0:
+		if loc == "head" or loc == "chest":
+			say_if_seen(sim.pos[i], "%s is killed by a blow to the %s." % [name_of(i), BODY.NAME[loc]])
+			kill(i)
+			return true
+		say_if_seen(sim.pos[i], "%s's %s is disabled!  %s" % [name_of(i), BODY.NAME[loc], _npc_limb_effect(i, loc)])
+	return false
+
+func _npc_limb_effect(i: int, loc: String) -> String:
+	if BODY.GROUP[loc] == "legs":
+		return "They limp." if npc_legs_ok(i) == 1 else "They can only drag themselves."
+	return "They fight one-handed." if npc_arms_ok(i) == 1 else "They cannot hold a weapon."
+
+## their Dodge in skill points, halved on one good leg and gone on none (as yours)
+func npc_dodge_pts(i: int) -> int:
+	var d: int = npc_lvl(i, "dodge")
+	var lg: int = npc_legs_ok(i)
+	return d if lg == 2 else (d / 2 if lg == 1 else 0)
+
+## the wounds worth seeing, for the look text
+func npc_wound_text(i: int) -> String:
+	if limbn[i * 6] == -1:
+		return ""
+	var bits: Array = []
+	for l in BODY.LIMBS:
+		var hp_l: int = npc_limb_hp(i, l)
+		if hp_l <= 0:
+			bits.append("%s disabled" % BODY.NAME[l])
+		elif hp_l * 2 < npc_limb_max(i, l):
+			bits.append("%s hurt" % BODY.NAME[l])
+	return ", ".join(bits)
+
 func npc_armor(i: int) -> int:
 	match fac[i]:
 		BRATVA: return 1
@@ -1616,7 +1698,7 @@ func npc_melee_dodge(i: int) -> int:
 	return SK.melee_dodge(npc_lvl(i, "dodge"))
 
 func npc_bullet_dodge(i: int) -> int:
-	return SK.bullet_dodge(npc_lvl(i, "dodge"))
+	return SK.bullet_dodge(npc_dodge_pts(i))
 
 # ---- hands, aim speed and what broken limbs do
 func weapon_hands(it) -> int:
@@ -2012,7 +2094,7 @@ func melee(i: int, dist: int = 1) -> void:
 	var sneak := astate[i] == UNAWARE or astate[i] == RETURNING
 	var helpless: bool = sneak or astate[i] == SURRENDERED or stun[i] > 0
 	var atk: int = lvl(msk) + int(round(float(ms.get("acc", 0)) / 5.0)) - (dist - 1) - (2 if body.arms_ok() < 2 else 0) + (1 if bless_left > 0 else 0)
-	var dodge: int = 0 if helpless else npc_lvl(i, "dodge")
+	var dodge: int = 0 if helpless else npc_dodge_pts(i)
 	var grit_t: int = npc_lvl(i, "grit")
 	var nat: int = _roll_2d10()
 	var total: int = nat + atk - dodge
@@ -2075,6 +2157,8 @@ func _melee_damage(i: int, dmg: int, ms: Dictionary, crit: bool = false, loc: St
 		_alert(i)
 		return
 	last_roll["dmg"] = dmg
+	if npc_limb_hit(i, loc, dmg):
+		return
 	hpn[i] -= dmg
 	if hpn[i] <= 0:
 		kill(i)
@@ -2112,8 +2196,11 @@ func _npc_swing_stats(i: int) -> Dictionary:
 
 ## an NPC strikes the player.  Same rules as yours: 2d10 + their skill - your Dodge, a locational hit, weapon roll + skill - your armor - your Grit.
 func _npc_melee_attack(i: int) -> void:
+	if npc_arms_ok(i) == 0:
+		say_if_seen(sim.pos[i], "%s flails with no good arm." % name_of(i))
+		return
 	var nm: Dictionary = _npc_swing_stats(i)
-	var atk: int = npc_lvl(i, String(nm["skill"])) + int(round(float(nm.get("acc", 0)) / 5.0))
+	var atk: int = npc_lvl(i, String(nm["skill"])) + int(round(float(nm.get("acc", 0)) / 5.0)) - (2 if npc_arms_ok(i) < 2 else 0) - (1 if npc_head_hurt(i) else 0)
 	var dodge: int = player_dodge_pts()
 	var nat: int = _roll_2d10()
 	var total: int = nat + atk - dodge
@@ -2670,6 +2757,7 @@ func act_fire(any: bool = false) -> bool:
 	var hits_by: Dictionary = {}
 	var crit_by: Dictionary = {}
 	var where_by: Dictionary = {}
+	var loc_by: Dictionary = {}                  # agent -> {limb: damage}
 	var aimed: int = aim_turns
 	var skill: int = lvl("ranged")
 	var fumbled := false
@@ -2730,6 +2818,9 @@ func act_fire(any: bool = false) -> bool:
 			if crit:
 				crit_by[victim] = true
 			where_by[victim] = loc
+			var lm: Dictionary = loc_by.get(victim, {})
+			lm[loc] = int(lm.get(loc, 0)) + dmg
+			loc_by[victim] = lm
 	wield.loaded -= shots
 	stamina = maxi(0, stamina - GP.STAM_FIRE)
 	var msg := "You fire the %s [%s]" % [wield.def["name"], GP.mode_name(wield)]
@@ -2747,7 +2838,13 @@ func act_fire(any: bool = false) -> bool:
 		say("The shot goes wild and you lose your aim!")
 	_noise(pc, int(st["noise"]))
 	for v in dmg_by:
-		_damage_npc(v, int(dmg_by[v]), true)
+		var dead := false
+		for lc in loc_by.get(v, {}):
+			if npc_limb_hit(v, String(lc), int(loc_by[v][lc])):
+				dead = true
+				break
+		if not dead:
+			_damage_npc(v, int(dmg_by[v]), true)
 		skill_up("ranged", 2 + d / 5)
 	if dmg_by.is_empty() and st["blast"] == 0:
 		_alert(t)
@@ -3291,7 +3388,7 @@ func _hunt(i: int, d: int) -> void:
 func _hunt_act(i: int, d: int, sees: bool) -> void:
 	var c: int = sim.pos[i]
 	var g := gunc[i]
-	if g > 0 and sees and d >= 2 and d <= int(GP.NPC_GUN[g]["range"][1]) + 3:
+	if g > 0 and sees and d >= 2 and d <= int(GP.NPC_GUN[g]["range"][1]) + 3 and npc_arms_ok(i) > 0:
 		var ng: Dictionary = GP.NPC_GUN[g]
 		if int(aimn[i]) < int(ng["want"]):          # the tell: a gunman spends a whole action raising the gun before the first shot
 			aimn[i] += 1
@@ -3303,7 +3400,7 @@ func _hunt_act(i: int, d: int, sees: bool) -> void:
 		var nat: int = _roll_2d10()
 		var rr: int = rng.randi_range(int(ng["range"][0]), int(ng["range"][1]))
 		var skill: int = npc_lvl(i, "ranged")
-		var bonus: int = skill + int(aimn[i]) + [-3, -2, 0, -1][stance] - (3 if in_vehicle >= 0 else 0)
+		var bonus: int = skill + int(aimn[i]) + [-3, -2, 0, -1][stance] - (3 if in_vehicle >= 0 else 0) - (3 if npc_arms_ok(i) < 2 else 0) - (1 if npc_head_hurt(i) else 0)
 		var total: int = GP.shot_total(nat, bonus, absi(d - rr), cover_vs(c, pc, crouch))
 		var out: String = SK.melee_outcome(nat, total, lvl("grit"))
 		last_roll = {"who": name_of(i), "target": -1, "nat": nat, "total": total, "outcome": out, "loc": "", "dmg": 0, "range_roll": rr, "aim": int(aimn[i])}
@@ -3328,6 +3425,7 @@ func _hunt_act(i: int, d: int, sees: bool) -> void:
 		return
 	if not _step_field(i):
 		_step_to(i, pc)
+	apn[i] -= AP_BASE * (2 - npc_legs_ok(i))          # a bad leg doubles the cost of a step, two make them crawl
 
 ## a fighter's stamina in percent, brought up to date: 1 back per turn, plus 1 per 2 points of their Grit
 func npc_stamina(i: int) -> int:
@@ -4276,7 +4374,7 @@ func save_dict() -> Dictionary:
 			"items_at": it_at, "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
 					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc),
-					"prov": provoked.keys(), "apn": Array(apn), "stamn": Array(stamn), "stamt": Array(stamt), "aimn": Array(aimn), "mdis": Array(mdis), "noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle)}}
+					"prov": provoked.keys(), "apn": Array(apn), "stamn": Array(stamn), "stamt": Array(stamt), "aimn": Array(aimn), "limbs": _limbs_save(), "mdis": Array(mdis), "noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle)}}
 
 func load_dict(d: Dictionary) -> void:
 	seed_value = int(d["seed"])
@@ -4367,6 +4465,13 @@ func load_dict(d: Dictionary) -> void:
 	stamn.fill(STAMINA_MAX)
 	stamt.fill(0)
 	aimn.fill(0)
+	limbn.fill(-1)
+	var ls: Dictionary = nn.get("limbs", {})
+	for k in ls:
+		var ji: int = int(k)
+		if ji >= 0 and ji < sim.n:
+			for q in 6:
+				limbn[ji * 6 + q] = int(ls[k][q])
 	for j in mini(aimn.size(), nn.get("aimn", []).size()):
 		aimn[j] = int(nn["aimn"][j])
 	for j in mini(apn.size(), nn.get("apn", []).size()):
