@@ -103,6 +103,10 @@ func run() -> Array:
 		g.sim.ctl[who] = 1
 		g.stun[who] = 0
 		g.bleed[who] = 0
+		g.body.reset()               # the hunter hits back now: keep the duelist whole so every test starts alike
+		g.hp = g.hp_max
+		g.stamina = g.STAMINA_MAX
+		g.game_over = false
 	var dmg_of = func(weapon, trials: int) -> float:
 		g.wield = weapon
 		var tot := 0
@@ -119,23 +123,23 @@ func run() -> Array:
 	var master_avg: float = dmg_of.call(g._new_item("trl_mel_katana_m"), 60)
 	check.call("katana beats bare hands, forged beats plain, masterwork beats forged (%.1f, %.1f, %.1f, %.1f)" % [fists, kat_avg, forged_avg, master_avg],
 		kat_avg > fists * 2 and forged_avg > kat_avg and master_avg > forged_avg)
-	# attack speed: a strike costs action points; fast weapons get more of them per turn
+	# a swing costs 100 action points whatever the weapon; the weapon's weight is what tires you (1 stamina per kg)
 	g.wield = g._new_item("trl_mel_kastet")
-	var c_fast: int = g.melee_cost(g.melee_stats())
+	var c_fast: int = g.swing_stamina(g.melee_stats())
 	g.wield = g._new_item("trl_mel_katana")
-	var c_norm: int = g.melee_cost(g.melee_stats())
+	var c_norm: int = g.swing_stamina(g.melee_stats())
 	g.wield = g._new_item("trl_mel_nodachi")
-	var c_slow: int = g.melee_cost(g.melee_stats())
-	check.call("attack speed: knuckles cost %d, a katana %d, a nodachi %d action points" % [c_fast, c_norm, c_slow], c_fast < 70 and c_norm >= 90 and c_norm <= 100 and c_slow > 150)
+	var c_slow: int = g.swing_stamina(g.melee_stats())
+	check.call("swing stamina follows weight: knuckles %d, a katana %d, a nodachi %d" % [c_fast, c_norm, c_slow], c_fast >= 1 and c_fast <= c_norm and c_norm <= c_slow and c_slow > c_fast)
 	g.wield = g._new_item("trl_mel_kastet")
-	g.atk_debt = 0
+	g.stamina = g.STAMINA_MAX
 	var tn0: int = g.turn
 	for _t in 20:
 		put.call(spot + 1)
 		g.pc = spot
 		g.act_move(1, 0)
 	var fast_turns: int = g.turn - tn0
-	check.call("twenty punches take about %d turns, not twenty" % fast_turns, fast_turns <= 15)
+	check.call("twenty punches take %d turns: 100 action points each, however light the weapon" % fast_turns, fast_turns >= 18 and fast_turns <= 21)
 	# bleed
 	g.wield = g._new_item("trl_mel_katana")
 	put.call(spot + 1)
@@ -239,10 +243,10 @@ func run() -> Array:
 	g.body.reset()      # the hunter above hit back; start the timing runs healthy
 	g.hp = g.hp_max
 	g.game_over = false
-	# slow weapons: ten swings of a nodachi take far longer than ten of a katana
+	# heavy or light, ten swings take the same number of turns (the nodachi just tires you more)
 	var turns_for := func(w: String) -> int:
 		g.wield = g._new_item(w)
-		g.atk_debt = 0
+		g.stamina = g.STAMINA_MAX
 		var tt: int = g.turn
 		for _t in 10:
 			put.call(spot + 1)
@@ -251,7 +255,7 @@ func run() -> Array:
 		return g.turn - tt
 	var slow_turns: int = turns_for.call("trl_mel_nodachi")
 	var kat_turns: int = turns_for.call("trl_mel_katana")
-	check.call("ten nodachi swings take %d turns, a katana's %d" % [slow_turns, kat_turns], slow_turns >= 15 and kat_turns <= 12 and kat_turns >= 8)
+	check.call("ten nodachi swings take %d turns, a katana's %d: AP cost does not depend on the weapon" % [slow_turns, kat_turns], absi(slow_turns - kat_turns) <= 1 and kat_turns >= 8 and kat_turns <= 11)
 	# stealth
 	var tot_t := 0
 	var tot_k := 0

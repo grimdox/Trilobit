@@ -70,7 +70,9 @@ func run() -> Array:
 		g.act_wait()
 	check.call("stamina comes back while resting and the runner slows to a walk", g.stamina >= 10 and g.stance == g.WALKING)
 	g.pc = open
+	g.stamina = g.STAMINA_MAX
 	g._set_stance(g.CRAWL)
+	g.ap = g.AP_BASE
 	t0 = g.turn
 	g.act_move(1, 0)
 	check.call("crawling is half speed", g.pc == open + 1 and g.turn == t0 + 2)
@@ -83,7 +85,7 @@ func run() -> Array:
 
 	# jumping
 	g.pc = open
-	g.stamina = 30
+	g.stamina = g.STAMINA_MAX
 	var cr: int = open + 1
 	g.city.tiles[cr] = CG.CRATE
 	g.sim.walk[cr] = 0
@@ -97,7 +99,7 @@ func run() -> Array:
 	g.sim.walk[open + 1] = 1
 	g.stamina = 3
 	check.call("no jump when winded", not g.act_jump(1, 0))
-	g.stamina = 30
+	g.stamina = g.STAMINA_MAX
 	g.pc = open - 3
 	g.run_streak = 1
 	g.run_dir = Vector2i(1, 0)
@@ -196,9 +198,10 @@ func run() -> Array:
 		check.call("a blow from behind does about twice what a frontal ambush does (%d vs %d)" % [tot_back, tot_front], tot_back > tot_front * 3 / 2 and tot_front > 0)
 	# save/load puts you back on your feet
 	g._set_stance(g.CRAWL)
+	g.stamina = 77
 	var dd: Dictionary = JSON.parse_string(JSON.stringify(g.save_dict()))
 	var g2 = GameScript.new(21)
 	g2.setup(1200)
 	g2.load_dict(dd)
-	check.call("a loaded game starts walking with full stamina", g2.stance == g2.WALKING and g2.stamina == g2.STAMINA_MAX)
+	check.call("a loaded game starts walking and keeps its stamina", g2.stance == g2.WALKING and g2.stamina == 77)
 	return [st[0], st[1], log]

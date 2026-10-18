@@ -24,13 +24,13 @@ const GROUPS := ["Combat", "Hacking", "Labour", "Social"]
 const SKILLS := [
 	{"id": "unarmed", "name": "Unarmed", "group": "Combat", "attrs": ["str", "agi"], "live": true,
 		"desc": "Weaponless melee combat.  The art of brawling and skilled martial arts.  Governs chance to hit, and how hard unarmed hits are.  At high levels, allows for martial arts disciplines.",
-		"note": "Fists, kicks and implant blades: +3% to hit and +1 damage per 2 levels.",
+		"note": "Fists, kicks and implant blades: each level adds 1 to your 2d10 hit roll and 1 damage (an 11 or more hits).",
 		"disc": [
 			{"id": "iron_fist", "name": "Iron Fist", "req": 5, "desc": "Unarmed hits deal +2 damage."},
 			{"id": "pressure_points", "name": "Pressure Points", "req": 8, "desc": "Unarmed hits stun for 3 turns about one time in five."}]},
 	{"id": "melee", "name": "Melee", "group": "Combat", "attrs": ["str", "agi"], "live": true,
 		"desc": "Combat with close-ranged weapons.  Governs chance to hit, and how hard melee hits are.  At high levels, allows for melee weapon disciplines.",
-		"note": "Blades and other melee weapons: +3% to hit, +1 damage per 2 levels, faster strikes.",
+		"note": "Blades and other melee weapons: each level adds 1 to your 2d10 hit roll and 1 damage.  Every swing costs 100 action points and 1 stamina per kg of weapon.",
 		"disc": [
 			{"id": "parry", "name": "Parry", "req": 3, "desc": "Turn blows aside with your weapon (+12% parry, +2% per level)."},
 			{"id": "riposte", "name": "Riposte", "req": 6, "desc": "A parried blow can become an instant counter-strike."}]},
@@ -42,11 +42,11 @@ const SKILLS := [
 			{"id": "marksman", "name": "Marksman", "req": 8, "desc": "+6% to hit at five or more tiles."}]},
 	{"id": "dodge", "name": "Dodge", "group": "Combat", "attrs": ["per", "agi"], "live": true,
 		"desc": "Chance to completely avoid both melee and ranged damage.  Ranged dodging is not possible without very high skill levels.",
-		"note": "+2% to slip a melee blow per level.  Bullets can only be dodged from level 7: 4% per level above 6.",
+		"note": "Each level takes 1 off an attacker's 2d10 melee roll.  Bullets can only be dodged from level 7: 4% per level above 6.",
 		"disc": []},
 	{"id": "grit", "name": "Grit", "group": "Combat", "attrs": ["str", "end"], "live": true,
 		"desc": "Ability to endure hits.  Grit decreases damage received and decreases critical hit chance.",
-		"note": "1 less damage per 4 levels; critical hits start at 6% and fall 1% a level (never below 1%).",
+		"note": "Melee blows lose 1 damage per level (after armor).  A blow is a crit on a natural 19 or 20, or a total of 20 plus your Grit.  Guns: 1 less damage per 4 levels; crits start at 6% and fall 1% a level.",
 		"disc": []},
 	{"id": "networking", "name": "Networking", "group": "Hacking", "attrs": ["cog"], "live": false,
 		"desc": "The ability to connect to electronic networks, including computer systems and other people's implants.  Higher levels allow for quicker and easier connection.",
@@ -156,6 +156,33 @@ static func melee_dodge(dodge_lvl: int) -> int:
 ## bullets are only dodgeable at very high levels
 static func bullet_dodge(dodge_lvl: int) -> int:
 	return clampi((dodge_lvl - 6) * 4, 0, 40)
+
+# ---- melee: the 2d10 hit roll.  final = 2d10 + attacker's skill - defender's dodge.  11 or more hits.  A natural 19 or 20, or a final of 20 + the
+## defender's Grit or more, is a critical hit; a natural 2 is a critical miss (and the other side strikes back for free).
+const HIT_AT := 11
+const CRIT_NAT := 19
+const CRIT_MISS_NAT := 2
+
+## "cmiss", "crit", "hit" or "miss" for a natural roll (2..20), the final total and the defender's Grit level
+static func melee_outcome(nat: int, total: int, defender_grit: int) -> String:
+	if nat <= CRIT_MISS_NAT:
+		return "cmiss"
+	if nat >= CRIT_NAT or total >= 20 + defender_grit:
+		return "crit"
+	return "hit" if total >= HIT_AT else "miss"
+
+## chance in percent that 2d10 + bonus reaches 11 (bonus = attacker skill - defender dodge), for the tests and the HUD text
+static func hit_percent(bonus: int) -> int:
+	var n := 0
+	for a in range(1, 11):
+		for b in range(1, 11):
+			if a + b > CRIT_MISS_NAT and (a + b >= CRIT_NAT or a + b + bonus >= HIT_AT):
+				n += 1
+	return n
+
+## damage of a melee blow before armor and Grit: the weapon roll (the maximum on a critical) plus the weapon skill, doubled on a critical
+static func melee_base(weapon_roll: int, weapon_max: int, skill: int, crit: bool) -> int:
+	return ((weapon_max if crit else weapon_roll) + skill) * (2 if crit else 1)
 
 static func grit_cut(grit_lvl: int) -> int:
 	return grit_lvl / 4

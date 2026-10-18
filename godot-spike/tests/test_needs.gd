@@ -41,7 +41,7 @@ func run() -> Array:
 	for k in 20:
 		g.act_move(1, 0)
 	var spent: int = g.turn - turn0
-	check.call("20 steps while thirsty take 25 turns (%d)" % spent, spent == 25)
+	check.call("20 steps while thirsty take about 25 turns at 80 AP a turn (%d)" % spent, spent >= 24 and spent <= 25)
 	var db = g.db
 	var drink_id := ""
 	for id in db.defs:

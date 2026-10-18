@@ -5,6 +5,8 @@ const LIMBS := ["head", "chest", "l_arm", "r_arm", "l_leg", "r_leg"]
 const NAME := {"head": "head", "chest": "chest", "l_arm": "left arm", "r_arm": "right arm", "l_leg": "left leg", "r_leg": "right leg"}
 const BASE := {"head": 20, "chest": 40, "l_arm": 24, "r_arm": 24, "l_leg": 28, "r_leg": 28}
 const WEIGHT := {"head": 8, "chest": 40, "l_arm": 13, "r_arm": 13, "l_leg": 13, "r_leg": 13}     # where a random hit lands (percent-ish)
+## where a melee blow lands, in percent: torso 30, head 10, each arm and leg 15
+const MELEE_WEIGHT := {"head": 10, "chest": 30, "l_arm": 15, "r_arm": 15, "l_leg": 15, "r_leg": 15}
 ## the implant slot groups: which limbs an implant needs in working order
 const GROUP := {"head": "head", "chest": "chest", "l_arm": "arms", "r_arm": "arms", "l_leg": "legs", "r_leg": "legs"}
 const PART_GROUP := {"head": "head", "eyes": "head", "spine": "chest", "chest": "chest", "arms": "arms", "hands": "arms", "legs": "legs"}
@@ -54,6 +56,15 @@ func pick(rng: RandomNumberGenerator) -> String:
 	var r := rng.randi() % total
 	for l in LIMBS:
 		r -= int(WEIGHT[l])
+		if r < 0:
+			return l
+	return "chest"
+
+## the limb a melee blow lands on (MELEE_WEIGHT)
+func pick_melee(rng: RandomNumberGenerator) -> String:
+	var r := rng.randi() % 100
+	for l in LIMBS:
+		r -= int(MELEE_WEIGHT[l])
 		if r < 0:
 			return l
 	return "chest"

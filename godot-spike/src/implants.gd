@@ -11,7 +11,7 @@ const PARTS := [
 	{"id": "legs", "name": "Legs", "at": Vector2(0.43, 0.72)},
 ]
 ## Every implant has a grade (1 street grade ... 4 military).  Fields: acc / acc_far (ranged accuracy; acc_far only at 5+ tiles), aim (aim speed),
-## dodge_melee, dodge_bullet (ONLY grade 3 and up can dodge bullets), atk_speed (melee action cost reduction), armor + dur (a flat damage deduction
+## dodge_melee, dodge_bullet (ONLY grade 3 and up can dodge bullets), atk_speed (extra action points per turn: speed above 100), armor + dur (a flat damage deduction
 ## on `armor_group` limbs that wears out as it soaks damage), arc (degrees added to the 180-degree field of view: a rear-view eye gives 180), and the limb group it lives in (from its body part): it stops working with that limb.
 const ALL := [
 	{"id": "cortex", "part": "head", "name": "Neural Link", "cost": 4200, "live": true, "grade": 3, "acc": 4, "aim": 0.25, "armor": 1, "armor_group": "head", "dur": 30,
@@ -35,6 +35,11 @@ const ALL := [
 	{"id": "legs", "part": "legs", "name": "Leg Actuators", "cost": 1600, "live": true, "grade": 2, "armor": 1, "armor_group": "legs", "dur": 40,
 		"desc": "Long jumps and softer landings.  1 armor on the legs."},
 ]
+
+## durability of an implant: its `dur` (armor implants) or this default.  Damage past a limb's own health wears it down; at 0 it stops working until serviced.
+const DEFAULT_DUR := 20
+static func dur(d: Dictionary) -> int:
+	return int(d.get("dur", DEFAULT_DUR))
 
 ## the sum of one numeric field over the implants that are fitted and working
 static func sum(implants: Dictionary, field: String, active: Callable = Callable()) -> float:

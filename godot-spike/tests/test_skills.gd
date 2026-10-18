@@ -68,9 +68,9 @@ func run() -> Array:
 	g.wield = g._new_item(blade)
 	check.call("a blade uses Melee", g.melee_skill_id() == "melee")
 	g.wield = null
-	var d0: int = g.player_melee_dodge()
+	var d0: int = g.player_dodge_pts()
 	g.skills["dodge"] = 3
-	check.call("Dodge adds 2%% per level against blows (%d -> %d)" % [d0, g.player_melee_dodge()], g.player_melee_dodge() == d0 + 6)
+	check.call("Dodge adds 1 point per level against blows (%d -> %d)" % [d0, g.player_dodge_pts()], g.player_dodge_pts() == d0 + 3)
 	g.skills["dodge"] = 0
 	check.call("a beginner cannot dodge bullets", g.player_bullet_dodge() == 0)
 	g.skills["dodge"] = 6

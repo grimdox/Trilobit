@@ -290,18 +290,19 @@ func run() -> Array:
 	check.call("a broken arm hurts your melee accuracy (%d vs %d)" % [one_arm, civ_hits], one_arm < civ_hits - 20)
 	fresh.call()
 	g.wield = g._new_item("trl_mel_kastet")
-	var cost_fast: int = g.melee_cost(g.melee_stats())
+	var cost_fast: int = g.swing_stamina(g.melee_stats())
 	g.wield = g._new_item("trl_mel_katana")
-	var cost_kat: int = g.melee_cost(g.melee_stats())
+	var cost_kat: int = g.swing_stamina(g.melee_stats())
 	g.wield = g._new_item("trl_mel_nodachi")
-	var cost_slow: int = g.melee_cost(g.melee_stats())
+	var cost_slow: int = g.swing_stamina(g.melee_stats())
+	g.stamina = g.STAMINA_MAX
 	g.implants["reflex"] = true
-	var cost_reflex: int = g.melee_cost(g.melee_stats())
+	var rate_reflex: int = g.ap_rate()
 	g.implants = {}
-	check.call("attack speed: fast %d < katana %d < nodachi %d; reflex wires cut the cost (%d)" % [cost_fast, cost_kat, cost_slow, cost_reflex], cost_fast < cost_kat and cost_kat < cost_slow and cost_reflex < cost_slow)
+	check.call("swing stamina: light %d <= katana %d <= nodachi %d; reflex wires raise the AP rate (%d vs %d)" % [cost_fast, cost_kat, cost_slow, rate_reflex, g.ap_rate()], cost_fast <= cost_kat and cost_kat <= cost_slow and rate_reflex > g.ap_rate())
 	g.wield = g._new_item("trl_mel_katana")
 	g.wield = g._new_item("trl_mel_kastet")
-	check.call("melee dodge for the player: skill + implants", g.player_melee_dodge() >= 4 and (func(): g.implants["synapse"] = true; var d: int = g.player_melee_dodge(); g.implants = {}; return d > 18).call())
+	check.call("melee dodge for the player: skill + implants", g.player_dodge_pts() >= 0 and (func(): g.implants["synapse"] = true; var d: int = g.player_dodge_pts(); g.implants = {}; return d > g.player_dodge_pts()).call())
 	# arts: parry and riposte are hooks the player can learn
 	g.skills = SK.default_skills()           # the strikes above taught some Melee; start the arts check from a clean sheet
 	check.call("no melee arts known at the start", g.melee_arts.is_empty() and not g.has_art("parry"))

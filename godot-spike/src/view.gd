@@ -638,7 +638,7 @@ func _draw_hud() -> void:
 	var amax: int = int(ars["max"])
 	_meter(xi, my + 20, wi, 16, (float(ars["left"]) / float(maxi(1, amax))) if amax > 0 else 0.0, Color(0.35, 0.65, 0.95) if not broken else Color(0.9, 0.55, 0.2), "ARMOR %d" % int(ars["value"]), ("BROKEN" if broken else "%d / %d" % [int(ars["left"]), amax]))
 	var stf: float = float(game.stamina) / float(game.STAMINA_MAX)
-	_meter(xi, my + 40, wi, 16, stf, Color(0.9, 0.78, 0.25) if stf > 0.25 else Color(0.9, 0.45, 0.2), "STAMINA", "%s" % game.stance_name())
+	_meter(xi, my + 40, wi, 16, stf, Color(0.9, 0.78, 0.25) if stf > 0.25 else Color(0.9, 0.45, 0.2), "STAMINA", "%s  %d AP" % [game.stance_name(), game.ap_rate()])
 	# hunger and thirst: full when you have just eaten or drunk, empty (and a status effect) when the clock runs out
 	var nt: Array = game.need_timers()
 	var ff: float = float(nt[0]) / float(game.HUNGER_AFTER)

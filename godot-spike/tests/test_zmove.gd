@@ -75,7 +75,7 @@ func run() -> Array:
 	check.call("found a roof edge with a railing and open air beyond", edge >= 0)
 	if edge >= 0:
 		g.pc = edge
-		g.stamina = 30
+		g.stamina = g.STAMINA_MAX
 		g.stance = g.WALKING
 		var hp1: int = g.hp
 		check.call("leaping over the railing into the void drops you the whole height", g.act_jump(1, 0) and g.z_of(g.pc) == 0 and hp1 - g.hp >= 60)
@@ -83,7 +83,7 @@ func run() -> Array:
 		g.implants["jets"] = true
 		g.body.reset()
 		g.fuel = 24
-		g.stamina = 30
+		g.stamina = g.STAMINA_MAX
 		g.sim.retier(g.pc)
 		check.call("with jump jets the same leap ends in flight, still at roof height", g.act_jump(1, 0) and g.flying and g.z_of(g.pc) == H)
 		var f0: int = g.fuel
@@ -105,7 +105,7 @@ func run() -> Array:
 	g.hp = g.hp_max
 	g.pc = open
 	g.sim.retier(g.pc)
-	g.stamina = 30
+	g.stamina = g.STAMINA_MAX
 	g.stance = g.WALKING
 	g.last_pc = open
 	g.act_jump(1, 0)
@@ -113,7 +113,7 @@ func run() -> Array:
 	g.pc = open
 	g.implants["legs"] = true
 	g.body.reset()
-	g.stamina = 30
+	g.stamina = g.STAMINA_MAX
 	g.act_jump(1, 0)
 	check.call("leg actuators jump four", g.pc == open + 4)
 	g.implants.erase("legs")
@@ -124,7 +124,7 @@ func run() -> Array:
 	g.implants["jets"] = true
 	g.body.reset()
 	g.fuel = 24
-	g.stamina = 30
+	g.stamina = g.STAMINA_MAX
 	check.call("without leaving the ground first, jets lift you through open air", g.act_vertical(1) and g.flying and g.z_of(g.pc) == 1)
 	g.act_vertical(1)
 	g.act_vertical(1)
