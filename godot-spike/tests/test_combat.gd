@@ -169,16 +169,18 @@ func run() -> Array:
 	# ---------------------------------------------------------------- ranged accuracy: sights, scopes, implants
 	g.wield = g._new_item("trl_gun_hx9")
 	var base: Dictionary = GP.stats(g.wield)
-	check.call("an iron-sighted gun gets its sights bonus (%d) and no optic" % base["sights"], base["sights"] > 0 and not base["optic"] and not base["scoped"])
+	check.call("a bare gun has no optic and no sights bonus (max aim %d)" % base["max_aim"], not base["optic"] and not base["scoped"] and not base.has("sights"))
 	var acc_iron: int = GP.hit_chance(base, 10, 0, false, false, 2, 0)
 	var scope = g._new_item("trl_mod_scope4")
 	g.wield.mods.append(scope)
 	var scoped: Dictionary = GP.stats(g.wield)
 	var acc_scope: int = GP.hit_chance(scoped, 10, 0, false, false, 2, 0)
-	check.call("a scope replaces the iron sights: better at range (%d vs %d), no sights bonus" % [acc_scope, acc_iron], scoped["scoped"] and scoped["sights"] == 0 and acc_scope > acc_iron)
+	check.call("a scope allows range precision (%d vs %d) and adds max aim (%d -> %d) but settles slower (%.2f vs %.2f)" % [acc_scope, acc_iron, base["max_aim"], scoped["max_aim"], scoped["aim_rate"], base["aim_rate"]], scoped["scoped"] and acc_scope > acc_iron and scoped["max_aim"] == base["max_aim"] + 1 and scoped["aim_rate"] < base["aim_rate"])
 	var acc_close_iron: int = GP.hit_chance(base, 3, 0, false, false, 2, 0)
 	var acc_close_scope: int = GP.hit_chance(scoped, 3, 0, false, false, 2, 0)
-	check.call("but a scope is worse up close (%d vs %d)" % [acc_close_scope, acc_close_iron], acc_close_scope < acc_close_iron)
+	var sc_flat: Dictionary = scoped.duplicate()
+	sc_flat["close_pen"] = 0
+	check.call("but a scope is clumsy up close (range penalty %d inside 4 tiles, %d without its close penalty)" % [GP.range_penalty(scoped, 3, 5), GP.range_penalty(sc_flat, 3, 5)], GP.range_penalty(scoped, 3, 5) > GP.range_penalty(sc_flat, 3, 5))
 	g.wield.mods.clear()
 	# find a target and compute with implants
 	var sp: int = _open_line(g, g.pc, 12)

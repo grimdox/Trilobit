@@ -2759,7 +2759,10 @@
   "mod": {
    "slot": "optic",
    "fx": {
-    "acc": 5
+    "acc": 5,
+    "max_aim": 1,
+    "aim_speed": -0.05,
+    "rangepen_pct": 10
    }
   }
  },
@@ -2778,7 +2781,9 @@
    "slot": "optic",
    "fx": {
     "acc": 7,
-    "rangepen_pct": 15
+    "max_aim": 1,
+    "aim_speed": -0.08,
+    "rangepen_pct": 20
    }
   }
  },
@@ -2798,6 +2803,7 @@
    "fx": {
     "acc": 8,
     "max_aim": 1,
+    "aim_speed": -0.12,
     "range_pct": 30,
     "rangepen_pct": 40,
     "close_pen": 8
@@ -2820,6 +2826,7 @@
    "fx": {
     "acc": 10,
     "max_aim": 2,
+    "aim_speed": -0.25,
     "range_pct": 70,
     "rangepen_pct": 65,
     "close_pen": 18
@@ -2842,6 +2849,7 @@
    "fx": {
     "acc": 12,
     "max_aim": 1,
+    "aim_speed": -0.05,
     "hip": 6,
     "rangepen_pct": 30
    }
@@ -2862,7 +2870,8 @@
    "slot": "under",
    "fx": {
     "hip": 10,
-    "close_pen": -4
+    "close_pen": -4,
+    "aim_speed": 0.05
    }
   }
  },
@@ -2901,7 +2910,8 @@
    "fx": {
     "recoil_pct": -15,
     "max_aim": 1,
-    "acc": 3
+    "acc": 3,
+    "aim_speed": -0.05
    }
   }
  },

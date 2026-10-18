@@ -28,11 +28,9 @@ const KIND := {
 }
 const KINDS_BY_CAL := {"9mm": ["fmj", "ap", "hp"], ".357": ["fmj", "ap", "hp"], "5.56": ["fmj", "ap", "hp"], "12ga": ["shot", "slug"], ".338": ["fmj", "ap"],
 	"7.62": ["fmj", "ap"], "12.7": ["fmj", "ap"], "40mm": ["he"], "cell": ["cell"]}
-## iron sights (percent to hit, lost as soon as an optic is fitted), hands needed, and how quick the class is to settle (aim speed modifier)
-const SIGHTS := {"pistol": 3, "revolver": 4, "smg": 4, "rifle": 6, "shotgun": 2, "sniper": 8, "mg": 3, "heavy_mg": 1, "launcher": 0, "laser": 5}
+## hands needed, and how quick the class is to settle (aim speed modifier)
 const HANDS := {"pistol": 1, "revolver": 1, "laser": 1}
 const AIM_CLASS := {"pistol": 0.1, "revolver": 0.05, "smg": 0.0, "rifle": -0.05, "shotgun": -0.1, "sniper": -0.2, "mg": -0.25, "heavy_mg": -0.35, "launcher": -0.2, "laser": 0.0}
-const AIM_MOD := {"trl_mod_redot": 0.05, "trl_mod_holo": 0.05, "trl_mod_scope4": -0.08, "trl_mod_scope8": -0.2, "trl_mod_smartlink": 0.1, "trl_mod_laser": 0.05, "trl_mod_bipod": -0.05}
 
 static func default_kind(cal: String) -> String:
 	return KINDS_BY_CAL[cal][0]
@@ -40,7 +38,7 @@ static func default_kind(cal: String) -> String:
 ## the mod effects summed up
 static func fx(gun) -> Dictionary:
 	var t := {"acc": 0, "aim": 0, "hip": 0, "range_pct": 0, "rangepen_pct": 0, "close_pen": 0, "recoil_pct": 0, "dmg_pct": 0, "mag_pct": 0, "jam": 0.0, "reload": 0,
-		"spread_pct": 0, "noise_cap": 999, "max_aim": 0}
+		"spread_pct": 0, "noise_cap": 999, "max_aim": 0, "aim_speed": 0.0}
 	for m in gun.mods:
 		var e: Dictionary = m.def["mod"]["fx"]
 		for k in e:
@@ -71,7 +69,8 @@ static func stats(gun) -> Dictionary:
 	s["range"] = s["range_hi"]
 	s["max_aim"] = int(b["max_aim"]) + int(f["max_aim"])
 	s["aim_loss"] = maxf(0.1, float(b["aim_loss"]) * (1.0 + float(f["recoil_pct"]) / 100.0))
-	s["acc"] = int(b["acc"]) + int(f["acc"])
+	s["acc"] = int(b["acc"])
+	s["acc_mod"] = int(f["acc"])
 	s["mag"] = maxi(1, int(round(float(b["mag"]) * (1.0 + float(f["mag_pct"]) / 100.0))))
 	s["noise"] = mini(int(b["noise"]), int(f["noise_cap"]))
 	s["reload"] = maxi(1, int(b["reload"]) + int(f["reload"]))
@@ -87,16 +86,14 @@ static func stats(gun) -> Dictionary:
 	s["cls"] = cls
 	var optic := false
 	var scoped := false
-	var rate: float = float(AIM_CLASS.get(cls, 0.0))
+	var rate: float = float(AIM_CLASS.get(cls, 0.0)) + float(f["aim_speed"])
 	for m in gun.mods:
 		if m.def["mod"]["slot"] == "optic":
 			optic = true
 			if int(m.def["mod"]["fx"].get("range_pct", 0)) > 0:
 				scoped = true
-		rate += float(AIM_MOD.get(m.def["id"], 0.0))
 	s["optic"] = optic
 	s["scoped"] = scoped
-	s["sights"] = 0 if optic else int(SIGHTS.get(cls, 2))
 	s["hands"] = int(HANDS.get(cls, 2))
 	s["aim_rate"] = rate
 	s["rangepen"] = 1.0 - clampf(float(f["rangepen_pct"]) / 100.0, 0.0, 0.9)      # points lost per tile off the natural range
@@ -107,10 +104,14 @@ static func stats(gun) -> Dictionary:
 	s["suppressed"] = s["noise"] <= 6 and b["noise"] > 6
 	return s
 
-## the 2d10 modifiers that do not depend on the dice or the range roll: skill, the gun's own accuracy ((acc - 65) / 5), iron sights, aim points
+## the gun's own accuracy as a flat -2..+2 on the roll: 65 is neutral, every 5 away is one point, never more than two; mods add their own accuracy on top (5 percentage points = 1)
+static func acc_points(s: Dictionary) -> int:
+	return clampi(int(round(float(int(s["acc"]) - 65) / 5.0)), -2, 2) + int(round(float(int(s.get("acc_mod", 0))) / 5.0))
+
+## the 2d10 modifiers that do not depend on the dice or the range roll: skill, the gun's own accuracy (acc_points), aim points
 ## (or the hip-fire bonus when there are none), and stance.  `extra` carries implants, blessings and injuries from the game.
 static func bonus_points(s: Dictionary, aim: int, moved: bool, crouch: bool, skill: int, penalty: int, prone: bool = false, extra: int = 0) -> int:
-	var b: float = float(skill) + float(int(s["acc"]) - 65) / 5.0 + float(int(s.get("sights", 0))) / 5.0 + float(extra)
+	var b: float = float(skill) + float(acc_points(s)) + float(extra)
 	b += float(aim) if aim > 0 else float(aim) + float(s["hip"]) / 5.0
 	if moved:
 		b -= 2.0
