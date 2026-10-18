@@ -1,48 +1,47 @@
-"""Side-view paper dolls (proposal stage).  Every layer is a 64x64 image of the figure facing RIGHT (the game mirrors it for
-left), feet on y=61, drawn by the same Art renderer as the rest of the 64px set.  Three base designs (D1 Runner, D2 Hauler,
-D3 Climber) share one hold pose so any gun, blade or working tool lines up with the same two hands.
+"""Side-view paper doll, version 2: realistic proportions (about 7 heads) in the shaded, gritty style of the reference the
+designer supplied.  One body, three stances.  Every layer is a 64x64 image of the figure facing RIGHT (the game mirrors it).
 
-Layer order (back to front):  shadow, arm_far, body (legs, torso, head, underwear), hair, equipment 'under', held item,
-arm_near, hand_far, equipment 'over'.
-Skin layers are drawn in light grey and multiplied by the skin colour; hair likewise.
+A Rig is a set of joints (head, neck, shoulders, elbows, hands, hips, knees, ankles, toes) for one stance.  The body, clothes, armor
+and held items are all built from the same joints, so anything lines up in every stance.  Held items attach to the two hand points:
+the line far hand -> near hand is the item's axis (barrel, blade, haft).
 
-Two styles: 'bouma' (full palette, shaded, dirty) and 'moku' (three inks: ink, paper, neon; flat fills, hatching)."""
+Layer order (back to front): shadow, arm_far, leg_far, torso+leg_near+head, underwear, hair, armor 'under', held, arm_near,
+hands, armor 'over'.   Skin and hair layers are grey and are multiplied by the skin / hair colour.
+Styles: 'bouma' (full colour, shaded, dirty) and 'moku' (three inks: ink, paper, neon; flat fills, hatching)."""
+import math
 import numpy as np
 from PIL import Image
 from scipy import ndimage as ndi
-from art64 import Art, col, mix, lit, tint
+from art64 import Art, col
 
 W = 64
-HAND_NEAR = (46.0, 29.0)   # support hand
-HAND_FAR = (40.0, 30.5)    # trigger / lower hand
-
 STYLES = {
-    'bouma': dict(ink='#14141c', paper='#d9d6cf', neon='#19e0d0', skin='#cfcfcf', hair='#8a8a8a'),
+    'bouma': dict(ink='#14141c', paper='#d9d6cf', neon='#19e0d0', skin='#d2d2d2', hair='#8c8c8c'),
     'moku': dict(ink='#0d0d12', paper='#f1eee4', neon='#ff2f7d', skin='#f1eee4', hair='#0d0d12'),
 }
-
-SKINS = {          # multiplied over the grey skin layer (task 2: five tones)
+SKINS = {          # five tones, multiplied over the grey skin layer
     'pale': (1.00, 0.84, 0.74), 'tan_white': (0.97, 0.76, 0.58), 'tanned': (0.86, 0.62, 0.42),
     'dark': (0.60, 0.40, 0.27), 'near_black': (0.30, 0.20, 0.15),
 }
 
-# ---------------------------------------------------------------------------------- three designs
-DOLLS = {
-    'D1': dict(name='Runner', head=(35.0, 9.5, 4.3, 5.0), neck=(34.0, 15.0), lw=(6.2, 5.2, 4.0), aw=(4.3, 3.7, 3.1),
-               torso=[(29, 19), (36, 19), (37.8, 23), (36.8, 29), (35.6, 35), (36, 38.5), (27.2, 38.5), (27.6, 34), (27.8, 28), (27.4, 22.5)],
-               nl=[(31.5, 37), (37.5, 47), (36.5, 57), (43.5, 61)], fl=[(28.5, 37), (24.5, 47), (21.5, 57), (28.5, 61)],
-               na=[(33.2, 21), (38.0, 29.5), HAND_NEAR], fa=[(31.0, 21), (35.0, 31), HAND_FAR],
-               hair='crop', brief=(35.0, 42.5), band=None, beard=False),
-    'D2': dict(name='Hauler', head=(36.0, 10.0, 4.8, 5.2), neck=(35.0, 15.5), lw=(7.8, 6.4, 5.0), aw=(5.4, 4.6, 3.8),
-               torso=[(27.5, 18.5), (38, 18.8), (40.4, 23), (39.4, 29.5), (38, 35), (38, 39), (24.8, 39), (25.4, 34), (25.2, 28), (25.0, 22.5)],
-               nl=[(32, 38), (38, 47), (37, 56.5), (44.5, 61)], fl=[(28.5, 38), (24, 47), (21, 56.5), (28.5, 61)],
-               na=[(34.0, 21.5), (39.0, 30), HAND_NEAR], fa=[(30.5, 21.5), (35.0, 31.5), HAND_FAR],
-               hair='bald', brief=(36.0, 43.5), band=None, beard=True),
-    'D3': dict(name='Climber', head=(34.5, 8.6, 4.0, 4.8), neck=(33.7, 14.2), lw=(5.2, 4.4, 3.4), aw=(3.7, 3.2, 2.7),
-               torso=[(29.2, 18), (35.4, 18.2), (36.9, 22.5), (35.9, 28), (34.6, 33.5), (34.8, 37), (27.6, 37), (28, 32), (28.2, 27), (27.9, 22)],
-               nl=[(31, 36), (37, 46.5), (36, 57.5), (42.5, 61)], fl=[(29, 36), (24.5, 46.5), (21.5, 57.5), (28.5, 61)],
-               na=[(33, 20), (37.6, 28.5), HAND_NEAR], fa=[(31, 20), (35.0, 30.5), HAND_FAR],
-               hair='tail', brief=(34.0, 40.5), band=(21.0, 27.0), beard=False),
+# ---------------------------------------------------------------------------------------------- stances
+# all points are (x, y) in the 64x64 tile, feet at y=61, facing right
+STANCES = {
+    'ready': dict(label='Ready',             # upright, weight forward, both hands up front
+                  head=(34.0, 8.2), neck=(33.2, 12.4), sh_n=(33.0, 15.0), sh_f=(31.6, 15.2), hip=(30.0, 34.0),
+                  el_n=(36.5, 22.0), hand_n=(45.0, 22.6), el_f=(33.0, 23.0), hand_f=(39.5, 24.6),
+                  hn=(32.5, 34.5), kn_n=(37.0, 46.0), an_n=(35.5, 57.2), toe_n=(42.5, 60.8),
+                  hf=(29.0, 34.5), kn_f=(26.0, 46.5), an_f=(22.0, 57.0), toe_f=(28.5, 60.8)),
+    'guard': dict(label='Guard',             # wide braced stance, weapon held across the body, rear hand high
+                  head=(36.0, 10.0), neck=(34.8, 14.2), sh_n=(34.2, 16.8), sh_f=(32.6, 17.0), hip=(29.5, 35.0),
+                  el_n=(40.0, 23.0), hand_n=(47.5, 18.0), el_f=(34.5, 25.5), hand_f=(40.0, 21.0),
+                  hn=(32.5, 35.5), kn_n=(40.0, 46.5), an_n=(40.0, 57.4), toe_n=(47.0, 60.8),
+                  hf=(27.5, 35.5), kn_f=(22.5, 47.0), an_f=(17.5, 57.0), toe_f=(24.0, 60.8)),
+    'crouch': dict(label='Crouch',           # low, knees deep, hunched behind the weapon
+                   head=(37.5, 17.0), neck=(35.6, 20.8), sh_n=(34.0, 22.6), sh_f=(32.4, 22.8), hip=(26.5, 40.0),
+                   el_n=(38.0, 29.0), hand_n=(46.0, 28.4), el_f=(34.0, 31.0), hand_f=(40.5, 29.8),
+                   hn=(28.5, 40.5), kn_n=(38.5, 46.5), an_n=(34.0, 57.6), toe_n=(41.5, 60.8),
+                   hf=(25.0, 40.5), kn_f=(31.0, 51.5), an_f=(22.0, 57.6), toe_f=(26.0, 60.8)),
 }
 
 
@@ -51,25 +50,66 @@ def new():
 
 
 def pal(style):
-    p = STYLES[style]
-    return {k: col(v) for k, v in p.items()}
+    return {k: col(v) for k, v in STYLES[style].items()}
 
 
-def limb_mask(a, pts, w0, w1=None):
-    """tapered chain of capsules; w0 may be a list of per-joint widths (then w1 is ignored)"""
-    if isinstance(w0, (tuple, list)):
-        ws = list(w0)[:len(pts)]
-    else:
-        w1 = w0 * 0.8 if w1 is None else w1
-        ws = [w0 + (w1 - w0) * i / max(len(pts) - 1, 1) for i in range(len(pts))]
+# ---------------------------------------------------------------------------------------------- geometry
+def chain(a, pts, ws):
     m = None
     for i in range(len(pts) - 1):
-        seg = a.line(pts[i][0], pts[i][1], pts[i + 1][0], pts[i + 1][1], (ws[i] + ws[i + 1]) / 2)
-        m = seg if m is None else (m | seg)
+        s = a.line(pts[i][0], pts[i][1], pts[i + 1][0], pts[i + 1][1], (ws[i] + ws[i + 1]) / 2.0)
+        m = s if m is None else (m | s)
     return m
 
 
-def paint(a, mask, base, style, seed, bevel=2.0, strength=0.34, grain=0.1, hatch=True):
+def torso_poly(r, grow=0.0):
+    """ribcage, waist and pelvis from the shoulder-hip axis, with chest forward and glutes back"""
+    sx, sy = (r['sh_n'][0] + r['sh_f'][0]) / 2, (r['sh_n'][1] + r['sh_f'][1]) / 2
+    hx, hy = r['hip']
+    ax, ay = hx - sx, hy - sy
+    ln = math.hypot(ax, ay)
+    ax, ay = ax / ln, ay / ln
+    px, py = ay * -1, ax          # perpendicular, pointing to +x (front) when the axis points down
+    if px < 0:
+        px, py = -px, -py
+    prof = [(-0.04, 2.6, 3.0), (0.08, 4.4, 4.2), (0.30, 4.6, 4.0), (0.58, 3.5, 3.1), (0.82, 3.8, 4.4), (1.0, 3.7, 4.9)]
+    front, back = [], []
+    for t, f, b in prof:
+        cx, cy = sx + ax * ln * t, sy + ay * ln * t
+        front.append((cx + px * (f + grow), cy + py * (f + grow)))
+        back.append((cx - px * (b + grow), cy - py * (b + grow)))
+    return front + back[::-1]
+
+
+def rig_masks(r):
+    a = new()
+    M = {}
+    M['torso'] = a.poly(torso_poly(r))
+    M['leg_n'] = chain(a, [r['hn'], r['kn_n'], r['an_n']], (7.0, 5.0, 3.4)) | a.ellipse(
+        (r['kn_n'][0] + r['an_n'][0]) / 2 - 0.6, (r['kn_n'][1] + r['an_n'][1]) / 2 - 1.4, 2.7, 4.6)
+    M['leg_f'] = chain(a, [r['hf'], r['kn_f'], r['an_f']], (7.0, 5.0, 3.4)) | a.ellipse(
+        (r['kn_f'][0] + r['an_f'][0]) / 2 - 0.6, (r['kn_f'][1] + r['an_f'][1]) / 2 - 1.4, 2.6, 4.4)
+    for s in ('n', 'f'):
+        ax_, ay_ = r['an_' + s]
+        tx, ty = r['toe_' + s]
+        M['foot_' + s] = a.poly([(ax_ - 2.6, ay_ - 1.8), (ax_ + 2.0, ay_ - 2.0), (tx - 2.0, ty - 3.0), (tx + 1.4, ty - 1.2), (tx + 1.4, ty + 0.5),
+                                 (ax_ - 3.6, ty + 0.5)])
+    M['arm_n'] = chain(a, [r['sh_n'], r['el_n'], r['hand_n']], (4.6, 3.8, 2.8))
+    M['arm_f'] = chain(a, [r['sh_f'], r['el_f'], r['hand_f']], (4.4, 3.6, 2.7))
+    M['hand_n'] = a.ellipse(r['hand_n'][0] + 0.4, r['hand_n'][1], 2.3, 2.0)
+    M['hand_f'] = a.ellipse(r['hand_f'][0] + 0.4, r['hand_f'][1], 2.2, 1.9)
+    hx_, hy_ = r['head']
+    M['head'] = a.ellipse(hx_, hy_ - 0.4, 3.9, 4.2) | a.poly(
+        [(hx_ - 1.5, hy_ + 1.5), (hx_ + 3.2, hy_ + 1.0), (hx_ + 3.0, hy_ + 3.6), (hx_ + 1.0, hy_ + 4.6), (hx_ - 2.0, hy_ + 3.6)])
+    M['neck'] = chain(a, [(r['neck'][0] - 0.2, r['neck'][1] - 1.0), (r['neck'][0] - 0.6, r['neck'][1] + 3.0)], (3.8, 4.2))
+    M['nose'] = a.tri((hx_ + 3.3, hy_ - 0.6), (hx_ + 5.0, hy_ + 1.6), (hx_ + 3.0, hy_ + 1.9))
+    return M
+
+
+# ---------------------------------------------------------------------------------------------- painting
+def paint(a, mask, base, style, seed, bevel=1.8, strength=0.36, grain=0.08, hatch=True):
+    if mask is None or not mask.any():
+        return
     if style == 'moku':
         a.shade(mask, base, bevel=bevel, flat=True)
         if hatch:
@@ -84,280 +124,245 @@ def paint(a, mask, base, style, seed, bevel=2.0, strength=0.34, grain=0.1, hatch
 def finish(a, style):
     if style == 'moku':
         return a.image(outline=1.0, outline_col=col(STYLES['moku']['ink']))
-    return a.image(outline=0.8)
+    return a.image(outline=0.85)
 
 
-def parts(d):
-    a = new()
-    return dict(
-        torso=a.poly(d['torso']),
-        nl=limb_mask(a, d['nl'][:3], d['lw']) | a.poly(foot(d['nl'])),
-        fl=limb_mask(a, d['fl'][:3], d['lw']) | a.poly(foot(d['fl'])),
-        head=a.ellipse(d['head'][0], d['head'][1], d['head'][2], d['head'][3]),
-        neck=limb_mask(a, [d['neck'], (d['neck'][0] - 0.5, d['neck'][1] + 4)], 3.0, 3.4),
-        na=limb_mask(a, d['na'], d['aw']),
-        fa=limb_mask(a, d['fa'], d['aw']),
-        nose=a.tri((d['head'][0] + d['head'][2] - 0.6, d['head'][1] - 0.6),
-                   (d['head'][0] + d['head'][2] + 1.5, d['head'][1] + 1.4),
-                   (d['head'][0] + d['head'][2] - 0.8, d['head'][1] + 1.8)),
-        hand_n=a.ellipse(HAND_NEAR[0] + 0.2, HAND_NEAR[1], 2.6, 2.3),
-        hand_f=a.ellipse(HAND_FAR[0] + 0.2, HAND_FAR[1], 2.4, 2.1),
-    )
+def mul(c, k, style):
+    return c * k if style == 'bouma' else c
 
 
-def foot(leg):
-    ax, ay = leg[2]
-    tx, ty = leg[3]
-    return [(ax - 2.0, ay - 1.0), (ax + 2.0, ay - 1.0), (tx + 1.0, ty - 2.4), (tx + 1.0, ty + 0.4), (ax - 2.5, ty + 0.4)]
-
-
-# ---------------------------------------------------------------------------------- base layers
-def shadow_layer(style='bouma'):
+def shadow_layer(style):
     a = new()
     if style == 'moku':
         m = a.ellipse(33, 61.6, 16, 1.6)
-        a.fill(m & ((((a.xx * 2) % 2) < 1.0)), STYLES['moku']['ink'])
+        a.fill(m & (((a.xx * 2) % 2) < 1.0), STYLES['moku']['ink'])
         return a.image()
     m = a.ellipse(33, 61.5, 17, 2.4)
-    a.fill(m, '#000000', 0.0)
     k = ndi.gaussian_filter(m.astype(np.float32), 3.0) * 0.5
     a.rgb[:] = 0
     a.a[:] = k
     return a.image()
 
 
-def layer_arm_far(dk, style, p):
-    a = new()
-    P = parts(dk)
-    paint(a, P['fa'], p['skin'] * (0.78 if style == 'bouma' else 1.0), style, 1)
-    return finish(a, style)
-
-
-def underwear_mask(a, dk, P):
-    y0, y1 = dk['brief']
-    band = a.rect(0, y0 - 3.5, W, y1 - y0 + 3.5)
-    legs = (P['nl'] | P['fl'])
-    short = P['torso'] & a.rect(0, y0 - 3.5, W, 3.6 + 3.0) | (legs & a.rect(0, y0 - 3.5, W, y1 - y0 + 3.5))
-    return short & (P['torso'] | legs)
-
-
-def layer_body(dk, style, p, seed=3):
-    a = new()
-    P = parts(dk)
-    skin = p['skin']
-    paint(a, P['fl'], skin * (0.80 if style == 'bouma' else 1.0), style, seed)
-    paint(a, P['neck'], skin * (0.92 if style == 'bouma' else 1.0), style, seed + 1, bevel=1.2)
-    paint(a, P['nl'], skin * (0.96 if style == 'bouma' else 1.0), style, seed + 2)
-    paint(a, P['torso'], skin, style, seed + 3, bevel=3.0)
-    paint(a, P['head'], skin, style, seed + 4, bevel=2.5)
-    paint(a, P['nose'], skin, style, seed + 5, bevel=0.8, hatch=False)
-    # face: eye, brow and mouth are marks, not shading
-    hx_, hy_, rx, ry = dk['head']
+def skin_cap(a, M, r, p, style, seed):
+    """the bare body (skin)"""
+    sk = p['skin']
+    paint(a, M['leg_f'] | M['foot_f'], mul(sk, 0.78, style), style, seed)
+    paint(a, M['leg_n'] | M['foot_n'], mul(sk, 0.95, style), style, seed + 1)
+    paint(a, M['neck'], mul(sk, 0.9, style), style, seed + 2, bevel=1.2)
+    paint(a, M['torso'], sk, style, seed + 3, bevel=2.6)
+    paint(a, M['head'], sk, style, seed + 4, bevel=2.2)
+    paint(a, M['nose'], sk, style, seed + 5, bevel=0.7, hatch=False)
+    hx_, hy_ = r['head']
     ink = p['ink']
-    a.fill(a.ellipse(hx_ + rx * 0.45, hy_ - 0.6, 0.7, 0.55), ink)
-    a.fill(a.line(hx_ + rx * 0.25, hy_ - 1.9, hx_ + rx * 0.8, hy_ - 1.6, 0.45), ink, 0.9)
-    a.fill(a.line(hx_ + rx * 0.45, hy_ + 2.3, hx_ + rx * 0.95, hy_ + 2.2, 0.4), ink, 0.8)
-    # underwear (basic briefs / shorts, plus a chest band on D3)
-    uw = underwear_mask(a, dk, P)
-    ucol = col('#4a5a78') if style == 'bouma' else p['neon']
-    paint(a, uw, ucol, style, seed + 6, bevel=1.5, hatch=False)
+    a.fill(a.ellipse(hx_ + 2.3, hy_ - 0.2, 0.65, 0.5), ink)                                  # eye
+    a.fill(a.line(hx_ + 1.4, hy_ - 1.5, hx_ + 3.4, hy_ - 1.2, 0.5), ink, 0.9)                # brow
+    a.fill(a.line(hx_ + 1.6, hy_ + 2.5, hx_ + 3.1, hy_ + 2.4, 0.4), ink, 0.75)               # mouth
+
+
+def layer_arm_far(r, M, style, p):
+    a = new()
+    paint(a, M['arm_f'], mul(p['skin'], 0.74, style), style, 1, bevel=1.6)
+    return finish(a, style)
+
+
+def layer_body(r, M, style, p, seed=3):
+    a = new()
+    skin_cap(a, M, r, p, style, seed)
+    # basic underwear: boxer shorts and a thin sleeveless undershirt
+    u = col('#4b5a78') if style == 'bouma' else p['neon']
+    t = M['torso']
+    hy = r['hip'][1]
+    shorts = (t & a.rect(0, hy - 3.2, W, 9)) | ((M['leg_n'] | M['leg_f']) & a.rect(0, hy - 3.2, W, 9.5))
+    paint(a, shorts & (t | M['leg_n'] | M['leg_f']), u, style, seed + 6, bevel=1.4, hatch=False)
+    a.fill(a.rect(0, hy - 3.3, W, 0.9) & t, '#22202b' if style == 'bouma' else p['ink'], 0.9)
+    ut = col('#8b8f98') if style == 'bouma' else p['paper']
+    sx, sy = r['sh_n']
+    shirt = t & a.rect(0, sy - 2.6, W, hy - sy - 1.4)
+    paint(a, shirt, ut, style, seed + 7, bevel=1.6, hatch=False)
     if style == 'bouma':
-        a.speckle(uw, '#2a2622', 3.0, seed + 8, 1.2, 0.5)
-        a.fill(a.rect(0, dk['brief'][0] - 3.6, W, 0.9) & uw, '#232029', 0.9)
-    if dk['band']:
-        y0, y1 = dk['band']
-        bm = P['torso'] & a.rect(0, y0, W, y1 - y0)
-        paint(a, bm, ucol, style, seed + 7, bevel=1.2, hatch=False)
+        a.speckle(shirt | shorts, '#2b2823', 3.2, seed + 8, 1.2, 0.5)
+        a.fill(a.line(sx - 0.5, sy - 2.2, sx + 3.0, sy - 2.0, 0.7), '#2b2823', 0.7)
     return finish(a, style)
 
 
-def layer_hair(dk, style, p, seed=5):
+def layer_hair(r, style, p, seed=5):
     a = new()
-    hx_, hy_, rx, ry = dk['head']
+    hx_, hy_ = r['head']
     hc = p['hair'] if style == 'bouma' else p['ink']
-    kind = dk['hair']
-    if kind == 'crop':
-        m = a.ellipse(hx_ - 0.3, hy_ - 1.4, rx + 0.5, ry - 0.2) & a.rect(0, 0, W, hy_ - 1.0)
-        m |= a.ellipse(hx_ - 2.8, hy_ + 0.8, 2.0, 3.2)
-        paint(a, m, hc, style, seed, bevel=1.4, hatch=False)
-    elif kind == 'tail':
-        m = a.ellipse(hx_ - 0.2, hy_ - 1.2, rx + 0.5, ry) & a.rect(0, 0, W, hy_ + 0.5) & ~a.rect(hx_ + 1.6, hy_ - 1.5, 8, 6)
-        m |= a.ellipse(hx_ - 2.8, hy_ + 1.2, 2.1, 3.4)
-        paint(a, m, hc, style, seed, bevel=1.4, hatch=False)
-        tail = a.poly([(hx_ - 3.6, hy_ - 1.5), (hx_ - 8.5, hy_ + 1.0), (hx_ - 13.0, hy_ + 7.0), (hx_ - 11.2, hy_ + 11.5),
-                       (hx_ - 8.0, hy_ + 6.2), (hx_ - 4.2, hy_ + 3.5)])
-        paint(a, tail, hc * 0.9, style, seed + 1, bevel=1.2, hatch=False)
-        a.fill(a.ellipse(hx_ - 4.2, hy_ - 0.6, 1.1, 1.4), p['neon'])
-    elif kind == 'bald':
-        m = a.ellipse(hx_ + 0.2, hy_ + 3.0, rx - 0.5, 2.5) & a.rect(hx_ - 1, hy_ + 2.2, 9, 5)      # beard
-        m |= a.ellipse(hx_ + rx * 0.2, hy_ + 3.6, rx * 0.8, 2.3)
-        paint(a, m & ~a.rect(0, 0, W, hy_ + 1.8), hc * 0.7 if style == 'bouma' else hc, style, seed, bevel=0.8, hatch=False)
+    cap = a.ellipse(hx_ - 0.5, hy_ - 1.2, 4.5, 4.7) & a.rect(0, 0, W, hy_ - 1.3)
+    side = a.ellipse(hx_ - 2.4, hy_ + 0.4, 2.0, 3.0)
+    nape = a.poly([(hx_ - 4.2, hy_ - 1.0), (hx_ - 1.2, hy_ - 1.2), (hx_ - 1.4, hy_ + 3.0), (hx_ - 3.6, hy_ + 2.4)])
+    paint(a, cap | side | nape, hc, style, seed, bevel=1.4, hatch=False)
     return finish(a, style)
 
 
-def layer_arm_near(dk, style, p, seed=11):
+def layer_arm_near(r, M, style, p, seed=11):
     a = new()
-    P = parts(dk)
-    paint(a, P['na'], p['skin'], style, seed, bevel=1.8)
-    paint(a, P['hand_n'], p['skin'] * (0.98 if style == 'bouma' else 1.0), style, seed + 1, bevel=1.0, hatch=False)
+    paint(a, M['arm_n'], p['skin'], style, seed, bevel=1.7)
     return finish(a, style)
 
 
-def layer_hand_far(dk, style, p, seed=12):
+def layer_hands(r, M, style, p, seed=12):
     a = new()
-    P = parts(dk)
-    paint(a, P['hand_f'], p['skin'] * (0.9 if style == 'bouma' else 1.0), style, seed, bevel=1.0, hatch=False)
+    paint(a, M['hand_f'], mul(p['skin'], 0.9, style), style, seed, bevel=1.0, hatch=False)
+    paint(a, M['hand_n'], mul(p['skin'], 0.98, style), style, seed + 1, bevel=1.0, hatch=False)
     return finish(a, style)
 
 
-# ---------------------------------------------------------------------------------- armor (three proposals)
+# ---------------------------------------------------------------------------------------------- armor
 ARMOR = {
-    'A1': dict(label='Plasteel plate', bouma=('#8795a6', '#3c4552', '#e8782a'), kind='plate'),
-    'A2': dict(label='Riot shell', bouma=('#59607a', '#262a38', '#e0405a'), kind='shell'),
-    'A3': dict(label='Weave and plates', bouma=('#8b8760', '#4a4733', '#27d2c4'), kind='weave'),
+    'A1': dict(label='Plasteel plate', bouma=('#7d8ba0', '#38414f', '#e8782a')),
+    'A2': dict(label='Riot shell', bouma=('#555c76', '#232735', '#e0405a')),
+    'A3': dict(label='Weave and plates', bouma=('#868260', '#44412f', '#27d2c4')),
 }
 
 
-def armor_layers(key, dk, style, p, seed=21):
-    """returns (under, over) images"""
-    cfg = ARMOR[key]
-    main, dark, acc = (col(c) for c in cfg['bouma'])
+def armor_layers(key, r, M, style, p, seed=21):
+    main, dark, acc = (col(c) for c in ARMOR[key]['bouma'])
     if style == 'moku':
         main, dark, acc = p['paper'], p['ink'], p['neon']
-    P = parts(dk)
-    u = new()
-    o = new()
-    hx_, hy_, rx, ry = dk['head']
-    tors = P['torso']
-    chest = tors & u.rect(0, 17, W, 17.0)
-    kind = cfg['kind']
-    if kind == 'plate':
-        paint(u, tors & u.rect(0, 18, W, 19.5), main, style, seed, bevel=2.2, strength=0.6)
-        paint(u, chest & u.rect(0, 20, W, 8) & u.rect(31, 0, 12, W), main * 1.08, style, seed + 1, bevel=1.6, strength=0.6)
-        u.fill(u.rect(25, 28.4, 16, 0.8) & tors, dark)
-        u.fill(u.rect(33, 21, 1.1, 13) & tors, acc)
-        pauld = u.ellipse(dk['na'][0][0] - 0.6, dk['na'][0][1] - 0.4, 4.6, 4.0)
-        paint(u, pauld, main * 1.05, style, seed + 2, bevel=2.0, strength=0.6)
-        paint(u, u.rect(0, 30.0, W, 3.0) & limb_mask(u, dk['nl'][:3], dk['lw'][0] + 1.6, dk['lw'][1] + 0.6) & u.rect(0, 36, W, 12), dark, style, seed + 3, bevel=1.0, hatch=False)
-        # helmet: shell over the skull with a visor slit
-        sk = u.ellipse(hx_ - 0.2, hy_ - 0.8, rx + 1.0, ry + 0.8) & u.rect(0, 0, W, hy_ + 1.6)
-        paint(u, sk, main, style, seed + 4, bevel=2.0, strength=0.6)
-        u.fill(u.rect(hx_ + 0.6, hy_ - 1.3, rx + 0.4, 1.7) & u.ellipse(hx_, hy_, rx + 0.2, ry), acc)
-        paint(o, limb_mask(o, [dk['na'][1], dk['na'][2]], dk['aw'][1] + 1.6, dk['aw'][2] + 1.2) & o.rect(0, 0, W, W), dark, style, seed + 5, bevel=1.4)
-        o.fill(o.rect(dk['na'][1][0] + 1.2, dk['na'][1][1] - 2.2, 1.0, 4.4), acc)
-        paint(o, limb_mask(o, [dk['nl'][1], (dk['nl'][2][0] + 0.2, dk['nl'][2][1] - 2.0)], dk['lw'][1] + 1.5, dk['lw'][2] + 1.0), dark, style, seed + 6, bevel=1.4)
-    elif kind == 'shell':
-        paint(u, tors & u.rect(0, 17.5, W, 20.5), main, style, seed, bevel=2.8, strength=0.65)
-        for yy in (23.5, 27.5, 31.5):
-            u.fill(u.rect(24, yy, 17, 0.7) & tors, dark)
-        u.fill(u.rect(34.5, 19, 4, 3.4) & tors, acc)
-        pauld = u.poly([(dk['na'][0][0] - 4.4, dk['na'][0][1] - 3), (dk['na'][0][0] + 3.6, dk['na'][0][1] - 3.2),
-                        (dk['na'][0][0] + 4.2, dk['na'][0][1] + 4.2), (dk['na'][0][0] - 3.4, dk['na'][0][1] + 3.0)])
-        paint(u, pauld, main * 1.1, style, seed + 2, bevel=1.8, strength=0.65)
-        sk = u.ellipse(hx_ - 0.2, hy_ - 0.4, rx + 1.3, ry + 1.2) & u.rect(0, 0, W, hy_ + 3.6)
-        paint(u, sk, main, style, seed + 4, bevel=2.2, strength=0.65)
-        u.fill(u.rect(hx_ + 0.2, hy_ - 1.6, rx + 1.5, 3.2) & sk, dark)
-        u.fill(u.rect(hx_ + 1.6, hy_ - 0.9, rx - 0.4, 0.9) & sk, acc)
-        paint(o, limb_mask(o, [dk['na'][0], dk['na'][1], dk['na'][2]], dk['aw'][0] + 1.0, dk['aw'][2] + 0.9), main * 0.95, style, seed + 5, bevel=1.4)
-        paint(o, limb_mask(o, dk['nl'][:3], dk['lw'][0] + 1.4, dk['lw'][2] + 0.9) & o.rect(0, 40, W, 24), main * 0.95, style, seed + 6, bevel=1.4)
-    else:   # weave: soft jacket with chest, back and knee plates
-        paint(u, tors & u.rect(0, 17.8, W, 21.2), main, style, seed, bevel=2.4, strength=0.45, grain=0.35)
-        u.fill(u.rect(25, 33.2, 15, 1.1) & tors, dark)
-        paint(u, u.rect(31, 21, 8, 8) & tors, dark, style, seed + 1, bevel=1.4)
-        u.fill(u.rect(31.8, 22, 6.4, 0.7), acc)
-        paint(u, limb_mask(u, [dk['na'][0], dk['na'][1]], dk['aw'][0] + 1.0, dk['aw'][1] + 0.8), main, style, seed + 2, bevel=1.6, strength=0.45, grain=0.3)
-        hood = u.ellipse(hx_ - 1.6, hy_ + 0.3, rx + 1.7, ry + 1.2) & ~u.rect(hx_ + 1.2, hy_ - 2.6, 9, 8.6)
-        paint(u, hood, main * 0.9, style, seed + 4, bevel=2.2, strength=0.45, grain=0.3)
-        u.fill(u.line(hx_ + 1.0, hy_ - 3.4, hx_ + 1.4, hy_ + 3.2, 0.7), dark)
-        paint(o, u.ellipse(dk['nl'][1][0] + 0.6, dk['nl'][1][1], 2.9, 3.0), dark, style, seed + 5, bevel=1.4)
-        paint(o, limb_mask(o, [dk['na'][1], dk['na'][2]], dk['aw'][1] + 1.0, dk['aw'][2] + 0.8), dark, style, seed + 6, bevel=1.2)
-        paint(o, limb_mask(o, [(dk['nl'][1][0] - 0.2, dk['nl'][1][1] + 3.0), (dk['nl'][2][0] + 0.2, dk['nl'][2][1] - 1.0)], dk['lw'][1] + 1.0, dk['lw'][2] + 0.8), dark, style, seed + 7, bevel=1.2)
+    u, o = new(), new()
+    hx_, hy_ = r['head']
+    t = M['torso']
+    sy = r['sh_n'][1]
+    hy = r['hip'][1]
+    tp = Art(W, W, 4)
+    chest = Art(W, W, 4).poly(torso_poly(r, 0.9))
+    plate = chest & u.rect(0, sy - 2.4, W, (hy - sy) * 0.78)
+    paint(u, plate, main, style, seed, bevel=2.4, strength=0.5)
+    # plate seams and a front panel
+    for k in (0.28, 0.55):
+        yy = sy - 2.4 + (hy - sy) * 0.78 * k
+        u.fill(u.rect(0, yy, W, 0.7) & plate, dark)
+    cx = (r['sh_n'][0] + r['hip'][0]) / 2 + 1.2
+    u.fill(u.rect(cx, sy, 1.0, (hy - sy) * 0.7) & plate, acc)
+    # belt and tassets
+    belt = chest & u.rect(0, hy - 4.6, W, 2.0)
+    paint(u, belt, dark, style, seed + 1, bevel=0.9, hatch=False)
+    # shoulder pauldron
+    paint(u, u.ellipse(r['sh_n'][0] - 0.4, r['sh_n'][1] + 0.2, 4.8, 4.2), main * 1.06 if style == 'bouma' else main, style, seed + 2, bevel=2.0, strength=0.5)
+    # helmet and visor slit
+    sk = u.ellipse(hx_ - 0.3, hy_ - 0.9, 5.2, 5.3) & u.rect(0, 0, W, hy_ + 1.8)
+    paint(u, sk, main, style, seed + 3, bevel=2.0, strength=0.5)
+    u.fill(u.rect(hx_ + 0.2, hy_ - 1.5, 5.4, 1.7) & u.ellipse(hx_ + 0.4, hy_, 5.0, 4.6), acc)
+    # knee and shin guards (both legs; the far one is darker)
+    for s, k in (('f', 0.78), ('n', 1.0)):
+        kx, ky = r['kn_' + s]
+        ax_, ay_ = r['an_' + s]
+        im = u if s == 'f' else o
+        paint(im, chain(im, [(kx + 0.2, ky - 1.0), (kx + (ax_ - kx) * 0.15, ky + (ay_ - ky) * 0.35), (ax_ + 0.2, ay_ - 2.6)], (5.2, 5.0, 3.8)), dark * k if style == 'bouma' else dark, style, seed + 4 + (s == 'n'), bevel=1.2)
+        paint(im, im.ellipse(kx + 0.8, ky - 0.2, 2.9, 2.9), main * k if style == 'bouma' else main, style, seed + 6 + (s == 'n'), bevel=1.2, strength=0.5)
+    # forearm guard and glove
+    paint(o, chain(o, [(r['el_n'][0] * 0.6 + r['hand_n'][0] * 0.4, r['el_n'][1] * 0.6 + r['hand_n'][1] * 0.4), r['hand_n']], (4.4, 3.6)), dark, style, seed + 8, bevel=1.2)
+    o.fill(o.rect(r['el_n'][0] + 1.0, r['el_n'][1] - 2.0, 0.9, 4.0) & o.a.astype(bool) if False else o.line(r['el_n'][0] + 1.2, r['el_n'][1] - 1.6, r['el_n'][0] + 1.2, r['el_n'][1] + 1.6, 0.8), acc, 0.9)
     if style == 'bouma':
         for im_ in (u, o):
             m = im_.a > 0.5
-            im_.speckle(m, '#1b1a18', 2.5, seed + 9, 1.3, 0.45)
-            im_.speckle(m, '#8a7a5c', 1.0, seed + 10, 1.0, 0.25)
+            im_.speckle(m, '#1b1a18', 2.6, seed + 9, 1.3, 0.45)
+            im_.speckle(m, '#8a7a5c', 1.0, seed + 10, 1.0, 0.22)
     return finish(u, style), finish(o, style)
 
 
-# ---------------------------------------------------------------------------------- held items (shared hold pose)
-def held(kind, style, p, seed=31):
+# ---------------------------------------------------------------------------------------------- held items
+def _axis(r):
+    fx, fy = r['hand_f']
+    nx, ny = r['hand_n']
+    d = math.hypot(nx - fx, ny - fy)
+    return (fx, fy), (nx, ny), ((nx - fx) / d, (ny - fy) / d)
+
+
+def _quad(a, f, d, n, x0, x1, h0, h1):
+    """quad along the item axis: from x0 to x1 along d (relative to the far hand), thickness h0..h1 perpendicular"""
+    nx, ny = -d[1], d[0]
+    pts = []
+    for x, h in ((x0, h0), (x1, h1)):
+        pts.append((f[0] + d[0] * x + nx * h, f[1] + d[1] * x + ny * h))
+    for x, h in ((x1, h1), (x0, h0)):
+        pts.append((f[0] + d[0] * x - nx * h * 0 + nx * (-h if h > 0 else h), f[1] + d[1] * x + ny * (-h if h > 0 else h)))
+    return a.poly(pts)
+
+
+def box(a, f, d, x0, x1, up, down):
+    """rectangle along the axis, `up` toward the top of the sprite (negative perpendicular), `down` toward the bottom"""
+    nx, ny = -d[1], d[0]            # perpendicular pointing 'down' when d points right
+    return a.poly([(f[0] + d[0] * x0 - nx * up, f[1] + d[1] * x0 - ny * up),
+                   (f[0] + d[0] * x1 - nx * up, f[1] + d[1] * x1 - ny * up),
+                   (f[0] + d[0] * x1 + nx * down, f[1] + d[1] * x1 + ny * down),
+                   (f[0] + d[0] * x0 + nx * down, f[1] + d[1] * x0 + ny * down)])
+
+
+def held(kind, r, style, p, seed=31):
     a = new()
-    metal = col('#6a7080') if style == 'bouma' else p['paper']
-    dark = col('#1c1d24') if style == 'bouma' else p['ink']
+    f, n, d = _axis(r)
+    metal = col('#6e7484') if style == 'bouma' else p['paper']
+    dark = col('#23252e') if style == 'bouma' else p['ink']
     acc = col('#e8782a') if style == 'bouma' else p['neon']
-    wood = col('#7a5a3c') if style == 'bouma' else p['paper']
-    hx0, hy0 = HAND_FAR
+    wood = col('#7c5c3e') if style == 'bouma' else p['paper']
     if kind == 'pistol':
-        paint(a, a.poly([(hx0 - 2.0, hy0 - 4.0), (hx0 + 12.5, hy0 - 4.0), (hx0 + 13.0, hy0 - 0.2), (hx0 - 2.0, hy0 - 0.2)]), metal, style, seed, bevel=1.0)
-        paint(a, a.poly([(hx0 - 1.6, hy0 - 0.5), (hx0 + 3.4, hy0 - 0.5), (hx0 + 1.6, hy0 + 7.0), (hx0 - 2.6, hy0 + 7.0)]), dark, style, seed + 1, bevel=0.8)
-        a.fill(a.rect(hx0 + 12.0, hy0 - 4.4, 1.1, 1.0), acc)
-        a.fill(a.line(hx0 + 5, hy0 - 4.0, hx0 + 5, hy0 - 0.6, 0.4), dark)
+        paint(a, box(a, f, d, -2.0, 11.0, 3.4, 0.6), metal, style, seed, bevel=1.0)
+        paint(a, box(a, f, d, -1.8, 2.4, 0.2, 7.0), dark, style, seed + 1, bevel=0.8)
+        a.fill(box(a, f, d, 10.2, 11.2, 3.8, 3.0), acc)
     elif kind == 'rifle':
-        paint(a, a.poly([(hx0 - 8.0, hy0 - 7.0), (hx0 - 1.0, hy0 - 4.6), (hx0 - 1.0, hy0 - 0.8), (hx0 - 8.8, hy0 - 3.2)]), dark, style, seed, bevel=1.0)
-        paint(a, a.poly([(hx0 - 1.0, hy0 - 5.2), (hx0 + 12.0, hy0 - 5.2), (hx0 + 12.0, hy0 - 0.6), (hx0 - 1.0, hy0 - 0.6)]), metal, style, seed + 1, bevel=1.1)
-        paint(a, a.poly([(hx0 + 12.0, hy0 - 4.4), (hx0 + 21.5, hy0 - 4.0), (hx0 + 21.5, hy0 - 2.7), (hx0 + 12.0, hy0 - 2.3)]), metal * 0.8, style, seed + 2, bevel=0.7)
-        paint(a, a.poly([(hx0 + 3.0, hy0 - 0.6), (hx0 + 6.4, hy0 - 0.6), (hx0 + 5.2, hy0 + 5.8), (hx0 + 2.0, hy0 + 5.8)]), dark, style, seed + 3, bevel=0.8)
-        paint(a, a.rect(hx0 + 2.2, hy0 - 7.6, 6.0, 2.4), dark, style, seed + 4, bevel=0.8)
-        a.fill(a.rect(hx0 + 7.2, hy0 - 6.9, 0.9, 1.4), acc)
+        paint(a, box(a, f, d, -9.5, -0.5, 2.0, 2.8), dark, style, seed, bevel=1.0)                  # stock
+        paint(a, box(a, f, d, -0.5, 13.0, 2.4, 0.9), metal, style, seed + 1, bevel=1.0)             # receiver and handguard
+        paint(a, box(a, f, d, 13.0, 25.0, 1.5, 0.3), dark if style == 'bouma' else metal, style, seed + 2, bevel=0.5)
+        paint(a, box(a, f, d, 3.0, 6.0, 0.8, 7.0), dark, style, seed + 3, bevel=0.8)                # magazine
+        paint(a, box(a, f, d, 2.0, 8.0, 2.4, 3.6), dark, style, seed + 4, bevel=0.8)                # optic
+        a.fill(box(a, f, d, 7.4, 8.4, 3.2, 2.6), acc)
+    elif kind == 'blade':
+        paint(a, box(a, f, d, -3.0, 0.5, 1.2, 1.2), dark, style, seed, bevel=0.6, hatch=False)      # grip
+        paint(a, box(a, f, d, 0.5, 2.0, 2.4, 2.4), metal, style, seed + 1, bevel=0.5, hatch=False)  # guard
+        paint(a, box(a, f, d, 2.0, 26.0, 1.6, 0.9), col('#aab4c4') if style == 'bouma' else metal, style, seed + 2, bevel=0.5)
+        a.fill(box(a, f, d, 3.0, 24.0, 0.2, 0.0), acc, 0.7)
     elif kind == 'pick':
-        # working tool: a pickaxe, haft through both hands, head above the front hand
-        top = (HAND_NEAR[0] + 6.0, HAND_NEAR[1] - 13.5)
-        paint(a, a.line(hx0 - 7.0, hy0 + 8.0, top[0], top[1], 2.4), wood, style, seed, bevel=0.7, hatch=False)
-        head = a.poly([(top[0] - 7.0, top[1] + 4.2), (top[0] - 2.0, top[1] - 1.4), (top[0] + 2.4, top[1] - 1.6),
-                       (top[0] + 9.0, top[1] + 3.6), (top[0] + 2.4, top[1] + 0.2), (top[0] - 2.0, top[1] + 1.0)])
-        paint(a, head, metal, style, seed + 1, bevel=0.9)
-        a.fill(a.line(top[0] - 6.0, top[1] + 3.8, top[0] - 3.6, top[1] + 0.2, 0.5), acc, 0.8)
+        paint(a, box(a, f, d, -9.0, 20.0, 1.2, 1.2), wood, style, seed, bevel=0.7, hatch=False)
+        paint(a, box(a, f, d, 17.0, 20.0, 4.8, 4.8), metal, style, seed + 1, bevel=0.8)
+        paint(a, box(a, f, d, 19.0, 22.0, 4.0, -0.4), metal, style, seed + 2, bevel=0.6)
     if style == 'bouma':
-        m = a.a > 0.5
-        a.speckle(m, '#0e0e12', 3.0, seed + 9, 1.0, 0.5)
+        a.speckle(a.a > 0.5, '#0e0e12', 3.0, seed + 9, 1.0, 0.5)
     return finish(a, style)
 
 
-# ---------------------------------------------------------------------------------- compositing
+# ---------------------------------------------------------------------------------------------- compositing
 def tinted(im, rgb):
     arr = np.asarray(im).astype(np.float32) / 255.0
     arr[..., :3] = np.clip(arr[..., :3] * np.asarray(rgb, np.float32)[None, None, :], 0, 1)
     return Image.fromarray((arr * 255 + 0.5).astype(np.uint8), 'RGBA')
 
 
-def compose(dkey, style, skin='tan_white', armor=None, item=None, hair_rgb=(0.55, 0.45, 0.36)):
-    dk = DOLLS[dkey]
+def compose(stance, style, skin='tanned', armor=None, item=None, hair_rgb=(0.50, 0.40, 0.32)):
+    r = STANCES[stance]
     p = pal(style)
+    M = rig_masks(r)
     st = tuple(SKINS[skin]) if style == 'bouma' else (1, 1, 1)
-    canvas = Image.new('RGBA', (W, W), (0, 0, 0, 0))
-
-    def put(im):
-        canvas.alpha_composite(im)
-
-    put(shadow_layer(style))
-    put(tinted(layer_arm_far(dk, style, p), st))
-    put(tinted(layer_body(dk, style, p), st))
-    hair = layer_hair(dk, style, p)
-    put(tinted(hair, hair_rgb) if style == 'bouma' else hair)
-    under = over = None
+    cv = Image.new('RGBA', (W, W), (0, 0, 0, 0))
+    cv.alpha_composite(shadow_layer(style))
+    cv.alpha_composite(tinted(layer_arm_far(r, M, style, p), st))
+    cv.alpha_composite(tinted(layer_body(r, M, style, p), st))
+    hair = layer_hair(r, style, p)
+    cv.alpha_composite(tinted(hair, hair_rgb) if style == 'bouma' else hair)
+    over = None
     if armor:
-        under, over = armor_layers(armor, dk, style, p)
-        put(under)
+        under, over = armor_layers(armor, r, M, style, p)
+        cv.alpha_composite(under)
     if item:
-        put(held(item, style, p))
-    put(tinted(layer_arm_near(dk, style, p), st))
-    put(tinted(layer_hand_far(dk, style, p), st))
+        cv.alpha_composite(held(item, r, style, p))
+    cv.alpha_composite(tinted(layer_arm_near(r, M, style, p), st))
+    cv.alpha_composite(tinted(layer_hands(r, M, style, p), st))
     if over:
-        put(over)
-    return canvas
+        cv.alpha_composite(over)
+    return cv
 
 
-def layers_for_export(dkey, style):
-    """individual layer images for one design (what the game would stack)"""
-    dk = DOLLS[dkey]
+def layers_for_export(stance, style):
+    r = STANCES[stance]
     p = pal(style)
-    out = {
-        'shadow': shadow_layer(style), 'arm_far': layer_arm_far(dk, style, p), 'body': layer_body(dk, style, p),
-        'hair': layer_hair(dk, style, p), 'arm_near': layer_arm_near(dk, style, p), 'hand_far': layer_hand_far(dk, style, p),
-    }
+    M = rig_masks(r)
+    out = {'shadow': shadow_layer(style), 'arm_far': layer_arm_far(r, M, style, p), 'body': layer_body(r, M, style, p),
+           'hair': layer_hair(r, style, p), 'arm_near': layer_arm_near(r, M, style, p), 'hands': layer_hands(r, M, style, p)}
     for k in ARMOR:
-        out['armor_%s_under' % k], out['armor_%s_over' % k] = armor_layers(k, dk, style, p)
-    for it in ('pistol', 'rifle', 'pick'):
-        out['held_' + it] = held(it, style, p)
+        out['armor_%s_under' % k], out['armor_%s_over' % k] = armor_layers(k, r, M, style, p)
+    for it in ('pistol', 'rifle', 'blade', 'pick'):
+        out['held_' + it] = held(it, r, style, p)
     return out
