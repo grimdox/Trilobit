@@ -2,6 +2,8 @@
 
 **Question:** can Godot 4 carry Trilobit better than a CDDA fork?  **Budget:** two weeks of work, three pass/fail tests, then a decision.  Built 2026-10-14; the first round of tests runs headless in GDScript only (no C++), so a pass is a conservative result.
 
+> 2026-10-18: the game tree is now clean of CDDA material.  Mentions of the Bouma and Mokuhanga tilesets below are history; the game draws only with Trilobit64.  See README "Clean of CDDA".
+
 ## What the spike must show
 | # | Test | Pass mark | Why it matters |
 |---|---|---|---|

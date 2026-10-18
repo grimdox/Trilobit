@@ -11,7 +11,7 @@ const IMP = preload("res://src/implants.gd")
 const SK = preload("res://src/skills.gd")
 const CLK = preload("res://src/clock.gd")
 const UI_S := 1.5          # the interface is laid out for 1280x720 and drawn at 1.5x on the 1920x1080 canvas
-const TILESETS := ["Trilobit64", "Bouma_TopDown", "Mokuhanga_TopDown"]
+const TILESETS := ["Trilobit64"]      # Trilobit's own 64px art (tools/content/gen_tiles64.py); more sets can be added here
 const SLOTS := 3
 const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "implants", "skills", "map"]
 const MOUSE_MODES := ["title", "pause", "options", "visuals", "keys", "saves", "loads", "implants", "map"]
@@ -428,16 +428,11 @@ func activate(id: String) -> void:
 			settings.save()
 			_fill_keys()
 
-## the chosen tileset, with Bouma behind the original 64px art for anything not redrawn yet
+## the chosen tileset (the first one if it cannot be loaded)
 func _load_tileset() -> void:
 	tileset.fallback = null
 	if not tileset.load_dir("res://gfx/" + TILESETS[ts_index]):
-		tileset.load_dir("res://gfx/" + TILESETS[1])
-		return
-	if TILESETS[ts_index] == "Trilobit64":
-		var fb = TilesetScript.new()
-		if fb.load_dir("res://gfx/" + TILESETS[1]):
-			tileset.fallback = fb
+		tileset.load_dir("res://gfx/" + TILESETS[0])
 
 func _cycle_tileset(dir: int) -> void:
 	ts_index = (ts_index + dir + TILESETS.size()) % TILESETS.size()

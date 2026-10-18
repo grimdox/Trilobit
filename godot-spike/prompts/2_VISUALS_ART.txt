@@ -13,7 +13,7 @@ FILL-IN FIELDS
  TITLE:            # e.g. "Painted train sprite"
  GOAL:             # what should be visible/recognizable, in plain words
  SUBJECT DETAIL:   # shape, size in tiles (use the SCALE list), colors, wear
- WHERE IT APPEARS: # tileset(s): Bouma / Mokuhanga / both; zone/district
+ WHERE IT APPEARS: # tileset: Trilobit64; zone/district
  FACTION / DISTRICT FEEL: # e.g. Bratva low district: rust, tarps, red paint
  MOOD (original words only): # e.g. "wet neon, sodium-orange alleys"
  DOCS TO READ:     # Design Document tileset section, Update 0.19 (scale)
@@ -31,9 +31,9 @@ ART GUARDRAILS (in addition to CORE RULES)
    neighbouring tile type.
  - Grit on every tile: wear, grime, patches, stains. Nothing pristine except
    upper-district glass, and even that gets a smudge/reflection.
- - Bouma = rich classic cyberpunk palette. Mokuhanga = black/white/neon
-   print, MAX 3 inks, bold outlines, flat fills. Provide both unless told
-   "Bouma only".
+ - Trilobit64 = rich cyberpunk palette, drawn in code by the t64_*.py
+   modules.  Everything must be original: no sprites, ids or data taken from
+   CDDA or any other game.
  - Sizes follow the SCALE list exactly (tile multiples). Multi-tile sprites
    align to the 64 px grid and rotate/layer like the existing vehicles
    (3 painted layers).
@@ -50,7 +50,7 @@ DEFINITION OF DONE
  [ ] Screenshot(s) at 1920x1080 via xvfb (shotN.gd) showing it in context,
      sent to Eric with SendUserFile
  [ ] Checked at game scale AND zoomed; compared against neighbours
- [ ] Both tilesets done (or "Bouma only" stated)
+ [ ] Drawn in Trilobit64 by the generator (no imported art)
  [ ] All suites green; committed; pushed; work-log line
  [ ] Report in the REPORT FORMAT, with "Looks wrong / known weak spots"
      added honestly

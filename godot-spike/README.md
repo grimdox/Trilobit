@@ -78,3 +78,9 @@ Tests: `./run_all.sh` (pockets, world, scale, levels, game, vertical, guns, stea
 - **Passengers**: commuters ride the carriages (stateless, a function of seed, train, cell and door-opening count; fuller at rush hours); the painted carriage sprites are `gfx/Trilobit64/veh/veh_train*.png`.
 - **Island remake** (guide image): 4400x7750 tiles, 1 guide px = 4.4 tiles; see PLAN.md; `tests/test_remake.gd` (14).
 - **Chart**: `overview_image(8)` draws the island from the seed (districts, bridges, ring, boulevards); `tests/test_bigcity.gd` (15).
+
+## Clean of CDDA (2026-10-18)
+- The game uses one tileset, **Trilobit64**, drawn by `tools/content/gen_tiles64.py`.  The Bouma and Mokuhanga sets (about 14,000 sprites keyed to CDDA ids) and the fallback that filled gaps from them are gone; every sprite the game draws is in Trilobit64 or the paper-doll sheet.  An item with no art of its own shows as a parcel.
+- Guns: `tools/content/guns.py` is the only gun source (class table plus a row per gun: maker, weight, price, accuracy, damage, magazine, rarity, description).  `gen_gunset.py` and `data/source/gunset.json`, which built each gun on a CDDA base gun, are removed.  Stats in play are unchanged; descriptions are rewritten.
+- Items no longer carry `looks_like` (CDDA sprite ids); sprites are found by item id.
+- The removed files are kept, unchanged, on the `cdda-archive` branch.

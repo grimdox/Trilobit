@@ -54,8 +54,9 @@ FIXED FACTS (do not rename or renumber)
  - Scale: lane 6 tiles, road 12, cars 4x6, trucks 6x12, helicopter 6x9,
    plane 12x10, mech 5x5, train 4 wide x 6-long carriages x4. Tiles 64 px;
    canvas 1920x1080; UI authored 1280x720 and scaled 1.5x (UI_S).
- - Tilesets: Bouma (default, classic cyberpunk) and Mokuhanga (black/white/neon
-   print look, at most 3 inks). Readability first.
+ - Tileset: Trilobit64 (64px, Trilobit's own art, drawn by
+   tools/content/gen_tiles64.py). Readability first.  No art, ids or data
+   from CDDA or any other game.
 
 QUALITY BAR
  - Data first, code second. New content goes in data tables/generators, not

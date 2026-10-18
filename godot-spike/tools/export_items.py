@@ -1,54 +1,13 @@
 #!/usr/bin/env python3
-"""Export Trilobit's CDDA-side content tables into the Godot spike's item schema (data/items.json).
-Shows that the generated content transfers: the 50 new guns (gunset.json) become engine-neutral records, plus a few containers
-that exercise the pocket model.  usage: export_items.py  (run from godot-spike/)"""
-import json, os, re
+"""Build data/items.json, the Godot game's item definitions, from Trilobit's own content tables.
+Guns come from tools/content/guns.py; ammunition, gun mods, melee weapons, containers, armor, engines, food and charms are defined below.
+Sprites are looked up by item id in gfx/Trilobit64 (drawn by tools/content/gen_tiles64.py).  usage: export_items.py  (run from godot-spike/)"""
+import json, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
-MOD = os.path.join(HERE, "../data/source")
-LEN = {"SMG": 450, "Pistol": 200, "Revolver": 220, "Rifle": 900, "Shotgun": 950, "Sniper": 1100, "MG": 1000, "Heavy MG": 1300, "Launcher": 800, "Laser": 700}
+sys.path.insert(0, os.path.join(HERE, "content"))
+import guns
 
-
-def grams(s):
-    m = re.match(r"([\d.]+)\s*(kg|g)", s)
-    return int(float(m.group(1)) * (1000 if m.group(2) == "kg" else 1))
-
-
-names = {}
-src = open(os.path.join(HERE, "content/gen_gunset.py")).read()
-ns = {"__file__": os.path.join(HERE, "content/gen_gunset.py")}
-import sys
-sys.argv = ["x", "/tmp"]
-exec(src.split("out = []")[0], ns)
-cls = {g[0]: g[4] for g in ns["GUNS"]}
-base = {g[0]: g[3] for g in ns["GUNS"]}
-# class table: damage range, effective range in tiles, base accuracy (percent), caliber, magazine, fire modes [name, shots], recoil per extra shot,
-# report radius (how far a shot is heard, in tiles), reload turns, pellets per shot, mod slots, jam chance (percent per trigger pull)
-SL = ["optic", "muzzle", "barrel", "mag", "under", "stock"]
-GUN = {"SMG": {"dmg": [7, 11], "range": 12, "acc": 62, "cal": "9mm", "mag": 25, "modes": [["single", 1], ["burst", 3], ["auto", 6]], "recoil": 4, "noise": 16, "reload": 1, "pellets": 1, "slots": ["optic", "muzzle", "mag", "under", "stock"], "jam": 1.0},
-       "Pistol": {"dmg": [10, 16], "range": 10, "acc": 70, "cal": "9mm", "mag": 12, "modes": [["single", 1]], "recoil": 3, "noise": 14, "reload": 1, "pellets": 1, "slots": ["optic", "muzzle", "mag", "under"], "jam": 0.6},
-       "Revolver": {"dmg": [14, 22], "range": 10, "acc": 72, "cal": ".357", "mag": 6, "modes": [["single", 1]], "recoil": 5, "noise": 18, "reload": 3, "pellets": 1, "slots": ["optic", "muzzle", "under"], "jam": 0.1},
-       "Rifle": {"dmg": [16, 24], "range": 18, "acc": 74, "cal": "5.56", "mag": 30, "modes": [["single", 1], ["burst", 3]], "recoil": 4, "noise": 20, "reload": 2, "pellets": 1, "slots": ["optic", "muzzle", "barrel", "mag", "under", "stock"], "jam": 0.8},
-       "Shotgun": {"dmg": [20, 34], "range": 6, "acc": 80, "cal": "12ga", "mag": 6, "modes": [["single", 1]], "recoil": 6, "noise": 22, "reload": 3, "pellets": 8, "slots": ["optic", "barrel", "under", "stock"], "jam": 0.8},
-       "Sniper": {"dmg": [30, 48], "range": 30, "acc": 82, "cal": ".338", "mag": 5, "modes": [["single", 1]], "recoil": 6, "noise": 24, "reload": 2, "pellets": 1, "slots": ["optic", "muzzle", "barrel", "under", "stock"], "jam": 0.5},
-       "MG": {"dmg": [12, 18], "range": 16, "acc": 55, "cal": "7.62", "mag": 50, "modes": [["burst", 4], ["auto", 8]], "recoil": 3, "noise": 22, "reload": 4, "pellets": 1, "slots": ["optic", "muzzle", "under", "stock"], "jam": 1.5},
-       "Heavy MG": {"dmg": [16, 24], "range": 20, "acc": 55, "cal": "12.7", "mag": 60, "modes": [["burst", 5], ["auto", 10]], "recoil": 3, "noise": 26, "reload": 5, "pellets": 1, "slots": ["optic", "muzzle"], "jam": 1.5},
-       "Launcher": {"dmg": [40, 70], "range": 14, "acc": 65, "cal": "40mm", "mag": 1, "modes": [["single", 1]], "recoil": 0, "noise": 24, "reload": 2, "pellets": 1, "slots": ["optic", "under"], "jam": 0.5},
-       "Laser": {"dmg": [14, 22], "range": 15, "acc": 78, "cal": "cell", "mag": 12, "modes": [["single", 1], ["burst", 2]], "recoil": 1, "noise": 8, "reload": 1, "pellets": 1, "slots": ["optic", "under"], "jam": 0.0}}
-import zlib
-items = []
-for o in json.load(open(os.path.join(MOD, "gunset.json"))):
-    if o.get("type") != "ITEM":
-        continue
-    code = o["id"][len("trl_gun_"):]
-    gun = json.loads(json.dumps(GUN[cls[code]]))
-    h = zlib.crc32(code.encode())
-    gun["acc"] += (h % 9) - 4                       # every model handles a little differently
-    gun["dmg"] = [gun["dmg"][0] + (h >> 4) % 3 - 1, gun["dmg"][1] + (h >> 6) % 3 - 1]
-    if gun["mag"] > 1:
-        gun["mag"] += ((h >> 8) % 5 - 2) * max(1, gun["mag"] // 12)
-    items.append({"id": o["id"], "name": o["name"]["str"], "desc": o["description"], "weight_g": grams(o["weight"]),
-                  "volume_ml": grams(o["weight"]) // 2, "length_mm": LEN.get(cls[code], 600), "price": int(o["price"].split()[0]),
-                  "tags": ["gun", cls[code].lower().replace(" ", "_")], "looks_like": base[code], "gun": gun})
+items = guns.records()
 # ammunition: one item per caliber and kind; a box holds `rounds`.  kind modifiers live in the game (gunplay.gd).
 AMMO = [("9mm", ["fmj", "ap", "hp"], 18, 14), (".357", ["fmj", "ap", "hp"], 12, 18), ("5.56", ["fmj", "ap", "hp"], 20, 24), ("12ga", ["shot", "slug"], 10, 20),
         (".338", ["fmj", "ap"], 10, 40), ("7.62", ["fmj", "ap"], 30, 30), ("12.7", ["fmj", "ap"], 20, 50), ("40mm", ["he"], 3, 45), ("cell", ["cell"], 20, 30)]
@@ -56,7 +15,7 @@ KINDN = {"fmj": "ball", "ap": "armor-piercing", "hp": "hollow-point", "shot": "b
 for cal, kinds, rounds, price in AMMO:
     for k in kinds:
         items.append({"id": "trl_ammo_%s_%s" % (cal.replace(".", ""), k), "name": "%s %s box" % (cal, KINDN[k]), "weight_g": rounds * 10, "volume_ml": rounds * 6, "length_mm": 80,
-                      "price": price * (2 if k == "ap" else 1), "tags": ["ammo"], "looks_like": "9mm", "ammo": {"cal": cal, "kind": k, "rounds": rounds}})
+                      "price": price * (2 if k == "ap" else 1), "tags": ["ammo"], "ammo": {"cal": cal, "kind": k, "rounds": rounds}})
 # gun mods.  effects: acc (flat, percentage points), aim (extra bonus per aiming turn), hip (bonus when not aiming), range_pct, rangepen_pct (less accuracy lost per tile),
 # close_pen (penalty inside 4 tiles), recoil_pct, noise_cap (shots are heard no further than this), dmg_pct, mag_pct, jam (percentage points), reload (turns), spread_pct
 MODS = [
@@ -82,80 +41,80 @@ MODS = [
 ]
 for mid, name, slot, eff, price, wt, desc in MODS:
     items.append({"id": "trl_mod_" + mid, "name": name, "desc": desc, "weight_g": wt, "volume_ml": max(40, wt // 2), "length_mm": 150, "price": price,
-                  "tags": ["mod"], "looks_like": "scope", "mod": {"slot": slot, "fx": eff}})
+                  "tags": ["mod"], "mod": {"slot": slot, "fx": eff}})
 # melee weapons: strictly Japanese or Russian.  Three grades each (plain, forged, masterwork).  fields: dmg, reach, acc, fast (chance of a second strike),
 # slow (attack takes two turns), parry (percent off enemy melee hit chance), stun/trip/entangle/disarm (chances), bleed, sneak (backstab multiplier),
 # sweep (also hits others beside you), brace (reach strike on a charger does more), flail (ignores the target's parry), verb
 JP = "Japanese"
 RU = "Russian"
 MELEE = [
-    # id, name, culture, class tag, dmg, reach, weight g, length mm, price, looks_like, extras
-    ("kama", "kama", JP, "blade", [6, 11], 1, 600, 400, 60, "trl_kama", {"fast": 0.4, "trip": 0.2, "bleed": True, "verb": "hook"}),
-    ("wakizashi", "wakizashi", JP, "blade", [9, 15], 1, 900, 650, 220, "wakizashi", {"parry": 10, "fast": 0.15, "bleed": True, "verb": "cut"}),
-    ("katana", "katana", JP, "blade", [12, 20], 1, 1200, 1000, 450, "katana", {"parry": 15, "bleed": True, "verb": "cut"}),
-    ("tanto", "tanto", JP, "blade", [6, 10], 1, 300, 300, 90, "tanto", {"sneak": 5, "fast": 0.3, "bleed": True, "verb": "stab"}),
-    ("nodachi", "nodachi", JP, "blade", [16, 28], 2, 2800, 1600, 700, "nodachi", {"slow": True, "parry": 10, "bleed": True, "knock": 0.35, "verb": "cleave"}),
-    ("naginata", "naginata", JP, "polearm", [11, 18], 2, 2200, 2100, 380, "naginata", {"sweep": True, "parry": 10, "bleed": True, "verb": "slash"}),
-    ("yari", "yari", JP, "polearm", [10, 16], 2, 1800, 2000, 200, "trl_yari", {"brace": True, "verb": "thrust"}),
-    ("bo", "bo staff", JP, "staff", [5, 9], 2, 1000, 1800, 40, "bokken", {"stun": 0.25, "parry": 20, "knock": 0.4, "verb": "crack"}),
-    ("jo", "jo staff", JP, "staff", [4, 8], 1, 500, 1300, 30, "bokken", {"stun": 0.2, "parry": 15, "verb": "rap"}),
-    ("nunchaku", "nunchaku", JP, "blunt", [6, 11], 1, 450, 350, 50, "trl_nunchaku", {"fast": 0.4, "stun": 0.1, "verb": "whip"}),
-    ("kusarigama", "kusarigama", JP, "chain", [7, 12], 2, 1100, 1500, 260, "trl_kusarigama", {"entangle": 0.35, "bleed": True, "verb": "lash"}),
-    ("sai", "sai", JP, "blunt", [5, 9], 1, 600, 400, 140, "punch_dagger", {"parry": 20, "disarm": 0.3, "fast": 0.2, "verb": "jab"}),
-    ("jitte", "jitte", JP, "blunt", [6, 10], 1, 700, 450, 170, "baton", {"parry": 20, "disarm": 0.45, "stun": 0.1, "verb": "strike"}),
-    ("tessen", "tessen (iron fan)", JP, "blunt", [3, 6], 1, 400, 300, 160, "baton", {"parry": 20, "sneak": 3, "fast": 0.3, "verb": "rap"}),
-    ("kunai", "kunai", JP, "blade", [4, 8], 1, 200, 220, 45, "tanto", {"sneak": 5, "fast": 0.25, "verb": "stab"}),
-    ("ono", "ono (axe)", JP, "axe", [14, 22], 1, 3500, 1100, 300, "hatchet", {"slow": True, "bleed": True, "knock": 0.5, "verb": "chop"}),
-    ("tonfa", "tonfa", JP, "blunt", [5, 9], 1, 600, 450, 70, "tonfa", {"parry": 15, "stun": 0.2, "verb": "strike"}),
-    ("shashka", "shashka", RU, "blade", [11, 18], 1, 1100, 900, 320, "cavalry_sabre", {"parry": 15, "fast": 0.15, "bleed": True, "verb": "slash"}),
-    ("kinzhal", "kinzhal", RU, "blade", [7, 12], 1, 500, 450, 130, "tanto", {"sneak": 5, "fast": 0.25, "bleed": True, "verb": "stab"}),
-    ("finka", "Finka knife", RU, "blade", [6, 10], 1, 250, 280, 70, "tanto", {"sneak": 5, "fast": 0.25, "bleed": True, "verb": "stab"}),
-    ("lopata", "MPL-50 sapper shovel", RU, "axe", [9, 15], 1, 1300, 500, 55, "shovel", {"stun": 0.15, "knock": 0.3, "verb": "chop"}),
-    ("kistien", "kistien flail", RU, "chain", [8, 16], 1, 900, 500, 90, "2h_flail_wood", {"stun": 0.2, "flail": True, "knock": 0.4, "verb": "smash"}),
-    ("chekan", "chekan axe-hammer", RU, "axe", [10, 17], 1, 900, 650, 150, "hatchet", {"bleed": True, "stun": 0.1, "verb": "hack"}),
-    ("topor", "topor axe", RU, "axe", [12, 20], 1, 1600, 700, 100, "hatchet", {"bleed": True, "knock": 0.3, "verb": "chop"}),
-    ("kastet", "kastet knuckles", RU, "blunt", [4, 8], 1, 250, 100, 40, "knuckle_brass", {"fast": 0.45, "stun": 0.15, "verb": "punch"}),
+    # id, name, culture, class tag, dmg, reach, weight g, length mm, price, extras
+    ("kama", "kama", JP, "blade", [6, 11], 1, 600, 400, 60, {"fast": 0.4, "trip": 0.2, "bleed": True, "verb": "hook"}),
+    ("wakizashi", "wakizashi", JP, "blade", [9, 15], 1, 900, 650, 220, {"parry": 10, "fast": 0.15, "bleed": True, "verb": "cut"}),
+    ("katana", "katana", JP, "blade", [12, 20], 1, 1200, 1000, 450, {"parry": 15, "bleed": True, "verb": "cut"}),
+    ("tanto", "tanto", JP, "blade", [6, 10], 1, 300, 300, 90, {"sneak": 5, "fast": 0.3, "bleed": True, "verb": "stab"}),
+    ("nodachi", "nodachi", JP, "blade", [16, 28], 2, 2800, 1600, 700, {"slow": True, "parry": 10, "bleed": True, "knock": 0.35, "verb": "cleave"}),
+    ("naginata", "naginata", JP, "polearm", [11, 18], 2, 2200, 2100, 380, {"sweep": True, "parry": 10, "bleed": True, "verb": "slash"}),
+    ("yari", "yari", JP, "polearm", [10, 16], 2, 1800, 2000, 200, {"brace": True, "verb": "thrust"}),
+    ("bo", "bo staff", JP, "staff", [5, 9], 2, 1000, 1800, 40, {"stun": 0.25, "parry": 20, "knock": 0.4, "verb": "crack"}),
+    ("jo", "jo staff", JP, "staff", [4, 8], 1, 500, 1300, 30, {"stun": 0.2, "parry": 15, "verb": "rap"}),
+    ("nunchaku", "nunchaku", JP, "blunt", [6, 11], 1, 450, 350, 50, {"fast": 0.4, "stun": 0.1, "verb": "whip"}),
+    ("kusarigama", "kusarigama", JP, "chain", [7, 12], 2, 1100, 1500, 260, {"entangle": 0.35, "bleed": True, "verb": "lash"}),
+    ("sai", "sai", JP, "blunt", [5, 9], 1, 600, 400, 140, {"parry": 20, "disarm": 0.3, "fast": 0.2, "verb": "jab"}),
+    ("jitte", "jitte", JP, "blunt", [6, 10], 1, 700, 450, 170, {"parry": 20, "disarm": 0.45, "stun": 0.1, "verb": "strike"}),
+    ("tessen", "tessen (iron fan)", JP, "blunt", [3, 6], 1, 400, 300, 160, {"parry": 20, "sneak": 3, "fast": 0.3, "verb": "rap"}),
+    ("kunai", "kunai", JP, "blade", [4, 8], 1, 200, 220, 45, {"sneak": 5, "fast": 0.25, "verb": "stab"}),
+    ("ono", "ono (axe)", JP, "axe", [14, 22], 1, 3500, 1100, 300, {"slow": True, "bleed": True, "knock": 0.5, "verb": "chop"}),
+    ("tonfa", "tonfa", JP, "blunt", [5, 9], 1, 600, 450, 70, {"parry": 15, "stun": 0.2, "verb": "strike"}),
+    ("shashka", "shashka", RU, "blade", [11, 18], 1, 1100, 900, 320, {"parry": 15, "fast": 0.15, "bleed": True, "verb": "slash"}),
+    ("kinzhal", "kinzhal", RU, "blade", [7, 12], 1, 500, 450, 130, {"sneak": 5, "fast": 0.25, "bleed": True, "verb": "stab"}),
+    ("finka", "Finka knife", RU, "blade", [6, 10], 1, 250, 280, 70, {"sneak": 5, "fast": 0.25, "bleed": True, "verb": "stab"}),
+    ("lopata", "MPL-50 sapper shovel", RU, "axe", [9, 15], 1, 1300, 500, 55, {"stun": 0.15, "knock": 0.3, "verb": "chop"}),
+    ("kistien", "kistien flail", RU, "chain", [8, 16], 1, 900, 500, 90, {"stun": 0.2, "flail": True, "knock": 0.4, "verb": "smash"}),
+    ("chekan", "chekan axe-hammer", RU, "axe", [10, 17], 1, 900, 650, 150, {"bleed": True, "stun": 0.1, "verb": "hack"}),
+    ("topor", "topor axe", RU, "axe", [12, 20], 1, 1600, 700, 100, {"bleed": True, "knock": 0.3, "verb": "chop"}),
+    ("kastet", "kastet knuckles", RU, "blunt", [4, 8], 1, 250, 100, 40, {"fast": 0.45, "stun": 0.15, "verb": "punch"}),
 ]
 GRADES = [("", "", 1.0, 0, 1.0, 0), ("_f", "forged ", 1.2, 4, 3.5, 0), ("_m", "masterwork ", 1.45, 8, 9.0, 5)]
-for mid, name, culture, klass, dmg, reach, wt, ln, price, looks, extra in MELEE:
+for mid, name, culture, klass, dmg, reach, wt, ln, price, extra in MELEE:
     for suf, pre, dm, acc, pm, parry_bonus in GRADES:
         m = {"dmg": [max(1, round(dmg[0] * dm)), max(1, round(dmg[1] * dm))], "reach": reach, "acc": acc}
         m.update(extra)
         if "parry" in m or parry_bonus:
             m["parry"] = m.get("parry", 0) + parry_bonus
         items.append({"id": "trl_mel_" + mid + suf, "name": pre + name, "desc": "A %s weapon (%s)." % (culture, klass), "weight_g": wt, "volume_ml": max(60, wt // 3),
-                      "length_mm": ln, "price": int(price * pm), "tags": ["melee", klass, culture.lower()], "looks_like": looks, "melee": m, "culture": culture})
+                      "length_mm": ln, "price": int(price * pm), "tags": ["melee", klass, culture.lower()], "melee": m, "culture": culture})
 # containers: the pocket model
 P = lambda i, vol, wt, flex=False, tags=None, water=False, length=0: {"id": i, "max_volume_ml": vol, "max_weight_g": wt, "flexible": flex,
                                                                     "allow_tags": tags or [], "watertight": water, "max_item_length_mm": length}
 items += [
-    {"id": "trl_backpack", "name": "commuter backpack", "weight_g": 700, "volume_ml": 1500, "length_mm": 450, "price": 120, "tags": ["container", "worn"], "looks_like": "backpack",
+    {"id": "trl_backpack", "name": "commuter backpack", "weight_g": 700, "volume_ml": 1500, "length_mm": 450, "price": 120, "tags": ["container", "worn"],
      "pockets": [P("main", 22000, 15000, True), P("side", 1500, 3000, False, ["bottle"], False, 300)]},
-    {"id": "trl_holster", "name": "thigh holster", "weight_g": 250, "volume_ml": 400, "length_mm": 300, "price": 60, "tags": ["container", "worn"], "looks_like": "holster",
+    {"id": "trl_holster", "name": "thigh holster", "weight_g": 250, "volume_ml": 400, "length_mm": 300, "price": 60, "tags": ["container", "worn"],
      "pockets": [P("holster", 600, 2500, False, ["pistol", "revolver"], False, 260)]},
-    {"id": "trl_coat", "name": "long coat", "weight_g": 1400, "volume_ml": 3000, "length_mm": 800, "price": 300, "tags": ["container", "worn"], "looks_like": "trenchcoat", "armor": {"slot": "chest", "phys": 1, "dur": 20},
+    {"id": "trl_coat", "name": "long coat", "weight_g": 1400, "volume_ml": 3000, "length_mm": 800, "price": 300, "tags": ["container", "worn"], "armor": {"slot": "chest", "phys": 1, "dur": 20},
      "pockets": [P("inner", 2500, 4000, True), P("left", 600, 1000, True), P("right", 600, 1000, True)]},
-    {"id": "trl_helmet", "name": "ballistic helmet", "desc": "Armor 3 on the head.", "weight_g": 1200, "volume_ml": 3000, "length_mm": 300, "price": 350, "tags": ["armor", "worn"], "looks_like": "helmet_ball", "armor": {"slot": "head", "phys": 3, "dur": 40}},
-    {"id": "trl_visor", "name": "riot visor helmet", "desc": "Armor 5 on the head.", "weight_g": 1900, "volume_ml": 4000, "length_mm": 320, "price": 800, "tags": ["armor", "worn"], "looks_like": "helmet_riot", "armor": {"slot": "head", "phys": 5, "dur": 60}},
-    {"id": "trl_vest", "name": "ballistic vest", "desc": "Armor 4 on the chest.", "weight_g": 3200, "volume_ml": 5000, "length_mm": 500, "price": 500, "tags": ["armor", "worn"], "looks_like": "vest_ballistic", "armor": {"slot": "chest", "phys": 4, "dur": 60}},
-    {"id": "trl_vest_heavy", "name": "plate carrier", "desc": "Armor 7 on the chest.", "weight_g": 6800, "volume_ml": 8000, "length_mm": 520, "price": 1400, "tags": ["armor", "worn"], "looks_like": "vest_plate", "armor": {"slot": "chest", "phys": 7, "dur": 90}},
-    {"id": "trl_bracers", "name": "composite arm guards", "desc": "Armor 2 on both arms.", "weight_g": 1100, "volume_ml": 2000, "length_mm": 350, "price": 300, "tags": ["armor", "worn"], "looks_like": "armguard", "armor": {"slot": "arms", "phys": 2, "dur": 40}},
-    {"id": "trl_greaves", "name": "shin guards", "desc": "Armor 2 on both legs.", "weight_g": 1500, "volume_ml": 2500, "length_mm": 400, "price": 300, "tags": ["armor", "worn"], "looks_like": "legguard", "armor": {"slot": "legs", "phys": 2, "dur": 40}},
-    {"id": "trl_pouch", "name": "belt pouch", "weight_g": 120, "volume_ml": 250, "length_mm": 180, "price": 20, "tags": ["container"], "looks_like": "chestpouch",
+    {"id": "trl_helmet", "name": "ballistic helmet", "desc": "Armor 3 on the head.", "weight_g": 1200, "volume_ml": 3000, "length_mm": 300, "price": 350, "tags": ["armor", "worn"], "armor": {"slot": "head", "phys": 3, "dur": 40}},
+    {"id": "trl_visor", "name": "riot visor helmet", "desc": "Armor 5 on the head.", "weight_g": 1900, "volume_ml": 4000, "length_mm": 320, "price": 800, "tags": ["armor", "worn"], "armor": {"slot": "head", "phys": 5, "dur": 60}},
+    {"id": "trl_vest", "name": "ballistic vest", "desc": "Armor 4 on the chest.", "weight_g": 3200, "volume_ml": 5000, "length_mm": 500, "price": 500, "tags": ["armor", "worn"], "armor": {"slot": "chest", "phys": 4, "dur": 60}},
+    {"id": "trl_vest_heavy", "name": "plate carrier", "desc": "Armor 7 on the chest.", "weight_g": 6800, "volume_ml": 8000, "length_mm": 520, "price": 1400, "tags": ["armor", "worn"], "armor": {"slot": "chest", "phys": 7, "dur": 90}},
+    {"id": "trl_bracers", "name": "composite arm guards", "desc": "Armor 2 on both arms.", "weight_g": 1100, "volume_ml": 2000, "length_mm": 350, "price": 300, "tags": ["armor", "worn"], "armor": {"slot": "arms", "phys": 2, "dur": 40}},
+    {"id": "trl_greaves", "name": "shin guards", "desc": "Armor 2 on both legs.", "weight_g": 1500, "volume_ml": 2500, "length_mm": 400, "price": 300, "tags": ["armor", "worn"], "armor": {"slot": "legs", "phys": 2, "dur": 40}},
+    {"id": "trl_pouch", "name": "belt pouch", "weight_g": 120, "volume_ml": 250, "length_mm": 180, "price": 20, "tags": ["container"],
      "pockets": [P("main", 1200, 2000, True)]},
-    {"id": "trl_duffel", "name": "duffel bag", "weight_g": 900, "volume_ml": 1800, "length_mm": 700, "price": 80, "tags": ["container"], "looks_like": "duffelbag",
+    {"id": "trl_duffel", "name": "duffel bag", "weight_g": 900, "volume_ml": 1800, "length_mm": 700, "price": 80, "tags": ["container"],
      "pockets": [P("main", 55000, 30000, True)]},
-    {"id": "trl_water_bottle", "name": "water bottle", "weight_g": 80, "volume_ml": 600, "length_mm": 230, "price": 5, "tags": ["container", "bottle"], "looks_like": "bottle_plastic",
+    {"id": "trl_water_bottle", "name": "water bottle", "weight_g": 80, "volume_ml": 600, "length_mm": 230, "price": 5, "tags": ["container", "bottle"],
      "pockets": [P("liquid", 500, 600, False, ["liquid"], True, 0)]},
-    {"id": "trl_yen", "name": "yen notes", "weight_g": 1, "volume_ml": 1, "length_mm": 0, "price": 1, "tags": ["money"], "looks_like": "money_bundle_hundred"},
-    {"id": "trl_ammo", "name": "ammo box", "weight_g": 120, "volume_ml": 70, "length_mm": 60, "price": 20, "tags": ["ammo"], "looks_like": "9mm", "ammo": {"cal": "9mm", "kind": "fmj", "rounds": 12}},
+    {"id": "trl_yen", "name": "yen notes", "weight_g": 1, "volume_ml": 1, "length_mm": 0, "price": 1, "tags": ["money"]},
+    {"id": "trl_ammo", "name": "ammo box", "weight_g": 120, "volume_ml": 70, "length_mm": 60, "price": 20, "tags": ["ammo"], "ammo": {"cal": "9mm", "kind": "fmj", "rounds": 12}},
     {"id": "trl_water", "name": "water", "weight_g": 1, "volume_ml": 1, "length_mm": 0, "price": 0, "tags": ["liquid"], "per_unit": True},
-    {"id": "trl_ration", "name": "cyber ration bar", "weight_g": 90, "volume_ml": 80, "length_mm": 150, "price": 15, "tags": ["food"], "looks_like": "granola", "food": {"hp": 3, "stam": 6, "drink": False, "alcohol": False, "kcal": 500}},
-    {"id": "trl_parcel", "name": "sealed parcel", "weight_g": 600, "volume_ml": 1500, "length_mm": 250, "price": 0, "tags": ["job"], "looks_like": "box_small"},
-    {"id": "trl_datacase", "name": "encrypted data case", "weight_g": 1800, "volume_ml": 6000, "length_mm": 420, "price": 400, "tags": ["job"], "looks_like": "briefcase"},
-    {"id": "trl_medkit", "name": "trauma patch", "weight_g": 120, "volume_ml": 100, "length_mm": 120, "price": 40, "tags": ["medical"], "looks_like": "bandages", "desc": "Heals 25 and mends your worst limb a little."},
-    {"id": "trl_kit_repair", "name": "field repair kit", "desc": "Patch plates, hoses and wiring.  Restores 25 points to one vehicle part.", "weight_g": 1500, "volume_ml": 3000, "length_mm": 350, "price": 90, "tags": ["tool"], "looks_like": "toolbox", "repair": 25},
-    {"id": "trl_credstick", "name": "credstick", "weight_g": 10, "volume_ml": 4, "length_mm": 80, "price": 0, "tags": ["card"], "looks_like": "cash_card"},
+    {"id": "trl_ration", "name": "cyber ration bar", "weight_g": 90, "volume_ml": 80, "length_mm": 150, "price": 15, "tags": ["food"], "food": {"hp": 3, "stam": 6, "drink": False, "alcohol": False, "kcal": 500}},
+    {"id": "trl_parcel", "name": "sealed parcel", "weight_g": 600, "volume_ml": 1500, "length_mm": 250, "price": 0, "tags": ["job"]},
+    {"id": "trl_datacase", "name": "encrypted data case", "weight_g": 1800, "volume_ml": 6000, "length_mm": 420, "price": 400, "tags": ["job"]},
+    {"id": "trl_medkit", "name": "trauma patch", "weight_g": 120, "volume_ml": 100, "length_mm": 120, "price": 40, "tags": ["medical"], "desc": "Heals 25 and mends your worst limb a little."},
+    {"id": "trl_kit_repair", "name": "field repair kit", "desc": "Patch plates, hoses and wiring.  Restores 25 points to one vehicle part.", "weight_g": 1500, "volume_ml": 3000, "length_mm": 350, "price": 90, "tags": ["tool"], "repair": 25},
+    {"id": "trl_credstick", "name": "credstick", "weight_g": 10, "volume_ml": 4, "length_mm": 80, "price": 0, "tags": ["card"]},
 ]
 
 # vehicle engines: power = top speed in tiles a turn, drain = turns per battery point, hp = hit points of the engine part, fits = the vehicle kinds it can drive
@@ -169,43 +128,43 @@ ENGINES = [
 ]
 for eid, ename, power, drain, hp, fits, price, wt in ENGINES:
     items.append({"id": "trl_eng_" + eid, "name": ename, "desc": "Vehicle engine: top speed %d, %d hp, fits %s." % (power, hp, ", ".join(fits)), "weight_g": wt, "volume_ml": wt // 2, "length_mm": 900, "price": price,
-                  "tags": ["engine"], "looks_like": "engine_block", "engine": {"power": power, "drain": drain, "hp": hp, "fits": fits}})
+                  "tags": ["engine"], "engine": {"power": power, "drain": drain, "hp": hp, "fits": fits}})
 # ---- more armor: the paper doll shows each piece, and every one has its own icon (tools/content/pd_armor.py)
 items += [
-    {"id": "trl_balaclava", "name": "balaclava", "desc": "Armor 1 on the head.  Hides your face.", "weight_g": 150, "volume_ml": 300, "length_mm": 250, "price": 60, "tags": ["armor", "worn"], "looks_like": "helmet_ball", "armor": {"slot": "head", "phys": 1, "dur": 12}},
-    {"id": "trl_helm_tac", "name": "tactical helmet", "desc": "Armor 4 on the head, with a night-vision mount.", "weight_g": 1500, "volume_ml": 3200, "length_mm": 310, "price": 650, "tags": ["armor", "worn"], "looks_like": "helmet_ball", "armor": {"slot": "head", "phys": 4, "dur": 50}},
-    {"id": "trl_jacket", "name": "riot jacket", "desc": "Armor 2 on the chest.", "weight_g": 1800, "volume_ml": 3500, "length_mm": 600, "price": 220, "tags": ["armor", "worn"], "looks_like": "vest_ballistic", "armor": {"slot": "chest", "phys": 2, "dur": 36}},
-    {"id": "trl_vest_corp", "name": "corporate liner vest", "desc": "Armor 3 on the chest.  Slim enough to wear under a suit.", "weight_g": 2200, "volume_ml": 3500, "length_mm": 500, "price": 900, "tags": ["armor", "worn"], "looks_like": "vest_ballistic", "armor": {"slot": "chest", "phys": 3, "dur": 55}},
-    {"id": "trl_bracers_heavy", "name": "reinforced arm armor", "desc": "Armor 4 on both arms.", "weight_g": 2400, "volume_ml": 3000, "length_mm": 380, "price": 700, "tags": ["armor", "worn"], "looks_like": "armguard", "armor": {"slot": "arms", "phys": 4, "dur": 60}},
-    {"id": "trl_greaves_heavy", "name": "reinforced leg armor", "desc": "Armor 4 on both legs.", "weight_g": 3000, "volume_ml": 4000, "length_mm": 450, "price": 700, "tags": ["armor", "worn"], "looks_like": "legguard", "armor": {"slot": "legs", "phys": 4, "dur": 60}},
-    {"id": "trl_kneepads", "name": "knee pads", "desc": "Armor 1 on both legs.", "weight_g": 400, "volume_ml": 800, "length_mm": 200, "price": 70, "tags": ["armor", "worn"], "looks_like": "legguard", "armor": {"slot": "legs", "phys": 1, "dur": 20}},
+    {"id": "trl_balaclava", "name": "balaclava", "desc": "Armor 1 on the head.  Hides your face.", "weight_g": 150, "volume_ml": 300, "length_mm": 250, "price": 60, "tags": ["armor", "worn"], "armor": {"slot": "head", "phys": 1, "dur": 12}},
+    {"id": "trl_helm_tac", "name": "tactical helmet", "desc": "Armor 4 on the head, with a night-vision mount.", "weight_g": 1500, "volume_ml": 3200, "length_mm": 310, "price": 650, "tags": ["armor", "worn"], "armor": {"slot": "head", "phys": 4, "dur": 50}},
+    {"id": "trl_jacket", "name": "riot jacket", "desc": "Armor 2 on the chest.", "weight_g": 1800, "volume_ml": 3500, "length_mm": 600, "price": 220, "tags": ["armor", "worn"], "armor": {"slot": "chest", "phys": 2, "dur": 36}},
+    {"id": "trl_vest_corp", "name": "corporate liner vest", "desc": "Armor 3 on the chest.  Slim enough to wear under a suit.", "weight_g": 2200, "volume_ml": 3500, "length_mm": 500, "price": 900, "tags": ["armor", "worn"], "armor": {"slot": "chest", "phys": 3, "dur": 55}},
+    {"id": "trl_bracers_heavy", "name": "reinforced arm armor", "desc": "Armor 4 on both arms.", "weight_g": 2400, "volume_ml": 3000, "length_mm": 380, "price": 700, "tags": ["armor", "worn"], "armor": {"slot": "arms", "phys": 4, "dur": 60}},
+    {"id": "trl_greaves_heavy", "name": "reinforced leg armor", "desc": "Armor 4 on both legs.", "weight_g": 3000, "volume_ml": 4000, "length_mm": 450, "price": 700, "tags": ["armor", "worn"], "armor": {"slot": "legs", "phys": 4, "dur": 60}},
+    {"id": "trl_kneepads", "name": "knee pads", "desc": "Armor 1 on both legs.", "weight_g": 400, "volume_ml": 800, "length_mm": 200, "price": 70, "tags": ["armor", "worn"], "armor": {"slot": "legs", "phys": 1, "dur": 20}},
 ]
 
-# ---- food and drink.  food = {hp: healed, stam: stamina restored, drink, alcohol}; sprites come from the tilesets' trl_f_* art
+# ---- food and drink.  food = {hp: healed, stam: stamina restored, drink, alcohol}; each has its own icon in gfx/Trilobit64
 FOODS = [
-    # id, name, price, hp, stamina, sprite, kind (""/drink/alcohol)
-    ("cup_ramen", "cup ramen", 18, 4, 6, "trl_f_cup_ramen", ""), ("gyoza", "gyoza plate", 25, 5, 6, "trl_f_gyoza", ""),
-    ("onigiri", "onigiri", 12, 3, 4, "trl_f_onigiri", ""), ("sashimi", "sashimi plate", 60, 8, 8, "trl_f_sashimi", ""),
-    ("yakitori", "yakitori skewers", 30, 6, 6, "trl_f_yakitori", ""), ("katsu", "katsu bento", 55, 10, 10, "trl_f_katsu_bento", ""),
-    ("unagi", "unagi donburi", 90, 12, 12, "trl_f_unagi_don", ""), ("miso", "miso soup", 15, 3, 5, "trl_f_miso_soup", ""),
-    ("okonomiyaki", "okonomiyaki", 35, 7, 8, "trl_f_okonomiyaki", ""), ("takoyaki", "takoyaki", 28, 5, 6, "trl_f_takoyaki", ""),
-    ("pelmeni", "pelmeni", 28, 6, 8, "trl_f_pelmeni", ""), ("borscht", "borscht", 24, 6, 8, "trl_f_borscht", ""),
-    ("blini", "blini", 20, 4, 5, "trl_f_blini", ""), ("caviar_blini", "caviar blini", 75, 8, 8, "trl_f_caviar_blini", ""),
-    ("solyanka", "solyanka", 30, 7, 8, "trl_f_solyanka", ""), ("piroshki", "piroshki", 14, 3, 4, "trl_f_piroshki", ""),
-    ("kotleta", "kotleta and kasha", 34, 8, 9, "trl_f_kotleta", ""), ("chow_mein", "chow mein", 32, 7, 8, "trl_f_chow_mein", ""),
-    ("fried_rice", "fried rice", 26, 6, 7, "trl_f_fried_rice", ""), ("hamburger", "hamburger", 30, 7, 8, "hamburger", ""),
-    ("taco", "taco", 22, 5, 5, "taco", ""), ("fries", "fries", 14, 2, 4, "fries", ""), ("crepe", "crepe", 24, 4, 5, "crepe", ""),
-    ("sencha", "sencha tea", 8, 1, 6, "trl_f_sencha", "drink"), ("oolong", "oolong tea", 9, 1, 6, "trl_f_oolong", "drink"),
-    ("kan_coffee", "canned coffee", 7, 0, 10, "trl_f_kan_coffee", "drink"), ("kvass", "kvass", 8, 1, 5, "trl_f_kvass", "drink"),
-    ("kompot", "kompot", 8, 1, 5, "trl_f_kompot", "drink"), ("cola", "cola", 7, 0, 6, "cola", "drink"),
-    ("beer", "beer", 12, 1, 0, "beer", "alcohol"), ("vodka", "vodka shot", 15, 1, 0, "vodka", "alcohol"), ("sake", "sake", 18, 1, 0, "sake_filtered", "alcohol"),
+    # id, name, price, hp, stamina, kind (""/drink/alcohol)
+    ("cup_ramen", "cup ramen", 18, 4, 6, ""), ("gyoza", "gyoza plate", 25, 5, 6, ""),
+    ("onigiri", "onigiri", 12, 3, 4, ""), ("sashimi", "sashimi plate", 60, 8, 8, ""),
+    ("yakitori", "yakitori skewers", 30, 6, 6, ""), ("katsu", "katsu bento", 55, 10, 10, ""),
+    ("unagi", "unagi donburi", 90, 12, 12, ""), ("miso", "miso soup", 15, 3, 5, ""),
+    ("okonomiyaki", "okonomiyaki", 35, 7, 8, ""), ("takoyaki", "takoyaki", 28, 5, 6, ""),
+    ("pelmeni", "pelmeni", 28, 6, 8, ""), ("borscht", "borscht", 24, 6, 8, ""),
+    ("blini", "blini", 20, 4, 5, ""), ("caviar_blini", "caviar blini", 75, 8, 8, ""),
+    ("solyanka", "solyanka", 30, 7, 8, ""), ("piroshki", "piroshki", 14, 3, 4, ""),
+    ("kotleta", "kotleta and kasha", 34, 8, 9, ""), ("chow_mein", "chow mein", 32, 7, 8, ""),
+    ("fried_rice", "fried rice", 26, 6, 7, ""), ("hamburger", "hamburger", 30, 7, 8, ""),
+    ("taco", "taco", 22, 5, 5, ""), ("fries", "fries", 14, 2, 4, ""), ("crepe", "crepe", 24, 4, 5, ""),
+    ("sencha", "sencha tea", 8, 1, 6, "drink"), ("oolong", "oolong tea", 9, 1, 6, "drink"),
+    ("kan_coffee", "canned coffee", 7, 0, 10, "drink"), ("kvass", "kvass", 8, 1, 5, "drink"),
+    ("kompot", "kompot", 8, 1, 5, "drink"), ("cola", "cola", 7, 0, 6, "drink"),
+    ("beer", "beer", 12, 1, 0, "alcohol"), ("vodka", "vodka shot", 15, 1, 0, "alcohol"), ("sake", "sake", 18, 1, 0, "alcohol"),
     # the grocery
-    ("black_bread", "black bread", 10, 4, 6, "trl_f_black_bread", ""), ("tushonka", "canned stew", 16, 6, 8, "trl_f_tushonka", ""),
-    ("herring", "salted herring", 14, 4, 5, "trl_f_herring", ""), ("natto", "natto", 9, 3, 4, "trl_f_natto", ""),
-    ("mochi", "mochi", 10, 2, 4, "trl_f_mochi", ""), ("apple", "apple", 5, 2, 3, "apple", ""), ("orange", "orange", 5, 2, 3, "orange", ""),
-    ("banana", "banana", 5, 2, 3, "banana", ""), ("milk", "milk", 8, 2, 4, "milk", "drink"), ("protein", "protein brick", 20, 5, 10, "trl_cf_protein_brick", ""),
-    ("glucose", "glucose cube", 9, 1, 14, "trl_cf_glucose_cube", ""), ("hydrogel", "hydration gel", 10, 1, 12, "trl_cf_hydration_gel", "drink"),
-    ("chocolate", "chocolate bar", 7, 1, 8, "chocolate", ""), ("cheese", "cheese wedge", 12, 3, 4, "cheese", ""),
+    ("black_bread", "black bread", 10, 4, 6, ""), ("tushonka", "canned stew", 16, 6, 8, ""),
+    ("herring", "salted herring", 14, 4, 5, ""), ("natto", "natto", 9, 3, 4, ""),
+    ("mochi", "mochi", 10, 2, 4, ""), ("apple", "apple", 5, 2, 3, ""), ("orange", "orange", 5, 2, 3, ""),
+    ("banana", "banana", 5, 2, 3, ""), ("milk", "milk", 8, 2, 4, "drink"), ("protein", "protein brick", 20, 5, 10, ""),
+    ("glucose", "glucose cube", 9, 1, 14, ""), ("hydrogel", "hydration gel", 10, 1, 12, "drink"),
+    ("chocolate", "chocolate bar", 7, 1, 8, ""), ("cheese", "cheese wedge", 12, 3, 4, ""),
 ]
 # Energy and water.  kcal: every food and drink has one (2,500 kcal = 24 hours of not being hungry).  ml: a drink's millilitres (500 mL of water = 4 hours of not
 # being thirsty); hydr: how much of that counts as water (1.0 for tea, soft drinks and milk; strong drink dehydrates).  Figures are typical servings.
@@ -216,25 +175,25 @@ KCAL = {"cup_ramen": 420, "gyoza": 320, "onigiri": 190, "sashimi": 280, "yakitor
         "milk": 150, "protein": 350, "glucose": 100, "hydrogel": 20, "chocolate": 230, "cheese": 200}
 ML = {"sencha": 250, "oolong": 250, "kan_coffee": 190, "kvass": 330, "kompot": 330, "cola": 330, "beer": 350, "vodka": 40, "sake": 180, "milk": 250, "hydrogel": 200}
 HYDR = {"beer": 0.5, "vodka": 0.0, "sake": 0.3}
-for fid, nm, pr, hp, st, spr, kind in FOODS:
+for fid, nm, pr, hp, st, kind in FOODS:
     fd = {"hp": hp, "stam": st, "drink": kind != "", "alcohol": kind == "alcohol", "kcal": KCAL[fid]}
     if kind:
         fd["ml"] = ML[fid]
         fd["hydr"] = HYDR.get(fid, 1.0)
     items.append({"id": "trl_food_" + fid, "name": nm, "desc": "%s.  %d kcal%s.  Heals %d, restores %d stamina." % (nm.capitalize(), KCAL[fid], (", %d mL" % ML[fid]) if kind else "", hp, st), "weight_g": 250, "volume_ml": 300, "length_mm": 120,
-                  "price": pr, "tags": ["food"] + (["drink"] if kind else []), "looks_like": spr, "food": fd})
+                  "price": pr, "tags": ["food"] + (["drink"] if kind else []), "food": fd})
 
 # ---- faith items (church and shrine shops); `use` is what they do when used
 FAITH = [
-    ("candle", "church candle", 20, "trl_church_candle", {"heat": -8, "msg": "You light the candle and say a short prayer.  Things feel quieter."}),
-    ("icon", "small icon", 120, "trl_icon", {"bless": 480, "msg": "You hold the icon.  You feel watched over for a while."}),
-    ("gospel", "pocket gospel", 60, "trl_gospel", {"heat": -15, "msg": "You read a few lines.  Your pulse slows."}),
-    ("omamori", "omamori charm", 150, "trl_omamori", {"bless": 600, "msg": "The charm warms in your hand.  Luck is with you for a while."}),
-    ("ofuda", "ofuda paper ward", 90, "trl_ofuda", {"bless": 300, "msg": "You tuck the ward in your sleeve."}),
-    ("ema", "ema plaque", 50, "trl_ema", {"hp": 8, "msg": "You write a wish and hang it.  You feel lighter."}),
+    ("candle", "church candle", 20, {"heat": -8, "msg": "You light the candle and say a short prayer.  Things feel quieter."}),
+    ("icon", "small icon", 120, {"bless": 480, "msg": "You hold the icon.  You feel watched over for a while."}),
+    ("gospel", "pocket gospel", 60, {"heat": -15, "msg": "You read a few lines.  Your pulse slows."}),
+    ("omamori", "omamori charm", 150, {"bless": 600, "msg": "The charm warms in your hand.  Luck is with you for a while."}),
+    ("ofuda", "ofuda paper ward", 90, {"bless": 300, "msg": "You tuck the ward in your sleeve."}),
+    ("ema", "ema plaque", 50, {"hp": 8, "msg": "You write a wish and hang it.  You feel lighter."}),
 ]
-for fid, nm, pr, spr, use in FAITH:
-    items.append({"id": "trl_faith_" + fid, "name": nm, "desc": "A %s.  Use it for a small blessing." % nm, "weight_g": 80, "volume_ml": 100, "length_mm": 100, "price": pr, "tags": ["charm"], "looks_like": spr, "use": use})
+for fid, nm, pr, use in FAITH:
+    items.append({"id": "trl_faith_" + fid, "name": nm, "desc": "A %s.  Use it for a small blessing." % nm, "weight_g": 80, "volume_ml": 100, "length_mm": 100, "price": pr, "tags": ["charm"], "use": use})
 
 json.dump(items, open(os.path.join(HERE, "../data/items.json"), "w"), indent=1)
 print(len(items), "items exported")

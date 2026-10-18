@@ -1,5 +1,5 @@
 extends RefCounted
-## An item instance with CDDA-style pockets.
+## An item instance with nested pockets (volume, weight, tags, watertight, length).
 ##  - rigid pocket: its capacity lives inside the item's own volume (the item does not grow)
 ##  - flexible pocket: the item grows by the volume of what it holds (a bag collapses when empty)
 ##  - a pocket can restrict by tag, require watertight for liquids, and cap item length
@@ -99,7 +99,7 @@ func why_not(pi: int, it) -> String:
 		return "too heavy"
 	return ""
 
-## put `it` into the best-fitting pocket of this item (smallest free volume that still fits, like CDDA's best-fit rule); false if none
+## put `it` into the best-fitting pocket of this item (smallest free volume that still fits); false if none
 func insert(it) -> bool:
 	var best := -1
 	var best_free := 1 << 60

@@ -1,5 +1,5 @@
 extends Node2D
-## Draws the game around the player with a CDDA-format tileset: terrain, items, cars, people with awareness marks, a target bracket.
+## Draws the game around the player with the Trilobit tileset: terrain, items, cars, people with awareness marks, a target bracket.
 const CG = preload("res://src/citygen.gd")
 const PD = preload("res://src/paperdoll.gd")
 const DS = preload("res://src/dollspec.gd")
@@ -44,11 +44,10 @@ func item_sprite(it) -> String:
 		return id
 	if pd.has("icon:" + id):
 		return "icon:" + id
-	var ll: String = it.def.get("looks_like", "")
-	return ll if tileset.has(ll) else "money_bundle_hundred"
+	return "trl_parcel"                    # any item without its own art yet shows as a parcel
 
 func person_sprite(i: int) -> String:
-	return "npc_female" if game.fem[i] == 1 else "npc_male"
+	return "trl_person_f" if game.fem[i] == 1 else "trl_person_m"
 
 ## the paper doll.  The 64px set has top-down layers (facing up, centred on the cell) that are stacked by z and turned to the facing.
 func doll_ready() -> bool:
@@ -370,10 +369,10 @@ func _draw() -> void:
 			draw_circle(centre + Vector2(T / 2.0, T * 0.9), T * 0.28, Color(0, 0, 0, 0.35))
 			draw_circle(centre + Vector2(T / 2.0, T * 0.95), 5.0 * S, Color(1, 0.7, 0.2, 0.9))
 		if not doll_ready():
-			_blit("player_male", centre)
+			_blit("trl_person_player", centre)
 		_draw_doll(DS.for_player(game), centre, game.facing)
 	else:
-		_blit("player_male", centre, Color(1, 1, 1, 0.9))
+		_draw_doll(DS.for_player(game), centre, game.facing, Color(1, 1, 1, 0.9))
 	_draw_cranes(ox, oy, base)
 	# the job target, if it is on this level
 	if not game.eco.job.is_empty() and int(game.eco.job["cell"]) / s2 == base / s2:
@@ -581,7 +580,7 @@ func _meter(x: float, y: float, w: float, h: float, f: float, col: Color, label:
 	if right != "":
 		_txt(x, y + h - 3, right, int(h) - 3, Color.WHITE, w - 4, HORIZONTAL_ALIGNMENT_RIGHT)
 
-## the right-hand panel, in the spirit of the CDDA sidebar: where and when, the (purchasable) nav slot, the body, the meters, status effects and gear.
+## the right-hand panel, as a sidebar: where and when, the (purchasable) nav slot, the body, the meters, status effects and gear.
 ## There is deliberately no minimap: that is an implant to buy.
 func _draw_hud() -> void:
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.5, 1.5))

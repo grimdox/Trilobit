@@ -1,6 +1,7 @@
 extends RefCounted
-## Loads a CDDA-format tileset (tile_config.json plus sheets) so the Godot game can draw with the Bouma / Mokuhanga / Neonoir / Pixel16 / Smog art.
-## Sprite ids are the CDDA ids (t_wall, npc_male, a gun's looks_like...).  Sheets are numbered in order; fg index n maps to sheet n - base.
+## Loads a Trilobit tileset: tile_config.json (sprite ids, sheet layout, variants, paper-doll layers) plus its sprite sheets.
+## Sprite ids are Trilobit's own keys: terrain (t_wall), furniture (f_dumpster), animals (mon_dog), paper-doll layers (dl:...) and
+## item ids (trl_gun_hx9).  Sheets are numbered in order; fg index n maps to sheet n - base.
 var textures: Dictionary = {}       # file -> Texture2D
 var sheets: Array = []              # {file, base, n, sw, sh, cols, ox, oy}
 var index: Dictionary = {}          # id -> fg

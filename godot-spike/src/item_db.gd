@@ -1,5 +1,5 @@
 extends RefCounted
-## Item definitions loaded from data/items.json (exported from the Trilobit CDDA content tables).
+## Item definitions loaded from data/items.json (written by tools/export_items.py from Trilobit's content tables).
 var defs: Dictionary = {}
 
 func load_file(path: String) -> int:

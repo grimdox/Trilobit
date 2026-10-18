@@ -71,5 +71,5 @@ func run() -> Array:
 	for k in db.defs:
 		if "gun" in db.defs[k].get("tags", []):
 			guns += 1
-	check.call("all 50 Trilobit guns exported from the CDDA tables are loaded", guns == 50)
+	check.call("all 50 Trilobit guns from the gun table are loaded", guns == 50)
 	return [st[0], st[1], log]
