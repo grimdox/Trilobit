@@ -72,6 +72,14 @@ func run() -> Array:
 		var bl: Dictionary = GP.AMMO[kk]
 		bullets_ok = bullets_ok and bl["dmg"][1] >= bl["dmg"][0] and int(bl["eff_range"]) >= 1
 	check.call("no gun carries damage; all %d bullet types carry a damage range and an effective range" % GP.AMMO.size(), no_gun_dmg and bullets_ok)
+	var acc_ok := true
+	var acc_seen := {}
+	for k in g.db.defs:
+		if "gun" in g.db.defs[k]["tags"]:
+			var av: int = int(g.db.defs[k]["gun"]["acc"])
+			acc_seen[av] = true
+			acc_ok = acc_ok and av >= -2 and av <= 2
+	check.call("every gun's accuracy is a flat -2..+2 (values in use: %s)" % str(acc_seen.keys()), acc_ok and acc_seen.size() >= 4)
 	var ps = g._new_item(g.gun_ids["pistol"][0])
 	check.call("a gun's damage is its loaded bullet's (pistol with %s: %s)" % [ps.kind, str(GP.stats(ps)["dmg"])], int(GP.stats(ps)["dmg"][0]) == int(GP.bullet("9mm", "fmj")["dmg"][0]) and int(GP.stats(ps)["dmg"][1]) == int(GP.bullet("9mm", "fmj")["dmg"][1]))
 	ps.kind = "hp"
@@ -80,7 +88,7 @@ func run() -> Array:
 	check.call("damage is full inside the effective range and loses 1/range a tile past it (12: %.2f, 18: %.2f, 24: %.2f, 40: %.2f)" % [GP.falloff(12, 12), GP.falloff(12, 18), GP.falloff(12, 24), GP.falloff(12, 40)],
 		GP.falloff(12, 12) == 1.0 and absf(GP.falloff(12, 18) - 0.5) < 0.001 and GP.falloff(12, 24) == 0.0 and GP.falloff(12, 40) == 0.0 and absf(GP.falloff(30, 31) - (1.0 - 1.0 / 30.0)) < 0.001)
 	# ---- the hit model against hand-computed cases
-	var flat := {"acc": 65, "sights": 0, "hip": 0, "range_lo": 5, "range_hi": 5, "rangepen": 1.0, "pellets": 1, "spread": 1.0, "close_pen": 0, "max_aim": 2, "aim_loss": 1.0}
+	var flat := {"acc": 0, "sights": 0, "hip": 0, "range_lo": 5, "range_hi": 5, "rangepen": 1.0, "pellets": 1, "spread": 1.0, "close_pen": 0, "max_aim": 2, "aim_loss": 1.0}
 	check.call("on the natural range with no bonus: 55%% (%d), +2 aim 72%% (%d)" % [GP.hit_chance(flat, 5, 0, false, false, 0, 0), GP.hit_chance(flat, 5, 2, false, false, 0, 0)], GP.hit_chance(flat, 5, 0, false, false, 0, 0) == 55 and GP.hit_chance(flat, 5, 2, false, false, 0, 0) == 72)
 	check.call("3 tiles off the natural range costs 3 points (%d%%)" % GP.hit_chance(flat, 8, 0, false, false, 0, 0), GP.hit_chance(flat, 8, 0, false, false, 0, 0) == 28)
 	check.call("20%% cover multiplies the total by 0.8: +10 skill needs a natural 4 (%d%%)" % GP.hit_chance(flat, 5, 0, false, false, 10, 0, 0, false, 0, 20), GP.hit_chance(flat, 5, 0, false, false, 10, 0, 0, false, 0, 20) == 97)

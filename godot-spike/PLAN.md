@@ -110,3 +110,5 @@ Why: the city was flat.  Verticality is also the cheapest big win for the NPC si
 **Sights and gun accuracy** (2026-10-18): iron-sight bonuses removed; a gun's own accuracy is a flat -2..+2 on the roll (65 neutral, 5 per point, `GP.acc_points`); optic mods (red dot, holo, scopes, smartlink) now add Max Aim, widen range precision (`rangepen_pct`) and slow aiming (`aim_speed`, data in tools/export_items.py).
 
 **Damage on the bullet** (2026-10-18): guns no longer have damage; every bullet type (`BULLETS` in tools/export_items.py -> data/items.json `ammo.dmg`, `ammo.eff_range`, loaded into `GP.AMMO` at setup) carries a damage range and an effective range, and past it a bullet loses 1/effective-range of its damage per tile (`GP.falloff`); gunmen fire 9mm/5.56 ball from the same table. Mods still scale damage by `dmg_pct` and effective range by `range_pct`. Tests in `tests/test_ranged.gd`.
+
+**Gun accuracy as points** (2026-10-18): every gun's `acc` in tools/content/guns.py is now a flat -2..+2 (was 53-85 percent: one point per 5 from 65, capped at 2); `tools/export_weapons_ods.py` and `tools/export_melee_ods.py` write the review spreadsheets.

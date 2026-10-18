@@ -127,9 +127,9 @@ static func stats(gun) -> Dictionary:
 	s["suppressed"] = s["noise"] <= 6 and b["noise"] > 6
 	return s
 
-## the gun's own accuracy as a flat -2..+2 on the roll: 65 is neutral, every 5 away is one point, never more than two; mods add their own accuracy on top (5 percentage points = 1)
+## the gun's own accuracy is stored as a flat -2..+2 on the roll (gun data); mods add their own accuracy on top (5 percentage points = 1)
 static func acc_points(s: Dictionary) -> int:
-	return clampi(int(round(float(int(s["acc"]) - 65) / 5.0)), -2, 2) + int(round(float(int(s.get("acc_mod", 0))) / 5.0))
+	return clampi(int(s["acc"]), -2, 2) + int(round(float(int(s.get("acc_mod", 0))) / 5.0))
 
 ## the 2d10 modifiers that do not depend on the dice or the range roll: skill, the gun's own accuracy (acc_points), aim points
 ## (or the hip-fire bonus when there are none), and stance.  `extra` carries implants, blessings and injuries from the game.
