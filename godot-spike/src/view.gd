@@ -317,7 +317,7 @@ func _draw() -> void:
 		var ky: int = (kc / size) % size - oy
 		if kx < 0 or ky < 0 or kx >= cols or ky >= rows:
 			continue
-		_facing_mark(Vector2(kx * T, ky * T), int(k.get("face", 0)), Color(0.95, 0.75, 0.4, 0.85))
+		_facing_mark(Vector2(kx * T, ky * T), int(k.get("face", 0)), ATT_COL[2] if int(k.get("mood", 0)) == 1 else ATT_COL[1])
 		if not _blit("mon_" + String(k["k"]), Vector2(kx * T, ky * T)):
 			draw_string(font, Vector2(kx * T + T * 0.3, ky * T + T * 0.7), "d" if k["k"] == "dog" else "c", HORIZONTAL_ALIGNMENT_LEFT, -1, 30, Color(0.9, 0.7, 0.4))
 	# vehicles: whole bodies, a tile for every tile of the footprint
@@ -341,13 +341,11 @@ func _draw() -> void:
 			_blit(person_sprite(i), pos)
 		var fd: Array = game.DIR8[int(game.face[i]) % 8]
 		_draw_doll(DS.for_person(game, i), pos, Vector2i(fd[0], fd[1]))
-		_facing_mark(pos, int(game.face[i]), Color(1, 0.35, 0.3) if (int(game.fac[i]) != 0 and int(game.astate[i]) >= 1) else Color(0.85, 0.9, 1.0, 0.85))
+		_awareness_glow(pos, int(game.astate[i]))
+		_facing_mark(pos, int(game.face[i]), ATT_COL[game.attitude(i)])
 		var glyph := ""
 		var col := Color.WHITE
 		match int(game.astate[i]):
-			1: glyph = "?"; col = Color(1, 0.9, 0.2)
-			2: glyph = "?"; col = Color(1, 0.55, 0.1)
-			3: glyph = "!"; col = Color(1, 0.2, 0.2)
 			5: glyph = "~"; col = Color(0.6, 0.9, 1)
 			6: glyph = "="; col = Color.WHITE
 		if glyph == "":
@@ -360,8 +358,6 @@ func _draw() -> void:
 				7, 8: glyph = "^"; col = Color(0.9, 0.85, 1)
 		if glyph != "":
 			draw_string(font, pos + Vector2(T * 0.3, -2 * S), glyph, HORIZONTAL_ALIGNMENT_LEFT, -1, 30, col)
-		elif game.meter[i] > 0 and game.astate[i] == 0:
-			draw_rect(Rect2(pos.x + 4 * S, pos.y - 2 * S, (T - 8 * S) * game.meter[i] / 100.0, 3 * S), Color(1, 0.9, 0.2))
 	# the player
 	var centre := Vector2((px - ox) * T, (py - oy) * T)
 	if game.in_vehicle >= 0:
@@ -376,8 +372,6 @@ func _draw() -> void:
 		_draw_doll(DS.for_player(game), centre, game.facing)
 	else:
 		_blit("player_male", centre, Color(1, 1, 1, 0.9))
-	if game.in_vehicle < 0 and game.transit.riding < 0:
-		_facing_mark(centre, game.DIR8.find([signi(game.facing.x), signi(game.facing.y)]), Color(0.3, 0.95, 1.0, 0.9))
 	_draw_cranes(ox, oy, base)
 	# the job target, if it is on this level
 	if not game.eco.job.is_empty() and int(game.eco.job["cell"]) / s2 == base / s2:
@@ -407,6 +401,24 @@ func _draw() -> void:
 			var pr := Rect2((px - ox) * T, (py - oy) * T, T, T)
 			draw_line(pr.get_center(), lr.get_center(), Color(0.3, 0.95, 1.0, 0.35), 2.0 * S)
 	_draw_hud()
+
+## facing-arrow colours by attitude towards the player: friendly green, neutral blue, hostile red
+const ATT_COL := [Color(0.3, 1.0, 0.4, 0.95), Color(0.35, 0.6, 1.0, 0.95), Color(1.0, 0.25, 0.25, 0.95)]
+
+## a glow along the edges of a tile for how aware someone is of you: unaware blue, suspicious (and searching) yellow, hunting orange
+func _awareness_glow(pos: Vector2, st: int) -> void:
+	var col: Color
+	match st:
+		0: col = Color(0.3, 0.55, 1.0)
+		1, 2: col = Color(1.0, 0.9, 0.2)
+		3: col = Color(1.0, 0.5, 0.1)
+		_: return
+	var T: float = float(tile())
+	var w: float = maxf(2.0, T / 22.0)
+	for k in 4:
+		var a: float = 0.85 - 0.25 * k
+		var r := Rect2(pos + Vector2(w * (k + 0.5), w * (k + 0.5)), Vector2(T - w * (2 * k + 1), T - w * (2 * k + 1)))
+		draw_rect(r, Color(col.r, col.g, col.b, a), false, w)
 
 ## a small pointer on the edge of a tile showing which way someone faces (index into DIR8)
 func _facing_mark(pos: Vector2, fi: int, col: Color) -> void:

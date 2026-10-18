@@ -702,6 +702,16 @@ func hostile(i: int) -> bool:
 		NAP: return heat >= 30
 		_: return false
 
+## how a person stands towards the player, for the facing arrow: 0 friendly (green), 1 neutral (blue), 2 hostile (red).
+## Nobody is friendly yet: recruited allies will put their index in `allies`.
+var allies: Dictionary = {}
+func attitude(i: int) -> int:
+	if allies.has(i):
+		return 0
+	if hostile(i) or int(astate[i]) == HUNTING:
+		return 2
+	return 1
+
 func name_of(i: int) -> String:
 	if eco != null and eco.role[i] != 0:
 		return "%s (%s)" % [nname[i], eco.label(i)]
