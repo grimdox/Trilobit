@@ -65,10 +65,10 @@ var station_names := ["Harbor Gate", "Kuroda Plaza", "Ninth Street", "Old Market
 
 # ------------------------------------------------------------------------------------------------ the line itself
 static func pack(gx: int, gy: int, z: int) -> int:
-	return ((z + 2) << 24) | (gy << 12) | gx
+	return ((z + 2) << 28) | (gy << 14) | gx
 
 static func unpack(v: int) -> Vector3i:
-	return Vector3i(v & 4095, (v >> 12) & 4095, ((v >> 24) & 7) - 2)
+	return Vector3i(v & 16383, (v >> 14) & 16383, ((v >> 28) & 7) - 2)
 
 ## build the line from a finished city game.  With no island it is just the subway loop.
 static func build_line(city, island, zone: Vector2i) -> Dictionary:

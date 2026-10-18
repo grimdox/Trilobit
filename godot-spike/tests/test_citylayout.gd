@@ -21,7 +21,7 @@ func run() -> Array:
 	var isl = g.island
 	var c = g.city
 	var n: int = g.size
-	var o: Vector2i = ISL.zone_origin(1, 1)
+	var o: Vector2i = ISL.zone_origin(ISL.CITY_ZONE.x, ISL.CITY_ZONE.y)
 	var plan: Dictionary = c.plan
 	var mask: PackedByteArray = plan["mask"]
 
@@ -66,31 +66,27 @@ func run() -> Array:
 
 	# ---- the river
 	var okc := true
-	for y in range(ISL.RIVER_Y0 + 3, ISL.H - 2, 9):
+	for y in range(isl.RIVER_Y0 + 3, isl.RIVER_Y1 - 1, 9):
 		var cx := int(isl._rv_x[y])
 		var t2: int = isl.terrain(cx, y)
 		if t2 != CG.WATER and t2 != CG.ROAD:
 			okc = false
-	check.call("the river is one unbroken channel from the foothills to the south edge", okc)
-	var ys0: int = ISL.RIVER_Y0 + 8
+	check.call("the river is one unbroken channel from the foothills to the harbor", okc)
+	var ys0: int = isl.RIVER_Y0 + 8
 	var xs0 := int(isl._rv_x[ys0])
-	check.call("it rises inside the mountain range (x %d, the range is %d-%d)" % [xs0, int(isl.mtn_west(ys0)), int(isl.mtn_east(ys0))], float(xs0) > isl.mtn_west(ys0) and float(xs0) < isl.mtn_east(ys0) + 20.0 and isl.terrain(xs0 - 14, ys0) == CG.MOUNTAIN)
-	var mouth_y := -1
-	for y in range(1000, ISL.H):
-		if float(y) >= isl.south_y(int(isl._rv_x[y])):
-			mouth_y = y
-			break
-	check.call("it reaches the sea on the south coast (mouth at row %d)" % mouth_y, mouth_y > 1150 and mouth_y < 1380 and isl.terrain(int(isl._rv_x[ISL.H - 20]), ISL.H - 20) == CG.WATER)
+	check.call("it rises inside the mountains (x %d, mass %.2f)" % [xs0, isl._samp(isl._g_mt, xs0 - 20, ys0)], isl._samp(isl._g_mt, xs0 - 40, ys0 - 40) > 0.3 and isl.terrain(xs0 - 14, ys0) in [CG.MOUNTAIN, CG.ROCKS])
+	var my: int = isl.RIVER_Y1 + 8
+	check.call("it reaches the sea in the city's harbor (mouth at row %d, city-local %d)" % [isl.RIVER_Y1, isl.RIVER_Y1 - o.y], isl.terrain(int(isl._rv_x[isl.RIVER_Y1]), my) == CG.WATER and isl.RIVER_Y1 - o.y > 780)
 	var wet := 0
 	for i in n * n:
 		if c.tiles[i] == CG.WATER:
 			wet += 1
 	check.call("it runs through the city (%d tiles of water in the city map)" % wet, wet > 6000)
 	var widths := []
-	for y in [ISL.RIVER_Y0 + 10, 500, 700, 900, 1100, 1300]:
+	for y in [o.y + 60, o.y + 300, o.y + 500, o.y + 700, o.y + 800]:
 		var sp: Vector2i = isl.river_span(y)
 		widths.append(sp.y - sp.x + 1)
-	check.call("and it widens on its way down (%s)" % str(widths), widths[0] < widths[2] and widths[2] <= widths[5] and widths[5] >= 50)
+	check.call("and it widens on its way down (%s)" % str(widths), widths[0] < widths[2] and widths[2] <= widths[4] and widths[4] >= 40)
 
 	# ---- the bridges: three four-lane (24-wide) roads over the river
 	var bridges_ok := 0
@@ -134,7 +130,7 @@ func run() -> Array:
 	# ---- the highway: harbor to the east coast, six lanes wide, walkable end to end
 	var wide_ok := true
 	var rows_checked := 0
-	for x in range(isl._hx0 + 4, ISL.HWY_X1, 7):
+	for x in range(isl._hx0 + 4, isl.HWY_X1, 7):
 		var hy: int = isl.pass_yc(x)
 		var nn: int = isl.hwy_n(x)
 		var ss: int = isl.hwy_s(x)
@@ -145,7 +141,7 @@ func run() -> Array:
 					width += 1
 		rows_checked += 1
 		var expect: int = nn + ss + 1
-		if x < ISL.PASS_X0 - 18 or x >= ISL.PASS_X1 + 12:
+		if x < isl.PASS_X0 - 18 or x >= ISL.PASS_X1 + 12:
 			expect = 36
 		if width != expect:
 			wide_ok = false
@@ -158,23 +154,26 @@ func run() -> Array:
 	while head < q.size() and not reached_east:
 		var cur: Vector2i = q[head]
 		head += 1
-		if cur.x >= ISL.HWY_X1 - 2:
+		if cur.x >= isl.HWY_X1 - 2:
 			reached_east = true
 			break
 		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 			var nx: Vector2i = cur + d
-			if absi(nx.y - ISL.HWY_Y) > 24 or nx.x < isl._hx0 or seen.has(nx):
+			if absi(nx.y - isl.pass_yc(nx.x)) > 24 or nx.x < isl._hx0 or seen.has(nx):
 				continue
 			if CG.WALK[isl.terrain(nx.x, nx.y)] == 1:
 				seen[nx] = true
 				q.append(nx)
 	check.call("you can walk from the harbor all the way east along the highway (over both bridges)", reached_east)
-	var cliff_gap: int = int(isl.east_x(ISL.HWY_Y)) - ISL.HWY_X1
-	check.call("it ends at the coast (%d tiles from the clifftop)" % cliff_gap, cliff_gap >= 0 and cliff_gap <= 30 and isl.terrain(ISL.HWY_X1, ISL.HWY_Y) == CG.ROAD)
-	var hz = w._make(Vector2i(0, 1))
+	var to_sea := 0
+	while isl.terrain(isl.HWY_X1 + to_sea, ISL.HWY_Y) != CG.WATER and to_sea < 200:
+		to_sea += 1
+	check.call("it ends at the east coast (%d tiles from the sea)" % to_sea, to_sea <= 80 and isl.terrain(isl.HWY_X1, ISL.HWY_Y) == CG.ROAD)
+	var hz = w._make(w.island.PORT_ZONE)
 	var quay_ok := false
-	var qx: int = int(isl.west_x(ISL.PORT.y)) + 6 + 3
-	quay_ok = hz.city.tiles[(ISL.HWY_Y - 448) * hz.size + qx] == CG.ROAD and hz.city.tiles[(ISL.HWY_Y - 448 - 17) * hz.size + qx + 40] == CG.ROAD and hz.city.tiles[(ISL.HWY_Y - 448 + 17) * hz.size + qx + 40] == CG.ROAD
+	var hzo: Vector2i = isl.zone_origin(isl.PORT_ZONE.x, isl.PORT_ZONE.y)
+	var qx: int = int(isl.west_x(isl.PORT.y)) + 6 + 3 - isl.zone_origin(isl.PORT_ZONE.x, isl.PORT_ZONE.y).x
+	quay_ok = hz.city.tiles[(ISL.HWY_Y - hzo.y) * hz.size + qx] == CG.ROAD and hz.city.tiles[(ISL.HWY_Y - hzo.y - 17) * hz.size + qx + 40] == CG.ROAD and hz.city.tiles[(ISL.HWY_Y - hzo.y + 17) * hz.size + qx + 40] == CG.ROAD
 	check.call("in the harbor the six-lane highway starts at the quay road", quay_ok and hz.city.ys_w.values().has(36))
 	# the highway through the city, edge to edge
 	var tr_seen := {}

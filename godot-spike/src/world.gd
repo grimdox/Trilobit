@@ -19,10 +19,10 @@ static func key(z: Vector2i) -> String:
 func people_for(z: Vector2i) -> int:
 	if z == ISL.CITY_ZONE:
 		return CITY_PEOPLE
-	if z == Vector2i(0, 1):
-		return 220
-	if z == ISL.TOWN_ZONE:
-		return 90
+	match island.zone_kind(z):
+		"port": return 220
+		"town": return 90
+		"industry": return 70
 	return 0
 
 func start(sd: int, people: int = -1) -> void:
@@ -112,7 +112,7 @@ func enter(dest: Vector2i) -> bool:
 	game = ng
 	switches += 1
 	visited[dk] = true
-	ng.say("You cross into %s." % ISL.zone_name(dest))
+	ng.say("You cross into %s." % island.zone_name(dest))
 	return true
 
 ## the nearest cell a person can stand on

@@ -199,7 +199,7 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) ->
 	thing_at = PackedInt32Array(); thing_at.resize(total); thing_at.fill(-1)
 	crit_at = PackedInt32Array(); crit_at.resize(total); crit_at.fill(-1)
 	_people()
-	if island != null and zone == Vector2i(0, 1):
+	if island != null and zone == island.PORT_ZONE:
 		_port_people()
 	_prof("people", _t0)
 	_roads_and_cars()
@@ -426,6 +426,10 @@ func _spawn_vehicles() -> void:
 				continue
 			vehicles[vb_i]["charge"] = rng.randi_range(40, 100)
 			made += 1
+	# trucks parked on the south harbor's apron
+	if island != null:
+		for k in 5:
+			_place("truck", 140 + k * 170 + rng.randi_range(-30, 30), island.harb_y - 40, 0, 50, [CG.PLATFORM], rng.randi() % 2, cols[rng.randi() % cols.size()])
 	_spawn_special_vehicles()
 
 var special_dir := 0
@@ -469,7 +473,7 @@ func _place(kind: String, near_x: int, near_y: int, minr: int, maxr: int, tiles:
 func _spawn_zone_vehicles() -> void:
 	var cols: Array = _car_colors()
 	var o: Vector2i = island.zone_origin(zone.x, zone.y)
-	if zone == Vector2i(0, 1):
+	if zone == island.PORT_ZONE:
 		var qx: int = int(island.west_x(island.PORT.y)) + 6 - o.x
 		var py: int = island.PORT.y - o.y
 		for k in 2:
@@ -484,6 +488,10 @@ func _spawn_zone_vehicles() -> void:
 		for k in 5:
 			_place("car", cx + rng.randi_range(-60, 60), cy + rng.randi_range(-50, 60), 0, 60, [CG.GROUND], rng.randi() % 2, cols[rng.randi() % cols.size()])
 		_place("heli", cx + 40, cy - 100, 0, 100, [CG.GROUND, CG.PARK], 0, Color("#7fd6e8"))
+	elif island.zone_kind(zone) == "industry":
+		for k in 6:
+			var rx2: int = int(city.xs[rng.randi() % city.xs.size()]) + 6
+			_place("truck" if k % 2 == 0 else "car", rx2, rng.randi_range(40, size - 40), 0, 30, [CG.ROAD], rng.randi() % 4, cols[rng.randi() % cols.size()])
 	elif zone == island.AIR_ZONE:
 		var x0: int = island.AIR_X0 - o.x
 		var y0: int = island.AIR_Y - o.y

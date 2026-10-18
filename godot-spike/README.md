@@ -71,4 +71,5 @@ Tests: `./run_all.sh` (pockets, world, scale, levels, game, vertical, guns, stea
 - **Boulevards**: curved 12-wide streets follow both banks (`island.boulevards()`); AI cars slide along the bends.
 - **West Bank station**: platforms either side of the rail bridge's west end with stairs to the street; the line has seven stops.
 - **Passengers**: commuters ride the carriages (stateless, a function of seed, train, cell and door-opening count; fuller at rush hours); the painted carriage sprites are `gfx/Trilobit64/veh/veh_train*.png`.
-- **Chart**: `overview_image(2)` draws the island from the seed (districts, bridges, ring, boulevards); `tests/test_bigcity.gd` (15).
+- **Island remake** (guide image): 4400x7750 tiles, 1 guide px = 4.4 tiles; see PLAN.md; `tests/test_remake.gd` (14).
+- **Chart**: `overview_image(8)` draws the island from the seed (districts, bridges, ring, boulevards); `tests/test_bigcity.gd` (15).

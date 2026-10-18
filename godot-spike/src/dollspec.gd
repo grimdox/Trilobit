@@ -39,7 +39,7 @@ static func for_person(g, i: int) -> Dictionary:
 	var h: int = (i * 2654435761) & 0x7fffffff
 	var fac: int = int(g.fac[i])
 	var extra: Array = g.eco.look.get(i, []) if g.eco != null else []
-	if extra.is_empty() and fac == 0 and g.island != null and g.zone == Vector2i(0, 1):
+	if extra.is_empty() and fac == 0 and g.island != null and g.zone == g.island.PORT_ZONE:
 		extra = ["overalls"] + (["helmet_ball"] if h % 2 == 0 else [])      # dock workers
 	if not extra.is_empty():
 		layers = extra.duplicate()

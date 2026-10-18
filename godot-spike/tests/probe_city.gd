@@ -13,7 +13,7 @@ func _init() -> void:
 		sd = int(args[1])
 	var t0 := Time.get_ticks_msec()
 	var isl = ISL.new(sd)
-	var c = isl.build_zone(1, 1)
+	var c = isl.build_zone(ISL.CITY_ZONE.x, ISL.CITY_ZONE.y)
 	print("generate ms ", Time.get_ticks_msec() - t0)
 	LV.build(c, sd)
 	isl.rail_portal(c)

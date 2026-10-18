@@ -49,7 +49,7 @@ func run() -> Array:
 	check.call("both tiles of the track are laid in the city zone (%d cells off)" % bad, bad == 0)
 	check.call("the wall lanes of the train have room beside the track (%d solid)" % narrow, narrow < 40)
 	# the harbor game sees the same line and its terminal platform
-	var hz = w._make(Vector2i(0, 1))
+	var hz = w._make(w.island.PORT_ZONE)
 	var ti: int = hz.transit.stop_names.find("Harbor Terminal")
 	var term: int = hz.transit.stop_cell(ti)
 	var plat := 0
@@ -110,7 +110,7 @@ func run() -> Array:
 		var cg2 = w.game
 		if cg2.transit.riding >= 0 and cg2.pc != cg2.transit.seat_cell():
 			seat_ok = false
-		if cg2.zone == Vector2i(0, 1):
+		if cg2.zone == cg2.island.PORT_ZONE:
 			visited_harbor = true
 		elif visited_harbor and cg2.zone == ISL.CITY_ZONE:
 			back_in_city = true

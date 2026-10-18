@@ -4,7 +4,7 @@ const ISL = preload("res://src/island.gd")
 func _init() -> void:
 	for sd in [1, 2, 3, 7, 11, 99]:
 		var isl = ISL.new(sd)
-		var c = isl.build_zone(1, 1)
+		var c = isl.build_zone(ISL.CITY_ZONE.x, ISL.CITY_ZONE.y)
 		var cnt := {}
 		for v in c.venues:
 			cnt[v["kind"]] = cnt.get(v["kind"], 0) + 1

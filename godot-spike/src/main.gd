@@ -275,7 +275,7 @@ func _make_map() -> void:
 		screen.map_tex = null
 		return
 	if map_tex == null or map_seed != world.seed_value:
-		map_tex = ImageTexture.create_from_image(world.island.overview_image(2))
+		map_tex = ImageTexture.create_from_image(world.island.overview_image(8))
 		map_seed = world.seed_value
 	screen.map_tex = map_tex
 
