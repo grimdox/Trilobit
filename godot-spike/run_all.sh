@@ -2,7 +2,7 @@
 # Run every spike test headless.  Needs Godot 4.3 on the PATH as `godot`.  Exit code is non-zero if any test fails or does not finish.
 cd "$(dirname "$0")"
 python3 tools/export_items.py
-python3 ../trilobit-tools/gen_paperdoll.py data/items.json gfx/paperdoll
+python3 tools/content/gen_paperdoll.py data/items.json gfx/paperdoll
 rc=0
 for t in pockets world scale levels game vertical guns stealth zmove melee npcfall things menus vehicles island combat facing trains needs skills citylayout bigcity remake timeui; do
   out=$(timeout -s KILL 280 godot --headless --path . -s tests/run_$t.gd 2>&1)

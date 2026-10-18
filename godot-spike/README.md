@@ -29,7 +29,7 @@ Tests: `./run_all.sh` (pockets, world, scale, levels, game, vertical, guns, stea
 
 ## Round six
 - Fixed a crash when stepping onto the railway in any zone without a subway (`transit.car_cell` took a modulo by an empty ring).
-- Exe icon (the splash-screen car, `trilobit-tools/gen_icon.py`) and version info are stamped by `tools/set_exe_icon.py`; `tools/build_windows.sh` exports, stamps and zips.
+- Exe icon (the splash-screen car, `tools/content/gen_icon.py`) and version info are stamped by `tools/set_exe_icon.py`; `tools/build_windows.sh` exports, stamps and zips.
 - Loading screen shows とりろびつ (bundled kana subset of Noto Sans CJK JP, OFL); the title tag line is gone; menus take mouse hover, click, right-click back and wheel.
 - Everyone has an on-screen facing arrow (people, animals, you); the drawn vision-cone tint is removed.  The player sees a 180 degree half circle (`vision_arc()`; implants may add degrees with an `arc` field); `;` + direction turns without a step.  NPCs still look back at you all round (`fov.around`).
 - Windows SmartScreen only goes away with a trusted code-signing certificate; see README-FIRST.txt in the zip for the workaround.
@@ -38,7 +38,7 @@ Tests: `./run_all.sh` (pockets, world, scale, levels, game, vertical, guns, stea
 - The city's blocks are merged into bigger buildings: mega-towers fill 2-3 blocks each way (4-9 blocks) in the centre, the ring around them has buildings 1-2 blocks wide (1-4 blocks), and houses/venues sit in the outer suburbs.  Mega-towers are always among the tallest.
 - Wealth districts (`CityGen.wealth`, lower / middle / upper): bare concrete and dingy tint, plain, or marble and bright tint; venue tier, residents' cash and clothes follow the district.  The HUD shows the district name.
 - The harbor: north end = unaffiliated criminals (faction GANG) around derelict warehouses, centre = the working port (quay road with AI trucks, six animated gantry cranes, container yard, dock workers in hard hats), south end = Bratva around the dormitories.
-- `trilobit-tools/gen_tiles64.py` draws the whole 64x64 tileset (terrain, furniture, harbor props, items, animals, top-down paper dolls); `tools/build_windows.sh` runs it.
+- `tools/content/gen_tiles64.py` draws the whole 64x64 tileset (terrain, furniture, harbor props, items, animals, top-down paper dolls); `tools/build_windows.sh` runs it.
 
 ## Rail line, side panel, hunger and thirst
 - One rail line, three trains in a repeating loop (`transit.gd`).  Tracks are two tiles wide and the line is two-track (four rows apart); a train is four tiles wide (wall/door lane, two floor lanes you can stand and walk in, wall/door lane) and each carriage is six tiles long, four carriages to a train; the two middle tiles of each side wall are the doors, which open at stops.  The route: the four city stations (level -1, 30-tile platforms on both sides of the train), a twin-track tunnel west to a portal, the island railway through the pass, the Harbor Terminal (platform on the port siding), buffers, and back on the return track.  Trains are stateless (a tabulated timetable indexed by a clock that travels with the player), so every zone game draws just its part of the line; riders carry across the zone border.  Step onto a carriage while its doors are open to board, onto a platform to leave.

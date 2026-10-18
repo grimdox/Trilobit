@@ -1,4 +1,0 @@
-NAME: Pixel16
-VIEW: Pixel16
-JSON: tile_config.json
-TILESET: tiles.png

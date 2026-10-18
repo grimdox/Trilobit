@@ -1,4 +1,0 @@
-NAME: Mokuhanga Overmap
-VIEW: Mokuhanga Overmap
-JSON: tile_config.json
-TILESET: overmap.png

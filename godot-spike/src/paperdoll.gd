@@ -1,6 +1,6 @@
 extends RefCounted
 ## The paper-doll atlas: icons for weapons and armor (32x32) and layers drawn over the base person sprite (32x36).
-## Made by trilobit-tools/gen_paperdoll.py into gfx/paperdoll/.  Keys: "icon:<item id>" and "doll:<layer>".
+## Made by tools/content/gen_paperdoll.py into gfx/paperdoll/.  Keys: "icon:<item id>" and "doll:<layer>".
 var tex: Texture2D
 var index: Dictionary = {}
 var scale: float = 2.0           # on-screen scale of an atlas cell (the old 32px atlas is drawn at 2x; the 64px one at 1x)

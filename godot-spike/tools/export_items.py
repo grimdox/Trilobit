@@ -4,7 +4,7 @@ Shows that the generated content transfers: the 50 new guns (gunset.json) become
 that exercise the pocket model.  usage: export_items.py  (run from godot-spike/)"""
 import json, os, re
 HERE = os.path.dirname(os.path.abspath(__file__))
-MOD = os.path.join(HERE, "../../data/mods/trilobit")
+MOD = os.path.join(HERE, "../data/source")
 LEN = {"SMG": 450, "Pistol": 200, "Revolver": 220, "Rifle": 900, "Shotgun": 950, "Sniper": 1100, "MG": 1000, "Heavy MG": 1300, "Launcher": 800, "Laser": 700}
 
 
@@ -14,8 +14,8 @@ def grams(s):
 
 
 names = {}
-src = open(os.path.join(HERE, "../../trilobit-tools/gen_gunset.py")).read()
-ns = {"__file__": os.path.join(HERE, "../../trilobit-tools/gen_gunset.py")}
+src = open(os.path.join(HERE, "content/gen_gunset.py")).read()
+ns = {"__file__": os.path.join(HERE, "content/gen_gunset.py")}
 import sys
 sys.argv = ["x", "/tmp"]
 exec(src.split("out = []")[0], ns)
@@ -170,7 +170,7 @@ ENGINES = [
 for eid, ename, power, drain, hp, fits, price, wt in ENGINES:
     items.append({"id": "trl_eng_" + eid, "name": ename, "desc": "Vehicle engine: top speed %d, %d hp, fits %s." % (power, hp, ", ".join(fits)), "weight_g": wt, "volume_ml": wt // 2, "length_mm": 900, "price": price,
                   "tags": ["engine"], "looks_like": "engine_block", "engine": {"power": power, "drain": drain, "hp": hp, "fits": fits}})
-# ---- more armor: the paper doll shows each piece, and every one has its own icon (trilobit-tools/pd_armor.py)
+# ---- more armor: the paper doll shows each piece, and every one has its own icon (tools/content/pd_armor.py)
 items += [
     {"id": "trl_balaclava", "name": "balaclava", "desc": "Armor 1 on the head.  Hides your face.", "weight_g": 150, "volume_ml": 300, "length_mm": 250, "price": 60, "tags": ["armor", "worn"], "looks_like": "helmet_ball", "armor": {"slot": "head", "phys": 1, "dur": 12}},
     {"id": "trl_helm_tac", "name": "tactical helmet", "desc": "Armor 4 on the head, with a night-vision mount.", "weight_g": 1500, "volume_ml": 3200, "length_mm": 310, "price": 650, "tags": ["armor", "worn"], "looks_like": "helmet_ball", "armor": {"slot": "head", "phys": 4, "dur": 50}},
