@@ -1,5 +1,6 @@
 extends Node
 ## Entry point: title screen, menus, then the game, its view and HUD; turns keys into actions.
+const GP = preload("res://src/gunplay.gd")
 const GameScript = preload("res://src/game.gd")
 const WorldScript = preload("res://src/world.gd")
 const TilesetScript = preload("res://src/tileset.gd")
@@ -696,7 +697,7 @@ func show_mods() -> void:
 		panel.visible = true
 		return
 	var t := "[b]%s[/b]  (1-9 removes the mod in that slot, a-z fits a carried mod, Esc closes)\n" % g.wield.def["name"]
-	t += "dmg %d-%d   range %d   accuracy %d%%   mag %d   recoil %.1f   report %d   reload %d   ammo %s %s\n\n" % [st["dmg"][0], st["dmg"][1], st["range"], st["acc"], st["mag"], st["recoil"], st["noise"], st["reload"], st["cal"], st["label"]]
+	t += GP.stat_line(st, g.aim_rate()) + "\n\n"
 	var k := 1
 	for slot in st["slots"]:
 		var cur := "(empty)"

@@ -21,12 +21,18 @@ func run() -> Array:
 		if "gun" in d["tags"]:
 			guns += 1
 			var b: Dictionary = d["gun"]
-			for f in ["cal", "mag", "modes", "slots", "recoil", "noise", "reload", "pellets", "jam", "dmg", "range", "acc"]:
+			for f in ["cal", "mag", "modes", "slots", "max_aim", "aim_loss", "noise", "reload", "pellets", "jam", "dmg", "range", "acc"]:
 				if not b.has(f):
 					complete = false
 			if not GP.KINDS_BY_CAL.has(b["cal"]):
 				complete = false
-	check.call("all %d guns carry caliber, magazine, fire modes, mod slots and recoil" % guns, guns >= 50 and complete)
+	var bands_ok := true
+	for k in g.db.defs:
+		var d2: Dictionary = g.db.defs[k]
+		if "gun" in d2["tags"]:
+			var rg: Array = d2["gun"]["range"]
+			bands_ok = bands_ok and rg.size() == 2 and int(rg[0]) >= 1 and int(rg[1]) > int(rg[0]) and int(d2["gun"]["max_aim"]) >= 2
+	check.call("all %d guns carry caliber, clip, fire modes, mod slots, max aim, aim loss and a natural range band" % guns, guns >= 50 and complete and bands_ok)
 	var mods := 0
 	for k in g.db.defs:
 		if "mod" in g.db.defs[k]["tags"]:
@@ -35,29 +41,31 @@ func run() -> Array:
 	# accuracy and mods, as pure numbers
 	var snip = g._new_item(g.gun_ids["sniper"][0])
 	var base: Dictionary = GP.stats(snip)
-	var far0: int = GP.hit_chance(base, 24, 0, false, false, 2, 0)
-	var close0: int = GP.hit_chance(base, 2, 0, false, false, 2, 0)
+	var far0: int = GP.hit_chance(base, 40, 0, false, false, 2, 0)
+	var close0: int = GP.hit_chance(base, 24, 0, false, false, 2, 0)
 	snip.mods.append(g._new_item("trl_mod_scope8"))
 	var sc: Dictionary = GP.stats(snip)
-	var far1: int = GP.hit_chance(sc, 24, 0, false, false, 2, 0)
-	var close1: int = GP.hit_chance(sc, 2, 0, false, false, 2, 0)
-	check.call("a scope raises hit chance at range (%d -> %d)" % [far0, far1], far1 > far0 + 8)
-	check.call("a scope is a handicap up close (%d -> %d)" % [close0, close1], close1 < close0)
-	check.call("a scope extends effective range (%d -> %d)" % [base["range"], sc["range"]], sc["range"] > base["range"] + 10)
-	var a0: int = GP.hit_chance(base, 22, 0, false, false, 2, 0)
-	var a3: int = GP.hit_chance(base, 22, 3, false, false, 2, 0)
-	check.call("aiming for three turns adds accuracy (%d -> %d)" % [a0, a3], a3 >= a0 + 18)
-	check.call("moving costs accuracy, crouching helps", GP.hit_chance(base, 22, 0, true, false, 2, 0) < a0 and GP.hit_chance(base, 22, 0, false, true, 2, 0) > a0)
-	check.call("the implant's tremor costs accuracy", GP.hit_chance(base, 22, 0, false, false, 2, 28) < a0)
-	var scope_aim: int = GP.hit_chance(sc, 15, 3, false, false, 2, 0)
+	var far1: int = GP.hit_chance(sc, 40, 0, false, false, 2, 0)
+	var close1: int = GP.hit_chance(sc, 24, 0, false, false, 2, 0)
+	check.call("a scope raises hit chance far out (%d -> %d at 40 tiles)" % [far0, far1], far1 > far0 + 8)
+	check.call("a scope moves the band out, so it is worse inside the old one (%d -> %d at 24 tiles)" % [close0, close1], close1 < close0)
+	check.call("a scope extends the natural range (%d-%d -> %d-%d) and the max aim (%d -> %d)" % [base["range_lo"], base["range_hi"], sc["range_lo"], sc["range_hi"], base["max_aim"], sc["max_aim"]],
+		sc["range_hi"] > base["range_hi"] + 10 and sc["max_aim"] == base["max_aim"] + 2)
+	var a0: int = GP.hit_chance(base, 36, 0, false, false, 2, 0)
+	var a3: int = GP.hit_chance(base, 36, 3, false, false, 2, 0)
+	check.call("aiming for three points adds accuracy (%d -> %d)" % [a0, a3], a3 >= a0 + 12)
+	check.call("moving costs accuracy, crouching helps", GP.hit_chance(base, 36, 0, true, false, 2, 0) < a0 and GP.hit_chance(base, 36, 0, false, true, 2, 0) > a0)
+	check.call("the implant's tremor costs accuracy", GP.hit_chance(base, 36, 0, false, false, 2, 28) < a0)
+	check.call("cover multiplies the roll down (%d -> %d with 28%% cover)" % [a0, GP.hit_chance(base, 36, 0, false, false, 2, 0, 0, false, 0, 28)], GP.hit_chance(base, 36, 0, false, false, 2, 0, 0, false, 0, 28) < a0 - 15)
+	var scope_aim: int = GP.hit_chance(sc, 40, 3, false, false, 2, 0)
 	var smg = g._new_item(g.gun_ids["smg"][0])
 	var s0: Dictionary = GP.stats(smg)
-	check.call("recoil makes later shots in a burst less accurate", GP.hit_chance(s0, 6, 0, false, false, 2, 0, 5) < GP.hit_chance(s0, 6, 0, false, false, 2, 0, 0))
+	check.call("each bullet fired loses aim, so later shots in a burst are less accurate", GP.hit_chance(s0, 6, 2, false, false, 2, 0, 5) < GP.hit_chance(s0, 6, 2, false, false, 2, 0, 0))
 	smg.mods.append(g._new_item("trl_mod_compensator"))
 	smg.mods.append(g._new_item("trl_mod_foregrip"))
 	var s1: Dictionary = GP.stats(smg)
-	check.call("compensator and foregrip cut recoil (%.1f -> %.1f) and help the last shot of a burst" % [s0["recoil"], s1["recoil"]],
-		s1["recoil"] < s0["recoil"] * 0.6 and GP.hit_chance(s1, 6, 0, false, false, 2, 0, 5) > GP.hit_chance(s0, 6, 0, false, false, 2, 0, 5))
+	check.call("compensator and foregrip cut the aim lost per bullet (%.2f -> %.2f) and help the last shot of a burst" % [s0["aim_loss"], s1["aim_loss"]],
+		s1["aim_loss"] < s0["aim_loss"] * 0.6 and GP.hit_chance(s1, 6, 2, false, false, 2, 0, 5) > GP.hit_chance(s0, 6, 2, false, false, 2, 0, 5))
 	var pis = g._new_item(g.gun_ids["pistol"][0])
 	var p0: Dictionary = GP.stats(pis)
 	pis.mods.append(g._new_item("trl_mod_suppressor"))
@@ -209,10 +217,13 @@ func run() -> Array:
 		g.hpn[found] = 400
 		refresh.call()
 		var aims := 0
+		g.aim_turns = 0
+		g.wield.jammed = false
 		while g.aim_turns < 2 and aims < 6:
+			refresh.call()
 			g.act_aim(true)
 			aims += 1
-		check.call("aiming stacks (%d actions at %.2f a turn) and appears in the gun line" % [aims, g.aim_rate()], g.aim_turns == 2 and g.gun_line().contains("aim 2") and aims <= 3)
+		check.call("aiming stacks (%d actions at %.2f a turn) and appears in the gun line" % [aims, g.aim_rate()], g.aim_turns == 2 and g.gun_line().contains("aim 2/") and aims <= 3)
 		g.act_move(0, 0) if false else null
 		# the report of a shot
 		var civ_noise: int = int(GP.stats(gun2)["noise"])

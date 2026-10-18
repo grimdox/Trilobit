@@ -16,17 +16,17 @@ for cal, kinds, rounds, price in AMMO:
     for k in kinds:
         items.append({"id": "trl_ammo_%s_%s" % (cal.replace(".", ""), k), "name": "%s %s box" % (cal, KINDN[k]), "weight_g": rounds * 10, "volume_ml": rounds * 6, "length_mm": 80,
                       "price": price * (2 if k == "ap" else 1), "tags": ["ammo"], "ammo": {"cal": cal, "kind": k, "rounds": rounds}})
-# gun mods.  effects: acc (flat, percentage points), aim (extra bonus per aiming turn), hip (bonus when not aiming), range_pct, rangepen_pct (less accuracy lost per tile),
-# close_pen (penalty inside 4 tiles), recoil_pct, noise_cap (shots are heard no further than this), dmg_pct, mag_pct, jam (percentage points), reload (turns), spread_pct
+# gun mods.  effects: acc (flat, percentage points; 5 points = 1 on the 2d10 roll), max_aim (more aim points can be banked; aim speed comes from the sight class in gunplay.gd), hip (bonus when not aiming), range_pct, rangepen_pct (less accuracy lost per tile),
+# close_pen (penalty inside 4 tiles), recoil_pct (less aim lost per bullet), noise_cap (shots are heard no further than this), dmg_pct, mag_pct, jam (percentage points), reload (turns), spread_pct
 MODS = [
-    ("redot", "red-dot sight", "optic", {"acc": 5, "aim": 1}, 90, 120, "Fast, forgiving.  A little steadier on the first aimed turn."),
-    ("holo", "holographic sight", "optic", {"acc": 7, "aim": 2, "rangepen_pct": 15}, 150, 220, "Wide window, bright reticle."),
-    ("scope4", "4x scope", "optic", {"acc": 8, "aim": 3, "range_pct": 30, "rangepen_pct": 40, "close_pen": 8}, 300, 400, "Reaches out; clumsy up close."),
-    ("scope8", "8x sniper scope", "optic", {"acc": 10, "aim": 5, "range_pct": 70, "rangepen_pct": 65, "close_pen": 18}, 700, 900, "For long streets and rooftops.  Useless at arm's length."),
-    ("smartlink", "smartlink sight", "optic", {"acc": 12, "aim": 3, "hip": 6, "rangepen_pct": 30}, 600, 1100, "Reads your optic nerve.  The gun knows where you are looking."),
+    ("redot", "red-dot sight", "optic", {"acc": 5}, 90, 120, "Fast, forgiving.  A little steadier on the first aimed turn."),
+    ("holo", "holographic sight", "optic", {"acc": 7, "rangepen_pct": 15}, 150, 220, "Wide window, bright reticle."),
+    ("scope4", "4x scope", "optic", {"acc": 8, "max_aim": 1, "range_pct": 30, "rangepen_pct": 40, "close_pen": 8}, 300, 400, "Reaches out; clumsy up close."),
+    ("scope8", "8x sniper scope", "optic", {"acc": 10, "max_aim": 2, "range_pct": 70, "rangepen_pct": 65, "close_pen": 18}, 700, 900, "For long streets and rooftops.  Useless at arm's length."),
+    ("smartlink", "smartlink sight", "optic", {"acc": 12, "max_aim": 1, "hip": 6, "rangepen_pct": 30}, 600, 1100, "Reads your optic nerve.  The gun knows where you are looking."),
     ("laser", "laser sight", "under", {"hip": 10, "close_pen": -4}, 70, 80, "A red dot on the target.  Helps most when you are not taking time to aim."),
     ("foregrip", "foregrip", "under", {"recoil_pct": -25, "acc": 2}, 40, 150, "Hold it down in bursts."),
-    ("bipod", "folding bipod", "under", {"recoil_pct": -15, "aim": 2, "acc": 3}, 80, 500, "Steadies a long gun if you are not walking."),
+    ("bipod", "folding bipod", "under", {"recoil_pct": -15, "max_aim": 1, "acc": 3}, 80, 500, "Steadies a long gun if you are not walking."),
     ("suppressor", "suppressor", "muzzle", {"noise_cap": 5, "dmg_pct": -6, "range_pct": -5, "jam": 0.2}, 500, 350, "Quiet shots.  Nobody comes to look."),
     ("compensator", "compensator", "muzzle", {"recoil_pct": -30, "noise_cap": 99}, 120, 200, "Tames the muzzle."),
     ("flashhider", "flash hider", "muzzle", {"recoil_pct": -10, "acc": 1}, 60, 100, "A little less climb, a little less glare."),
@@ -37,7 +37,7 @@ MODS = [
     ("drum", "drum magazine", "mag", {"mag_pct": 150, "jam": 1.5, "reload": 1, "acc": -2}, 260, 400, "Lots of lead; slow to swap, fond of jamming."),
     ("quickmag", "quick-release magazine", "mag", {"reload": -1}, 70, 90, "Swaps in a heartbeat."),
     ("stock", "adjustable stock", "stock", {"recoil_pct": -20, "acc": 3}, 90, 450, "Solid against the shoulder."),
-    ("cheekrest", "cheek rest and padded stock", "stock", {"recoil_pct": -30, "aim": 2, "acc": 2}, 160, 700, "Built for precision."),
+    ("cheekrest", "cheek rest and padded stock", "stock", {"recoil_pct": -30, "max_aim": 1, "acc": 2}, 160, 700, "Built for precision."),
 ]
 for mid, name, slot, eff, price, wt, desc in MODS:
     items.append({"id": "trl_mod_" + mid, "name": name, "desc": desc, "weight_g": wt, "volume_ml": max(40, wt // 2), "length_mm": 150, "price": price,

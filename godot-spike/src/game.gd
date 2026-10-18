@@ -73,7 +73,8 @@ var yen: int = 300
 var heat: int = 0
 var ammo_pool: Dictionary = {"9mm|fmj": 36}   # "caliber|kind" -> rounds carried loose
 var want_kind: Dictionary = {}                 # caliber -> kind the next reload loads
-var aim_turns: int = 0
+var aim_turns: int = 0                         # banked aim points (negative after a long burst, never below max aim - 5)
+var aim_dbt: float = 0.0                       # fractional aim loss carried between bullets
 var aim_target: int = -1
 var moved: bool = false
 var last_pc: int = -1
@@ -252,6 +253,7 @@ func _people() -> void:
 	apn = PackedInt32Array(); apn.resize(n)
 	stamn = PackedByteArray(); stamn.resize(n); stamn.fill(STAMINA_MAX)
 	stamt = PackedInt32Array(); stamt.resize(n)
+	aimn = PackedByteArray(); aimn.resize(n)
 	for i in n:
 		face[i] = (i * 5 + 3) & 7
 	fem = PackedByteArray(); fem.resize(n)
@@ -1407,6 +1409,7 @@ var _free_swing := false                       # a free counter-attack is in pro
 var apn: PackedInt32Array                      # every person's banked action points (only fighters use them)
 var stamn: PackedByteArray                     # every person's stamina in percent, brought up to date when they fight (stamt = the turn it was last brought up)
 var stamt: PackedInt32Array
+var aimn: PackedByteArray                      # every gunman's banked aim points (they aim for a turn, then fire for half a turn)
 var last_roll: Dictionary = {}                 # the last melee roll, for the HUD line and the tests: {who, nat, total, outcome, loc, dmg}
 const ARMOR_TYPES := ["phys"]
 
@@ -2441,7 +2444,7 @@ func _target_ok(j: int, any: bool, st: Dictionary) -> bool:
 		return false
 	if not any and not (hostile(j) or astate[j] == HUNTING):
 		return false
-	return cheb(sim.pos[j], pc) <= int(st["range"]) + 4 and sim._sees(pc, sim.pos[j], 40)
+	return cheb(sim.pos[j], pc) <= int(st["range_hi"]) + 8 and sim._sees(pc, sim.pos[j], 40)
 
 ## visible targets, nearest first
 func target_list(any: bool = false) -> Array:
@@ -2476,21 +2479,24 @@ func hit_chance_on(t: int, shot_index: int = 0) -> int:
 		return 0
 	return _shot_chance(st, t, aim_turns, shot_index)
 
-## model + stance + cover on the target
+## everything on the 2d10 roll that comes from you rather than the gun: implants (5 percentage points = 1), a blessing, a drink, a hurt arm, long-range gear
+func _ranged_extra(d: int) -> int:
+	var x: float = imp_sum("acc")
+	if d >= 5:
+		x += imp_sum("acc_far")
+		if discipline("marksman"):
+			x += 6.0
+	x -= float(_arm_acc_pen())
+	if bless_left > 0:
+		x += 6.0
+	if drunk_left > 0:
+		x -= 8.0
+	return int(round(x / 5.0))
+
+## percent to hit on the target for the shot_index'th bullet (the 2d10 model, averaged over the gun's natural-range roll), cover included
 func _shot_chance(st: Dictionary, t: int, aimed: int, shot_index: int) -> int:
 	var d: int = cheb(sim.pos[t], pc)
-	var c: int = GP.hit_chance(st, d, aimed, moved, crouch, lvl("ranged"), eco.aim_penalty(), shot_index, stance == CRAWL)
-	c += int(imp_sum("acc"))                         # brain and eye implants, the palm link
-	if d >= 5:
-		c += int(imp_sum("acc_far"))
-		if discipline("marksman"):
-			c += 6
-	c -= _arm_acc_pen()
-	if bless_left > 0:
-		c += 6
-	if drunk_left > 0:
-		c -= 8
-	return clampi(c - cover_vs(pc, sim.pos[t], false), 5, 95)
+	return GP.hit_chance(st, d, aimed, moved, crouch, lvl("ranged"), eco.aim_penalty(), shot_index, stance == CRAWL, _ranged_extra(d), cover_vs(pc, sim.pos[t], false))
 
 ## one-line description of the wielded gun and what it is aimed at
 func gun_line() -> String:
@@ -2504,8 +2510,7 @@ func gun_line() -> String:
 	var s := "%s [%s] %d/%d %s  res %d" % [wield.def["name"], GP.mode_name(wield), wield.loaded, st["mag"], st["label"] if wield.loaded > 0 else "empty", reserve(st["cal"])]
 	if wield.jammed:
 		s += "  JAMMED"
-	if aim_turns > 0:
-		s += "  aim %d" % aim_turns
+	s += "  range %d-%d  aim %d/%d" % [st["range_lo"], st["range_hi"], aim_turns, st["max_aim"]]
 	return s
 
 func act_cycle_target(any: bool = false) -> bool:
@@ -2533,17 +2538,19 @@ func act_aim(any: bool = false) -> bool:
 		return false
 	if not can_use_weapon(wield):
 		return false
-	if aim_turns == 0 and turn > aim_last + 1:
+	if aim_turns <= 0 and turn > aim_last + 1:
 		aim_frac = 0.0
 	aim_last = turn
+	var mx: int = int(st["max_aim"])
 	aim_frac += aim_rate()
-	while aim_frac >= 0.999 and aim_turns < GP.MAX_AIM:
+	while aim_frac >= 0.999 and aim_turns < mx:
 		aim_turns += 1
 		aim_frac = maxf(0.0, aim_frac - 1.0)
-	if aim_turns >= GP.MAX_AIM:
+	if aim_turns >= mx:
 		aim_frac = 0.0
 	aim_target = t
-	say("You steady the %s on %s (aim %d, %.2f a turn): %d%% to hit." % [wield.def["name"], name_of(t), aim_turns, aim_rate(), hit_chance_on(t)])
+	stamina = maxi(0, stamina - GP.STAM_AIM)
+	say("You steady the %s on %s (aim %d/%d, %.2f a turn): %d%% to hit." % [wield.def["name"], name_of(t), aim_turns, mx, aim_rate(), hit_chance_on(t)])
 	end_turn()
 	return true
 
@@ -2661,9 +2668,12 @@ func act_fire(any: bool = false) -> bool:
 	var d: int = cheb(sim.pos[t], pc)
 	var dmg_by: Dictionary = {}                  # agent -> damage
 	var hits_by: Dictionary = {}
+	var crit_by: Dictionary = {}
+	var where_by: Dictionary = {}
 	var aimed: int = aim_turns
+	var skill: int = lvl("ranged")
+	var fumbled := false
 	for s in shots:
-		var chance: int = _shot_chance(st, t, aimed, s)
 		var blocked: Array = _vehicle_in_line(t)
 		if not blocked.is_empty() and st["blast"] == 0:
 			var vdmg: int = rng.randi_range(int(st["dmg"][0]), int(st["dmg"][1]))
@@ -2672,72 +2682,96 @@ func act_fire(any: bool = false) -> bool:
 			vs.damage_cell(int(blocked[0]), int(blocked[1]), vdmg, "gunfire")
 			if s == 0:
 				say("Your shots slam into the %s." % vs.KINDS[vehicles[int(blocked[0])]["kind"]]["name"])
+			_spend_aim_on_bullet(st)
 			continue
 		var victim: int = _victim_in_line(t)
 		var vd: int = d if victim == t else cheb(sim.pos[victim], pc)
-		var pellets: int = int(st["pellets"])
-		var landed := 0
-		var dmg_total := 0
-		var arm_eff: int = maxi(0, npc_armor(victim) - int(st.get("pen", 0)))
-		if st["blast"] > 0:
-			landed = 1 if rng.randi() % 100 < chance else 0
-			dmg_total = rng.randi_range(int(st["dmg"][0]), int(st["dmg"][1]))
-		elif pellets > 1:
-			var pc_chance: int = clampi(chance - int(float(vd) * 3.0 * float(st["spread"])), 4, 95)
-			var fall: float = 1.0 if vd <= int(st["range"]) else 0.5
-			for _p in pellets:
-				if rng.randi() % 100 < pc_chance:
-					landed += 1
-					dmg_total += maxi(0, int(float(rng.randi_range(int(st["dmg"][0]), int(st["dmg"][1]))) / float(pellets) * 1.25 * fall) - arm_eff)
-		else:
-			if rng.randi() % 100 < chance:
-				if rng.randi() % 100 < npc_bullet_dodge(victim):
-					say_if_seen(sim.pos[victim], "%s blurs aside and the round misses." % name_of(victim))
+		var nat: int = _roll_2d10()
+		var rr: int = rng.randi_range(int(st["range_lo"]), int(st["range_hi"]))
+		var bonus: int = GP.bonus_points(st, aim_turns, moved, crouch, skill, eco.aim_penalty(), stance == CRAWL, _ranged_extra(vd))
+		var total: int = GP.shot_total(nat, bonus, GP.range_penalty(st, vd, rr), cover_vs(pc, sim.pos[victim], false))
+		var out: String = SK.melee_outcome(nat, total, npc_lvl(victim, "grit"))
+		var loc: String = body.pick_melee(rng)
+		last_roll = {"who": "you", "target": victim, "nat": nat, "total": total, "outcome": out, "loc": loc, "dmg": 0, "range_roll": rr, "aim": aim_turns}
+		_spend_aim_on_bullet(st)
+		var landed := false
+		var dmg: int = 0
+		var crit: bool = out == "crit"
+		if out == "cmiss":
+			fumbled = true
+			aim_turns = 0
+			aim_dbt = 0.0
+			aim_frac = 0.0
+		elif out != "miss":
+			if st["blast"] == 0 and rng.randi() % 100 < npc_bullet_dodge(victim):
+				say_if_seen(sim.pos[victim], "%s blurs aside and the round misses." % name_of(victim))
+			else:
+				landed = true
+				var wmax: int = int(st["dmg"][1])
+				var base: int = SK.melee_base(rng.randi_range(int(st["dmg"][0]), wmax), wmax, skill, crit)
+				if st["blast"] > 0:
+					dmg = base
 				else:
-					landed = 1
-					dmg_total = maxi(0, rng.randi_range(int(st["dmg"][0]), int(st["dmg"][1])) - arm_eff)
-					if dmg_total == 0:
+					var arm_eff: int = maxi(0, npc_armor(victim) - int(st.get("pen", 0)))
+					dmg = maxi(0, base - arm_eff - npc_lvl(victim, "grit"))
+					if dmg == 0:
 						say("The round pings off %s's armor." % name_of(victim))
-		tracers.append([pc, sim.pos[victim] if landed > 0 or st["blast"] > 0 else sim.pos[t], landed > 0])
+						landed = false
+		tracers.append([pc, sim.pos[victim] if landed or st["blast"] > 0 else sim.pos[t], landed])
 		sfx("shot" if int(st["noise"]) < 14 else "shot_big")
+		last_roll["dmg"] = dmg
 		if st["blast"] > 0:
-			_explode(sim.pos[t] if landed > 0 else _scatter_cell(sim.pos[t]), int(st["blast"]), dmg_total)
-			hits_by[t] = hits_by.get(t, 0) + landed
+			_explode(sim.pos[t] if landed else _scatter_cell(sim.pos[t]), int(st["blast"]), dmg)
+			hits_by[t] = int(hits_by.get(t, 0)) + (1 if landed else 0)
 			continue
-		if landed > 0:
-			dmg_by[victim] = int(dmg_by.get(victim, 0)) + dmg_total
-			hits_by[victim] = int(hits_by.get(victim, 0)) + landed
+		if landed:
+			dmg_by[victim] = int(dmg_by.get(victim, 0)) + dmg
+			hits_by[victim] = int(hits_by.get(victim, 0)) + 1
+			if crit:
+				crit_by[victim] = true
+			where_by[victim] = loc
 	wield.loaded -= shots
+	stamina = maxi(0, stamina - GP.STAM_FIRE)
 	var msg := "You fire the %s [%s]" % [wield.def["name"], GP.mode_name(wield)]
 	if aimed > 0:
-		msg += " (aimed)"
+		msg += " (aim %d)" % aimed
 	if st["blast"] > 0:
 		msg += ": the grenade bursts."
 	else:
 		var parts: Array = []
 		for v in dmg_by:
-			parts.append("%s: %d hit%s for %d" % [name_of(v), hits_by[v], "" if hits_by[v] == 1 else "s", dmg_by[v]])
+			parts.append("%s: %d hit%s for %d in the %s%s" % [name_of(v), hits_by[v], "" if hits_by[v] == 1 else "s", dmg_by[v], BODY.NAME[where_by[v]], " - a critical hit" if crit_by.has(v) else ""])
 		msg += (": " + ", ".join(parts)) if not parts.is_empty() else ": miss"
 	say(msg)
-	aim_turns = 0
+	if fumbled:
+		say("The shot goes wild and you lose your aim!")
 	_noise(pc, int(st["noise"]))
 	for v in dmg_by:
-		_damage_npc(v, int(dmg_by[v]))
+		_damage_npc(v, int(dmg_by[v]), true)
 		skill_up("ranged", 2 + d / 5)
 	if dmg_by.is_empty() and st["blast"] == 0:
 		_alert(t)
 	if rng.randf() * 100.0 < float(st["jam"]) * float(shots) * maxf(0.5, 1.0 - 0.04 * float(lvl("engineering"))) and wield.loaded > 0:
 		wield.jammed = true
 		say("The %s jams." % wield.def["name"])
-	end_turn()
+	end_turn(GP.AP_FIRE)
 	return true
 
-func _damage_npc(v: int, dmg: int) -> void:
+## each bullet costs the shooter aim: `aim_loss` points a bullet (fractions carry over), never below max aim - 5
+func _spend_aim_on_bullet(st: Dictionary) -> void:
+	aim_dbt += float(st["aim_loss"])
+	var floor_aim: int = int(st["max_aim"]) - GP.AIM_FLOOR_DROP
+	while aim_dbt >= 0.999:
+		aim_dbt -= 1.0
+		aim_turns = maxi(floor_aim, aim_turns - 1)
+
+func _damage_npc(v: int, dmg: int, final: bool = false) -> void:
 	if sim.alive[v] == 0:
 		return
 	var st: Dictionary = gun_stats()
 	_silent = (not st.is_empty() and st["suppressed"]) and (astate[v] == UNAWARE or astate[v] == RETURNING)
-	dmg = npc_take(v, dmg)
+	if not final:
+		dmg = npc_take(v, dmg)
 	hpn[v] -= dmg
 	if hpn[v] <= 0:
 		kill(v)
@@ -3257,20 +3291,37 @@ func _hunt(i: int, d: int) -> void:
 func _hunt_act(i: int, d: int, sees: bool) -> void:
 	var c: int = sim.pos[i]
 	var g := gunc[i]
-	if g > 0 and sees and cool[i] == 0 and d >= 2 and d <= (8 if g == 1 else 14):
-		cool[i] = 2
-		var stance_pen: int = [18, 10, 0, 6][stance]
-		var chance := clampi(62 + 2 * (npc_lvl(i, "ranged") - 3) - 4 * maxi(0, d - 2) - stance_pen - (15 if in_vehicle >= 0 else 0) - cover_vs(c, pc, crouch), 8, 85)
-		if rng.randi() % 100 < chance:
-			if rng.randi() % 100 < player_bullet_dodge():
-				say("You twist aside and the round cracks past!")
-				skill_up("dodge", 5)
-			else:
-				var dmg := rng.randi_range(5, 9) if g == 1 else rng.randi_range(6, 11)
-				player_hurt(dmg, "%s shoots you" % name_of(i), "phys", "", 1 if fac[i] == NAP else 0)
-		else:
+	if g > 0 and sees and d >= 2 and d <= int(GP.NPC_GUN[g]["range"][1]) + 3:
+		var ng: Dictionary = GP.NPC_GUN[g]
+		if int(aimn[i]) < int(ng["want"]):          # the tell: a gunman spends a whole action raising the gun before the first shot
+			aimn[i] += 1
+			npc_stamina_spend(i, GP.STAM_AIM)
+			say_if_seen(c, "%s raises a %s and takes aim at you." % [name_of(i), String(ng["name"])])
+			return
+		apn[i] = mini(apn[i] + AP_BASE - GP.AP_FIRE, AP_BASE + npc_ap_rate(i) - 1)     # a shot costs only 50 of the 100 points
+		npc_stamina_spend(i, GP.STAM_FIRE)
+		var nat: int = _roll_2d10()
+		var rr: int = rng.randi_range(int(ng["range"][0]), int(ng["range"][1]))
+		var skill: int = npc_lvl(i, "ranged")
+		var bonus: int = skill + int(aimn[i]) + [-3, -2, 0, -1][stance] - (3 if in_vehicle >= 0 else 0)
+		var total: int = GP.shot_total(nat, bonus, absi(d - rr), cover_vs(c, pc, crouch))
+		var out: String = SK.melee_outcome(nat, total, lvl("grit"))
+		last_roll = {"who": name_of(i), "target": -1, "nat": nat, "total": total, "outcome": out, "loc": "", "dmg": 0, "range_roll": rr, "aim": int(aimn[i])}
+		aimn[i] = maxi(0, int(aimn[i]) - 1)
+		_noise(c, int(ng["noise"]))
+		if out == "cmiss":
+			aimn[i] = 0
+			say_if_seen(c, "%s's shot goes wild." % name_of(i))
+		elif out == "miss":
 			say_if_seen(c, "%s shoots at you and misses." % name_of(i))
-		_noise(c, 14)
+		elif rng.randi() % 100 < player_bullet_dodge():
+			say("You twist aside and the round cracks past!")
+			skill_up("dodge", 5)
+		else:
+			var crit: bool = out == "crit"
+			var wmax: int = int(ng["dmg"][1])
+			var dmg: int = SK.melee_base(rng.randi_range(int(ng["dmg"][0]), wmax), wmax, skill, crit)
+			player_melee_hurt(dmg, "%s shoots you" % name_of(i), 1 if fac[i] == NAP else 0, crit)
 		return
 	if d <= 1:
 		_npc_melee_attack(i)
@@ -4225,7 +4276,7 @@ func save_dict() -> Dictionary:
 			"items_at": it_at, "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
 					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc),
-					"prov": provoked.keys(), "apn": Array(apn), "stamn": Array(stamn), "stamt": Array(stamt), "mdis": Array(mdis), "noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle)}}
+					"prov": provoked.keys(), "apn": Array(apn), "stamn": Array(stamn), "stamt": Array(stamt), "aimn": Array(aimn), "mdis": Array(mdis), "noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle)}}
 
 func load_dict(d: Dictionary) -> void:
 	seed_value = int(d["seed"])
@@ -4315,6 +4366,9 @@ func load_dict(d: Dictionary) -> void:
 	apn.fill(AP_BASE)
 	stamn.fill(STAMINA_MAX)
 	stamt.fill(0)
+	aimn.fill(0)
+	for j in mini(aimn.size(), nn.get("aimn", []).size()):
+		aimn[j] = int(nn["aimn"][j])
 	for j in mini(apn.size(), nn.get("apn", []).size()):
 		apn[j] = int(nn["apn"][j])
 		stamn[j] = int(nn["stamn"][j])

@@ -9,35 +9,36 @@ Makers (the four-country rule: Russia, China, Japan, USA; all working placeholde
   H Hoshikawa Arms (JP)   S Sakurada Precision (JP)   V Volkov Works (RU)   Z Zarya Combine (RU)
   G Granite Arms (US)     L Longhai Ordnance (CN)     F Feng-Xu Arms (CN)
 
-CLASS holds what a whole class shares: caliber, fire modes, recoil, report, reload, pellets, mod slots, jam chance, range and
-length.  Each gun then sets its own accuracy, damage range and magazine size.  Edit a gun's row to change that gun.
+CLASS holds what a whole class shares: caliber, fire modes, natural range, max aim, aim loss, report, reload, pellets, mod slots, jam chance
+and length.  Each gun then sets its own accuracy, damage range and magazine size.  Edit a gun's row to change that gun.
 """
 
 MAKERS = {"H": "Hoshikawa Arms", "S": "Sakurada Precision", "V": "Volkov Works", "Z": "Zarya Combine",
           "G": "Granite Arms", "L": "Longhai Ordnance", "F": "Feng-Xu Arms"}
 
-# range: effective range in tiles; acc: base accuracy (percent); cal: caliber; modes: [name, shots]; recoil: lost accuracy per extra shot in a
-# burst; noise: report radius in tiles; reload: turns; pellets per shot; slots: mod slots; jam: percent per trigger pull; length_mm: overall length
+# range: natural range [near, far] in tiles (each shot rolls a distance in the band and loses 1 point per tile you are away from it);
+# max_aim: the most aim points a steady hand can bank; aim_loss: aim points lost per bullet fired without re-aiming; acc: base accuracy (percent,
+# a small bonus or penalty of (acc - 65) / 5 points to the 2d10 roll); cal: caliber; modes: [name, shots]; noise: report radius in tiles; reload: turns; pellets per shot; slots: mod slots; jam: percent per trigger pull; length_mm: overall length
 CLASS = {
-    "SMG":      {"range": 12, "cal": "9mm",  "modes": [["single", 1], ["burst", 3], ["auto", 6]], "recoil": 4, "noise": 16, "reload": 1, "pellets": 1,
+    "SMG":      {"range": [4, 9], "max_aim": 2, "cal": "9mm",  "modes": [["single", 1], ["burst", 3], ["auto", 6]], "aim_loss": 1.0, "noise": 16, "reload": 1, "pellets": 1,
                  "slots": ["optic", "muzzle", "mag", "under", "stock"], "jam": 1.0, "length_mm": 450},
-    "Pistol":   {"range": 10, "cal": "9mm",  "modes": [["single", 1]], "recoil": 3, "noise": 14, "reload": 1, "pellets": 1,
+    "Pistol":   {"range": [3, 7], "max_aim": 2, "cal": "9mm",  "modes": [["single", 1]], "aim_loss": 1.0, "noise": 14, "reload": 1, "pellets": 1,
                  "slots": ["optic", "muzzle", "mag", "under"], "jam": 0.6, "length_mm": 200},
-    "Revolver": {"range": 10, "cal": ".357", "modes": [["single", 1]], "recoil": 5, "noise": 18, "reload": 3, "pellets": 1,
+    "Revolver": {"range": [3, 7], "max_aim": 2, "cal": ".357", "modes": [["single", 1]], "aim_loss": 1.0, "noise": 18, "reload": 3, "pellets": 1,
                  "slots": ["optic", "muzzle", "under"], "jam": 0.1, "length_mm": 220},
-    "Rifle":    {"range": 18, "cal": "5.56", "modes": [["single", 1], ["burst", 3]], "recoil": 4, "noise": 20, "reload": 2, "pellets": 1,
+    "Rifle":    {"range": [10, 15], "max_aim": 3, "cal": "5.56", "modes": [["single", 1], ["burst", 3]], "aim_loss": 1.0, "noise": 20, "reload": 2, "pellets": 1,
                  "slots": ["optic", "muzzle", "barrel", "mag", "under", "stock"], "jam": 0.8, "length_mm": 900},
-    "Shotgun":  {"range": 6,  "cal": "12ga", "modes": [["single", 1]], "recoil": 6, "noise": 22, "reload": 3, "pellets": 8,
+    "Shotgun":  {"range": [3, 7], "max_aim": 2,  "cal": "12ga", "modes": [["single", 1]], "aim_loss": 1.0, "noise": 22, "reload": 3, "pellets": 8,
                  "slots": ["optic", "barrel", "under", "stock"], "jam": 0.8, "length_mm": 950},
-    "Sniper":   {"range": 30, "cal": ".338", "modes": [["single", 1]], "recoil": 6, "noise": 24, "reload": 2, "pellets": 1,
+    "Sniper":   {"range": [20, 30], "max_aim": 5, "cal": ".338", "modes": [["single", 1]], "aim_loss": 1.0, "noise": 24, "reload": 2, "pellets": 1,
                  "slots": ["optic", "muzzle", "barrel", "under", "stock"], "jam": 0.5, "length_mm": 1100},
-    "MG":       {"range": 16, "cal": "7.62", "modes": [["burst", 4], ["auto", 8]], "recoil": 3, "noise": 22, "reload": 4, "pellets": 1,
+    "MG":       {"range": [9, 13], "max_aim": 2, "cal": "7.62", "modes": [["burst", 4], ["auto", 8]], "aim_loss": 1.0, "noise": 22, "reload": 4, "pellets": 1,
                  "slots": ["optic", "muzzle", "under", "stock"], "jam": 1.5, "length_mm": 1000},
-    "Heavy MG": {"range": 20, "cal": "12.7", "modes": [["burst", 5], ["auto", 10]], "recoil": 3, "noise": 26, "reload": 5, "pellets": 1,
+    "Heavy MG": {"range": [12, 18], "max_aim": 2, "cal": "12.7", "modes": [["burst", 5], ["auto", 10]], "aim_loss": 1.0, "noise": 26, "reload": 5, "pellets": 1,
                  "slots": ["optic", "muzzle"], "jam": 1.5, "length_mm": 1300},
-    "Launcher": {"range": 14, "cal": "40mm", "modes": [["single", 1]], "recoil": 0, "noise": 24, "reload": 2, "pellets": 1,
+    "Launcher": {"range": [8, 14], "max_aim": 2, "cal": "40mm", "modes": [["single", 1]], "aim_loss": 1.0, "noise": 24, "reload": 2, "pellets": 1,
                  "slots": ["optic", "under"], "jam": 0.5, "length_mm": 800},
-    "Laser":    {"range": 15, "cal": "cell", "modes": [["single", 1], ["burst", 2]], "recoil": 1, "noise": 8, "reload": 1, "pellets": 1,
+    "Laser":    {"range": [8, 13], "max_aim": 3, "cal": "cell", "modes": [["single", 1], ["burst", 2]], "aim_loss": 0.5, "noise": 8, "reload": 1, "pellets": 1,
                  "slots": ["optic", "under"], "jam": 0.0, "length_mm": 700},
 }
 
@@ -112,8 +113,8 @@ def records():
     out = []
     for code, name, mk, cls, wt, price, acc, dmg, mag, rare, text in GUNS:
         c = CLASS[cls]
-        gun = {"dmg": list(dmg), "range": c["range"], "acc": acc, "cal": c["cal"], "mag": mag, "modes": [list(m) for m in c["modes"]],
-               "recoil": c["recoil"], "noise": c["noise"], "reload": c["reload"], "pellets": c["pellets"], "slots": list(c["slots"]), "jam": c["jam"]}
+        gun = {"dmg": list(dmg), "range": list(c["range"]), "acc": acc, "cal": c["cal"], "mag": mag, "modes": [list(m) for m in c["modes"]],
+               "max_aim": c["max_aim"], "aim_loss": c["aim_loss"], "noise": c["noise"], "reload": c["reload"], "pellets": c["pellets"], "slots": list(c["slots"]), "jam": c["jam"]}
         out.append({"id": "trl_gun_" + code, "name": name, "desc": "%s  Made by %s." % (text, MAKERS[mk]), "weight_g": wt,
                     "volume_ml": wt // 2, "length_mm": c["length_mm"], "price": price, "tags": ["gun", cls.lower().replace(" ", "_")],
                     "maker": MAKERS[mk], "rare": rare, "gun": gun})

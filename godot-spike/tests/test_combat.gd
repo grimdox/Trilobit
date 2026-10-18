@@ -226,7 +226,7 @@ func run() -> Array:
 	g.act_aim(true)
 	var after1: int = g.aim_turns
 	g.act_aim(true)
-	check.call("with a grade 4 implant two aim actions settle three levels (%d, then %d)" % [after1, g.aim_turns], after1 == 1 and g.aim_turns == 3)
+	check.call("with a grade 4 implant aim comes faster, up to the gun's max aim (%d, then %d of %d)" % [after1, g.aim_turns, g.gun_stats()["max_aim"]], after1 == 1 and g.aim_turns == mini(3, int(g.gun_stats()["max_aim"])))
 	g.implants = {}
 	# cover
 	var chance_open: int = g._shot_chance(bs, who, 0, 0)

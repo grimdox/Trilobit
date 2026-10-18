@@ -36,7 +36,7 @@ const SKILLS := [
 			{"id": "riposte", "name": "Riposte", "req": 6, "desc": "A parried blow can become an instant counter-strike."}]},
 	{"id": "ranged", "name": "Ranged", "group": "Combat", "attrs": ["per", "cog"], "live": true,
 		"desc": "Accuracy and precision with guns.  Governs chance to hit with ranged weapons.  At high levels, allows for ranged weapon disciplines.",
-		"note": "+2% to hit per level, steadier aim.",
+		"note": "Each level adds 1 to your 2d10 shot roll and 1 damage, and settles your aim a little faster.",
 		"disc": [
 			{"id": "steady_aim", "name": "Steady Aim", "req": 5, "desc": "Each aim action steadies the shot a quarter level more."},
 			{"id": "marksman", "name": "Marksman", "req": 8, "desc": "+6% to hit at five or more tiles."}]},
@@ -46,7 +46,7 @@ const SKILLS := [
 		"disc": []},
 	{"id": "grit", "name": "Grit", "group": "Combat", "attrs": ["str", "end"], "live": true,
 		"desc": "Ability to endure hits.  Grit decreases damage received and decreases critical hit chance.",
-		"note": "Melee blows lose 1 damage per level (after armor).  A blow is a crit on a natural 19 or 20, or a total of 20 plus your Grit.  Guns: 1 less damage per 4 levels; crits start at 6% and fall 1% a level.",
+		"note": "Blows and bullets lose 1 damage per level (after armor).  An attack is a crit on a natural 19 or 20, or a total of 20 plus your Grit.  Blasts: 1 less damage per 4 levels.",
 		"disc": []},
 	{"id": "networking", "name": "Networking", "group": "Hacking", "attrs": ["cog"], "live": false,
 		"desc": "The ability to connect to electronic networks, including computer systems and other people's implants.  Higher levels allow for quicker and easier connection.",
