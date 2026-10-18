@@ -325,7 +325,7 @@ def train(open_doors=False):
         o.shade(o.rrect(88, y - (0 if y == 0 else 2), 80, 8, 3), '#2a2f38', bevel=2.5, strength=0.7, spec=0.5)
     o.fill(o.rect(126, 4, 4, 28), '#050608', 0.8)
     o.fill(o.rect(126, 352, 4, 28), '#050608', 0.8)
-    # lit panels and neon trim (Bouma): a cyan light strip along each wall's inner edge, a magenta route sign at the ends
+    # lit panels and neon trim: a cyan light strip along each wall's inner edge, a magenta route sign at the ends
     o.shade(o.rect(60, 14, 3, 360), CY, bevel=0.8, strength=0.1, emit=0.8)
     o.shade(o.rect(193, 14, 3, 360), CY, bevel=0.8, strength=0.1, emit=0.8)
     for y in (46, 322):

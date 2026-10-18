@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Draws the 64x64 Trilobit tileset into gfx/Trilobit64/ (CDDA tile_config format, read by src/tileset.gd).
+"""Draws the 64x64 Trilobit tileset into gfx/Trilobit64/ (tile_config.json plus sheets, read by src/tileset.gd).
 Usage: gen_tiles64.py OUTDIR ITEMS_JSON"""
 import sys, os, json, importlib
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))

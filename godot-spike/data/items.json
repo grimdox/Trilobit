@@ -2,7 +2,7 @@
  {
   "id": "trl_gun_hx9",
   "name": "HX-9 Fuji",
-  "desc": "A smooth, balanced 9mm submachine gun carried by city security.  Made by Hoshikawa Arms.",
+  "desc": "A smooth, balanced submachine gun issued to tower security.  Made by Hoshikawa Arms.",
   "weight_g": 2600,
   "volume_ml": 1300,
   "length_mm": 450,
@@ -11,7 +11,8 @@
    "gun",
    "smg"
   ],
-  "looks_like": "colt_ro635",
+  "maker": "Hoshikawa Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     7,
@@ -52,7 +53,7 @@
  {
   "id": "trl_gun_sm9",
   "name": "SM-9 Kagero",
-  "desc": "A vertical-magazine 9mm SMG with almost no felt recoil.  Made by Sakurada Precision.",
+  "desc": "A sleek SMG with a buffered bolt that barely climbs in a burst.  Made by Sakurada Precision.",
   "weight_g": 2300,
   "volume_ml": 1150,
   "length_mm": 450,
@@ -61,7 +62,8 @@
    "gun",
    "smg"
   ],
-  "looks_like": "TDI",
+  "maker": "Sakurada Precision",
+  "rare": false,
   "gun": {
    "dmg": [
     8,
@@ -102,7 +104,7 @@
  {
   "id": "trl_gun_vs45",
   "name": "VS-45 Buran",
-  "desc": "A crude, cheap .45 submachine gun that never seems to jam.  Made by Volkov Works.",
+  "desc": "Stamped steel and a wire stock.  Cheap, crude, and it always fires.  Made by Volkov Works.",
   "weight_g": 3400,
   "volume_ml": 1700,
   "length_mm": 450,
@@ -111,7 +113,8 @@
    "gun",
    "smg"
   ],
-  "looks_like": "greasegun",
+  "maker": "Volkov Works",
+  "rare": false,
   "gun": {
    "dmg": [
     7,
@@ -152,7 +155,7 @@
  {
   "id": "trl_gun_zp19",
   "name": "ZP-19 Vikhr",
-  "desc": "A short, loud, fast-firing SMG for room fights.  Made by Zarya Combine.",
+  "desc": "A short, loud bullet hose for clearing a room in one breath.  Made by Zarya Combine.",
   "weight_g": 2000,
   "volume_ml": 1000,
   "length_mm": 450,
@@ -161,7 +164,8 @@
    "gun",
    "smg"
   ],
-  "looks_like": "mac_10",
+  "maker": "Zarya Combine",
+  "rare": false,
   "gun": {
    "dmg": [
     7,
@@ -202,7 +206,7 @@
  {
   "id": "trl_gun_gk7",
   "name": "GK-7 Grizzly",
-  "desc": "A drum-fed .45 submachine gun with a heavy, steady hit.  Made by Granite Arms.",
+  "desc": "A heavy SMG with a wooden fore-end.  It sits still when it fires.  Made by Granite Arms.",
   "weight_g": 4300,
   "volume_ml": 2150,
   "length_mm": 450,
@@ -211,7 +215,8 @@
    "gun",
    "smg"
   ],
-  "looks_like": "tommygun",
+  "maker": "Granite Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     8,
@@ -252,7 +257,7 @@
  {
   "id": "trl_gun_ls5",
   "name": "LS-5 Panda",
-  "desc": "A high-capacity helical-magazine carbine, quiet and compact.  Made by Longhai Ordnance.",
+  "desc": "A compact carbine with a deep magazine, popular with couriers.  Made by Longhai Ordnance.",
   "weight_g": 2300,
   "volume_ml": 1150,
   "length_mm": 450,
@@ -261,7 +266,8 @@
    "gun",
    "smg"
   ],
-  "looks_like": "calico",
+  "maker": "Longhai Ordnance",
+  "rare": false,
   "gun": {
    "dmg": [
     8,
@@ -302,7 +308,7 @@
  {
   "id": "trl_gun_fs9",
   "name": "FS-9 Needle",
-  "desc": "A tiny machine pistol that fits under a coat.  Made by Feng-Xu Arms.",
+  "desc": "A palm-sized machine pistol that hides under a jacket.  Made by Feng-Xu Arms.",
   "weight_g": 1300,
   "volume_ml": 650,
   "length_mm": 450,
@@ -311,7 +317,8 @@
    "gun",
    "smg"
   ],
-  "looks_like": "mac_11",
+  "maker": "Feng-Xu Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     6,
@@ -352,7 +359,7 @@
  {
   "id": "trl_gun_sp45",
   "name": "SP-45 Hayabusa",
-  "desc": "A slim target-grade .45 with a crisp trigger.  Made by Sakurada Precision.",
+  "desc": "A slim competition pistol with a crisp, light trigger.  Made by Sakurada Precision.",
   "weight_g": 1000,
   "volume_ml": 500,
   "length_mm": 200,
@@ -361,7 +368,8 @@
    "gun",
    "pistol"
   ],
-  "looks_like": "m1911_10",
+  "maker": "Sakurada Precision",
+  "rare": false,
   "gun": {
    "dmg": [
     11,
@@ -393,7 +401,7 @@
  {
   "id": "trl_gun_zp9",
   "name": "ZP-9 Gnezdo",
-  "desc": "A small, blunt 9mm pistol: ugly, reliable and everywhere in the slums.  Made by Zarya Combine.",
+  "desc": "A small, blunt pistol: ugly, reliable and everywhere in the slums.  Made by Zarya Combine.",
   "weight_g": 700,
   "volume_ml": 350,
   "length_mm": 200,
@@ -402,7 +410,8 @@
    "gun",
    "pistol"
   ],
-  "looks_like": "makarov",
+  "maker": "Zarya Combine",
+  "rare": false,
   "gun": {
    "dmg": [
     11,
@@ -434,7 +443,7 @@
  {
   "id": "trl_gun_fp7",
   "name": "FP-7 Lotus",
-  "desc": "A slim 20-round pistol firing a small, fast, armor-piercing round.  Made by Feng-Xu Arms.",
+  "desc": "A polymer pistol with a long grip and a high-capacity magazine.  Made by Feng-Xu Arms.",
   "weight_g": 650,
   "volume_ml": 325,
   "length_mm": 200,
@@ -443,7 +452,8 @@
    "gun",
    "pistol"
   ],
-  "looks_like": "ruger_57",
+  "maker": "Feng-Xu Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     11,
@@ -475,7 +485,7 @@
  {
   "id": "trl_gun_hp40",
   "name": "HP-40 Sagi",
-  "desc": "A six-shot revolver in 10mm with a short, quick-pointing barrel.  Made by Hoshikawa Arms.",
+  "desc": "A snub six-shot revolver that points itself.  Made by Hoshikawa Arms.",
   "weight_g": 1000,
   "volume_ml": 500,
   "length_mm": 220,
@@ -484,7 +494,8 @@
    "gun",
    "revolver"
   ],
-  "looks_like": "sw_610",
+  "maker": "Hoshikawa Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     13,
@@ -515,7 +526,7 @@
  {
   "id": "trl_gun_gp10",
   "name": "GP-10 Mustang",
-  "desc": "A huge gas-operated hand cannon.  It is as loud as it looks.  Made by Granite Arms.",
+  "desc": "An oversized chrome pistol.  It is as loud as it looks.  Made by Granite Arms.",
   "weight_g": 1900,
   "volume_ml": 950,
   "length_mm": 200,
@@ -524,7 +535,8 @@
    "gun",
    "pistol"
   ],
-  "looks_like": "modular_deagle",
+  "maker": "Granite Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     9,
@@ -556,7 +568,7 @@
  {
   "id": "trl_gun_lp22",
   "name": "LP-22 Sparrow",
-  "desc": "A quiet little .22 target pistol that thieves like.  Made by Longhai Ordnance.",
+  "desc": "A light, quiet target pistol that thieves like.  Made by Longhai Ordnance.",
   "weight_g": 500,
   "volume_ml": 250,
   "length_mm": 200,
@@ -565,7 +577,8 @@
    "gun",
    "pistol"
   ],
-  "looks_like": "sr22",
+  "maker": "Longhai Ordnance",
+  "rare": false,
   "gun": {
    "dmg": [
     11,
@@ -606,7 +619,8 @@
    "gun",
    "revolver"
   ],
-  "looks_like": "model_10_revolver",
+  "maker": "Volkov Works",
+  "rare": false,
   "gun": {
    "dmg": [
     15,
@@ -637,7 +651,7 @@
  {
   "id": "trl_gun_sr44",
   "name": "SR-44 Okami",
-  "desc": "A long-barrel .44 revolver for patient, accurate shots.  Made by Sakurada Precision.",
+  "desc": "A long-barrelled revolver for patient, accurate shots.  Made by Sakurada Precision.",
   "weight_g": 1500,
   "volume_ml": 750,
   "length_mm": 220,
@@ -646,7 +660,8 @@
    "gun",
    "revolver"
   ],
-  "looks_like": "colt_anaconda_6",
+  "maker": "Sakurada Precision",
+  "rare": false,
   "gun": {
    "dmg": [
     13,
@@ -677,7 +692,7 @@
  {
   "id": "trl_gun_gr500",
   "name": "GR-500 Thunderhead",
-  "desc": "A five-shot .500 revolver: slow, heavy and devastating.  Made by Granite Arms.",
+  "desc": "A massive revolver with a ported barrel: slow, heavy and brutal.  Made by Granite Arms.",
   "weight_g": 2100,
   "volume_ml": 1050,
   "length_mm": 220,
@@ -686,7 +701,8 @@
    "gun",
    "revolver"
   ],
-  "looks_like": "sw_500",
+  "maker": "Granite Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     15,
@@ -717,7 +733,7 @@
  {
   "id": "trl_gun_ha5",
   "name": "HA-5 Kaede",
-  "desc": "A short, light carbine for patrols in corridors.  Made by Hoshikawa Arms.",
+  "desc": "A short, light carbine for patrols in tower corridors.  Made by Hoshikawa Arms.",
   "weight_g": 2900,
   "volume_ml": 1450,
   "length_mm": 900,
@@ -726,7 +742,8 @@
    "gun",
    "rifle"
   ],
-  "looks_like": "modular_m4_carbine",
+  "maker": "Hoshikawa Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     16,
@@ -764,7 +781,7 @@
  {
   "id": "trl_gun_sa14",
   "name": "SA-14 Zuiun",
-  "desc": "A burst-fire rifle with a long barrel and fine sights.  Made by Sakurada Precision.",
+  "desc": "A long-barrelled rifle with fine sights and a three-round burst.  Made by Sakurada Precision.",
   "weight_g": 3400,
   "volume_ml": 1700,
   "length_mm": 900,
@@ -773,7 +790,8 @@
    "gun",
    "rifle"
   ],
-  "looks_like": "modular_m16a4",
+  "maker": "Sakurada Precision",
+  "rare": false,
   "gun": {
    "dmg": [
     16,
@@ -811,7 +829,7 @@
  {
   "id": "trl_gun_vk74",
   "name": "VK-74 Granit",
-  "desc": "A mid-weight semi-automatic rifle, tough and honest.  Made by Volkov Works.",
+  "desc": "A mid-weight rifle with a slab-sided receiver, tough and honest.  Made by Volkov Works.",
   "weight_g": 3300,
   "volume_ml": 1650,
   "length_mm": 900,
@@ -820,7 +838,8 @@
    "gun",
    "rifle"
   ],
-  "looks_like": "ak74_semi",
+  "maker": "Volkov Works",
+  "rare": false,
   "gun": {
    "dmg": [
     16,
@@ -858,7 +877,7 @@
  {
   "id": "trl_gun_zk15",
   "name": "ZK-15 Taiga",
-  "desc": "A modernised AK-pattern rifle with a short tactical barrel.  Made by Zarya Combine.",
+  "desc": "A rail-covered assault rifle with a short tactical barrel.  Made by Zarya Combine.",
   "weight_g": 3500,
   "volume_ml": 1750,
   "length_mm": 900,
@@ -867,7 +886,8 @@
    "gun",
    "rifle"
   ],
-  "looks_like": "kord",
+  "maker": "Zarya Combine",
+  "rare": false,
   "gun": {
    "dmg": [
     17,
@@ -905,7 +925,7 @@
  {
   "id": "trl_gun_ga10",
   "name": "GA-10 Ironwood",
-  "desc": "A full-power battle rifle with a steel barrel.  Made by Granite Arms.",
+  "desc": "A heavy battle rifle with a fluted steel barrel.  Made by Granite Arms.",
   "weight_g": 4200,
   "volume_ml": 2100,
   "length_mm": 900,
@@ -914,7 +934,8 @@
    "gun",
    "rifle"
   ],
-  "looks_like": "ar10",
+  "maker": "Granite Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     16,
@@ -961,7 +982,8 @@
    "gun",
    "rifle"
   ],
-  "looks_like": "rdb_223",
+  "maker": "Longhai Ordnance",
+  "rare": false,
   "gun": {
    "dmg": [
     15,
@@ -999,7 +1021,7 @@
  {
   "id": "trl_gun_fk9",
   "name": "FK-9 Lantern",
-  "desc": "A long-range bullpup rifle with a folding stock.  Made by Feng-Xu Arms.",
+  "desc": "A long bullpup rifle with a folding stock and a glowing optic rail.  Made by Feng-Xu Arms.",
   "weight_g": 3800,
   "volume_ml": 1900,
   "length_mm": 900,
@@ -1008,7 +1030,8 @@
    "gun",
    "rifle"
   ],
-  "looks_like": "rfb_308",
+  "maker": "Feng-Xu Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     17,
@@ -1046,7 +1069,7 @@
  {
   "id": "trl_gun_gm14",
   "name": "GM-14 Patriot",
-  "desc": "A blocky, accurate battle rifle that has seen three generations.  Made by Granite Arms.",
+  "desc": "A blocky, accurate rifle that has served three generations of guards.  Made by Granite Arms.",
   "weight_g": 4500,
   "volume_ml": 2250,
   "length_mm": 900,
@@ -1055,7 +1078,8 @@
    "gun",
    "rifle"
   ],
-  "looks_like": "m1a",
+  "maker": "Granite Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     15,
@@ -1093,7 +1117,7 @@
  {
   "id": "trl_gun_vs44",
   "name": "VS-44 Kholod",
-  "desc": "A simple, long semi-automatic carbine with a fixed magazine.  Made by Volkov Works.",
+  "desc": "A long, simple carbine with a wooden stock and a fixed magazine.  Made by Volkov Works.",
   "weight_g": 3800,
   "volume_ml": 1900,
   "length_mm": 900,
@@ -1102,7 +1126,8 @@
    "gun",
    "rifle"
   ],
-  "looks_like": "sks",
+  "maker": "Volkov Works",
+  "rare": false,
   "gun": {
    "dmg": [
     15,
@@ -1140,7 +1165,7 @@
  {
   "id": "trl_gun_lc30",
   "name": "LC-30 Dragonfly",
-  "desc": "A light carbine with a thin stock, easy to carry all day.  Made by Longhai Ordnance.",
+  "desc": "A light carbine with a skeleton stock, easy to carry all day.  Made by Longhai Ordnance.",
   "weight_g": 2400,
   "volume_ml": 1200,
   "length_mm": 900,
@@ -1149,7 +1174,8 @@
    "gun",
    "rifle"
   ],
-  "looks_like": "m1carbine",
+  "maker": "Longhai Ordnance",
+  "rare": false,
   "gun": {
    "dmg": [
     16,
@@ -1187,7 +1213,7 @@
  {
   "id": "trl_gun_hs10",
   "name": "HS-10 Raiden",
-  "desc": "A semi-automatic shotgun with a quick follow-up shot.  Made by Hoshikawa Arms.",
+  "desc": "A self-loading shotgun with a quick follow-up shot.  Made by Hoshikawa Arms.",
   "weight_g": 3600,
   "volume_ml": 1800,
   "length_mm": 950,
@@ -1196,7 +1222,8 @@
    "gun",
    "shotgun"
   ],
-  "looks_like": "mossberg_930",
+  "maker": "Hoshikawa Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     19,
@@ -1228,7 +1255,7 @@
  {
   "id": "trl_gun_zs20",
   "name": "ZS-20 Kabanchik",
-  "desc": "A boxy semi-automatic with a big detachable magazine.  Made by Zarya Combine.",
+  "desc": "A boxy shotgun fed from a big detachable box.  Made by Zarya Combine.",
   "weight_g": 3800,
   "volume_ml": 1900,
   "length_mm": 950,
@@ -1237,7 +1264,8 @@
    "gun",
    "shotgun"
   ],
-  "looks_like": "saiga_12",
+  "maker": "Zarya Combine",
+  "rare": false,
   "gun": {
    "dmg": [
     20,
@@ -1269,7 +1297,7 @@
  {
   "id": "trl_gun_gs12",
   "name": "GS-12 Warden",
-  "desc": "A riot shotgun with a long magazine tube.  Made by Granite Arms.",
+  "desc": "A riot shotgun with a long tube and a pistol grip.  Made by Granite Arms.",
   "weight_g": 3500,
   "volume_ml": 1750,
   "length_mm": 950,
@@ -1278,7 +1306,8 @@
    "gun",
    "shotgun"
   ],
-  "looks_like": "remington_870_express",
+  "maker": "Granite Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     21,
@@ -1310,7 +1339,7 @@
  {
   "id": "trl_gun_ls12",
   "name": "LS-12 Pagoda",
-  "desc": "A compact twin-tube pump that holds a lot of shells.  Made by Longhai Ordnance.",
+  "desc": "A compact pump gun with two magazine tubes and a selector.  Made by Longhai Ordnance.",
   "weight_g": 3100,
   "volume_ml": 1550,
   "length_mm": 950,
@@ -1319,7 +1348,8 @@
    "gun",
    "shotgun"
   ],
-  "looks_like": "ksg",
+  "maker": "Longhai Ordnance",
+  "rare": false,
   "gun": {
    "dmg": [
     19,
@@ -1351,7 +1381,7 @@
  {
   "id": "trl_gun_ss12",
   "name": "SS-12 Tsubame",
-  "desc": "A clip-on and standalone door-breaker shotgun.  Made by Sakurada Precision.",
+  "desc": "A stubby breaching shotgun with a standoff muzzle for doors.  Made by Sakurada Precision.",
   "weight_g": 2500,
   "volume_ml": 1250,
   "length_mm": 950,
@@ -1360,7 +1390,8 @@
    "gun",
    "shotgun"
   ],
-  "looks_like": "m26_mass",
+  "maker": "Sakurada Precision",
+  "rare": false,
   "gun": {
    "dmg": [
     20,
@@ -1392,7 +1423,7 @@
  {
   "id": "trl_gun_fs410",
   "name": "FS-410 Quail",
-  "desc": "A two-barrel pocket shotgun for close, ugly encounters.  Made by Feng-Xu Arms.",
+  "desc": "A pocket shotgun for close, ugly encounters.  Made by Feng-Xu Arms.",
   "weight_g": 600,
   "volume_ml": 300,
   "length_mm": 950,
@@ -1401,7 +1432,8 @@
    "gun",
    "shotgun"
   ],
-  "looks_like": "bond_410",
+  "maker": "Feng-Xu Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     21,
@@ -1433,7 +1465,7 @@
  {
   "id": "trl_gun_sd7",
   "name": "SD-7 Kiri",
-  "desc": "A scoped semi-automatic marksman rifle.  Made by Sakurada Precision.",
+  "desc": "A scoped self-loading marksman rifle in a grey composite chassis.  Made by Sakurada Precision.",
   "weight_g": 5000,
   "volume_ml": 2500,
   "length_mm": 1100,
@@ -1442,7 +1474,8 @@
    "gun",
    "sniper"
   ],
-  "looks_like": "m14ebr",
+  "maker": "Sakurada Precision",
+  "rare": false,
   "gun": {
    "dmg": [
     29,
@@ -1475,7 +1508,7 @@
  {
   "id": "trl_gun_vd62",
   "name": "VD-62 Ruchey",
-  "desc": "An ancient bolt-action rifle with a modern scope: still deadly.  Made by Volkov Works.",
+  "desc": "An old bolt-action rifle wearing a modern scope.  Still deadly.  Made by Volkov Works.",
   "weight_g": 4200,
   "volume_ml": 2100,
   "length_mm": 1100,
@@ -1484,7 +1517,8 @@
    "gun",
    "sniper"
   ],
-  "looks_like": "mosin91_30",
+  "maker": "Volkov Works",
+  "rare": false,
   "gun": {
    "dmg": [
     30,
@@ -1517,7 +1551,7 @@
  {
   "id": "trl_gun_zd54",
   "name": "ZD-54 Filin",
-  "desc": "A heavy bolt-action rifle that shoots a huge round very far.  Made by Zarya Combine.",
+  "desc": "A huge bolt-action rifle on a bipod.  It reaches across districts.  Made by Zarya Combine.",
   "weight_g": 11000,
   "volume_ml": 5500,
   "length_mm": 1100,
@@ -1526,7 +1560,8 @@
    "gun",
    "sniper"
   ],
-  "looks_like": "tac50",
+  "maker": "Zarya Combine",
+  "rare": true,
   "gun": {
    "dmg": [
     31,
@@ -1568,7 +1603,8 @@
    "gun",
    "sniper"
   ],
-  "looks_like": "mrad_smr",
+  "maker": "Feng-Xu Arms",
+  "rare": true,
   "gun": {
    "dmg": [
     30,
@@ -1610,7 +1646,8 @@
    "gun",
    "sniper"
   ],
-  "looks_like": "remington_700_308",
+  "maker": "Hoshikawa Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     29,
@@ -1643,7 +1680,7 @@
  {
   "id": "trl_gun_gd300",
   "name": "GD-300 Longshot",
-  "desc": "A chassis rifle with a hand-lapped barrel.  Made by Granite Arms.",
+  "desc": "A chassis rifle with a hand-lapped barrel and an adjustable cheek.  Made by Granite Arms.",
   "weight_g": 5700,
   "volume_ml": 2850,
   "length_mm": 1100,
@@ -1652,7 +1689,8 @@
    "gun",
    "sniper"
   ],
-  "looks_like": "ruger_pr",
+  "maker": "Granite Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     31,
@@ -1685,7 +1723,7 @@
  {
   "id": "trl_gun_ld10",
   "name": "LD-10 Pale Horse",
-  "desc": "A long-range magnum rifle with an integral suppressor.  Made by Longhai Ordnance.",
+  "desc": "A long magnum rifle with a built-in suppressor.  Made by Longhai Ordnance.",
   "weight_g": 6000,
   "volume_ml": 3000,
   "length_mm": 1100,
@@ -1694,7 +1732,8 @@
    "gun",
    "sniper"
   ],
-  "looks_like": "m2010",
+  "maker": "Longhai Ordnance",
+  "rare": true,
   "gun": {
    "dmg": [
     31,
@@ -1727,7 +1766,7 @@
  {
   "id": "trl_gun_vm12",
   "name": "VM-12 Tundra",
-  "desc": "A tripod-mounted heavy machine gun.  It needs a strong back or a vehicle.  Made by Volkov Works.",
+  "desc": "A tripod heavy machine gun.  It needs a strong back or a vehicle.  Made by Volkov Works.",
   "weight_g": 38000,
   "volume_ml": 19000,
   "length_mm": 1300,
@@ -1736,7 +1775,8 @@
    "gun",
    "heavy_mg"
   ],
-  "looks_like": "m2browning",
+  "maker": "Volkov Works",
+  "rare": true,
   "gun": {
    "dmg": [
     16,
@@ -1770,7 +1810,7 @@
  {
   "id": "trl_gun_zm74",
   "name": "ZM-74 Rokot",
-  "desc": "A semi-auto belt-fed support gun for patient shooters.  Made by Zarya Combine.",
+  "desc": "A belt-fed support gun for patient shooters.  Made by Zarya Combine.",
   "weight_g": 9500,
   "volume_ml": 4750,
   "length_mm": 1000,
@@ -1779,7 +1819,8 @@
    "gun",
    "mg"
   ],
-  "looks_like": "m60_semi",
+  "maker": "Zarya Combine",
+  "rare": false,
   "gun": {
    "dmg": [
     13,
@@ -1815,7 +1856,7 @@
  {
   "id": "trl_gun_gm134",
   "name": "GM-134 Hornet",
-  "desc": "A six-barrel minigun on a harness.  Do not run out of ammunition.  Made by Granite Arms.",
+  "desc": "A motor-driven rotary gun on a harness.  Do not run out of ammunition.  Made by Granite Arms.",
   "weight_g": 19000,
   "volume_ml": 9500,
   "length_mm": 1300,
@@ -1824,7 +1865,8 @@
    "gun",
    "heavy_mg"
   ],
-  "looks_like": "m134",
+  "maker": "Granite Arms",
+  "rare": true,
   "gun": {
    "dmg": [
     15,
@@ -1867,7 +1909,8 @@
    "gun",
    "mg"
   ],
-  "looks_like": "m60",
+  "maker": "Hoshikawa Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     13,
@@ -1903,7 +1946,7 @@
  {
   "id": "trl_gun_lm7",
   "name": "LM-7 Tiger",
-  "desc": "An automatic battle rifle with a bipod, good for suppressing fire.  Made by Longhai Ordnance.",
+  "desc": "A long automatic rifle with a bipod, built for suppressing fire.  Made by Longhai Ordnance.",
   "weight_g": 8800,
   "volume_ml": 4400,
   "length_mm": 1000,
@@ -1912,7 +1955,8 @@
    "gun",
    "mg"
   ],
-  "looks_like": "m1918",
+  "maker": "Longhai Ordnance",
+  "rare": false,
   "gun": {
    "dmg": [
     11,
@@ -1948,7 +1992,7 @@
  {
   "id": "trl_gun_gl40",
   "name": "GL-40 Pumpkin",
-  "desc": "A break-open single-shot grenade launcher.  Made by Granite Arms.",
+  "desc": "A fat break-open grenade launcher with a flip-up sight.  Made by Granite Arms.",
   "weight_g": 2700,
   "volume_ml": 1350,
   "length_mm": 800,
@@ -1957,7 +2001,8 @@
    "gun",
    "launcher"
   ],
-  "looks_like": "m79",
+  "maker": "Granite Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     40,
@@ -1987,7 +2032,7 @@
  {
   "id": "trl_gun_zl40",
   "name": "ZL-40 Gvozd",
-  "desc": "A grenade launcher that clips under a rifle.  Made by Zarya Combine.",
+  "desc": "A short grenade launcher with a folding grip.  Made by Zarya Combine.",
   "weight_g": 1600,
   "volume_ml": 800,
   "length_mm": 800,
@@ -1996,7 +2041,8 @@
    "gun",
    "launcher"
   ],
-  "looks_like": "m203",
+  "maker": "Zarya Combine",
+  "rare": false,
   "gun": {
    "dmg": [
     40,
@@ -2026,7 +2072,7 @@
  {
   "id": "trl_gun_fl80",
   "name": "FL-80 Cloud",
-  "desc": "A four-tube rocket launcher that fills a street with fire.  Made by Feng-Xu Arms.",
+  "desc": "A shoulder launcher that fills a street with fire.  Made by Feng-Xu Arms.",
   "weight_g": 6500,
   "volume_ml": 3250,
   "length_mm": 800,
@@ -2035,7 +2081,8 @@
    "gun",
    "launcher"
   ],
-  "looks_like": "m202_flash",
+  "maker": "Feng-Xu Arms",
+  "rare": true,
   "gun": {
    "dmg": [
     39,
@@ -2074,7 +2121,8 @@
    "gun",
    "laser"
   ],
-  "looks_like": "laser_rifle",
+  "maker": "Hoshikawa Arms",
+  "rare": false,
   "gun": {
    "dmg": [
     15,
@@ -2117,7 +2165,8 @@
    "gun",
    "laser"
   ],
-  "looks_like": "laser_rifle",
+  "maker": "Sakurada Precision",
+  "rare": true,
   "gun": {
    "dmg": [
     15,
@@ -2160,7 +2209,8 @@
    "gun",
    "laser"
   ],
-  "looks_like": "laser_rifle",
+  "maker": "Feng-Xu Arms",
+  "rare": true,
   "gun": {
    "dmg": [
     13,
@@ -2201,7 +2251,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "9mm",
    "kind": "fmj",
@@ -2218,7 +2267,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "9mm",
    "kind": "ap",
@@ -2235,7 +2283,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "9mm",
    "kind": "hp",
@@ -2252,7 +2299,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": ".357",
    "kind": "fmj",
@@ -2269,7 +2315,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": ".357",
    "kind": "ap",
@@ -2286,7 +2331,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": ".357",
    "kind": "hp",
@@ -2303,7 +2347,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "5.56",
    "kind": "fmj",
@@ -2320,7 +2363,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "5.56",
    "kind": "ap",
@@ -2337,7 +2379,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "5.56",
    "kind": "hp",
@@ -2354,7 +2395,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "12ga",
    "kind": "shot",
@@ -2371,7 +2411,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "12ga",
    "kind": "slug",
@@ -2388,7 +2427,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": ".338",
    "kind": "fmj",
@@ -2405,7 +2443,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": ".338",
    "kind": "ap",
@@ -2422,7 +2459,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "7.62",
    "kind": "fmj",
@@ -2439,7 +2475,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "7.62",
    "kind": "ap",
@@ -2456,7 +2491,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "12.7",
    "kind": "fmj",
@@ -2473,7 +2507,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "12.7",
    "kind": "ap",
@@ -2490,7 +2523,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "40mm",
    "kind": "he",
@@ -2507,7 +2539,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "cell",
    "kind": "cell",
@@ -2525,7 +2556,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "optic",
    "fx": {
@@ -2545,7 +2575,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "optic",
    "fx": {
@@ -2566,7 +2595,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "optic",
    "fx": {
@@ -2589,7 +2617,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "optic",
    "fx": {
@@ -2612,7 +2639,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "optic",
    "fx": {
@@ -2634,7 +2660,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "under",
    "fx": {
@@ -2654,7 +2679,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "under",
    "fx": {
@@ -2674,7 +2698,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "under",
    "fx": {
@@ -2695,7 +2718,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "muzzle",
    "fx": {
@@ -2717,7 +2739,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "muzzle",
    "fx": {
@@ -2737,7 +2758,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "muzzle",
    "fx": {
@@ -2757,7 +2777,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "barrel",
    "fx": {
@@ -2778,7 +2797,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "barrel",
    "fx": {
@@ -2800,7 +2818,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "barrel",
    "fx": {
@@ -2820,7 +2837,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "mag",
    "fx": {
@@ -2840,7 +2856,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "mag",
    "fx": {
@@ -2862,7 +2877,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "mag",
    "fx": {
@@ -2881,7 +2895,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "stock",
    "fx": {
@@ -2901,7 +2914,6 @@
   "tags": [
    "mod"
   ],
-  "looks_like": "scope",
   "mod": {
    "slot": "stock",
    "fx": {
@@ -2924,7 +2936,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "trl_kama",
   "melee": {
    "dmg": [
     6,
@@ -2952,7 +2963,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "trl_kama",
   "melee": {
    "dmg": [
     7,
@@ -2980,7 +2990,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "trl_kama",
   "melee": {
    "dmg": [
     9,
@@ -3009,7 +3018,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "wakizashi",
   "melee": {
    "dmg": [
     9,
@@ -3037,7 +3045,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "wakizashi",
   "melee": {
    "dmg": [
     11,
@@ -3065,7 +3072,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "wakizashi",
   "melee": {
    "dmg": [
     13,
@@ -3093,7 +3099,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "katana",
   "melee": {
    "dmg": [
     12,
@@ -3120,7 +3125,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "katana",
   "melee": {
    "dmg": [
     14,
@@ -3147,7 +3151,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "katana",
   "melee": {
    "dmg": [
     17,
@@ -3174,7 +3177,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "tanto",
   "melee": {
    "dmg": [
     6,
@@ -3202,7 +3204,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "tanto",
   "melee": {
    "dmg": [
     7,
@@ -3230,7 +3231,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "tanto",
   "melee": {
    "dmg": [
     9,
@@ -3259,7 +3259,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "nodachi",
   "melee": {
    "dmg": [
     16,
@@ -3288,7 +3287,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "nodachi",
   "melee": {
    "dmg": [
     19,
@@ -3317,7 +3315,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "nodachi",
   "melee": {
    "dmg": [
     23,
@@ -3346,7 +3343,6 @@
    "polearm",
    "japanese"
   ],
-  "looks_like": "naginata",
   "melee": {
    "dmg": [
     11,
@@ -3374,7 +3370,6 @@
    "polearm",
    "japanese"
   ],
-  "looks_like": "naginata",
   "melee": {
    "dmg": [
     13,
@@ -3402,7 +3397,6 @@
    "polearm",
    "japanese"
   ],
-  "looks_like": "naginata",
   "melee": {
    "dmg": [
     16,
@@ -3430,7 +3424,6 @@
    "polearm",
    "japanese"
   ],
-  "looks_like": "trl_yari",
   "melee": {
    "dmg": [
     10,
@@ -3456,7 +3449,6 @@
    "polearm",
    "japanese"
   ],
-  "looks_like": "trl_yari",
   "melee": {
    "dmg": [
     12,
@@ -3482,7 +3474,6 @@
    "polearm",
    "japanese"
   ],
-  "looks_like": "trl_yari",
   "melee": {
    "dmg": [
     14,
@@ -3509,7 +3500,6 @@
    "staff",
    "japanese"
   ],
-  "looks_like": "bokken",
   "melee": {
    "dmg": [
     5,
@@ -3537,7 +3527,6 @@
    "staff",
    "japanese"
   ],
-  "looks_like": "bokken",
   "melee": {
    "dmg": [
     6,
@@ -3565,7 +3554,6 @@
    "staff",
    "japanese"
   ],
-  "looks_like": "bokken",
   "melee": {
    "dmg": [
     7,
@@ -3593,7 +3581,6 @@
    "staff",
    "japanese"
   ],
-  "looks_like": "bokken",
   "melee": {
    "dmg": [
     4,
@@ -3620,7 +3607,6 @@
    "staff",
    "japanese"
   ],
-  "looks_like": "bokken",
   "melee": {
    "dmg": [
     5,
@@ -3647,7 +3633,6 @@
    "staff",
    "japanese"
   ],
-  "looks_like": "bokken",
   "melee": {
    "dmg": [
     6,
@@ -3674,7 +3659,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "trl_nunchaku",
   "melee": {
    "dmg": [
     6,
@@ -3701,7 +3685,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "trl_nunchaku",
   "melee": {
    "dmg": [
     7,
@@ -3728,7 +3711,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "trl_nunchaku",
   "melee": {
    "dmg": [
     9,
@@ -3756,7 +3738,6 @@
    "chain",
    "japanese"
   ],
-  "looks_like": "trl_kusarigama",
   "melee": {
    "dmg": [
     7,
@@ -3783,7 +3764,6 @@
    "chain",
    "japanese"
   ],
-  "looks_like": "trl_kusarigama",
   "melee": {
    "dmg": [
     8,
@@ -3810,7 +3790,6 @@
    "chain",
    "japanese"
   ],
-  "looks_like": "trl_kusarigama",
   "melee": {
    "dmg": [
     10,
@@ -3838,7 +3817,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "punch_dagger",
   "melee": {
    "dmg": [
     5,
@@ -3866,7 +3844,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "punch_dagger",
   "melee": {
    "dmg": [
     6,
@@ -3894,7 +3871,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "punch_dagger",
   "melee": {
    "dmg": [
     7,
@@ -3922,7 +3898,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "baton",
   "melee": {
    "dmg": [
     6,
@@ -3950,7 +3925,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "baton",
   "melee": {
    "dmg": [
     7,
@@ -3978,7 +3952,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "baton",
   "melee": {
    "dmg": [
     9,
@@ -4006,7 +3979,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "baton",
   "melee": {
    "dmg": [
     3,
@@ -4034,7 +4006,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "baton",
   "melee": {
    "dmg": [
     4,
@@ -4062,7 +4033,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "baton",
   "melee": {
    "dmg": [
     4,
@@ -4090,7 +4060,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "tanto",
   "melee": {
    "dmg": [
     4,
@@ -4117,7 +4086,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "tanto",
   "melee": {
    "dmg": [
     5,
@@ -4144,7 +4112,6 @@
    "blade",
    "japanese"
   ],
-  "looks_like": "tanto",
   "melee": {
    "dmg": [
     6,
@@ -4172,7 +4139,6 @@
    "axe",
    "japanese"
   ],
-  "looks_like": "hatchet",
   "melee": {
    "dmg": [
     14,
@@ -4200,7 +4166,6 @@
    "axe",
    "japanese"
   ],
-  "looks_like": "hatchet",
   "melee": {
    "dmg": [
     17,
@@ -4228,7 +4193,6 @@
    "axe",
    "japanese"
   ],
-  "looks_like": "hatchet",
   "melee": {
    "dmg": [
     20,
@@ -4257,7 +4221,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "tonfa",
   "melee": {
    "dmg": [
     5,
@@ -4284,7 +4247,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "tonfa",
   "melee": {
    "dmg": [
     6,
@@ -4311,7 +4273,6 @@
    "blunt",
    "japanese"
   ],
-  "looks_like": "tonfa",
   "melee": {
    "dmg": [
     7,
@@ -4338,7 +4299,6 @@
    "blade",
    "russian"
   ],
-  "looks_like": "cavalry_sabre",
   "melee": {
    "dmg": [
     11,
@@ -4366,7 +4326,6 @@
    "blade",
    "russian"
   ],
-  "looks_like": "cavalry_sabre",
   "melee": {
    "dmg": [
     13,
@@ -4394,7 +4353,6 @@
    "blade",
    "russian"
   ],
-  "looks_like": "cavalry_sabre",
   "melee": {
    "dmg": [
     16,
@@ -4422,7 +4380,6 @@
    "blade",
    "russian"
   ],
-  "looks_like": "tanto",
   "melee": {
    "dmg": [
     7,
@@ -4450,7 +4407,6 @@
    "blade",
    "russian"
   ],
-  "looks_like": "tanto",
   "melee": {
    "dmg": [
     8,
@@ -4478,7 +4434,6 @@
    "blade",
    "russian"
   ],
-  "looks_like": "tanto",
   "melee": {
    "dmg": [
     10,
@@ -4507,7 +4462,6 @@
    "blade",
    "russian"
   ],
-  "looks_like": "tanto",
   "melee": {
    "dmg": [
     6,
@@ -4535,7 +4489,6 @@
    "blade",
    "russian"
   ],
-  "looks_like": "tanto",
   "melee": {
    "dmg": [
     7,
@@ -4563,7 +4516,6 @@
    "blade",
    "russian"
   ],
-  "looks_like": "tanto",
   "melee": {
    "dmg": [
     9,
@@ -4592,7 +4544,6 @@
    "axe",
    "russian"
   ],
-  "looks_like": "shovel",
   "melee": {
    "dmg": [
     9,
@@ -4619,7 +4570,6 @@
    "axe",
    "russian"
   ],
-  "looks_like": "shovel",
   "melee": {
    "dmg": [
     11,
@@ -4646,7 +4596,6 @@
    "axe",
    "russian"
   ],
-  "looks_like": "shovel",
   "melee": {
    "dmg": [
     13,
@@ -4674,7 +4623,6 @@
    "chain",
    "russian"
   ],
-  "looks_like": "2h_flail_wood",
   "melee": {
    "dmg": [
     8,
@@ -4702,7 +4650,6 @@
    "chain",
    "russian"
   ],
-  "looks_like": "2h_flail_wood",
   "melee": {
    "dmg": [
     10,
@@ -4730,7 +4677,6 @@
    "chain",
    "russian"
   ],
-  "looks_like": "2h_flail_wood",
   "melee": {
    "dmg": [
     12,
@@ -4759,7 +4705,6 @@
    "axe",
    "russian"
   ],
-  "looks_like": "hatchet",
   "melee": {
    "dmg": [
     10,
@@ -4786,7 +4731,6 @@
    "axe",
    "russian"
   ],
-  "looks_like": "hatchet",
   "melee": {
    "dmg": [
     12,
@@ -4813,7 +4757,6 @@
    "axe",
    "russian"
   ],
-  "looks_like": "hatchet",
   "melee": {
    "dmg": [
     14,
@@ -4841,7 +4784,6 @@
    "axe",
    "russian"
   ],
-  "looks_like": "hatchet",
   "melee": {
    "dmg": [
     12,
@@ -4868,7 +4810,6 @@
    "axe",
    "russian"
   ],
-  "looks_like": "hatchet",
   "melee": {
    "dmg": [
     14,
@@ -4895,7 +4836,6 @@
    "axe",
    "russian"
   ],
-  "looks_like": "hatchet",
   "melee": {
    "dmg": [
     17,
@@ -4923,7 +4863,6 @@
    "blunt",
    "russian"
   ],
-  "looks_like": "knuckle_brass",
   "melee": {
    "dmg": [
     4,
@@ -4950,7 +4889,6 @@
    "blunt",
    "russian"
   ],
-  "looks_like": "knuckle_brass",
   "melee": {
    "dmg": [
     5,
@@ -4977,7 +4915,6 @@
    "blunt",
    "russian"
   ],
-  "looks_like": "knuckle_brass",
   "melee": {
    "dmg": [
     6,
@@ -5003,7 +4940,6 @@
    "container",
    "worn"
   ],
-  "looks_like": "backpack",
   "pockets": [
    {
     "id": "main",
@@ -5038,7 +4974,6 @@
    "container",
    "worn"
   ],
-  "looks_like": "holster",
   "pockets": [
    {
     "id": "holster",
@@ -5065,7 +5000,6 @@
    "container",
    "worn"
   ],
-  "looks_like": "trenchcoat",
   "armor": {
    "slot": "chest",
    "phys": 1,
@@ -5113,7 +5047,6 @@
    "armor",
    "worn"
   ],
-  "looks_like": "helmet_ball",
   "armor": {
    "slot": "head",
    "phys": 3,
@@ -5132,7 +5065,6 @@
    "armor",
    "worn"
   ],
-  "looks_like": "helmet_riot",
   "armor": {
    "slot": "head",
    "phys": 5,
@@ -5151,7 +5083,6 @@
    "armor",
    "worn"
   ],
-  "looks_like": "vest_ballistic",
   "armor": {
    "slot": "chest",
    "phys": 4,
@@ -5170,7 +5101,6 @@
    "armor",
    "worn"
   ],
-  "looks_like": "vest_plate",
   "armor": {
    "slot": "chest",
    "phys": 7,
@@ -5189,7 +5119,6 @@
    "armor",
    "worn"
   ],
-  "looks_like": "armguard",
   "armor": {
    "slot": "arms",
    "phys": 2,
@@ -5208,7 +5137,6 @@
    "armor",
    "worn"
   ],
-  "looks_like": "legguard",
   "armor": {
    "slot": "legs",
    "phys": 2,
@@ -5225,7 +5153,6 @@
   "tags": [
    "container"
   ],
-  "looks_like": "chestpouch",
   "pockets": [
    {
     "id": "main",
@@ -5248,7 +5175,6 @@
   "tags": [
    "container"
   ],
-  "looks_like": "duffelbag",
   "pockets": [
    {
     "id": "main",
@@ -5272,7 +5198,6 @@
    "container",
    "bottle"
   ],
-  "looks_like": "bottle_plastic",
   "pockets": [
    {
     "id": "liquid",
@@ -5296,8 +5221,7 @@
   "price": 1,
   "tags": [
    "money"
-  ],
-  "looks_like": "money_bundle_hundred"
+  ]
  },
  {
   "id": "trl_ammo",
@@ -5309,7 +5233,6 @@
   "tags": [
    "ammo"
   ],
-  "looks_like": "9mm",
   "ammo": {
    "cal": "9mm",
    "kind": "fmj",
@@ -5338,7 +5261,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "granola",
   "food": {
    "hp": 3,
    "stam": 6,
@@ -5356,8 +5278,7 @@
   "price": 0,
   "tags": [
    "job"
-  ],
-  "looks_like": "box_small"
+  ]
  },
  {
   "id": "trl_datacase",
@@ -5368,8 +5289,7 @@
   "price": 400,
   "tags": [
    "job"
-  ],
-  "looks_like": "briefcase"
+  ]
  },
  {
   "id": "trl_medkit",
@@ -5381,7 +5301,6 @@
   "tags": [
    "medical"
   ],
-  "looks_like": "bandages",
   "desc": "Heals 25 and mends your worst limb a little."
  },
  {
@@ -5395,7 +5314,6 @@
   "tags": [
    "tool"
   ],
-  "looks_like": "toolbox",
   "repair": 25
  },
  {
@@ -5407,8 +5325,7 @@
   "price": 0,
   "tags": [
    "card"
-  ],
-  "looks_like": "cash_card"
+  ]
  },
  {
   "id": "trl_eng_city",
@@ -5421,7 +5338,6 @@
   "tags": [
    "engine"
   ],
-  "looks_like": "engine_block",
   "engine": {
    "power": 4,
    "drain": 4,
@@ -5443,7 +5359,6 @@
   "tags": [
    "engine"
   ],
-  "looks_like": "engine_block",
   "engine": {
    "power": 3,
    "drain": 6,
@@ -5464,7 +5379,6 @@
   "tags": [
    "engine"
   ],
-  "looks_like": "engine_block",
   "engine": {
    "power": 6,
    "drain": 2,
@@ -5485,7 +5399,6 @@
   "tags": [
    "engine"
   ],
-  "looks_like": "engine_block",
   "engine": {
    "power": 3,
    "drain": 3,
@@ -5507,7 +5420,6 @@
   "tags": [
    "engine"
   ],
-  "looks_like": "engine_block",
   "engine": {
    "power": 3,
    "drain": 3,
@@ -5529,7 +5441,6 @@
   "tags": [
    "engine"
   ],
-  "looks_like": "engine_block",
   "engine": {
    "power": 2,
    "drain": 5,
@@ -5551,7 +5462,6 @@
    "armor",
    "worn"
   ],
-  "looks_like": "helmet_ball",
   "armor": {
    "slot": "head",
    "phys": 1,
@@ -5570,7 +5480,6 @@
    "armor",
    "worn"
   ],
-  "looks_like": "helmet_ball",
   "armor": {
    "slot": "head",
    "phys": 4,
@@ -5589,7 +5498,6 @@
    "armor",
    "worn"
   ],
-  "looks_like": "vest_ballistic",
   "armor": {
    "slot": "chest",
    "phys": 2,
@@ -5608,7 +5516,6 @@
    "armor",
    "worn"
   ],
-  "looks_like": "vest_ballistic",
   "armor": {
    "slot": "chest",
    "phys": 3,
@@ -5627,7 +5534,6 @@
    "armor",
    "worn"
   ],
-  "looks_like": "armguard",
   "armor": {
    "slot": "arms",
    "phys": 4,
@@ -5646,7 +5552,6 @@
    "armor",
    "worn"
   ],
-  "looks_like": "legguard",
   "armor": {
    "slot": "legs",
    "phys": 4,
@@ -5665,7 +5570,6 @@
    "armor",
    "worn"
   ],
-  "looks_like": "legguard",
   "armor": {
    "slot": "legs",
    "phys": 1,
@@ -5683,7 +5587,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_cup_ramen",
   "food": {
    "hp": 4,
    "stam": 6,
@@ -5703,7 +5606,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_gyoza",
   "food": {
    "hp": 5,
    "stam": 6,
@@ -5723,7 +5625,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_onigiri",
   "food": {
    "hp": 3,
    "stam": 4,
@@ -5743,7 +5644,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_sashimi",
   "food": {
    "hp": 8,
    "stam": 8,
@@ -5763,7 +5663,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_yakitori",
   "food": {
    "hp": 6,
    "stam": 6,
@@ -5783,7 +5682,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_katsu_bento",
   "food": {
    "hp": 10,
    "stam": 10,
@@ -5803,7 +5701,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_unagi_don",
   "food": {
    "hp": 12,
    "stam": 12,
@@ -5823,7 +5720,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_miso_soup",
   "food": {
    "hp": 3,
    "stam": 5,
@@ -5843,7 +5739,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_okonomiyaki",
   "food": {
    "hp": 7,
    "stam": 8,
@@ -5863,7 +5758,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_takoyaki",
   "food": {
    "hp": 5,
    "stam": 6,
@@ -5883,7 +5777,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_pelmeni",
   "food": {
    "hp": 6,
    "stam": 8,
@@ -5903,7 +5796,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_borscht",
   "food": {
    "hp": 6,
    "stam": 8,
@@ -5923,7 +5815,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_blini",
   "food": {
    "hp": 4,
    "stam": 5,
@@ -5943,7 +5834,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_caviar_blini",
   "food": {
    "hp": 8,
    "stam": 8,
@@ -5963,7 +5853,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_solyanka",
   "food": {
    "hp": 7,
    "stam": 8,
@@ -5983,7 +5872,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_piroshki",
   "food": {
    "hp": 3,
    "stam": 4,
@@ -6003,7 +5891,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_kotleta",
   "food": {
    "hp": 8,
    "stam": 9,
@@ -6023,7 +5910,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_chow_mein",
   "food": {
    "hp": 7,
    "stam": 8,
@@ -6043,7 +5929,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_fried_rice",
   "food": {
    "hp": 6,
    "stam": 7,
@@ -6063,7 +5948,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "hamburger",
   "food": {
    "hp": 7,
    "stam": 8,
@@ -6083,7 +5967,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "taco",
   "food": {
    "hp": 5,
    "stam": 5,
@@ -6103,7 +5986,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "fries",
   "food": {
    "hp": 2,
    "stam": 4,
@@ -6123,7 +6005,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "crepe",
   "food": {
    "hp": 4,
    "stam": 5,
@@ -6144,7 +6025,6 @@
    "food",
    "drink"
   ],
-  "looks_like": "trl_f_sencha",
   "food": {
    "hp": 1,
    "stam": 6,
@@ -6167,7 +6047,6 @@
    "food",
    "drink"
   ],
-  "looks_like": "trl_f_oolong",
   "food": {
    "hp": 1,
    "stam": 6,
@@ -6190,7 +6069,6 @@
    "food",
    "drink"
   ],
-  "looks_like": "trl_f_kan_coffee",
   "food": {
    "hp": 0,
    "stam": 10,
@@ -6213,7 +6091,6 @@
    "food",
    "drink"
   ],
-  "looks_like": "trl_f_kvass",
   "food": {
    "hp": 1,
    "stam": 5,
@@ -6236,7 +6113,6 @@
    "food",
    "drink"
   ],
-  "looks_like": "trl_f_kompot",
   "food": {
    "hp": 1,
    "stam": 5,
@@ -6259,7 +6135,6 @@
    "food",
    "drink"
   ],
-  "looks_like": "cola",
   "food": {
    "hp": 0,
    "stam": 6,
@@ -6282,7 +6157,6 @@
    "food",
    "drink"
   ],
-  "looks_like": "beer",
   "food": {
    "hp": 1,
    "stam": 0,
@@ -6305,7 +6179,6 @@
    "food",
    "drink"
   ],
-  "looks_like": "vodka",
   "food": {
    "hp": 1,
    "stam": 0,
@@ -6328,7 +6201,6 @@
    "food",
    "drink"
   ],
-  "looks_like": "sake_filtered",
   "food": {
    "hp": 1,
    "stam": 0,
@@ -6350,7 +6222,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_black_bread",
   "food": {
    "hp": 4,
    "stam": 6,
@@ -6370,7 +6241,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_tushonka",
   "food": {
    "hp": 6,
    "stam": 8,
@@ -6390,7 +6260,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_herring",
   "food": {
    "hp": 4,
    "stam": 5,
@@ -6410,7 +6279,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_natto",
   "food": {
    "hp": 3,
    "stam": 4,
@@ -6430,7 +6298,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_f_mochi",
   "food": {
    "hp": 2,
    "stam": 4,
@@ -6450,7 +6317,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "apple",
   "food": {
    "hp": 2,
    "stam": 3,
@@ -6470,7 +6336,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "orange",
   "food": {
    "hp": 2,
    "stam": 3,
@@ -6490,7 +6355,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "banana",
   "food": {
    "hp": 2,
    "stam": 3,
@@ -6511,7 +6375,6 @@
    "food",
    "drink"
   ],
-  "looks_like": "milk",
   "food": {
    "hp": 2,
    "stam": 4,
@@ -6533,7 +6396,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_cf_protein_brick",
   "food": {
    "hp": 5,
    "stam": 10,
@@ -6553,7 +6415,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "trl_cf_glucose_cube",
   "food": {
    "hp": 1,
    "stam": 14,
@@ -6574,7 +6435,6 @@
    "food",
    "drink"
   ],
-  "looks_like": "trl_cf_hydration_gel",
   "food": {
    "hp": 1,
    "stam": 12,
@@ -6596,7 +6456,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "chocolate",
   "food": {
    "hp": 1,
    "stam": 8,
@@ -6616,7 +6475,6 @@
   "tags": [
    "food"
   ],
-  "looks_like": "cheese",
   "food": {
    "hp": 3,
    "stam": 4,
@@ -6636,7 +6494,6 @@
   "tags": [
    "charm"
   ],
-  "looks_like": "trl_church_candle",
   "use": {
    "heat": -8,
    "msg": "You light the candle and say a short prayer.  Things feel quieter."
@@ -6653,7 +6510,6 @@
   "tags": [
    "charm"
   ],
-  "looks_like": "trl_icon",
   "use": {
    "bless": 480,
    "msg": "You hold the icon.  You feel watched over for a while."
@@ -6670,7 +6526,6 @@
   "tags": [
    "charm"
   ],
-  "looks_like": "trl_gospel",
   "use": {
    "heat": -15,
    "msg": "You read a few lines.  Your pulse slows."
@@ -6687,7 +6542,6 @@
   "tags": [
    "charm"
   ],
-  "looks_like": "trl_omamori",
   "use": {
    "bless": 600,
    "msg": "The charm warms in your hand.  Luck is with you for a while."
@@ -6704,7 +6558,6 @@
   "tags": [
    "charm"
   ],
-  "looks_like": "trl_ofuda",
   "use": {
    "bless": 300,
    "msg": "You tuck the ward in your sleeve."
@@ -6721,7 +6574,6 @@
   "tags": [
    "charm"
   ],
-  "looks_like": "trl_ema",
   "use": {
    "hp": 8,
    "msg": "You write a wish and hang it.  You feel lighter."

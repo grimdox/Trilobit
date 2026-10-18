@@ -1,4 +1,0 @@
-NAME: Bouma TopDown
-VIEW: Bouma TopDown
-JSON: tile_config.json
-TILESET: tiles.png
