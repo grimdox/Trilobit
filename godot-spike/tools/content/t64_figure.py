@@ -51,6 +51,8 @@ class Body:
         right = [(2.4, t - 1.8), (sh - 2.6, t + 0.2), (sh - 0.6, t + 2.0), (c + 0.4, t + 4.8), (c, t + 9.0), (w + 0.5, t + 13.2), (w, t + 15.8),
                  (h, t + 20.4), (h - 0.5, t + 23.6)]
         left = [(-x, y) for x, y in reversed(right)]
+        if self.fem:            # the bust shows in profile on the side the figure turns toward; the near side keeps the plain line
+            right = right[:4] + [(c + 1.4, t + 6.8), (c + 0.6, t + 8.6)] + right[5:]
         return [(self.X(x), y) for x, y in right + left]
 
     # masks -------------------------------------------------------------------------------------
@@ -67,7 +69,8 @@ class Body:
 
     def neck(self, a):
         x = self.centre()
-        return a.rrect(x - 1.9, self.head_cy + 2.5, 3.8, self.top - self.head_cy - 1.5, 1.0)
+        w = 3.2 if self.fem else 3.8
+        return a.rrect(x - w / 2, self.head_cy + 2.5, w, self.top - self.head_cy - 1.5, 1.0)
 
     def head_mask(self, a):
         rx, ry = self.head
@@ -111,6 +114,12 @@ BODIES = {
               arm_w=(6.0, 5.0), leg_w=(7.5, 5.5)),
     'BX': Body('BX', turn=0.8, sh=11.2, chest=9.8, waist=7.8, hip=8.4, head=(5.2, 5.7), head_cy=9.3, top=16.4, hair='none', jaw=1.1,
                arm_w=(6.0, 5.0), leg_w=(7.5, 5.5), cyber=True),
+    # the female body (in review): same pose, height and hand positions, so everything held still lines up; narrower
+    # shoulders and waist, wider hips, slimmer limbs, a smaller head with a softer jaw
+    'F': Body('F', turn=0.8, sh=9.4, chest=8.4, waist=6.2, hip=9.5, head=(4.9, 5.5), head_cy=9.5, top=16.8, hair='none', jaw=0.8,
+              arm_w=(4.7, 3.9), leg_w=(7.1, 4.9), fem=True),
+    'FX': Body('FX', turn=0.8, sh=9.4, chest=8.4, waist=6.2, hip=9.5, head=(4.9, 5.5), head_cy=9.5, top=16.8, hair='none', jaw=0.8,
+               arm_w=(4.7, 3.9), leg_w=(7.1, 4.9), fem=True, cyber=True),
 }
 
 
@@ -291,9 +300,7 @@ def layer_body(b, skin=SKIN_PREVIEW, hair_c='#2b2420'):
     t = b.top
     # anatomy, kept quiet
     if b.fem:
-        for s in (-1, 1):
-            bm = a.ellipse(b.X(s * 3.4), t + 6.8, 3.2 * (1 - (0.25 * b.turn if s > 0 else 0)), 2.6)
-            skin_paint(a, bm, skin, 8, bevel=1.8)
+        fem_torso(a, b, skin)
     else:
         muscles(a, b, skin)
     for s in (-1, 1):
@@ -348,6 +355,29 @@ def muscles(a, b, skin):
         a.fill(a.line(b.X(s * (b.waist - 0.4)), t + 11.0, b.X(s * (b.waist - 1.8)), t + 17.0, 0.5), tone(2))
 
 
+def fem_torso(a, b, skin):
+    """the female chest and stomach in the same language as muscles(): flat lit forms with a highlight on the upper-left
+    edge and a soft crease beneath, a cleavage shadow, a quiet toned stomach (no six-pack) and the waist-to-hip curve"""
+    t = b.top
+    tor = b.torso(a)
+    k = float(np.mean(col(skin)) / np.mean(col(SKIN_PREVIEW)))
+    tone = lambda i: lit(SKIN_RAMP[i], min(1.0, k))
+    for s in (-1, 1):
+        far = s > 0
+        rx = 3.5 * (1 - 0.28 * b.turn if far else 1)
+        cx, cy = b.X(s * 3.5), t + 6.6
+        br = a.ellipse(cx, cy, rx, 2.9) & tor
+        a.fill(br, tone(3 if far else 4))
+        a.fill(br & ~a.ellipse(cx + 0.8, cy + 0.9, rx, 2.9), tone(4 if far else 5))      # light on the upper curve
+        a.fill(br & a.ellipse(cx - 0.9, cy - 0.7, 1.1, 0.8), tone(5 if far else 6))       # one bright point near side
+        under = a.ellipse(cx, cy + 0.9, rx, 2.9) & ~br & (a.yy > cy + 0.6) & tor
+        a.fill(under, tone(2))                                                           # soft crease beneath
+    a.fill(a.line(b.X(0), t + 4.8, b.X(0), t + 7.4, 0.55), tone(2))                     # cleavage shadow
+    a.fill(a.line(b.X(0), t + 11.0, b.X(0), t + 15.0, 0.45), tone(3))                   # a quiet centre line on the stomach
+    for s in (-1, 1):                                                                    # the waist curve catches a little shade
+        a.fill(a.line(b.X(s * (b.waist + 0.2)), t + 12.0, b.X(s * (b.waist - 0.6)), t + 16.4, 0.5), tone(2 if s > 0 else 3), 0.8)
+
+
 def px(a, x, y, c, alpha=1.0, w=1, h=1):
     """one crisp sprite pixel (or a w x h block) at integer position"""
     a.fill(a.rect(int(round(x)), int(round(y)), w, h), c, alpha)
@@ -362,7 +392,7 @@ def face(a, b, hx, skin):
     dark = '#1c1512'
     # eyes and brows are character-creation layers, not part of the base doll
     px(a, fx + 0.6 * b.turn, ey + 2.2, SKIN_RAMP[2], 1.0)                          # nose: one shadow pixel
-    px(a, fx - 1.0 + 0.6 * b.turn, cy + ry - 2.4, mix(SKIN_RAMP[1], '#8a2a2a', 0.35), 1.0, w=2)   # small mouth
+    px(a, fx - 1.0 + 0.6 * b.turn, cy + ry - 2.4, mix(SKIN_RAMP[1], '#8a2a2a', 0.35 if not b.fem else 0.5), 1.0, w=2)   # small mouth
     px(a, fx - 1.0 + 0.6 * b.turn, cy + ry - 1.4, SKIN_RAMP[3], 0.6, w=2)          # lower lip shade
     if b.turn > 0.2:
         a.fill(a.ellipse(hx - rx + 1.0, cy + 0.8, 1.0, 1.7), SKIN_RAMP[3], 1.0)   # near ear
@@ -418,18 +448,28 @@ def layer_under(b):
     pelvis = a.poly([(b.X(-b.waist - 0.3), t + 16.4), (b.X(b.waist + 0.3), t + 16.4), (b.X(b.hip + 0.4), t + 20.2), (b.X(b.hip - 0.2), t + 24.2), (b.X(-b.hip + 0.2), t + 24.2), (b.X(-b.hip - 0.4), t + 20.2)])
     shorts = pelvis
     for near in (True, False):
-        thigh = b.leg(a, near)[0] & (a.yy < 44.2)
+        thigh = b.leg(a, near)[0] & (a.yy < (41.6 if b.fem else 44.2))          # women's shorts sit higher on the thigh
         shorts |= ndi_grow(a, thigh, 0.4)
     ramp_paint(a, shorts, UNDER_RAMP, bevel=3.0, strength=1.0, seed=31, grain=0.1)
     a.fill(a.poly([(b.X(-b.waist - 0.3), t + 16.4), (b.X(b.waist + 0.3), t + 16.4), (b.X(b.waist + 0.6), t + 17.8), (b.X(-b.waist - 0.6), t + 17.8)]), '#5b606b', 0.95)  # waistband
     a.fill(a.line(b.X(0.2), t + 18.2, b.X(0.2), t + 22.5, 0.45), '#1d1f24', 0.7)
     a.speckle(shorts, '#4a4d55', 0.04, 32, alpha=0.6)
     if b.fem:
-        top = a.poly([(b.X(-b.chest + 0.2), t + 3.6), (b.X(b.chest - 0.2), t + 3.6), (b.X(b.chest + 0.1), t + 9.6), (b.X(-b.chest - 0.1), t + 9.6)]) & b.torso(a)
+        tor = b.torso(a)
+        top = a.poly([(b.X(-b.chest + 0.2), t + 3.4), (b.X(b.chest + 2.0), t + 3.4), (b.X(b.chest + 2.0), t + 9.9), (b.X(-b.chest - 0.1), t + 9.9)]) & tor
         for s in (-1, 1):
             top |= a.line(b.X(s * 3.6), t + 4.0, b.X(s * (b.sh - 2.6)), t + 0.2, 1.3)
-        ramp_paint(a, top, UNDER_RAMP, bevel=1.8, strength=1.0, seed=33, grain=0.2)
-        a.fill(a.rect(b.X(-b.chest), t + 8.5, b.X(b.chest) - b.X(-b.chest), 1.1), '#5b606b', 0.95)
+        a.fill(top, UNDER_RAMP[2])
+        for s in (-1, 1):                         # the top follows the bust: a lit upper curve and a shadow under each side
+            far = s > 0
+            rx = 3.5 * (1 - 0.28 * b.turn if far else 1)
+            cx, cy = b.X(s * 3.5), t + 6.6
+            cup = a.ellipse(cx, cy, rx, 2.9) & top
+            a.fill(cup, UNDER_RAMP[3 if far else 4])
+            a.fill(cup & ~a.ellipse(cx + 0.8, cy + 0.9, rx, 2.9), UNDER_RAMP[4 if far else 5])
+            a.fill(top & a.ellipse(cx, cy + 0.9, rx, 2.9) & ~cup & (a.yy > cy + 0.6), UNDER_RAMP[1])
+        a.fill(a.line(b.X(0), t + 4.6, b.X(0), t + 7.6, 0.5) & top, UNDER_RAMP[0])
+        a.fill(a.rect(b.X(-b.chest - 0.4), t + 8.9, b.X(b.chest + 2.0) - b.X(-b.chest - 0.4), 1.1) & tor, '#5b606b', 0.95)   # under-band
     return a.image(outline=0.7)
 
 
