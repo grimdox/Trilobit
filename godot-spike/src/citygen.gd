@@ -57,6 +57,7 @@ const EXTRA := [
 	["shimenawa", "f_trl_shimenawa_pole", 0, 0], ["bonsai", "f_trl_bonsai", 0, 0], ["fern", "f_trl_fern", 0, 0], ["aquarium", "f_trl_aquarium", 0, 0],
 	["charm_counter", "f_trl_charm_counter", 0, 1], ["cabinet", "f_trl_cabinet_lacquer", 0, 1], ["neon", "f_trl_neon_pink", 0, 0],
 	["crane_leg", "f_trl_crane_leg", 0, 0], ["container", "f_trl_container", 0, 1], ["bollard", "f_trl_bollard", 0, 0],
+	["terminal", "f_trl_terminal", 0, 0], ["portal", "f_trl_portal", 1, 0], ["mission_device", "f_trl_device", 0, 0],
 ]
 const EXTRA0 := 33
 static var TID: Dictionary = _tids()

@@ -203,6 +203,9 @@ static func stamp(c, kind: String, bx0: int, by0: int, bx1: int, by1: int, side:
 			if ty >= 0 and ty < c.size and c.tiles[ty * c.size + dx] != CG.WALL:
 				c.under[ty * c.size + dx] = c.tiles[ty * c.size + dx]
 				c.tiles[ty * c.size + dx] = CG.TID["torii"]
+	# a mission terminal in the corner by the door, in the places people wait or do business (see missions.gd)
+	if kind in ["restaurant", "grocery", "implant", "clinic"] and wi >= 7:
+		L.put(0, wi - 1, "terminal")
 	# a floor underneath everything that is not furniture
 	var v_rec := {"kind": kind, "style": style, "tier": tier, "name": sname, "x0": bx0, "y0": by0, "x1": bx1, "y1": by1,
 		"door": Vector2i(dx, dy), "keeper": keeper.y * c.size + keeper.x, "side": side}

@@ -18,6 +18,7 @@ const GROCER := 5        # grocery keepers: food and water to carry
 const DOCTOR := 6        # clinic doctors: treat wounds
 const PRIEST := 7        # church: candles, confession, a blessing
 const MIKO := 8          # shrine keeper: charms and offerings
+const HOSTAGE := 9       # a bound hostage on a mission site (missions.gd): talk to cut them loose
 const VN = preload("res://src/venues.gd")
 const CLK = preload("res://src/clock.gd")
 const DAY := CLK.DAY
@@ -163,6 +164,7 @@ func label(i: int) -> String:
 		DOCTOR: return "doctor"
 		PRIEST: return "priest"
 		MIKO: return "shrine keeper"
+		HOSTAGE: return "hostage"
 	return ""
 
 # ------------------------------------------------------------------ the clocks
@@ -451,6 +453,13 @@ func menu_for(i: int) -> Dictionary:
 			m["options"].append({"label": "Offering at the saisen box  ¥50  (a blessing, health +8)", "op": "pray", "arg": [50, 8, 0, 360, "You throw the coin, clap twice and bow.  The air feels clean."]})
 			for e in [["trl_faith_omamori", "omamori charm", 150], ["trl_faith_ofuda", "ofuda paper ward", 90], ["trl_faith_ema", "ema plaque", 50]]:
 				m["options"].append(_buy_opt(i, e))
+		HOSTAGE:
+			m["title"] = "%s - hostage" % who
+			if g.mission.get("freed", false):
+				m["text"] = ["\"I'm with you.  Don't stop.\""]
+			else:
+				m["text"] = ["Bound, gagged at the mouth, and very awake.  \"Hurry.\""]
+				m["options"].append({"label": "Cut the bonds", "op": "mission_free", "arg": null})
 		FIXER:
 			if job.is_empty():
 				m["text"] = ["\"I have work, if you can climb.\""]
@@ -553,6 +562,9 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 	var o: Dictionary = m["options"][k]
 	match o["op"]:
 		"close":
+			return {}
+		"mission_free":
+			g.MS.free_hostage(g)
 			return {}
 		"buy":
 			var e: Array = o["arg"]

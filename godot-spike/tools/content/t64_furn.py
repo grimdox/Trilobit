@@ -1120,6 +1120,55 @@ def table_generic():
     return done(a)
 
 
+# ------------------------------------------------------------------------------------------------ mission terminal, portal, site machinery
+def mission_terminal():
+    a = A()
+    base = box(a, 14, 38, 36, 20, '#2a2f38', r=3, bevel=3, spec=0.4)
+    a.shade(a.rrect(17, 47, 30, 8, 2), '#14171c', bevel=1.2, strength=0.5)
+    for i in range(7):
+        a.fill(a.rect(19 + i * 4, 49, 3, 2), '#55606e', 0.9)
+    box(a, 18, 8, 28, 32, '#1b1f27', r=3, bevel=2.5, spec=0.5)
+    scr = a.rect(21, 11, 22, 24)
+    a.shade(scr, '#06151c', bevel=1.2, strength=0.4)
+    for j in range(6):
+        w = 8 + (j * 7) % 13
+        a.fill(a.rect(23, 13 + j * 3.6, w, 1.6), GLOW_C, 0.9)
+    a.fill(a.rect(23, 33, 4, 1.4), GLOW_M, 0.95)
+    a.glow(32, 22, 22, GLOW_C, 0.22)
+    a.fill(a.ellipse(48, 52, 1.6), GLOW_M, 0.9)
+    return done(a)
+
+
+def mission_portal():
+    a = A()
+    ring = a.ellipse(32, 32, 24)
+    a.glow(32, 32, 30, '#7a4dff', 0.55)
+    a.shade(ring, '#2a1a66', bevel=6, strength=0.9, spec=0.6)
+    inner = a.ellipse(32, 32, 17)
+    a.shade(inner, '#0a0624', bevel=4, strength=0.5)
+    yy, xx = a.yy, a.xx
+    r = np.sqrt((xx - 32) ** 2 + (yy - 32) ** 2)
+    ang = np.arctan2(yy - 32, xx - 32)
+    swirl = (0.5 + 0.5 * np.sin(ang * 3 + r * 0.45)) * inner
+    a.rgb = np.clip(a.rgb + swirl[..., None] * np.array([0.25, 0.9, 1.0]) * 0.55, 0, 1)
+    a.glow(32, 32, 14, GLOW_C, 0.5)
+    a.fill(a.ellipse(32, 32, 3.5), '#e9fbff', 0.9)
+    return done(a)
+
+
+def mission_device():
+    a = A()
+    box(a, 10, 12, 44, 44, '#59626d', r=3, bevel=4, spec=0.5, grain=0.2)
+    a.shade(a.rrect(14, 16, 36, 20, 2), '#2b3038', bevel=1.5, strength=0.5)
+    for i in range(3):
+        a.fill(a.ellipse(21 + i * 11, 26, 3.4), ['#ff8a2a', '#35d7ff', '#6ab04c'][i], 0.95)
+    a.shade(a.rect(14, 40, 36, 4), '#17191d', bevel=1)
+    a.shade(a.rect(14, 47, 36, 4), '#17191d', bevel=1)
+    a.fill(a.rect(40, 40, 8, 11), '#d62b3a', 0.9)
+    a.glow(32, 28, 20, '#ff8a2a', 0.12)
+    return done(a)
+
+
 FLOORS = {'t_trl_checker': f_checker, 't_trl_floor_church': f_church, 't_trl_floor_hinoki': f_hinoki, 't_trl_floor_clean': f_clean,
           't_trl_marble': f_marble, 't_trl_floor_steel': f_steel, 't_trl_floor_wood': f_wood, 't_trl_tatami': f_tatami, 't_trl_carpet_red': f_carpet}
 
@@ -1131,6 +1180,7 @@ FURN = {
     'f_trl_liquor_shelf': liquor_shelf, 'f_trl_hot_plate': hot_plate,
     'f_trl_shelf_clean': shelf_clean, 'f_trl_produce_bin': produce_bin, 'f_trl_freezer_case': freezer_case, 'f_trl_checkout': checkout,
     'f_trl_vending': vending, 'f_trl_water_cooler': water_cooler,
+    'f_trl_terminal': mission_terminal, 'f_trl_portal': mission_portal, 'f_trl_device': mission_device,
     'f_trl_implant_chair': implant_chair, 'f_trl_implant_printer': implant_printer, 'f_trl_limb_bin': limb_bin,
     'f_trl_autodoc_imp_m': autodoc, 'f_trl_hospital_bed': hospital_bed, 'f_trl_ward_bed': lambda: hospital_bed('#7fae8a'),
     'f_trl_scanner': scanner, 'f_trl_med_cabinet': med_cabinet, 'f_trl_iv_stand': iv_stand, 'f_trl_reception': reception, 'f_trl_exam_couch': exam_couch,

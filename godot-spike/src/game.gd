@@ -18,6 +18,8 @@ const BODY = preload("res://src/body.gd")
 const SK = preload("res://src/skills.gd")
 const CR = preload("res://src/creation.gd")
 const CLK = preload("res://src/clock.gd")
+const MS = preload("res://src/missions.gd")
+const SITE = preload("res://src/mission_site.gd")
 const LOOK = preload("res://src/look.gd")
 
 const UNAWARE := 0
@@ -90,6 +92,12 @@ var implants := {}                             # "legs": leg actuators, "jets": 
 var fuel: int = 24
 var flying: bool = false
 var followers: Array = []                      # hunters climbing after you
+# missions (missions.gd): `mission` is set only inside a generated site; `portal` only in the physical world while an accepted mission's portal is open
+var mission: Dictionary = {}
+var portal: Dictionary = {}                    # {cell, was (the tile it replaced), under, offer}
+var terminal_hit: int = -1                     # a mission terminal the player just bumped (the front end opens its screen and clears this)
+var mission_leave_request: String = ""         # "exit" (stepped through the exit portal) or "blast" (the charge went off): the front end hands over to the world
+var mission_enter_request: bool = false        # the player stepped into an open portal
 var step_noise: int = 0                        # how far this turn's footsteps carry
 var app: Dictionary = {"sprite": 0, "skin": 0, "hair": 4, "style": 1, "eyes": 0, "bg": "none"}      # how the player looks (creation.gd); saved with the player
 var attrs: Dictionary = SK.default_attrs()      # Strength, Perception, Agility, Cognition, Endurance (start at 10)
@@ -156,8 +164,9 @@ func say(msg: String) -> void:
 	if log.size() > 200:
 		log = log.slice(100)
 
-func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) -> void:
+func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1), msn: Dictionary = {}) -> void:
 	rng.seed = seed_value
+	mission = msn.duplicate(true)
 	db = DB.new()
 	db.load_file("res://data/items.json")
 	GP.load_ammo(db.defs)
@@ -171,7 +180,12 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) ->
 					gun_ids[t].append(k)
 	_melee_pools()
 	var _t0 := Time.get_ticks_msec()
-	if isl != null:
+	if not mission.is_empty():
+		island = null
+		zone = Vector2i(-1, -1)
+		city = SITE.build(mission["offer"])
+		n_people = city.get_meta("site")["agents"].size()
+	elif isl != null:
 		island = isl
 		zone = zn
 		city = island.build_zone(zn.x, zn.y)
@@ -210,6 +224,8 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) ->
 	thing_at = PackedInt32Array(); thing_at.resize(total); thing_at.fill(-1)
 	crit_at = PackedInt32Array(); crit_at.resize(total); crit_at.fill(-1)
 	_people()
+	if not mission.is_empty():
+		_mission_people()
 	if island != null and zone == island.PORT_ZONE:
 		_port_people()
 	_prof("people", _t0)
@@ -224,6 +240,8 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1)) ->
 	_prof("transit", _t0)
 	eco = EC.new()
 	eco.setup(self)
+	if not mission.is_empty():
+		_mission_roles()
 	_prof("eco", _t0)
 	_compute_fov()
 	_prof("fov", _t0)
@@ -339,6 +357,10 @@ func _roads_and_cars() -> void:
 		if city.tiles[i] == CG.ROAD:
 			road_walk[i] = 1
 			road_cells.append(i)
+	if not mission.is_empty():
+		vs = VS.new(self)
+		_spawn_things()
+		return
 	_spawn_vehicles()
 	_spawn_things()
 	_spawn_critters()
@@ -601,6 +623,9 @@ func _random_gun() -> String:
 	return arr[rng.randi() % arr.size()]
 
 func _loot() -> void:
+	if not mission.is_empty():
+		_mission_objects()
+		return
 	var markers: Array = []
 	markers.append_array(Array(city.homes))
 	markers.append_array(Array(city.works))
@@ -627,6 +652,8 @@ func _loot() -> void:
 		_put(c, it)
 
 func _vault_loot() -> void:
+	if not mission.is_empty():
+		return
 	for cells in city.vaults:
 		var arr: PackedInt32Array = cells
 		if arr.is_empty():
@@ -651,13 +678,13 @@ func _start_player() -> void:
 	var centre: int = (size / 2) * size + size / 2
 	var best := -1
 	var bd := 1 << 30
-	for i in size * size:
+	for i in (0 if not mission.is_empty() else size * size):
 		if city.tiles[i] == CG.ROAD and veh_at[i] == -1:
 			var d := maxi(absi(i % size - size / 2), absi(i / size - size / 2))
 			if d < bd and sim.at[i] == -1:
 				bd = d
 				best = i
-	pc = best
+	pc = best if mission.is_empty() else int(city.get_meta("site")["entry"])
 	var coat = _new_item("trl_coat")
 	var pack = _new_item("trl_backpack")
 	worn = [coat, pack]
@@ -962,6 +989,15 @@ func _act_move_core(dx: int, dy: int, run: bool = false) -> bool:
 		return false
 	if city.tiles[c] == CG.LOCKED:
 		return _pick_lock(c)
+	if city.tiles[c] == CG.TID["terminal"]:
+		facing = Vector2i(dx, dy)
+		terminal_hit = c
+		say("The terminal's screen wakes.")
+		sfx("blip")
+		return false
+	if city.tiles[c] == CG.TID["mission_device"]:
+		facing = Vector2i(dx, dy)
+		return MS.use_device(self)
 	if city.tiles[c] == CG.AIR:
 		say("Open air.  [q] to leap across, or fly with jump jets.")
 		return false
@@ -1003,6 +1039,11 @@ func _act_move_core(dx: int, dy: int, run: bool = false) -> bool:
 		for it in items_at[pc]:
 			names.append(item_label(it))
 		say("You see here: " + ", ".join(names) + ".")
+	if city.tiles[pc] == CG.TID["portal"]:
+		if not mission.is_empty():
+			mission_leave_request = "exit"
+		elif not portal.is_empty() and int(portal["cell"]) == pc:
+			mission_enter_request = true
 	# a step is one action (100 AP); crawling doubles it, and each dead leg adds a step's worth
 	var legs_out: int = 2 - body.legs_ok()
 	end_turn(AP_BASE * (1 + (1 if stance == CRAWL else 0) + legs_out))
@@ -3116,6 +3157,7 @@ func _tick() -> void:
 	sim.step(pc)
 	transit.step()
 	_ai()
+	MS.step(self)
 	_bleed_tick()
 	_critters_turn()
 	_vehicles()
@@ -4381,7 +4423,7 @@ func save_dict() -> Dictionary:
 		vlist.append(vs.to_dict(v))
 	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "attrs": attrs, "app": app, "xp": xp, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
-			"rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
+			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 			"items_at": it_at, "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
 					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc),
@@ -4390,7 +4432,11 @@ func save_dict() -> Dictionary:
 func load_dict(d: Dictionary) -> void:
 	seed_value = int(d["seed"])
 	var isl_seed: int = int(d.get("island", -1))
-	if isl_seed >= 0:
+	var saved_mission: Dictionary = d.get("mission", {})
+	if not saved_mission.is_empty():
+		setup(int(d.get("people", 0)), null, Vector2i(-1, -1), JSON.parse_string(JSON.stringify(saved_mission)))
+		_restore_mission_state(saved_mission)
+	elif isl_seed >= 0:
 		var isl = island if (island != null and island.seed_value == isl_seed) else ISL.new(isl_seed)
 		setup(int(d.get("people", 0)), isl, Vector2i(int(d["zone"][0]), int(d["zone"][1])))
 	else:
@@ -4524,4 +4570,100 @@ func load_dict(d: Dictionary) -> void:
 	log = []
 	for l in d["log"]:
 		log.append(str(l))
+	portal = {}
+	var pd: Dictionary = d.get("portal", {})
+	if not pd.is_empty():
+		_portal_set(int(pd["cell"]), int(pd["was"]), int(pd["under"]), JSON.parse_string(JSON.stringify(pd["offer"])))
 	_compute_fov()
+
+
+# ---------------------------------------------------------------- missions: people, objects, the portal
+## the people of a generated site (mission_site.gd lists them): factions, health, weapons and stations; sticky, so the guards stand their posts until they notice you
+func _mission_people() -> void:
+	var site: Dictionary = city.get_meta("site")
+	var agents: Dictionary = {}
+	var risk: int = int(mission["offer"]["risk"])
+	for k in site["agents"].size():
+		var a: Dictionary = site["agents"][k]
+		var f: int = int(a["fac"])
+		fac[k] = f
+		hpmax[k] = [25, 40, 45, 30, 35][f] + (6 if a["role"] == "target" else 0)
+		hpn[k] = hpmax[k]
+		gunc[k] = 0 if f == CIV else (1 if (a["role"] != "target" or risk >= 2) else 0)
+		yenn[k] = 0 if f == CIV else rng.randi_range(30, 160)
+		if a["name"] != "":
+			nname[k] = a["name"]
+		var cell: int = int(a["cell"])
+		sim.pos[k] = cell
+		sim.home_cell[k] = cell
+		sim.dest[k] = cell
+		sim.goal[k] = sim.HOME
+		sim.arrive[k] = -1
+		sim.sticky[k] = 1
+		agents[str(k)] = a["role"]
+	mission["agents"] = agents
+
+## after the economy has handed out its roles: nobody on a site is a vendor or a fixer, and the hostage can be talked to
+func _mission_roles() -> void:
+	for i in sim.n:
+		eco.role[i] = EC.NONE
+	var h: int = MS.agent_with_role(self, "hostage")
+	if h >= 0:
+		eco.role[h] = EC.HOSTAGE
+	sim.retier(pc)
+
+func _mission_objects() -> void:
+	var site: Dictionary = city.get_meta("site")
+	if site.has("case"):
+		_put(int(site["case"]), _new_item("trl_datacase"))
+
+## a site loaded from a save: the progress it had (the layout and the people come back from the seed)
+func _restore_mission_state(saved: Dictionary) -> void:
+	for k in ["progress", "need", "fuse"]:
+		mission[k] = int(saved.get(k, mission.get(k, 0)))
+	for k in ["done", "planted", "freed"]:
+		mission[k] = bool(saved.get(k, false))
+	if mission["freed"]:
+		var h: int = MS.agent_with_role(self, "hostage")
+		if h >= 0:
+			sim.sticky[h] = 0
+
+## open a portal on the cell beside a terminal for an accepted offer; false if there is no room
+func portal_open(offer: Dictionary, term_cell: int) -> bool:
+	if not portal.is_empty() or not mission.is_empty():
+		return false
+	var tx: int = term_cell % size
+	var ty: int = term_cell / size
+	var order: Array = [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]
+	for d in order:
+		var x: int = tx + d.x
+		var y: int = ty + d.y
+		if not in_bounds(x, y):
+			continue
+		var n: int = y * size + x
+		var t: int = city.tiles[n]
+		if sim.walk[n] == 0 or sim.at[n] != -1 or veh_at[n] != -1 or thing_at[n] != -1 or crit_at[n] != -1 or n == pc or items_at.has(n):
+			continue
+		if t in [CG.DOOR, CG.LOCKED, CG.STAIRS, CG.ELEVATOR, CG.LADDER, CG.MANHOLE, CG.TRACK, CG.PLATFORM] or n >= s2:
+			continue
+		_portal_set(n, t, city.under[n] if n < city.under.size() else 0, offer)
+		say("A portal tears open beside the terminal: %s.  Step in to begin; leaving the site closes it." % offer["title"])
+		sfx("select")
+		return true
+	return false
+
+func _portal_set(cell: int, was: int, under_was: int, offer: Dictionary) -> void:
+	portal = {"cell": cell, "was": was, "under": under_was, "offer": offer}
+	city.tiles[cell] = CG.TID["portal"]
+	if cell < city.under.size():
+		city.under[cell] = was if was < CG.EXTRA0 else under_was
+
+## close the portal (the mission is over, or was scrapped at the terminal): the street comes back as it was
+func portal_close() -> void:
+	if portal.is_empty():
+		return
+	var cell: int = int(portal["cell"])
+	city.tiles[cell] = int(portal["was"])
+	if cell < city.under.size():
+		city.under[cell] = int(portal["under"])
+	portal = {}

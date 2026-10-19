@@ -12,12 +12,14 @@ const IMP = preload("res://src/implants.gd")
 const SK = preload("res://src/skills.gd")
 const CR = preload("res://src/creation.gd")
 const CLK = preload("res://src/clock.gd")
+const MS = preload("res://src/missions.gd")
 const UI_S := 1.5          # the interface is laid out for 1280x720 and drawn at 1.5x on the 1920x1080 canvas
 const TILESETS := ["Trilobit64"]      # Trilobit's own 64px art (tools/content/gen_tiles64.py); more sets can be added here
 const SLOTS := 3
-const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "implants", "skills", "map", "create"]
+const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "implants", "skills", "map", "create", "terminal"]
 const MOUSE_MODES := ["title", "pause", "options", "visuals", "keys", "saves", "loads", "implants", "map", "create"]
 
+var tm: Dictionary = {}                # the open mission terminal: {cell, offers, sel, msg}
 var game
 var tileset
 var view
@@ -293,7 +295,68 @@ func open_screen(kind: String) -> void:
 			screen.cc = cc
 			screen.cc_sel = cc_sel
 			screen.cc_tileset = cc_tileset
+		"terminal":
+			screen.overlay = true
+			screen.tm = tm
 	_scroll_fix()
+
+## bumping a mission terminal: its five offers for today (the same for the same terminal and day)
+func open_terminal(cell: int) -> void:
+	var sd: int = world.seed_value if world != null else game.seed_value
+	tm = {"cell": cell, "offers": MS.offers(sd, cell, game.sim.tick / CLK.DAY), "sel": 0, "msg": ""}
+	game.terminal_hit = -1
+	open_screen("terminal")
+	sfx.play("select")
+
+func _terminal_key(k: int) -> void:
+	var n: int = tm["offers"].size()
+	if k == KEY_ESCAPE or k == KEY_E:
+		resume_play()
+	elif k == KEY_UP or k == KEY_K or settings.action_for(k) == "north":
+		tm["sel"] = (int(tm["sel"]) + n - 1) % n
+		tm["msg"] = ""
+		sfx.play("blip")
+	elif k == KEY_DOWN or k == KEY_J or settings.action_for(k) == "south":
+		tm["sel"] = (int(tm["sel"]) + 1) % n
+		tm["msg"] = ""
+		sfx.play("blip")
+	elif k >= KEY_1 and k < KEY_1 + n:
+		tm["sel"] = k - KEY_1
+		tm["msg"] = ""
+		sfx.play("blip")
+	elif k == KEY_C:
+		if game.portal.is_empty():
+			tm["msg"] = "No portal is open."
+		else:
+			game.portal_close()
+			game.say("You scrap the contract at the terminal.  The portal collapses.")
+			tm["msg"] = "Contract scrapped.  The portal is closed."
+			sfx.play("blip")
+	elif k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
+		if not game.portal.is_empty():
+			tm["msg"] = "A portal is already open.  Finish that contract, or press C to scrap it."
+			sfx.play("blip")
+		elif game.portal_open(tm["offers"][int(tm["sel"])], int(tm["cell"])):
+			resume_play()
+		else:
+			tm["msg"] = "No room for a portal beside this terminal."
+			sfx.play("blip")
+
+## the player stepped into an open portal, or out through a site's exit: hand over to the world, which swaps the game
+func _mission_transfer() -> void:
+	var entering: bool = game.mission_enter_request
+	var forced: String = game.mission_leave_request
+	game.mission_enter_request = false
+	game.mission_leave_request = ""
+	if entering:
+		if not world.enter_mission():
+			return
+	elif world.leave_mission("blast" if forced == "blast" else "").is_empty():
+		return
+	game = world.game
+	view.game = game
+	screen.game = game
+	sfx.play("select")
 
 func _make_map() -> void:
 	if world == null:
@@ -363,7 +426,7 @@ func back_from_screen() -> void:
 			open_screen("title")
 		"implants", "skills":
 			open_screen("pause")
-		"map":
+		"map", "terminal":
 			resume_play()
 		"pause":
 			resume_play()
@@ -561,6 +624,9 @@ func screen_key(k: int) -> void:
 	if mode == "create":
 		_cc_key(k)
 		return
+	if mode == "terminal":
+		_terminal_key(k)
+		return
 	if mode == "skills":
 		if k == KEY_ESCAPE or k == settings.binds["skills"][0]:
 			back_from_screen()
@@ -728,6 +794,8 @@ func refresh() -> void:
 		view.game = game
 		screen.game = game
 		sfx.play("select")
+	elif world != null and world.game == game and (game.mission_enter_request or game.mission_leave_request != ""):
+		_mission_transfer()
 	view.queue_redraw()
 	var g = game
 	var extra := ""
@@ -752,7 +820,10 @@ func refresh() -> void:
 		var cov: int = g.cover_vs(g.pc, g.sim.pos[tgt], false)
 		line2 += "   |   Target: %s, %d tiles, %d%%%s" % [g.name_of(tgt), g.cheb(g.sim.pos[tgt], g.pc), g.hit_chance_on(tgt), (" (in cover)" if cov > 0 else "")]
 	var jt: String = g.eco.job_text()
-	status.text = line2 + ("\n" + jt if jt != "" else "")
+	var mt: String = MS.status_text(g)
+	if mt == "" and not g.portal.is_empty():
+		mt = "Portal open: %s  -  step in to begin" % g.portal["offer"]["title"]
+	status.text = line2 + ("\n" + jt if jt != "" else "") + ("\n" + mt if mt != "" else "")
 	var lines: Array = g.log.slice(-5)
 	logbox.text = "\n".join(lines)
 	status.add_theme_color_override("font_color", Color(1, 0.4, 0.4) if g.hp < g.hp_max / 3 else Color.WHITE)
@@ -1205,6 +1276,9 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				_:
 					acted = false
 	if acted:
+		if mode == "play" and game.terminal_hit >= 0:
+			open_terminal(game.terminal_hit)
+			return
 		refresh()
 
 func _drain_sfx() -> void:

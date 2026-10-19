@@ -22,6 +22,7 @@ var world = null
 var cc: Dictionary = {}            # the character being made on the create screen: {app, attrs}
 var cc_sel: int = 0                # the highlighted row of the create screen (see cc_row_rect)
 var cc_tileset = null              # the 64px tileset, for the doll preview when the standing dolls are missing
+var tm: Dictionary = {}            # the open mission terminal (main.gd): {cell, offers, sel, msg}
 var cc_fig = null                  # the standing-doll atlas, loaded when the creation screen first draws
 var map_tex: ImageTexture = null
 var font: Font = ThemeDB.fallback_font
@@ -95,6 +96,8 @@ func _draw() -> void:
 			_skills(W, H)
 		"create":
 			_create(W, H)
+		"terminal":
+			_terminal(W, H)
 		"map":
 			_map(W, H)
 		"title":
@@ -731,3 +734,66 @@ func _cc_doll(c: Vector2, k: float, look: Dictionary) -> void:
 			tint = look["hair"]
 		draw_texture_rect_region(sp[0], Rect2(-r.size * 0.5, r.size), r, tint)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+# ---------------------------------------------------------------------------------------------- the mission terminal
+const MS = preload("res://src/missions.gd")
+const TM_ROW := 98.0
+
+func _terminal(W: float, H: float) -> void:
+	draw_rect(Rect2(0, 0, W, H), Color(0.0, 0.0, 0.0, 0.55))
+	var offers: Array = tm.get("offers", [])
+	var sel: int = int(tm.get("sel", 0))
+	var left := Rect2(40, 50, 520, 580)
+	var right := Rect2(580, 50, 660, 580)
+	_panel(left)
+	_panel(right)
+	_txt("MISSION TERMINAL", Vector2(60, 84), 24, CYAN)
+	_txt("Five contracts are posted today", Vector2(60, 106), 14, Color(0.6, 0.75, 0.9))
+	var portal_open: bool = game != null and not game.portal.is_empty()
+	for k in offers.size():
+		var o: Dictionary = offers[k]
+		var r := Rect2(54, 122 + k * TM_ROW, 492, TM_ROW - 8)
+		var on: bool = k == sel
+		draw_rect(r, Color(0.12, 0.2, 0.3, 0.95) if on else Color(0.06, 0.09, 0.14, 0.9))
+		draw_rect(r, MAGENTA if on else Color(0.2, 0.4, 0.5), false, 1.5 if on else 1.0)
+		var tcol: Color = [Color(1.0, 0.4, 0.4), Color(0.4, 1.0, 0.7), Color(1.0, 0.8, 0.25), Color(0.5, 0.8, 1.0), Color(1.0, 0.55, 0.2)][k % 5]
+		draw_rect(Rect2(r.position.x + 10, r.position.y + 12, 64, 24), tcol * Color(1, 1, 1, 0.25))
+		draw_rect(Rect2(r.position.x + 10, r.position.y + 12, 64, 24), tcol, false, 1.0)
+		_txt(String(o["tag"]), Vector2(r.position.x + 10, r.position.y + 30), 15, tcol, HORIZONTAL_ALIGNMENT_CENTER, 64.0)
+		_txt("%d" % (k + 1), Vector2(r.position.x + 12, r.position.y + 62), 14, Color(0.5, 0.65, 0.8))
+		_txt(String(o["name"]).to_upper(), Vector2(r.position.x + 90, r.position.y + 28), 18, Color.WHITE)
+		_fit(String(o["title"]), Vector2(r.position.x + 90, r.position.y + 52), 15, Color(0.8, 0.9, 1.0), 300.0)
+		_rtxt("¥%d" % int(o["reward"]), r.end.x - 14, r.position.y + 28, 20, Color(1.0, 0.8, 0.25))
+		_rtxt("risk: " + MS.risk_text(int(o["risk"])), r.end.x - 14, r.position.y + 52, 14, [Color(0.5, 1.0, 0.6), Color(1.0, 0.85, 0.3), Color(1.0, 0.4, 0.4)][clampi(int(o["risk"]), 1, 3) - 1])
+		_fit(String(o["site"]) if o["type"] in ["assassination", "rescue"] else String(o["client"]), Vector2(r.position.x + 90, r.position.y + 72), 13, Color(0.55, 0.7, 0.85), 390.0)
+	if offers.is_empty():
+		return
+	var o: Dictionary = offers[sel]
+	var t: Dictionary = MS.type_of(o["type"])
+	var x: float = right.position.x + 22
+	var w: float = right.size.x - 44
+	_txt(String(o["name"]).to_upper(), Vector2(x, 86), 26, Color.WHITE)
+	_rtxt("¥%d on completion" % int(o["reward"]), right.end.x - 22, 86, 22, Color(1.0, 0.8, 0.25))
+	_txt(String(o["title"]), Vector2(x, 116), 18, CYAN)
+	draw_multiline_string(font, Vector2(x, 150), String(t["line"]), HORIZONTAL_ALIGNMENT_LEFT, w, 17, 2, Color(0.9, 0.95, 1.0))
+	draw_multiline_string(font, Vector2(x, 206), String(o["brief"]), HORIZONTAL_ALIGNMENT_LEFT, w, 15, 6, Color(0.7, 0.82, 0.92))
+	_txt("RISK", Vector2(x, 340), 14, Color(0.55, 0.7, 0.85))
+	for p in 3:
+		var filled: bool = p < int(o["risk"])
+		draw_rect(Rect2(x + 52 + p * 26, 326, 20, 14), [Color(1.0, 0.4, 0.4) if filled else Color(0.15, 0.2, 0.28)][0])
+	_txt("HELPS", Vector2(x, 372), 14, Color(0.55, 0.7, 0.85))
+	var bits: Array = []
+	for sid in t["skills"]:
+		var sd: Dictionary = SK.skill(sid)
+		var mine: int = game.lvl(sid) if game != null else 0
+		bits.append("%s %d%s" % [sd["name"], mine, "" if sd["live"] else " (not in play yet)"])
+	_txt(", ".join(bits), Vector2(x + 62, 372), 15, Color(0.5, 1.0, 0.7))
+	draw_multiline_string(font, Vector2(x, 412), "Accepting opens a portal on the street beside this terminal.  Stepping through it enters the site.  The site is its own place, and leaving it closes the portal for good: pay only on a met objective.", HORIZONTAL_ALIGNMENT_LEFT, w, 14, 4, Color(0.6, 0.75, 0.9))
+	if portal_open:
+		draw_rect(Rect2(x, 482, w, 60), Color(0.35, 0.1, 0.2, 0.6))
+		draw_multiline_string(font, Vector2(x + 12, 506), "A portal is already open for: %s.  Finish that contract, or scrap it with C." % String(game.portal["offer"]["title"]), HORIZONTAL_ALIGNMENT_LEFT, w - 24, 15, 2, Color(1.0, 0.6, 0.7))
+	var msg: String = String(tm.get("msg", ""))
+	if msg != "":
+		_txt(msg, Vector2(x, 570), 16, Color(1.0, 0.8, 0.25))
+	_txt("Up / Down or 1-5 chooses  -  Enter accepts  -  C scraps an open contract  -  Esc leaves", Vector2(60, 664), 15, Color(0.6, 0.75, 0.9))

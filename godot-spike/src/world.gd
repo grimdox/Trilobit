@@ -3,6 +3,8 @@ extends RefCounted
 ## The player (and the vehicle being driven) is carried across.  Zones that are not live are kept as save dictionaries in `cache`.
 const GameScript = preload("res://src/game.gd")
 const ISL = preload("res://src/island.gd")
+const MS = preload("res://src/missions.gd")
+const ORIGIN := "mission_origin"        # cache key of the physical-world game while the player is inside a mission site
 const CITY_PEOPLE := 2000             # the city is big and packed: two thousand people (the performance budget in the design notes)
 
 var island
@@ -11,6 +13,7 @@ var cache: Dictionary = {}          # "x,y" -> save_dict of a zone that has been
 var seed_value: int = 0
 var switches: int = 0
 var line: Dictionary = {}           # the rail line (see transit.gd), shared by every zone game
+var origin_game = null              # the physical-world game, kept whole while the player is inside a mission site (saved into `cache` only when the world is saved)
 var visited: Dictionary = {}        # "x,y" -> true (for the map)
 
 static func key(z: Vector2i) -> String:
@@ -39,12 +42,83 @@ func _make(z: Vector2i, people: int = -1):
 
 ## revive a stored zone
 func _restore(z: Vector2i):
+	return _restore_dict(cache[key(z)])
+
+func _restore_dict(d: Dictionary):
 	var g = GameScript.new(0)
 	g.world = self
 	g.island = island
-	g.load_dict(cache[key(z)])
+	g.load_dict(d)
 	g.world = self
 	return g
+
+# ------------------------------------------------------------------ mission sites
+func in_site() -> bool:
+	return origin_game != null or cache.has(ORIGIN)
+
+## the time spent in a site passes in the street too: people who were walking and would have arrived by now are there (their arrival ticks went by while the game was put away)
+func _catch_up(g) -> void:
+	var sim = g.sim
+	for t in sim.buckets.keys():
+		if int(t) < sim.tick:
+			for i in sim.buckets[t]:
+				if sim.arrive[i] == int(t) and sim.near[i] == 0 and sim.alive[i] == 1:
+					sim.pos[i] = sim.dest[i]
+					sim.arrive[i] = -1
+			sim.buckets.erase(t)
+
+## the player steps into an open portal: the physical world is put away whole, the site is generated from the offer's seed, and the player is carried in
+func enter_mission() -> bool:
+	var g = game
+	if g.portal.is_empty() or not g.mission.is_empty():
+		return false
+	var offer: Dictionary = g.portal["offer"]
+	var carry: Dictionary = g.player_dict()
+	origin_game = g
+	var ng = GameScript.new(int(offer["seed"]))
+	ng.world = self
+	ng.setup(0, null, Vector2i(-1, -1), MS.new_state(offer))
+	ng.apply_player(carry)
+	ng.last_pc = ng.pc
+	ng.sim.retier(ng.pc)
+	ng._compute_fov()
+	game = ng
+	switches += 1
+	ng.say("You step through.  %s.  The exit portal is behind you; leaving closes it for good." % offer["title"])
+	return true
+
+## the player leaves the site (through the exit portal, or thrown out by a blast): the outcome is judged, the site is dropped, the physical world comes
+## back as it was with the portal closed, and a won contract pays.  Returns the outcome dictionary.
+func leave_mission(forced: String = "") -> Dictionary:
+	var g = game
+	if g.mission.is_empty() or not in_site():
+		return {}
+	var res: Dictionary = MS.outcome(g, forced)
+	if res["outcome"] == "success" and res["type"] == "recover":
+		var case = g.eco._find("trl_datacase")
+		if case != null:
+			g.eco._remove(case)
+	if forced == "blast":
+		g.hp = maxi(1, g.hp - 20)
+	var carry: Dictionary = g.player_dict()
+	var og = origin_game if origin_game != null else _restore_dict(cache[ORIGIN])
+	origin_game = null
+	cache.erase(ORIGIN)
+	var job: Dictionary = og.eco.job.duplicate(true)
+	og.apply_player(carry)
+	og.eco.job = job
+	_catch_up(og)
+	og.portal_close()
+	if res["outcome"] == "success":
+		og.yen += int(res["reward"])
+		og.sfx("pick")
+	og.say(String(res["text"]))
+	og.last_pc = og.pc
+	og.sim.retier(og.pc)
+	og._compute_fov()
+	game = og
+	switches += 1
+	return res
 
 ## has the player gone far enough into another zone's territory to hand over to it?  (three tiles of hysteresis)
 func poll() -> bool:
@@ -138,6 +212,8 @@ func save_dict() -> Dictionary:
 	var zones := {}
 	for k in cache:
 		zones[k] = cache[k]
+	if origin_game != null:
+		zones[ORIGIN] = JSON.parse_string(JSON.stringify(origin_game.save_dict()))
 	return {"layout": ISL.LAYOUT_VER, "island": seed_value, "zone": [game.zone.x, game.zone.y], "game": game.save_dict(), "zones": zones, "visited": visited.keys(), "switches": switches}
 
 func load_dict(d: Dictionary) -> void:
