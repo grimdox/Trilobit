@@ -52,6 +52,29 @@ def main(items_path):
     body = np.asarray(a['layers']['body'])[..., 3] > 200
     check(body[59:63].any(), 'feet reach the bottom of the tile (rows 59-62)')
     check(not body[:2].any(), 'head clears the top of the tile')
+    # the baked atlas covers everything the game can put on a person
+    import re
+    here = os.path.dirname(os.path.abspath(__file__))
+    root = os.path.normpath(os.path.join(here, '..', '..'))
+    idx_path = os.path.join(root, 'gfx', 'figure', 'fig_index.json')
+    check(os.path.exists(idx_path), 'gfx/figure/fig_index.json exists')
+    if os.path.exists(idx_path):
+        idx = json.load(open(idx_path))
+        spec = open(os.path.join(root, 'src', 'dollspec.gd')).read()
+        worn = set(re.findall(r'"trl_[a-z_]+": "([a-z_]+)"', spec.split('const ARMOR_LAYER')[1].split('}')[0]))
+        outfits = {'thug', 'nap', 'nasim', 'suit', 'overalls', 'coat', 'labcoat', 'chef', 'priest', 'kannushi', 'courier'} | {'jacket_%d' % i for i in range(6)}
+        miss = sorted(k for k in worn | outfits if k not in idx)
+        check(not miss, 'every DollSpec outfit and worn layer has a sprite %s' % miss)
+        usable = [i['id'] for i in items if 'gun' in i.get('tags', []) or i.get('tags', [''])[0] == 'melee' or i['id'] in ('trl_kit_repair', 'trl_medkit')]
+        miss = [i for i in usable if i not in idx]
+        check(len(usable) >= 127 and not miss, 'every gun, melee weapon and tool has a held sprite (%d) %s' % (len(usable), miss[:5]))
+        import t64_hair as HR
+        hair = ['hair_%s_%d' % (st, c) for st in HR.STYLES for c in range(len(HR.HAIR_COLOURS))]
+        eyes = ['eyes_%s_%d' % (sh, c) for sh in HR.EYE_SHAPES for c in range(len(HR.EYE_COLOURS))]
+        check(all(k in idx for k in hair) and len(hair) == 49, '7 hair styles x 7 colours')
+        check(all(k in idx for k in eyes) and len(eyes) == 24, '4 eye shapes x 6 colours')
+        check(all(v[2] == 64 and v[3] == 64 for k, v in idx.items() if not k.startswith('_')), 'every cell is 64x64')
+        check(all(('base:%s:%s:hands' % (bd, sk)) in idx for bd in ('B', 'BX') for sk in F.SKINS), 'base layers for both bodies in all five skins')
     print('FIGURES %d/%d' % (ok, n))
     return 0 if ok == n else 1
 
