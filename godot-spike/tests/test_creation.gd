@@ -59,8 +59,7 @@ func run() -> Array:
 	var app: Dictionary = CR.default_app()
 	check.call("the default look is the figure the game always drew (Frame A, light skin, grey hair, buzz cut)", CR.look_of(app)["skin"] == DS.SKINS[0] and CR.look_of(app)["hair"] == DS.HAIRS[4] and CR.look_of(app)["style"] == "buzz" and not CR.look_of(app)["fem"])
 	var wrap := true
-	for row in CR.LOOK_ROWS:
-		var f: String = row["id"]
+	for f in ["sprite", "skin", "hair", "style", "eyes"]:
 		var cur2: Dictionary = app
 		for i in CR.count(f):
 			cur2 = CR.cycle(cur2, f, 1)
@@ -71,7 +70,8 @@ func run() -> Array:
 	check.call("every appearance row wraps in both directions", wrap)
 	check.call("five skin tones, seven hair colours, seven styles, six eye colours, two sprites", CR.count("skin") == 5 and CR.count("hair") == 7 and CR.count("style") == 7 and CR.count("eyes") == 6 and CR.count("sprite") == 2)
 	check.call("every style the creator offers exists in the doll's hair layers", CR.STYLES.all(func(s): return s in DS.STYLES_M or s in DS.STYLES_F))
-	check.call("every option has a name", CR.LOOK_ROWS.all(func(r): return CR.option_name(app, r["id"]) != ""))
+	check.call("every option has a name", ["sprite", "skin", "hair", "style", "eyes"].all(func(f): return CR.option_name(app, f) != ""))
+	check.call("the screen shows only the sprite row; skin, hair, style and eyes stay in the data", CR.LOOK_ROWS.size() == 1 and CR.LOOK_ROWS[0]["id"] == "sprite" and CR.HIDDEN_LOOK == ["skin", "hair", "style", "eyes"])
 	var bad: Dictionary = CR.sanitize({"sprite": 9, "skin": -3, "hair": 99, "style": 40, "eyes": 12, "bg": "zzz"})
 	check.call("out-of-range saved values are brought inside the tables", bad["sprite"] == 1 and bad["skin"] == 0 and bad["hair"] == 6 and bad["style"] == 6 and bad["eyes"] == 5 and bad["bg"] == "none")
 	check.call("the background page is a placeholder (one 'not chosen' entry)", CR.BACKGROUNDS.size() == 1 and CR.BACKGROUNDS[0]["id"] == "none")

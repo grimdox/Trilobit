@@ -562,17 +562,17 @@ func _skill_detail(r: Rect2, sel: Dictionary, attrs: Dictionary, base: Dictionar
 # ---------------------------------------------------------------------------------------------- character creation
 ## rows: 0-4 appearance (CR.LOOK_ROWS), 5-9 attributes (SK.ATTRS), 10 Begin, 11 Back.  Everything fits one 1280x720 screen.
 const CC_LOOK_X := 40.0
-const CC_LOOK_Y := 396.0
-const CC_ATTR_X := 752.0
+const CC_LOOK_Y := 356.0
+const CC_ATTR_X := 622.0
 const CC_ATTR_Y := 170.0
 const CC_ATTR_H := 80.0
 
 func cc_row_rect(i: int) -> Rect2:
 	if i < CR.LOOK_ROWS.size():
-		return Rect2(CC_LOOK_X, CC_LOOK_Y + i * 40.0, 360.0, 34.0)
+		return Rect2(CC_LOOK_X, CC_LOOK_Y + i * 40.0, 218.0, 34.0)
 	var a: int = i - CR.LOOK_ROWS.size()
 	if a < SK.ATTRS.size():
-		return Rect2(CC_ATTR_X, CC_ATTR_Y + a * (CC_ATTR_H + 4.0), 488.0, CC_ATTR_H)
+		return Rect2(CC_ATTR_X, CC_ATTR_Y + a * (CC_ATTR_H + 4.0), 618.0, CC_ATTR_H)
 	if a == SK.ATTRS.size():
 		return Rect2(864, 640, 190, 46)
 	return Rect2(1066, 640, 190, 46)
@@ -587,9 +587,10 @@ func cc_hit(p: Vector2) -> Dictionary:
 		if r.has_point(p):
 			var dir := 0
 			if i < CR.LOOK_ROWS.size() + SK.ATTRS.size():
-				if p.x < r.position.x + 56.0:
+				var zone: float = r.size.x * 0.5 if i < CR.LOOK_ROWS.size() else 56.0          # a sprite row is split in halves
+				if p.x < r.position.x + zone:
 					dir = -1
-				elif p.x > r.end.x - 56.0:
+				elif p.x > r.end.x - zone:
 					dir = 1
 			return {"row": i, "dir": dir}
 	return {"row": -1, "dir": 0}
@@ -608,17 +609,14 @@ func _create(W: float, H: float) -> void:
 	var look: Dictionary = CR.look_of(app)
 	_txt("CREATE CHARACTER", Vector2(40, 46), 32, Color.WHITE)
 	_rtxt("Up / Down choose  -  Left / Right change  -  Enter begins  -  Esc back", W - 40, 42, 15, Color(0.6, 0.75, 0.9))
-	# ---- appearance
-	var pa := Rect2(24, 66, 392, 560)
+	# ---- appearance: the sprite only
+	var pa := Rect2(24, 66, 250, 332)
 	_panel(pa)
 	_txt("1  APPEARANCE", Vector2(pa.position.x + 16, pa.position.y + 28), 18, CYAN)
-	draw_rect(Rect2(40, 108, 360, 276), Color(0.02, 0.03, 0.06))
-	draw_rect(Rect2(40, 108, 360, 276), Color(0.3, 0.9, 1.0, 0.35), false, 1.0)
-	_cc_doll(Vector2(128, 250), 2.0, look)
-	_cc_portrait(Vector2(300, 214), 50.0, look)
-	_txt("in game, seen from above", Vector2(52, 130), 12, Color(0.5, 0.62, 0.72))
-	_txt("face (stand-in drawing)", Vector2(236, 130), 12, Color(0.5, 0.62, 0.72))
-	_txt("Sprites you supply replace both pictures.", Vector2(46, 376), 12, Color(0.5, 0.62, 0.72))
+	draw_rect(Rect2(40, 108, 218, 236), Color(0.02, 0.03, 0.06))
+	draw_rect(Rect2(40, 108, 218, 236), Color(0.3, 0.9, 1.0, 0.35), false, 1.0)
+	_cc_doll(Vector2(149, 226), 2.0, look)
+	_txt("stand-in sprite", Vector2(48, 334), 12, Color(0.5, 0.62, 0.72))
 	for i in CR.LOOK_ROWS.size():
 		var row: Dictionary = CR.LOOK_ROWS[i]
 		var r: Rect2 = cc_row_rect(i)
@@ -626,18 +624,12 @@ func _create(W: float, H: float) -> void:
 		draw_rect(r, Color(0.3, 0.9, 1.0, 0.2) if on else Color(1, 1, 1, 0.04))
 		if on:
 			draw_rect(Rect2(r.position.x, r.position.y, 4, r.size.y), MAGENTA)
-		_txt(row["label"], Vector2(r.position.x + 14, r.position.y + 23), 16, Color(0.75, 0.88, 1.0))
-		_tri(Vector2(r.position.x + 150, r.position.y + 17), false, true)
+		_txt(row["label"], Vector2(r.position.x + 12, r.position.y + 23), 16, Color(0.75, 0.88, 1.0))
+		_tri(Vector2(r.position.x + 82, r.position.y + 17), false, true)
 		_tri(Vector2(r.end.x - 14, r.position.y + 17), true, true)
-		var vx: float = r.position.x + 166.0
-		var sw: Color = CR.option_color(app, row["id"])
-		if sw.a > 0.0:
-			draw_rect(Rect2(vx, r.position.y + 7, 20, 20), sw)
-			draw_rect(Rect2(vx, r.position.y + 7, 20, 20), Color(1, 1, 1, 0.6), false, 1.0)
-			vx += 28.0
-		_fit(CR.option_name(app, row["id"]), Vector2(vx, r.position.y + 23), 17, Color.WHITE, r.end.x - 34.0 - vx)
+		_fit(CR.option_name(app, row["id"]), Vector2(r.position.x + 100, r.position.y + 23), 17, Color.WHITE, r.end.x - 34.0 - (r.position.x + 100.0))
 	# ---- background and goals (placeholder)
-	var pb := Rect2(432, 66, 288, 560)
+	var pb := Rect2(290, 66, 300, 560)
 	_panel(pb)
 	_txt("2  BACKGROUND & GOALS", Vector2(pb.position.x + 16, pb.position.y + 28), 17, CYAN)
 	var bgd: Dictionary = CR.BACKGROUNDS[0]
@@ -650,7 +642,7 @@ func _create(W: float, H: float) -> void:
 		draw_multiline_string(font, Vector2(box.position.x + 12, box.position.y + 80), "Coming in a later update." if k == 0 else "You will pick what you are after here.", HORIZONTAL_ALIGNMENT_LEFT, box.size.x - 24, 14, 3, Color(0.5, 0.6, 0.7))
 	draw_multiline_string(font, Vector2(pb.position.x + 16, pb.position.y + 370), String(bgd["desc"]), HORIZONTAL_ALIGNMENT_LEFT, pb.size.x - 32, 14, 4, Color(0.6, 0.72, 0.85))
 	# ---- attributes
-	var pt := Rect2(736, 66, 520, 560)
+	var pt := Rect2(606, 66, 650, 560)
 	_panel(pt)
 	_txt("3  ATTRIBUTES", Vector2(pt.position.x + 16, pt.position.y + 28), 18, CYAN)
 	_rtxt("%d to %d each, %d points in all" % [CR.ATTR_MIN, CR.ATTR_MAX, CR.total()], pt.end.x - 16, pt.position.y + 26, 14, Color(0.6, 0.72, 0.85))
@@ -658,7 +650,7 @@ func _create(W: float, H: float) -> void:
 	var fc := Color(1.0, 0.8, 0.25) if free > 0 else Color(0.5, 1.0, 0.7)
 	_txt("FREE POINTS", Vector2(CC_ATTR_X, 118), 16, Color(0.75, 0.88, 1.0))
 	_txt(str(free), Vector2(CC_ATTR_X + 150, 126), 40, fc)
-	_rtxt(CR.pool_text(attrs), CC_ATTR_X + 488, 118, 15, fc)
+	_rtxt(CR.pool_text(attrs), CC_ATTR_X + 618, 118, 15, fc)
 	_txt("Lower one attribute to free a point; spend it on another.", Vector2(CC_ATTR_X, 148), 13, Color(0.55, 0.68, 0.8))
 	for k in SK.ATTRS.size():
 		var ad: Dictionary = SK.ATTRS[k]
@@ -724,41 +716,3 @@ func _cc_doll(c: Vector2, k: float, look: Dictionary) -> void:
 			tint = look["hair"]
 		draw_texture_rect_region(sp[0], Rect2(-r.size * 0.5, r.size), r, tint)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-
-## a drawn face so skin, hair and eye colour can be judged together (the game's doll is seen from above and shows no eyes)
-func _cc_portrait(c: Vector2, rr: float, look: Dictionary) -> void:
-	var skin: Color = look["skin"]
-	var hair: Color = look["hair"]
-	var style: String = look["style"]
-	var fem: bool = look["fem"]
-	draw_rect(Rect2(c.x - rr * 1.1, c.y + rr * 0.85, rr * 2.2, rr * 1.0), skin.darkened(0.25))                # shoulders
-	draw_rect(Rect2(c.x - rr * 0.32, c.y + rr * 0.6, rr * 0.64, rr * 0.5), skin.darkened(0.12))               # neck
-	if style == "long" or style == "bob":
-		draw_rect(Rect2(c.x - rr * 1.12, c.y - rr * 0.3, rr * 2.24, rr * (1.9 if style == "long" else 1.15)), hair.darkened(0.15))
-	if style == "ponytail":
-		draw_rect(Rect2(c.x + rr * 0.85, c.y - rr * 0.5, rr * 0.5, rr * 1.7), hair.darkened(0.1))
-	draw_circle(c, rr, skin)
-	draw_circle(c + Vector2(-rr * 0.98, rr * 0.1), rr * 0.16, skin.darkened(0.08))
-	draw_circle(c + Vector2(rr * 0.98, rr * 0.1), rr * 0.16, skin.darkened(0.08))
-	var top: float = c.y - rr
-	match style:
-		"buzz":
-			draw_arc(c, rr * 0.99, PI * 1.12, PI * 1.88, 24, hair, rr * 0.16)
-		"mohawk":
-			draw_rect(Rect2(c.x - rr * 0.14, top - rr * 0.34, rr * 0.28, rr * 0.7), hair)
-		"bun":
-			draw_circle(Vector2(c.x, top - rr * 0.1), rr * 0.3, hair)
-			draw_arc(c, rr * 0.99, PI * 1.08, PI * 1.92, 24, hair, rr * 0.3)
-		_:
-			draw_arc(c, rr * 0.98, PI * 1.02, PI * 1.98, 24, hair, rr * 0.44)
-			draw_rect(Rect2(c.x - rr * 0.98, c.y - rr * 0.72, rr * 1.96, rr * 0.3), hair)
-	var ey: float = c.y - rr * 0.08
-	var iris: Color = look["eyes"]
-	for sx in [-1.0, 1.0]:
-		var ex: float = c.x + sx * rr * 0.4
-		draw_rect(Rect2(ex - rr * 0.2, ey - rr * 0.1, rr * 0.4, rr * 0.2), Color(0.95, 0.95, 0.95))
-		draw_circle(Vector2(ex, ey), rr * 0.095, iris)
-		draw_circle(Vector2(ex, ey), rr * 0.04, Color(0.04, 0.04, 0.05))
-		draw_line(Vector2(ex - rr * 0.22, ey - rr * 0.22), Vector2(ex + rr * 0.2, ey - rr * 0.2 - (0.04 if fem else 0.0) * rr), hair.darkened(0.3), 2.0)
-	draw_line(Vector2(c.x, ey + rr * 0.12), Vector2(c.x - rr * 0.06, ey + rr * 0.42), skin.darkened(0.3), 2.0)
-	draw_line(Vector2(c.x - rr * 0.22, c.y + rr * 0.58), Vector2(c.x + rr * 0.22, c.y + rr * 0.58), skin.darkened(0.55), 2.0)

@@ -14,18 +14,18 @@ func _initialize() -> void:
 		await process_frame
 	await _snap(out + "_fresh.png")
 	# a few choices: a darker skin, a bob, green eyes, Strength up and Cognition and Endurance down
-	for step in [[1, 3], [3, 4], [4, 2], [8, -1], [9, -2], [5, 3]]:
+	for step in [[0, 1], [4, -1], [5, -2], [1, 3]]:
 		m.cc_sel = step[0]
 		for i in absi(step[1]):
 			m.cc_step(1 if step[1] > 0 else -1)
-	m.cc_sel = 5
+	m.cc_sel = 1
 	m._cc_sync()
 	for i in 3:
 		await process_frame
 	await _snap(out + "_chosen.png")
-	m.cc_sel = 7
+	m.cc_sel = 3
 	m.cc_step(-1)
-	m.cc_sel = 10
+	m.cc_sel = 6
 	m.cc_begin()
 	m._cc_sync()
 	for i in 3:

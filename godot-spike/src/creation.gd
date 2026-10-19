@@ -20,10 +20,10 @@ const STYLE_NAMES := ["Short", "Buzz cut", "Mohawk", "Long", "Bob", "Ponytail", 
 # natural eye colours only: an eye that glows or sees in the dark is an implant (pillar 3)
 const EYES := [Color(0.34, 0.2, 0.1), Color(0.5, 0.36, 0.14), Color(0.3, 0.5, 0.22), Color(0.25, 0.45, 0.72), Color(0.52, 0.58, 0.62), Color(0.62, 0.45, 0.12)]
 const EYE_NAMES := ["Brown", "Hazel", "Green", "Blue", "Grey", "Amber"]
-# the appearance rows the screen shows: id in `app`, label, option count, option label
-const LOOK_ROWS := [
-	{"id": "sprite", "label": "Sprite"}, {"id": "skin", "label": "Skin"}, {"id": "hair", "label": "Hair colour"},
-	{"id": "style", "label": "Hair style"}, {"id": "eyes", "label": "Eyes"}]
+# the appearance rows the screen shows.  Only the sprite for now: skin, hair, eyes and style stay in `app` (saved, drawn on the doll, and
+# steppable with `cycle`) but have no row until the supplied sprites say which of them creation should still offer.
+const LOOK_ROWS := [{"id": "sprite", "label": "Sprite"}]
+const HIDDEN_LOOK := ["skin", "hair", "style", "eyes"]
 
 const BACKGROUNDS := [{"id": "none", "name": "Not chosen yet", "desc": "Background and goals arrive in a later update.  Nothing on this page changes play yet."}]
 
