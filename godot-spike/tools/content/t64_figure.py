@@ -438,7 +438,8 @@ def ndi_grow(a, m, px):
     return ndi.binary_dilation(m, iterations=max(1, int(px * a.ss)))
 
 
-def layer_arms(b, skin=SKIN_PREVIEW):
+def layer_arms(b, skin=SKIN_PREVIEW, gap=True):
+    """gap=False when a sleeve covers the arm: the sleeve draws its own gap line"""
     a = A()
     ua = b.upper_arm(a, True)
     fa_n, fa_f = b.forearm(a, True), b.forearm(a, False)
@@ -460,8 +461,8 @@ def layer_arms(b, skin=SKIN_PREVIEW):
     yy_, xx_ = np.mgrid[0:SZ, 0:SZ]
     # the shoulder top grows out of the torso (no line); from the armpit down a 1px deep-skin gap separates arm and body
     shoulder = tor & (yy_ < b.S_n[1] + 2.5) & (xx_ < b.centre())
-    gap = tor & (yy_ >= b.S_n[1] + 2.5) & (yy_ < b.E_n[1] + 0.5) & (xx_ < b.centre())
-    return crisp(a, no_outline=shoulder | gap, soft=(gap, tuple(col(SKIN_RAMP[1]) * k)))
+    gapm = tor & (yy_ >= b.S_n[1] + 2.5) & (yy_ < b.E_n[1] + 0.5) & (xx_ < b.centre())
+    return crisp(a, no_outline=shoulder | gapm, soft=(gapm, tuple(col(SKIN_RAMP[1]) * k)) if gap else None)
 
 
 def prosthetic_arm(a, b, ua, fa):
