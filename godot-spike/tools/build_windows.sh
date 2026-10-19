@@ -6,6 +6,7 @@ cd "$(dirname "$0")/.."
 VER=${1:-0.19.0.0}
 python3 tools/export_items.py
 python3 tools/content/gen_paperdoll.py data/items.json gfx/paperdoll
+python3 tools/content/gen_figures.py data/items.json gfx/figure
 python3 tools/content/gen_tiles64.py gfx/Trilobit64 data/items.json
 godot --headless --path . --import >/dev/null 2>&1 || true
 godot --headless --path . --export-release "Windows Desktop" build/Trilobit.exe 2>&1 | grep -E "ERROR|error" || true

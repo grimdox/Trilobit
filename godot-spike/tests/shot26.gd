@@ -13,7 +13,7 @@ func _initialize() -> void:
 	for i in 3:
 		await process_frame
 	await _snap(out + "_fresh.png")
-	# a few choices: a darker skin, a bob, green eyes, Strength up and Cognition and Endurance down
+	# a few appearance choices on the five look rows
 	for step in [[0, 1], [4, -1], [5, -2], [1, 3]]:
 		m.cc_sel = step[0]
 		for i in absi(step[1]):

@@ -14,6 +14,11 @@ const SKINS := [Color(0.96, 0.8, 0.68), Color(0.88, 0.69, 0.53), Color(0.74, 0.5
 const HAIRS := [Color(0.1, 0.09, 0.1), Color(0.22, 0.14, 0.09), Color(0.45, 0.3, 0.15), Color(0.72, 0.58, 0.3), Color(0.6, 0.62, 0.66), Color(0.8, 0.2, 0.3), Color(0.2, 0.75, 0.9)]
 const STYLES_M := ["short", "buzz", "mohawk", "short", "buzz"]
 const STYLES_F := ["long", "bob", "ponytail", "bun", "short"]
+# the standing dolls (gfx/figure): skin ramps in SKINS order, hair styles in creation.gd STYLES order, eye shapes
+const FIG_SKINS := ["skin_pale", "skin_fair", "skin_tan", "skin_brown", "skin_deep"]
+const FIG_STYLES := ["short", "buzz", "mohawk", "long", "bob", "ponytail", "bun"]
+const EYE_SHAPES := ["round", "almond", "hooded", "wide"]
+const EYE_COUNT := 6
 
 ## body and look: the layers every figure has, plus skin and hair tints
 static func look(h: int, fem: bool, fac: int) -> Dictionary:
@@ -23,7 +28,9 @@ static func look(h: int, fem: bool, fac: int) -> Dictionary:
 	elif fac == 2:
 		hs = (h >> 4) % 4
 	var styles: Array = STYLES_F if fem else STYLES_M
-	return {"fem": fem, "skin": SKINS[(h >> 8) % SKINS.size()], "hair": HAIRS[hs], "style": styles[(h >> 12) % styles.size()]}
+	var si: int = (h >> 8) % SKINS.size()
+	return {"fem": fem, "skin": SKINS[si], "hair": HAIRS[hs], "style": styles[(h >> 12) % styles.size()],
+		"skin_i": si, "hair_i": hs, "eye_i": (h >> 16) % EYE_COUNT, "eye_shape": EYE_SHAPES[(h >> 19) % EYE_SHAPES.size()]}
 
 static func base_layers(look: Dictionary, hair_hidden: bool) -> Array:
 	var sx: String = "f" if look["fem"] else "m"
@@ -31,6 +38,44 @@ static func base_layers(look: Dictionary, hair_hidden: bool) -> Array:
 	if not hair_hidden:
 		l.append("d_hair_" + String(look["style"]))
 	return l
+
+## the standing-doll keys for a spec, in draw order.  `fig` is the atlas (figure.gd); keys it has no sprite for are left out
+## (implants have no standing sprites yet).  Augmented people (any implant layer) get the augmented body.
+static func figure_keys(spec: Dictionary, fig) -> Array:
+	var lk: Dictionary = spec["look"]
+	var layers: Array = spec["layers"]
+	var aug := false
+	for l in layers:
+		if String(l).begins_with("imp_"):
+			aug = true
+	var base: String = "base:%s:%s:" % ["BX" if aug else "B", FIG_SKINS[clampi(int(lk.get("skin_i", 0)), 0, FIG_SKINS.size() - 1)]]
+	var keys: Array = ["base:shadow", base + "body", "base:under"]
+	var sleeved := false
+	for l in layers:
+		var ls := String(l)
+		keys.append(ls)
+		keys.append(ls + "_back")
+		if fig.has(ls + "_arm"):
+			keys.append(ls + "_arm")
+			if fig.z(ls + "_arm") < 48:          # a sleeve (z 45-46) covers the arm; arm armor (z 48) sits on the bare arm
+				sleeved = true
+	keys.append(base + ("arms_sleeved" if sleeved else "arms"))
+	keys.append(base + "hands")
+	if String(spec.get("weapon", "")) != "":
+		keys.append(String(spec["weapon"]))
+	var style := String(lk.get("style", "short"))
+	if not bool(lk.get("hid", false)) and style in FIG_STYLES:
+		keys.append("hair_%s_%d" % [style, int(lk.get("hair_i", 0))])
+		keys.append("hair_%s_%d_back" % [style, int(lk.get("hair_i", 0))])
+	if not ("visor" in layers or "helm_tac" in layers):
+		keys.append("eyes_%s_%d" % [String(lk.get("eye_shape", "round")), int(lk.get("eye_i", 0))])
+	var out: Array = []
+	for n in keys.size():
+		var k := String(keys[n])
+		if fig.has(k):
+			out.append([fig.z(k) * 1000 + n, k])
+	out.sort_custom(func(a, b): return a[0] < b[0])
+	return out.map(func(e): return e[1])
 
 ## layers and the weapon id for person i (an NPC).  Returns {"layers": Array, "weapon": String}
 static func for_person(g, i: int) -> Dictionary:

@@ -3,8 +3,10 @@ extends Node2D
 const CG = preload("res://src/citygen.gd")
 const PD = preload("res://src/paperdoll.gd")
 const DS = preload("res://src/dollspec.gd")
+const FG = preload("res://src/figure.gd")
 const CLK = preload("res://src/clock.gd")
 var pd = PD.new()
+var fig = FG.new()            # the standing dolls (gfx/figure), drawn for every person when present
 var game
 var tileset
 const TILE := 64            # screen pixels per cell: sprites are drawn at 64x64 whatever the tileset's own size
@@ -49,12 +51,16 @@ func item_sprite(it) -> String:
 func person_sprite(i: int) -> String:
 	return "trl_person_f" if game.fem[i] == 1 else "trl_person_m"
 
-## the paper doll.  The 64px set has top-down layers (facing up, centred on the cell) that are stacked by z and turned to the facing.
+## the paper doll.  People are drawn as standing dolls (gfx/figure, three-quarter turned, mirrored when facing left); without that
+## atlas, the tileset's top-down layers (facing up, centred on the cell, stacked by z and turned to the facing) or the old 32px atlas.
 func doll_ready() -> bool:
-	return tileset != null and tileset.has("dl:d_legs")
+	return fig.ready() or (tileset != null and tileset.has("dl:d_legs"))
 
 func _draw_doll(spec: Dictionary, pos: Vector2, face_dir: Vector2i, mod: Color = Color.WHITE) -> void:
-	if doll_ready():
+	if fig.ready():
+		fig.draw(self, DS.figure_keys(spec, fig), pos, TILE / 64.0, face_dir.x < 0, mod)
+		return
+	if tileset != null and tileset.has("dl:d_legs"):
 		_draw_doll64(spec, pos, face_dir, mod)
 		return
 	for l in spec["layers"]:

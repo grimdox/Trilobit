@@ -5,6 +5,7 @@ const IMP = preload("res://src/implants.gd")
 const SK = preload("res://src/skills.gd")
 const CR = preload("res://src/creation.gd")
 const DS = preload("res://src/dollspec.gd")
+const FG = preload("res://src/figure.gd")
 var kind: String = "title"
 var title: String = ""
 var subtitle: String = ""
@@ -20,7 +21,8 @@ var sk_sel: int = 0                # the highlighted line of the attributes & sk
 var world = null
 var cc: Dictionary = {}            # the character being made on the create screen: {app, attrs}
 var cc_sel: int = 0                # the highlighted row of the create screen (see cc_row_rect)
-var cc_tileset = null              # the 64px tileset, for the doll preview
+var cc_tileset = null              # the 64px tileset, for the doll preview when the standing dolls are missing
+var cc_fig = null                  # the standing-doll atlas, loaded when the creation screen first draws
 var map_tex: ImageTexture = null
 var font: Font = ThemeDB.fallback_font
 var kana_font: Font = load("res://gfx/fonts/NotoSansJP-kana-subset.otf")
@@ -561,6 +563,8 @@ func _skill_detail(r: Rect2, sel: Dictionary, attrs: Dictionary, base: Dictionar
 
 # ---------------------------------------------------------------------------------------------- character creation
 ## rows: 0-4 appearance (CR.LOOK_ROWS), 5-9 attributes (SK.ATTRS), 10 Begin, 11 Back.  Everything fits one 1280x720 screen.
+const CC_LOOK_H := 38.0
+const CC_LOOK_STEP := 42.0
 const CC_LOOK_X := 40.0
 const CC_LOOK_Y := 356.0
 const CC_ATTR_X := 622.0
@@ -569,7 +573,7 @@ const CC_ATTR_H := 80.0
 
 func cc_row_rect(i: int) -> Rect2:
 	if i < CR.LOOK_ROWS.size():
-		return Rect2(CC_LOOK_X, CC_LOOK_Y + i * 40.0, 218.0, 34.0)
+		return Rect2(CC_LOOK_X, CC_LOOK_Y + i * CC_LOOK_STEP, 218.0, CC_LOOK_H)
 	var a: int = i - CR.LOOK_ROWS.size()
 	if a < SK.ATTRS.size():
 		return Rect2(CC_ATTR_X, CC_ATTR_Y + a * (CC_ATTR_H + 4.0), 618.0, CC_ATTR_H)
@@ -609,14 +613,13 @@ func _create(W: float, H: float) -> void:
 	var look: Dictionary = CR.look_of(app)
 	_txt("CREATE CHARACTER", Vector2(40, 46), 32, Color.WHITE)
 	_rtxt("Up / Down choose  -  Left / Right change  -  Enter begins  -  Esc back", W - 40, 42, 15, Color(0.6, 0.75, 0.9))
-	# ---- appearance: the sprite only
-	var pa := Rect2(24, 66, 250, 332)
+	# ---- appearance: the standing doll, then skin, hair and eyes
+	var pa := Rect2(24, 66, 250, 560)
 	_panel(pa)
 	_txt("1  APPEARANCE", Vector2(pa.position.x + 16, pa.position.y + 28), 18, CYAN)
 	draw_rect(Rect2(40, 108, 218, 236), Color(0.02, 0.03, 0.06))
 	draw_rect(Rect2(40, 108, 218, 236), Color(0.3, 0.9, 1.0, 0.35), false, 1.0)
 	_cc_doll(Vector2(149, 226), 2.0, look)
-	_txt("stand-in sprite", Vector2(48, 334), 12, Color(0.5, 0.62, 0.72))
 	for i in CR.LOOK_ROWS.size():
 		var row: Dictionary = CR.LOOK_ROWS[i]
 		var r: Rect2 = cc_row_rect(i)
@@ -624,10 +627,16 @@ func _create(W: float, H: float) -> void:
 		draw_rect(r, Color(0.3, 0.9, 1.0, 0.2) if on else Color(1, 1, 1, 0.04))
 		if on:
 			draw_rect(Rect2(r.position.x, r.position.y, 4, r.size.y), MAGENTA)
-		_txt(row["label"], Vector2(r.position.x + 12, r.position.y + 23), 16, Color(0.75, 0.88, 1.0))
-		_tri(Vector2(r.position.x + 82, r.position.y + 17), false, true)
-		_tri(Vector2(r.end.x - 14, r.position.y + 17), true, true)
-		_fit(CR.option_name(app, row["id"]), Vector2(r.position.x + 100, r.position.y + 23), 17, Color.WHITE, r.end.x - 34.0 - (r.position.x + 100.0))
+		_txt(String(row["label"]).to_upper(), Vector2(r.position.x + 12, r.position.y + 13), 11, Color(0.6, 0.75, 0.9))
+		_tri(Vector2(r.position.x + 16, r.position.y + 24), false, true)
+		_tri(Vector2(r.end.x - 16, r.position.y + 24), true, true)
+		var sw: Color = CR.option_color(app, row["id"])
+		var vx: float = r.position.x + 34.0
+		if sw.a > 0.0:
+			draw_rect(Rect2(vx, r.position.y + 18, 12, 12), sw)
+			draw_rect(Rect2(vx, r.position.y + 18, 12, 12), Color(1, 1, 1, 0.5), false, 1.0)
+			vx += 20.0
+		_fit(CR.option_name(app, row["id"]), Vector2(vx, r.position.y + 31), 17, Color.WHITE, r.end.x - 34.0 - vx)
 	# ---- background and goals (placeholder)
 	var pb := Rect2(290, 66, 300, 560)
 	_panel(pb)
@@ -695,8 +704,14 @@ func _create(W: float, H: float) -> void:
 	var msg: String = prompt if prompt != "" else ("" if valid else "Spend your free points to begin")
 	_txt(msg, Vector2(40, 664), 16, Color(1.0, 0.8, 0.25))
 
-## the doll in the tileset, unrotated, at `k` times its drawn size, centred on c (stand-in art: the supplied sprites will replace the tileset layers)
+## the standing doll; without its atlas, the doll in the tileset, unrotated, at `k` times its drawn size, centred on c (stand-in art: the supplied sprites will replace the tileset layers)
 func _cc_doll(c: Vector2, k: float, look: Dictionary) -> void:
+	if cc_fig == null:
+		cc_fig = FG.new()
+	if cc_fig.ready():                     # the standing doll at 3x, in underwear, no weapon
+		var keys: Array = DS.figure_keys({"layers": [], "weapon": "", "look": look}, cc_fig)
+		cc_fig.draw(self, keys, c - Vector2(96, 104), 3.0, false)
+		return
 	if cc_tileset == null or not cc_tileset.has("dl:d_legs"):
 		return
 	var items: Array = []

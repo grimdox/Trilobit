@@ -59,7 +59,7 @@ func run() -> Array:
 	var app: Dictionary = CR.default_app()
 	check.call("the default look is the figure the game always drew (Frame A, light skin, grey hair, buzz cut)", CR.look_of(app)["skin"] == DS.SKINS[0] and CR.look_of(app)["hair"] == DS.HAIRS[4] and CR.look_of(app)["style"] == "buzz" and not CR.look_of(app)["fem"])
 	var wrap := true
-	for f in ["sprite", "skin", "hair", "style", "eyes"]:
+	for f in CR.FIELDS:
 		var cur2: Dictionary = app
 		for i in CR.count(f):
 			cur2 = CR.cycle(cur2, f, 1)
@@ -68,19 +68,22 @@ func run() -> Array:
 		if CR.cycle(app, f, -1)[f] != (int(app[f]) + CR.count(f) - 1) % CR.count(f):
 			wrap = false
 	check.call("every appearance row wraps in both directions", wrap)
-	check.call("five skin tones, seven hair colours, seven styles, six eye colours, two sprites", CR.count("skin") == 5 and CR.count("hair") == 7 and CR.count("style") == 7 and CR.count("eyes") == 6 and CR.count("sprite") == 2)
+	check.call("five skin tones, seven hair colours, seven styles, six eye colours, two sprites", CR.count("skin") == 5 and CR.count("hair") == 7 and CR.count("style") == 7 and CR.count("eyes") == 6 and CR.count("sprite") == 2 and CR.count("eye_shape") == 4)
 	check.call("every style the creator offers exists in the doll's hair layers", CR.STYLES.all(func(s): return s in DS.STYLES_M or s in DS.STYLES_F))
-	check.call("every option has a name", ["sprite", "skin", "hair", "style", "eyes"].all(func(f): return CR.option_name(app, f) != ""))
-	check.call("the screen shows only the sprite row; skin, hair, style and eyes stay in the data", CR.LOOK_ROWS.size() == 1 and CR.LOOK_ROWS[0]["id"] == "sprite" and CR.HIDDEN_LOOK == ["skin", "hair", "style", "eyes"])
-	var bad: Dictionary = CR.sanitize({"sprite": 9, "skin": -3, "hair": 99, "style": 40, "eyes": 12, "bg": "zzz"})
-	check.call("out-of-range saved values are brought inside the tables", bad["sprite"] == 1 and bad["skin"] == 0 and bad["hair"] == 6 and bad["style"] == 6 and bad["eyes"] == 5 and bad["bg"] == "none")
+	check.call("every option has a name", CR.FIELDS.all(func(f): return CR.option_name(app, f) != ""))
+	check.call("the screen offers skin tone, hair style, hair colour, eye shape and eye colour; the body frame stays in the data", CR.LOOK_ROWS.map(func(r): return r["id"]) == ["skin", "style", "hair", "eye_shape", "eyes"] and CR.HIDDEN_LOOK == ["sprite"])
+	var bad: Dictionary = CR.sanitize({"sprite": 9, "skin": -3, "hair": 99, "style": 40, "eyes": 12, "eye_shape": 7, "bg": "zzz"})
+	check.call("out-of-range saved values are brought inside the tables", bad["sprite"] == 1 and bad["skin"] == 0 and bad["hair"] == 6 and bad["style"] == 6 and bad["eyes"] == 5 and bad["eye_shape"] == 3 and bad["bg"] == "none")
+	var old_app: Dictionary = CR.default_app()
+	old_app.erase("eye_shape")
+	check.call("a look saved before eye shapes gets round eyes", CR.sanitize(old_app)["eye_shape"] == 0 and CR.look_of(old_app)["eye_shape"] == "round")
 	check.call("the background page is a placeholder (one 'not chosen' entry)", CR.BACKGROUNDS.size() == 1 and CR.BACKGROUNDS[0]["id"] == "none")
 
 	# ---- applied to a game, saved, carried between zones, drawn
 	var g = GameScript.new(21)
 	g.setup(300)
 	var prof: Dictionary = CR.new_profile()
-	prof["app"] = CR.cycle(CR.cycle(CR.cycle(prof["app"], "skin", 3), "eyes", 3), "sprite", 1)
+	prof["app"] = CR.cycle(CR.cycle(CR.cycle(CR.cycle(prof["app"], "skin", 3), "eyes", 3), "sprite", 1), "eye_shape", 2)
 	prof["attrs"] = two.duplicate()
 	check.call("a finished profile is valid", CR.profile_valid(prof))
 	CR.apply(g, prof)
@@ -103,6 +106,37 @@ func run() -> Array:
 	check.call("an old save with no look loads with the default figure", g4.app == CR.default_app())
 	var spec: Dictionary = DS.for_player(g)
 	check.call("the player's doll uses the chosen skin and the other body frame", spec["look"]["skin"] == DS.SKINS[3] and spec["look"]["fem"] and spec["look"]["eyes"] == CR.EYES[3])
+	var FG = load("res://src/figure.gd")
+	var fig = FG.new()
+	check.call("the standing-doll atlas loads", fig.ready())
+	var fk: Array = DS.figure_keys(spec, fig)
+	check.call("the player's standing doll uses the chosen skin, hair, eye shape and eye colour", ("base:B:skin_brown:body" in fk) and ("hair_buzz_4" in fk) and ("eyes_hooded_3" in fk))
+	var zs: Array = fk.map(func(k): return fig.z(k))
+	var sorted_ok := true
+	for n in range(1, zs.size()):
+		if zs[n] < zs[n - 1]:
+			sorted_ok = false
+	check.call("standing-doll layers come out in draw order", sorted_ok and fk[0] == "base:shadow")
+	var every := true
+	for c_si in 5:
+		for sty in CR.STYLES.size():
+			for c_hi in 7:
+				for c_es in 4:
+					for c_ei in 6:
+						var c_app: Dictionary = {"sprite": 0, "skin": c_si, "hair": c_hi, "style": sty, "eyes": c_ei, "eye_shape": c_es, "bg": "none"}
+						var c_keys: Array = DS.figure_keys({"layers": [], "weapon": "", "look": CR.look_of(c_app)}, fig)
+						if c_keys.size() != 7 and not (c_keys.size() == 8 and c_keys.any(func(k): return String(k).ends_with("_back"))):
+							every = false
+	check.call("every creation choice has standing-doll art (body, underwear, arms, hands, hair, eyes, shadow)", every)
+	var lyr_ok := true
+	for l in DS.ARMOR_LAYER.values() + ["thug", "nap", "nasim", "suit", "overalls", "jacket_0", "jacket_5"]:
+		if not fig.has(l):
+			lyr_ok = false
+	check.call("every worn layer and outfit people wear has a standing sprite", lyr_ok)
+	var vlook: Dictionary = CR.look_of(CR.default_app())
+	vlook["hid"] = DS._hides_hair(["thug", "visor"])
+	var cover: Array = DS.figure_keys({"layers": ["thug", "visor"], "weapon": "", "look": vlook}, fig)
+	check.call("sleeves cover the bare arms and a visor hides hair and eyes", ("base:B:skin_pale:arms_sleeved" in cover) and not cover.any(func(k): return String(k).begins_with("hair_") or String(k).begins_with("eyes_")))
 	var layers: Array = DS.base_layers(spec["look"], false)
 	check.call("the doll's base layers follow the chosen frame and hair style", "d_torso_f" in layers and ("d_hair_" + String(spec["look"]["style"])) in layers)
 
