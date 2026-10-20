@@ -27,8 +27,9 @@ func run() -> Array:
 	check.call("an ordinary citizen shows no indicator", not g.marked(cit))
 	check.call("a Bratva thug is marked and hostile (red arrow)", g.marked(thug) and g.attitude(thug) == 2)
 	check.call("a calm NAP officer is marked and neutral (blue arrow)", g.marked(nap) and g.attitude(nap) == 1)
-	g.heat = 50
-	check.call("with heat the NAP officer turns red", g.attitude(nap) == 2)
+	g.astate[nap] = g.HUNTING
+	check.call("an officer who is hunting you turns red", g.attitude(nap) == 2)
+	g.astate[nap] = g.UNAWARE
 	g.pc = g.sim.pos[cit] + 1
 	g.hurt(cit, 1, true)
 	check.call("hitting a citizen provokes them: marked, red arrow", g.provoked.has(cit) and g.marked(cit) and g.attitude(cit) == 2)

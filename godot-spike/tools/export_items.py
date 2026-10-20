@@ -196,9 +196,9 @@ for fid, nm, pr, hp, st, kind in FOODS:
 
 # ---- faith items (church and shrine shops); `use` is what they do when used
 FAITH = [
-    ("candle", "church candle", 20, {"heat": -8, "msg": "You light the candle and say a short prayer.  Things feel quieter."}),
+    ("candle", "church candle", 20, {"bless": 20, "msg": "You light the candle and say a short prayer.  Things feel quieter."}),
     ("icon", "small icon", 120, {"bless": 480, "msg": "You hold the icon.  You feel watched over for a while."}),
-    ("gospel", "pocket gospel", 60, {"heat": -15, "msg": "You read a few lines.  Your pulse slows."}),
+    ("gospel", "pocket gospel", 60, {"bless": 40, "msg": "You read a few lines.  Your pulse slows."}),
     ("omamori", "omamori charm", 150, {"bless": 600, "msg": "The charm warms in your hand.  Luck is with you for a while."}),
     ("ofuda", "ofuda paper ward", 90, {"bless": 300, "msg": "You tuck the ward in your sleeve."}),
     ("ema", "ema plaque", 50, {"hp": 8, "msg": "You write a wish and hang it.  You feel lighter."}),

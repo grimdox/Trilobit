@@ -32,6 +32,10 @@ const SITES := ["the Hollow Tannery", "Cold Store Nine", "the Salt Warehouse", "
 const FIRST_NAMES := ["Tanaka", "Volkov", "Reyes", "Mori", "Okafor", "Sato", "Brandt", "Ilyin", "Park", "Nakamura", "Costa", "Hale"]
 const DIRS := [Vector2i(0, 1), Vector2i(1, 0), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]
 const FUSE_TURNS := 36                 # turns from the charge being set to the blast
+## the bomb is a little stronger than a 40mm grenade (radius 2, 40-70 damage, 55 on average, losing 30% a tile): radius 3, 66 at the core (+20% on the grenade's average)
+## and it falls off the same way, 66 / 46 / 26 / 7 at 0 / 1 / 2 / 3 tiles.  It can hit any limb, the head and chest included, so stand well away when it goes.
+const BOMB_RADIUS := 3
+const BOMB_DAMAGE := 66
 
 static func type_index(id: String) -> int:
 	for i in TYPES.size():
@@ -223,8 +227,11 @@ static func step(g) -> void:
 				if int(m["fuse"]) == 10:
 					g.say("The core is whining.  Ten turns.")
 				if int(m["fuse"]) == 0:
-					g.say("The charge goes off.  The roof comes down around you.")
-					g.mission_leave_request = "blast"
+					g.say("The charge goes off.")
+					g._explode(int(g.city.get_meta("site")["objective"]), BOMB_RADIUS, BOMB_DAMAGE)
+					if not g.game_over:
+						g.say("The roof comes down.  You are thrown out of the site.")
+						g.mission_leave_request = "blast"
 
 ## the hostage trails the player along the shortest walkable route (a flood from the player's cell, so doors and walls are respected): one step a turn,
 ## to the free neighbouring cell nearest the player, never onto them

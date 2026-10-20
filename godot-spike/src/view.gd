@@ -667,8 +667,6 @@ func _draw_hud() -> void:
 		effects.append(["Blessed", Color(0.7, 0.9, 1.0)])
 	if game.transit.riding >= 0:
 		effects.append(["On train", C_CYAN])
-	if game.heat >= 30:
-		effects.append(["Wanted", Color(1, 0.35, 0.35)])
 	if effects.is_empty():
 		_txt(xi, ey + 11, "No status effects", 11, Color(0.4, 0.46, 0.55))
 	for e in effects:
@@ -686,13 +684,11 @@ func _draw_hud() -> void:
 	var mv: String = game.stance_name()
 	_txt(xi, gy + 4, "SPEED", 11, C_DIM)
 	_txt(xi, gy + 4, "%d%%  (%s)" % [int(round(game.speed_mult() * 100.0)), mv], 12, Color(1, 0.6, 0.4) if game.speed_mult() < 1.0 else Color.WHITE, wi, HORIZONTAL_ALIGNMENT_RIGHT)
-	_txt(xi, gy + 20, "HEAT", 11, C_DIM)
-	_meter(xi + 40, gy + 11, wi - 40, 10, float(game.heat) / 60.0, Color(0.9, 0.3, 0.25) if game.heat >= 30 else Color(0.9, 0.7, 0.3), "", "%d" % game.heat)
-	_txt(xi, gy + 38, "CARRY", 11, C_DIM)
-	_txt(xi, gy + 38, "%.1f kg" % game.total_weight_kg(), 12, Color.WHITE, wi, HORIZONTAL_ALIGNMENT_RIGHT)
-	_txt(xi, gy + 56, game.gun_line(), 12, Color(0.95, 0.88, 0.7), wi)
+	_txt(xi, gy + 20, "CARRY", 11, C_DIM)
+	_txt(xi, gy + 20, "%.1f kg" % game.total_weight_kg(), 12, Color.WHITE, wi, HORIZONTAL_ALIGNMENT_RIGHT)
+	_txt(xi, gy + 38, game.gun_line(), 12, Color(0.95, 0.88, 0.7), wi)
 	if hud_extra != "":
-		_txt(xi, gy + 73, hud_extra.strip_edges(), 11, C_CYAN, wi)
+		_txt(xi, gy + 55, hud_extra.strip_edges(), 11, C_CYAN, wi)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 ## a vehicle drawn tile by tile from its template

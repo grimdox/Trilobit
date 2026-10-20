@@ -6,25 +6,26 @@ extends RefCounted
 ##   At 0 the implants stop (game.gd gates has_implant, imp_sum and armor on it): the player is "just" a normal human until recharged.
 ## The price of a recharge is four parts:
 ##   1  quality fee    QUALITY_FEE yen for each tier point of fitted implants (a tier 1 implant 100, tier 2 200, tier 3 300), charged once a visit
-##   2  implant tax    TAX_PCT percent of the fitted implants' total price, once a visit; the player's heat adds TAX_PER_HEAT percent a point
-##   3  power cost     POWER_RATE yen per kJ delivered, times the district (DISTRICT_RATE: lower, middle, upper) and (1 + heat / 200)
-##   4  power tax      POWER_TAX yen per kJ delivered, times (1 + heat / 100)
-## Heat (0-100, what the police and the corporations know of you) is the reputation: there are no faction ranks in the Godot game yet.
+##   2  implant tax    TAX_PCT percent of the fitted implants' total price, once a visit
+##   3  power cost     POWER_RATE yen per kJ delivered, times the district (DISTRICT_RATE: lower, middle, upper)
+##   4  power tax      POWER_TAX yen per kJ delivered
+## A reputation term (faction ranks) is not built yet; the rates are flat apart from the district.
 const IMP = preload("res://src/implants.gd")
 
 const FULL_HOURS := 72.0
 const TIER_DRAW := {1: 2.0, 2: 4.0, 3: 8.0}                # kJ per hour
 const QUALITY_FEE := 100
 const TAX_PCT := 5.0
-const TAX_PER_HEAT := 0.1
 const POWER_RATE := 1.0
 const DISTRICT_RATE := [0.85, 1.0, 1.35]                   # lower, middle, upper (the charging posts of the rich districts are dearer)
 const POWER_TAX := 0.1
 const HOUR_TURNS := 600                                     # clock.gd: one hour is 600 turns
-## what a person carries in an energy cell, by faction (game.gd: CIV 0, BRATVA 1, NAP 2, NASIM 3, GANG 4), in kJ.  Nasim refuse implants (design: absolutely none).
-const NPC_ENERGY := [0, 40, 120, 0, 0]
-const SIPHON_BASE := 12                                     # kJ drawn from a downed person in one go, plus SIPHON_PER_LEVEL per Engineering level
-const SIPHON_PER_LEVEL := 3
+## What a person's implants draw, by faction (game.gd: CIV 0, BRATVA 1, NAP 2, NASIM 3, GANG 4), in kJ an hour: Bratva wear a tier 1 rig (8, like the player's), the NAP a
+## tier 2 rig (16).  Civilians and the gang are unwired and Nasim refuse implants (design: absolutely none), so they hold nothing.
+## Each wired person last charged some time in the past 72 hours (a fixed point from the seed and their index), so how much is left in them is a fraction of a full charge
+## that runs down with the clock.  game.gd freezes the figure the moment they die, or are first drained, and keeps it from then on.
+const NPC_DRAW := [0.0, 8.0, 16.0, 0.0, 0.0]
+const SIPHON_FRACTION := 0.10                               # a draw takes a tenth of what is left in the body (at least 1 kJ)
 
 static func tier_of(d: Dictionary) -> int:
 	return clampi(int(d.get("grade", 2)) - 1, 1, 3)
@@ -51,38 +52,53 @@ static func loadout(implants: Dictionary) -> Dictionary:
 static func turn_draw(implants: Dictionary) -> float:
 	return float(loadout(implants)["draw"]) / float(HOUR_TURNS)
 
-static func tax_pct(heat: int) -> float:
-	return TAX_PCT + TAX_PER_HEAT * float(clampi(heat, 0, 100))
+static func tax_pct() -> float:
+	return TAX_PCT
 
-static func power_rate(heat: int, district: int) -> float:
-	return POWER_RATE * float(DISTRICT_RATE[clampi(district, 0, 2)]) * (1.0 + float(clampi(heat, 0, 100)) / 200.0)
+static func power_rate(district: int) -> float:
+	return POWER_RATE * float(DISTRICT_RATE[clampi(district, 0, 2)])
 
-static func power_tax_rate(heat: int) -> float:
-	return POWER_TAX * (1.0 + float(clampi(heat, 0, 100)) / 100.0)
+static func power_tax_rate() -> float:
+	return POWER_TAX
 
 ## the yen asked for delivering `kj` kJ: {fee, tax, energy, ptax, total, kj, tax_pct}.  Nothing is delivered, nothing is charged.
-static func quote(implants: Dictionary, heat: int, district: int, kj: float) -> Dictionary:
+static func quote(implants: Dictionary, district: int, kj: float) -> Dictionary:
 	var L: Dictionary = loadout(implants)
-	var out := {"fee": 0, "tax": 0, "energy": 0, "ptax": 0, "total": 0, "kj": 0.0, "tax_pct": tax_pct(heat)}
+	var out := {"fee": 0, "tax": 0, "energy": 0, "ptax": 0, "total": 0, "kj": 0.0, "tax_pct": tax_pct()}
 	if kj <= 0.0 or int(L["count"]) == 0:
 		return out
 	out["kj"] = kj
 	out["fee"] = QUALITY_FEE * int(L["quality"])
-	out["tax"] = int(round(float(L["value"]) * tax_pct(heat) / 100.0))
-	out["energy"] = int(round(kj * power_rate(heat, district)))
-	out["ptax"] = int(round(kj * power_tax_rate(heat)))
+	out["tax"] = int(round(float(L["value"]) * tax_pct() / 100.0))
+	out["energy"] = int(round(kj * power_rate(district)))
+	out["ptax"] = int(round(kj * power_tax_rate()))
 	out["total"] = int(out["fee"]) + int(out["tax"]) + int(out["energy"]) + int(out["ptax"])
 	return out
 
 ## the most kJ `yen` pays for after the visit's fixed charges (0 if it does not cover them)
-static func affordable_kj(implants: Dictionary, heat: int, district: int, yen: int) -> float:
-	var fixed: Dictionary = quote(implants, heat, district, 1.0)
+static func affordable_kj(implants: Dictionary, district: int, yen: int) -> float:
+	var fixed: Dictionary = quote(implants, district, 1.0)
 	var left: float = float(yen) - float(fixed["fee"]) - float(fixed["tax"])
 	if left <= 0.0:
 		return 0.0
-	return floorf(left / (power_rate(heat, district) + power_tax_rate(heat)))
+	return floorf(left / (power_rate(district) + power_tax_rate()))
 
 ## hours of life a charge of `kj` gives a rig
 static func hours_left(implants: Dictionary, kj: float) -> float:
 	var d: float = float(loadout(implants)["draw"])
 	return kj / d if d > 0.0 else 0.0
+
+## kJ left in a person at game tick `tick` (turns): a full charge (72 h of their draw) less the time since their last charge, which was a seeded point in the past 72 hours
+static func npc_remaining(faction: int, idx: int, world_seed: int, tick: int) -> int:
+	var draw: float = float(NPC_DRAW[clampi(faction, 0, NPC_DRAW.size() - 1)])
+	if draw <= 0.0:
+		return 0
+	var phase: float = float(hash([world_seed, idx, "charge"]) % 7200) / 100.0         # hours since the last charge at tick 0
+	var age: float = fmod(float(tick) / float(HOUR_TURNS) + phase, FULL_HOURS)
+	return int(draw * (FULL_HOURS - age))
+
+## what one draw takes from a body holding `left` kJ
+static func siphon_take(left: int) -> int:
+	if left <= 0:
+		return 0
+	return maxi(1, int(round(float(left) * SIPHON_FRACTION)))

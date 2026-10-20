@@ -34,7 +34,7 @@ func _initialize() -> void:
 	for tier in [1, 2, 3]:
 		var rg: Dictionary = TP.rig(tier)
 		var L: Dictionary = PW.loadout(rg)
-		var q: Dictionary = PW.quote(rg, 0, 1, float(L["cap"]))
+		var q: Dictionary = PW.quote(rg, 1, float(L["cap"]))
 		costs[tier] = int(q["total"])
 		print("| Tier %d | %d | ¥%d | %d | %.0f | %d | %d | %d | %d | %d | **¥%d** |" % [tier, int(L["count"]), int(L["value"]), int(L["quality"]), L["draw"], int(L["cap"]), int(q["fee"]), int(q["tax"]), int(q["energy"]), int(q["ptax"]), int(q["total"])])
 	print("\n## A generic mission (%d turns = %.1f h)" % [MISSION_TURNS, MISSION_TURNS / 600.0])
@@ -42,7 +42,7 @@ func _initialize() -> void:
 	for tier in [1, 2, 3]:
 		var L: Dictionary = PW.loadout(TP.rig(tier))
 		var kj: float = float(L["draw"]) * MISSION_TURNS / 600.0
-		var q: Dictionary = PW.quote(TP.rig(tier), 0, 1, kj)
+		var q: Dictionary = PW.quote(TP.rig(tier), 1, kj)
 		var marg: int = int(q["energy"]) + int(q["ptax"])
 		print("| Tier %d | %.0f | ¥%d | %.1f%% |" % [tier, kj, marg, 100.0 * marg / avg])
 	print("\n## Average week / month (living ¥%d/day, loan installments ¥%d/day, a recharge every 3 days)" % [LIVING, DEBT_DAY])
@@ -55,11 +55,9 @@ func _initialize() -> void:
 				rech = float(costs[tier]) * 7.0 / 3.0
 			var net: float = gross - rech - (LIVING + DEBT_DAY) * 7.0
 			print("| %.0f | %s | %d | %d | %d | %d | %s |" % [mpd, "human" if tier == 0 else "Tier %d" % tier, int(gross), int(rech), int(net), int(net * 30.0 / 7.0), "-" if tier == 0 else "%.0f%%" % (100.0 * rech / gross)])
-	print("\n## Reputation and place (Tier 2 rig, one full recharge)")
-	print("| Heat | District | Total |")
-	for h in [0, 40, 80]:
-		for d in [0, 1, 2]:
-			var rg2: Dictionary = TP.rig(2)
-			var cap2: float = float(PW.loadout(rg2)["cap"])
-			print("| %d | %s | ¥%d |" % [h, ["lower", "middle", "upper"][d], int(PW.quote(rg2, h, d, cap2)["total"])])
+	print("\n## Place (Tier 2 rig, one full recharge)")
+	print("| District | Total |")
+	for d in [0, 1, 2]:
+		var rg2: Dictionary = TP.rig(2)
+		print("| %s | ¥%d |" % [["lower", "middle", "upper"][d], int(PW.quote(rg2, d, float(PW.loadout(rg2)["cap"]))["total"])])
 	quit()

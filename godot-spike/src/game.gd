@@ -72,7 +72,6 @@ var sfx_queue: Array = []             # sound events for the front end ("shot", 
 # the player
 var pc: int = 0                      # cell index
 var yen: int = 300
-var heat: int = 0
 var ammo_pool: Dictionary = {"9mm|fmj": 36}   # "caliber|kind" -> rounds carried loose
 var want_kind: Dictionary = {}                 # caliber -> kind the next reload loads
 var aim_turns: int = 0                         # banked aim points (negative after a long burst, never below max aim - 5)
@@ -97,7 +96,7 @@ var mission: Dictionary = {}
 var power: float = -1.0
 var power_state: int = 0                       # 0 fine, 1 low (a quarter), 2 critical (a tenth), 3 dark: so each warning is said once
 var charger_hit: int = -1                      # a charging post the player just bumped (the front end opens its menu and clears this)
-var energy: PackedInt32Array                   # every person's energy cell, in kJ (power.gd NPC_ENERGY by faction); implants can be drained from a downed person
+var energy: PackedInt32Array                   # kJ left in each person: -1 until it is first needed (then power.gd works it out from the clock); frozen when they die or are drained
 var done_contracts: Dictionary = {}           # ids of the contracts the player has completed and been paid for: a posted contract pays once
 var portal: Dictionary = {}                    # {cell, was (the tile it replaced), under, offer}
 var terminal_hit: int = -1                     # a mission terminal the player just bumped (the front end opens its screen and clears this)
@@ -746,7 +745,7 @@ func in_bounds(x: int, y: int) -> bool:
 func hostile(i: int) -> bool:
 	match fac[i]:
 		BRATVA, GANG: return true
-		NAP: return heat >= 30
+		NAP: return false                 # officers act only on what they see you do: a warning first, then they hunt
 		_: return false
 
 ## how a person stands towards the player, for the facing arrow: 0 friendly (green), 1 neutral (blue), 2 hostile (red).
@@ -1231,7 +1230,7 @@ func _pick_lock(c: int) -> bool:
 	else:
 		say("The lock holds.  You fumble with it.")
 		_noise(c, 8)
-		_witness(c, 9, 6, -1)
+		_witness(c, 9, -1)
 	end_turn()
 	return true
 
@@ -2033,8 +2032,6 @@ func act_use_charm(it) -> bool:
 	if u.is_empty():
 		return false
 	_consume_one(it)
-	if u.has("heat"):
-		heat = maxi(0, heat + int(u["heat"]))
 	if u.has("hp"):
 		heal_body(int(u["hp"]))
 	if u.has("bless"):
@@ -2432,7 +2429,7 @@ func _alert(i: int) -> void:
 	var f := fac[i]
 	if f == CIV:
 		provoked[i] = 1
-	if f == CIV or (f == NAP and heat < 30 and false):
+	if f == CIV:
 		_flee(i, 25)
 		return
 	if astate[i] != HUNTING:
@@ -2453,6 +2450,7 @@ func _set_state(i: int, s: int) -> void:
 	astate[i] = s
 
 func kill(i: int) -> void:
+	energy[i] = npc_energy(i)                    # what was left in them when they died stays with the body
 	provoked.erase(i)
 	say("%s goes down." % name_of(i))
 	var c: int = sim.pos[i]
@@ -2474,11 +2472,10 @@ func kill(i: int) -> void:
 	bleed[i] = 0
 	sim.remove_agent(i)
 	astate[i] = UNAWARE
-	_witness(c, 4 if _silent else 14, 3 if _silent else 14, i)
+	_witness(c, 4 if _silent else 14, i)
 
-## people who see violence react: civilians panic, officers add heat
-func _witness(cell: int, radius: int, add_heat: int, except: int) -> void:
-	var seen_by := 0
+## people who see violence react: civilians panic
+func _witness(cell: int, radius: int, except: int) -> void:
 	for k in sim.near_list.size():
 		var j: int = sim.near_list[k]
 		if j == except or sim.alive[j] == 0:
@@ -2489,12 +2486,8 @@ func _witness(cell: int, radius: int, add_heat: int, except: int) -> void:
 			continue
 		if astate[j] != HUNTING and cone_factor(j, cell, true) == 0.0:
 			continue                       # they had their back turned
-		if fac[j] == CIV or fac[j] == NAP:
-			seen_by += 1
-			if fac[j] == CIV and astate[j] != FLEEING:
-				_flee(j, 20)
-	if seen_by > 0:
-		heat = mini(100, heat + mini(add_heat, 4 + seen_by * 3))
+		if fac[j] == CIV and astate[j] != FLEEING:
+			_flee(j, 20)
 
 func _alarm(i: int) -> void:
 	var told := 0
@@ -2540,13 +2533,12 @@ func act_steal() -> bool:
 		say("You lift ¥%d from %s without a sound." % [take, name_of(target)])
 		skill_up("deception", 4 if not aware else 6)
 		if fac[target] == NAP:
-			_witness(sim.pos[target], 8, 6, target)
+			_witness(sim.pos[target], 8, target)
 		end_turn()
 		return true
 	say("%s catches your hand!" % name_of(target))
 	skill_up("deception", 3)
 	_alert(target)
-	heat = mini(100, heat + 4)
 	end_turn()
 	return false
 
@@ -2638,7 +2630,7 @@ func _ranged_extra(d: int) -> int:
 ## percent to hit on the target for the shot_index'th bullet (the 2d10 model, averaged over the gun's natural-range roll), cover included
 func _shot_chance(st: Dictionary, t: int, aimed: int, shot_index: int) -> int:
 	var d: int = cheb(sim.pos[t], pc)
-	return GP.hit_chance(st, d, aimed, moved, crouch, lvl("ranged"), eco.aim_penalty(), shot_index, stance == CRAWL, _ranged_extra(d), cover_vs(pc, sim.pos[t], false))
+	return GP.hit_chance(st, d, aimed, moved, crouch, lvl("ranged"), 0, shot_index, stance == CRAWL, _ranged_extra(d), cover_vs(pc, sim.pos[t], false))
 
 ## one-line description of the wielded gun and what it is aimed at
 func gun_line() -> String:
@@ -2831,7 +2823,7 @@ func act_fire(any: bool = false) -> bool:
 		var vd: int = d if victim == t else cheb(sim.pos[victim], pc)
 		var nat: int = _roll_2d10()
 		var rr: int = rng.randi_range(int(st["range_lo"]), int(st["range_hi"]))
-		var bonus: int = GP.bonus_points(st, aim_turns, moved, crouch, skill, eco.aim_penalty(), stance == CRAWL, _ranged_extra(vd))
+		var bonus: int = GP.bonus_points(st, aim_turns, moved, crouch, skill, 0, stance == CRAWL, _ranged_extra(vd))
 		var total: int = GP.shot_total(nat, bonus, GP.range_penalty(st, vd, rr), cover_vs(pc, sim.pos[victim], false))
 		var out: String = SK.melee_outcome(nat, total, npc_lvl(victim, "grit"))
 		var loc: String = body.pick_melee(rng)
@@ -2977,7 +2969,6 @@ func _explode(c: int, radius: int, dmg: int) -> void:
 		_damage_npc(j, int(float(dmg) * f))
 	if cheb(pc, c) <= radius:
 		player_hurt(int(float(dmg) * (1.0 - 0.3 * float(cheb(pc, c)))), "The blast catches you")
-	heat = mini(100, heat + 12)
 	_noise(c, 26)
 
 # ---- vehicle service: engines and repairs
@@ -3178,8 +3169,6 @@ func _tick() -> void:
 	ran_this_turn = false
 	_jet_tick()
 	_process_followers()
-	if turn % (20 * CLK.MIN) == 0 and heat > 0:
-		heat -= 1
 	if bless_left > 0:
 		bless_left -= 1
 	if drunk_left > 0:
@@ -3379,7 +3368,6 @@ func _notice(i: int, d: int) -> void:
 			postc[i] = c if st == UNAWARE else postc[i]
 		if meter[i] >= 100 and fac[i] == NAP and not hostile(i):
 			if st != HUNTING:
-				heat = mini(100, heat + 10)
 				meter[i] = 60
 				astate[i] = SUSPICIOUS
 				say_if_seen(c, "%s: \"Weapons down, citizen!\"" % name_of(i))
@@ -3794,7 +3782,7 @@ func _bump_crit(c: int, dx: int, dy: int) -> bool:
 func crit_hit(ki: int, dmg: int) -> void:
 	var k: Dictionary = critters[ki]
 	k["hp"] -= dmg
-	_witness(k["cell"], 8, 3, -1)
+	_witness(k["cell"], 8, -1)
 	if k["hp"] <= 0:
 		_kill_crit(ki, "dies")
 		return
@@ -4286,7 +4274,7 @@ func act_shove(dx: int, dy: int) -> bool:
 		say("There is nobody there to shove.")
 		return false
 	facing = Vector2i(dx, dy)
-	_witness(pc, 10, 10, who)
+	_witness(pc, 10, who)
 	if rng.randi() % 100 < 88 - (10 if astate[who] == HUNTING else 0):
 		say("You shove %s." % name_of(who))
 		push_agent(who, dx, dy)
@@ -4339,7 +4327,7 @@ func outside_tile(x: int, y: int) -> int:
 
 ## everything about the player that travels between zones
 func player_dict() -> Dictionary:
-	return {"done": done_contracts.duplicate(), "power": power, "power_state": power_state, "yen": yen, "heat": heat, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
+	return {"done": done_contracts.duplicate(), "power": power, "power_state": power_state, "yen": yen, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
 		"attrs": attrs.duplicate(), "app": app.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 		"stamina": stamina, "stam_v": 2, "ap": ap, "stance": stance, "turn": turn, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "flying": flying,
 		"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
@@ -4380,7 +4368,6 @@ func apply_player(d: Dictionary) -> void:
 	power = float(d.get("power", -1.0))
 	power_state = int(d.get("power_state", 0))
 	yen = int(d["yen"])
-	heat = int(d["heat"])
 	implants = d["implants"]
 	fuel = int(d["fuel"])
 	ammo_pool = d["ammo"]
@@ -4429,7 +4416,7 @@ func save_dict() -> Dictionary:
 	var vlist := []
 	for v in vehicles:
 		vlist.append(vs.to_dict(v))
-	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "heat": heat, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "attrs": attrs, "app": app, "xp": xp, "in_vehicle": in_vehicle,
+	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "attrs": attrs, "app": app, "xp": xp, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
 			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 			"items_at": it_at, "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
@@ -4455,7 +4442,6 @@ func load_dict(d: Dictionary) -> void:
 	power = float(d.get("power", -1.0))
 	power_state = int(d.get("power_state", 0))
 	yen = int(d["yen"])
-	heat = int(d["heat"])
 	ammo_pool = {}
 	for k in d["ammo"]:
 		ammo_pool[k] = int(d["ammo"][k])
@@ -4750,7 +4736,7 @@ func district_of(cell: int) -> int:
 
 ## what the post at `cell` asks for delivering `kj`
 func charge_quote(cell: int, kj: float) -> Dictionary:
-	return PW.quote(implants, heat, district_of(cell), kj)
+	return PW.quote(implants, district_of(cell), kj)
 
 ## pay for and take `kj` at a post: false (and nothing happens) if the yen is short or the rig is already full
 func recharge(cell: int, kj: float) -> bool:
@@ -4771,7 +4757,9 @@ func recharge(cell: int, kj: float) -> bool:
 
 ## energy of one person (kJ)
 func npc_energy(i: int) -> int:
-	return int(energy[i])
+	if int(energy[i]) >= 0:
+		return int(energy[i])
+	return PW.npc_remaining(int(fac[i]), i, seed_value, sim.tick)
 
 ## draw power from a person who is down (dead or stunned) and next to you; needs an implant interface of your own
 func act_siphon() -> bool:
@@ -4781,24 +4769,25 @@ func act_siphon() -> bool:
 	var best := -1
 	for k in sim.near_list.size():
 		var i: int = sim.near_list[k]
-		if cheb(sim.pos[i], pc) <= 1 and (sim.alive[i] == 0 or stun[i] > 0 or astate[i] == SURRENDERED) and int(energy[i]) > 0:
+		if cheb(sim.pos[i], pc) <= 1 and (sim.alive[i] == 0 or stun[i] > 0 or astate[i] == SURRENDERED) and npc_energy(i) > 0:
 			best = i
 			break
 	if best < 0:
 		for i in sim.n:
-			if sim.alive[i] == 0 and cheb(sim.pos[i], pc) <= 1 and int(energy[i]) > 0 and z_of(sim.pos[i]) == z_of(pc):
+			if sim.alive[i] == 0 and cheb(sim.pos[i], pc) <= 1 and npc_energy(i) > 0 and z_of(sim.pos[i]) == z_of(pc):
 				best = i
 				break
 	if best < 0:
 		say("Nobody here to draw from: they must be down or helpless, next to you, and still carry a charge.")
 		return false
-	var take: int = mini(int(energy[best]), PW.SIPHON_BASE + PW.SIPHON_PER_LEVEL * lvl("engineering"))
+	var left_in: int = npc_energy(best)
+	var take: int = PW.siphon_take(left_in)
 	var room: float = power_cap() - power_left()
 	if room < 1.0:
 		say("Your own cells are full.")
 		return false
 	take = mini(take, int(room))
-	energy[best] -= take
+	energy[best] = left_in - take
 	power_add(float(take))
 	skill_up("engineering", 3)
 	_noise(pc, 3)
@@ -4811,8 +4800,7 @@ func act_siphon() -> bool:
 func _npc_energy_init() -> void:
 	energy = PackedInt32Array()
 	energy.resize(sim.n)
-	for i in sim.n:
-		energy[i] = int(PW.NPC_ENERGY[clampi(int(fac[i]), 0, PW.NPC_ENERGY.size() - 1)])
+	energy.fill(-1)
 
 
 # ---------------------------------------------------------------- health is per limb

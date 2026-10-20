@@ -98,9 +98,6 @@ func leave_mission(forced: String = "") -> Dictionary:
 		var case = g.eco._find("trl_datacase")
 		if case != null:
 			g.eco._remove(case)
-	if forced == "blast":
-		for bl in ["l_arm", "r_arm", "l_leg", "r_leg"]:        # the blast takes the limbs, never the head or chest
-			g._limb_hit(bl, 5)
 	var carry: Dictionary = g.player_dict()
 	var og = origin_game if origin_game != null else _restore_dict(cache[ORIGIN])
 	origin_game = null

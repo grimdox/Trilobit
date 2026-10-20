@@ -231,15 +231,40 @@ func _initialize() -> void:
 	while not s2.mission["planted"] and tr < 80:
 		s2.act_move(d3.x, d3.y)
 		tr += 1
+	# the blast hurts by distance: walk out to the far end of the hall first (the exit side), well beyond the bomb's reach
+	s2.pc = int(site2["entry"])
+	s2.sim.retier(s2.pc)
 	var hp0: int = s2.body.total()
 	for _k in 60:
 		if s2.mission_leave_request != "":
 			break
 		s2.end_turn()
 	check("blast: the fuse runs out and the charge goes off with the player inside", s2.mission_leave_request == "blast")
+	check("blast: far from the bomb the player is not hurt at all, and is thrown out with the contract failed", s2.body.total() == hp0 and not s2.game_over)
 	m.refresh()
 	g = w.game
-	check("blast: the player is thrown back out hurt, the contract failed, no pay, the portal closed", g.mission.is_empty() and g.portal.is_empty() and g.yen == yen1 and g.body.total() < hp0 + 1 and String(g.log[-1]).contains("failed"))
+	check("blast: the player is back on the street, the contract failed, no pay, the portal closed", g.mission.is_empty() and g.portal.is_empty() and g.yen == yen1 and String(g.log[-1]).contains("failed"))
+	# the bomb's damage by distance: more at the core, none beyond the radius, and it reaches the head and chest
+	g.crits = false
+	g.armor_worn = []
+	g.implants = {}
+	var means := []
+	var vital_hits := 0
+	for dist in 6:
+		var tot := 0
+		for _t in 60:
+			g.body.reset()
+			g.game_over = false
+			g._explode(g.pc + dist, MS.BOMB_RADIUS, MS.BOMB_DAMAGE)
+			tot += 164 - g.body.total()
+			if dist == 0 and (g.body.hp["head"] < g.body.mx["head"] or g.body.hp["chest"] < g.body.mx["chest"]):
+				vital_hits += 1
+		means.append(float(tot) / 60.0)
+	g.body.reset()
+	g.game_over = false
+	check("bomb: damage falls with distance (a limb only loses what it has, so the first two are close; mean loss at 0..5 tiles: %s)" % str(means.map(func(v): return int(v))), means[0] >= means[1] - 3.0 and means[1] > means[2] and means[2] > means[3] and means[3] > 0.0 and means[4] == 0.0 and means[5] == 0.0)
+	check("bomb: it hurts the head and chest too (%d of 60 blasts at the core)" % vital_hits, vital_hits > 0)
+	check("bomb: stronger than a grenade (radius %d against 2, %d at the core against 40-70, mean 55)" % [MS.BOMB_RADIUS, MS.BOMB_DAMAGE], MS.BOMB_RADIUS > 2 and MS.BOMB_DAMAGE > 55 and MS.BOMB_DAMAGE <= 80)
 	# scrapping at the terminal
 	dv = stand_beside(g, term)
 	m.open_terminal(term)

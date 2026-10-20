@@ -249,13 +249,12 @@ func _initialize() -> void:
 	old["turn"] = 90
 	old["bless"] = 100
 	old["eco"].erase("tv")
-	old["eco"]["implant"] = 50 * 60
 	for k in ["depart", "arrive"]:
 		old["npc"][k] = old["npc"][k].map(func(v): return v if int(v) < 0 else 100)
 	var go = GameScript.new(5)
 	go.setup(300)
 	go.load_dict(old)
-	check("a save from the minute-long turns is converted: 07:30 stays 07:30, meals and the stabiliser keep their hours", go.time_text() == "07:30:00" and go.last_ate == 6 * 600 and go.food_left() == go.HUNGER_AFTER - 90 * 10 and go.eco.implant_left == 50 * 600 and go.bless_left == 1000)
+	check("a save from the minute-long turns is converted: 07:30 stays 07:30, meals keep their hours", go.time_text() == "07:30:00" and go.last_ate == 6 * 600 and go.food_left() == go.HUNGER_AFTER - 90 * 10 and go.bless_left == 1000)
 	# ---------------------------------------------------------------- the game itself, driven by keys
 	DirAccess.remove_absolute("user://test_timeui_save_1.json")
 	var m = MainScript.new()

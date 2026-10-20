@@ -6598,7 +6598,7 @@
    "charm"
   ],
   "use": {
-   "heat": -8,
+   "bless": 20,
    "msg": "You light the candle and say a short prayer.  Things feel quieter."
   }
  },
@@ -6630,7 +6630,7 @@
    "charm"
   ],
   "use": {
-   "heat": -15,
+   "bless": 40,
    "msg": "You read a few lines.  Your pulse slows."
   }
  },

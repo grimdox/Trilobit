@@ -433,8 +433,7 @@ func interact() -> bool:
 		return false
 	if v["driver"] == -3:
 		g.say("You haul the driver out of the %s and take the wheel." % name)
-		g.heat += 12
-		g._witness(v["cell"], 14, 12, -1)
+		g._witness(v["cell"], 14, -1)
 		v["ai"] = false
 		v["driver"] = -1
 	if v["charge"] <= 0 or v["parts"]["engine"] <= 0:
@@ -541,7 +540,7 @@ func _step_ground(vi: int, dir: int, step_dir: int) -> bool:
 			var dmg: int = 12 + spd * 8
 			g.say("You run down %s!" % g.name_of(who))
 			g.hpn[who] -= dmg
-			g._witness(pr["cell"], 14, 18, who)
+			g._witness(pr["cell"], 14, who)
 			if g.hpn[who] <= 0:
 				g.kill(who)
 			else:
@@ -918,7 +917,7 @@ func mech_move(dx: int, dy: int, run: bool) -> bool:
 				var who: int = int(pr["idx"])
 				var dmg: int = g.rng.randi_range(14, 22)
 				g.say("The mech slams %s." % g.name_of(who))
-				g._witness(pr["cell"], 12, 14, who)
+				g._witness(pr["cell"], 12, who)
 				g._silent = false
 				g.hpn[who] -= dmg
 				if g.hpn[who] <= 0:

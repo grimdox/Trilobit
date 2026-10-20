@@ -132,7 +132,6 @@ func _initialize() -> void:
 	var post: int = posts[0]
 	var dir: Vector2i = stand_beside(g, post)
 	g.yen = 2000
-	g.heat = 0
 	var q: Dictionary = g.charge_quote(post, 576.0)
 	var dist: int = g.district_of(post)
 	check("bumping a post asks for its menu and spends no time", dir != Vector2i.ZERO and not g.act_move(dir.x, dir.y) and g.charger_hit == post)
@@ -172,12 +171,7 @@ func _initialize() -> void:
 	var pw1: float = g.power_left()
 	g.eco.choose(m4, aff_idx)
 	check("'what I can afford' charges as much as the purse pays for and not more (¥%d left, +%d kJ)" % [g.yen, int(g.power_left() - pw1)], aff_idx >= 0 and g.yen >= 0 and g.yen < 40 and g.power_left() > pw1)
-	# reputation and place change the bill
-	g.heat = 80
-	var q_hot: Dictionary = g.charge_quote(post, 300.0)
-	g.heat = 0
-	var q_cool: Dictionary = g.charge_quote(post, 300.0)
-	check("a wanted player pays more for the same charge (¥%d against ¥%d)" % [int(q_hot["total"]), int(q_cool["total"])], int(q_hot["total"]) > int(q_cool["total"]) and int(q_hot["tax"]) > int(q_cool["tax"]))
+	# place changes the bill
 	var lo := -1
 	var hi := -1
 	for p in posts:
@@ -206,44 +200,52 @@ func _initialize() -> void:
 			nap = i
 		elif g.fac[i] == g.CIV and civ < 0:
 			civ = i
-	check("people carry an energy value by faction: Bratva 40, NAP 120, Nasim and civilians 0", g.npc_energy(bratva) == 40 and g.npc_energy(nap) == 120 and g.npc_energy(nasim) == 0 and g.npc_energy(civ) == 0)
+	check("wired people hold a charge by faction: Bratva up to 576 kJ, NAP up to 1152; Nasim, gangs and civilians none", g.npc_energy(bratva) > 0 and g.npc_energy(bratva) <= 576 and g.npc_energy(nap) > 0 and g.npc_energy(nap) <= 1152 and g.npc_energy(nasim) == 0 and g.npc_energy(civ) == 0)
 	# ---- siphon
 	g.implants = {"smartlink": true, "optics": true}
 	g.power = 50.0
-	g.energy[bratva] = 40
 	g.sim.place(bratva, g.pc + 1)
 	if g.sim.walk[g.pc + 1] == 0:
 		g.sim.place(bratva, g.pc - 1)
+	var alive_e: int = g.npc_energy(bratva)
 	g.kill(bratva)
+	check("what was left in a person is recorded when they die (%d kJ)" % alive_e, g.energy[bratva] == alive_e and g.npc_energy(bratva) == alive_e)
+	g.sim.tick += 20000
+	check("and stays fixed on the body however long it lies there", g.npc_energy(bratva) == alive_e)
 	g.log.clear()
 	var e0: int = g.npc_energy(bratva)
 	var ok_s: bool = g.act_siphon()
-	check("siphoning a downed man moves energy: his cell drops, the rig's store rises (%d kJ, he has %d)" % [int(g.power_left()), g.npc_energy(bratva)], ok_s and g.npc_energy(bratva) < e0 and g.power_left() > 50.0)
-	check("and says so", String(g.log[-1]).contains("draw") or String(g.log[-2]).contains("draw"))
+	check("siphoning a downed man moves energy: his charge drops, the rig's store rises (%d kJ, he has %d)" % [int(g.power_left()), g.npc_energy(bratva)], ok_s and g.npc_energy(bratva) < e0 and g.power_left() > 50.0)
+	check("and says so", g.log.any(func(l): return String(l).contains("draw")))
 	var took: int = e0 - g.npc_energy(bratva)
-	check("one draw is 12 kJ plus 3 per Engineering level (%d)" % took, took == mini(e0, 12 + 3 * g.lvl("engineering")))
+	check("one draw is a tenth of what the body holds (%d of %d)" % [took, e0], took == PW.siphon_take(e0) and absf(float(took) - 0.1 * e0) <= 1.0)
+	var e1: int = g.npc_energy(bratva)
+	g.act_siphon()
+	check("a second draw takes a tenth of what is left, so less than the first", e1 - g.npc_energy(bratva) == PW.siphon_take(e1) and e1 - g.npc_energy(bratva) <= took)
 	g.implants = {}
 	check("with no implants of your own there is nothing to draw into", not g.act_siphon())
 	g.implants = {"smartlink": true}
 	g.energy[bratva] = 0
 	g.power = 10.0
 	check("a drained body gives nothing more", not g.act_siphon())
-	g.energy[nap] = 120
+	g.energy[nap] = -1
+	var nap_before: int = g.npc_energy(nap)
 	g.sim.place(nap, g.pc + 1)
 	if g.sim.walk[g.pc + 1] == 0:
 		g.sim.place(nap, g.pc - 1)
-	check("a standing, healthy man cannot be drained", not g.act_siphon() and g.npc_energy(nap) == 120)
+	check("a standing, healthy man cannot be drained", not g.act_siphon() and g.npc_energy(nap) == nap_before)
 	# ---- save and load
 	g.implants = {"smartlink": true, "optics": true, "legs": true}
 	g.done_contracts = {"repair-0000abcd": true}
 	g.power = 123.5
 	g.power_state = 1
 	g.energy[nap] = 77
+	g.energy[bratva] = 33
 	var sd: Dictionary = JSON.parse_string(JSON.stringify(g.save_dict()))
 	var g2 = preload("res://src/game.gd").new(7)
 	g2.load_dict(sd)
 	check("power survives a save and load (%.1f kJ, state %d)" % [g2.power, g2.power_state], absf(g2.power - 123.5) < 0.01 and g2.power_state == 1)
-	check("a person's energy survives a save and load", g2.npc_energy(nap) == 77)
+	check("a person's energy, and what a dead one held, survives a save and load", g2.npc_energy(nap) == 77 and g2.npc_energy(bratva) == 33)
 	var pd: Dictionary = JSON.parse_string(JSON.stringify(g.player_dict()))
 	var g3 = preload("res://src/game.gd").new(7)
 	g3.setup(300)
@@ -256,7 +258,7 @@ func _initialize() -> void:
 	old["npc"].erase("energy")
 	var g4 = preload("res://src/game.gd").new(7)
 	g4.load_dict(old)
-	check("an old save (no power, no energy) loads: the rig is full and people have their faction's energy", g4.power_left() == g4.power_cap() and g4.npc_energy(nap) == 120)
+	check("an old save (no power, no energy) loads: the rig is full and people hold their clock-based charge", g4.power_left() == g4.power_cap() and g4.npc_energy(nap) >= 0 and g4.npc_energy(nap) <= 1152)
 	# ---- the same seed plays the same
 	var ga = preload("res://src/game.gd").new(7)
 	ga.setup(300)

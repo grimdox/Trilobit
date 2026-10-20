@@ -206,19 +206,12 @@ func run() -> Array:
 		if g.nname[i].begins_with("Collector") and g.astate[i] == g.HUNTING:
 			collectors += 1
 	check.call("the second miss sends collectors (%d)" % collectors, g.eco.arrears == 2 and collectors >= 1)
-	# --- implant
-	g.eco.implant_left = 1
-	g.end_turn()
-	check.call("a dead implant hurts your aim", g.eco.aim_penalty() > 0)
+	# --- the ripperdoc has no stabiliser to service any more
 	var ripper := -1
 	for i in g.sim.n:
 		if g.eco.role[i] == 2:
 			ripper = i
-	check.call("a ripperdoc exists", ripper >= 0)
-	g.yen = 2000
-	var m: Dictionary = g.eco.menu_for(ripper)
-	g.eco.choose(m, 0)
-	check.call("servicing resets the implant to 96h", g.eco.implant_left == 96 * 600 and g.yen < 2000)
+	check.call("a ripperdoc exists and sells implants and trauma patches, not stabiliser service", ripper >= 0 and g.eco.menu_for(ripper)["options"].all(func(o): return o["op"] != "service"))
 	# --- vendors and jobs
 	var vendor := -1
 	var fixer := -1

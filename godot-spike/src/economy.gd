@@ -2,7 +2,6 @@ extends RefCounted
 ## The pressure systems and the people who deal with them.
 ##   debt:     a loan from Kuroda Lending, interest every midnight, an installment every three days; missed ones become arrears,
 ##             arrears become collectors (armed Nasim runners who find you), and clearing it is the long-term goal
-##   implant:  a failing cortical stabiliser that must be serviced by a ripperdoc before it runs out: tremor, then seizures
 ##   jobs:     fixers hand out couriers (carry a parcel to a flat or office, anywhere in the city, floors up) and retrievals
 ##             (a data case left on a roof or down in the sewers); both pay by credstick on completion
 ##   vendors:  sell food, water, ammunition, a trauma patch and carrying gear
@@ -30,7 +29,6 @@ var look: Dictionary = {}              # agent -> paper-doll layers for a fixed 
 var debt: int = 4000
 var arrears: int = 0
 var paid_cycle: int = 0
-var implant_left: int = 96 * CLK.HOUR      # turns (a turn is six seconds) until the stabiliser fails
 var job: Dictionary = {}
 var jobs_done: int = 0
 var earned: int = 0
@@ -177,19 +175,6 @@ func step() -> void:
 			g.say("Midnight.  Kuroda Lending adds ¥%d interest.  You owe ¥%d." % [add, debt])
 	if t >= DAY * 3 and t % (DAY * 3) == 8 * CLK.HOUR and debt > 0:
 		_due()
-	# the implant
-	if implant_left > 0:
-		implant_left -= 1
-		match implant_left:
-			24 * CLK.HOUR: g.say("Your stabiliser throws a warning: 24 hours of service life left.")
-			12 * CLK.HOUR: g.say("Your hands begin to tremble.  Twelve hours left on the stabiliser.")
-			3 * CLK.HOUR: g.say("The stabiliser is failing.  Three hours.")
-			0: g.say("The stabiliser dies.  Your nerves misfire.  Find a ripperdoc.")
-	elif g.turn % (10 * CLK.MIN) == 0:
-		g._raw_hurt(2, "chest")
-		g.say("A seizure grips you (-2).")
-	if implant_left < 12 * CLK.HOUR and implant_left > 0 and g.turn % (40 * CLK.MIN) == 0:
-		g.say(["Your fingers jitter.", "A static hiss floods your ears.", "The edges of your vision flicker."][g.rng.randi() % 3])
 	_job_step()
 
 func min_payment() -> int:
@@ -223,13 +208,6 @@ func pay(amount: int) -> bool:
 		arrears = 0
 		g.say("DEBT CLEARED.  Kuroda Lending closes your file.  You are free to leave this city, or to stay.")
 	return true
-
-func aim_penalty() -> int:
-	if implant_left <= 0:
-		return 28
-	if implant_left < 12 * CLK.HOUR:
-		return 10
-	return 0
 
 func _collectors(count: int) -> void:
 	var sim = g.sim
@@ -388,9 +366,7 @@ func menu_for(i: int) -> Dictionary:
 			var cheap: bool = g.z_of(g.sim.pos[i]) < 0 or (not rv.is_empty() and int(rv["tier"]) == 0)
 			if not rv.is_empty():
 				m["title"] = "%s - %s" % [who, rv["name"]]
-			var cost: int = 350 if cheap else 700
-			m["text"] = ["\"Let me see that stabiliser.\"  Service life: %dh." % (implant_left / CLK.HOUR)]
-			m["options"].append({"label": "Service the stabiliser  ¥%d  (resets to 96h)" % cost, "op": "service", "arg": cost})
+			m["text"] = ["\"What are we fitting today?\""]
 			m["options"].append(_buy_opt(i, ["trl_medkit", "trauma patch", 40], "Trauma patch"))
 			var wrecked := 0
 			for l in g.BODY.LIMBS:
@@ -442,15 +418,13 @@ func menu_for(i: int) -> Dictionary:
 		PRIEST:
 			m["title"] = "%s - %s" % [who, venue_of.get(i, {}).get("name", "church")]
 			m["text"] = ["\"Peace be with you.  Come in, stay as long as you need.\""]
-			m["options"].append({"label": "Light a candle  ¥20  (heat -8)", "op": "pray", "arg": [20, 0, 8, 0, "You light a candle.  The flame steadies you."]})
-			m["options"].append({"label": "Confession  ¥150  (heat cleared)", "op": "pray", "arg": [150, 0, 100, 0, "You speak for a long time.  The priest absolves you.  Your heat is gone."]})
-			m["options"].append({"label": "Donation for the roof  ¥100  (a blessing, health +10)", "op": "pray", "arg": [100, 10, 0, 480, "The priest makes a cross over you.  You feel lighter and luckier."]})
+			m["options"].append({"label": "Donation for the roof  ¥100  (a blessing, health +10)", "op": "pray", "arg": [100, 10, 480, "The priest makes a cross over you.  You feel lighter and luckier."]})
 			for e in [["trl_faith_candle", "church candle", 20], ["trl_faith_icon", "small icon", 120], ["trl_faith_gospel", "pocket gospel", 60]]:
 				m["options"].append(_buy_opt(i, e))
 		MIKO:
 			m["title"] = "%s - %s" % [who, venue_of.get(i, {}).get("name", "shrine")]
 			m["text"] = ["\"Welcome.  Clap twice, bow, and ask quietly.\""]
-			m["options"].append({"label": "Offering at the saisen box  ¥50  (a blessing, health +8)", "op": "pray", "arg": [50, 8, 0, 360, "You throw the coin, clap twice and bow.  The air feels clean."]})
+			m["options"].append({"label": "Offering at the saisen box  ¥50  (a blessing, health +8)", "op": "pray", "arg": [50, 8, 360, "You throw the coin, clap twice and bow.  The air feels clean."]})
 			for e in [["trl_faith_omamori", "omamori charm", 150], ["trl_faith_ofuda", "ofuda paper ward", 90], ["trl_faith_ema", "ema plaque", 50]]:
 				m["options"].append(_buy_opt(i, e))
 		HOSTAGE:
@@ -569,13 +543,13 @@ func charger_menu(cell: int) -> Dictionary:
 	m["text"] = [
 		"Store: %d of %d kJ (about %d h of power left).  Your rig draws %.1f kJ/h." % [int(g.power_left()), int(g.power_cap()), int(g.power_hours()), float(L["draw"])],
 		"A visit costs a quality fee of %d (tier points %d x %d), implant tax %.1f%% of your hardware's %d, plus per kJ: power %.2f and power tax %.2f." % [
-			int(q1["fee"]), int(L["quality"]), g.PW.QUALITY_FEE, float(q1["tax_pct"]), int(L["value"]), g.PW.power_rate(g.heat, g.district_of(cell)), g.PW.power_tax_rate(g.heat)]]
+			int(q1["fee"]), int(L["quality"]), g.PW.QUALITY_FEE, float(q1["tax_pct"]), int(L["value"]), g.PW.power_rate(g.district_of(cell)), g.PW.power_tax_rate()]]
 	if room < 1.0:
 		m["text"].append("Your cells are full.")
 	else:
 		var d24: float = minf(room, float(L["draw"]) * 24.0)
 		var d72: float = room
-		var aff: float = minf(room, g.PW.affordable_kj(g.implants, g.heat, g.district_of(cell), g.yen))
+		var aff: float = minf(room, g.PW.affordable_kj(g.implants, g.district_of(cell), g.yen))
 		for e in [["Top up to full", d72], ["Charge 24 hours' worth", d24], ["Charge what I can afford", aff]]:
 			var kj: float = float(e[1])
 			if kj < 1.0 or (e[0] != "Top up to full" and kj >= d72 - 0.5) or (e[0] == "Charge what I can afford" and absf(kj - d24) < 0.5):
@@ -651,10 +625,8 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 			if int(pa[1]) > 0:
 				g.heal_body(int(pa[1]))
 			if int(pa[2]) > 0:
-				g.heat = maxi(0, g.heat - int(pa[2]))
-			if int(pa[3]) > 0:
-				g.bless_left = maxi(g.bless_left, int(pa[3]) * CLK.MIN)       # the data gives minutes
-			g.say(String(pa[4]))
+				g.bless_left = maxi(g.bless_left, int(pa[2]) * CLK.MIN)       # the data gives minutes
+			g.say(String(pa[3]))
 			return m
 		"implant":
 			var im: Array = o["arg"]
@@ -669,16 +641,6 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 			g.say("The surgery takes an hour.  You wake with new hardware: %s." % g.IMP.get_def(im[0]).get("name", im[0]))
 			m["text"] = ["\"Don't test it indoors.\""]
 			m["options"] = [{"label": "Leave", "op": "close", "arg": null}]
-			return m
-		"service":
-			var cost: int = o["arg"]
-			if g.yen < cost:
-				g.say("You can't afford the service.")
-				return m
-			g.yen -= cost
-			implant_left = 96 * CLK.HOUR
-			g.say("The stabiliser hums back to life.  96 hours.")
-			m["text"] = ["\"Come back in four days.\""]
 			return m
 		"mend":
 			var mcost: int = o["arg"]
@@ -727,17 +689,15 @@ func status_text() -> String:
 		d = "Debt ¥%d  (min ¥%d in %dd%02dh%s)" % [debt, min_payment(), due / DAY, (due % DAY) / CLK.HOUR, ", arrears %d" % arrears if arrears > 0 else ""]
 	else:
 		d = "Debt-free"
-	var im := "Implant %dh" % (implant_left / CLK.HOUR) if implant_left > 0 else "IMPLANT DEAD"
-	return d + "   " + im
+	return d
 
 func save() -> Dictionary:
-	return {"debt": debt, "arrears": arrears, "paid": paid_cycle, "implant": implant_left, "tv": CLK.SAVE_VERSION, "job": job, "done": jobs_done, "earned": earned, "free": debt_free}
+	return {"debt": debt, "arrears": arrears, "paid": paid_cycle, "tv": CLK.SAVE_VERSION, "job": job, "done": jobs_done, "earned": earned, "free": debt_free}
 
 func load_from(d: Dictionary) -> void:
 	debt = int(d["debt"])
 	arrears = int(d["arrears"])
 	paid_cycle = int(d["paid"])
-	implant_left = int(d["implant"]) * (1 if int(d.get("tv", 1)) >= CLK.SAVE_VERSION else CLK.OLD_TO_NEW)
 	job = d["job"]
 	for k in ["cell", "z", "reward", "deadline"]:
 		if job.has(k):

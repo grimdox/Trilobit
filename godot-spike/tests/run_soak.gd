@@ -37,6 +37,6 @@ func _init() -> void:
 			g.body.mend_to(0.3)
 			g.game_over = false
 			tot_turns += 1
-		print("seed %d ok: turn %d, debt %d, jobs %d, heat %d" % [seed, g.turn, g.eco.debt, g.eco.jobs_done, g.heat])
+		print("seed %d ok: turn %d, debt %d, jobs %d" % [seed, g.turn, g.eco.debt, g.eco.jobs_done])
 	print("SOAK %d/%d" % [tot_turns, 6000])
 	quit(0)
