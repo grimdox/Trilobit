@@ -13,8 +13,9 @@ func run() -> Array:
 		log.append(("  PASS " if cond else "  FAIL ") + name)
 	var g = GameScript.new(51)
 	g.setup(1200)
-	g.hp = 5000
-	g.hp_max = 5000
+	for l_ in g.BODY.LIMBS:
+		g.body.hp[l_] = 100000
+		g.body.mx[l_] = 100000
 	var tall: Dictionary = {}
 	for t in g.city.tower_info:
 		if tall.is_empty() or int(t["h"]) > int(tall["h"]):

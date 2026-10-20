@@ -18,7 +18,7 @@ func _init() -> void:
 				g.pc = spots[rng.randi() % spots.size()]
 				g.sim.at[g.pc] = -1
 				g.sim.retier(g.pc)
-				g.hp = g.hp_max
+				g.body.mend_to(1.0)
 				g.game_over = false
 			match rng.randi() % 14:
 				0, 1, 2, 3, 4, 5: g.act_move(rng.randi_range(-1, 1), rng.randi_range(-1, 1))
@@ -34,7 +34,8 @@ func _init() -> void:
 						g.eco.choose(m, rng.randi() % m["options"].size())
 				12: g.act_wait()
 				_: g.act_pay(100)
-			g.hp = maxi(g.hp, 5)
+			g.body.mend_to(0.3)
+			g.game_over = false
 			tot_turns += 1
 		print("seed %d ok: turn %d, debt %d, jobs %d, heat %d" % [seed, g.turn, g.eco.debt, g.eco.jobs_done, g.heat])
 	print("SOAK %d/%d" % [tot_turns, 6000])

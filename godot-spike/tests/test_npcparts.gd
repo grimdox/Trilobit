@@ -34,8 +34,9 @@ func run() -> Array:
 		log.append(("  PASS " if cond else "  FAIL ") + name)
 	var g = GameScript.new(81)
 	g.setup(1200)
-	g.hp = 50000
-	g.hp_max = 50000
+	for l_ in g.BODY.LIMBS:
+		g.body.hp[l_] = 100000
+		g.body.mx[l_] = 100000
 	var spot: int = _open_line(g, g.pc, 12)
 	g.pc = spot
 	g.last_pc = spot
@@ -61,7 +62,7 @@ func run() -> Array:
 		g.bleed[who] = 0
 		g.gunc[who] = 0
 		g.body.reset()
-		g.hp = g.hp_max
+		g.body.mend_to(1.0)
 		g.game_over = false
 		g.pc = spot
 		g.last_pc = spot
@@ -92,16 +93,16 @@ func run() -> Array:
 	g.skills = SK.default_skills()
 	var dmg_taken := 0
 	for _t in 60:
-		g.hp = g.hp_max
+		g.body.mend_to(1.0)
 		g.body.reset()
 		g.apn[who] = 100
 		g.stamn[who] = 100
 		g.stamt[who] = g.turn
 		g._npc_melee_attack(who)
-		dmg_taken += g.hp_max - g.hp
+		dmg_taken += 164 - g.body.total()
 	check.call("a one-armed fighter still hits back (%d damage over 60 swings)" % dmg_taken, dmg_taken > 0)
 	g.npc_limb_hit(who, "l_arm", 99)
-	g.hp = g.hp_max
+	g.body.mend_to(1.0)
 	var l0: int = g.log.size()
 	for _t in 20:
 		g._npc_melee_attack(who)
@@ -109,7 +110,7 @@ func run() -> Array:
 	for li in range(l0, g.log.size()):
 		if String(g.log[li]).contains("flails"):
 			flail = true
-	check.call("with both arms disabled they cannot attack (flail, no damage: %d)" % (g.hp_max - g.hp), g.npc_arms_ok(who) == 0 and flail and g.hp == g.hp_max)
+	check.call("with both arms disabled they cannot attack (flail, no damage: %d)" % (164 - g.body.total()), g.npc_arms_ok(who) == 0 and flail and g.body.total() == 164)
 	g.gunc[who] = 1
 	g.aimn[who] = 1
 	g.apn[who] = 100

@@ -58,6 +58,7 @@ const EXTRA := [
 	["charm_counter", "f_trl_charm_counter", 0, 1], ["cabinet", "f_trl_cabinet_lacquer", 0, 1], ["neon", "f_trl_neon_pink", 0, 0],
 	["crane_leg", "f_trl_crane_leg", 0, 0], ["container", "f_trl_container", 0, 1], ["bollard", "f_trl_bollard", 0, 0],
 	["terminal", "f_trl_terminal", 0, 0], ["portal", "f_trl_portal", 1, 0], ["mission_device", "f_trl_device", 0, 0],
+	["charger", "f_trl_charger", 0, 0],
 ]
 const EXTRA0 := 33
 static var TID: Dictionary = _tids()
@@ -147,6 +148,7 @@ var venues: Array = []                 # {kind, style, tier, x0, y0, x1, y1, doo
 var venue_plan: Array = []             # kinds still to place while the suburbs are laid out
 var under: PackedByteArray = PackedByteArray()   # ground level: the floor tile under each piece of furniture
 var cranes: Array = []                           # harbor gantry cranes: {x0, x1, y} in local coordinates (drawn as moving overlays)
+var chargers: PackedInt32Array = PackedInt32Array()   # the cells of the government implant charging posts
 var wealth: PackedByteArray = PackedByteArray()  # per column of the map: 0 poor, 1 middle, 2 rich (empty = everything middle)
 const DISTRICTS := ["lower", "middle", "upper"]
 
@@ -367,6 +369,42 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 			_suburb_block(rr3.position.x, rr3.position.y, rr3.end.x, rr3.end.y, 0.7 if exurb else 0.97)
 	if planned:
 		_paint_boulevards()
+	_place_chargers(grid)
+
+## Government charging posts: one on the street side of every third block (a diagonal pattern, so there is one about every 40-60 tiles each way), on open ground
+## at the building line, never closer than a cell to anything that could box it in.  No random numbers are drawn, so the city is the same with or without them.
+func _place_chargers(grid: Array) -> void:
+	chargers = PackedInt32Array()
+	var tid: int = TID["charger"]
+	for i in grid.size():
+		for j in grid[i].size():
+			var b = grid[i][j]
+			if b == null or (i + 2 * j) % 3 != 0:
+				continue
+			var r: Rect2i = b["r"]
+			var cx: int = r.position.x + r.size.x / 2
+			var done := false
+			for dy in range(0, 4):
+				for dx in [0, 1, -1, 2, -2, 3, -3, 4, -4]:
+					var c: int = (r.position.y + dy) * size + cx + dx
+					if _post_ok(c):
+						tiles[c] = tid
+						chargers.append(c)
+						done = true
+						break
+				if done:
+					break
+
+func _post_ok(c: int) -> bool:
+	if tiles[c] != GROUND:
+		return false
+	for oy in range(-1, 2):
+		for ox in range(-1, 2):
+			var n: int = c + oy * size + ox
+			var t: int = tiles[n]
+			if not (t == GROUND or t == ROAD or t == PARK):
+				return false
+	return true
 
 ## the island city has a ragged edge: a street is kept only where it serves a block (or is an avenue or the highway), so the grid stops where the
 ## town does instead of running on into the fields

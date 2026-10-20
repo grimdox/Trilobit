@@ -207,6 +207,8 @@ func _initialize() -> void:
 		check("%s: the log says how it ended" % tid, ended.contains("Contract complete"))
 	# failure and abandonment pay nothing; the blast
 	g = w.game
+	check("a paid contract cannot be taken again the same day", not g.portal_open(MS.offers(w.seed_value, term, g.sim.tick / 14400)[4], term))
+	g.done_contracts.clear()                # (the tests below reuse the same postings)
 	var yen1: int = g.yen
 	dv = stand_beside(g, term)
 	m.open_terminal(term)
@@ -229,7 +231,7 @@ func _initialize() -> void:
 	while not s2.mission["planted"] and tr < 80:
 		s2.act_move(d3.x, d3.y)
 		tr += 1
-	var hp0: int = s2.hp
+	var hp0: int = s2.body.total()
 	for _k in 60:
 		if s2.mission_leave_request != "":
 			break
@@ -237,7 +239,7 @@ func _initialize() -> void:
 	check("blast: the fuse runs out and the charge goes off with the player inside", s2.mission_leave_request == "blast")
 	m.refresh()
 	g = w.game
-	check("blast: the player is thrown back out hurt, the contract failed, no pay, the portal closed", g.mission.is_empty() and g.portal.is_empty() and g.yen == yen1 and g.hp < hp0 + 1 and String(g.log[-1]).contains("failed"))
+	check("blast: the player is thrown back out hurt, the contract failed, no pay, the portal closed", g.mission.is_empty() and g.portal.is_empty() and g.yen == yen1 and g.body.total() < hp0 + 1 and String(g.log[-1]).contains("failed"))
 	# scrapping at the terminal
 	dv = stand_beside(g, term)
 	m.open_terminal(term)

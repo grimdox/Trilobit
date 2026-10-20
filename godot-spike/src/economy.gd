@@ -422,7 +422,7 @@ func menu_for(i: int) -> Dictionary:
 		DOCTOR:
 			var dv: Dictionary = venue_of.get(i, {})
 			m["title"] = "%s - %s" % [who, dv.get("name", "clinic")]
-			var missing: int = g.hp_max - g.hp
+			var missing: int = (g.body_missing() + 2) / 3        # the bill is by the old 60-point scale: a third of the limb points
 			var wrecked := 0
 			var hurt := 0
 			for l in g.BODY.LIMBS:
@@ -430,12 +430,12 @@ func menu_for(i: int) -> Dictionary:
 					wrecked += 1
 				if int(g.body.hp[l]) < int(g.body.mx[l]):
 					hurt += 1
-			m["text"] = ["\"Let me look at you.\"", "You are at %d of %d, with %d hurt limb%s." % [g.hp, g.hp_max, hurt, "" if hurt == 1 else "s"]]
+			m["text"] = ["\"Let me look at you.\"", "You are at %d of %d, with %d hurt limb%s." % [g.body.total(), g.body.mx.values().reduce(func(a, b): return a + b), hurt, "" if hurt == 1 else "s"]]
 			if missing > 0 or hurt > 0:
 				var c1: int = 20 + missing * 2 + hurt * 15
-				m["options"].append({"label": "Treat my wounds (health full, limbs half mended)  ¥%d" % c1, "op": "treat", "arg": [c1, 0.5]})
+				m["options"].append({"label": "Treat my wounds (every limb half mended)  ¥%d" % c1, "op": "treat", "arg": [c1, 0.5]})
 				var c2: int = 40 + missing * 3 + hurt * 30 + wrecked * 60
-				m["options"].append({"label": "Full recovery (health and every limb)  ¥%d" % c2, "op": "treat", "arg": [c2, 1.0]})
+				m["options"].append({"label": "Full recovery (every limb whole)  ¥%d" % c2, "op": "treat", "arg": [c2, 1.0]})
 			else:
 				m["text"].append("\"Nothing wrong with you that I can see.\"")
 			m["options"].append(_buy_opt(i, ["trl_medkit", "trauma patch", 35], "Trauma patch"))
@@ -556,6 +556,35 @@ func _rumor(i: int, shift: int = 0) -> String:
 	return lines[(i * 7 + g.turn / 90 + shift * 3) % lines.size()]
 
 ## run option k of a menu; returns the next menu, or {} to close
+## the menu at a government implant charging post: what a charge costs, in the four parts power.gd defines
+func charger_menu(cell: int) -> Dictionary:
+	var m := {"title": "Government implant charging post", "text": [], "options": [], "charger": cell}
+	var L: Dictionary = g.PW.loadout(g.implants)
+	if int(L["count"]) == 0:
+		m["text"] = ["The cradle finds nothing of yours to charge.", "Fully human: no implants, no draw, no tax.  Move along."]
+		m["options"].append({"label": "Leave", "op": "close", "arg": null})
+		return m
+	var room: float = g.power_cap() - g.power_left()
+	var q1: Dictionary = g.charge_quote(cell, 1.0)
+	m["text"] = [
+		"Store: %d of %d kJ (about %d h of power left).  Your rig draws %.1f kJ/h." % [int(g.power_left()), int(g.power_cap()), int(g.power_hours()), float(L["draw"])],
+		"A visit costs a quality fee of %d (tier points %d x %d), implant tax %.1f%% of your hardware's %d, plus per kJ: power %.2f and power tax %.2f." % [
+			int(q1["fee"]), int(L["quality"]), g.PW.QUALITY_FEE, float(q1["tax_pct"]), int(L["value"]), g.PW.power_rate(g.heat, g.district_of(cell)), g.PW.power_tax_rate(g.heat)]]
+	if room < 1.0:
+		m["text"].append("Your cells are full.")
+	else:
+		var d24: float = minf(room, float(L["draw"]) * 24.0)
+		var d72: float = room
+		var aff: float = minf(room, g.PW.affordable_kj(g.implants, g.heat, g.district_of(cell), g.yen))
+		for e in [["Top up to full", d72], ["Charge 24 hours' worth", d24], ["Charge what I can afford", aff]]:
+			var kj: float = float(e[1])
+			if kj < 1.0 or (e[0] != "Top up to full" and kj >= d72 - 0.5) or (e[0] == "Charge what I can afford" and absf(kj - d24) < 0.5):
+				continue
+			var q: Dictionary = g.charge_quote(cell, kj)
+			m["options"].append({"label": "%s  %d kJ  ¥%d  (about %d h)" % [e[0], int(kj), int(q["total"]), int(g.PW.hours_left(g.implants, kj))], "op": "charge", "arg": [cell, kj]})
+	m["options"].append({"label": "Leave", "op": "close", "arg": null})
+	return m
+
 func choose(m: Dictionary, k: int) -> Dictionary:
 	if k < 0 or k >= m["options"].size():
 		return m
@@ -563,6 +592,10 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 	match o["op"]:
 		"close":
 			return {}
+		"charge":
+			var ca: Array = o["arg"]
+			g.recharge(int(ca[0]), float(ca[1]))
+			return charger_menu(int(ca[0]))
 		"mission_free":
 			g.MS.free_hostage(g)
 			return {}
@@ -604,7 +637,6 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 				g.say("You can't afford the treatment.")
 				return m
 			g.yen -= int(tr[0])
-			g.hp = g.hp_max
 			g.body.mend_to(float(tr[1]))
 			g.say("The doctor works for an hour.  You feel much better.")
 			m["text"] = ["\"Rest now.  Avoid being shot.\""]
@@ -617,7 +649,7 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 				return m
 			g.yen -= int(pa[0])
 			if int(pa[1]) > 0:
-				g.hp = mini(g.hp_max, g.hp + int(pa[1]))
+				g.heal_body(int(pa[1]))
 			if int(pa[2]) > 0:
 				g.heat = maxi(0, g.heat - int(pa[2]))
 			if int(pa[3]) > 0:
@@ -631,6 +663,7 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 				return m
 			g.yen -= int(im[1])
 			g.implants[im[0]] = true
+			g.power_install(im[0])
 			if im[0] == "jets":
 				g.fuel = g.FUEL_MAX
 			g.say("The surgery takes an hour.  You wake with new hardware: %s." % g.IMP.get_def(im[0]).get("name", im[0]))
@@ -655,7 +688,6 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 			g.yen -= mcost
 			g.body.mend_to(0.7)
 			g.imp_dur.clear()
-			g.hp = g.hp_max
 			g.say("Hours under the lamp.  Limbs rebuilt, implant plating replaced.")
 			m["text"] = ["\"Good as used.\""]
 			m["options"] = [{"label": "Leave", "op": "close", "arg": null}]

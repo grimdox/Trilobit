@@ -284,7 +284,7 @@ func run() -> Array:
 	for k in 12:
 		if wz.act_move(0, 1):
 			crossed += 1
-	check.call("you can walk straight across the rails (%d of 12 steps)" % crossed, crossed == 12 and wz.transit.riding == -1 and wz.hp > 0)
+	check.call("you can walk straight across the rails (%d of 12 steps)" % crossed, crossed == 12 and wz.transit.riding == -1 and not wz.body.vital_dead())
 	# save and load the whole world
 	var d: Dictionary = JSON.parse_string(JSON.stringify(w.save_dict()))
 	var w2 = World.new()

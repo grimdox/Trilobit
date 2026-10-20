@@ -35,8 +35,9 @@ func run() -> Array:
 		log.append(("  PASS " if cond else "  FAIL ") + name)
 	var g = GameScript.new(71)
 	g.setup(1200)
-	g.hp = 50000
-	g.hp_max = 50000
+	for l_ in g.BODY.LIMBS:
+		g.body.hp[l_] = 100000
+		g.body.mx[l_] = 100000
 	# ---- data: every gun shows its numbers, and the classes match the design
 	var by_cls := {}
 	var shown := true
@@ -120,7 +121,7 @@ func run() -> Array:
 		g.sim.ctl[who] = 1
 		g.stun[who] = 0
 		g.body.reset()
-		g.hp = g.hp_max
+		g.body.mend_to(1.0)
 		g.game_over = false
 		g.pc = spot
 		g.last_pc = spot
@@ -201,6 +202,7 @@ func run() -> Array:
 				crit_ok = crit_ok and (d_got == maxi(0, (hi_d + sk) * 2 - arm - gr) or d_got == 0)
 			else:
 				dmg_ok = dmg_ok and d_got >= maxi(0, lo_d + sk - arm - gr) and d_got <= maxi(0, hi_d + sk - arm - gr)
+	g.skills = SK.default_skills()               # the shots were all taken at the starting level; hitting taught a little afterwards
 	var expect: int = GP.hit_chance(sp, 5, 1, false, false, g.lvl("ranged"), 0, 0, false, g._ranged_extra(5), 0)
 	var rate: float = 100.0 * float(hits) / float(shots)
 	check.call("live hit rate %.0f%% matches the model's %d%% (fumbles %d, crits %d of %d)" % [rate, expect, fumbles, crits, shots], absf(rate - float(expect)) < 8.0 and fumbles > 0 and crits > 0)
@@ -246,7 +248,7 @@ func run() -> Array:
 	check.call("then he fires: 50 AP back to his bank (%d -> %d), 2 stamina (%d -> %d), aim spent" % [ap0, g.apn[who], s0, g.npc_stamina(who)], fired and g.apn[who] == ap0 + 50 and g.npc_stamina(who) == s0 - 2 and g.aimn[who] == 0)
 	var nhit := 0
 	for _t in 200:
-		g.hp = g.hp_max
+		g.body.mend_to(1.0)
 		g.body.reset()
 		g.aimn[who] = 1
 		g.stamn[who] = 100
@@ -272,7 +274,7 @@ func run() -> Array:
 			g.astate[who] = g.HUNTING
 			g.skills = SK.default_skills()
 			g.body.reset()
-			g.hp = g.hp_max
+			g.body.mend_to(1.0)
 			g.game_over = false
 			g.aim_turns = 2
 			g.stamina = g.STAMINA_MAX

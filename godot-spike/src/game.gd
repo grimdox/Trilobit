@@ -19,6 +19,7 @@ const SK = preload("res://src/skills.gd")
 const CR = preload("res://src/creation.gd")
 const CLK = preload("res://src/clock.gd")
 const MS = preload("res://src/missions.gd")
+const PW = preload("res://src/power.gd")
 const SITE = preload("res://src/mission_site.gd")
 const LOOK = preload("res://src/look.gd")
 
@@ -70,8 +71,6 @@ var sfx_queue: Array = []             # sound events for the front end ("shot", 
 
 # the player
 var pc: int = 0                      # cell index
-var hp: int = 60
-var hp_max: int = 60
 var yen: int = 300
 var heat: int = 0
 var ammo_pool: Dictionary = {"9mm|fmj": 36}   # "caliber|kind" -> rounds carried loose
@@ -94,6 +93,12 @@ var flying: bool = false
 var followers: Array = []                      # hunters climbing after you
 # missions (missions.gd): `mission` is set only inside a generated site; `portal` only in the physical world while an accepted mission's portal is open
 var mission: Dictionary = {}
+# implant power (power.gd): kJ in the store, -1 for a rig that has never been charged (it starts full the first time it is needed); at 0 every implant is off
+var power: float = -1.0
+var power_state: int = 0                       # 0 fine, 1 low (a quarter), 2 critical (a tenth), 3 dark: so each warning is said once
+var charger_hit: int = -1                      # a charging post the player just bumped (the front end opens its menu and clears this)
+var energy: PackedInt32Array                   # every person's energy cell, in kJ (power.gd NPC_ENERGY by faction); implants can be drained from a downed person
+var done_contracts: Dictionary = {}           # ids of the contracts the player has completed and been paid for: a posted contract pays once
 var portal: Dictionary = {}                    # {cell, was (the tile it replaced), under, offer}
 var terminal_hit: int = -1                     # a mission terminal the player just bumped (the front end opens its screen and clears this)
 var mission_leave_request: String = ""         # "exit" (stepped through the exit portal) or "blast" (the charge went off): the front end hands over to the world
@@ -242,6 +247,7 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1), ms
 	eco.setup(self)
 	if not mission.is_empty():
 		_mission_roles()
+	_npc_energy_init()                                  # after the economy has settled everyone's faction
 	_prof("eco", _t0)
 	_compute_fov()
 	_prof("fov", _t0)
@@ -995,6 +1001,12 @@ func _act_move_core(dx: int, dy: int, run: bool = false) -> bool:
 		say("The terminal's screen wakes.")
 		sfx("blip")
 		return false
+	if city.tiles[c] == CG.TID["charger"]:
+		facing = Vector2i(dx, dy)
+		charger_hit = c
+		say("The government charging post lights its panel.")
+		sfx("blip")
+		return false
 	if city.tiles[c] == CG.TID["mission_device"]:
 		facing = Vector2i(dx, dy)
 		return MS.use_device(self)
@@ -1104,7 +1116,7 @@ func wait_for(turns: int) -> bool:
 	wait_left = turns
 	wait_total = turns
 	wait_why = ""
-	wait_hp = hp
+	wait_hp = body.total()
 	say("You wait %s." % CLK.span_text(turns))
 	return true
 
@@ -1141,9 +1153,9 @@ func wait_step(max_turns: int) -> int:
 		wait_left -= 1
 		_tick()
 		spent += 1
-		wait_hp = mini(wait_hp, hp)
+		wait_hp = mini(wait_hp, body.total())
 		var why := ""
-		if hp < hp0 or hp < wait_hp:
+		if body.total() < hp0 or body.total() < wait_hp:
 			why = "You are hurt"
 		elif hungry() and not h0:
 			why = "You are hungry"
@@ -1463,7 +1475,7 @@ func limb_name(l: String) -> String:
 	return BODY.NAME[l]
 
 func _imp_active(d: Dictionary) -> bool:
-	return body.group_ok(body.group_of_part(String(d["part"]))) and int(imp_dur.get(d["id"], IMP.dur(d))) > 0
+	return power_left() > 0.0 and body.group_ok(body.group_of_part(String(d["part"]))) and int(imp_dur.get(d["id"], IMP.dur(d))) > 0
 
 func imp_sum(field: String) -> float:
 	return IMP.sum(implants, field, _imp_active)
@@ -1488,7 +1500,7 @@ func armor_pieces(limb: String) -> Array:
 		if a["slot"] == grp or a["slot"] == "all":
 			out.append({"item": it, "id": "", "name": it.def["name"], "phys": int(a["phys"]), "left": item_armor_left(it), "max": int(a["dur"])})
 	for d in IMP.ALL:
-		if implants.get(d["id"], false) and d.has("armor") and body.ok(limb) and (d["armor_group"] == grp or d["armor_group"] == "all"):
+		if implants.get(d["id"], false) and power_left() > 0.0 and d.has("armor") and body.ok(limb) and (d["armor_group"] == grp or d["armor_group"] == "all"):
 			out.append({"item": null, "id": d["id"], "name": d["name"], "phys": int(d["armor"]), "left": int(imp_dur.get(d["id"], int(d["dur"]))), "max": int(d["dur"])})
 	return out
 
@@ -1508,7 +1520,7 @@ func armor_status() -> Dictionary:
 		left += item_armor_left(it)
 		mx += int(it.def["armor"]["dur"])
 	for d in IMP.ALL:
-		if implants.get(d["id"], false) and d.has("armor"):
+		if implants.get(d["id"], false) and power_left() > 0.0 and d.has("armor"):
 			left += int(imp_dur.get(d["id"], int(d["dur"])))
 			mx += int(d["dur"])
 	return {"left": left, "max": mx, "value": armor_value("chest")}
@@ -1545,7 +1557,6 @@ func _raw_hurt(n: int, limb: String = "") -> void:
 		return
 	var l: String = limb if limb != "" else body.pick(rng)
 	_limb_hit(l, n)
-	hp -= n
 
 func _limb_hit(l: String, n: int) -> void:
 	var avail: int = int(body.hp[l])
@@ -1558,7 +1569,7 @@ func _limb_hit(l: String, n: int) -> void:
 		else:
 			say("Your %s is DISABLED!  %s" % [limb_name(l), _limb_effect(l)])
 	if r["dead"]:
-		hp = mini(hp, 0)
+		_die_check()
 
 ## damage that gets past a limb's own health lands on the implants fitted in it, each wearing down its durability until it is wrecked
 func _implants_take(l: String, n: int) -> void:
@@ -1586,7 +1597,8 @@ func _limb_effect(l: String) -> String:
 func player_hurt(dmg: int, msg: String, dtype: String = "phys", limb: String = "", pen: int = 0) -> void:
 	if in_mech():
 		var through: int = dmg / 5
-		hp -= through
+		if through > 0:
+			_limb_hit(body.pick(rng), through)
 		say("%s: the mech's armour takes it (-%d frame, -%d you)." % [msg, dmg, through])
 		vs.damage(in_vehicle, "body", dmg)
 		return
@@ -1603,7 +1615,6 @@ func player_hurt(dmg: int, msg: String, dtype: String = "phys", limb: String = "
 	if through2 > 0:
 		sfx("hurt")
 		_limb_hit(l, through2)
-		hp -= through2
 		skill_up("grit", 2 + through2 / 4)
 		say("%s in the %s (-%d%s)." % [msg, limb_name(l), through2, (", armor soaks %d" % int(ab["absorbed"])) if int(ab["absorbed"]) > 0 else ""])
 	else:
@@ -1642,7 +1653,6 @@ func player_melee_hurt(dmg: int, msg: String, pen: int, crit: bool) -> void:
 	if through > 0:
 		sfx("hurt")
 		_limb_hit(l, through)
-		hp -= through
 		skill_up("grit", 2 + through / 4)
 		var soaked: int = int(ab["absorbed"]) + mini(grit, int(ab["through"]))
 		say("%s in the %s (-%d%s)%s." % [msg, limb_name(l), through, (", armor and grit soak %d" % soaked) if soaked > 0 else "", tail])
@@ -1839,10 +1849,10 @@ func act_use_medical(it) -> bool:
 		holder.remove(it)
 	elif holder == it:
 		worn.erase(it)
-	hp = mini(hp_max, hp + 25)
 	var l: String = body.worst()
 	body.heal(l, maxi(8, int(body.mx[l]) / 3))
-	say("You slap on a trauma patch: health up, your %s mended a little." % limb_name(l))
+	var spread: int = heal_body(25)
+	say("You slap on a trauma patch: your %s mended and %d more points of wounds closed." % [limb_name(l), spread])
 	end_turn()
 	return true
 
@@ -1892,7 +1902,8 @@ func eat_now(it) -> Array:
 	if f.get("drink", false):
 		got_drink = ml_turns(int(f.get("ml", 0)), float(f.get("hydr", 1.0)))
 		last_drank = _filled(THIRST_AFTER, drink_left(), got_drink)
-	hp = mini(hp_max, hp + int(f.get("hp", 0)))
+	if int(f.get("hp", 0)) > 0:
+		heal_body(int(f["hp"]))
 	stamina = mini(STAMINA_MAX, stamina + int(round(float(f.get("stam", 0)) * STAM_LEGACY)))
 	if f.get("alcohol", false):
 		drunk_left = mini(240 * CLK.MIN, drunk_left + 60 * CLK.MIN)
@@ -2025,7 +2036,7 @@ func act_use_charm(it) -> bool:
 	if u.has("heat"):
 		heat = maxi(0, heat + int(u["heat"]))
 	if u.has("hp"):
-		hp = mini(hp_max, hp + int(u["hp"]))
+		heal_body(int(u["hp"]))
 	if u.has("bless"):
 		bless_left = maxi(bless_left, int(u["bless"]) * CLK.MIN)       # data gives minutes
 	say(String(u.get("msg", "You use it.")))
@@ -3159,6 +3170,7 @@ func _tick() -> void:
 	_ai()
 	MS.step(self)
 	_bleed_tick()
+	_power_tick()
 	_critters_turn()
 	_vehicles()
 	eco.step()
@@ -3173,16 +3185,12 @@ func _tick() -> void:
 	if drunk_left > 0:
 		drunk_left -= 1
 	_needs_tick()
-	if turn % (12 * CLK.MIN) == 0 and hp < hp_max and in_vehicle < 0:
-		hp += 1
 	if turn % (40 * CLK.MIN) == 0:
 		for l in BODY.LIMBS:                      # hurt limbs knit slowly; a disabled one needs a ripperdoc or a trauma patch
 			if body.ok(l) and int(body.hp[l]) < int(body.mx[l]):
 				body.heal(l, 1)
 	_compute_fov()
-	if hp <= 0 and not game_over:
-		game_over = true
-		say("You are dead.  Press [n] for a new life.")
+	_die_check()
 
 func _build_pf() -> void:
 	for c in pf_touched:
@@ -3891,7 +3899,7 @@ func in_heli() -> bool:
 
 ## fitted AND its limbs work (a disabled limb gives no bonuses)
 func has_implant(id: String) -> bool:
-	if not implants.get(id, false):
+	if not implants.get(id, false) or power_left() <= 0.0:
 		return false
 	return body.group_ok(body.group_of_part(String(IMP.get_def(id).get("part", "chest"))))
 
@@ -3955,7 +3963,6 @@ func _fall_player(reason: String) -> void:
 		_limb_hit("l_leg", dmg * 3 / 4)           # landing is mostly legs, no armor helps
 		_limb_hit("r_leg", dmg * 3 / 4)
 		_limb_hit("chest", dmg / 4)
-		hp -= dmg
 		sfx("hurt")
 		say("You hit the ground hard (-%d)." % dmg)
 		_noise(pc, 6 + levels)
@@ -4332,7 +4339,7 @@ func outside_tile(x: int, y: int) -> int:
 
 ## everything about the player that travels between zones
 func player_dict() -> Dictionary:
-	return {"hp": hp, "hp_max": hp_max, "yen": yen, "heat": heat, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
+	return {"done": done_contracts.duplicate(), "power": power, "power_state": power_state, "yen": yen, "heat": heat, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
 		"attrs": attrs.duplicate(), "app": app.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 		"stamina": stamina, "stam_v": 2, "ap": ap, "stance": stance, "turn": turn, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "flying": flying,
 		"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
@@ -4369,8 +4376,9 @@ func _load_body(d: Dictionary) -> void:
 	aim_frac = 0.0
 
 func apply_player(d: Dictionary) -> void:
-	hp = int(d["hp"])
-	hp_max = int(d["hp_max"])
+	done_contracts = d.get("done", {})
+	power = float(d.get("power", -1.0))
+	power_state = int(d.get("power_state", 0))
 	yen = int(d["yen"])
 	heat = int(d["heat"])
 	implants = d["implants"]
@@ -4421,12 +4429,12 @@ func save_dict() -> Dictionary:
 	var vlist := []
 	for v in vehicles:
 		vlist.append(vs.to_dict(v))
-	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "hp": hp, "yen": yen, "heat": heat, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "attrs": attrs, "app": app, "xp": xp, "in_vehicle": in_vehicle,
+	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "heat": heat, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "attrs": attrs, "app": app, "xp": xp, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
 			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 			"items_at": it_at, "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
-					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc),
+					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc), "energy": Array(energy),
 					"prov": provoked.keys(), "apn": Array(apn), "stamn": Array(stamn), "stamt": Array(stamt), "aimn": Array(aimn), "limbs": _limbs_save(), "mdis": Array(mdis), "noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle)}}
 
 func load_dict(d: Dictionary) -> void:
@@ -4443,7 +4451,9 @@ func load_dict(d: Dictionary) -> void:
 		setup(int(d.get("people", sim.n if sim != null else 1500)))             # regenerates the deterministic parts (map, markers, names, factions)
 	turn = int(d["turn"]) * time_scale(d)
 	pc = int(d["pc"])
-	hp = int(d["hp"])
+	done_contracts = d.get("done", {})
+	power = float(d.get("power", -1.0))
+	power_state = int(d.get("power_state", 0))
 	yen = int(d["yen"])
 	heat = int(d["heat"])
 	ammo_pool = {}
@@ -4557,6 +4567,8 @@ func load_dict(d: Dictionary) -> void:
 		lastpos[i] = int(nn["last"][i])
 		postc[i] = int(nn["post"][i])
 		yenn[i] = int(nn["yen"][i])
+		if nn.has("energy"):
+			energy[i] = int(nn["energy"][i])
 		gunc[i] = int(nn["gun"][i])
 		noticed_you[i] = int(nn["noticed"][i])
 		mdis[i] = int(nn["mdis"][i]) if nn.has("mdis") else 0
@@ -4630,7 +4642,7 @@ func _restore_mission_state(saved: Dictionary) -> void:
 
 ## open a portal on the cell beside a terminal for an accepted offer; false if there is no room
 func portal_open(offer: Dictionary, term_cell: int) -> bool:
-	if not portal.is_empty() or not mission.is_empty():
+	if not portal.is_empty() or not mission.is_empty() or done_contracts.has(String(offer["id"])):
 		return false
 	var tx: int = term_cell % size
 	var ty: int = term_cell / size
@@ -4667,3 +4679,168 @@ func portal_close() -> void:
 	if cell < city.under.size():
 		city.under[cell] = int(portal["under"])
 	portal = {}
+
+
+# ---------------------------------------------------------------- implant power (power.gd)
+## the kJ in the store; a rig that has never been charged counts as full
+func power_left() -> float:
+	return power if power >= 0.0 else float(PW.loadout(implants)["cap"])
+
+func power_cap() -> float:
+	return float(PW.loadout(implants)["cap"])
+
+## hours of life the store has at the rig's draw (0 with no implants)
+func power_hours() -> float:
+	return PW.hours_left(implants, power_left())
+
+func _power_tick() -> void:
+	var L: Dictionary = PW.loadout(implants)
+	if int(L["count"]) == 0:
+		return
+	var cap: float = float(L["cap"])
+	if power < 0.0:
+		power = cap
+	if power <= 0.0:
+		return
+	power = maxf(0.0, minf(power, cap) - float(L["draw"]) / float(PW.HOUR_TURNS))
+	_power_notice(cap)
+
+## say each warning once as the store runs down; recharging clears them
+func _power_notice(cap: float) -> void:
+	var f: float = power / maxf(1.0, cap)
+	if power <= 0.0:
+		if power_state != 3:
+			power_state = 3
+			say("Your implants go dark.  No power: you are a plain human until you recharge at a government post.")
+			sfx("hurt")
+	elif f <= 0.10:
+		if power_state < 2:
+			power_state = 2
+			say("Implant power critical: about %d hours left.  Find a charging post." % int(ceil(power_hours())))
+			sfx("blip")
+	elif f <= 0.25:
+		if power_state < 1:
+			power_state = 1
+			say("Implant power low: about %d hours left." % int(ceil(power_hours())))
+			sfx("blip")
+
+## deliver kJ into the store (a charging post, or a person drained); returns what went in
+func power_add(kj: float) -> float:
+	var cap: float = power_cap()
+	if cap <= 0.0:
+		return 0.0
+	var before: float = power_left()
+	power = minf(cap, before + kj)
+	var f: float = power / cap
+	power_state = 0 if f > 0.25 else (1 if f > 0.10 else 2)
+	return power - before
+
+## a freshly fitted implant comes charged: its share of a full charge goes into the store
+func power_install(id: String) -> void:
+	var d: Dictionary = IMP.get_def(id)
+	if d.is_empty():
+		return
+	var cap: float = power_cap()
+	power = minf(cap, power_left() + PW.draw_of(d) * PW.FULL_HOURS) if power >= 0.0 else -1.0
+	power_state = 0
+
+## the district of a cell, 0 lower .. 2 upper (the price of power follows it)
+func district_of(cell: int) -> int:
+	return city.wealth_at(cell % s2)
+
+## what the post at `cell` asks for delivering `kj`
+func charge_quote(cell: int, kj: float) -> Dictionary:
+	return PW.quote(implants, heat, district_of(cell), kj)
+
+## pay for and take `kj` at a post: false (and nothing happens) if the yen is short or the rig is already full
+func recharge(cell: int, kj: float) -> bool:
+	var room: float = power_cap() - power_left()
+	kj = minf(kj, room)
+	if kj < 1.0:
+		say("The cells are already full.")
+		return false
+	var q: Dictionary = charge_quote(cell, kj)
+	if yen < int(q["total"]):
+		say("You can't afford that charge (¥%d)." % int(q["total"]))
+		return false
+	yen -= int(q["total"])
+	var got: float = power_add(kj)
+	say("The post hums.  +%d kJ for ¥%d (fee %d, implant tax %d, power %d, power tax %d).  Implants good for about %d hours." % [int(got), int(q["total"]), int(q["fee"]), int(q["tax"]), int(q["energy"]), int(q["ptax"]), int(power_hours())])
+	sfx("pick")
+	return true
+
+## energy of one person (kJ)
+func npc_energy(i: int) -> int:
+	return int(energy[i])
+
+## draw power from a person who is down (dead or stunned) and next to you; needs an implant interface of your own
+func act_siphon() -> bool:
+	if implants.is_empty() or int(PW.loadout(implants)["count"]) == 0:
+		say("You have no implants to draw power into.")
+		return false
+	var best := -1
+	for k in sim.near_list.size():
+		var i: int = sim.near_list[k]
+		if cheb(sim.pos[i], pc) <= 1 and (sim.alive[i] == 0 or stun[i] > 0 or astate[i] == SURRENDERED) and int(energy[i]) > 0:
+			best = i
+			break
+	if best < 0:
+		for i in sim.n:
+			if sim.alive[i] == 0 and cheb(sim.pos[i], pc) <= 1 and int(energy[i]) > 0 and z_of(sim.pos[i]) == z_of(pc):
+				best = i
+				break
+	if best < 0:
+		say("Nobody here to draw from: they must be down or helpless, next to you, and still carry a charge.")
+		return false
+	var take: int = mini(int(energy[best]), PW.SIPHON_BASE + PW.SIPHON_PER_LEVEL * lvl("engineering"))
+	var room: float = power_cap() - power_left()
+	if room < 1.0:
+		say("Your own cells are full.")
+		return false
+	take = mini(take, int(room))
+	energy[best] -= take
+	power_add(float(take))
+	skill_up("engineering", 3)
+	_noise(pc, 3)
+	say("You clamp a lead to %s and draw %d kJ (%d left in them).  Implants good for about %d hours." % [name_of(best), take, int(energy[best]), int(power_hours())])
+	sfx("select")
+	end_turn()
+	return true
+
+## the energy cells of a fresh population: by faction
+func _npc_energy_init() -> void:
+	energy = PackedInt32Array()
+	energy.resize(sim.n)
+	for i in sim.n:
+		energy[i] = int(PW.NPC_ENERGY[clampi(int(fac[i]), 0, PW.NPC_ENERGY.size() - 1)])
+
+
+# ---------------------------------------------------------------- health is per limb
+## wounds not yet closed, in limb points (the doctor's bill is scaled from it)
+func body_missing() -> int:
+	var m := 0
+	for l in BODY.LIMBS:
+		m += int(body.mx[l]) - int(body.hp[l])
+	return m
+
+## close up to n points of wounds, one at a time on the most hurt working limb (the head and chest first on a tie); a disabled limb is not touched.  Returns the points healed.
+func heal_body(n: int) -> int:
+	var done := 0
+	while done < n:
+		var best := ""
+		var bf := 2.0
+		for l in BODY.LIMBS:
+			if body.ok(l) and int(body.hp[l]) < int(body.mx[l]) and body.frac(l) < bf:
+				bf = body.frac(l)
+				best = l
+		if best == "":
+			break
+		body.heal(best, 1)
+		done += 1
+	return done
+
+## the head or the chest at 0 ends the run
+func _die_check() -> void:
+	if body.vital_dead() and not game_over:
+		game_over = true
+		say("You are dead.  Press [n] for a new life.")

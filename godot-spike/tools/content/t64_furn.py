@@ -1169,6 +1169,23 @@ def mission_device():
     return done(a)
 
 
+def charging_post():
+    """A government implant charging post: a squat white-and-blue pillar with a lit panel, a yellow bolt and a coiled lead."""
+    a = A()
+    box(a, 12, 52, 40, 8, '#4a4f57', r=2, bevel=2, spec=0.3)
+    box(a, 18, 10, 28, 46, '#d9dee4', r=4, bevel=3.5, spec=0.5)
+    a.shade(a.rect(18, 10, 28, 9), '#1f4f9e', bevel=1.5, strength=0.6)
+    scr = a.rect(22, 22, 20, 14)
+    a.shade(scr, '#06151c', bevel=1.2, strength=0.4)
+    for j in range(3):
+        a.fill(a.rect(24, 24 + j * 4, 6 + (j * 5) % 9, 2), GLOW_C, 0.9)
+    a.fill(a.poly([(37, 38), (32, 47), (36, 47), (33, 55), (42, 44), (38, 44), (41, 38)]), '#ffd21f', 0.95)
+    a.glow(32, 29, 18, GLOW_C, 0.18)
+    a.fill(a.ellipse(46, 50, 3.4), '#222831', 0.95)
+    a.fill(a.ellipse(46, 50, 1.6), '#5ec1ff', 0.9)
+    return done(a)
+
+
 FLOORS = {'t_trl_checker': f_checker, 't_trl_floor_church': f_church, 't_trl_floor_hinoki': f_hinoki, 't_trl_floor_clean': f_clean,
           't_trl_marble': f_marble, 't_trl_floor_steel': f_steel, 't_trl_floor_wood': f_wood, 't_trl_tatami': f_tatami, 't_trl_carpet_red': f_carpet}
 
@@ -1180,7 +1197,7 @@ FURN = {
     'f_trl_liquor_shelf': liquor_shelf, 'f_trl_hot_plate': hot_plate,
     'f_trl_shelf_clean': shelf_clean, 'f_trl_produce_bin': produce_bin, 'f_trl_freezer_case': freezer_case, 'f_trl_checkout': checkout,
     'f_trl_vending': vending, 'f_trl_water_cooler': water_cooler,
-    'f_trl_terminal': mission_terminal, 'f_trl_portal': mission_portal, 'f_trl_device': mission_device,
+    'f_trl_charger': charging_post, 'f_trl_terminal': mission_terminal, 'f_trl_portal': mission_portal, 'f_trl_device': mission_device,
     'f_trl_implant_chair': implant_chair, 'f_trl_implant_printer': implant_printer, 'f_trl_limb_bin': limb_bin,
     'f_trl_autodoc_imp_m': autodoc, 'f_trl_hospital_bed': hospital_bed, 'f_trl_ward_bed': lambda: hospital_bed('#7fae8a'),
     'f_trl_scanner': scanner, 'f_trl_med_cabinet': med_cabinet, 'f_trl_iv_stand': iv_stand, 'f_trl_reception': reception, 'f_trl_exam_couch': exam_couch,

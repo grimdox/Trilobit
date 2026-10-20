@@ -95,16 +95,16 @@ func run() -> Array:
 	g.skills = SK.default_skills()
 	# Grit: damage taken
 	g.armor_worn = []
-	var hp_a: int = g.hp
+	var hp_a: int = g.body.total()
 	g.player_hurt(8, "Test", "phys", "chest")
-	var loss_a: int = hp_a - g.hp
-	g.hp = hp_a
+	var loss_a: int = hp_a - g.body.total()
+	g.body.mend_to(1.0)
 	g.skills["grit"] = 16
 	g.player_hurt(8, "Test", "phys", "chest")
-	var loss_b: int = hp_a - g.hp
+	var loss_b: int = hp_a - g.body.total()
 	check.call("Grit cuts the damage you take (8 hit: lost %d at grit 0, %d at grit 16)" % [loss_a, loss_b], loss_a > 0 and loss_b > 0 and loss_b < loss_a)
 	g.skills["grit"] = 0
-	g.hp = hp_a
+	g.body.mend_to(1.0)
 	var c0 := 0
 	var c5 := 0
 	for k in 4000:

@@ -313,7 +313,7 @@ func run() -> Array:
 	check.call("the player boards a train at a downtown stop", boarded)
 	var over_river := false
 	var turns := 0
-	while boarded and turns < t.period + 40 and w.game == g and g.hp > 0:
+	while boarded and turns < t.period + 40 and w.game == g and not g.body.vital_dead():
 		g.act_wait()
 		turns += 1
 		var gp: Vector2i = g.global_pos()

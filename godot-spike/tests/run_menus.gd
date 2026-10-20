@@ -87,7 +87,7 @@ func _initialize() -> void:
 	key(m, KEY_DOWN); key(m, KEY_ENTER)
 	check("Save Game shows the slots", m.mode == "saves" and m.screen.items.size() == 4)
 	key(m, KEY_DOWN); key(m, KEY_ENTER)
-	check("saving to slot 2 writes the file", FileAccess.file_exists("user://test_save_2.json") and m.slot_meta(2).contains("HP"))
+	check("saving to slot 2 writes the file", FileAccess.file_exists("user://test_save_2.json") and m.slot_meta(2).contains("Body"))
 	key(m, KEY_ESCAPE)
 	check("Esc returns to the pause menu", m.mode == "pause")
 	# implants screen

@@ -99,7 +99,8 @@ func leave_mission(forced: String = "") -> Dictionary:
 		if case != null:
 			g.eco._remove(case)
 	if forced == "blast":
-		g.hp = maxi(1, g.hp - 20)
+		for bl in ["l_arm", "r_arm", "l_leg", "r_leg"]:        # the blast takes the limbs, never the head or chest
+			g._limb_hit(bl, 5)
 	var carry: Dictionary = g.player_dict()
 	var og = origin_game if origin_game != null else _restore_dict(cache[ORIGIN])
 	origin_game = null
@@ -111,6 +112,7 @@ func leave_mission(forced: String = "") -> Dictionary:
 	og.portal_close()
 	if res["outcome"] == "success":
 		og.yen += int(res["reward"])
+		og.done_contracts[String(g.mission["offer"]["id"])] = true
 		og.sfx("pick")
 	og.say(String(res["text"]))
 	og.last_pc = og.pc

@@ -218,13 +218,13 @@ func slot_meta(n: int) -> String:
 	var d = JSON.parse_string(f.get_as_text()) if f != null else null
 	if d is Dictionary and d.has("meta"):
 		var m: Dictionary = d["meta"]
-		return "%s   HP %s   ¥%s   %s" % [m.get("where", "?"), m.get("hp", "?"), m.get("yen", "?"), m.get("saved", "")]
+		return "%s   Body %s   ¥%s   %s" % [m.get("where", "?"), m.get("hp", "?"), m.get("yen", "?"), m.get("saved", "")]
 	return "(unreadable)"
 
 func save_slot(n: int) -> bool:
 	if game == null:
 		return false
-	var meta := {"where": game.zname(game.pc), "hp": game.hp, "yen": game.yen, "turn": game.turn, "saved": Time.get_datetime_string_from_system(false, true)}
+	var meta := {"where": game.zname(game.pc), "hp": game.body.total(), "yen": game.yen, "turn": game.turn, "saved": Time.get_datetime_string_from_system(false, true)}
 	var f := FileAccess.open(slot_path(n), FileAccess.WRITE)
 	if f == null:
 		return false
@@ -339,7 +339,7 @@ func _terminal_key(k: int) -> void:
 		elif game.portal_open(tm["offers"][int(tm["sel"])], int(tm["cell"])):
 			resume_play()
 		else:
-			tm["msg"] = "No room for a portal beside this terminal."
+			tm["msg"] = "That contract is already done." if game.done_contracts.has(String(tm["offers"][int(tm["sel"])]["id"])) else "No room for a portal beside this terminal."
 			sfx.play("blip")
 
 ## the player stepped into an open portal, or out through a site's exit: hand over to the world, which swaps the game
@@ -826,7 +826,7 @@ func refresh() -> void:
 	status.text = line2 + ("\n" + jt if jt != "" else "") + ("\n" + mt if mt != "" else "")
 	var lines: Array = g.log.slice(-5)
 	logbox.text = "\n".join(lines)
-	status.add_theme_color_override("font_color", Color(1, 0.4, 0.4) if g.hp < g.hp_max / 3 else Color.WHITE)
+	status.add_theme_color_override("font_color", Color(1, 0.4, 0.4) if g.body.frac("chest") < 0.34 or g.body.frac("head") < 0.34 else Color.WHITE)
 	_drain_sfx()
 	if mode == "inventory":
 		show_inventory()
@@ -1196,6 +1196,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				menu = g.eco.menu_for(who)
 				mode = "talk"
 		"pay": g.act_pay(1000 if ev.shift_pressed else 100)
+		"siphon": g.act_siphon()
 		"pickup":
 			if ev.shift_pressed and k == KEY_COMMA:
 				g.act_vertical(1)
@@ -1276,6 +1277,12 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				_:
 					acted = false
 	if acted:
+		if mode == "play" and game.charger_hit >= 0:
+			menu = game.eco.charger_menu(game.charger_hit)
+			game.charger_hit = -1
+			mode = "talk"
+			refresh()
+			return
 		if mode == "play" and game.terminal_hit >= 0:
 			open_terminal(game.terminal_hit)
 			return

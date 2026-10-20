@@ -13,8 +13,9 @@ func run() -> Array:
 		log.append(("  PASS " if cond else "  FAIL ") + name)
 	var g = GameScript.new(61)
 	g.setup(1200)
-	g.hp = 5000
-	g.hp_max = 5000
+	for l_ in g.BODY.LIMBS:
+		g.body.hp[l_] = 100000
+		g.body.mx[l_] = 100000
 	var kinds := {"crate": 0, "table": 0, "chair": 0}
 	for t in g.things:
 		if t["k"] != "":
@@ -175,11 +176,11 @@ func run() -> Array:
 	g.critters[dg]["cell"] = g.critters[dg]["cell"]
 	g.critters[dg]["mood"] = 1
 	g._move_crit(dg, open)
-	var hp_b: int = g.hp
+	var hp_b: int = g.body.total()
 	for _t in 25:
 		g.critters[dg]["stun"] = 0
 		g._critters_turn()
-	check.call("an angry dog bites (hp -%d)" % (hp_b - g.hp), g.hp < hp_b)
+	check.call("an angry dog bites (hp -%d)" % (hp_b - g.body.total()), g.body.total() < hp_b)
 	g._kill_crit(dg, "dies")
 	# hitting a dog
 	var hd: int = g._add_critter("dog", open + 2)

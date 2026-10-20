@@ -104,7 +104,7 @@ func run() -> Array:
 	var seat_ok := true
 	var turns := 0
 	var rode_clock0: int = t.clock
-	while turns < t.period * 2 and w.game.hp > 0:
+	while turns < t.period * 2 and not w.game.body.vital_dead():
 		w.game.act_wait()
 		turns += 1
 		var cg2 = w.game

@@ -208,7 +208,7 @@ func run() -> Array:
 				break
 			gun2.loaded = int(GP.stats(gun2)["mag"])
 			var h0: int = g.hpn[found]
-			g.hp = g.hp_max
+			g.body.mend_to(1.0)
 			g.body.reset()
 			refresh.call()
 			g.act_fire(true)
@@ -243,7 +243,7 @@ func run() -> Array:
 		g.wield = gl
 		g.pool_add("40mm", "he", 3)
 		gl.loaded = 1
-		g.hp = g.hp_max
+		g.body.mend_to(1.0)
 		g.hpn[found] = 400
 		var hpf: int = g.hpn[found]
 		refresh.call()

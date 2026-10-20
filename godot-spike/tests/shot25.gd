@@ -32,8 +32,9 @@ func _initialize() -> void:
 	g.stun[who] = 40          # pinned, so the log shows only what the blows do to him
 	g.hpn[who] = 200
 	g.hpmax[who] = 60
-	g.hp = 5000
-	g.hp_max = 5000
+	for l_ in g.BODY.LIMBS:
+		g.body.hp[l_] = 100000
+		g.body.mx[l_] = 100000
 	g.wield = g._new_item("trl_mel_katana")
 	g.skills["melee"] = 6
 	g.fov.compute(g.pc % g.size, g.pc / g.size, 18)

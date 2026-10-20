@@ -26,6 +26,7 @@ const ACTIONS := [
 	["target", "Cycle target", [KEY_TAB]],
 	["gunsmith", "Gunsmith", [KEY_F4]],
 	["steal", "Pickpocket", [KEY_S]],
+	["siphon", "Draw power from a downed person", [KEY_MINUS]],
 	["crouch", "Crouch", [KEY_C]],
 	["crawl", "Crawl", [KEY_Z]],
 	["strike", "Strike (then direction)", [KEY_W]],

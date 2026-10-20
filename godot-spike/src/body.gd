@@ -1,6 +1,6 @@
 extends RefCounted
 ## The player's body: six limbs, each with its own health.  A limb at 0 is disabled (its implants stop working, and it hurts what you can do).
-## The head or the chest at 0 is death.  Damage still comes off the overall pool as well (Game.hp), so a leg shot costs you stamina of life too.
+## The head or the chest at 0 is death: there is no overall health pool, only these limbs (and the implants fitted in them, which take what a broken limb cannot).
 const LIMBS := ["head", "chest", "l_arm", "r_arm", "l_leg", "r_leg"]
 const NAME := {"head": "head", "chest": "chest", "l_arm": "left arm", "r_arm": "right arm", "l_leg": "left leg", "r_leg": "right leg"}
 const BASE := {"head": 20, "chest": 40, "l_arm": 24, "r_arm": 24, "l_leg": 28, "r_leg": 28}

@@ -206,12 +206,12 @@ func _initialize() -> void:
 		d2 += g.wait_step(600)
 	check("a long wait stops when thirst bites (%d of 600 turns) and tells you" % d2, d2 >= 29 and d2 <= 32 and g.thirsty() and not g.waiting() and String(g.log[g.log.size() - 1]).contains("stop waiting"))
 	g.last_drank = g.sim.tick
-	var hp0: int = g.hp
+	var hp0: int = g.body.total()
 	g.wait_for(100)
 	g._raw_hurt(3, "chest")
 	g.wait_step(1)
-	check("a wait stops when you are hurt", not g.waiting() and g.hp < g.hp_max)
-	g.hp = g.hp_max
+	check("a wait stops when you are hurt", not g.waiting() and g.body.total() < hp0)
+	g.body.mend_to(1.0)
 	# the clock moves the daily schedule: people go to work at 07:00, not at 07 minutes past six
 	g.sim.tick = 7 * CLK.HOUR
 	var work0: int = 0

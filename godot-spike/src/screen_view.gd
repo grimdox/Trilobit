@@ -764,7 +764,8 @@ func _terminal(W: float, H: float) -> void:
 		_txt("%d" % (k + 1), Vector2(r.position.x + 12, r.position.y + 62), 14, Color(0.5, 0.65, 0.8))
 		_txt(String(o["name"]).to_upper(), Vector2(r.position.x + 90, r.position.y + 28), 18, Color.WHITE)
 		_fit(String(o["title"]), Vector2(r.position.x + 90, r.position.y + 52), 15, Color(0.8, 0.9, 1.0), 300.0)
-		_rtxt("¥%d" % int(o["reward"]), r.end.x - 14, r.position.y + 28, 20, Color(1.0, 0.8, 0.25))
+		var is_done: bool = game != null and game.done_contracts.has(String(o["id"]))
+		_rtxt("DONE" if is_done else "¥%d" % int(o["reward"]), r.end.x - 14, r.position.y + 28, 20, Color(0.5, 0.6, 0.65) if is_done else Color(1.0, 0.8, 0.25))
 		_rtxt("risk: " + MS.risk_text(int(o["risk"])), r.end.x - 14, r.position.y + 52, 14, [Color(0.5, 1.0, 0.6), Color(1.0, 0.85, 0.3), Color(1.0, 0.4, 0.4)][clampi(int(o["risk"]), 1, 3) - 1])
 		_fit(String(o["site"]) if o["type"] in ["assassination", "rescue"] else String(o["client"]), Vector2(r.position.x + 90, r.position.y + 72), 13, Color(0.55, 0.7, 0.85), 390.0)
 	if offers.is_empty():

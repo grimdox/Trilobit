@@ -37,11 +37,11 @@ func _init() -> void:
 			g.act_fire()
 		else:
 			g.act_wait()
-		if g.hp < 20:
+		if g.body.total() < 20:
 			break
 	main.refresh()
 	await create_timer(0.5).timeout
 	root.get_texture().get_image().save_png("/tmp/claude-0/shot_action.png")
 	print("log: ", g.log.slice(-8))
-	print("people near: ", g.sim.near_list.size(), " heat ", g.heat, " hp ", g.hp)
+	print("people near: ", g.sim.near_list.size(), " heat ", g.heat, " hp ", g.body.total())
 	quit()

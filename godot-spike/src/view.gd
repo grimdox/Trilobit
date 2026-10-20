@@ -633,8 +633,12 @@ func _draw_hud() -> void:
 		k += 1
 	# the meters
 	var my: float = fy + 190.0
-	var hpf: float = float(game.hp) / float(maxi(1, game.hp_max))
-	_meter(xi, my, wi, 16, hpf, _limb_color(hpf), "HEALTH", "%d / %d" % [game.hp, game.hp_max])
+	var pcap: float = game.power_cap()
+	if pcap > 0.0:
+		var pf: float = game.power_left() / pcap
+		_meter(xi, my, wi, 16, pf, Color(0.95, 0.8, 0.2) if pf > 0.25 else Color(0.95, 0.35, 0.25), "POWER", "%d kJ  %dh" % [int(game.power_left()), int(game.power_hours())])
+	else:
+		_meter(xi, my, wi, 16, 1.0, Color(0.45, 0.6, 0.5), "HUMAN", "no implants")
 	var ars: Dictionary = game.armor_status()
 	var broken := false
 	for l in game.BODY.LIMBS:

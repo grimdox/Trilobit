@@ -36,8 +36,9 @@ func run() -> Array:
 		log.append(("  PASS " if cond else "  FAIL ") + name)
 	var g = GameScript.new(31)
 	g.setup(1200)
-	g.hp = 5000
-	g.hp_max = 5000
+	for l_ in g.BODY.LIMBS:
+		g.body.hp[l_] = 100000
+		g.body.mx[l_] = 100000
 	var tall: Dictionary = {}
 	for t in g.city.tower_info:
 		if tall.is_empty() or int(t["h"]) > int(tall["h"]):
@@ -60,9 +61,9 @@ func run() -> Array:
 	check.call("found open air five floors up beside the tower", aircell >= 0)
 	if aircell >= 0:
 		g.pc = aircell
-		var hp0: int = g.hp
+		var hp0: int = g.body.total()
 		g._fall_player("Test.")
-		check.call("a five-floor fall lands on the street for 25-28 damage (%d)" % (hp0 - g.hp), g.z_of(g.pc) == 0 and hp0 - g.hp >= 25 and hp0 - g.hp <= 28 and g.sim.walk[g.pc] == 1)
+		check.call("a five-floor fall lands on the street: 25-28 fall damage lands as 1.75x on two legs and the chest (%d)" % (hp0 - g.body.total()), g.z_of(g.pc) == 0 and hp0 - g.body.total() >= 42 and hp0 - g.body.total() <= 49 and g.sim.walk[g.pc] == 1)
 
 	# ---- leaping into the void from the roof
 	var edge := -1
@@ -77,8 +78,8 @@ func run() -> Array:
 		g.pc = edge
 		g.stamina = g.STAMINA_MAX
 		g.stance = g.WALKING
-		var hp1: int = g.hp
-		check.call("leaping over the railing into the void drops you the whole height", g.act_jump(1, 0) and g.z_of(g.pc) == 0 and hp1 - g.hp >= 60)
+		var hp1: int = g.body.total()
+		check.call("leaping over the railing into the void drops you the whole height", g.act_jump(1, 0) and g.z_of(g.pc) == 0 and hp1 - g.body.total() >= 105)
 		g.pc = edge
 		g.implants["jets"] = true
 		g.body.reset()
@@ -102,7 +103,7 @@ func run() -> Array:
 	var open: int = _open_cell(g, g.pc if g.z_of(g.pc) == 0 else (g.size / 2) * g.size + g.size / 2, 5)
 	check.call("found open ground", open >= 0)
 	g.body.reset()
-	g.hp = g.hp_max
+	g.body.mend_to(1.0)
 	g.pc = open
 	g.sim.retier(g.pc)
 	g.stamina = g.STAMINA_MAX
@@ -144,10 +145,10 @@ func run() -> Array:
 	g.pc = open + 3 * g.s2
 	g.flying = true
 	g.fuel = 1
-	var hp2: int = g.hp
+	var hp2: int = g.body.total()
 	g.sim.retier(g.pc)
 	g.act_wait()
-	check.call("running out of fuel in the air means a fall (hp -%d)" % (hp2 - g.hp), g.z_of(g.pc) == 0 and not g.flying and hp2 - g.hp > 0)
+	check.call("running out of fuel in the air means a fall (hp -%d)" % (hp2 - g.body.total()), g.z_of(g.pc) == 0 and not g.flying and hp2 - g.body.total() > 0)
 	# a ceiling stops jets
 	var ceil_cell := -1
 	for y in range(int(tall["y0"]) + 2, int(tall["y1"]) - 2):

@@ -36,8 +36,9 @@ func run() -> Array:
 		log.append(("  PASS " if cond else "  FAIL ") + name)
 	var g = GameScript.new(41)
 	g.setup(1200)
-	g.hp = 5000
-	g.hp_max = 5000
+	for l_ in g.BODY.LIMBS:
+		g.body.hp[l_] = 100000
+		g.body.mx[l_] = 100000
 	# ---- data
 	var found := {}
 	var west := false
@@ -104,7 +105,7 @@ func run() -> Array:
 		g.stun[who] = 0
 		g.bleed[who] = 0
 		g.body.reset()               # the hunter hits back now: keep the duelist whole so every test starts alike
-		g.hp = g.hp_max
+		g.body.mend_to(1.0)
 		g.stamina = g.STAMINA_MAX
 		g.game_over = false
 	var dmg_of = func(weapon, trials: int) -> float:
@@ -166,12 +167,12 @@ func run() -> Array:
 	put.call(spot + 1)
 	g.stun[who] = 3
 	g.cool[who] = 0
-	var p0: int = g.hp
+	var p0: int = g.body.total()
 	g.astate[who] = g.HUNTING
 	g.sim.pos[who] = spot + 1
 	g.end_turn()
 	g.end_turn()
-	check.call("a stunned enemy does not fight back", g.hp == p0 or g.stun[who] >= 0 and g.hp >= p0 - 0)
+	check.call("a stunned enemy does not fight back", g.body.total() == p0 or g.stun[who] >= 0 and g.body.total() >= p0 - 0)
 	# disarm
 	g.wield = g._new_item("trl_mel_jitte")
 	var disarmed := false
@@ -241,7 +242,7 @@ func run() -> Array:
 			g.melee(who)
 		check.call("a naginata's sweep hits the second enemy too (%d damage)" % (oh - g.hpn[other]), g.hpn[other] < oh)
 	g.body.reset()      # the hunter above hit back; start the timing runs healthy
-	g.hp = g.hp_max
+	g.body.mend_to(1.0)
 	g.game_over = false
 	# heavy or light, ten swings take the same number of turns (the nodachi just tires you more)
 	var turns_for := func(w: String) -> int:
@@ -284,21 +285,21 @@ func run() -> Array:
 	g.fac[who] = g.BRATVA
 	for _t in 600:
 		g.body.reset()
-		g.hp = g.hp_max
+		g.body.mend_to(1.0)
 		put.call(spot + 1)
 		g.pc = spot
 		g.gunc[who] = 0
 		g.mdis[who] = 1                    # no weapon, plain 60% punches
 		g.cool[who] = 0
 		g.wield = g._new_item("trl_mel_sai")
-		var p1: int = g.hp
+		var p1: int = g.body.total()
 		g._hunt(who, 1)
-		if g.hp < p1:
+		if g.body.total() < p1:
 			parry_hits += 1
 		g.wield = null
-		var p2: int = g.hp
+		var p2: int = g.body.total()
 		g._hunt(who, 1)
-		if g.hp < p2:
+		if g.body.total() < p2:
 			naked_hits += 1
 	check.call("a parrying weapon lowers the chance of being hit (%d vs %d of 600)" % [parry_hits, naked_hits], parry_hits < naked_hits - 20)
 

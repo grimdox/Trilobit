@@ -32,8 +32,9 @@ func run() -> Array:
 		log.append(("  PASS " if cond else "  FAIL ") + name)
 	var g = GameScript.new(21)
 	g.setup(800)
-	g.hp = 5000
-	g.hp_max = 5000
+	for l_ in g.BODY.LIMBS:
+		g.body.hp[l_] = 100000
+		g.body.mx[l_] = 100000
 	var vs = g.vs
 	var size: int = g.size
 	var cc = g.city
@@ -156,7 +157,7 @@ func run() -> Array:
 	g.pc = _beside(g, vi2)
 	g.sim.retier(g.pc)
 	g.act_vehicle()
-	var hp_before: int = g.hp
+	var hp_before: int = g.body.total()
 	var body_before: int = g.vehicles[vi2]["parts"]["body"]
 	# drive north until something stops us (the road ends at the edge of the street grid)
 	for k in 80:

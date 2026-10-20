@@ -151,7 +151,7 @@ func run() -> Array:
 		g.act_wait()
 		rides += 1
 	var far: int = g.cheb(g.pc, start_cell)
-	check.call("it carries you to the next station (%d cells in %d turns)" % [far, rides], tr.dwell_of(dj) > 0 and far > 30 and g.hp > 0)
+	check.call("it carries you to the next station (%d cells in %d turns)" % [far, rides], tr.dwell_of(dj) > 0 and far > 30 and not g.body.vital_dead())
 	# walk to a tdoor and off onto the platform
 	var exit_to := -1
 	var exit_door := -1
@@ -174,7 +174,7 @@ func run() -> Array:
 		wtries += 1
 	g.act_move((exit_to % g.size) - (g.pc % g.size), ((exit_to / g.size) % g.size) - ((g.pc / g.size) % g.size))
 	check.call("you can step off onto the platform", tr.riding < 0 and g.city.tiles[g.pc] == CG.PLATFORM)
-	var hp_before: int = g.hp
+	var hp_before: int = g.body.total()
 	var guard2 := 0
 	while guard2 < 3000 and not (tr.tab_dwell[tr._u(0)] == 0 and tr.tab_dwell[(tr._u(0) + 1) % tr.period] == 0 and tr.dwell_of(0) == 0):
 		tr.step()
@@ -182,9 +182,10 @@ func run() -> Array:
 	var track_cell: int = tr.cell_of[(tr.head_of(0) + 3) % tr.path.size()]
 	g.pc = track_cell
 	tr.step()
-	check.call("standing on the track when the train comes through hurts", g.hp < hp_before)
+	check.call("standing on the track when the train comes through hurts", g.body.total() < hp_before)
 	# --- debt
-	g.hp = g.hp_max
+	g.body.reset()
+	g.game_over = false
 	var debt0: int = g.eco.debt
 	g.sim.tick = 14400 * 2 - 1
 	g.end_turn()

@@ -31,8 +31,9 @@ func run() -> Array:
 	# ---- action points and stamina
 	var g = GameScript.new(61)
 	g.setup(1200)
-	g.hp = 5000
-	g.hp_max = 5000
+	for l_ in g.BODY.LIMBS:
+		g.body.hp[l_] = 100000
+		g.body.mx[l_] = 100000
 	g.stamina = g.STAMINA_MAX
 	check.call("100 action points a turn at full stamina", g.ap_rate() == 100)
 	g.stamina = 50
@@ -109,7 +110,7 @@ func run() -> Array:
 		g.stamina = g.STAMINA_MAX
 		g.skills = SK.default_skills()           # keep the skill fixed while the odds are sampled
 		g.body.reset()
-		g.hp = g.hp_max
+		g.body.mend_to(1.0)
 		var l0: int = g.log.size()
 		g.melee(who)
 		swings += 1
@@ -164,18 +165,18 @@ func run() -> Array:
 	check.call("NPCs regain stamina over turns (%d -> %d)" % [s_before, g.npc_stamina(who)], g.npc_stamina(who) > s_before)
 	# ---- a live NPC attack on the player uses the same rules
 	g.body.reset()
-	g.hp = g.hp_max
+	g.body.mend_to(1.0)
 	g.stamn[who] = 100
 	g.stamt[who] = g.turn
 	g.sim.pos[who] = g.pc + 1
 	var hurt := 0
 	for _t in 80:
-		g.hp = g.hp_max
+		g.body.mend_to(1.0)
 		g.body.reset()
 		g.stamn[who] = 100
 		g.stamt[who] = g.turn
 		g._npc_melee_attack(who)
-		if g.body.total() < 164 or g.hp < g.hp_max:
+		if g.body.total() < 164:
 			hurt += 1
 	check.call("an NPC's blows hurt the player's limbs (%d of 80 swings)" % hurt, hurt > 0)
 	# ---- save and load

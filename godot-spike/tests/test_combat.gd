@@ -40,8 +40,6 @@ func run() -> Array:
 	var fresh = func() -> void:
 		g.skills = SK.default_skills()
 		g.body.reset()
-		g.hp = 60
-		g.hp_max = 60
 		g.armor_worn = []
 		g.imp_dur = {}
 		g.implants = {}
@@ -52,15 +50,15 @@ func run() -> Array:
 	# ---------------------------------------------------------------- limbs
 	check.call("six limbs, each with its own health (%s)" % str(g.body.hp), g.body.hp.size() == 6 and g.body.hp["chest"] > g.body.hp["head"])
 	g.player_hurt(5, "Test", "phys", "l_arm")
-	check.call("a hit lands on the limb it names and comes off the pool (arm %d, hp %d)" % [g.body.hp["l_arm"], g.hp], g.body.hp["l_arm"] == BODY.BASE["l_arm"] - 5 and g.hp == 55)
+	check.call("a hit lands on the limb it names and comes off the limb (arm %d, body %d)" % [g.body.hp["l_arm"], g.body.total()], g.body.hp["l_arm"] == BODY.BASE["l_arm"] - 5 and g.body.total() == 159)
 	g.player_hurt(200, "Test", "phys", "l_arm")
-	check.call("a limb at 0 is disabled, but you live (hp %d)" % g.hp, not g.body.ok("l_arm") and g.hp > 0 or g.hp <= 0)
+	check.call("a limb at 0 is disabled, but you live (hp %d)" % g.body.total(), not g.body.ok("l_arm") and not g.body.vital_dead() and not g.game_over)
 	fresh.call()
 	g.player_hurt(500, "Test", "phys", "head")
-	check.call("head at 0 is death", g.hp <= 0)
+	check.call("head at 0 is death and ends the run", g.body.vital_dead() and g.game_over)
 	fresh.call()
 	g.player_hurt(500, "Test", "phys", "chest")
-	check.call("chest at 0 is death", g.hp <= 0)
+	check.call("chest at 0 is death and ends the run", g.body.vital_dead() and g.game_over)
 	fresh.call()
 	var hits := {}
 	for k in 400:
@@ -72,17 +70,17 @@ func run() -> Array:
 	var vest = g._new_item("trl_vest")
 	g.act_wear(vest)
 	check.call("a vest goes on over the body (armor %d on the chest)" % g.armor_value("chest"), g.armor_value("chest") == 4 and g.armor_value("head") == 0)
-	var h0: int = g.hp
+	var h0: int = g.body.total()
 	g.player_hurt(10, "Test", "phys", "chest")
-	check.call("armor is a flat deduction (10 - 4 = 6 through; hp %d -> %d)" % [h0, g.hp], h0 - g.hp == 6 and g.body.hp["chest"] == BODY.BASE["chest"] - 6)
+	check.call("armor is a flat deduction (10 - 4 = 6 through; hp %d -> %d)" % [h0, g.body.total()], h0 - g.body.total() == 6 and g.body.hp["chest"] == BODY.BASE["chest"] - 6)
 	check.call("it wore down by what it soaked (%s)" % g.item_label(vest), g.item_armor_left(vest) == 60 - 4 and g.item_label(vest).contains("93%"))
-	h0 = g.hp
+	h0 = g.body.total()
 	g.player_hurt(3, "Test", "phys", "chest")
-	check.call("a small hit is stopped outright", h0 == g.hp)
-	h0 = g.hp
+	check.call("a small hit is stopped outright", h0 == g.body.total())
+	h0 = g.body.total()
 	g.player_hurt(10, "Test", "phys", "chest", 3)
-	check.call("armor-piercing takes 3 off the armor (10 - 1 = 9)", h0 - g.hp == 9)
-	check.call("armor does not cover the arms", (func(): h0 = g.hp; g.player_hurt(10, "Test", "phys", "r_arm"); return h0 - g.hp == 10).call())
+	check.call("armor-piercing takes 3 off the armor (10 - 1 = 9)", h0 - g.body.total() == 9)
+	check.call("armor does not cover the arms", (func(): h0 = g.body.total(); g.player_hurt(10, "Test", "phys", "r_arm"); return h0 - g.body.total() == 10).call())
 	# it breaks
 	for k in 30:
 		g.player_hurt(8, "Test", "phys", "chest")
@@ -90,9 +88,9 @@ func run() -> Array:
 	fresh.call()
 	g.implants["dermal"] = true
 	check.call("implants carry armor too: dermal plating gives 2 everywhere", g.armor_value("head") == 2 and g.armor_value("l_leg") == 2)
-	h0 = g.hp
+	h0 = g.body.total()
 	g.player_hurt(6, "Test", "phys", "chest")
-	check.call("and wears (%d/80 left)" % int(g.imp_dur.get("dermal", 80)), h0 - g.hp == 4 and int(g.imp_dur["dermal"]) == 78)
+	check.call("and wears (%d/80 left)" % int(g.imp_dur.get("dermal", 80)), h0 - g.body.total() == 4 and int(g.imp_dur["dermal"]) == 78)
 	check.call("armor_status reports the bars (%s)" % str(g.armor_status()), g.armor_status()["left"] == 78 and g.armor_status()["max"] == 80)
 	g.armor_worn.append(g._new_item("trl_helmet"))
 	check.call("worn armor and implants stack on a limb (head 2 + 3)", g.armor_value("head") == 5)
@@ -128,12 +126,10 @@ func run() -> Array:
 	g.act_move(1, 0)
 	var normal_cost: int = g.turn - t0
 	g.player_hurt(500, "Test", "phys", "l_leg")
-	g.hp = g.hp_max
 	t0 = g.turn
 	g.act_move(1, 0)
 	var limp_cost: int = g.turn - t0
 	g.player_hurt(500, "Test", "phys", "r_leg")
-	g.hp = g.hp_max
 	t0 = g.turn
 	g.act_move(1, 0)
 	var crawl_cost: int = g.turn - t0
@@ -327,12 +323,10 @@ func run() -> Array:
 	# ---------------------------------------------------------------- items
 	fresh.call()
 	g.player_hurt(500, "Test", "phys", "r_leg")
-	var hp0: int = g.hp
-	g.hp = 20
 	var patch = g._new_item("trl_medkit")
 	g.stow(patch)
 	g.act_wield(patch)
-	check.call("a trauma patch heals and mends the worst limb (hp %d, leg %d)" % [g.hp, g.body.hp["r_leg"]], g.hp == 45 and g.body.ok("r_leg"))
+	check.call("a trauma patch revives the worst limb and closes wounds (body %d, leg %d)" % [g.body.total(), g.body.hp["r_leg"]], g.body.hp["r_leg"] == 28 and g.body.ok("r_leg"))
 	var helmet = g._new_item("trl_helmet")
 	g.stow(helmet)
 	g.act_wield(helmet)
