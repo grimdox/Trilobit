@@ -9,10 +9,10 @@ var pd = PD.new()
 var fig = FG.new()            # the standing dolls (gfx/figure), drawn for every person when present
 var game
 var tileset
-const TILE := 64            # screen pixels per cell: sprites are drawn at 64x64 whatever the tileset's own size
-const S := 2.0              # TILE / 32: scale for hand-placed pixel offsets
-var cols: int = 30
-var rows: int = 15
+const TILE := 27            # screen pixels per cell: sprites are drawn at 64x64 and scaled to this, whatever the tileset's own size
+const S := 27.0 / 32.0      # TILE / 32: scale for hand-placed pixel offsets
+var cols: int = 71          # 71 x 31 cells fill the 1920 x 1080 canvas above the message panel: you see 35 tiles either side, 15 up and down
+var rows: int = 31
 var font: Font = ThemeDB.fallback_font
 
 const TERRAIN := {0: "t_sidewalk", 1: "t_pavement", 2: "t_wall", 3: "t_floor", 4: "t_door_c", 5: "t_water_dp", 6: "t_grass", 7: "",
@@ -168,6 +168,10 @@ func _paint_marks(c: int, pos: Vector2, T: int, mod: Color, t: int) -> void:
 			draw_rect(Rect2(pos.x + 2 * S, pos.y, T - 4 * S, w * 0.6), white)
 		8:
 			draw_rect(Rect2(pos.x, pos.y + 2 * S, w * 0.6, T - 4 * S), white)
+		9:   # a parking bay's divider
+			draw_rect(Rect2(pos.x, pos.y, w * 0.6, T), white * 0.85)
+		10:  # a bay beside a vehicle charger: green
+			draw_rect(Rect2(pos.x, pos.y, w * 0.6, T), Color(0.3, 0.9, 0.5) * mod)
 		5:
 			for k in 4:
 				draw_rect(Rect2(pos.x + k * T / 4.0 + 2 * S, pos.y + 2 * S, 4 * S, T - 4 * S), Color(0.32, 0.2, 0.12) * mod)
@@ -243,8 +247,10 @@ func _draw() -> void:
 	var base: int = (game.pc / s2) * s2
 	var px: int = game.lx(game.pc)
 	var py: int = game.ly(game.pc)
-	var ox := px - cols / 2 + (look_off.x if look_on else 0)
-	var oy := py - rows / 2 + (look_off.y if look_on else 0)
+	var cx: int = game.lx(focus_cell) if focus_cell >= 0 else px      # the camera sits on the player, or on the target you switched the view to
+	var cy: int = game.ly(focus_cell) if focus_cell >= 0 else py
+	var ox := cx - cols / 2 + (look_off.x if look_on else 0)
+	var oy := cy - rows / 2 + (look_off.y if look_on else 0)
 	var below_mod := Color(0.5, 0.55, 0.75)
 	for sy in rows:
 		for sx in cols:
@@ -271,7 +277,12 @@ func _draw() -> void:
 				if bt >= 0:
 					_blit(tileset.pick(TERRAIN[bt], c), pos, mod * below_mod)
 				continue
-			if t >= CG.EXTRA0:
+			if t == CG.TID["door_closed"]:
+				_blit(tileset.pick("t_floor", c), pos, mod)
+				draw_rect(Rect2(pos + Vector2(3, 3) * S, Vector2(T - 6 * S, T - 6 * S)), Color(0.35, 0.24, 0.14) * mod)
+				draw_rect(Rect2(pos + Vector2(6, 6) * S, Vector2(T - 12 * S, T - 12 * S)), Color(0.5, 0.36, 0.22) * mod)
+				draw_circle(pos + Vector2(T - 10 * S, T * 0.5), 2.2 * S, Color(0.9, 0.8, 0.4) * mod)
+			elif t >= CG.EXTRA0:
 				if t >= CG.EXTRA0 + 9:      # furniture stands on a floor
 					var under_t: int = game.city.under[c] if c < game.city.under.size() else 3
 					if under_t >= CG.EXTRA0:
@@ -449,7 +460,8 @@ func _bar(x: float, y: float, w: float, h: float, f: float, col: Color, label: S
 
 # ---------------------------------------------------------------- the side panel (UI units: 1280x720, drawn at 1.5x)
 const PANEL_W := 252.0
-const PANEL_H := 640.0
+const PANEL_H := 558.0               # rows * TILE / 1.5
+var focus_cell: int = -1               # the camera is centred on this cell (a target out of the player's own screen) instead of the player; -1 = the player
 var look_on: bool = false              # the look cursor is out: the view is centred on it, not on the player
 var look_off := Vector2i.ZERO          # ... this many tiles from the player
 var hud_extra: String = ""            # vehicle / jet-pack line, set by main

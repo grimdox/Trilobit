@@ -1,7 +1,6 @@
 extends RefCounted
 ## The pressure systems and the people who deal with them.
-##   debt:     a loan from Kuroda Lending, interest every midnight, an installment every three days; missed ones become arrears,
-##             arrears become collectors (armed Nasim runners who find you), and clearing it is the long-term goal
+##   (no debt: loans and debts arrive with the banking update)
 ##   jobs:     fixers hand out couriers (carry a parcel to a flat or office, anywhere in the city, floors up) and retrievals
 ##             (a data case left on a roof or down in the sewers); both pay by credstick on completion
 ##   vendors:  sell food, water, ammunition, a trauma patch and carrying gear
@@ -26,13 +25,9 @@ var g
 var role: PackedByteArray
 var venue_of: Dictionary = {}          # agent -> the venue record they keep
 var look: Dictionary = {}              # agent -> paper-doll layers for a fixed outfit (doctors, cooks, priests, ripperdocs)
-var debt: int = 4000
-var arrears: int = 0
-var paid_cycle: int = 0
 var job: Dictionary = {}
 var jobs_done: int = 0
 var earned: int = 0
-var debt_free: bool = false
 var ripper_cells: Array = []
 var last_tower_clinic: int = -1
 
@@ -167,85 +162,7 @@ func label(i: int) -> String:
 
 # ------------------------------------------------------------------ the clocks
 func step() -> void:
-	var t: int = g.sim.tick
-	if t % DAY == 0:
-		var add: int = int(ceil(debt * 0.02))
-		if debt > 0:
-			debt += add
-			g.say("Midnight.  Kuroda Lending adds ¥%d interest.  You owe ¥%d." % [add, debt])
-	if t >= DAY * 3 and t % (DAY * 3) == 8 * CLK.HOUR and debt > 0:
-		_due()
 	_job_step()
-
-func min_payment() -> int:
-	return maxi(150, debt / 20)
-
-func _due() -> void:
-	var need: int = min_payment()
-	if paid_cycle >= need:
-		g.say("Installment received.  Next one in three days.")
-	else:
-		arrears += 1
-		debt += 120
-		g.say("You missed the installment (¥%d).  Arrears: %d.  A ¥120 fee is added." % [need, arrears])
-		if arrears >= 2 and arrears % 2 == 0:
-			g.say("Kuroda Lending has sent collectors.")
-			_collectors(2)
-	paid_cycle = 0
-
-## pay down the debt from cash
-func pay(amount: int) -> bool:
-	var amt: int = mini(mini(amount, g.yen), debt)
-	if amt <= 0:
-		g.say("Nothing to pay, or nothing to pay with.")
-		return false
-	g.yen -= amt
-	debt -= amt
-	paid_cycle += amt
-	g.say("You pay ¥%d.  You owe ¥%d." % [amt, debt])
-	if debt <= 0 and not debt_free:
-		debt_free = true
-		arrears = 0
-		g.say("DEBT CLEARED.  Kuroda Lending closes your file.  You are free to leave this city, or to stay.")
-	return true
-
-func _collectors(count: int) -> void:
-	var sim = g.sim
-	var picked := 0
-	for _try in 400:
-		if picked >= count:
-			break
-		var i: int = g.rng.randi() % sim.n
-		if sim.alive[i] == 0 or role[i] != NONE or g.fac[i] != g.CIV:
-			continue
-		# a free walkable cell 9..13 away on the player's level
-		var cell := -1
-		for _t in 30:
-			var a: float = g.rng.randf() * TAU
-			var r: int = g.rng.randi_range(9, 13)
-			var x: int = g.lx(g.pc) + int(cos(a) * r)
-			var y: int = g.ly(g.pc) + int(sin(a) * r)
-			if x < 1 or y < 1 or x >= g.size - 1 or y >= g.size - 1:
-				continue
-			var c: int = (g.pc / g.s2) * g.s2 + y * g.size + x
-			if sim.walk[c] == 1 and sim.at[c] == -1 and g.veh_at[c] == -1:
-				cell = c
-				break
-		if cell < 0:
-			continue
-		g.fac[i] = g.NASIM
-		g.hpmax[i] = 36
-		g.hpn[i] = 36
-		g.gunc[i] = 1
-		g.yenn[i] = g.rng.randi_range(120, 300)
-		g.nname[i] = "Collector " + g.nname[i]
-		sim.place(i, cell)
-		sim.ctl[i] = 1
-		g.astate[i] = g.HUNTING
-		g.meter[i] = 100
-		g.noticed_you[i] = 1
-		g.lastpos[i] = g.pc
-		picked += 1
 
 # ------------------------------------------------------------------ jobs
 func _job_step() -> void:
@@ -519,7 +436,6 @@ func _grocery_stock(i: int) -> Array:
 func _rumor(i: int, shift: int = 0) -> String:
 	var lines: Array = []
 	lines.append("\"The Ring Line runs under the roads.  Four stations, a train every few minutes.\"")
-	lines.append("\"Kuroda's collectors come after the second missed installment.  Don't miss two.\"")
 	if last_tower_clinic >= 0:
 		var tw: Dictionary = g.tower_at(last_tower_clinic)
 		lines.append("\"A ripperdoc runs a clinic on floor %d of the tower at (%d,%d).  Pricey.\"" % [g.z_of(last_tower_clinic), tw.get("x0", 0), tw.get("y0", 0)])
@@ -559,6 +475,30 @@ func charger_menu(cell: int) -> Dictionary:
 	m["options"].append({"label": "Leave", "op": "close", "arg": null})
 	return m
 
+## the menu at a vehicle charging bank: one entry per vehicle in reach, to full or as far as the yen goes
+func ev_menu(bank: int) -> Dictionary:
+	var m := {"title": "Vehicle charging bank", "text": [], "options": [], "bank": bank}
+	var list: Array = g.vehicles_at_bank(bank)
+	if list.is_empty():
+		m["text"] = ["No vehicle is parked within reach of the cables.", "Park a car beside the bank (within two tiles) and come back."]
+		m["options"].append({"label": "Leave", "op": "close", "arg": null})
+		return m
+	var d: int = g.district_of(bank)
+	m["text"] = ["Power ¥%.2f per kJ plus ¥%.2f power tax; a pack holds %d kJ.  You have ¥%d." % [g.PW.power_rate(d), g.PW.power_tax_rate(), int(g.PW.CAR_PACK_KJ), g.yen]]
+	for vi in list:
+		var v: Dictionary = g.vehicles[vi]
+		var name: String = String(g.vs.KINDS[v["kind"]]["name"]).capitalize() + (" (you are in it)" if vi == g.in_vehicle else "")
+		var need: int = 100 - int(v["charge"])
+		if need <= 0:
+			m["text"].append("%s: battery full." % name)
+			continue
+		m["options"].append({"label": "%s, battery %d%%: charge to full, ¥%d" % [name, int(v["charge"]), g.PW.vehicle_quote(need, d)], "op": "ev_charge", "arg": [bank, vi, need]})
+		var aff: int = g.PW.vehicle_affordable_pct(g.yen, d)
+		if aff > 0 and aff < need:
+			m["options"].append({"label": "%s: charge what I can afford (+%d%%, ¥%d)" % [name, aff, g.PW.vehicle_quote(aff, d)], "op": "ev_charge", "arg": [bank, vi, aff]})
+	m["options"].append({"label": "Leave", "op": "close", "arg": null})
+	return m
+
 func choose(m: Dictionary, k: int) -> Dictionary:
 	if k < 0 or k >= m["options"].size():
 		return m
@@ -570,6 +510,10 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 			var ca: Array = o["arg"]
 			g.recharge(int(ca[0]), float(ca[1]))
 			return charger_menu(int(ca[0]))
+		"ev_charge":
+			var ea: Array = o["arg"]
+			g.recharge_vehicle(int(ea[0]), int(ea[1]), int(ea[2]))
+			return ev_menu(int(ea[0]))
 		"mission_free":
 			g.MS.free_hostage(g)
 			return {}
@@ -680,28 +624,17 @@ func _haggle_xp(m: Dictionary, spent: int) -> void:
 	g.skill_up("negotiation", 1 + spent / 120)
 	g.skill_up("etiquette" if upscale else "streetwise", 1 + spent / 150)
 
+## the line under the clock: nothing yet (loans and debts arrive with the banking update)
 func status_text() -> String:
-	var d := ""
-	if debt > 0:
-		var t: int = g.sim.tick
-		var due_at: int = DAY * 3 + 8 * CLK.HOUR if t < DAY * 3 + 8 * CLK.HOUR else 8 * CLK.HOUR + ((t - 8 * CLK.HOUR) / (DAY * 3) + 1) * DAY * 3
-		var due: int = due_at - t
-		d = "Debt ¥%d  (min ¥%d in %dd%02dh%s)" % [debt, min_payment(), due / DAY, (due % DAY) / CLK.HOUR, ", arrears %d" % arrears if arrears > 0 else ""]
-	else:
-		d = "Debt-free"
-	return d
+	return ""
 
 func save() -> Dictionary:
-	return {"debt": debt, "arrears": arrears, "paid": paid_cycle, "tv": CLK.SAVE_VERSION, "job": job, "done": jobs_done, "earned": earned, "free": debt_free}
+	return {"tv": CLK.SAVE_VERSION, "job": job, "done": jobs_done, "earned": earned}
 
 func load_from(d: Dictionary) -> void:
-	debt = int(d["debt"])
-	arrears = int(d["arrears"])
-	paid_cycle = int(d["paid"])
 	job = d["job"]
 	for k in ["cell", "z", "reward", "deadline"]:
 		if job.has(k):
 			job[k] = int(job[k])
 	jobs_done = int(d["done"])
 	earned = int(d["earned"])
-	debt_free = bool(d["free"])

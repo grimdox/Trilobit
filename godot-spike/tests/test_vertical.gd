@@ -1,5 +1,5 @@
 extends RefCounted
-## Round three: floors, stairs, elevators, locked doors, the subway, the debt and implant clocks, jobs, vendors, save/load.
+## Round three: floors, stairs, elevators, locked doors, the subway, the implant clocks, jobs, vendors, save/load.
 const GameScript = preload("res://src/game.gd")
 const CG = preload("res://src/citygen.gd")
 
@@ -183,29 +183,16 @@ func run() -> Array:
 	g.pc = track_cell
 	tr.step()
 	check.call("standing on the track when the train comes through hurts", g.body.total() < hp_before)
-	# --- debt
+	# --- no debt: the clock runs past the old installment days and nothing is owed, no collectors come
 	g.body.reset()
 	g.game_over = false
-	var debt0: int = g.eco.debt
-	g.sim.tick = 14400 * 2 - 1
-	g.end_turn()
-	check.call("interest accrues at midnight", g.eco.debt > debt0)
-	g.yen = 1000
-	var d1: int = g.eco.debt
-	g.act_pay(500)
-	check.call("paying reduces debt and cash", g.eco.debt == d1 - 500 and g.yen == 500)
-	g.sim.tick = 3 * 14400 + 8 * 600 - 1
-	var arrears0: int = g.eco.arrears
-	g.eco.paid_cycle = 0
-	g.end_turn()
-	check.call("a missed installment adds arrears and a fee", g.eco.arrears == arrears0 + 1)
 	g.sim.tick = 6 * 14400 + 8 * 600 - 1
 	g.end_turn()
 	var collectors := 0
 	for i in g.sim.n:
-		if g.nname[i].begins_with("Collector") and g.astate[i] == g.HUNTING:
+		if g.nname[i].begins_with("Collector"):
 			collectors += 1
-	check.call("the second miss sends collectors (%d)" % collectors, g.eco.arrears == 2 and collectors >= 1)
+	check.call("there is no debt: no interest, no installment, no collectors (%d)" % collectors, g.eco.get("debt") == null and collectors == 0)
 	# --- the ripperdoc has no stabiliser to service any more
 	var ripper := -1
 	for i in g.sim.n:
@@ -241,12 +228,11 @@ func run() -> Array:
 	check.call("recovering the case pays", g.yen > y1 and g.eco.job.is_empty())
 	# --- save / load
 	g.pc = g.eco.job.get("cell", S) if false else S
-	var d1s: int = g.eco.debt
 	var head1: int = g.transit.head
 	var blob: String = JSON.stringify(g.save_dict())
 	var d = JSON.parse_string(blob)
 	g.load_dict(d)
-	check.call("save and load keep the debt, the train and the position", g.eco.debt == d1s and g.transit.head == head1 and g.pc == S)
+	check.call("save and load keep the train and the position", g.transit.head == head1 and g.pc == S)
 	# --- speed
 	var t1 := Time.get_ticks_msec()
 	for k in 120:

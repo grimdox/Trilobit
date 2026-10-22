@@ -33,10 +33,13 @@ func _init() -> void:
 						var m: Dictionary = g.eco.menu_for(w)
 						g.eco.choose(m, rng.randi() % m["options"].size())
 				12: g.act_wait()
-				_: g.act_pay(100)
+				_:
+					var nl: Array = g.interactables()
+					if not nl.is_empty():
+						g.act_interact_with(nl[rng.randi() % nl.size()])
 			g.body.mend_to(0.3)
 			g.game_over = false
 			tot_turns += 1
-		print("seed %d ok: turn %d, debt %d, jobs %d" % [seed, g.turn, g.eco.debt, g.eco.jobs_done])
+		print("seed %d ok: turn %d, jobs %d" % [seed, g.turn, g.eco.jobs_done])
 	print("SOAK %d/%d" % [tot_turns, 6000])
 	quit(0)

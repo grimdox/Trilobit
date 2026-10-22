@@ -1186,6 +1186,47 @@ def charging_post():
     return done(a)
 
 
+def gunsmith_table():
+    """A gunsmithing table: a steel-topped bench with a vise, a half-stripped pistol, loose parts and a lamp."""
+    a = A()
+    box(a, 6, 14, 52, 38, '#5b3a20', r=3, bevel=3, spec=0.2)
+    box(a, 9, 17, 46, 32, '#aeb6c0', r=2, bevel=2.5, spec=0.5)
+    box(a, 11, 20, 12, 10, '#2b3038', r=1.5, bevel=2, spec=0.6)
+    box(a, 14, 30, 6, 4, '#59626d', r=1, bevel=1.5)
+    a.fill(a.rect(28, 28, 20, 5), '#17191d', 0.95)
+    a.fill(a.rect(28, 28, 6, 12), '#17191d', 0.95)
+    a.fill(a.rect(36, 30, 10, 2), '#6b7480', 0.9)
+    for k, (px, py) in enumerate([(30, 42), (36, 44), (42, 41), (47, 44)]):
+        a.fill(a.ellipse(px, py, 1.6), '#c8a24a' if k % 2 else '#8a919b', 0.95)
+    a.fill(a.ellipse(48, 22, 4.2), '#e9c46a', 0.95)
+    a.glow(48, 22, 14, '#ffd98a', 0.22)
+    return done(a)
+
+
+def _ev_charger_big():
+    """A two-by-two vehicle charging bank (128 x 128): a green-and-white plinth with two pillars, lit screens, a bolt and two heavy cables."""
+    a = Art(128, 128, 4)
+    box(a, 8, 96, 112, 24, '#4a4f57', r=4, bevel=3, spec=0.3)
+    for x0 in (14, 74):
+        box(a, x0, 12, 40, 90, '#e4e8ec', r=5, bevel=4, spec=0.5)
+        a.shade(a.rect(x0, 12, 40, 14), '#1f9e5a', bevel=2, strength=0.6)
+        scr = a.rect(x0 + 6, 32, 28, 22)
+        a.shade(scr, '#06151c', bevel=1.5, strength=0.4)
+        for j in range(3):
+            a.fill(a.rect(x0 + 9, 36 + j * 6, 8 + (j * 7) % 13, 3), '#4dff9a', 0.9)
+        a.glow(x0 + 20, 43, 26, '#4dff9a', 0.16)
+        a.fill(a.ellipse(x0 + 20, 74, 9), '#17191d', 0.95)
+        a.fill(a.poly([(x0 + 23, 64), (x0 + 15, 76), (x0 + 20, 76), (x0 + 17, 86), (x0 + 28, 72), (x0 + 22, 72), (x0 + 26, 64)]), '#ffd21f', 0.95)
+    a.fill(a.rect(56, 70, 16, 6), '#222831', 0.95)
+    a.fill(a.ellipse(64, 73, 4), '#5ec1ff', 0.9)
+    return a.image(outline=0.85)
+
+
+def _ev_part(qx, qy):
+    im = _ev_charger_big()
+    return im.crop((qx * 64, qy * 64, qx * 64 + 64, qy * 64 + 64))
+
+
 FLOORS = {'t_trl_checker': f_checker, 't_trl_floor_church': f_church, 't_trl_floor_hinoki': f_hinoki, 't_trl_floor_clean': f_clean,
           't_trl_marble': f_marble, 't_trl_floor_steel': f_steel, 't_trl_floor_wood': f_wood, 't_trl_tatami': f_tatami, 't_trl_carpet_red': f_carpet}
 
@@ -1197,7 +1238,8 @@ FURN = {
     'f_trl_liquor_shelf': liquor_shelf, 'f_trl_hot_plate': hot_plate,
     'f_trl_shelf_clean': shelf_clean, 'f_trl_produce_bin': produce_bin, 'f_trl_freezer_case': freezer_case, 'f_trl_checkout': checkout,
     'f_trl_vending': vending, 'f_trl_water_cooler': water_cooler,
-    'f_trl_charger': charging_post, 'f_trl_terminal': mission_terminal, 'f_trl_portal': mission_portal, 'f_trl_device': mission_device,
+    'f_trl_charger': charging_post, 'f_trl_gunsmith_table': gunsmith_table,
+    'f_trl_ev_nw': lambda: _ev_part(0, 0), 'f_trl_ev_ne': lambda: _ev_part(1, 0), 'f_trl_ev_sw': lambda: _ev_part(0, 1), 'f_trl_ev_se': lambda: _ev_part(1, 1), 'f_trl_terminal': mission_terminal, 'f_trl_portal': mission_portal, 'f_trl_device': mission_device,
     'f_trl_implant_chair': implant_chair, 'f_trl_implant_printer': implant_printer, 'f_trl_limb_bin': limb_bin,
     'f_trl_autodoc_imp_m': autodoc, 'f_trl_hospital_bed': hospital_bed, 'f_trl_ward_bed': lambda: hospital_bed('#7fae8a'),
     'f_trl_scanner': scanner, 'f_trl_med_cabinet': med_cabinet, 'f_trl_iv_stand': iv_stand, 'f_trl_reception': reception, 'f_trl_exam_couch': exam_couch,

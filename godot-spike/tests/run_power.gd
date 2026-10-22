@@ -45,25 +45,23 @@ func _initialize() -> void:
 	for i in g.s2:
 		if g.city.tiles[i] == CG.TID["charger"]:
 			posts.append(i)
-	check("the city has government charging posts (%d)" % posts.size(), posts.size() >= 12)
+	check("the city has implant charging posts (%d), all at parking lots and charging stations" % posts.size(), posts.size() >= 4 and posts.size() == g.city.chargers.size())
+	var in_lot := 0
+	for p in posts:
+		for lot in g.city.lots:
+			if p % g.size >= lot["x0"] and p % g.size <= lot["x1"] and p / g.size >= lot["y0"] and p / g.size <= lot["y1"]:
+				in_lot += 1
+				break
+	check("no post stands loose on a street: every one is inside a lot", in_lot == posts.size())
 	check("a post is a solid, static tile", g.sim.walk[posts[0]] == 0 and g.thing_at[posts[0]] == -1)
-	var nn_list: Array = []
 	var reach := 0
 	for p in posts:
-		var best := 9999
-		for q in posts:
-			if q != p:
-				best = mini(best, maxi(absi(p % g.size - q % g.size), absi(p / g.size - q / g.size)))
-		nn_list.append(best)
 		var free := 0
 		for dd in [1, -1, g.size, -g.size]:
 			if g.sim.walk[p + dd] == 1:
 				free += 1
 		if free >= 2:
 			reach += 1
-	nn_list.sort()
-	var med: int = nn_list[nn_list.size() / 2]
-	check("posts stand at regular intervals: the typical post is 30-80 tiles from the next (%d), four in five are within 80, the farthest %d" % [med, nn_list[-1]], med >= 30 and med <= 80 and nn_list.filter(func(v): return v <= 80).size() * 5 >= nn_list.size() * 4)
 	check("every post can be reached from at least two sides", reach == posts.size())
 	var w2 = WorldScript.new()
 	w2.start(21, 300)
@@ -134,7 +132,12 @@ func _initialize() -> void:
 	g.yen = 2000
 	var q: Dictionary = g.charge_quote(post, 576.0)
 	var dist: int = g.district_of(post)
-	check("bumping a post asks for its menu and spends no time", dir != Vector2i.ZERO and not g.act_move(dir.x, dir.y) and g.charger_hit == post)
+	var turn0: int = g.turn
+	check("bumping a post does nothing but say what it is, and spends no time", dir != Vector2i.ZERO and not g.act_move(dir.x, dir.y) and g.charger_hit == -1 and g.turn == turn0)
+	var near_list: Array = g.interactables()
+	check("the interact key finds the post beside you", near_list.size() >= 1 and near_list.any(func(it): return it["kind"] == "charger" and it["cell"] == post))
+	g.act_interact_with(near_list.filter(func(it): return it["kind"] == "charger")[0])
+	check("using it asks for its menu", g.charger_hit == post)
 	g.charger_hit = -1
 	var menu: Dictionary = g.eco.charger_menu(post)
 	var full_idx := -1

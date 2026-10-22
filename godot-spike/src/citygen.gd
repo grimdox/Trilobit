@@ -58,7 +58,9 @@ const EXTRA := [
 	["charm_counter", "f_trl_charm_counter", 0, 1], ["cabinet", "f_trl_cabinet_lacquer", 0, 1], ["neon", "f_trl_neon_pink", 0, 0],
 	["crane_leg", "f_trl_crane_leg", 0, 0], ["container", "f_trl_container", 0, 1], ["bollard", "f_trl_bollard", 0, 0],
 	["terminal", "f_trl_terminal", 0, 0], ["portal", "f_trl_portal", 1, 0], ["mission_device", "f_trl_device", 0, 0],
-	["charger", "f_trl_charger", 0, 0],
+	["charger", "f_trl_charger", 0, 0], ["gunsmith_table", "f_trl_gunsmith_table", 0, 1],
+	["ev_charger_nw", "f_trl_ev_nw", 0, 0], ["ev_charger_ne", "f_trl_ev_ne", 0, 0], ["ev_charger_sw", "f_trl_ev_sw", 0, 0], ["ev_charger_se", "f_trl_ev_se", 0, 0],
+	["door_closed", "t_door_closed", 1, 0],
 ]
 const EXTRA0 := 33
 static var TID: Dictionary = _tids()
@@ -105,6 +107,8 @@ const M_RAIL_H := 5     # rail orientation, painted over TRACK tiles
 const M_RAIL_V := 6
 const M_DASH_H := 7     # dashed white lane line between two lanes that run the same way (wide roads)
 const M_DASH_V := 8
+const M_BAY := 9        # a parking bay's divider line (vertical, on the tile's left edge), painted over the lot's ROAD tiles
+const M_BAY_EV := 10    # the same beside a vehicle charger: drawn green
 
 var size: int = 512
 var marks: PackedByteArray             # ground-level overlay: lane lines and rail orientation (see M_*), size*size
@@ -148,7 +152,9 @@ var venues: Array = []                 # {kind, style, tier, x0, y0, x1, y1, doo
 var venue_plan: Array = []             # kinds still to place while the suburbs are laid out
 var under: PackedByteArray = PackedByteArray()   # ground level: the floor tile under each piece of furniture
 var cranes: Array = []                           # harbor gantry cranes: {x0, x1, y} in local coordinates (drawn as moving overlays)
-var chargers: PackedInt32Array = PackedInt32Array()   # the cells of the government implant charging posts
+var chargers: PackedInt32Array = PackedInt32Array()   # the cells of the implant charging posts (one tile: for cyberized people)
+var ev_chargers: PackedInt32Array = PackedInt32Array() # the north-west cell of every vehicle charging bank (two by two tiles)
+var lots: Array = []                   # parking lots and charging stations: {kind, x0, y0, x1, y1, bays: [[x, y, ev]], chargers: [cell], posts: [cell]}
 var wealth: PackedByteArray = PackedByteArray()  # per column of the map: 0 poor, 1 middle, 2 rich (empty = everything middle)
 const DISTRICTS := ["lower", "middle", "upper"]
 
@@ -330,11 +336,18 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 		for j in grid[i].size():
 			if grid[i][j] == null:
 				block_stats["null"] += 1
+	chargers = PackedInt32Array()
+	ev_chargers = PackedInt32Array()
+	lots = []
 	for ij in order:
 		var b: Dictionary = grid[ij[0]][ij[1]]
 		if b["used"]:
 			continue
 		var d: float = b["d"]
+		if _lot_block(ij[0], ij[1], b["r"], d):
+			b["used"] = true
+			block_stats["lot"] = int(block_stats.get("lot", 0)) + 1
+			continue
 		var r := rng.randf()
 		if r < (0.015 + d * 0.025 if planned else 0.06 + d * 0.12):
 			b["used"] = true
@@ -369,42 +382,65 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 			_suburb_block(rr3.position.x, rr3.position.y, rr3.end.x, rr3.end.y, 0.7 if exurb else 0.97)
 	if planned:
 		_paint_boulevards()
-	_place_chargers(grid)
 
-## Government charging posts: one on the street side of every third block (a diagonal pattern, so there is one about every 40-60 tiles each way), on open ground
-## at the building line, never closer than a cell to anything that could box it in.  No random numbers are drawn, so the city is the same with or without them.
-func _place_chargers(grid: Array) -> void:
-	chargers = PackedInt32Array()
-	var tid: int = TID["charger"]
-	for i in grid.size():
-		for j in grid[i].size():
-			var b = grid[i][j]
-			if b == null or (i + 2 * j) % 3 != 0:
-				continue
-			var r: Rect2i = b["r"]
-			var cx: int = r.position.x + r.size.x / 2
-			var done := false
-			for dy in range(0, 4):
-				for dx in [0, 1, -1, 2, -2, 3, -3, 4, -4]:
-					var c: int = (r.position.y + dy) * size + cx + dx
-					if _post_ok(c):
-						tiles[c] = tid
-						chargers.append(c)
-						done = true
-						break
-				if done:
-					break
-
-func _post_ok(c: int) -> bool:
-	if tiles[c] != GROUND:
+## Parking lots and charging stations.  A lot is paved like a road and marked with bays (a car is 4 wide by 6 long, so a bay is 4 x 6): a row of bays, an aisle six wide
+## and a row facing it, 18 deep, as wide as ten bays at most.  It takes the middle of a whole block (about one block in five that is big enough and not at the very centre).
+##   kind "lot"      mostly bays; one lot in three has a vehicle charging bank (2 x 2) between bays, and then a charging post for people at the end of the aisle
+##   kind "station"  a charging station like a petrol station: every third slot is a vehicle charging bank, and a post for people at the aisle's end
+## No random numbers are drawn (a hash of the block's place decides), so the rest of the city is the same with or without the lots.
+func _lot_block(i: int, j: int, r: Rect2i, d: float) -> bool:
+	if d < 0.12 or r.size.x < 30 or r.size.y < 24:
 		return false
-	for oy in range(-1, 2):
-		for ox in range(-1, 2):
-			var n: int = c + oy * size + ox
-			var t: int = tiles[n]
-			if not (t == GROUND or t == ROAD or t == PARK):
-				return false
+	var roll: int = (hash([size, i, j, "lot"]) & 0x7fffffff) % 100
+	if roll >= 18:
+		return false
+	var n: int = mini(10, (r.size.x - 4) / 4)
+	var ww: int = n * 4 + 2
+	var spot := Rect2i(r.position.x + (r.size.x - ww) / 2, r.position.y + (r.size.y - 20) / 2, ww, 20)
+	_stamp_lot("station" if roll < 6 else "lot", spot, (hash([size, i, j, "ev"]) & 0x7fffffff) % 3 == 0)
 	return true
+
+func _stamp_lot(kind: String, spot: Rect2i, with_ev: bool) -> void:
+	var x0: int = spot.position.x + 1
+	var y0: int = spot.position.y + 1
+	var n: int = (spot.size.x - 2) / 4
+	var lot := {"kind": kind, "x0": spot.position.x, "y0": spot.position.y, "x1": spot.end.x - 1, "y1": spot.end.y - 1, "bays": [], "chargers": [], "posts": []}
+	for yy in range(spot.position.y, spot.end.y):
+		for xx in range(spot.position.x, spot.end.x):
+			tiles[yy * size + xx] = ROAD
+			marks[yy * size + xx] = 0
+			under[yy * size + xx] = ROAD
+	var charge_slot := func(s: int) -> bool:
+		if kind == "station":
+			return s % 3 == 1
+		return with_ev and s % 5 == 2
+	for row in [0, 12]:                                   # the bay row at the top and the one at the bottom, the aisle between
+		var by: int = y0 + row
+		for s in n:
+			var bx: int = x0 + s * 4
+			var is_c: bool = charge_slot.call(s)
+			var near_c: bool = (s > 0 and charge_slot.call(s - 1)) or (s < n - 1 and charge_slot.call(s + 1))
+			for yy in 6:
+				marks[(by + yy) * size + bx] = M_BAY_EV if (near_c or is_c) else M_BAY
+			if s == n - 1:
+				for yy in 6:
+					marks[(by + yy) * size + bx + 4] = M_BAY_EV if is_c else M_BAY
+			if is_c:
+				var uy: int = by if row == 0 else by + 4
+				var base_c: int = uy * size + bx + 1
+				for k in 4:
+					var cc: int = base_c + (k / 2) * size + (k % 2)
+					tiles[cc] = TID["ev_charger_nw"] + k
+				lot["chargers"].append(base_c)
+				ev_chargers.append(base_c)
+			else:
+				lot["bays"].append([bx, by, 1 if near_c else 0])
+	if with_ev or kind == "station":
+		var post: int = (y0 + 8) * size + x0
+		tiles[post] = TID["charger"]
+		chargers.append(post)
+		lot["posts"].append(post)
+	lots.append(lot)
 
 ## the island city has a ragged edge: a street is kept only where it serves a block (or is an avenue or the highway), so the grid stops where the
 ## town does instead of running on into the fields

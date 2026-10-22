@@ -63,7 +63,10 @@ func _initialize() -> void:
 	check("a cell beside the terminal is free to stand on", dv != Vector2i.ZERO)
 	var turn0: int = g.turn
 	var moved: bool = g.act_move(dv.x, dv.y)
-	check("walking into a terminal wakes it: no move, no turn spent", not moved and g.terminal_hit == term and g.turn == turn0 and g.pc != term)
+	check("walking into a terminal only names it: no move, no turn spent, nothing opens", not moved and g.terminal_hit == -1 and g.turn == turn0 and g.pc != term)
+	var tl: Array = g.interactables().filter(func(it): return it["kind"] == "terminal" and it["cell"] == term)
+	g.act_interact_with(tl[0])
+	check("the interact key wakes the terminal: no turn spent", tl.size() == 1 and g.terminal_hit == term and g.turn == turn0)
 	g.terminal_hit = -1
 	# through the keys and the screen
 	m.mode = "play"
@@ -150,7 +153,7 @@ func _initialize() -> void:
 				var tries := 0
 				var d2: Vector2i = stand_beside(s, dev)
 				while not s.mission["done"] and tries < 80:
-					s.act_move(d2.x, d2.y)
+					s.act_interact_with({"kind": "device", "cell": dev})
 					tries += 1
 				check("repair: attempts add up to the work needed and the unit runs (%d tries)" % tries, s.mission["done"] and s.mission["progress"] == need and tries >= need)
 				check("repair: working makes noise", s.step_noise >= 0)
@@ -167,7 +170,7 @@ func _initialize() -> void:
 				var d2: Vector2i = stand_beside(s, dev)
 				var tries := 0
 				while not s.mission["planted"] and tries < 80:
-					s.act_move(d2.x, d2.y)
+					s.act_interact_with({"kind": "device", "cell": dev})
 					tries += 1
 				check("sabotage: the charge is set and the fuse lit", s.mission["planted"] and s.mission["fuse"] > 0)
 				check("sabotage: the alarm turned the guards", s.astate[guards[0]] == s.HUNTING or s.noticed_you[guards[0]] == 1)
@@ -229,7 +232,7 @@ func _initialize() -> void:
 	var d3: Vector2i = stand_beside(s2, int(site2["objective"]))
 	var tr := 0
 	while not s2.mission["planted"] and tr < 80:
-		s2.act_move(d3.x, d3.y)
+		s2.act_interact_with({"kind": "device", "cell": int(site2["objective"])})
 		tr += 1
 	# the blast hurts by distance: walk out to the far end of the hall first (the exit side), well beyond the bomb's reach
 	s2.pc = int(site2["entry"])

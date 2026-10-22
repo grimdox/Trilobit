@@ -71,7 +71,7 @@ var sfx_queue: Array = []             # sound events for the front end ("shot", 
 
 # the player
 var pc: int = 0                      # cell index
-var yen: int = 300
+var yen: int = 0                                   # starting cash will come from the chosen start; none for now
 var ammo_pool: Dictionary = {"9mm|fmj": 36}   # "caliber|kind" -> rounds carried loose
 var want_kind: Dictionary = {}                 # caliber -> kind the next reload loads
 var aim_turns: int = 0                         # banked aim points (negative after a long burst, never below max aim - 5)
@@ -95,11 +95,14 @@ var mission: Dictionary = {}
 # implant power (power.gd): kJ in the store, -1 for a rig that has never been charged (it starts full the first time it is needed); at 0 every implant is off
 var power: float = -1.0
 var power_state: int = 0                       # 0 fine, 1 low (a quarter), 2 critical (a tenth), 3 dark: so each warning is said once
-var charger_hit: int = -1                      # a charging post the player just bumped (the front end opens its menu and clears this)
+var charger_hit: int = -1                      # a charging post the player just used (the front end opens its menu and clears this)
 var energy: PackedInt32Array                   # kJ left in each person: -1 until it is first needed (then power.gd works it out from the clock); frozen when they die or are drained
 var done_contracts: Dictionary = {}           # ids of the contracts the player has completed and been paid for: a posted contract pays once
 var portal: Dictionary = {}                    # {cell, was (the tile it replaced), under, offer}
-var terminal_hit: int = -1                     # a mission terminal the player just bumped (the front end opens its screen and clears this)
+var terminal_hit: int = -1                     # a mission terminal the player just used (the front end opens its screen and clears this)
+var ev_hit: int = -1                           # a vehicle charging bank the player just used: its north-west cell (the front end opens the menu and clears this)
+var smith_hit: int = -1                        # a gunsmithing table the player just used (the front end opens the gun screen and clears this)
+var closed_doors: Dictionary = {}              # cells of doors the player has shut: cell -> true.  A shut door blocks sight; people walk through (and open) it
 var mission_leave_request: String = ""         # "exit" (stepped through the exit portal) or "blast" (the charge went off): the front end hands over to the world
 var mission_enter_request: bool = false        # the player stepped into an open portal
 var step_noise: int = 0                        # how far this turn's footsteps carry
@@ -370,10 +373,37 @@ func _roads_and_cars() -> void:
 	_spawn_things()
 	_spawn_critters()
 
+## fill the bays of the parking lots and charging stations with parked cars (normal cars: you can get in and drive them).  Each lot has its own fullness, from
+## completely empty (one lot in seven) up to about nine bays in ten; a station is quieter than a lot, and a car beside a charger has run lower on charge.
+func _park_lots(cols: Array) -> void:
+	for lot in city.lots:
+		var fill: float = 0.0 if rng.randi() % 7 == 0 else 0.25 + rng.randf() * 0.65
+		if lot["kind"] == "station":
+			fill *= 0.5
+		for bay in lot["bays"]:
+			if rng.randf() >= fill:
+				continue
+			park_in_bay(int(bay[0]), int(bay[1]), cols[rng.randi() % cols.size()], 10 if int(bay[2]) == 1 else 30, 60 if int(bay[2]) == 1 else 100)
+
+## put a parked car into the 4 x 6 bay whose top-left cell is (bx, by); -1 if it will not fit
+func park_in_bay(bx: int, by: int, color: Color, charge_lo: int, charge_hi: int) -> int:
+	var dir: int = 0 if rng.randi() % 2 == 0 else 2
+	var a: int = vs.anchor_for("car", dir, 2 * bx + 4, 2 * by + 6, 0)
+	var vi: int = vs.spawn("car", a, dir, color, false)
+	if vi < 0:
+		return -1
+	for c in vs.cells(vehicles[vi]):
+		if c % size < bx or c % size > bx + 3 or (c / size) % size < by or (c / size) % size > by + 5:
+			vs.lift(vi)
+			vehicles.pop_back()
+			return -1
+	vehicles[vi]["charge"] = rng.randi_range(charge_lo, charge_hi)
+	return vi
+
 func _car_colors() -> Array:
 	return [Color("#d94f70"), Color("#3fb6c9"), Color("#e8c03a"), Color("#8f8fa8"), Color("#4fd98a"), Color("#e8e8ee"), Color("#2a3140")]
 
-## cars in the lanes of the street grid (they drive), parked cars in the yards, and the special vehicles near the start
+## cars in the lanes of the street grid (they drive), parked cars in the lots, and the special vehicles near the start
 func _spawn_vehicles() -> void:
 	vs = VS.new(self)
 	if island != null and zone != island.CITY_ZONE:
@@ -384,7 +414,6 @@ func _spawn_vehicles() -> void:
 	var tries := 0
 	var traffic: float = float(size * size) / 262144.0              # cars and parked cars scale with the map: the 512 city is the reference (46 and 26)
 	var n_moving: int = int(round(46.0 * traffic))
-	var n_parked: int = int(round(26.0 * traffic))
 	while placed < n_moving and tries < n_moving * 14:
 		tries += 1
 		var vertical: bool = rng.randf() < 0.5
@@ -421,27 +450,7 @@ func _spawn_vehicles() -> void:
 				continue
 			vehicles[vi]["charge"] = rng.randi_range(40, 100)
 			placed += 1
-	# parked cars: any free 4x6 patch of pavement, along the streets
-	var parked := 0
-	tries = 0
-	while parked < n_parked and tries < n_parked * 16:
-		tries += 1
-		var c: int = rng.randi_range(0, s2 - 1)
-		if city.tiles[c] != CG.GROUND:
-			continue
-		var dir2: int = rng.randi() % 4
-		var vi2: int = vs.spawn("car", c, dir2, cols[rng.randi() % cols.size()], false)
-		if vi2 >= 0:
-			var ok2 := true
-			for cc in vs.cells(vehicles[vi2]):
-				if city.tiles[cc] != CG.GROUND:
-					ok2 = false
-			if not ok2:
-				vs.lift(vi2)
-				vehicles.pop_back()
-				continue
-			vehicles[vi2]["charge"] = rng.randi_range(30, 100)
-			parked += 1
+	_park_lots(cols)
 	# traffic on the riverside boulevards (they are curved, so they are not among the grid's lines): a few cars on each bank
 	for key in ["blv_w", "blv_e"]:
 		var band: PackedInt32Array = city.plan.get(key, PackedInt32Array())
@@ -994,21 +1003,12 @@ func _act_move_core(dx: int, dy: int, run: bool = false) -> bool:
 		return false
 	if city.tiles[c] == CG.LOCKED:
 		return _pick_lock(c)
-	if city.tiles[c] == CG.TID["terminal"]:
-		facing = Vector2i(dx, dy)
-		terminal_hit = c
-		say("The terminal's screen wakes.")
-		sfx("blip")
+	if city.tiles[c] == CG.TID["door_closed"]:
+		return act_door(c)
+	var hint: String = interact_hint(city.tiles[c])
+	if hint != "":
+		say(hint)
 		return false
-	if city.tiles[c] == CG.TID["charger"]:
-		facing = Vector2i(dx, dy)
-		charger_hit = c
-		say("The government charging post lights its panel.")
-		sfx("blip")
-		return false
-	if city.tiles[c] == CG.TID["mission_device"]:
-		facing = Vector2i(dx, dy)
-		return MS.use_device(self)
 	if city.tiles[c] == CG.AIR:
 		say("Open air.  [q] to leap across, or fly with jump jets.")
 		return false
@@ -1217,6 +1217,148 @@ func describe_at(c: int) -> String:
 	var d: int = cheb(c, pc)
 	return "%s, %d tile%s away." % [", ".join(bits), d, "" if d == 1 else "s"]
 
+# ---------------------------------------------------------------- interacting
+## what bumping into something you can use says (nothing happens: the interact key uses it)
+func interact_hint(t: int) -> String:
+	if t == CG.TID["terminal"]:
+		return "A mission terminal.  Use the interact key."
+	if t == CG.TID["charger"]:
+		return "A charging post for cyberized people.  Use the interact key."
+	if t >= CG.TID["ev_charger_nw"] and t <= CG.TID["ev_charger_se"]:
+		return "A vehicle charging bank.  Park beside it and use the interact key."
+	if t == CG.TID["gunsmith_table"]:
+		return "A gunsmithing table.  Use the interact key."
+	if t == CG.TID["mission_device"]:
+		return "A machine.  Use the interact key."
+	return ""
+
+## the north-west cell of the vehicle charging bank that cell `c` belongs to (-1 if it is not part of one)
+func ev_bank_of(c: int) -> int:
+	var k: int = city.tiles[c] - CG.TID["ev_charger_nw"]
+	if k < 0 or k > 3:
+		return -1
+	return c - (k / 2) * size - (k % 2)
+
+## everything the player could use from here: [{kind, cell, label}].  On foot that is anything in the eight cells around you; in a vehicle, the charging banks within two
+## tiles of it.  A door counts whether it is open, shut or locked.
+func interactables() -> Array:
+	var out: Array = []
+	var seen := {}
+	if in_vehicle >= 0:
+		for c0 in vs.cells(vehicles[in_vehicle]):
+			for dy in range(-2, 3):
+				for dx in range(-2, 3):
+					var x: int = c0 % size + dx
+					var y: int = (c0 / size) % size + dy
+					if not in_bounds(x, y):
+						continue
+					var cc: int = (c0 / s2) * s2 + y * size + x
+					var nw: int = ev_bank_of(cc)
+					if nw >= 0 and not seen.has(nw):
+						seen[nw] = true
+						out.append({"kind": "ev", "cell": nw, "label": "Vehicle charging bank"})
+		return out
+	var base: int = (pc / s2) * s2
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			if dx == 0 and dy == 0:
+				continue
+			var nx: int = pc % size + dx
+			var ny: int = (pc / size) % size + dy
+			if not in_bounds(nx, ny):
+				continue
+			var c: int = base + ny * size + nx
+			var t: int = city.tiles[c]
+			if t == CG.DOOR or t == CG.TID["door_closed"] or t == CG.LOCKED:
+				out.append({"kind": "door", "cell": c, "label": ("Locked door" if t == CG.LOCKED else ("Door (shut)" if t == CG.TID["door_closed"] else "Door (open)"))})
+			elif t == CG.TID["terminal"]:
+				out.append({"kind": "terminal", "cell": c, "label": "Mission terminal"})
+			elif t == CG.TID["charger"]:
+				out.append({"kind": "charger", "cell": c, "label": "Charging post (implants)"})
+			elif t == CG.TID["gunsmith_table"]:
+				out.append({"kind": "smith", "cell": c, "label": "Gunsmithing table"})
+			elif t == CG.TID["mission_device"]:
+				out.append({"kind": "device", "cell": c, "label": "Machine"})
+			else:
+				var nw: int = ev_bank_of(c)
+				if nw >= 0 and not seen.has(nw):
+					seen[nw] = true
+					out.append({"kind": "ev", "cell": nw, "label": "Vehicle charging bank"})
+	return out
+
+## use one thing from interactables().  True if it took a turn or opened something.
+func act_interact_with(it: Dictionary) -> bool:
+	var c: int = int(it["cell"])
+	match String(it["kind"]):
+		"door":
+			return act_door(c)
+		"terminal":
+			terminal_hit = c
+			say("The terminal's screen wakes.")
+			sfx("blip")
+			return true
+		"charger":
+			charger_hit = c
+			say("The charging post lights its panel.")
+			sfx("blip")
+			return true
+		"ev":
+			ev_hit = c
+			say("The charging bank wakes: two cables and a screen.")
+			sfx("blip")
+			return true
+		"smith":
+			smith_hit = c
+			say("You clear a space on the bench.")
+			sfx("blip")
+			return true
+		"device":
+			facing = Vector2i(signi(c % size - pc % size), signi((c / size) % size - (pc / size) % size))
+			return MS.use_device(self)
+	return false
+
+## open a shut door; close an open one if nothing stands in it; a locked door is picked.  Takes a turn.
+func act_door(c: int) -> bool:
+	var t: int = city.tiles[c]
+	if t == CG.LOCKED:
+		return _pick_lock(c)
+	if t == CG.TID["door_closed"]:
+		_set_door(c, false)
+		say("You open the door.")
+		_noise(c, 2)
+		end_turn()
+		return true
+	if t == CG.DOOR:
+		if sim.at[c] >= 0 or veh_at[c] != -1 or items_at.has(c) or thing_at[c] != -1 or crit_at[c] != -1:
+			say("Something is in the doorway.")
+			return false
+		_set_door(c, true)
+		say("You close the door.")
+		end_turn()
+		return true
+	return false
+
+func _set_door(c: int, closed: bool, refresh: bool = true) -> void:
+	var t: int = CG.TID["door_closed"] if closed else CG.DOOR
+	city.tiles[c] = t
+	sim.tiles[c] = t
+	sim.opaque[c] = 1 if closed else 0
+	if closed:
+		closed_doors[c] = true
+	else:
+		closed_doors.erase(c)
+	if refresh and fov != null:
+		_compute_fov()
+
+## a person (or a vehicle) reaching a shut door opens it
+func _doors_tick() -> void:
+	if closed_doors.is_empty():
+		return
+	for c in closed_doors.keys():
+		if sim.at[c] >= 0 or veh_at[c] != -1:
+			_set_door(int(c), false)
+			say_if_seen(int(c), "A door swings open.")
+
 ## the lock on a door: theft skill against the floor's security
 func _pick_lock(c: int) -> bool:
 	var z := absi(z_of(c))
@@ -1233,9 +1375,6 @@ func _pick_lock(c: int) -> bool:
 		_witness(c, 9, -1)
 	end_turn()
 	return true
-
-func act_pay(amount: int) -> bool:
-	return eco.pay(amount)
 
 ## the nearest person within reach who is not trying to kill you
 func talk_target() -> int:
@@ -3157,6 +3296,7 @@ func _tick() -> void:
 			stance = WALKING
 			run_streak = 0
 	sim.step(pc)
+	_doors_tick()
 	transit.step()
 	_ai()
 	MS.step(self)
@@ -4419,7 +4559,7 @@ func save_dict() -> Dictionary:
 	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "attrs": attrs, "app": app, "xp": xp, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
 			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
-			"items_at": it_at, "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
+			"items_at": it_at, "closed_doors": closed_doors.keys(), "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
 					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc), "energy": Array(energy),
 					"prov": provoked.keys(), "apn": Array(apn), "stamn": Array(stamn), "stamt": Array(stamt), "aimn": Array(aimn), "limbs": _limbs_save(), "mdis": Array(mdis), "noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle)}}
@@ -4438,6 +4578,9 @@ func load_dict(d: Dictionary) -> void:
 		setup(int(d.get("people", sim.n if sim != null else 1500)))             # regenerates the deterministic parts (map, markers, names, factions)
 	turn = int(d["turn"]) * time_scale(d)
 	pc = int(d["pc"])
+	closed_doors = {}
+	for dc in d.get("closed_doors", []):
+		_set_door(int(dc), true, false)
 	done_contracts = d.get("done", {})
 	power = float(d.get("power", -1.0))
 	power_state = int(d.get("power_state", 0))
@@ -4752,6 +4895,44 @@ func recharge(cell: int, kj: float) -> bool:
 	yen -= int(q["total"])
 	var got: float = power_add(kj)
 	say("The post hums.  +%d kJ for ¥%d (fee %d, implant tax %d, power %d, power tax %d).  Implants good for about %d hours." % [int(got), int(q["total"]), int(q["fee"]), int(q["tax"]), int(q["energy"]), int(q["ptax"]), int(power_hours())])
+	sfx("pick")
+	return true
+
+## the vehicles a charging bank (its north-west cell `bank`) can reach: the one you are in, and any vehicle with a tile within two of the bank
+func vehicles_at_bank(bank: int) -> Array:
+	var out: Array = []
+	var bx: int = bank % size
+	var by: int = (bank / size) % size
+	var base: int = (bank / s2) * s2
+	for vi in vehicles.size():
+		var v: Dictionary = vehicles[vi]
+		if v.get("wreck", false) or int(v["cell"]) / s2 != bank / s2:
+			continue
+		var near := false
+		for c in vs.cells(v):
+			var cx: int = c % size
+			var cy: int = (c / size) % size
+			if cx >= bx - 2 and cx <= bx + 3 and cy >= by - 2 and cy <= by + 3:
+				near = true
+				break
+		if near:
+			out.append(vi)
+	return out
+
+## pay for and take `pct` percent of charge into vehicle `vi` at the bank: false (nothing happens) if the pack is full or the yen is short
+func recharge_vehicle(bank: int, vi: int, pct: int) -> bool:
+	var v: Dictionary = vehicles[vi]
+	pct = mini(pct, 100 - int(v["charge"]))
+	if pct <= 0:
+		say("The pack is already full.")
+		return false
+	var cost: int = PW.vehicle_quote(pct, district_of(bank))
+	if yen < cost:
+		say("You can't afford that charge (¥%d)." % cost)
+		return false
+	yen -= cost
+	v["charge"] = int(v["charge"]) + pct
+	say("The cables thrum.  The %s takes +%d%% for ¥%d.  Battery %d%%." % [vs.KINDS[v["kind"]]["name"], pct, cost, int(v["charge"])])
 	sfx("pick")
 	return true
 

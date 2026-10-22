@@ -13,6 +13,7 @@ const SK = preload("res://src/skills.gd")
 const CR = preload("res://src/creation.gd")
 const CLK = preload("res://src/clock.gd")
 const MS = preload("res://src/missions.gd")
+const LOG_LINES := 10        # messages shown in the panel along the bottom
 const UI_S := 1.5          # the interface is laid out for 1280x720 and drawn at 1.5x on the 1920x1080 canvas
 const TILESETS := ["Trilobit64"]      # Trilobit's own 64px art (tools/content/gen_tiles64.py); more sets can be added here
 const SLOTS := 3
@@ -29,6 +30,7 @@ var panel: RichTextLabel
 var mode: String = "title"           # title, play, garage, inventory, talk, mods, jump, strike, shove, turn, look, waitmenu, waiting, consume, pause, options, visuals, keys, saves, loads, implants, skills, map, loading
 var menu_sel: int = 0                 # the highlighted line of the wait menu
 var consume_list: Array = []          # what the consume menu offers (see Game.consumables)
+var pick_list: Array = []             # the things around you when several can be used: [{kind, cell, label}]
 var look_off := Vector2i.ZERO         # the look cursor, in tiles from the player
 var menu: Dictionary = {}
 var ts_index: int = 0
@@ -160,15 +162,17 @@ func start_play(g) -> void:
 	status.add_theme_font_size_override("font_size", 16)
 	layer.add_child(status)
 	logbox = RichTextLabel.new()
-	logbox.position = Vector2(8, 646)
-	logbox.size = Vector2(1264, 70)
+	logbox.position = Vector2(8, 560)
+	logbox.size = Vector2(1264, 158)
+	logbox.add_theme_font_size_override("normal_font_size", 11)
+	logbox.add_theme_font_size_override("bold_font_size", 11)
 	logbox.bbcode_enabled = true
 	logbox.scroll_following = true
 	layer.add_child(logbox)
 	var bg := ColorRect.new()
-	bg.color = Color(0, 0, 0, 0.55)
-	bg.position = Vector2(0, 640)
-	bg.size = Vector2(1280, 80)
+	bg.color = Color(0, 0, 0, 0.92)
+	bg.position = Vector2(0, 558)
+	bg.size = Vector2(1280, 162)
 	bg.z_index = -1
 	layer.add_child(bg)
 	panel = RichTextLabel.new()
@@ -806,6 +810,13 @@ func refresh() -> void:
 		extra += "  [FLYING fuel %d]" % g.fuel
 	elif g.has_implant("jets") and g.fuel < g.FUEL_MAX:
 		extra += "  [jets %d]" % g.fuel
+	if view.focus_cell >= 0:
+		var ft: int = g.current_target()
+		if ft < 0:
+			view.focus_cell = -1
+		else:
+			view.focus_cell = g.sim.pos[ft]
+			extra += "  [VIEW: target]"
 	view.hud_extra = extra
 	var tw: Dictionary = g.tower_at(g.pc) if g.z_of(g.pc) > 0 else {}
 	var line2: String = g.eco.status_text()
@@ -824,7 +835,7 @@ func refresh() -> void:
 	if mt == "" and not g.portal.is_empty():
 		mt = "Portal open: %s  -  step in to begin" % g.portal["offer"]["title"]
 	status.text = line2 + ("\n" + jt if jt != "" else "") + ("\n" + mt if mt != "" else "")
-	var lines: Array = g.log.slice(-5)
+	var lines: Array = g.log.slice(-LOG_LINES)
 	logbox.text = "\n".join(lines)
 	status.add_theme_color_override("font_color", Color(1, 0.4, 0.4) if g.body.frac("chest") < 0.34 or g.body.frac("head") < 0.34 else Color.WHITE)
 	_drain_sfx()
@@ -832,14 +843,43 @@ func refresh() -> void:
 		show_inventory()
 	elif mode == "talk":
 		show_talk()
+	elif mode == "pick":
+		show_pick()
 	elif mode == "mods":
 		show_mods()
 	elif mode == "waitmenu":
 		show_wait()
 	elif mode == "consume":
 		show_consume()
-	elif mode == "garage":
-		show_garage()
+
+func show_pick() -> void:
+	var t := "[b]Use which?[/b]   (1-9 chooses, Esc cancels)\n\n"
+	for k in mini(9, pick_list.size()):
+		var it: Dictionary = pick_list[k]
+		t += "%d) %s   [color=#8899aa]%s[/color]\n" % [k + 1, it["label"], _dir_word(int(it["cell"]))]
+	panel.text = t
+	panel.visible = true
+
+## where a cell lies from the player, in words
+func _dir_word(c: int) -> String:
+	var dx: int = signi(c % game.size - game.pc % game.size)
+	var dy: int = signi((c / game.size) % game.size - (game.pc / game.size) % game.size)
+	var ns: String = "north" if dy < 0 else ("south" if dy > 0 else "")
+	var ew: String = "west" if dx < 0 else ("east" if dx > 0 else "")
+	return (ns + ew) if ns + ew != "" else "here"
+
+## switch the camera to the current target (and back): for shooting at someone outside the screen around you
+func toggle_target_view() -> void:
+	if view.focus_cell >= 0:
+		view.focus_cell = -1
+		game.say("The view returns to you.")
+		return
+	var tgt: int = game.current_target()
+	if tgt < 0:
+		game.say("No target to look at.  [Tab] picks one.")
+		return
+	view.focus_cell = game.sim.pos[tgt]
+	game.say("The view moves to %s.  The same key returns it." % game.name_of(tgt))
 
 func show_talk() -> void:
 	var t := "[b]%s[/b]   (1-9 chooses, Esc leaves)   ¥%d\n\n" % [menu["title"], game.yen]
@@ -850,41 +890,6 @@ func show_talk() -> void:
 	for o in menu["options"]:
 		t += "%d) %s\n" % [k, o["label"]]
 		k += 1
-	panel.text = t
-	panel.visible = true
-
-func show_garage() -> void:
-	inv_map.clear()
-	var g = game
-	var vi: int = g.vs.near_vehicle()
-	if vi < 0 or g.in_vehicle >= 0:
-		panel.text = "[b]Vehicle service[/b]\n\nStand next to a vehicle (and be out of it) to open its engine bay."
-		panel.visible = true
-		return
-	var v: Dictionary = g.vehicles[vi]
-	var ed: Dictionary = g.vs.eng_def(v)
-	var t := "[b]%s[/b]  %s   (a-z fits an engine, 1-4 patches a part with a repair kit, Esc closes)\n" % [g.vs.KINDS[v["kind"]]["name"].capitalize(), "[color=#ff6666]WRECK[/color]" if v["wreck"] else ""]
-	t += "engine: %s   power %s  battery use 1 per %s turns   battery %d%%\n\n" % [g.db.defs[v["eng"]["id"]]["name"], str(ed.get("power", "?")), str(ed.get("drain", "?")), v["charge"]]
-	var k := 1
-	for part in ["engine", "body", "drive", "cabin"]:
-		var pct: int = g.vs.part_pct(v, part)
-		var bar := "#".repeat(pct / 5) + "-".repeat(20 - pct / 5)
-		var label: String = g.vs.KINDS[v["kind"]]["drive"] if part == "drive" else part
-		t += "%d) %-8s [%s] %3d%%  (%d/%d)\n" % [k, label, bar, pct, v["parts"][part], v["pmax"][part]]
-		inv_map[str(k)] = part
-		k += 1
-	t += "\nrepair kits: %d\n\n[b]Engines you can fit[/b]\n" % g.repair_kits().size()
-	var j := 0
-	for e in g.engines_available():
-		var it = e["item"]
-		var d: Dictionary = it.def["engine"]
-		var fits: bool = v["kind"] in d["fits"]
-		var key := char(97 + j)
-		t += "%s) %s  [color=#8899aa]power %d, %d hp%s%s%s[/color]\n" % [key, it.def["name"], d["power"], d["hp"], ", worn to %d" % it.cond if it.cond >= 0 else "", ", on the ground" if e["ground"] else "", "" if fits else ", does not fit"]
-		inv_map[key] = e
-		j += 1
-	if j == 0:
-		t += "(none carried or lying at your feet)\n"
 	panel.text = t
 	panel.visible = true
 
@@ -1050,8 +1055,21 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				panel.visible = false
 		refresh()
 		return
+	if mode == "pick":
+		if k == KEY_ESCAPE:
+			mode = "play"
+			panel.visible = false
+		elif k >= KEY_1 and k < KEY_1 + mini(9, pick_list.size()):
+			var chosen: Dictionary = pick_list[k - KEY_1]
+			mode = "play"
+			panel.visible = false
+			game.act_interact_with(chosen)
+			_after_act()
+			return
+		refresh()
+		return
 	if mode == "mods":
-		if k == KEY_ESCAPE or k == KEY_M or k == KEY_F4:
+		if k == KEY_ESCAPE or k == KEY_M:
 			mode = "play"
 			panel.visible = false
 		else:
@@ -1062,21 +1080,6 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 					game.act_mod_remove(v)
 				else:
 					game.act_mod_install(v)
-		refresh()
-		return
-	if mode == "garage":
-		if k == KEY_ESCAPE:
-			mode = "play"
-			panel.visible = false
-		else:
-			var gk: String = OS.get_keycode_string(k).to_lower()
-			var gvi: int = game.vs.near_vehicle()
-			if inv_map.has(gk) and gvi >= 0:
-				var tgt = inv_map[gk]
-				if tgt is String:
-					game.act_repair(gvi, tgt)
-				else:
-					game.act_fit_engine(gvi, tgt["item"], tgt["ground"])
 		refresh()
 		return
 	if mode == "jump" or mode == "strike" or mode == "shove" or mode == "turn":
@@ -1195,7 +1198,6 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 			else:
 				menu = g.eco.menu_for(who)
 				mode = "talk"
-		"pay": g.act_pay(1000 if ev.shift_pressed else 100)
 		"siphon": g.act_siphon()
 		"pickup":
 			if ev.shift_pressed and k == KEY_COMMA:
@@ -1208,7 +1210,16 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		"firemode": g.act_fire_mode()
 		"ammo": g.act_cycle_kind()
 		"target": g.act_cycle_target(ev.shift_pressed)
-		"gunsmith": mode = "mods"
+		"interact":
+			var near: Array = g.interactables()
+			if near.is_empty():
+				g.say("Nothing here to use.")
+			elif near.size() == 1:
+				g.act_interact_with(near[0])
+			else:
+				pick_list = near
+				mode = "pick"
+		"viewtarget": toggle_target_view()
 		"steal": g.act_steal()
 		"crouch": g.act_crouch()
 		"crawl": g.act_crawl()
@@ -1225,12 +1236,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		"jump":
 			mode = "jump"
 			g.say("Jump which way?  (direction key, Esc cancels)")
-		"vehicle":
-			if ev.shift_pressed:
-				mode = "garage"
-			else:
-				g.act_vehicle()
-		"service": mode = "garage"
+		"vehicle": g.act_vehicle()
 		"drop": g.act_drop_wield()
 		"inventory": mode = "inventory"
 		"implants":
@@ -1277,16 +1283,25 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				_:
 					acted = false
 	if acted:
-		if mode == "play" and game.charger_hit >= 0:
-			menu = game.eco.charger_menu(game.charger_hit)
-			game.charger_hit = -1
-			mode = "talk"
-			refresh()
-			return
-		if mode == "play" and game.terminal_hit >= 0:
-			open_terminal(game.terminal_hit)
-			return
-		refresh()
+		_after_act()
+
+## what using something asks the front end for: a menu, a screen, the gun bench
+func _after_act() -> void:
+	if mode == "play" and game.charger_hit >= 0:
+		menu = game.eco.charger_menu(game.charger_hit)
+		game.charger_hit = -1
+		mode = "talk"
+	elif mode == "play" and game.ev_hit >= 0:
+		menu = game.eco.ev_menu(game.ev_hit)
+		game.ev_hit = -1
+		mode = "talk"
+	elif mode == "play" and game.smith_hit >= 0:
+		game.smith_hit = -1
+		mode = "mods"
+	elif mode == "play" and game.terminal_hit >= 0:
+		open_terminal(game.terminal_hit)
+		return
+	refresh()
 
 func _drain_sfx() -> void:
 	if game == null:

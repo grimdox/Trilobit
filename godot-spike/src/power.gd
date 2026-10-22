@@ -25,6 +25,9 @@ const HOUR_TURNS := 600                                     # clock.gd: one hour
 ## Each wired person last charged some time in the past 72 hours (a fixed point from the seed and their index), so how much is left in them is a fraction of a full charge
 ## that runs down with the clock.  game.gd freezes the figure the moment they die, or are first drained, and keeps it from then on.
 const NPC_DRAW := [0.0, 8.0, 16.0, 0.0, 0.0]
+## Vehicles (electric: `charge` is a percentage of the pack).  A bank at a lot or station sells the same power at the same district rate and power tax, with no quality
+## fee or implant tax: a pack holds CAR_PACK_KJ (200 kJ, so a car runs about a day's worth of a Bratva rig's draw), a full charge from empty about ¥220 in the middle district.
+const CAR_PACK_KJ := 200.0
 const SIPHON_FRACTION := 0.10                               # a draw takes a tenth of what is left in the body (at least 1 kJ)
 
 static func tier_of(d: Dictionary) -> int:
@@ -102,3 +105,14 @@ static func siphon_take(left: int) -> int:
 	if left <= 0:
 		return 0
 	return maxi(1, int(round(float(left) * SIPHON_FRACTION)))
+
+## the yen asked for putting `pct` percent into a vehicle pack
+static func vehicle_quote(pct: int, district: int) -> int:
+	if pct <= 0:
+		return 0
+	return int(round(float(pct) * CAR_PACK_KJ / 100.0 * (power_rate(district) + power_tax_rate())))
+
+## the most percent `yen` buys
+static func vehicle_affordable_pct(yen: int, district: int) -> int:
+	var per: float = CAR_PACK_KJ / 100.0 * (power_rate(district) + power_tax_rate())
+	return int(floor(float(yen) / per + 1e-6))
