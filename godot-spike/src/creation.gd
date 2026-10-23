@@ -14,7 +14,7 @@ const ATTR_MAX := 14
 # the doll still draws from the two bodies in the tileset; `fem` picks the layer set (d_torso_m / d_torso_f)
 const SPRITES := [{"id": "m", "name": "Frame A", "fem": false}, {"id": "f", "name": "Frame B", "fem": true}]
 const STYLES := ["short", "buzz", "mohawk", "long", "bob", "ponytail", "bun"]
-const SKIN_NAMES := ["Pale", "Light tan", "Tanned", "Dark", "Deep brown", "Blue", "Red", "Yellow", "Green", "Orange", "Purple"]
+const SKIN_NAMES := ["Pale", "Light tan", "Tanned", "Dark", "Deep brown", "Blue", "Red", "Yellow", "Green", "Orange", "Purple", "Dark gray"]
 const HAIR_NAMES := ["Black", "Dark brown", "Chestnut", "Blond", "Grey", "Crimson dye", "Cyan dye"]
 const STYLE_NAMES := ["Short", "Buzz cut", "Mohawk", "Long", "Bob", "Ponytail", "Bun"]
 # eye colours are muted and never glow: an eye that glows or sees in the dark is an implant (pillar 3).  The first six are natural; red, violet, gold, orange and teal are the unusual ones

@@ -199,7 +199,18 @@ def main():
     ap.add_argument('--frames', type=int, default=0, help='limit frames per body (quick test bakes)')
     ap.add_argument('--jobs', type=int, default=2)
     ap.add_argument('--lod', type=int, default=64, choices=(64, 32))
+    ap.add_argument('--palette-only', action='store_true',
+                    help='rewrite only the palette tables in an existing set (new or changed colour presets); seconds, no rendering')
     a = ap.parse_args()
+    if a.palette_only:
+        # colours never touch the sprite pixels (they are material x 8 + shade), so a new skin, hair, cloth or light
+        # preset needs only the manifest's palette tables
+        path = os.path.join(a.out, 'dolls.json')
+        man = json.load(open(path))
+        man['palette'] = json.loads(json.dumps(palette_table()))
+        json.dump(man, open(path, 'w'), separators=(',', ':'), sort_keys=True)
+        print('palette tables rewritten in %s (%d skins)' % (path, len(man['palette']['skins'])))
+        return
     FR.set_lod(a.lod)
     items = json.load(open(a.items))
     bodies = a.bodies.split(',')

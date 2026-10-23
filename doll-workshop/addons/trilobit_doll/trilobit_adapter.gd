@@ -9,7 +9,7 @@ extends RefCounted
 const SPEC = preload("res://addons/trilobit_doll/doll_spec.gd")
 const LIB = preload("res://addons/trilobit_doll/doll_library.gd")
 
-const SKINS := ["porcelain", "fair", "tan", "brown", "deep"]                      # DollSpec.SKINS order
+const SKINS := ["porcelain", "fair", "tan", "brown", "deep", "blue", "red", "yellow", "green", "orange", "purple", "dark gray"]   # DollSpec.SKINS order
 const HAIRS := ["black", "dark brown", "chestnut", "ash blond", "grey", "wine dye", "cyan dye"]   # DollSpec.HAIRS order
 const EYES := ["brown", "hazel", "green", "blue", "grey", "amber"]                # creation.gd EYES order
 const STYLES := {"short": "crop", "buzz": "buzz", "mohawk": "mohawk", "long": "long", "bob": "bob", "ponytail": "ponytail", "bun": "bun"}

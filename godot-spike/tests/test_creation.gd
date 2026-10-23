@@ -68,7 +68,7 @@ func run() -> Array:
 		if CR.cycle(app, f, -1)[f] != (int(app[f]) + CR.count(f) - 1) % CR.count(f):
 			wrap = false
 	check.call("every appearance row wraps in both directions", wrap)
-	check.call("eleven skin tones (five natural, six muted colours), seven hair colours, seven styles, eleven eye colours, two sprites", CR.count("skin") == 11 and CR.count("hair") == 7 and CR.count("style") == 7 and CR.count("eyes") == 11 and CR.count("sprite") == 2 and CR.count("eye_shape") == 4)
+	check.call("twelve skin tones (five natural, seven muted colours), seven hair colours, seven styles, eleven eye colours, two sprites", CR.count("skin") == 12 and CR.count("hair") == 7 and CR.count("style") == 7 and CR.count("eyes") == 11 and CR.count("sprite") == 2 and CR.count("eye_shape") == 4)
 	check.call("every style the creator offers exists in the doll's hair layers", CR.STYLES.all(func(s): return s in DS.STYLES_M or s in DS.STYLES_F))
 	check.call("every option has a name", CR.FIELDS.all(func(f): return CR.option_name(app, f) != ""))
 	check.call("the screen offers skin tone, hair style, hair colour, eye shape and eye colour; the body frame stays in the data", CR.LOOK_ROWS.map(func(r): return r["id"]) == ["skin", "style", "hair", "eye_shape", "eyes"] and CR.HIDDEN_LOOK == ["sprite"])

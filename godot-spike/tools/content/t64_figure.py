@@ -131,16 +131,18 @@ SKINS = {
     'skin_tan':   ['#3e2420', '#6a3e30', '#93593f', '#b47a58', '#cf9a74', '#e6bb95', '#f4d8b8'],   # moderately tanned
     'skin_brown': ['#26140f', '#45261b', '#64392a', '#83523a', '#a06a4a', '#ba845e', '#d1a07a'],   # darker
     'skin_deep':  ['#100808', '#1f120e', '#311d16', '#452a20', '#5a392b', '#72493a', '#8e6352'],   # near-black
-    # the muted fantasy skins (blue, red, yellow, green, orange, purple): greyed so they read as skin and not paint, but plainly not a natural tone
+    # the muted fantasy skins (blue, red, yellow, green, orange, purple, dark gray): greyed so they read as skin and not paint, but plainly not a natural tone
     'skin_blue':   ['#1b2536', '#2f4160', '#46618a', '#6684ae', '#88a4c6', '#aec3dc', '#d3e0ee'],
     'skin_red':    ['#3a1a1a', '#62302e', '#8b4742', '#ab6560', '#c58580', '#dca9a2', '#efcdc6'],
     'skin_yellow': ['#3b3314', '#665a22', '#8f8035', '#b1a14d', '#cbbb6d', '#e1d493', '#f2e9bb'],
     'skin_green':  ['#1c2c1d', '#304a31', '#486b49', '#668c66', '#88aa85', '#adc7a8', '#d1e1cc'],
     'skin_orange': ['#3d2310', '#693c1c', '#95562b', '#b87440', '#d19460', '#e5b685', '#f4d6b0'],
     'skin_purple': ['#2a1b33', '#46305a', '#654a82', '#84689f', '#a38abb', '#c3b0d4', '#e1d4ec'],
+    'skin_gray':   ['#121316', '#1e2024', '#2b2e33', '#3a3e44', '#4c5158', '#646a72', '#858c95'],   # very dark grey
 }
 SKIN_NAMES = {'skin_pale': 'Pale', 'skin_fair': 'Fair', 'skin_tan': 'Tan', 'skin_brown': 'Brown', 'skin_deep': 'Deep',
-              'skin_blue': 'Blue', 'skin_red': 'Red', 'skin_yellow': 'Yellow', 'skin_green': 'Green', 'skin_orange': 'Orange', 'skin_purple': 'Purple'}
+              'skin_blue': 'Blue', 'skin_red': 'Red', 'skin_yellow': 'Yellow', 'skin_green': 'Green', 'skin_orange': 'Orange', 'skin_purple': 'Purple',
+              'skin_gray': 'Dark gray'}
 SKIN_DEFAULT = 'skin_tan'
 SKIN_RAMP = list(SKINS[SKIN_DEFAULT])
 

@@ -34,6 +34,7 @@ with the .NET 8 SDK (8.0.4xx); port `doll_library.gd`, `doll_palette.gd`, `doll_
 ```sh
 python3 tools/dollgen/bake.py ../godot-spike/data/items.json dolls --jobs 2      # full bake (64 px)
 python3 tools/dollgen/bake.py ../godot-spike/data/items.json dolls32 --jobs 2 --lod 32   # the 32 px world set
+python3 tools/dollgen/bake.py ../godot-spike/data/items.json dolls --palette-only  # colour presets only (seconds)
 python3 tools/dollgen/qa.py dolls                                                # quality checks on the bake
 godot --headless --path . --import                                               # import the pages
 godot --headless --path . -s tests/run_tests.gd [-- res://dolls32]               # data and runtime

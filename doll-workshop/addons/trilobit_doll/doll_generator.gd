@@ -21,6 +21,8 @@ const SPEC = preload("res://addons/trilobit_doll/doll_spec.gd")
 const MAX_PASSES := 6
 const MIN_DL := 0.07
 const HUMAN_SKINS := ["porcelain", "fair", "olive", "tan", "brown", "deep"]
+const COLOURED_SKINS := ["blue", "red", "yellow", "green", "orange", "purple", "dark gray"]   # muted non-natural tones, as in the game
+const COLOURED_SKIN_PCT := 30                  # how often a generated human gets one (the game's DollSpec rate); 0 switches them off
 const SYNTH_SKINS := ["pearl", "graphite", "ceramic", "bone"]
 const GENERATED_SYNTH := ["pearl", "graphite", "ceramic"]     # bone reads as human skin at game scale: hand-made dolls only
 const NATURAL_HAIR := ["black", "violet black", "dark brown", "chestnut", "ash blond", "platinum", "grey"]
@@ -146,7 +148,12 @@ func generate(seed_value: int, archetype := ""):
 		pool2.remove_at(k)
 	# colours: skin, hair, eyes, then cloth from the archetype's family
 	var c := {}
-	c["skin"] = GENERATED_SYNTH[rng.randi_range(0, GENERATED_SYNTH.size() - 1)] if s.android else HUMAN_SKINS[rng.randi_range(0, HUMAN_SKINS.size() - 1)]
+	if s.android:
+		c["skin"] = GENERATED_SYNTH[rng.randi_range(0, GENERATED_SYNTH.size() - 1)]
+	elif rng.randi_range(0, 99) < COLOURED_SKIN_PCT:
+		c["skin"] = COLOURED_SKINS[rng.randi_range(0, COLOURED_SKINS.size() - 1)]
+	else:
+		c["skin"] = HUMAN_SKINS[rng.randi_range(0, HUMAN_SKINS.size() - 1)]
 	if s.android:
 		c["synth"] = c["skin"]
 	var dyed := rng.randf() < float(A["dyed"])
@@ -254,7 +261,7 @@ func validate(s, archetype: Dictionary = {}) -> Array:
 				bad.append(["R4", "danger red on a non-hostile doll", k])
 	# R5
 	var sk := String(s.colours.get("skin", "tan"))
-	if s.android and sk in HUMAN_SKINS:
+	if s.android and (sk in HUMAN_SKINS or sk in COLOURED_SKINS):
 		bad.append(["R5", "android with a human skin", "skin"])
 	if not s.android and sk in SYNTH_SKINS:
 		bad.append(["R5", "human with a synthetic skin", "skin"])

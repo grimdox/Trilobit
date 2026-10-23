@@ -3,6 +3,19 @@
 Everything is data plus a few builder functions; nothing is hand-painted, so every addition is drawn on all six bodies
 in every frame by the next bake.
 
+## A colour (skin, hair, eyes, cloth, metal, lights)
+
+Add the preset to the table in `tools/dollgen/materials.py` (for skin, `SKIN_PRESETS`), then rewrite only the palette
+tables of both sets; colours never touch the sprite pixels, so no rendering is needed (seconds, not a rebake):
+
+```sh
+python3 tools/dollgen/bake.py ../godot-spike/data/items.json dolls --palette-only
+python3 tools/dollgen/bake.py ../godot-spike/data/items.json dolls32 --palette-only --lod 32
+```
+
+For the generator to hand it out, add it to a list in `doll_generator.gd` (`HUMAN_SKINS`, `COLOURED_SKINS`, ...); for
+the game's creation index, to `SKINS` in `trilobit_adapter.gd` in the game's order.
+
 ## A garment
 
 Add one entry to `tools/dollgen/catalog.py`:

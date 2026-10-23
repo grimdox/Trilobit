@@ -131,6 +131,9 @@ def glow_ramp(core):
 # presets ------------------------------------------------------------------------------------------------------
 SKIN_PRESETS = {      # human skin, warm mid tones lit coldly
     'porcelain': '#d2a796', 'fair': '#c8987c', 'olive': '#ad8a64', 'tan': '#a87356', 'brown': '#81533a', 'deep': '#573628',
+    # muted non-natural tones (the game's fantasy skins): greyed so they read as skin, not paint
+    'blue': '#6684ae', 'red': '#ab6560', 'yellow': '#b1a14d', 'green': '#668c66', 'orange': '#b87440', 'purple': '#84689f',
+    'dark gray': '#3e4247',
     # prosthetic bodies
     'pearl': '#c9ccd2', 'graphite': '#4a4f5a', 'ceramic': '#a9bccb', 'bone': '#c8bba4',
 }
