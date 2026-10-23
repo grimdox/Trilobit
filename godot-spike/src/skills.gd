@@ -122,9 +122,9 @@ static func default_skills() -> Dictionary:
 		d[s["id"]] = 0
 	return d
 
-## +1 for every two points above 10; below 10 there is no penalty
+## +1 for every two points above 10 and -1 for every two below, odd values rounding towards 0 (9 is 0, 8 and 7 are -1, 6 is -2; 11 is 0, 12 and 13 are +1)
 static func attr_bonus(value: int) -> int:
-	return maxi(0, (value - ATTR_START) / 2)
+	return (value - ATTR_START) / 2
 
 ## the part of a skill that comes from its governing attributes
 static func bonus(attrs: Dictionary, id: String) -> int:

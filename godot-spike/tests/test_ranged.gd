@@ -265,6 +265,10 @@ func run() -> Array:
 		var fall_ok := true
 		var seen_hit := false
 		var sp2: Dictionary = GP.stats(pis)
+		var alive0: PackedByteArray = g.sim.alive.duplicate()      # with sight 30 bystanders are in view and nearer: only the gunman is a target here
+		for oi in g.sim.n:
+			if oi != who and g.sim.alive[oi] == 1:
+				g.sim.alive[oi] = 0
 		for _t in 300:
 			g.sim.place(who, far_spot + 16)
 			g.sim.near[who] = 1
@@ -290,6 +294,7 @@ func run() -> Array:
 				seen_hit = true
 				var cap: int = int(round(float(int(sp2["dmg"][1])) * GP.falloff(int(sp2["eff_range"]), 16)))
 				fall_ok = fall_ok and int(g.last_roll["dmg"]) <= cap
+		g.sim.alive = alive0
 		check.call("at 16 tiles a 9mm round has a third less punch (damage never above %d, max %d close up)" % [int(round(float(int(sp2["dmg"][1])) * GP.falloff(int(sp2["eff_range"]), 16))), sp2["dmg"][1]], seen_hit and fall_ok)
 	# ---- save and load
 	g.aimn[who] = 2

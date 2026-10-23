@@ -68,12 +68,12 @@ func run() -> Array:
 		if CR.cycle(app, f, -1)[f] != (int(app[f]) + CR.count(f) - 1) % CR.count(f):
 			wrap = false
 	check.call("every appearance row wraps in both directions", wrap)
-	check.call("five skin tones, seven hair colours, seven styles, six eye colours, two sprites", CR.count("skin") == 5 and CR.count("hair") == 7 and CR.count("style") == 7 and CR.count("eyes") == 6 and CR.count("sprite") == 2 and CR.count("eye_shape") == 4)
+	check.call("eleven skin tones (five natural, six muted colours), seven hair colours, seven styles, eleven eye colours, two sprites", CR.count("skin") == 11 and CR.count("hair") == 7 and CR.count("style") == 7 and CR.count("eyes") == 11 and CR.count("sprite") == 2 and CR.count("eye_shape") == 4)
 	check.call("every style the creator offers exists in the doll's hair layers", CR.STYLES.all(func(s): return s in DS.STYLES_M or s in DS.STYLES_F))
 	check.call("every option has a name", CR.FIELDS.all(func(f): return CR.option_name(app, f) != ""))
 	check.call("the screen offers skin tone, hair style, hair colour, eye shape and eye colour; the body frame stays in the data", CR.LOOK_ROWS.map(func(r): return r["id"]) == ["skin", "style", "hair", "eye_shape", "eyes"] and CR.HIDDEN_LOOK == ["sprite"])
 	var bad: Dictionary = CR.sanitize({"sprite": 9, "skin": -3, "hair": 99, "style": 40, "eyes": 12, "eye_shape": 7, "bg": "zzz"})
-	check.call("out-of-range saved values are brought inside the tables", bad["sprite"] == 1 and bad["skin"] == 0 and bad["hair"] == 6 and bad["style"] == 6 and bad["eyes"] == 5 and bad["eye_shape"] == 3 and bad["bg"] == "none")
+	check.call("out-of-range saved values are brought inside the tables", bad["sprite"] == 1 and bad["skin"] == 0 and bad["hair"] == 6 and bad["style"] == 6 and bad["eyes"] == 10 and bad["eye_shape"] == 3 and bad["bg"] == "none")
 	var old_app: Dictionary = CR.default_app()
 	old_app.erase("eye_shape")
 	check.call("a look saved before eye shapes gets round eyes", CR.sanitize(old_app)["eye_shape"] == 0 and CR.look_of(old_app)["eye_shape"] == "round")
@@ -88,7 +88,7 @@ func run() -> Array:
 	check.call("a finished profile is valid", CR.profile_valid(prof))
 	CR.apply(g, prof)
 	check.call("applying it sets the player's attributes and look", g.attrs["str"] == 14 and g.attrs["agi"] == 6 and g.app["skin"] == 3 and g.app["eyes"] == 3 and g.app["sprite"] == 1)
-	check.call("the attribute bonus uses the chosen attributes (Strength 14 gives +2 to Melee through Strength, Agility 6 gives 0)", g.lvl("melee") == 2 and g.lvl("grit") == 2 + 0)
+	check.call("the attribute bonus uses the chosen attributes (Str 14 is +2, Agi 6 and End 6 are -2: Melee is +2-2, Grit +2-2, Dodge -2)", SK.bonus(g.attrs, "melee") == 0 and SK.bonus(g.attrs, "grit") == 0 and g.lvl("melee") == int(g.skills.get("melee", 0)) and SK.attr_bonus(6) == -2)
 	var d: Dictionary = JSON.parse_string(JSON.stringify(g.save_dict()))
 	var g2 = GameScript.new(21)
 	g2.setup(300)

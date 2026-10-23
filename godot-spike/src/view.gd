@@ -187,7 +187,7 @@ func _joins(base: int, x: int, y: int) -> bool:
 	if x < 0 or y < 0 or x >= size or y >= size:
 		return false
 	var t: int = game.city.tiles[base + y * size + x]
-	return t == 2 or t == 10 or t == 4 or t == 22
+	return t == 2 or t == 10 or t == 4 or t == 22 or t == CG.TID["door_closed"] or t == CG.TID["window_broken"]
 
 ## one terrain cell: variants for texture, autotiled walls, doors that face along their wall, rails that turn
 const WEALTH_TINT := [Color(0.80, 0.75, 0.70), Color(1, 1, 1), Color(1.10, 1.13, 1.22)]
@@ -277,7 +277,13 @@ func _draw() -> void:
 				if bt >= 0:
 					_blit(tileset.pick(TERRAIN[bt], c), pos, mod * below_mod)
 				continue
-			if t == CG.TID["door_closed"]:
+			if t == CG.TID["window_broken"]:
+				_blit(tileset.pick("t_floor", c), pos, mod)
+				for k in 3:
+					draw_line(pos + Vector2(4 + k * 8, 3) * S, pos + Vector2(10 + k * 7, 29) * S, Color(0.75, 0.9, 1.0, 0.8) * mod, 1.2 * S)
+				draw_rect(Rect2(pos + Vector2(2, 2) * S, Vector2(T - 4 * S, 3 * S)), Color(0.55, 0.62, 0.7) * mod)
+				draw_rect(Rect2(pos + Vector2(2, T - 5 * S), Vector2(T - 4 * S, 3 * S)), Color(0.55, 0.62, 0.7) * mod)
+			elif t == CG.TID["door_closed"]:
 				_blit(tileset.pick("t_floor", c), pos, mod)
 				draw_rect(Rect2(pos + Vector2(3, 3) * S, Vector2(T - 6 * S, T - 6 * S)), Color(0.35, 0.24, 0.14) * mod)
 				draw_rect(Rect2(pos + Vector2(6, 6) * S, Vector2(T - 12 * S, T - 12 * S)), Color(0.5, 0.36, 0.22) * mod)
@@ -615,12 +621,14 @@ func _draw_hud() -> void:
 	var tw: Dictionary = game.tower_at(game.pc) if game.z_of(game.pc) > 0 else {}
 	if not tw.is_empty():
 		where += " (%d)" % int(tw["h"])
-	_txt(xi, 17, where.to_upper(), 12, C_CYAN, wi)
-	_txt(xi, 36, game.time_text(), 16, Color.WHITE)
-	_txt(xi + 80, 36, "Day %d   Turn %d" % [CLK.day_of(game.sim.tick), game.turn], 11, C_DIM)
-	_txt(xi, 36, "¥%d" % game.yen, 14, Color(0.95, 0.85, 0.4), wi, HORIZONTAL_ALIGNMENT_RIGHT)
+	var who: String = game.player_name.strip_edges()
+	_txt(xi, 17, who if who != "" else "UNNAMED", 15, Color.WHITE if who != "" else C_DIM, wi)
+	_txt(xi, 33, where.to_upper(), 12, C_CYAN, wi)
+	_txt(xi, 52, game.time_text(), 16, Color.WHITE)
+	_txt(xi + 80, 52, "Day %d   Turn %d" % [CLK.day_of(game.sim.tick), game.turn], 11, C_DIM)
+	_txt(xi, 52, "¥%d" % game.yen, 14, Color(0.95, 0.85, 0.4), wi, HORIZONTAL_ALIGNMENT_RIGHT)
 	# the nav slot: an empty implant bay
-	var ny := 44.0
+	var ny := 60.0
 	draw_rect(Rect2(xi, ny, wi, 50), Color(0.02, 0.03, 0.06, 0.9))
 	var dash := 0.0
 	while dash < wi:
@@ -630,7 +638,7 @@ func _draw_hud() -> void:
 	_txt(xi, ny + 21, "NAV IMPLANT: NOT INSTALLED", 12, C_DIM, wi, HORIZONTAL_ALIGNMENT_CENTER)
 	_txt(xi, ny + 37, "minimap available from a ripperdoc", 11, Color(0.4, 0.46, 0.55), wi, HORIZONTAL_ALIGNMENT_CENTER)
 	# the figure and the limb readouts
-	var fy: float = 100.0
+	var fy: float = 116.0
 	_draw_person(x0 + 62.0, fy, 21.0)
 	var names := {"head": "HEAD", "chest": "CHEST", "l_arm": "L ARM", "r_arm": "R ARM", "l_leg": "L LEG", "r_leg": "R LEG"}
 	var k := 0

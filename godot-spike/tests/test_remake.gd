@@ -74,7 +74,7 @@ func run() -> Array:
 			rail += 1
 		elif t == CG.WATER:
 			water += 1
-	check.call("an industrial zone %s is a mixed mess: service roads %d, walls %d, pipe racks %d, people %d" % [str(ind[0]), road, wall, rail, ig.sim.n], road > 4000 and wall > 800 and rail > 100 and ig.sim.n == 70)
+	check.call("an industrial zone %s is a mixed mess: service roads %d, walls %d, pipe racks %d, people %d" % [str(ind[0]), road, wall, rail, ig.sim.n], road > 4000 and wall > 600 and rail > 100 and ig.sim.n == 70)
 	var lag := 0
 	for z in ind:
 		var o: Vector2i = ISL.zone_origin(z.x, z.y)

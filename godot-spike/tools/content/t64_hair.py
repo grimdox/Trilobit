@@ -13,8 +13,9 @@ STYLES = ['short', 'buzz', 'mohawk', 'long', 'bob', 'ponytail', 'bun']          
 HAIR_COLOURS = [(0.1, 0.09, 0.1), (0.22, 0.14, 0.09), (0.45, 0.3, 0.15), (0.72, 0.58, 0.3), (0.6, 0.62, 0.66),
                 (0.8, 0.2, 0.3), (0.2, 0.75, 0.9)]                                    # DollSpec.HAIRS order
 HAIR_NAMES = ['Black', 'Dark brown', 'Chestnut', 'Blond', 'Grey', 'Crimson dye', 'Cyan dye']
-EYE_COLOURS = [(0.34, 0.2, 0.1), (0.5, 0.36, 0.14), (0.3, 0.5, 0.22), (0.25, 0.45, 0.72), (0.52, 0.58, 0.62), (0.62, 0.45, 0.12)]
-EYE_NAMES = ['Brown', 'Hazel', 'Green', 'Blue', 'Grey', 'Amber']
+EYE_COLOURS = [(0.34, 0.2, 0.1), (0.5, 0.36, 0.14), (0.3, 0.5, 0.22), (0.25, 0.45, 0.72), (0.52, 0.58, 0.62), (0.62, 0.45, 0.12),
+               (0.62, 0.2, 0.2), (0.5, 0.32, 0.62), (0.78, 0.66, 0.2), (0.8, 0.45, 0.15), (0.2, 0.55, 0.55)]     # DollSpec EYE order: six natural, then red, violet, gold, orange, teal
+EYE_NAMES = ['Brown', 'Hazel', 'Green', 'Blue', 'Grey', 'Amber', 'Red', 'Violet', 'Gold', 'Orange', 'Teal']
 EYE_SHAPES = ['round', 'almond', 'hooded', 'wide']
 
 

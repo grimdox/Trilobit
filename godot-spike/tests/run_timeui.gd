@@ -231,7 +231,7 @@ func _initialize() -> void:
 	g.sim.tick = 8 * CLK.HOUR
 	check("the train's crowd follows the hour (rush hour %d%%, night %d%%)" % [(func(): g.sim.tick = 8 * CLK.HOUR; return g.transit.load_pct()).call(), (func(): g.sim.tick = 23 * CLK.HOUR; return g.transit.load_pct()).call()], g.transit.load_pct() < 10)
 	# sight
-	check("you see 36 tiles, twice the old 18", g.sight_radius() == 36 and g.BASE_SIGHT == 36)
+	check("you see 30 tiles", g.sight_radius() == 30 and g.BASE_SIGHT == 30)
 	g.sim.tick = CLK.START_TICK
 	# save and load: new format, and the conversion of an old one
 	g.last_ate = g.sim.tick - 1234

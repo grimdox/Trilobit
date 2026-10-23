@@ -158,36 +158,38 @@ func _initialize() -> void:
 	var in_v: Array = g.interactables()
 	check("from inside the car the interact key still finds the bank", in_v.size() == 1 and in_v[0]["kind"] == "ev")
 	g.in_vehicle = -1
-	# ---- doors
+	# ---- doors: every door starts shut
+	check("every door starts shut: none is open, and shut ones are opaque", g.city.tiles.find(CG.DOOR) == -1 and g.city.tiles.find(CG.TID["door_closed"]) >= 0)
 	var door := -1
-	for c in g.s2:
-		if g.city.tiles[c] == CG.DOOR and g.sim.at[c] == -1 and g.thing_at[c] == -1 and g.veh_at[c] == -1 and not g.items_at.has(c):
-			door = c
+	var dc: int = g.city.tiles.find(CG.TID["door_closed"])
+	while dc >= 0 and dc < g.s2:
+		if g.sim.at[dc] == -1 and g.thing_at[dc] == -1 and g.veh_at[dc] == -1 and not g.items_at.has(dc) and stand_beside(g, dc) != Vector2i.ZERO:
+			door = dc
 			break
+		dc = g.city.tiles.find(CG.TID["door_closed"], dc + 1)
 	var dd: Vector2i = stand_beside(g, door)
 	g.facing = Vector2i(-dd.x, -dd.y)
+	check("a shut door is opaque to sight", g.sim.opaque[door] == 1 and g.sim.walk[door] == 1)
 	var dl: Array = g.interactables().filter(func(it): return it["kind"] == "door" and it["cell"] == door)
-	check("an open door is listed", dl.size() == 1 and dl[0]["label"] == "Door (open)")
-	g.act_interact_with(dl[0])
-	check("using an open door shuts it: it is solid to the eye and listed as shut", g.city.tiles[door] == CG.TID["door_closed"] and g.sim.opaque[door] == 1 and g.closed_doors.has(door))
+	check("a shut door is listed as shut", dl.size() == 1 and dl[0]["label"] == "Door (shut)")
 	var turn1: int = g.turn
 	var moved: bool = g.act_move(dd.x, dd.y)
-	check("walking into a shut door opens it (a turn) and does not move you", g.city.tiles[door] == CG.DOOR and g.sim.opaque[door] == 0 and not g.closed_doors.has(door) and g.turn > turn1 and moved)
-	g.act_interact_with(g.interactables().filter(func(it): return it["kind"] == "door" and it["cell"] == door)[0])
+	check("walking into a shut door opens it (a turn) and does not move you", g.city.tiles[door] == CG.DOOR and g.sim.opaque[door] == 0 and g.open_doors.has(door) and g.turn > turn1 and moved)
 	var sd: Dictionary = JSON.parse_string(JSON.stringify(g.save_dict()))
 	var g2 = GameScript.new(21)
 	g2.load_dict(sd)
-	check("a shut door stays shut through a save and load", g2.city.tiles[door] == CG.TID["door_closed"] and g2.sim.opaque[door] == 1 and g2.closed_doors.has(door))
+	check("an opened door stays open through a save and load, the rest stay shut", g2.city.tiles[door] == CG.DOOR and g2.sim.opaque[door] == 0 and g2.open_doors.has(door) and g2.city.tiles[dc] != 0)
+	g.act_interact_with(g.interactables().filter(func(it): return it["kind"] == "door" and it["cell"] == door)[0])
+	check("using an open door shuts it again", g.city.tiles[door] == CG.TID["door_closed"] and g.sim.opaque[door] == 1 and not g.open_doors.has(door))
 	g.act_interact_with(g.interactables().filter(func(it): return it["kind"] == "door" and it["cell"] == door)[0])
 	check("using a shut door opens it", g.city.tiles[door] == CG.DOOR)
-	# a person reaching a shut door opens it
 	g.act_interact_with(g.interactables().filter(func(it): return it["kind"] == "door" and it["cell"] == door)[0])
 	var walker := 0
 	while g.sim.alive[walker] == 0:
 		walker += 1
 	g.sim.place(walker, door)
 	g._doors_tick()
-	check("somebody stepping into a shut door opens it", g.city.tiles[door] == CG.DOOR and not g.closed_doors.has(door))
+	check("somebody stepping into a shut door opens it", g.city.tiles[door] == CG.DOOR and g.open_doors.has(door))
 	# ---- the gunsmithing table and the picker
 	var free := -1
 	for d2 in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 1), Vector2i(-1, -1)]:

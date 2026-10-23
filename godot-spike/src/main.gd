@@ -30,6 +30,7 @@ var panel: RichTextLabel
 var mode: String = "title"           # title, play, garage, inventory, talk, mods, jump, strike, shove, turn, look, waitmenu, waiting, consume, pause, options, visuals, keys, saves, loads, implants, skills, map, loading
 var menu_sel: int = 0                 # the highlighted line of the wait menu
 var consume_list: Array = []          # what the consume menu offers (see Game.consumables)
+var key_unicode: int = 0              # the character of the key being handled (the creation screen's name line reads it)
 var pick_list: Array = []             # the things around you when several can be used: [{kind, cell, label}]
 var look_off := Vector2i.ZERO         # the look cursor, in tiles from the player
 var menu: Dictionary = {}
@@ -187,6 +188,11 @@ func start_play(g) -> void:
 	pbg.border_color = Color(0.3, 0.9, 1)
 	panel.add_theme_stylebox_override("normal", pbg)
 	layer.add_child(panel)
+	# none of the play layer's controls may swallow a mouse click: the menus and the creation screen are drawn over it and read clicks themselves
+	# (a dead character's BEGIN and BACK buttons sat under the message bar and did nothing)
+	for ctl in layer.get_children():
+		if ctl is Control:
+			ctl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	mode = "play"
 	screen.visible = false
 	refresh()
@@ -534,13 +540,14 @@ func open_creation() -> void:
 			cc_tileset.load_dir("res://gfx/" + TILESETS[0])
 	open_screen("create")
 
-## rows of the creation screen: appearance, attributes, Begin, Back
+## rows of the creation screen: the name, appearance, attributes, Randomize, Begin, Back
 func cc_rows() -> Array:
-	var rows: Array = []
+	var rows: Array = [{"kind": "name", "id": "name"}]
 	for r in CR.LOOK_ROWS:
 		rows.append({"kind": "look", "id": r["id"]})
 	for a in SK.ATTRS:
 		rows.append({"kind": "attr", "id": a["id"]})
+	rows.append({"kind": "random", "id": "random"})
 	rows.append({"kind": "begin", "id": "begin"})
 	rows.append({"kind": "back", "id": "back"})
 	return rows
@@ -552,6 +559,8 @@ func _cc_sync() -> void:
 ## change the highlighted row one step (dir -1 / +1): an appearance row steps its option, an attribute row moves a point
 func cc_step(dir: int) -> void:
 	var row: Dictionary = cc_rows()[cc_sel]
+	if row["kind"] == "name" or row["kind"] == "random" or row["kind"] == "begin" or row["kind"] == "back":
+		return
 	if row["kind"] == "look":
 		cc["app"] = CR.cycle(cc["app"], row["id"], dir)
 		sfx.play("blip")
@@ -566,6 +575,26 @@ func cc_step(dir: int) -> void:
 			sfx.play("blip")
 	_cc_sync()
 
+## the Randomize button: new appearance and attributes (the name stays), a fresh roll each press
+func cc_randomize() -> void:
+	var r := RandomNumberGenerator.new()
+	r.randomize()
+	cc = CR.randomized(r, cc)
+	screen.prompt = "Randomized.  Change anything you like, or press Randomize again."
+	sfx.play("pick")
+	_cc_sync()
+
+## the name row takes typed text: letters, digits, spaces and punctuation add, Backspace deletes
+func cc_type(k: int, uc: int) -> bool:
+	var s: String = String(cc.get("name", ""))
+	if k == KEY_BACKSPACE:
+		cc["name"] = s.substr(0, maxi(0, s.length() - 1))
+		return true
+	if uc >= 32 and uc < 127 and s.length() < CR.NAME_MAX:
+		cc["name"] = s + char(uc)
+		return true
+	return uc >= 32 and uc < 127
+
 func cc_begin() -> void:
 	if not CR.profile_valid(cc):
 		screen.prompt = "Spend your %d free point%s first." % [CR.free_points(cc["attrs"]), "" if CR.free_points(cc["attrs"]) == 1 else "s"]
@@ -576,6 +605,10 @@ func cc_begin() -> void:
 func _cc_key(k: int) -> void:
 	var n: int = cc_rows().size()
 	var act: String = settings.action_for(k)
+	if cc_rows()[cc_sel]["kind"] == "name" and k != KEY_ESCAPE and k != KEY_UP and k != KEY_DOWN and k != KEY_TAB and k != KEY_ENTER and k != KEY_KP_ENTER and cc_type(k, key_unicode):
+		screen.prompt = ""
+		_cc_sync()
+		return
 	if k == KEY_ESCAPE:
 		back_from_screen()
 	elif k == KEY_UP or k == KEY_K or act == "north":
@@ -588,7 +621,7 @@ func _cc_key(k: int) -> void:
 		sfx.play("blip")
 	elif k == KEY_TAB:
 		# jump between the appearance block, the attributes and the buttons
-		var nl: int = CR.LOOK_ROWS.size()
+		var nl: int = 1 + CR.LOOK_ROWS.size()
 		var na: int = SK.ATTRS.size()
 		cc_sel = nl if cc_sel < nl else (nl + na if cc_sel < nl + na else 0)
 		sfx.play("blip")
@@ -602,6 +635,10 @@ func _cc_key(k: int) -> void:
 			cc_begin()
 		elif kind == "back":
 			back_from_screen()
+		elif kind == "random":
+			cc_randomize()
+		elif kind == "name":
+			cc_sel = 1
 		else:
 			cc_step(1)
 	_cc_sync()
@@ -722,6 +759,8 @@ func _cc_mouse(ev: InputEvent) -> void:
 				cc_begin()
 			elif kind == "back":
 				back_from_screen()
+			elif kind == "random":
+				cc_randomize()
 			elif h["dir"] != 0:
 				cc_step(h["dir"])
 			_cc_sync()
@@ -1037,6 +1076,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 	if not (ev is InputEventKey) or not ev.pressed:
 		return
 	var k: int = ev.keycode
+	key_unicode = ev.unicode
 	if mode in SCREEN_MODES:
 		if mode != "loading":
 			screen_key(k)

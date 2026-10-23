@@ -25,7 +25,13 @@ func run() -> Array:
 			gov_ok = false
 	check.call("every skill is governed by the attributes in the spec", gov_ok)
 	check.call("every skill has a description and every attribute governs a skill", SK.SKILLS.all(func(s): return String(s["desc"]).length() > 20 and not String(s["note"]).is_empty()) and SK.ATTRS.all(func(a): return SK.skills_of_attr(a["id"]).size() >= 1))
-	check.call("attributes add 1 per two points above 10 (10:0 11:0 12:1 13:1 14:2 20:5, 8:0)", SK.attr_bonus(10) == 0 and SK.attr_bonus(11) == 0 and SK.attr_bonus(12) == 1 and SK.attr_bonus(13) == 1 and SK.attr_bonus(14) == 2 and SK.attr_bonus(20) == 5 and SK.attr_bonus(8) == 0)
+	check.call("attributes add 1 per two points above 10 (10:0 11:0 12:1 13:1 14:2 20:5) and take 1 per two below, odd values rounding towards 0 (9:0 8:-1 7:-1 6:-2)", SK.attr_bonus(10) == 0 and SK.attr_bonus(11) == 0 and SK.attr_bonus(12) == 1 and SK.attr_bonus(13) == 1 and SK.attr_bonus(14) == 2 and SK.attr_bonus(20) == 5 and SK.attr_bonus(9) == 0 and SK.attr_bonus(8) == -1 and SK.attr_bonus(7) == -1 and SK.attr_bonus(6) == -2)
+	var low6: Dictionary = {}
+	for a in SK.ATTRS:
+		low6[a["id"]] = 6
+	var bsk: Dictionary = SK.default_skills()
+	var some: String = SK.SKILLS[0]["id"]
+	check.call("a skill under low attributes is cut: every governing attribute at 6 takes 2 each (%s)" % some, SK.level(low6, bsk, some) == int(bsk.get(some, 0)) - 2 * SK.skill(some)["attrs"].size())
 
 	# ---- a new character
 	var g = GameScript.new(5)

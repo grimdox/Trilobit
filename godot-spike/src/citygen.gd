@@ -60,7 +60,7 @@ const EXTRA := [
 	["terminal", "f_trl_terminal", 0, 0], ["portal", "f_trl_portal", 1, 0], ["mission_device", "f_trl_device", 0, 0],
 	["charger", "f_trl_charger", 0, 0], ["gunsmith_table", "f_trl_gunsmith_table", 0, 1],
 	["ev_charger_nw", "f_trl_ev_nw", 0, 0], ["ev_charger_ne", "f_trl_ev_ne", 0, 0], ["ev_charger_sw", "f_trl_ev_sw", 0, 0], ["ev_charger_se", "f_trl_ev_se", 0, 0],
-	["door_closed", "t_door_closed", 1, 0],
+	["door_closed", "t_door_closed", 1, 0], ["window_broken", "t_window_broken", 1, 0],
 ]
 const EXTRA0 := 33
 static var TID: Dictionary = _tids()

@@ -477,8 +477,8 @@ func _skills(W: float, H: float) -> void:
 		var v: int = int(attrs.get(ad["id"], 10))
 		_txt(str(v), Vector2(r.position.x, r.position.y + 56), 32, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
 		var bn: int = SK.attr_bonus(v)
-		if bn > 0:
-			_rtxt("+%d" % bn, r.end.x - 8, r.position.y + 20, 15, Color(1.0, 0.8, 0.25))
+		if bn != 0:
+			_rtxt("%+d" % bn, r.end.x - 8, r.position.y + 20, 15, Color(1.0, 0.8, 0.25) if bn > 0 else Color(1.0, 0.45, 0.4))
 	# the detail box
 	var dbox := Rect2(632, SK_TOP + 8.0, W - 632 - 40, SK_TOP_H - 8.0)
 	_panel(dbox)
@@ -545,7 +545,7 @@ func _skill_detail(r: Rect2, sel: Dictionary, attrs: Dictionary, base: Dictionar
 	var eff: int = SK.level(attrs, base, sd["id"])
 	var parts: Array = []
 	for a in sd["attrs"]:
-		parts.append("%s %d (+%d)" % [SK.attr(a)["name"], int(attrs.get(a, 10)), SK.attr_bonus(int(attrs.get(a, 10)))])
+		parts.append("%s %d (%+d)" % [SK.attr(a)["name"], int(attrs.get(a, 10)), SK.attr_bonus(int(attrs.get(a, 10)))])
 	_txt("%s   level %d" % [sd["name"].to_upper(), eff], Vector2(x, y), 20, Color.WHITE)
 	_rtxt("base %d" % b, r.end.x - 14.0, y, 15, dim)
 	draw_multiline_string(font, Vector2(x, y + 20.0), sd["desc"], HORIZONTAL_ALIGNMENT_LEFT, w, 14, 3, dim)
@@ -574,18 +574,24 @@ const CC_ATTR_X := 622.0
 const CC_ATTR_Y := 170.0
 const CC_ATTR_H := 80.0
 
+## rows: 0 the name, then the appearance rows, the attributes, and the buttons Randomize, Begin, Back
 func cc_row_rect(i: int) -> Rect2:
-	if i < CR.LOOK_ROWS.size():
-		return Rect2(CC_LOOK_X, CC_LOOK_Y + i * CC_LOOK_STEP, 218.0, CC_LOOK_H)
-	var a: int = i - CR.LOOK_ROWS.size()
+	if i == 0:
+		return Rect2(306, 90, 268, 52)
+	var j: int = i - 1
+	if j < CR.LOOK_ROWS.size():
+		return Rect2(CC_LOOK_X, CC_LOOK_Y + j * CC_LOOK_STEP, 218.0, CC_LOOK_H)
+	var a: int = j - CR.LOOK_ROWS.size()
 	if a < SK.ATTRS.size():
 		return Rect2(CC_ATTR_X, CC_ATTR_Y + a * (CC_ATTR_H + 4.0), 618.0, CC_ATTR_H)
 	if a == SK.ATTRS.size():
+		return Rect2(662, 640, 190, 46)
+	if a == SK.ATTRS.size() + 1:
 		return Rect2(864, 640, 190, 46)
 	return Rect2(1066, 640, 190, 46)
 
 func cc_rows() -> int:
-	return CR.LOOK_ROWS.size() + SK.ATTRS.size() + 2
+	return 1 + CR.LOOK_ROWS.size() + SK.ATTRS.size() + 3
 
 ## which row the mouse is on and which way it would move: {row, dir}; dir -1 / +1 for the arrow zones at either end of a row, 0 elsewhere
 func cc_hit(p: Vector2) -> Dictionary:
@@ -593,8 +599,8 @@ func cc_hit(p: Vector2) -> Dictionary:
 		var r: Rect2 = cc_row_rect(i)
 		if r.has_point(p):
 			var dir := 0
-			if i < CR.LOOK_ROWS.size() + SK.ATTRS.size():
-				var zone: float = r.size.x * 0.5 if i < CR.LOOK_ROWS.size() else 56.0          # a sprite row is split in halves
+			if i >= 1 and i < 1 + CR.LOOK_ROWS.size() + SK.ATTRS.size():
+				var zone: float = r.size.x * 0.5 if i < 1 + CR.LOOK_ROWS.size() else 56.0          # a sprite row is split in halves
 				if p.x < r.position.x + zone:
 					dir = -1
 				elif p.x > r.end.x - zone:
@@ -615,7 +621,7 @@ func _create(W: float, H: float) -> void:
 	var attrs: Dictionary = cc.get("attrs", CR.start_attrs())
 	var look: Dictionary = CR.look_of(app)
 	_txt("CREATE CHARACTER", Vector2(40, 46), 32, Color.WHITE)
-	_rtxt("Up / Down choose  -  Left / Right change  -  Enter begins  -  Esc back", W - 40, 42, 15, Color(0.6, 0.75, 0.9))
+	_rtxt("Up / Down choose  -  Left / Right change  -  type a name on the NAME line  -  Esc back", W - 40, 42, 15, Color(0.6, 0.75, 0.9))
 	# ---- appearance: the standing doll, then skin, hair and eyes
 	var pa := Rect2(24, 66, 250, 560)
 	_panel(pa)
@@ -623,10 +629,10 @@ func _create(W: float, H: float) -> void:
 	draw_rect(Rect2(40, 108, 218, 236), Color(0.02, 0.03, 0.06))
 	draw_rect(Rect2(40, 108, 218, 236), Color(0.3, 0.9, 1.0, 0.35), false, 1.0)
 	_cc_doll(Vector2(149, 226), 2.0, look)
-	for i in CR.LOOK_ROWS.size():
-		var row: Dictionary = CR.LOOK_ROWS[i]
-		var r: Rect2 = cc_row_rect(i)
-		var on: bool = cc_sel == i
+	for li in CR.LOOK_ROWS.size():
+		var row: Dictionary = CR.LOOK_ROWS[li]
+		var r: Rect2 = cc_row_rect(li + 1)
+		var on: bool = cc_sel == li + 1
 		draw_rect(r, Color(0.3, 0.9, 1.0, 0.2) if on else Color(1, 1, 1, 0.04))
 		if on:
 			draw_rect(Rect2(r.position.x, r.position.y, 4, r.size.y), MAGENTA)
@@ -640,19 +646,27 @@ func _create(W: float, H: float) -> void:
 			draw_rect(Rect2(vx, r.position.y + 18, 12, 12), Color(1, 1, 1, 0.5), false, 1.0)
 			vx += 20.0
 		_fit(CR.option_name(app, row["id"]), Vector2(vx, r.position.y + 31), 17, Color.WHITE, r.end.x - 34.0 - vx)
-	# ---- background and goals (placeholder)
+	# ---- the name, then background and goals (placeholder)
 	var pb := Rect2(290, 66, 300, 560)
 	_panel(pb)
-	_txt("2  BACKGROUND & GOALS", Vector2(pb.position.x + 16, pb.position.y + 28), 17, CYAN)
+	_txt("2  NAME, BACKGROUND & GOALS", Vector2(pb.position.x + 16, pb.position.y + 22), 15, CYAN)
+	var nr: Rect2 = cc_row_rect(0)
+	var non: bool = cc_sel == 0
+	draw_rect(nr, Color(0.3, 0.9, 1.0, 0.2) if non else Color(1, 1, 1, 0.04))
+	draw_rect(nr, MAGENTA if non else Color(0.4, 0.5, 0.6, 0.6), false, 2.0 if non else 1.0)
+	_txt("NAME", Vector2(nr.position.x + 12, nr.position.y + 15), 11, Color(0.6, 0.75, 0.9))
+	var nm: String = String(cc.get("name", ""))
+	var shown: String = nm + ("_" if non and int(Time.get_ticks_msec() / 450) % 2 == 0 else "")
+	_fit(shown if (nm != "" or non) else "Type a name", Vector2(nr.position.x + 12, nr.position.y + 40), 19, Color.WHITE if nm != "" else Color(0.5, 0.58, 0.66), nr.size.x - 24.0)
 	var bgd: Dictionary = CR.BACKGROUNDS[0]
 	for k in 2:
-		var box := Rect2(pb.position.x + 16, pb.position.y + 52 + k * 150, pb.size.x - 32, 134)
+		var box := Rect2(pb.position.x + 16, pb.position.y + 92 + k * 150, pb.size.x - 32, 134)
 		draw_rect(box, Color(1, 1, 1, 0.03))
 		draw_rect(box, Color(0.4, 0.5, 0.6, 0.6), false, 1.0)
 		_txt("BACKGROUND" if k == 0 else "GOALS", Vector2(box.position.x + 12, box.position.y + 24), 15, Color(0.55, 0.65, 0.75))
 		_txt(String(bgd["name"]) if k == 0 else "None yet", Vector2(box.position.x + 12, box.position.y + 54), 20, Color(0.7, 0.78, 0.86))
 		draw_multiline_string(font, Vector2(box.position.x + 12, box.position.y + 80), "Coming in a later update." if k == 0 else "You will pick what you are after here.", HORIZONTAL_ALIGNMENT_LEFT, box.size.x - 24, 14, 3, Color(0.5, 0.6, 0.7))
-	draw_multiline_string(font, Vector2(pb.position.x + 16, pb.position.y + 370), String(bgd["desc"]), HORIZONTAL_ALIGNMENT_LEFT, pb.size.x - 32, 14, 4, Color(0.6, 0.72, 0.85))
+	draw_multiline_string(font, Vector2(pb.position.x + 16, pb.position.y + 430), String(bgd["desc"]), HORIZONTAL_ALIGNMENT_LEFT, pb.size.x - 32, 14, 4, Color(0.6, 0.72, 0.85))
 	# ---- attributes
 	var pt := Rect2(606, 66, 650, 560)
 	_panel(pt)
@@ -666,7 +680,7 @@ func _create(W: float, H: float) -> void:
 	_txt("Lower one attribute to free a point; spend it on another.", Vector2(CC_ATTR_X, 148), 13, Color(0.55, 0.68, 0.8))
 	for k in SK.ATTRS.size():
 		var ad: Dictionary = SK.ATTRS[k]
-		var i: int = CR.LOOK_ROWS.size() + k
+		var i: int = 1 + CR.LOOK_ROWS.size() + k
 		var r: Rect2 = cc_row_rect(i)
 		var on: bool = cc_sel == i
 		var v: int = int(attrs.get(ad["id"], SK.ATTR_START))
@@ -687,7 +701,7 @@ func _create(W: float, H: float) -> void:
 		var bn: int = SK.attr_bonus(v)
 		if names.size() > 4:
 			names = names.slice(0, 3) + ["%d more" % (names.size() - 3)]
-		_fit("Skills +%d:  %s" % [bn, ", ".join(names)], Vector2(r.position.x + 40, r.position.y + 72), 13, Color(1.0, 0.8, 0.25) if bn > 0 else Color(0.5, 0.6, 0.7), r.size.x - 56.0)
+		_fit("Skills %+d:  %s" % [bn, ", ".join(names)], Vector2(r.position.x + 40, r.position.y + 72), 13, (Color(1.0, 0.8, 0.25) if bn > 0 else (Color(1.0, 0.45, 0.4) if bn < 0 else Color(0.5, 0.6, 0.7))), r.size.x - 56.0)
 		# the 6..14 track: nine cells, the start (10) marked
 		for c in range(CR.ATTR_MIN, CR.ATTR_MAX + 1):
 			var cx: float = r.position.x + 40.0 + float(c - CR.ATTR_MIN) * 16.0
@@ -696,9 +710,11 @@ func _create(W: float, H: float) -> void:
 				draw_rect(Rect2(cx + 5, r.position.y + 50.0, 3, 2), Color(1, 1, 1, 0.8))
 	# ---- buttons
 	var valid: bool = CR.attrs_valid(attrs)
-	var rb: Rect2 = cc_row_rect(CR.LOOK_ROWS.size() + SK.ATTRS.size())
-	var rk: Rect2 = cc_row_rect(CR.LOOK_ROWS.size() + SK.ATTRS.size() + 1)
-	for pair in [[rb, "BEGIN", valid, cc_sel == CR.LOOK_ROWS.size() + SK.ATTRS.size()], [rk, "BACK", true, cc_sel == CR.LOOK_ROWS.size() + SK.ATTRS.size() + 1]]:
+	var b0: int = 1 + CR.LOOK_ROWS.size() + SK.ATTRS.size()
+	var rr: Rect2 = cc_row_rect(b0)
+	var rb: Rect2 = cc_row_rect(b0 + 1)
+	var rk: Rect2 = cc_row_rect(b0 + 2)
+	for pair in [[rr, "RANDOMIZE", true, cc_sel == b0], [rb, "BEGIN", valid, cc_sel == b0 + 1], [rk, "BACK", true, cc_sel == b0 + 2]]:
 		var br: Rect2 = pair[0]
 		var okb: bool = pair[2]
 		draw_rect(br, Color(0.3, 0.9, 1.0, 0.22) if pair[3] else Color(1, 1, 1, 0.05))

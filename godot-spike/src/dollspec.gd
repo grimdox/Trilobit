@@ -10,15 +10,20 @@ const ARMOR_LAYER := {"trl_helmet": "helmet_ball", "trl_visor": "visor", "trl_he
 	"trl_backpack": "backpack", "trl_holster": "holster"}
 const MELEE_THUG := ["trl_mel_kastet", "trl_mel_finka", "trl_mel_topor", "trl_mel_tonfa", "trl_mel_lopata", "trl_mel_chekan", "trl_mel_kistien", "trl_mel_kinzhal"]
 const ORDER := ["backpack", "holster"]
-const SKINS := [Color(0.96, 0.8, 0.68), Color(0.88, 0.69, 0.53), Color(0.74, 0.54, 0.38), Color(0.55, 0.38, 0.27), Color(0.38, 0.26, 0.19)]
+const SKINS := [Color(0.96, 0.8, 0.68), Color(0.88, 0.69, 0.53), Color(0.74, 0.54, 0.38), Color(0.55, 0.38, 0.27), Color(0.38, 0.26, 0.19),
+	Color(0.40, 0.52, 0.68), Color(0.68, 0.40, 0.38), Color(0.72, 0.65, 0.30), Color(0.40, 0.57, 0.40), Color(0.72, 0.45, 0.25), Color(0.52, 0.40, 0.63)]    # then blue, red, yellow, green, orange, purple
+const NATURAL_SKINS := 5               # the first five are the natural tones; people get a muted blue, red, yellow, green, orange or purple skin this often:
+const COLOURED_SKIN_PCT := 30
+const NATURAL_EYES := 6
+const COLOURED_EYE_PCT := 25            # and an eye of one of the five unusual colours (red, violet, gold, orange, teal) this often (set both to 0 to switch the fantasy colours off)
 const HAIRS := [Color(0.1, 0.09, 0.1), Color(0.22, 0.14, 0.09), Color(0.45, 0.3, 0.15), Color(0.72, 0.58, 0.3), Color(0.6, 0.62, 0.66), Color(0.8, 0.2, 0.3), Color(0.2, 0.75, 0.9)]
 const STYLES_M := ["short", "buzz", "mohawk", "short", "buzz"]
 const STYLES_F := ["long", "bob", "ponytail", "bun", "short"]
 # the standing dolls (gfx/figure): skin ramps in SKINS order, hair styles in creation.gd STYLES order, eye shapes
-const FIG_SKINS := ["skin_pale", "skin_fair", "skin_tan", "skin_brown", "skin_deep"]
+const FIG_SKINS := ["skin_pale", "skin_fair", "skin_tan", "skin_brown", "skin_deep", "skin_blue", "skin_red", "skin_yellow", "skin_green", "skin_orange", "skin_purple"]
 const FIG_STYLES := ["short", "buzz", "mohawk", "long", "bob", "ponytail", "bun"]
 const EYE_SHAPES := ["round", "almond", "hooded", "wide"]
-const EYE_COUNT := 6
+const EYE_COUNT := 11
 
 ## body and look: the layers every figure has, plus skin and hair tints
 static func look(h: int, fem: bool, fac: int) -> Dictionary:
@@ -28,9 +33,14 @@ static func look(h: int, fem: bool, fac: int) -> Dictionary:
 	elif fac == 2:
 		hs = (h >> 4) % 4
 	var styles: Array = STYLES_F if fem else STYLES_M
-	var si: int = (h >> 8) % SKINS.size()
+	var si: int = (h >> 8) % NATURAL_SKINS
+	if (h >> 25) % 100 < COLOURED_SKIN_PCT:
+		si = NATURAL_SKINS + (h >> 20) % (SKINS.size() - NATURAL_SKINS)
+	var ei: int = (h >> 16) % NATURAL_EYES
+	if (h >> 17) % 100 < COLOURED_EYE_PCT:
+		ei = NATURAL_EYES + (h >> 22) % (EYE_COUNT - NATURAL_EYES)
 	return {"fem": fem, "skin": SKINS[si], "hair": HAIRS[hs], "style": styles[(h >> 12) % styles.size()],
-		"skin_i": si, "hair_i": hs, "eye_i": (h >> 16) % EYE_COUNT, "eye_shape": EYE_SHAPES[(h >> 19) % EYE_SHAPES.size()]}
+		"skin_i": si, "hair_i": hs, "eye_i": ei, "eye_shape": EYE_SHAPES[(h >> 19) % EYE_SHAPES.size()]}
 
 static func base_layers(look: Dictionary, hair_hidden: bool) -> Array:
 	var sx: String = "f" if look["fem"] else "m"

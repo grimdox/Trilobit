@@ -32,7 +32,7 @@ def main(items_path):
             continue
         check(im.size == (64, 64) and im.mode == 'RGBA', 'layer %s is 64x64 RGBA' % k)
     check(all(h(a[s]) == h(b[s]) for s in ('bare', 'armor', 'gun', 'tool')), 'build is deterministic')
-    check(set(F.SKINS) == {'skin_pale', 'skin_fair', 'skin_tan', 'skin_brown', 'skin_deep'}, 'five skin ids')
+    check(set(F.SKINS) == {'skin_pale', 'skin_fair', 'skin_tan', 'skin_brown', 'skin_deep', 'skin_blue', 'skin_red', 'skin_yellow', 'skin_green', 'skin_orange', 'skin_purple'}, 'eleven skin ids')
     check(all(len(r) == 7 for r in F.SKINS.values()), 'each skin ramp has 7 tones')
     seen = set()
     silhouettes = set()
@@ -44,7 +44,7 @@ def main(items_path):
         lum = [np.mean(F.col(c)) for c in F.SKINS[name]]
         check(all(x < y for x, y in zip(lum, lum[1:])), '%s ramp runs dark to light' % name)
     F.use_skin(F.SKIN_DEFAULT)
-    check(len(seen) == 5, 'five skins give five different dolls')
+    check(len(seen) == 11, 'eleven skins give eleven different dolls')
     check(len(silhouettes) == 1, 'skins never change the silhouette')
     hands = np.asarray(a['layers']['hands'])[..., 3] > 0
     for H in (F.BODIES['B'].H_n, F.BODIES['B'].H_f):
@@ -72,9 +72,9 @@ def main(items_path):
         hair = ['hair_%s_%d' % (st, c) for st in HR.STYLES for c in range(len(HR.HAIR_COLOURS))]
         eyes = ['eyes_%s_%d' % (sh, c) for sh in HR.EYE_SHAPES for c in range(len(HR.EYE_COLOURS))]
         check(all(k in idx for k in hair) and len(hair) == 49, '7 hair styles x 7 colours')
-        check(all(k in idx for k in eyes) and len(eyes) == 24, '4 eye shapes x 6 colours')
+        check(all(k in idx for k in eyes) and len(eyes) == 44, '4 eye shapes x 11 colours')
         check(all(v[2] == 64 and v[3] == 64 for k, v in idx.items() if not k.startswith('_')), 'every cell is 64x64')
-        check(all(('base:%s:%s:hands' % (bd, sk)) in idx for bd in ('B', 'BX') for sk in F.SKINS), 'base layers for both bodies in all five skins')
+        check(all(('base:%s:%s:hands' % (bd, sk)) in idx for bd in ('B', 'BX') for sk in F.SKINS), 'base layers for both bodies in all eleven skins')
     print('FIGURES %d/%d' % (ok, n))
     return 0 if ok == n else 1
 

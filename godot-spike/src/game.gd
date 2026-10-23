@@ -102,7 +102,8 @@ var portal: Dictionary = {}                    # {cell, was (the tile it replace
 var terminal_hit: int = -1                     # a mission terminal the player just used (the front end opens its screen and clears this)
 var ev_hit: int = -1                           # a vehicle charging bank the player just used: its north-west cell (the front end opens the menu and clears this)
 var smith_hit: int = -1                        # a gunsmithing table the player just used (the front end opens the gun screen and clears this)
-var closed_doors: Dictionary = {}              # cells of doors the player has shut: cell -> true.  A shut door blocks sight; people walk through (and open) it
+var player_name: String = ""                   # chosen on the creation screen, shown on the HUD, saved
+var open_doors: Dictionary = {}                # cells of doors that have been opened (every door starts shut): cell -> true.  A shut door blocks sight; people walk through (and open) it
 var mission_leave_request: String = ""         # "exit" (stepped through the exit portal) or "blast" (the charge went off): the front end hands over to the world
 var mission_enter_request: bool = false        # the player stepped into an open portal
 var step_noise: int = 0                        # how far this turn's footsteps carry
@@ -215,6 +216,9 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1), ms
 	s2 = size * size
 	total = city.tiles.size()
 	rows = total / size
+	_shut_doors()
+	if mission.is_empty():
+		_add_windows()
 	sim = SIM.new()
 	sim.perception_standin = false
 	sim.setup(city, n_people, seed_value ^ 0x5eed)
@@ -1230,6 +1234,8 @@ func interact_hint(t: int) -> String:
 		return "A gunsmithing table.  Use the interact key."
 	if t == CG.TID["mission_device"]:
 		return "A machine.  Use the interact key."
+	if t == CG.GLASS:
+		return "A window.  Strike it to break it."
 	return ""
 
 ## the north-west cell of the vehicle charging bank that cell `c` belongs to (-1 if it is not part of one)
@@ -1338,26 +1344,103 @@ func act_door(c: int) -> bool:
 		return true
 	return false
 
+## every door starts shut (and so opaque, which npc_sim.gd reads from the tile): you open it by walking into it or with the interact key, and anyone walking in opens it
+func _shut_doors() -> void:
+	var closed: int = CG.TID["door_closed"]
+	var c: int = city.tiles.find(CG.DOOR)
+	while c >= 0:
+		city.tiles[c] = closed
+		c = city.tiles.find(CG.DOOR, c + 1)
+
+## Windows along the outside of the ground floor: on every straight outer wall of at least five tiles, windows one to three tiles wide with two to five wall tiles between
+## them (the gap is fixed for a stretch of wall, so one building looks regular and another does not), never in the corner tiles, so a window never touches a door.  A window is a
+## GLASS tile like those on the towers: it blocks movement and not sight, and it can be broken (strike it).  No random numbers are drawn: a hash of the stretch decides.
+func _add_windows() -> void:
+	var T: PackedByteArray = city.tiles
+	var kind := PackedByteArray()
+	kind.resize(s2)
+	var c: int = T.find(CG.WALL)
+	while c >= 0 and c < s2:
+		var x: int = c % size
+		var y: int = c / size
+		if x > 0 and y > 0 and x < size - 1 and y < size - 1:
+			var n: int = T[c - size]
+			var so: int = T[c + size]
+			var w: int = T[c - 1]
+			var e: int = T[c + 1]
+			if (_outside_t(n) and _inside_t(so)) or (_inside_t(n) and _outside_t(so)):
+				kind[c] = 1
+			elif (_outside_t(w) and _inside_t(e)) or (_inside_t(w) and _outside_t(e)):
+				kind[c] = 2
+		c = T.find(CG.WALL, c + 1)
+	for k in [1, 2]:
+		var step: int = 1 if k == 1 else size
+		var start: int = kind.find(k)
+		while start >= 0:
+			if start - step >= 0 and kind[start - step] == k:        # not the start of a stretch: it was handled with the first cell
+				start = kind.find(k, start + 1)
+				continue
+			var run: Array = [start]
+			var cur: int = start + step
+			while cur < s2 and kind[cur] == k:
+				run.append(cur)
+				cur += step
+			_window_run(run)
+			start = kind.find(k, cur)
+
+func _outside_t(t: int) -> bool:
+	return t == CG.GROUND or t == CG.ROAD or t == CG.PARK or t == CG.SAND
+
+func _inside_t(t: int) -> bool:
+	return t == CG.FLOOR or (t >= CG.EXTRA0 and t < CG.EXTRA0 + 9)
+
+func _window_run(run: Array) -> void:
+	var n: int = run.size()
+	if n < 5:
+		return
+	var key: int = hash([seed_value, run[0]]) & 0x7fffffff
+	var gap: int = 2 + key % 4
+	var p: int = 1 + (key >> 4) % gap
+	var i := 0
+	while true:
+		var wd: int = 1 + (hash([key, i]) & 0x7fffffff) % 3
+		if p + wd > n - 1:
+			break
+		for q in wd:
+			city.tiles[run[p + q]] = CG.GLASS
+		p += wd + gap
+		i += 1
+
+## a window struck from beside it breaks: the frame stays open (you can climb through), and the noise carries
+func break_window(c: int) -> void:
+	city.tiles[c] = CG.TID["window_broken"]
+	sim.tiles[c] = CG.TID["window_broken"]
+	sim.walk[c] = 1
+	say("The window shatters.")
+	sfx("hit")
+	_noise(c, 9)
+	_witness(c, 9, -1)
+
 func _set_door(c: int, closed: bool, refresh: bool = true) -> void:
 	var t: int = CG.TID["door_closed"] if closed else CG.DOOR
 	city.tiles[c] = t
 	sim.tiles[c] = t
 	sim.opaque[c] = 1 if closed else 0
 	if closed:
-		closed_doors[c] = true
+		open_doors.erase(c)
 	else:
-		closed_doors.erase(c)
+		open_doors[c] = true
 	if refresh and fov != null:
 		_compute_fov()
 
 ## a person (or a vehicle) reaching a shut door opens it
 func _doors_tick() -> void:
-	if closed_doors.is_empty():
-		return
-	for c in closed_doors.keys():
-		if sim.at[c] >= 0 or veh_at[c] != -1:
-			_set_door(int(c), false)
-			say_if_seen(int(c), "A door swings open.")
+	var shut: int = CG.TID["door_closed"]
+	for k in sim.near_list.size():
+		var c: int = sim.pos[sim.near_list[k]]
+		if city.tiles[c] == shut:
+			_set_door(c, false)
+			say_if_seen(c, "A door swings open.")
 
 ## the lock on a door: theft skill against the floor's security
 func _pick_lock(c: int) -> bool:
@@ -1366,6 +1449,8 @@ func _pick_lock(c: int) -> bool:
 	if rng.randi() % 100 < chance:
 		city.tiles[c] = CG.DOOR
 		sim.tiles[c] = CG.DOOR
+		sim.opaque[c] = 0
+		open_doors[c] = true
 		say("You work the lock open.")
 		skill_up("engineering", 3 + z / 6)
 		_noise(c, 5)
@@ -1551,7 +1636,7 @@ func vision_arc() -> float:
 	return minf(360.0, BASE_ARC + IMP.sum(implants, "arc", func(d): return body.group_ok(body.group_of_part(String(d.get("part", "head"))))))
 
 ## how far you can see, in tiles.  Doubled from 18 to 36 (2026-10-18); implants and scopes will add to it later through sight_bonus().
-const BASE_SIGHT := 36
+const BASE_SIGHT := 30
 func sight_bonus() -> int:
 	return 0
 
@@ -1759,6 +1844,14 @@ func player_hurt(dmg: int, msg: String, dtype: String = "phys", limb: String = "
 		say("%s in the %s, but your armor stops it (%d)." % [msg, limb_name(l), int(ab["absorbed"])])
 
 ## bullets can only be dodged with high-grade implants (grade 3 and up)
+## your chance to twist away from a round, rolled and written out
+func _twist_roll() -> bool:
+	var chance: int = player_bullet_dodge()
+	var r: int = rng.randi() % 100
+	if chance > 0:
+		_math("Twisting aside from the round: %d%% chance, rolled %d: %s" % [chance, r, "DODGED" if r < chance else "no"])
+	return r < chance
+
 func player_bullet_dodge() -> int:
 	var d: float = imp_sum("dodge_bullet") + SK.bullet_dodge(lvl("dodge"))
 	if body.legs_ok() < 2:
@@ -1783,6 +1876,7 @@ func player_melee_hurt(dmg: int, msg: String, pen: int, crit: bool) -> void:
 	var ab: Dictionary = absorb(l, dmg, pen, "phys")
 	var grit: int = lvl("grit")
 	var through: int = maxi(0, int(ab["through"]) - grit)
+	_math("The blow of %d on your %s: armor soaks %d, Grit %d soaks %d: %d goes through" % [dmg, limb_name(l), int(ab["absorbed"]), grit, mini(grit, int(ab["through"])), through])
 	for b in ab["broke"]:
 		say("Your %s breaks!" % b)
 	last_roll["dmg"] = through
@@ -1950,6 +2044,25 @@ func swing_stamina(ms: Dictionary) -> int:
 
 func _roll_2d10() -> int:
 	return rng.randi_range(1, 10) + rng.randi_range(1, 10)
+
+## combat maths shown in the message lines (for now, so the numbers can be understood and tuned): every roll and every damage step is written out
+const SHOW_MATH := true
+
+func _math(msg: String) -> void:
+	if SHOW_MATH:
+		say("[color=#8fb0cc]  " + msg + "[/color]")
+
+## "+4 Melee -2 Dodge": the parts of a roll that are not 0, signed
+func _terms(parts: Array) -> String:
+	var out: Array = []
+	for p in parts:
+		var v: int = int(p[1])
+		if v != 0:
+			out.append("%+d %s" % [v, p[0]])
+	return " ".join(out) if not out.is_empty() else "+0"
+
+func _outcome_word(out: String) -> String:
+	return {"cmiss": "FUMBLE", "crit": "CRITICAL HIT", "hit": "HIT", "miss": "MISS"}.get(out, out)
 
 ## melee arts are skills the player can learn later (parry, riposte).  The hooks are here and working; nothing grants them yet.
 func has_art(id: String) -> bool:
@@ -2269,7 +2382,7 @@ func _random_melee(grade: String = "") -> String:
 func _line_clear(a: int, b: int) -> bool:
 	for c in GP.line_cells(a, b, size):
 		var t: int = city.tiles[c]
-		if t == CG.WALL or t == CG.EARTH or t == CG.LOCKED or t == CG.GLASS:
+		if t == CG.WALL or t == CG.EARTH or t == CG.LOCKED or t == CG.GLASS or t == CG.TID["door_closed"]:
 			return false
 	return true
 
@@ -2293,6 +2406,9 @@ func melee(i: int, dist: int = 1) -> void:
 	if helpless and out == "miss":
 		out = "hit"
 	var loc: String = body.pick_melee(rng)
+	_math("You attack %s: dice %d %s = %d.  Hits at %d, critical at 19+ or %d (their Grit %d), fumble on 2.  %s%s" % [name_of(i), nat,
+		_terms([[msk.capitalize(), lvl(msk)], ["weapon", int(round(float(ms.get("acc", 0)) / 5.0))], ["reach", -(dist - 1)], ["one arm", -2 if body.arms_ok() < 2 else 0],
+		["blessing", 1 if bless_left > 0 else 0], ["their Dodge", -dodge]]), total, SK.HIT_AT, 20 + grit_t, grit_t, _outcome_word(out), " (they cannot dodge)" if helpless else ""])
 	last_roll = {"who": "you", "target": i, "nat": nat, "total": total, "outcome": out, "loc": loc, "dmg": 0}
 	stamina = maxi(0, stamina - swing_stamina(ms))
 	if out == "cmiss":
@@ -2310,13 +2426,17 @@ func melee(i: int, dist: int = 1) -> void:
 	var crit: bool = out == "crit"
 	var wmax: int = int(ms["dmg"][1])
 	var skill_bonus: int = lvl(msk) + (2 if msk == "unarmed" and discipline("iron_fist") else 0)
-	var dmg: int = SK.melee_base(rng.randi_range(int(ms["dmg"][0]), wmax), wmax, skill_bonus, crit)
+	var wroll: int = rng.randi_range(int(ms["dmg"][0]), wmax)
+	var dmg: int = SK.melee_base(wroll, wmax, skill_bonus, crit)
+	_math("Damage: %s = %d" % [("weapon maximum %d (critical) + skill %d, doubled" % [wmax, skill_bonus]) if crit else ("weapon roll %d (%d-%d) + skill %d" % [wroll, int(ms["dmg"][0]), wmax, skill_bonus]), dmg])
 	var behind: bool = sneak and cone_factor(i, pc) == 0.0
 	if behind:
 		dmg *= int(ms.get("sneak", 4))
+		_math("From behind: x%d = %d" % [int(ms.get("sneak", 4)), dmg])
 		say("You strike %s from behind!" % name_of(i))
 	elif sneak:
 		dmg *= 2
+		_math("Unready: x2 = %d" % dmg)
 		say("You catch %s unready." % name_of(i))
 	if dist > 1 and ms.get("brace", false) and astate[i] == HUNTING:
 		dmg = dmg * 3 / 2
@@ -2342,7 +2462,9 @@ func _melee_damage(i: int, dmg: int, ms: Dictionary, crit: bool = false, loc: St
 		say("Your %s glances off %s's armor." % [String(ms.get("verb", "blow")), name_of(i)])
 		_alert(i)
 		return
-	dmg = maxi(0, dmg - cut - npc_lvl(i, "grit"))
+	var ngrit: int = npc_lvl(i, "grit")
+	_math("%s: armor %d (the weapon pierces %d) takes %d, Grit %d takes %d: %d goes through" % [name_of(i), npc_armor(i), pen, cut, ngrit, mini(ngrit, maxi(0, dmg - cut)), maxi(0, dmg - cut - ngrit)])
+	dmg = maxi(0, dmg - cut - ngrit)
 	if dmg <= 0:
 		say("%s shrugs off your %s." % [name_of(i), String(ms.get("verb", "blow"))])
 		_alert(i)
@@ -2396,6 +2518,9 @@ func _npc_melee_attack(i: int) -> void:
 	var nat: int = _roll_2d10()
 	var total: int = nat + atk - dodge
 	var out: String = SK.melee_outcome(nat, total, lvl("grit"))
+	_math("%s attacks you: dice %d %s = %d.  Hits at %d, critical at 19+ or %d (your Grit %d), fumble on 2.  %s" % [name_of(i), nat,
+		_terms([[String(nm["skill"]).capitalize(), npc_lvl(i, String(nm["skill"]))], ["weapon", int(round(float(nm.get("acc", 0)) / 5.0))], ["one arm", -2 if npc_arms_ok(i) < 2 else 0],
+		["head wound", -1 if npc_head_hurt(i) else 0], ["your Dodge", -dodge]]), total, SK.HIT_AT, 20 + lvl("grit"), lvl("grit"), _outcome_word(out)])
 	last_roll = {"who": name_of(i), "target": -1, "nat": nat, "total": total, "outcome": out, "loc": "", "dmg": 0}
 	npc_stamina_spend(i, int(nm["kg"]))
 	if out == "cmiss":
@@ -2410,13 +2535,19 @@ func _npc_melee_attack(i: int) -> void:
 		else:
 			say("%s swings and misses." % name_of(i))
 		return
-	if rng.randi() % 100 < parry_chance(npc_melee_stats(i)):
+	var parry: int = parry_chance(npc_melee_stats(i))
+	var parry_roll: int = rng.randi() % 100
+	if parry > 0:
+		_math("Your parry: %d%% chance, rolled %d: %s" % [parry, parry_roll, "PARRIED" if parry_roll < parry else "no parry"])
+	if parry_roll < parry:
 		say("You turn %s's blow aside." % name_of(i))
 		_melee_arts_on_miss(i, "parry")
 		return
 	var crit: bool = out == "crit"
 	var wmax: int = int(nm["dmg"][1])
-	var dmg: int = SK.melee_base(rng.randi_range(int(nm["dmg"][0]), wmax), wmax, npc_lvl(i, String(nm["skill"])), crit)
+	var nroll: int = rng.randi_range(int(nm["dmg"][0]), wmax)
+	var dmg: int = SK.melee_base(nroll, wmax, npc_lvl(i, String(nm["skill"])), crit)
+	_math("Their damage: %s = %d" % [("weapon maximum %d (critical) + skill %d, doubled" % [wmax, npc_lvl(i, String(nm["skill"]))]) if crit else ("weapon roll %d (%d-%d) + skill %d" % [nroll, int(nm["dmg"][0]), wmax, npc_lvl(i, String(nm["skill"]))]), dmg])
 	var vb: String = String(nm.get("verb", "hit"))
 	var what: String = "%s%s you" % [vb, "es" if vb.ends_with("s") or vb.ends_with("sh") or vb.ends_with("ch") or vb.ends_with("x") else "s"]
 	player_melee_hurt(dmg, "%s %s" % [name_of(i), what], int(nm.get("pen", 1 if wmax >= 14 else 0)), crit)
@@ -2508,6 +2639,11 @@ func act_strike(dx: int, dy: int) -> bool:
 		if thing_at[c2] != -1:
 			facing = Vector2i(dx, dy)
 			thing_hit(thing_at[c2], dmg)
+			end_turn()
+			return true
+		if dist == 1 and city.tiles[c2] == CG.GLASS and c2 < s2:
+			facing = Vector2i(dx, dy)
+			break_window(c2)
 			end_turn()
 			return true
 	say("Nothing within reach of your %s." % (wield.def["name"] if wield != null else "fists"))
@@ -2966,6 +3102,11 @@ func act_fire(any: bool = false) -> bool:
 		var total: int = GP.shot_total(nat, bonus, GP.range_penalty(st, vd, rr), cover_vs(pc, sim.pos[victim], false))
 		var out: String = SK.melee_outcome(nat, total, npc_lvl(victim, "grit"))
 		var loc: String = body.pick_melee(rng)
+		var rpen_shown: int = GP.range_penalty(st, vd, rr)
+		var cov_shown: int = cover_vs(pc, sim.pos[victim], false)
+		_math("Shot %d at %s, %d tiles: dice %d + bonus %d (%s) - range %d (the gun's natural range rolled %d, off by %d) = %d%s.  Hits at %d, critical at 19+ or %d.  %s" % [s + 1, name_of(victim), vd, nat, bonus,
+			_terms([["Ranged", skill], ["gun", GP.acc_points(st)], ["implants and state", _ranged_extra(vd)], ["aim", aim_turns], ["moving", -2 if moved else 0], ["crouching", 1 if crouch else 0], ["prone", 1 if stance == CRAWL else 0]]),
+			rpen_shown, rr, absi(vd - rr), nat + bonus - rpen_shown, (", then cover hides %d%% = %d" % [cov_shown, total]) if cov_shown > 0 else "", SK.HIT_AT, 20 + npc_lvl(victim, "grit"), _outcome_word(out)])
 		last_roll = {"who": "you", "target": victim, "nat": nat, "total": total, "outcome": out, "loc": loc, "dmg": 0, "range_roll": rr, "aim": aim_turns}
 		_spend_aim_on_bullet(st)
 		var landed := false
@@ -2982,7 +3123,9 @@ func act_fire(any: bool = false) -> bool:
 			else:
 				landed = true
 				var wmax: int = int(st["dmg"][1])
-				var base: int = SK.melee_base(rng.randi_range(int(st["dmg"][0]), wmax), wmax, skill, crit)
+				var bwroll: int = rng.randi_range(int(st["dmg"][0]), wmax)
+				var base: int = SK.melee_base(bwroll, wmax, skill, crit)
+				_math("Damage: %s = %d" % [("bullet maximum %d (critical) + Ranged %d, doubled" % [wmax, skill]) if crit else ("bullet roll %d (%d-%d) + Ranged %d" % [bwroll, int(st["dmg"][0]), wmax, skill]), base])
 				var fall: float = GP.falloff(int(st["eff_range"]), vd)
 				if fall < 1.0:
 					base = int(round(float(base) * fall))
@@ -2993,6 +3136,7 @@ func act_fire(any: bool = false) -> bool:
 				else:
 					var arm_eff: int = maxi(0, npc_armor(victim) - int(st.get("pen", 0)))
 					dmg = maxi(0, base - arm_eff - npc_lvl(victim, "grit"))
+					_math("%s: armor %d (the round pierces %d) takes %d, Grit %d: %d goes through" % [name_of(victim), npc_armor(victim), int(st.get("pen", 0)), arm_eff, npc_lvl(victim, "grit"), dmg])
 					if dmg == 0:
 						say("The round pings off %s's armor." % name_of(victim))
 						landed = false
@@ -3078,6 +3222,14 @@ func _scatter_cell(c: int) -> int:
 func _explode(c: int, radius: int, dmg: int) -> void:
 	say_if_seen(c, "BOOM.")
 	sfx("boom")
+	if c < s2:
+		for wy in range(-radius, radius + 1):
+			for wx in range(-radius, radius + 1):
+				var wc: int = c + wy * size + wx
+				if wc >= 0 and wc < s2 and c % size + wx >= 0 and c % size + wx < size and city.tiles[wc] == CG.GLASS:
+					city.tiles[wc] = CG.TID["window_broken"]
+					sim.tiles[wc] = CG.TID["window_broken"]
+					sim.walk[wc] = 1
 	var victims: Array = []
 	for k in sim.near_list.size():
 		var j: int = sim.near_list[k]
@@ -3589,6 +3741,10 @@ func _hunt_act(i: int, d: int, sees: bool) -> void:
 		var bonus: int = skill + int(aimn[i]) + [-3, -2, 0, -1][stance] - (3 if in_vehicle >= 0 else 0) - (3 if npc_arms_ok(i) < 2 else 0) - (1 if npc_head_hurt(i) else 0)
 		var total: int = GP.shot_total(nat, bonus, absi(d - rr), cover_vs(c, pc, crouch))
 		var out: String = SK.melee_outcome(nat, total, lvl("grit"))
+		var ncov: int = cover_vs(c, pc, crouch)
+		_math("%s fires at you from %d tiles: dice %d + bonus %d (%s) - range %d (their gun's natural range rolled %d, off by %d) = %d%s.  Hits at %d, critical at 19+ or %d.  %s" % [name_of(i), d, nat, bonus,
+			_terms([["Ranged", skill], ["aim", int(aimn[i])], ["stance", [-3, -2, 0, -1][stance]], ["you in a vehicle", -3 if in_vehicle >= 0 else 0], ["one arm", -3 if npc_arms_ok(i) < 2 else 0], ["head wound", -1 if npc_head_hurt(i) else 0]]),
+			absi(d - rr), rr, absi(d - rr), nat + bonus - absi(d - rr), (", then your cover hides %d%% = %d" % [ncov, total]) if ncov > 0 else "", SK.HIT_AT, 20 + lvl("grit"), _outcome_word(out)])
 		last_roll = {"who": name_of(i), "target": -1, "nat": nat, "total": total, "outcome": out, "loc": "", "dmg": 0, "range_roll": rr, "aim": int(aimn[i])}
 		aimn[i] = maxi(0, int(aimn[i]) - 1)
 		_noise(c, int(ng["noise"]))
@@ -3597,15 +3753,18 @@ func _hunt_act(i: int, d: int, sees: bool) -> void:
 			say_if_seen(c, "%s's shot goes wild." % name_of(i))
 		elif out == "miss":
 			say_if_seen(c, "%s shoots at you and misses." % name_of(i))
-		elif rng.randi() % 100 < player_bullet_dodge():
+		elif _twist_roll():
 			say("You twist aside and the round cracks past!")
 			skill_up("dodge", 5)
 		else:
 			var crit: bool = out == "crit"
 			var nb: Dictionary = GP.bullet(String(ng["cal"]), "fmj")
 			var wmax: int = int(nb["dmg"][1])
-			var dmg: int = SK.melee_base(rng.randi_range(int(nb["dmg"][0]), wmax), wmax, skill, crit)
-			dmg = int(round(float(dmg) * GP.falloff(int(nb["eff_range"]), d)))
+			var nbroll: int = rng.randi_range(int(nb["dmg"][0]), wmax)
+			var dmg: int = SK.melee_base(nbroll, wmax, skill, crit)
+			var nfall: float = GP.falloff(int(nb["eff_range"]), d)
+			dmg = int(round(float(dmg) * nfall))
+			_math("Their damage: %s, range falloff x%.2f = %d" % [("bullet maximum %d (critical) + skill %d, doubled" % [wmax, skill]) if crit else ("bullet roll %d (%d-%d) + skill %d" % [nbroll, int(nb["dmg"][0]), wmax, skill]), nfall, dmg])
 			player_melee_hurt(dmg, "%s shoots you" % name_of(i), 1 if fac[i] == NAP else 0, crit)
 		return
 	if d <= 1:
@@ -4468,12 +4627,13 @@ func outside_tile(x: int, y: int) -> int:
 ## everything about the player that travels between zones
 func player_dict() -> Dictionary:
 	return {"done": done_contracts.duplicate(), "power": power, "power_state": power_state, "yen": yen, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
-		"attrs": attrs.duplicate(), "app": app.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
+		"name": player_name, "attrs": attrs.duplicate(), "app": app.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 		"stamina": stamina, "stam_v": 2, "ap": ap, "stance": stance, "turn": turn, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "flying": flying,
 		"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
 
 ## attributes, skills and XP from a save; saves from before the attribute system (or with the old skill names) keep what still exists and start the rest at the defaults
 func _load_skills(d: Dictionary) -> void:
+	player_name = CR.clean_name(String(d.get("name", "")))
 	app = CR.sanitize(d.get("app", {}))          # saves from before character creation get the figure the game always drew
 	attrs = SK.default_attrs()
 	skills = SK.default_skills()
@@ -4556,10 +4716,10 @@ func save_dict() -> Dictionary:
 	var vlist := []
 	for v in vehicles:
 		vlist.append(vs.to_dict(v))
-	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "attrs": attrs, "app": app, "xp": xp, "in_vehicle": in_vehicle,
+	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
 			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
-			"items_at": it_at, "closed_doors": closed_doors.keys(), "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
+			"items_at": it_at, "open_doors": open_doors.keys(), "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
 					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc), "energy": Array(energy),
 					"prov": provoked.keys(), "apn": Array(apn), "stamn": Array(stamn), "stamt": Array(stamt), "aimn": Array(aimn), "limbs": _limbs_save(), "mdis": Array(mdis), "noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle)}}
@@ -4578,9 +4738,9 @@ func load_dict(d: Dictionary) -> void:
 		setup(int(d.get("people", sim.n if sim != null else 1500)))             # regenerates the deterministic parts (map, markers, names, factions)
 	turn = int(d["turn"]) * time_scale(d)
 	pc = int(d["pc"])
-	closed_doors = {}
-	for dc in d.get("closed_doors", []):
-		_set_door(int(dc), true, false)
+	open_doors = {}
+	for dc in d.get("open_doors", []):
+		_set_door(int(dc), false, false)
 	done_contracts = d.get("done", {})
 	power = float(d.get("power", -1.0))
 	power_state = int(d.get("power_state", 0))

@@ -87,6 +87,7 @@ func setup(city, count: int, seed: int) -> void:
 		lut.append(1 if (t < city.WALK.size() and city.WALK[t] == 1) else 0)
 	# walkable / opaque per cell.  The upper levels are open air nearly everywhere (walk 0, opaque 0, which is what the arrays start as), so a
 	# run of 64 air cells is skipped by one comparison instead of 64 steps.
+	var shut_id: int = city.TID["door_closed"]          # a shut door and a locked door cannot be seen through
 	var seg := 64
 	var air_seg := PackedByteArray()
 	air_seg.resize(seg)
@@ -100,7 +101,7 @@ func setup(city, count: int, seed: int) -> void:
 				for i in range(rb, rb + size):
 					var t := tiles[i]
 					walk[i] = lut[t]
-					opaque[i] = 1 if (t == 2 or t == 17 or t == 27 or t == 28 or t == 29) else 0
+					opaque[i] = 1 if (t == 2 or t == 17 or t == 27 or t == 28 or t == 29 or t == 22 or t == shut_id) else 0
 				continue
 			for x0 in range(0, size, seg):
 				var a: int = rb + x0
@@ -109,7 +110,7 @@ func setup(city, count: int, seed: int) -> void:
 				for i in range(a, a + seg):
 					var t := tiles[i]
 					walk[i] = lut[t]
-					opaque[i] = 1 if (t == 2 or t == 17 or t == 27 or t == 28 or t == 29) else 0
+					opaque[i] = 1 if (t == 2 or t == 17 or t == 27 or t == 28 or t == 29 or t == 22 or t == shut_id) else 0
 	# the three distance fields (to home, work, shop) are independent: one thread each
 	var srcs := [homes, works, shops]
 	var made := [PackedInt32Array(), PackedInt32Array(), PackedInt32Array()]

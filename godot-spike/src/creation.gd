@@ -14,12 +14,13 @@ const ATTR_MAX := 14
 # the doll still draws from the two bodies in the tileset; `fem` picks the layer set (d_torso_m / d_torso_f)
 const SPRITES := [{"id": "m", "name": "Frame A", "fem": false}, {"id": "f", "name": "Frame B", "fem": true}]
 const STYLES := ["short", "buzz", "mohawk", "long", "bob", "ponytail", "bun"]
-const SKIN_NAMES := ["Pale", "Light tan", "Tanned", "Dark", "Deep brown"]
+const SKIN_NAMES := ["Pale", "Light tan", "Tanned", "Dark", "Deep brown", "Blue", "Red", "Yellow", "Green", "Orange", "Purple"]
 const HAIR_NAMES := ["Black", "Dark brown", "Chestnut", "Blond", "Grey", "Crimson dye", "Cyan dye"]
 const STYLE_NAMES := ["Short", "Buzz cut", "Mohawk", "Long", "Bob", "Ponytail", "Bun"]
-# natural eye colours only: an eye that glows or sees in the dark is an implant (pillar 3)
-const EYES := [Color(0.34, 0.2, 0.1), Color(0.5, 0.36, 0.14), Color(0.3, 0.5, 0.22), Color(0.25, 0.45, 0.72), Color(0.52, 0.58, 0.62), Color(0.62, 0.45, 0.12)]
-const EYE_NAMES := ["Brown", "Hazel", "Green", "Blue", "Grey", "Amber"]
+# eye colours are muted and never glow: an eye that glows or sees in the dark is an implant (pillar 3).  The first six are natural; red, violet, gold, orange and teal are the unusual ones
+const EYES := [Color(0.34, 0.2, 0.1), Color(0.5, 0.36, 0.14), Color(0.3, 0.5, 0.22), Color(0.25, 0.45, 0.72), Color(0.52, 0.58, 0.62), Color(0.62, 0.45, 0.12),
+	Color(0.62, 0.2, 0.2), Color(0.5, 0.32, 0.62), Color(0.78, 0.66, 0.2), Color(0.8, 0.45, 0.15), Color(0.2, 0.55, 0.55)]
+const EYE_NAMES := ["Brown", "Hazel", "Green", "Blue", "Grey", "Amber", "Red", "Violet", "Gold", "Orange", "Teal"]
 const EYE_SHAPE_NAMES := ["Round", "Almond", "Hooded", "Wide"]          # DollSpec.EYE_SHAPES order
 const FIELDS := ["sprite", "skin", "hair", "style", "eyes", "eye_shape"]
 # the appearance rows the screen shows.  The body frame has no row until the standing doll has a second body; `sprite` stays in `app`.
@@ -135,8 +136,36 @@ static func pool_text(attrs: Dictionary) -> String:
 
 
 # ---------------------------------------------------------------------------------------------- a whole profile
+const NAME_MAX := 24
+
+## the name as it is stored: printable ASCII only, trimmed, at most NAME_MAX characters
+static func clean_name(s: String) -> String:
+	var out := ""
+	for i in s.length():
+		var u: int = s.unicode_at(i)
+		if u >= 32 and u < 127:
+			out += s[i]
+	return out.strip_edges().substr(0, NAME_MAX)
+
 static func new_profile() -> Dictionary:
-	return {"app": default_app(), "attrs": start_attrs()}
+	return {"app": default_app(), "attrs": start_attrs(), "name": ""}
+
+## the Randomize button: every appearance field at random and the attribute points moved about (the total stays 50, each 6..14); the name you typed stays
+static func randomized(rng: RandomNumberGenerator, keep: Dictionary = {}) -> Dictionary:
+	var app: Dictionary = default_app()
+	for f in FIELDS:
+		app[f] = rng.randi() % count(f)
+	var attrs: Dictionary = start_attrs()
+	var ids: Array = SK.ATTRS.map(func(a): return String(a["id"]))
+	for _i in 60:
+		var lo: String = ids[rng.randi() % ids.size()]
+		var hi: String = ids[rng.randi() % ids.size()]
+		if lo == hi or not can_lower(attrs, lo):
+			continue
+		var moved: Dictionary = change(attrs, lo, -1)
+		if can_raise(moved, hi):
+			attrs = change(moved, hi, 1)
+	return {"app": app, "attrs": attrs, "name": clean_name(String(keep.get("name", "")))}
 
 static func profile_valid(p: Dictionary) -> bool:
 	return attrs_valid(p.get("attrs", {})) and sanitize(p.get("app", {})) == p.get("app", {})
@@ -145,3 +174,4 @@ static func profile_valid(p: Dictionary) -> bool:
 static func apply(g, p: Dictionary) -> void:
 	g.attrs = p["attrs"].duplicate()
 	g.app = sanitize(p["app"])
+	g.player_name = clean_name(String(p.get("name", "")))

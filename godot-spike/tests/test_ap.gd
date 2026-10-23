@@ -78,8 +78,9 @@ func run() -> Array:
 	g._set_stance(g.WALKING)
 	g.pc = open
 	g.stamina = 80
+	var t_run: int = g.turn
 	g.act_move(1, 0, true)
-	check.call("running costs 5 stamina a move, less the turn's regen (80 -> %d)" % g.stamina, g.stamina == 80 - g.RUN_STAMINA + g.stamina_regen())
+	check.call("running costs 5 stamina a move, plus at most the regen of each turn it takes (80 -> %d over %d turns)" % [g.stamina, g.turn - t_run], g.stamina >= 80 - g.RUN_STAMINA and g.stamina <= 80 - g.RUN_STAMINA + g.stamina_regen() * (g.turn - t_run))
 	# ---- a swing: 100 AP, stamina by kg, 2d10, location, armor and Grit
 	var who := -1
 	var spot := -1
