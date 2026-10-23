@@ -7,4 +7,5 @@ The game tree contains no code, data, art or ids from Cataclysm: Dark Days Ahead
 - Guns: `godot-spike/tools/content/guns.py` (50 guns, seven fictional makers, Trilobit's own stats).
 - Other items: `godot-spike/tools/export_items.py`, which writes `godot-spike/data/items.json`.
 - Art: `godot-spike/tools/content/` generators draw the Trilobit64 tileset, paper dolls and icons.
-- Character sprites (trial, not yet in the game): [`doll-workshop/`](doll-workshop/) is a standalone Godot 4.5 workshop and runtime for layered, palette-swapped dolls (male and female, three frames each, 64 px and a 32 px world set), with a seeded generator and its own tests.
+- World tiles: [`world-workshop/`](world-workshop/) draws the five 64 px district tilesets (downtown, mid-town, slums, country, docks and sewers) and their street furniture; the game picks a set per cell by district.
+- Character sprites: [`doll-workshop/`](doll-workshop/) is the standalone Godot 4.5 workshop and runtime for the layered, palette-swapped dolls the game draws people with (male and female, three frames each, a 64 px set for the creation screen and a 32 px world set), with a seeded generator, a cached incremental bake and its own tests.

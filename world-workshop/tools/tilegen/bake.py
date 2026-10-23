@@ -1,0 +1,126 @@
+#!/usr/bin/env python3
+"""Bake the world tilesets: every id in catalog.py for every theme in themes.py, into one folder per theme in the
+game's tileset format (tile_config.json + sheet_tiles.png, read by the game's src/tileset.gd).
+
+Usage: bake.py OUT [--themes rich,mid] [--jobs N] [--no-cache]
+Each sprite is cached (in .cache/) under a key of the sources that draw it, its theme's materials and its id and
+variant, so a bake re-renders only what changed: a new prop renders that prop in five themes; a changed material
+renders that theme; a changed renderer renders everything.  Output is byte-identical either way.
+"""
+import argparse
+import gzip
+import hashlib
+import json
+import os
+import pickle
+import sys
+import time
+from multiprocessing import Pool
+
+import numpy as np
+from PIL import Image
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import themes as TH        # noqa: E402
+import catalog as CA       # noqa: E402
+from canvas import Rng     # noqa: E402
+import render as R         # noqa: E402
+
+COLS = 32
+CACHE_VERSION = 1
+SOURCES = ['canvas.py', 'render.py', 'color.py', 'terrain.py', 'walls.py', 'furniture.py', 'props.py']
+
+
+def _src_key():
+    h = hashlib.sha256()
+    for n in SOURCES:
+        h.update(open(os.path.join(HERE, n), 'rb').read())
+    return h.hexdigest()
+
+
+def _theme_key(theme):
+    th = dict(TH.THEMES[theme])
+    return hashlib.sha256(json.dumps([TH.COMMON, th], sort_keys=True, default=str).encode()).hexdigest()
+
+
+def sprite_names(n, id_):
+    return [id_] if n == 1 else ['%s.%d' % (id_, v) for v in range(n)]
+
+
+def render_one(args):
+    theme, id_, v = args
+    f, n, kind = CA.CATALOG[id_]
+    t = f(theme, Rng(theme, id_, v), v)
+    return R.to_rgba(t, TH.Mats(theme))
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('out')
+    ap.add_argument('--themes', default=','.join(TH.ORDER))
+    ap.add_argument('--jobs', type=int, default=os.cpu_count() or 2)
+    ap.add_argument('--no-cache', action='store_true')
+    ap.add_argument('--cache', default=os.path.join(HERE, '..', '..', '.cache', 'tiles'))
+    a = ap.parse_args()
+    t0 = time.time()
+    src = _src_key()
+    os.makedirs(a.cache, exist_ok=True)
+    total = rendered = 0
+    for theme in a.themes.split(','):
+        tk = _theme_key(theme)
+        jobs, keys, cached = [], [], {}
+        for id_, (f, n, kind) in CA.CATALOG.items():
+            for v in range(n):
+                k = hashlib.sha256(('%d|%s|%s|%s|%s|%d' % (CACHE_VERSION, src, tk, theme, id_, v)).encode()).hexdigest()[:32]
+                p = os.path.join(a.cache, k + '.npy.gz')
+                if not a.no_cache and os.path.exists(p):
+                    with gzip.open(p, 'rb') as fh:
+                        cached[(id_, v)] = np.load(fh)
+                else:
+                    jobs.append((theme, id_, v))
+                    keys.append(p)
+        if jobs:
+            with Pool(a.jobs) as pool:
+                for (th, id_, v), p, img in zip(jobs, keys, pool.map(render_one, jobs, chunksize=4)):
+                    cached[(id_, v)] = img
+                    if not a.no_cache:
+                        with gzip.open(p + '.tmp', 'wb', compresslevel=1) as fh:
+                            np.save(fh, img)
+                        os.replace(p + '.tmp', p)
+        rendered += len(jobs)
+        # the sheet: ids in catalogue order, variants together
+        entries = []
+        variants = {}
+        for id_, (f, n, kind) in CA.CATALOG.items():
+            names = sprite_names(n, id_)
+            if n > 1:
+                variants[id_] = n
+            for v, name in enumerate(names):
+                entries.append((name, cached[(id_, v)]))
+            if n > 1:
+                entries.append((id_, cached[(id_, 0)]))
+        for alias, id_ in CA.ALIASES.items():
+            entries.append((alias, cached[(id_, 0)]))
+        rows = (len(entries) + COLS - 1) // COLS
+        sheet = np.zeros((rows * 64, COLS * 64, 4), np.uint8)
+        tiles = []
+        for i, (name, img) in enumerate(entries):
+            r, c = divmod(i, COLS)
+            sheet[r * 64:(r + 1) * 64, c * 64:(c + 1) * 64] = img
+            tiles.append({'id': name, 'fg': i + 1})
+        od = os.path.join(a.out, theme)
+        os.makedirs(od, exist_ok=True)
+        Image.fromarray(sheet, 'RGBA').save(os.path.join(od, 'sheet_tiles.png'), optimize=True)
+        cfg = {'tile_info': [{'pixelscale': 1, 'width': 64, 'height': 64}], 'variants': variants, 'doll': {},
+               'theme': {'id': theme, 'name': TH.THEMES[theme]['name'], 'desc': TH.THEMES[theme]['desc']},
+               'tiles-new': [{'file': 'sheet_tiles.png', 'sprite_width': 64, 'sprite_height': 64, 'sprite_offset_x': 0,
+                              'sprite_offset_y': 0, 'tiles': tiles}]}
+        json.dump(cfg, open(os.path.join(od, 'tile_config.json'), 'w'), indent=None, separators=(',', ':'), sort_keys=True)
+        total += len(entries)
+        print('  %s: %d sprites (%d rendered)' % (theme, len(entries), len(jobs)), flush=True)
+    print('baked %d sprites, rendered %d, in %.0fs' % (total, rendered, time.time() - t0))
+
+
+if __name__ == '__main__':
+    main()

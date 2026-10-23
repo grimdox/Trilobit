@@ -1,7 +1,7 @@
 extends SceneTree
 ## Three scenes drawn by the game's own view at a 32 px tile (32 px dolls) and at a 64 px tile (64 px dolls):
 ## a busy sidewalk at noon, a charging station, and a street at night with a patrol.  The view's source is loaded with
-## its tile size changed; nothing else differs.  godot ... -s tests/shot32.gd -- out_prefix
+## its tile size changed; nothing else differs.  godot ... -s tests/shot32.gd -- out_prefix [sizes, default 32,64]
 const MainScript = preload("res://src/main.gd")
 const WorldScript = preload("res://src/world.gd")
 
@@ -77,8 +77,11 @@ func _initialize() -> void:
 			thug = i
 			break
 	scenes.append(["hideout", int(g.sim.pos[thug]) + 2, 23 * 600 + 40, [1, 2, 1, 2, 0], 12])
-	var V32 := _variant(32, "res://gfx/dolls32")
-	var V64 := _variant(64, "res://gfx/dolls")
+	var args := OS.get_cmdline_user_args()
+	var sizes: Array = Array(String(args[1]).split(",")) if args.size() > 1 else ["32", "64"]
+	var views := []
+	for sz in sizes:
+		views.append([_variant(int(sz), "res://gfx/dolls" if int(sz) >= 64 else "res://gfx/dolls32"), int(sz)])
 	for sc in scenes:
 		g.pc = sc[1]
 		g.last_pc = g.pc
@@ -88,7 +91,7 @@ func _initialize() -> void:
 		_crowd(g, g.pc, sc[3], sc[4])
 		g.act_wait()
 		g._compute_fov()
-		for v in [[V32, 32], [V64, 64]]:
+		for v in views:
 			var vp := SubViewport.new()
 			vp.size = Vector2i(1280, 704)
 			vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS

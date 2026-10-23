@@ -235,10 +235,100 @@ func _joins(base: int, x: int, y: int) -> bool:
 ## one terrain cell: variants for texture, autotiled walls, doors that face along their wall, rails that turn
 const WEALTH_TINT := [Color(0.80, 0.75, 0.70), Color(1, 1, 1), Color(1.10, 1.13, 1.22)]
 
+## the district tilesets (world-workshop): every cell is drawn with the set of its district, falling back to the base
+## set for anything a district set does not draw (items, animals, vehicles)
+const THEMES := ["rich", "mid", "slum", "rural", "industry"]
+const WEALTH_THEME := ["slum", "mid", "rich"]
+var theme_sets := {}               # theme -> Tileset, or {} when the sets are missing
+var base_set = null                # the base tileset (the one main.gd hands the view)
+var themed := false                # drawing a cell with a district set (no wealth tint: the set is the district)
+
+func _load_themes() -> void:
+	if not theme_sets.is_empty() or tileset == null:
+		return
+	theme_sets["_tried"] = true
+	for th in THEMES:
+		var ts = tileset.get_script().new()
+		if ts.load_dir("res://gfx/tiles_" + th):
+			ts.fallback = tileset
+			theme_sets[th] = ts
+
+## the district a cell belongs to: the country and the docks outside the city, sewers and tunnels underground, and in
+## the city its wealth (slums, mid-town, downtown)
+func theme_at(c: int) -> String:
+	if game.island != null and game.zone != game.island.CITY_ZONE:
+		return "industry" if game.zone == game.island.PORT_ZONE else "rural"
+	if c / game.s2 > game.city.zmax:
+		return "industry"
+	# the district of the 16 x 16 block the cell is in, so borders run straight instead of in steps across a lot
+	var g: int = c % game.s2
+	var bx: int = mini((g % game.size) / 16 * 16 + 8, game.size - 1)
+	var by: int = mini((g / game.size) / 16 * 16 + 8, game.size - 1)
+	return WEALTH_THEME[clampi(game.city.wealth_at(by * game.size + bx), 0, 2)]
+
+## street furniture by district, drawn over the ground (it does not block): lamps and street trees along the kerb,
+## neon, benches, flowerbeds, rubbish and spills along building fronts, fountains, statues and shrubs in parks, drums
+## and pallets in the docks.  Chosen by a hash of the cell, so it is the same every time you pass.
+const DECOR_KERB := {"rich": [[4, "f_trl_tree_street"], [9, "f_trl_streetlight"]], "mid": [[7, "f_trl_streetlight"], [13, "f_trl_tree_street"]],
+	"slum": [[9, "f_trl_streetlight_broken"], [13, "f_trl_streetlight"], [17, "f_trl_trash"]], "industry": [[8, "f_trl_streetlight"], [15, "f_trl_barrels"]],
+	"rural": [[19, "f_trl_streetlight"]]}
+const DECOR_FRONT := {"rich": [[11, "f_trl_flowerbed"], [17, "f_trl_bench"], [23, "f_trl_neon_cyan"]],
+	"mid": [[10, "neon"], [19, "f_trl_bench"], [29, "f_trl_flowerbed"]],
+	"slum": [[6, "neon"], [9, "f_trl_spill_chem"], [11, "f_trl_trash"], [14, "f_trl_puddle"], [23, "f_trl_bench_broken"]],
+	"industry": [[9, "f_trl_spill_oil"], [11, "f_trl_pallet"], [13, "f_trl_barrels"], [19, "neon"]],
+	"rural": [[9, "f_trl_woodpile"], [15, "f_trl_fence"]]}
+const DECOR_PARK := {"rich": [[23, "f_trl_flowerbed"], [61, "f_trl_fountain"], [67, "f_trl_statue"]], "mid": [[37, "f_trl_bench"], [97, "f_trl_statue"], [41, "f_trl_hedge"]],
+	"slum": [[13, "f_trl_shrub_wild"], [29, "f_trl_trash"], [113, "f_trl_statue_broken"]], "industry": [[17, "f_trl_shrub_wild"], [31, "f_trl_barrels"]],
+	"rural": [[53, "f_trl_haystack"], [71, "f_trl_well"], [29, "f_trl_shrub_wild"], [43, "f_trl_bamboo"]]}
+const NEON_BY_THEME := {"rich": ["cyan"], "mid": ["pink", "cyan"], "slum": ["pink", "green", "violet", "red"], "industry": ["amber", "cyan"], "rural": ["amber"]}
+
+func _decor_pick(table: Array, h: int, th: String) -> String:
+	for e in table:
+		if h % int(e[0]) == 0:
+			var id: String = e[1]
+			if id == "neon":
+				var cols: Array = NEON_BY_THEME.get(th, ["pink"])
+				return "f_trl_neon_" + String(cols[(h / 7) % cols.size()])
+			return id
+	return ""
+
+func _decor(c: int, t: int, wx: int, wy: int, base: int) -> String:
+	if not themed or c >= game.s2:
+		return ""
+	var th := theme_at(c)
+	var h: int = ((c * 2654435761) >> 7) & 0xffffff
+	var size: int = game.size
+	if t == 0:
+		var road := false
+		var wall := false
+		for d in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]:
+			var x: int = wx + d.x
+			var y: int = wy + d.y
+			if x < 0 or y < 0 or x >= size or y >= size:
+				continue
+			var nt: int = game.city.tiles[base + y * size + x]
+			road = road or nt == 1
+			wall = wall or nt == 2 or nt == 10
+		if road and not wall:
+			return _decor_pick(DECOR_KERB.get(th, []), h, th)
+		if wall and not road:
+			return _decor_pick(DECOR_FRONT.get(th, []), h, th)
+		return ""
+	if t == 6:
+		return _decor_pick(DECOR_PARK.get(th, []), h, th)
+	if t == 13 and th == "industry":
+		return _decor_pick([[13, "f_trl_barrels"], [17, "f_trl_pallet"], [29, "f_trl_generator"], [37, "f_trl_machinery"]], h, th)
+	return ""
+
+func _use_theme(c: int) -> void:
+	var ts = theme_sets.get(theme_at(c)) if not theme_sets.is_empty() else null
+	tileset = ts if ts != null else base_set
+	themed = ts != null
+
 func _cell_art(t: int, c: int, wx: int, wy: int, pos: Vector2, mod: Color, ground: bool) -> void:
 	var T := TILE
 	var wl: int = game.city.wealth_at(c)
-	if wl != 1 and (t == 0 or t == 2 or t == 3 or t == 4 or t == 10):
+	if not themed and wl != 1 and (t == 0 or t == 2 or t == 3 or t == 4 or t == 10):
 		mod = mod * WEALTH_TINT[wl]
 		if t == 3 and tileset.has("t_trl_marble") and tileset.has("t_concrete"):
 			_blit(tileset.pick("t_trl_marble" if wl == 2 else "t_concrete", c), pos, mod)
@@ -295,8 +385,12 @@ func _draw() -> void:
 	var ox := cx - cols / 2 + (look_off.x if look_on else 0)
 	var oy := cy - rows / 2 + (look_off.y if look_on else 0)
 	var below_mod := Color(0.5, 0.55, 0.75)
+	base_set = tileset if base_set == null or not (tileset in theme_sets.values()) else base_set
+	_load_themes()
 	for sy in rows:
 		for sx in cols:
+			tileset = base_set
+			themed = false
 			var wx := ox + sx
 			var wy := oy + sy
 			if wx < 0 or wy < 0 or wx >= size or wy >= size:
@@ -311,6 +405,7 @@ func _draw() -> void:
 			var c := base + wy * size + wx
 			if game.fov.explored[c] == 0:
 				continue
+			_use_theme(c)
 			var vis: bool = game.fov.visible[c] == 1
 			var mod: Color = Color.WHITE if vis else DARK
 			var pos := Vector2(sx * T, sy * T)
@@ -320,7 +415,12 @@ func _draw() -> void:
 				if bt >= 0:
 					_blit(tileset.pick(TERRAIN[bt], c), pos, mod * below_mod)
 				continue
-			if t == CG.TID["window_broken"]:
+			if (t == CG.TID["window_broken"] or t == CG.TID["door_closed"]) and tileset.index.has("t_door_closed"):
+				_blit(tileset.pick("t_floor", c), pos, mod)
+				var vert: bool = _joins(base, wx, wy - 1) and _joins(base, wx, wy + 1) and not (_joins(base, wx - 1, wy) and _joins(base, wx + 1, wy))
+				var key: String = "t_window_broken" if t == CG.TID["window_broken"] else "t_door_closed"
+				_blit(key + (".v" if vert and tileset.index.has(key + ".v") else ""), pos, mod)
+			elif t == CG.TID["window_broken"]:
 				_blit(tileset.pick("t_floor", c), pos, mod)
 				for k in 3:
 					draw_line(pos + Vector2(4 + k * 8, 3) * S, pos + Vector2(10 + k * 7, 29) * S, Color(0.75, 0.9, 1.0, 0.8) * mod, 1.2 * S)
@@ -342,9 +442,14 @@ func _draw() -> void:
 					draw_rect(Rect2(pos + Vector2(4, 4) * S, Vector2(T - 8 * S, T - 8 * S)), Color(0.5, 0.4, 0.25) * mod)
 			else:
 				_cell_art(t, c, wx, wy, pos, mod, c < s2)
+				var dec := _decor(c, t, wx, wy, base)
+				if dec != "" and tileset.index.has(dec) and not game.items_at.has(c):
+					_blit(dec, pos, mod)
 			if vis and game.items_at.has(c):
 				var arr: Array = game.items_at[c]
 				_blit(item_sprite(arr[arr.size() - 1]), pos)
+	tileset = base_set
+	themed = false
 	# the trains: a cutaway of each carriage, tile by tile (wall/door, two floor lanes, wall/door)
 	if game.transit.active():
 		var tr = game.transit
