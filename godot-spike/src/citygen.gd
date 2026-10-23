@@ -383,7 +383,7 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 	if planned:
 		_paint_boulevards()
 
-## Parking lots and charging stations.  A lot is paved like a road and marked with bays (a car is 4 wide by 6 long, so a bay is 4 x 6): a row of bays, an aisle six wide
+## Parking lots and charging stations.  A lot is paved like a road and marked with bays (a bay is 4 x 6: a car is 3 wide by 5 long and has room to spare): a row of bays, an aisle six wide
 ## and a row facing it, 18 deep, as wide as ten bays at most.  It takes the middle of a whole block (about one block in five that is big enough and not at the very centre).
 ##   kind "lot"      mostly bays; one lot in three has a vehicle charging bank (2 x 2) between bays, and then a charging post for people at the end of the aisle
 ##   kind "station"  a charging station like a petrol station: every third slot is a vehicle charging bank, and a post for people at the aisle's end

@@ -57,37 +57,40 @@ func run() -> Array:
 	var counts := {}
 	for o in off:
 		counts[o[2]] = int(counts.get(o[2], 0)) + 1
-	check.call("a car is 24 tiles: 4 wide, 6 long", off.size() == 24)
-	check.call("it has a 2x2 cabin, an engine bay, a trunk and four wheels %s" % str(counts), counts["C"] == 4 and counts["E"] == 4 and counts["T"] == 4 and counts["W"] == 4)
+	check.call("a car is 15 tiles: 3 wide, 5 long", off.size() == 15)
+	check.call("it has a two-seat cabin, an engine bay, a trunk and four wheels %s" % str(counts), counts["C"] == 2 and counts["E"] == 2 and counts["T"] == 1 and counts["W"] == 4)
 	var xs := []
 	var ys := []
 	for o in off:
 		xs.append(o[0])
 		ys.append(o[1])
-	check.call("facing north it is 4 across and 6 deep", xs.max() - xs.min() == 3 and ys.max() - ys.min() == 5)
-	var off_e = vs.offsets("car", 1)
+	check.call("facing north it is 3 across and 5 deep", xs.max() - xs.min() == 2 and ys.max() - ys.min() == 4)
+	var off_e = vs.offsets("car", 2)
 	var xe := []
 	var ye := []
 	for o in off_e:
 		xe.append(o[0])
 		ye.append(o[1])
-	check.call("facing east it is 6 across and 4 deep", xe.max() - xe.min() == 5 and ye.max() - ye.min() == 3)
+	check.call("facing east it is 5 across and 3 deep", xe.max() - xe.min() == 4 and ye.max() - ye.min() == 2)
+	var off_ne = vs.offsets("car", 1)
+	var off_se = vs.offsets("car", 3)
+	check.call("facing north-east it is a turned body of about 15 tiles, the seat in the middle and an engine tile ahead of it (%d tiles)" % off_ne.size(), off_ne.size() >= 13 and off_ne.size() <= 19 and off_ne.any(func(o): return o[0] == 0 and o[1] == 0 and o[2] == "C") and off_ne.any(func(o): return o[2] == "E" and o[0] > 0 and o[1] < 0) and off_se.any(func(o): return o[2] == "E" and o[0] > 0 and o[1] > 0))
 	# ---- park a car in the east lane of a vertical road, heading north
 	var lane_x: int = e + 8
 	var a: int = vs.anchor_for("car", 0, VS.lane_hi2(e), 2 * mid_y, 0)
 	var vi: int = vs.spawn("car", a, 0, Color.RED)
-	check.call("a car fits a lane exactly (spawned in the northbound lane)", vi >= 0)
+	check.call("a car fits a lane (spawned in the northbound lane)", vi >= 0)
 	var occupied := 0
 	for c in vs.cells(g.vehicles[vi]):
 		if g.veh_at[c] == vi and g.sim.walk[c] == 0:
 			occupied += 1
-	check.call("every tile of the body is marked as occupied", occupied == 24)
+	check.call("every tile of the body is marked as occupied", occupied == 15)
 	var bx0 := 99999
 	var bx1 := 0
 	for c in vs.cells(g.vehicles[vi]):
 		bx0 = mini(bx0, c % size)
 		bx1 = maxi(bx1, c % size)
-	check.call("its four tiles span the four black lane tiles (x %d..%d)" % [bx0, bx1], bx0 == e + 7 and bx1 == e + 10)
+	check.call("its three tiles sit inside the four black lane tiles (x %d..%d)" % [bx0, bx1], bx0 >= e + 7 and bx1 <= e + 10 and bx1 - bx0 == 2)
 	var other: int = vs.anchor_for("car", 0, VS.lane_hi2(e), 2 * mid_y + 4, 0)
 	check.call("a second car cannot overlap the first", vs.spawn("car", other, 0, Color.BLUE) == -1)
 	check.call("a person cannot stand on the body", g.sim.walk[g.vehicles[vi]["cell"]] == 0)
@@ -106,16 +109,21 @@ func run() -> Array:
 	g.act_move(0, -1)
 	check.call("it accelerates up to the engine's top speed (4)", g.vehicles[vi]["spd"] == 4 and g.vehicles[vi]["cell"] <= c0 - size * 6)
 	check.call("the player's seat moves with it", g.pc == g.vehicles[vi]["cell"])
+	var cs: int = g.vehicles[vi]["cell"]
 	g.act_move(1, 0)
-	check.call("too fast to turn: it just slows", g.vehicles[vi]["dir"] == 0 and g.vehicles[vi]["spd"] == 3)
-	g.act_move(0, 1)
-	g.act_move(0, 1)
+	check.call("at speed a turn scrubs a point of speed, bends the heading 45 degrees to the car's right and the car keeps moving (an arc)", g.vehicles[vi]["dir"] == 1 and g.vehicles[vi]["spd"] == 3 and g.vehicles[vi]["cell"] != cs and g.facing == Vector2i(1, -1))
+	var presses := 0
+	while g.vehicles[vi]["spd"] > 0 and presses < 4:
+		g.act_move(0, 1)
+		presses += 1
 	check.call("the opposite key brakes to a halt", g.vehicles[vi]["spd"] == 0)
-	# turn: a quarter turn about the centre
-	var ctr0: Vector2i = vs.center2("car", g.vehicles[vi]["cell"], 0)
+	g.act_move(-1, 0)
+	check.call("Left turns it back to the left of its own heading, and the view follows (%s)" % str(g.facing), g.vehicles[vi]["dir"] == 0 and g.facing == Vector2i(0, -1))
+	# standing still, Right pivots on the spot
+	var cell_still: int = g.vehicles[vi]["cell"]
 	g.act_move(1, 0)
-	var ctr1: Vector2i = vs.center2("car", g.vehicles[vi]["cell"], g.vehicles[vi]["dir"])
-	check.call("a sideways key turns it on the spot, about its centre (%s -> %s)" % [str(ctr0), str(ctr1)], g.vehicles[vi]["dir"] == 1 and absi(ctr0.x - ctr1.x) <= 2 and absi(ctr0.y - ctr1.y) <= 2)
+	g.act_move(1, 0)
+	check.call("standing still a sideways key pivots it on the spot, 45 degrees each press (now heading east)", g.vehicles[vi]["dir"] == 2 and g.vehicles[vi]["cell"] == cell_still and g.facing == Vector2i(1, 0))
 	# the damage model
 	var v: Dictionary = g.vehicles[vi]
 	v["spd"] = 0

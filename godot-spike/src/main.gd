@@ -844,7 +844,7 @@ func refresh() -> void:
 	var extra := ""
 	if g.in_vehicle >= 0:
 		var vv: Dictionary = g.vehicles[g.in_vehicle]
-		extra = "  [%s  batt %d%%  speed %d  %s%s]" % [g.vs.KINDS[vv["kind"]]["name"].to_upper(), vv["charge"], absi(int(vv["spd"])), g.vs.status_text(g.in_vehicle), "  AIRBORNE" if g.airborne() else ""]
+		extra = "  [%s  batt %d%%  speed %s  %s%s]" % [g.vs.KINDS[vv["kind"]]["name"].to_upper(), vv["charge"], ("%d km/h" % g.vs.kph(vv)) if g.vs.is_g8(String(vv["kind"])) else str(absi(int(vv["spd"]))), g.vs.status_text(g.in_vehicle), "  AIRBORNE" if g.airborne() else ""]
 	if g.flying:
 		extra += "  [FLYING fuel %d]" % g.fuel
 	elif g.has_implant("jets") and g.fuel < g.FUEL_MAX:

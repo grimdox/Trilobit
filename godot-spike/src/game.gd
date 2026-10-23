@@ -390,10 +390,11 @@ func _park_lots(cols: Array) -> void:
 				continue
 			park_in_bay(int(bay[0]), int(bay[1]), cols[rng.randi() % cols.size()], 10 if int(bay[2]) == 1 else 30, 60 if int(bay[2]) == 1 else 100)
 
-## put a parked car into the 4 x 6 bay whose top-left cell is (bx, by); -1 if it will not fit
+## put a parked car (3 x 5) into the 4 x 6 bay whose top-left cell is (bx, by); -1 if it will not fit
 func park_in_bay(bx: int, by: int, color: Color, charge_lo: int, charge_hi: int) -> int:
 	var dir: int = 0 if rng.randi() % 2 == 0 else 2
-	var a: int = vs.anchor_for("car", dir, 2 * bx + 4, 2 * by + 6, 0)
+	dir = VS.h("car", dir)
+	var a: int = vs.anchor_for("car", dir, 2 * bx + 3, 2 * by + 5, 0)
 	var vi: int = vs.spawn("car", a, dir, color, false)
 	if vi < 0:
 		return -1
@@ -442,6 +443,7 @@ func _spawn_vehicles() -> void:
 			cy2 = VS.lane_k2(e, lane_k)
 			cx2 = along * 2
 		var kind := "car" if rng.randf() < 0.88 else "truck"
+		dir = VS.h(kind, dir)
 		var a: int = vs.anchor_for(kind, dir, cx2, cy2, 0)
 		var vi: int = vs.spawn(kind, a, dir, cols[rng.randi() % cols.size()], true)
 		if vi >= 0:
@@ -469,8 +471,8 @@ func _spawn_vehicles() -> void:
 			tries += 1
 			var row: int = rows[rng.randi() % rows.size()]
 			var hi: bool = made % 2 == 0
-			var vb: int = vs.anchor_for("car", 0 if hi else 2, VS.lane_k2(band[row], 1 if hi else 0), row * 2, 0)
-			var vb_i: int = vs.spawn("car", vb, 0 if hi else 2, cols[rng.randi() % cols.size()], true)
+			var vb: int = vs.anchor_for("car", 0 if hi else 4, VS.lane_k2(band[row], 1 if hi else 0), row * 2, 0)
+			var vb_i: int = vs.spawn("car", vb, 0 if hi else 4, cols[rng.randi() % cols.size()], true)
 			if vb_i < 0:
 				continue
 			var fits := true
@@ -505,6 +507,7 @@ func _spawn_dock_trucks(cols: Array) -> void:
 		var cx2: int = VS.lane_hi2(e) if hi_lane else VS.lane_lo2(e)
 		var cy2: int = (py + rng.randi_range(-46, 46)) * 2
 		var kind := "truck" if rng.randf() < 0.75 else "car"
+		dir = VS.h(kind, dir)
 		var a: int = vs.anchor_for(kind, dir, cx2, cy2, 0)
 		var vi: int = vs.spawn(kind, a, dir, cols[rng.randi() % cols.size()], true)
 		if vi < 0:
@@ -522,8 +525,8 @@ func _spawn_dock_trucks(cols: Array) -> void:
 
 ## park something at the first free spot of the right ground near a local position
 func _place(kind: String, near_x: int, near_y: int, minr: int, maxr: int, tiles: Array, dir: int, color: Color) -> void:
-	var cell: int = vs.find_spot(kind, clampi(near_y, 0, size - 1) * size + clampi(near_x, 0, size - 1), minr, maxr, tiles, dir)
-	special_dir = dir
+	var cell: int = vs.find_spot(kind, clampi(near_y, 0, size - 1) * size + clampi(near_x, 0, size - 1), minr, maxr, tiles, VS.h(kind, dir))
+	special_dir = VS.h(kind, dir)
 	_add_special(kind, cell, color)
 
 ## the vehicles of the wild zones: trucks and a mech on the quay, cars in the town, a plane on the strip
@@ -1246,15 +1249,15 @@ func ev_bank_of(c: int) -> int:
 		return -1
 	return c - (k / 2) * size - (k % 2)
 
-## everything the player could use from here: [{kind, cell, label}].  On foot that is anything in the eight cells around you; in a vehicle, the charging banks within two
+## everything the player could use from here: [{kind, cell, label}].  On foot that is anything in the eight cells around you; in a vehicle, the charging banks within three
 ## tiles of it.  A door counts whether it is open, shut or locked.
 func interactables() -> Array:
 	var out: Array = []
 	var seen := {}
 	if in_vehicle >= 0:
 		for c0 in vs.cells(vehicles[in_vehicle]):
-			for dy in range(-2, 3):
-				for dx in range(-2, 3):
+			for dy in range(-3, 4):
+				for dx in range(-3, 4):
 					var x: int = c0 % size + dx
 					var y: int = (c0 / size) % size + dy
 					if not in_bounds(x, y):
@@ -5096,7 +5099,7 @@ func vehicles_at_bank(bank: int) -> Array:
 		for c in vs.cells(v):
 			var cx: int = c % size
 			var cy: int = (c / size) % size
-			if cx >= bx - 2 and cx <= bx + 3 and cy >= by - 2 and cy <= by + 3:
+			if cx >= bx - 3 and cx <= bx + 4 and cy >= by - 3 and cy <= by + 4:
 				near = true
 				break
 		if near:

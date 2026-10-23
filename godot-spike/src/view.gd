@@ -735,7 +735,7 @@ func _draw_body(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> void:
 	if _draw_body_sprite(vi, v, ox, oy, T):
 		return
 	var shade := Color(0, 0, 0, 0.28)
-	var front: Vector2i = Vector2i(game.vs.DIR4[dirn][0], game.vs.DIR4[dirn][1])
+	var front: Vector2i = game.vs.fwd(kind, dirn)
 	# a soft shadow under anything in the air
 	var airborne: bool = bool(v.get("air", false))
 	for o in offs:
@@ -996,17 +996,18 @@ func _draw_body_sprite(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> bool
 		return false
 	var dirn: int = int(v["dir"])
 	var wreck: bool = v["wreck"]
-	var c2: Vector2i = game.vs.center2(kind, int(v["cell"]), dirn)
-	var ctr := Vector2((float(c2.x) * 0.5 - float(ox)) * T, (float(c2.y) * 0.5 - float(oy)) * T)
+	var tc: Vector2 = game.vs.true_center(kind, int(v["cell"]), dirn)
+	var ctr := Vector2((tc.x - float(ox)) * T, (tc.y - float(oy)) * T)
+	var rot_step: float = PI / 4.0 if game.vs.is_g8(kind) else PI / 2.0
 	var k: float = float(T) / 64.0
 	var tint: Color = Color(0.32, 0.30, 0.30) if wreck else (v["color"] as Color) * 1.12
 	tint.a = 1.0
 	var plain := Color(0.34, 0.32, 0.32) if wreck else Color.WHITE
 	var airborne: bool = bool(v.get("air", false))
 	if airborne:
-		draw_set_transform(ctr + Vector2(10, 24) * k, float(dirn) * PI / 2.0, Vector2(k, k))
+		draw_set_transform(ctr + Vector2(10, 24) * k, float(dirn) * rot_step, Vector2(k, k))
 		draw_texture(tu, -tu.get_size() * 0.5, Color(0, 0, 0, 0.35))
-	draw_set_transform(ctr, float(dirn) * PI / 2.0, Vector2(k, k))
+	draw_set_transform(ctr, float(dirn) * rot_step, Vector2(k, k))
 	draw_texture(tu, -tu.get_size() * 0.5, plain)
 	draw_texture(tp, -tp.get_size() * 0.5, tint)
 	draw_texture(to, -to.get_size() * 0.5, plain)
@@ -1026,6 +1027,24 @@ func _draw_body_sprite(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> bool
 		draw_circle(HELI_MAST, 12.0, Color(0.18, 0.2, 0.24))
 		draw_circle(HELI_MAST, 6.0, Color(0.6, 0.63, 0.68))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	# the driving marker: a green orb on the roof of the car or truck you are driving (the driver is not drawn); it stays upright however the vehicle turns
+	if int(v["driver"]) == -2 and game.vs.is_g8(kind) and not wreck:
+		var mk = _veh_tex("drive", "mark")
+		if mk != null:
+			var mp: Vector2 = ctr
+			if kind != "car":
+				var sx := 0.0
+				var sy := 0.0
+				var sn := 0
+				for o in game.vs.offsets(kind, dirn):
+					if String(o[2]) == "C":
+						sx += float(o[0])
+						sy += float(o[1])
+						sn += 1
+				var an := int(v["cell"])
+				mp = Vector2((float(an % game.size) + 0.5 + sx / maxf(1.0, float(sn)) - float(ox)) * T, (float((an % game.s2) / game.size) + 0.5 + sy / maxf(1.0, float(sn)) - float(oy)) * T)
+			var msz: float = 2.1 * float(T)
+			draw_texture_rect(mk, Rect2(mp - Vector2(msz, msz) * 0.5, Vector2(msz, msz)), false)
 	if wreck or game.vs.part_pct(v, "engine") < 30:
 		draw_circle(ctr + Vector2(0, -T * 0.6), 9.0 * S, Color(0.15, 0.15, 0.15, 0.5))
 		draw_circle(ctr + Vector2(T * 0.3, -T * 1.2), 12.0 * S, Color(0.2, 0.2, 0.2, 0.35))

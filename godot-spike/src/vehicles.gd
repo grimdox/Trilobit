@@ -1,12 +1,23 @@
 extends RefCounted
 ## Vehicles at human scale.  Every vehicle is a footprint of tiles taken from an ASCII template, rotated to one of four headings:
 ##   E engine bay   C cabin (the 2x2 seats)   K canopy glass   T trunk or cargo   B body panel   P wing or fin   H turret   W wheel   L leg   R rotor mast
-## A car is 4 wide by 6 long: engine bay in front, a 2x2 cabin in the middle, trunk behind, a wheel on each corner.  The lane of a road is
-## six tiles (white edge, four black, yellow centre), so a car fits a lane exactly.  The `cell` of a vehicle is its driver's seat (the front left
+## A car is 3 wide by 5 long: engine bay in front, a two-seat cabin in the middle, trunk behind, a wheel on each corner.  The lane of a road is
+## six tiles (white edge, four black, yellow centre), so a car sits in a lane with a tile to spare.  The `cell` of a vehicle is its driver's seat (the front left
 ## cabin tile); `veh_at` and `sim.walk` mark every tile of the footprint.  Each vehicle has four parts with their own hit points: the engine
 ## (swappable, from an item), the body, the drive (wheels, rotor or legs) and the cabin.
 const CG = preload("res://src/citygen.gd")
 const DIR4 := [[0, -1], [1, 0], [0, 1], [-1, 0]]
+## ground vehicles (car, truck) head in eight directions: dir 0..7 clockwise from north in 45 degree steps (0 N, 1 NE, 2 E ... 7 NW).  Every other kind keeps four (0..3).
+const DIR8 := [[0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1]]
+const GROUND8 := ["car", "truck"]
+const KPH_PER_TILE := 15                               # a tile a turn is 15 km/h: the city car's 3 tiles is 45, a hauler's 6 is 90
+
+static func is_g8(kind: String) -> bool:
+	return kind in GROUND8
+
+## a heading given as a quarter turn (0..3) in the units of that kind of vehicle
+static func h(kind: String, d4: int) -> int:
+	return d4 * 2 if kind in GROUND8 else d4
 const GROUND_OK := [1, 0, 6, 31, 32]                  # road, pavement, grass, field, sand
 const LAND_OK := [1, 0, 6, 31, 32, 11, 13, 30]        # ... plus roofs, platforms and rocks, for a helicopter's skids
 const MECH_OK := [1, 0, 6, 31, 32, 30, 20, 23, 24, 25]
@@ -14,7 +25,7 @@ const PART_OF := {"E": "engine", "B": "body", "T": "body", "P": "body", "H": "bo
 
 const KINDS := {
 	"car": {"name": "car", "drive": "wheels", "move": "ground", "anchor": [2, 1], "engine": "trl_eng_city", "parts": {"engine": 50, "body": 90, "drive": 40, "cabin": 30},
-		"rows": ["WEEW", "BEEB", "BCCB", "BCCB", "BTTB", "WTTW"]},
+		"rows": ["WEW", "BEB", "BCB", "BCB", "WTW"]},
 	"truck": {"name": "truck", "drive": "wheels", "move": "ground", "anchor": [2, 1], "engine": "trl_eng_haul", "parts": {"engine": 90, "body": 160, "drive": 70, "cabin": 45},
 		"rows": ["WEEEEW", "BEEEEB", "BCCCCB", "BCCCCB", "BBBBBB", "BTTTTB", "BTTTTB", "BTTTTB", "BTTTTB", "BTTTTB", "BTTTTB", "WTTTTW"]},
 	"heli": {"name": "helicopter", "drive": "rotor", "move": "air", "anchor": [1, 2], "engine": "trl_eng_rotor", "parts": {"engine": 60, "body": 60, "drive": 35, "cabin": 25},
@@ -47,13 +58,37 @@ func offsets(kind: String, dir: int) -> Array:
 	var rows: Array = t["rows"]
 	var an: Array = t["anchor"]
 	var out := []
+	if is_g8(kind) and dir % 2 == 1:
+		# a diagonal heading: every grid cell whose centre falls inside the turned body takes the template tile it lands on
+		var ang: float = float(dir) * PI / 4.0
+		var fx: float = sin(ang)
+		var fy: float = -cos(ang)
+		var rx: float = cos(ang)
+		var ry: float = sin(ang)
+		var hh: int = rows.size()
+		var ww: int = String(rows[0]).length()
+		var reach: int = maxi(hh, ww) + 1
+		for dy in range(-reach, reach + 1):
+			for dx in range(-reach, reach + 1):
+				var f: float = dx * fx + dy * fy
+				var u: float = dx * rx + dy * ry
+				var col: int = int(round(u)) + int(an[1])
+				var row_i: int = int(an[0]) - int(round(f))
+				if col < 0 or row_i < 0 or col >= ww or row_i >= hh:
+					continue
+				var ch2: String = String(rows[row_i])[col]
+				if ch2 != ".":
+					out.append([dx, dy, ch2])
+		_off[key] = out
+		return out
+	var qd: int = dir / 2 if is_g8(kind) else dir
 	for r in rows.size():
 		var row: String = rows[r]
 		for c in row.length():
 			var ch := row[c]
 			if ch == ".":
 				continue
-			var d: Array = rot(c - int(an[1]), int(an[0]) - r, dir)
+			var d: Array = rot(c - int(an[1]), int(an[0]) - r, qd)
 			out.append([d[0], d[1], ch])
 	_off[key] = out
 	return out
@@ -97,6 +132,24 @@ func center2(kind: String, anchor: int, dir: int) -> Vector2i:
 	var ax: int = anchor % g.size
 	var ay: int = (anchor % g.s2) / g.size
 	return Vector2i(2 * ax + x0 + x1 + 1, 2 * ay + y0 + y1 + 1)
+
+## the middle of the whole body in tile coordinates (a cell (x, y) spans x..x+1), at any heading: the point the painted sprite is turned about
+func true_center(kind: String, anchor: int, dir: int) -> Vector2:
+	var t: Dictionary = KINDS[kind]
+	var rows: Array = t["rows"]
+	var an: Array = t["anchor"]
+	var cu: float = (float(String(rows[0]).length()) - 1.0) * 0.5 - float(an[1])
+	var cf: float = float(an[0]) - (float(rows.size()) - 1.0) * 0.5
+	var ax: float = float(anchor % g.size) + 0.5
+	var ay: float = float((anchor % g.s2) / g.size) + 0.5
+	var ang: float = (float(dir) * PI / 4.0) if is_g8(kind) else (float(dir) * PI / 2.0)
+	return Vector2(ax + cu * cos(ang) + cf * sin(ang), ay + cu * sin(ang) - cf * cos(ang))
+
+## the unit step a heading takes (dx, dy)
+func fwd(kind: String, dir: int) -> Vector2i:
+	if is_g8(kind):
+		return Vector2i(DIR8[dir][0], DIR8[dir][1])
+	return Vector2i(DIR4[dir][0], DIR4[dir][1])
 
 ## the anchor that puts the footprint's centre at (cx2, cy2) (twice the coordinates), on the level of `base_cell`
 func anchor_for(kind: String, dir: int, cx2: int, cy2: int, base_cell: int) -> int:
@@ -203,7 +256,7 @@ func new_record(kind: String, anchor: int, dir: int, color: Color, engine_id: St
 	if not ed.is_empty():
 		parts["engine"] = int(ed["hp"])
 	return {"kind": kind, "cell": anchor, "dir": dir, "spd": 0, "charge": 100, "parts": parts, "pmax": parts.duplicate(), "eng": {"id": eid, "hp": int(parts["engine"])},
-			"color": color, "driver": -1, "ai": false, "dest": 0, "air": false, "stuck": 0, "wreck": false, "hp": int(parts["body"]), "turn_at": -1}
+			"color": color, "d8": true, "driver": -1, "ai": false, "dest": 0, "air": false, "stuck": 0, "wreck": false, "hp": int(parts["body"]), "turn_at": -1}
 
 func spawn(kind: String, anchor: int, dir: int, color: Color, ai: bool = false, engine_id: String = "") -> int:
 	var v := new_record(kind, anchor, dir, color, engine_id)
@@ -403,7 +456,7 @@ func _exit_cell(vi: int) -> void:
 			if fp.has(nc) or not g._free_for_player(nc) or g.z_of(nc) != g.z_of(c):
 				continue
 			var dd: int = maxi(absi(nx - a % g.size), absi(ny - (a % g.s2) / g.size))
-			var left: Array = rot(-1, 0, int(v["dir"]))
+			var left: Array = DIR8[(int(v["dir"]) + 6) % 8] if is_g8(String(v["kind"])) else rot(-1, 0, int(v["dir"]))
 			var lx: int = left[0]
 			var ly: int = left[1]
 			var side: int = (nx - a % g.size) * lx + (ny - (a % g.s2) / g.size) * ly
@@ -447,7 +500,9 @@ func interact() -> bool:
 		"heli": g.say("You strap into the helicopter.  [<] lifts off, arrows fly, [>] descends, [e] exits when landed.  Cells %d%%." % v["charge"])
 		"mech": g.say("You climb into the mech.  It steps over cover, crushes crates, jumps (q) and takes the hits.  Cells %d%%." % v["charge"])
 		"plane": g.say("You strap into the plane.  It needs speed to fly: arrows accelerate, [<] pulls up.  [e] exits when stopped.")
-		_: g.say("You get into the %s.  Up/down/left/right drive (a sideways key turns, the opposite key brakes), [space] stops, [e] exits.  Battery %d%%." % [name, v["charge"]])
+		_:
+			g.say("You get into the %s.  Up speeds up, Down brakes then reverses, Left and Right turn it (relative to the way it faces), [space] stops, [e] exits.  Battery %d%%." % [name, v["charge"]])
+			g.facing = fwd(String(v["kind"]), int(v["dir"]))
 	g.end_turn()
 	return true
 
@@ -517,10 +572,10 @@ func _drain(v: Dictionary, per: float) -> void:
 	if (g.turn * 7 + int(per * 3.0)) % dr == 0:
 		v["charge"] = maxi(0, int(v["charge"]) - 1)
 
-## one tile of travel for a ground vehicle in direction `dir`.  Returns false if it stopped.
+## one tile of travel for a ground vehicle (heading `dir`, stepping toward `step_dir`, both 0..7).  Returns false if it stopped.
 func _step_ground(vi: int, dir: int, step_dir: int) -> bool:
 	var v: Dictionary = g.vehicles[vi]
-	var d: Array = DIR4[step_dir]
+	var d: Array = DIR8[step_dir]
 	var a: int = int(v["cell"]) + d[1] * g.size + d[0]
 	var ax: int = int(v["cell"]) % g.size + d[0]
 	var ay: int = (int(v["cell"]) % g.s2) / g.size + d[1]
@@ -535,17 +590,9 @@ func _step_ground(vi: int, dir: int, step_dir: int) -> bool:
 		put(vi, a, dir)
 		return true
 	match String(pr["t"]):
-		"person":
-			var who: int = int(pr["idx"])
-			var dmg: int = 12 + spd * 8
-			g.say("You run down %s!" % g.name_of(who))
-			g.hpn[who] -= dmg
-			g._witness(pr["cell"], 14, who)
-			if g.hpn[who] <= 0:
-				g.kill(who)
-			else:
-				g._alert(who)
-			v["spd"] = maxi(1, spd - 2)
+		"person", "player":
+			run_down(vi, String(pr["t"]), int(pr["idx"]), int(pr["cell"]))
+			v["spd"] = maxi(1, spd - 2) if spd > 0 else 0
 			damage(vi, "body", 4)
 			return false
 		"critter":
@@ -554,7 +601,7 @@ func _step_ground(vi: int, dir: int, step_dir: int) -> bool:
 			return true if probe(vi, a, dir).is_empty() and _put_ok(vi, a, dir) else false
 		"thing":
 			g.smash_thing(int(pr["idx"]), "is flattened")
-			damage(vi, "body", 3 + spd)
+			damage(vi, "body", 3 + absi(spd))
 			if probe(vi, a, dir).is_empty():
 				put(vi, a, dir)
 				return true
@@ -563,6 +610,54 @@ func _step_ground(vi: int, dir: int, step_dir: int) -> bool:
 			_crash(vi, pr)
 			return false
 	return false
+
+## how fast a vehicle is going in km/h (a driven car's speed in tiles a turn; traffic runs at two)
+func kph(v: Dictionary) -> int:
+	var sp: int = absi(int(v["spd"]))
+	if sp == 0 and bool(v.get("ai", false)):
+		sp = 2
+	return sp * KPH_PER_TILE
+
+## a person struck by a car takes one point of damage for every km/h, split over the body: half to the legs (a quarter to each), the rest over chest 25%, arms 10% each and head 5%.
+const HIT_SPLIT := [["l_leg", 25], ["r_leg", 25], ["chest", 25], ["l_arm", 10], ["r_arm", 10], ["head", 5]]
+
+func hit_split(total: int) -> Dictionary:
+	var out := {}
+	var used := 0
+	for k in HIT_SPLIT.size():
+		var part: int = total * int(HIT_SPLIT[k][1]) / 100
+		out[HIT_SPLIT[k][0]] = part
+		used += part
+	out["chest"] = int(out["chest"]) + (total - used)      # the rounding crumbs land on the chest
+	return out
+
+## the car at vi hits `who`: kind "person" (idx = the NPC) or "player"
+func run_down(vi: int, kind: String, idx: int, cell: int) -> void:
+	var v: Dictionary = g.vehicles[vi]
+	var total: int = kph(v)
+	var name: String = String(KINDS[v["kind"]]["name"])
+	if total <= 0:
+		return
+	var parts: Dictionary = hit_split(total)
+	if kind == "player":
+		g.say("A %s hits you at %d km/h!  -%d: legs %d and %d, chest %d, arms %d and %d, head %d." % [name, total, total, parts["l_leg"], parts["r_leg"], parts["chest"], parts["l_arm"], parts["r_arm"], parts["head"]])
+		g.sfx("hurt")
+		for l in parts:
+			if int(parts[l]) > 0:
+				g._limb_hit(l, int(parts[l]))
+		return
+	g.say("You run down %s at %d km/h!  -%d: legs %d and %d, chest %d, arms %d and %d, head %d." % [g.name_of(idx), total, total, parts["l_leg"], parts["r_leg"], parts["chest"], parts["l_arm"], parts["r_arm"], parts["head"]]) if v["driver"] == -2 else g.say_if_seen(cell, "A %s hits %s at %d km/h!" % [name, g.name_of(idx), total])
+	g.hpn[idx] -= total
+	g._witness(cell, 14, idx)
+	var dead := false
+	for l in parts:
+		if not dead and int(parts[l]) > 0:
+			dead = g.npc_limb_hit(idx, l, int(parts[l]))
+	if dead or g.hpn[idx] <= 0:
+		if g.sim.alive[idx] == 1:
+			g.kill(idx)
+	else:
+		g._alert(idx)
 
 func _put_ok(vi: int, a: int, dir: int) -> bool:
 	put(vi, a, dir)
@@ -587,16 +682,28 @@ func _crash(vi: int, pr: Dictionary) -> void:
 		g._noise(v["cell"], 6 + spd)
 	v["spd"] = 0
 
-## turn the whole body a quarter-turn about its centre
+## turn the whole body to a new heading: a quarter turn between two cardinal headings goes about its centre (so a lane keeps it), a 45 degree turn about the driver's seat
 func _rotate_pose(vi: int, new_dir: int) -> bool:
 	var v: Dictionary = g.vehicles[vi]
-	var ctr: Vector2i = center2(v["kind"], int(v["cell"]), int(v["dir"]))
-	var a: int = anchor_for(v["kind"], new_dir, ctr.x, ctr.y, int(v["cell"]))
+	var kind: String = v["kind"]
+	var old: int = int(v["dir"])
+	if is_g8(kind) and (old % 2 == 1 or new_dir % 2 == 1):
+		if probe(vi, int(v["cell"]), new_dir).is_empty():
+			put(vi, int(v["cell"]), new_dir)
+			return true
+		return false
+	var ctr: Vector2i = center2(kind, int(v["cell"]), old)
+	var a: int = anchor_for(kind, new_dir, ctr.x, ctr.y, int(v["cell"]))
 	if probe(vi, a, new_dir).is_empty():
 		put(vi, a, new_dir)
 		return true
 	return false
 
+## the speed from which steering scrubs speed (tiles a turn)
+const SCRUB_SPEED := 4
+
+## Tank controls for cars and trucks: Up speeds up, Down brakes and then reverses, Left and Right turn the vehicle 45 degrees to its own left or right (not the screen's).
+## The diagonals do both at once.  Standing still a turn pivots on the spot; at speed the vehicle keeps moving as it turns, so the faster it goes the wider the arc.
 func drive(dx: int, dy: int) -> bool:
 	var vi: int = g.in_vehicle
 	var v: Dictionary = g.vehicles[vi]
@@ -611,44 +718,43 @@ func drive(dx: int, dy: int) -> bool:
 	if top <= 0:
 		g.say("It will not move: %s." % status_text(vi))
 		return false
-	var want := heading_of(dx, dy)
-	if want < 0:
-		g.say("Vehicles steer in four directions.")
-		return false
+	var throttle: int = -dy
+	var steer: int = dx
+	var kind: String = v["kind"]
 	var dir: int = int(v["dir"])
 	var spd: int = int(v["spd"])
-	var moving_dir := dir
-	if want == dir:
-		spd = mini(maxi(spd + 1, 1), top)
-	elif want == (dir + 2) % 4:
+	if throttle > 0:
+		if spd < 0:
+			spd = mini(0, spd + 2)
+		else:
+			spd = mini(maxi(spd + 1, 1), top)
+	elif throttle < 0:
 		if spd > 0:
 			spd = maxi(0, spd - 2)
 			if spd == 0:
 				g.say("You brake to a halt.")
 		else:
 			spd = -1                                    # reverse
-	else:
-		if spd > 2:
-			g.say("Too fast to turn: ease off.")
+	if steer != 0:
+		if spd >= SCRUB_SPEED:
 			spd -= 1
+			g.say("You scrub speed in the turn.")
+		var nd: int = (dir + steer + 8) % 8
+		if _rotate_pose(vi, nd):
+			dir = nd
 		else:
-			if _rotate_pose(vi, want):
-				dir = want
-				moving_dir = want
-				spd = 1
-			else:
-				g.say("No room to turn here.")
-				spd = maxi(0, spd - 1)
+			g.say("No room to turn here.")
 	v["spd"] = spd
 	var steps: int = absi(spd)
 	for s in steps:
-		var sd: int = dir if spd > 0 else (dir + 2) % 4
+		var sd: int = dir if spd > 0 else (dir + 4) % 8
 		if not _step_ground(vi, dir, sd):
 			break
-	moving_dir = moving_dir
+	g.facing = fwd(kind, int(v["dir"]))
+	dir = int(v["dir"])
 	if int(v["parts"]["drive"]) * 2 < int(v["pmax"]["drive"]) and spd != 0 and g.rng.randf() < 0.3:
-		var side: int = (dir + (1 if g.rng.randf() < 0.5 else 3)) % 4
-		var sd2: Array = DIR4[side]
+		var side: int = (dir + (2 if g.rng.randf() < 0.5 else 6)) % 8
+		var sd2: Array = DIR8[side]
 		var a: int = int(v["cell"]) + sd2[1] * g.size + sd2[0]
 		if probe(vi, a, dir).is_empty():
 			put(vi, a, dir)
@@ -657,9 +763,6 @@ func drive(dx: int, dy: int) -> bool:
 		g.sfx("engine")
 	_drain(v, float(steps))
 	g.step_noise = 3 + steps
-	if v["wreck"]:
-		g.end_turn()
-		return true
 	g.end_turn()
 	return true
 
@@ -1025,34 +1128,37 @@ static func turn_lanes(e: int, w: int, hi_first: bool) -> Vector2i:
 
 func _ai_car(vi: int) -> void:
 	var v: Dictionary = g.vehicles[vi]
-	var dir: int = int(v["dir"])
+	if int(v["dir"]) % 2 == 1:
+		v["dir"] = (int(v["dir"]) + 1) % 8                  # traffic only drives the four straight headings
+	var q: int = int(v["dir"]) / 2                         # the quarter-turn heading (0 N, 1 E, 2 S, 3 W)
 	for s in 2:
-		var d: Array = DIR4[dir]
+		var dir: int = q * 2
+		var d: Array = DIR4[q]
 		var a: int = int(v["cell"]) + d[1] * g.size + d[0]
 		# decide a turn when the body's centre reaches the centre of a cross lane
 		var ctr := center2(v["kind"], int(v["cell"]), dir)
-		var fwd2: int = ctr.y if dir % 2 == 0 else ctr.x
-		var key: int = fwd2 * 4 + dir
+		var fwd2: int = ctr.y if q % 2 == 0 else ctr.x
+		var key: int = fwd2 * 4 + q
 		if int(v["turn_at"]) != key:
-			var cross: Array = g.city.ys if dir % 2 == 0 else g.city.xs
+			var cross: Array = g.city.ys if q % 2 == 0 else g.city.xs
 			var turn := 0
 			for e in cross:
 				# traffic keeps to the right: the first cross lane met is the one a right turn joins
-				var hi_first: bool = dir == 0 or dir == 3
-				var tl := turn_lanes(int(e), g.city.line_w(int(e), dir % 2 == 0), hi_first)
+				var hi_first: bool = q == 0 or q == 3
+				var tl := turn_lanes(int(e), g.city.line_w(int(e), q % 2 == 0), hi_first)
 				var right_c: int = tl.x
 				var left_c: int = tl.y
-				if fwd2 == right_c and g.rng.randf() < 0.28:
+				if (fwd2 == right_c or (fwd2 - right_c) % 2 != 0 and fwd2 == right_c + 1) and g.rng.randf() < 0.28:
 					turn = 1
 					break
-				if fwd2 == left_c and g.rng.randf() < 0.2:
+				if (fwd2 == left_c or (fwd2 - left_c) % 2 != 0 and fwd2 == left_c + 1) and g.rng.randf() < 0.2:
 					turn = 3
 					break
 			if turn != 0:
 				v["turn_at"] = key
-				var nd: int = (dir + turn) % 4
-				if _rotate_pose(vi, nd):
-					dir = nd
+				var nq: int = (q + turn) % 4
+				if _rotate_pose(vi, nq * 2):
+					q = nq
 					v["stuck"] = 0
 					continue
 		var pr := probe(vi, a, dir)
@@ -1083,9 +1189,10 @@ func _ai_car(vi: int) -> void:
 ## the way ahead is open but for the edge of the road: step forward and one column across to whichever side is still road (a bend of a curved street)
 func _ai_slide(vi: int, dir: int, ahead: int) -> bool:
 	var v: Dictionary = g.vehicles[vi]
+	var q: int = dir / 2
 	for sh in [1, -1] if g.rng.randf() < 0.5 else [-1, 1]:
-		var a2: int = ahead + (sh if dir % 2 == 0 else sh * g.size)
-		if (a2 % g.size) - (ahead % g.size) != (sh if dir % 2 == 0 else 0):
+		var a2: int = ahead + (sh if q % 2 == 0 else sh * g.size)
+		if (a2 % g.size) - (ahead % g.size) != (sh if q % 2 == 0 else 0):
 			continue                                      # the step wrapped round the edge of the map
 		if not probe(vi, a2, dir).is_empty():
 			continue
@@ -1101,18 +1208,19 @@ func _ai_slide(vi: int, dir: int, ahead: int) -> bool:
 
 func _ai_uturn(vi: int) -> void:
 	var v: Dictionary = g.vehicles[vi]
-	var dir: int = int(v["dir"])
-	var nd: int = (dir + 2) % 4
+	var q: int = int(v["dir"]) / 2
+	var dir: int = q * 2
+	var nd: int = (q + 2) % 4 * 2
 	var ctr := center2(v["kind"], int(v["cell"]), dir)
-	var lat2: int = ctr.x if dir % 2 == 0 else ctr.y
-	var lines: Array = g.city.xs if dir % 2 == 0 else g.city.ys
+	var lat2: int = ctr.x if q % 2 == 0 else ctr.y
+	var lines: Array = g.city.xs if q % 2 == 0 else g.city.ys
 	var mirrored := lat2
 	for e in lines:
-		var lw: int = g.city.line_w(int(e), dir % 2 != 0)
+		var lw: int = g.city.line_w(int(e), q % 2 != 0)
 		if lat2 >= 2 * int(e) and lat2 <= 2 * int(e) + 2 * lw:
 			mirrored = 2 * (2 * int(e) + lw) - lat2
 			break
-	if mirrored == lat2 and dir % 2 == 0 and not g.city.plan.is_empty():
+	if mirrored == lat2 and q % 2 == 0 and not g.city.plan.is_empty():
 		# on a riverside boulevard: its left edge at this row, twelve wide
 		var row: int = clampi(ctr.y / 2, 0, g.size - 1)
 		for key in ["blv_w", "blv_e"]:
@@ -1120,8 +1228,8 @@ func _ai_uturn(vi: int) -> void:
 			if bx >= 0 and lat2 >= 2 * bx and lat2 <= 2 * (bx + g.city.rw):
 				mirrored = 2 * (2 * bx + g.city.rw) - lat2
 				break
-	var nx2: int = mirrored if dir % 2 == 0 else ctr.x
-	var ny2: int = ctr.y if dir % 2 == 0 else mirrored
+	var nx2: int = mirrored if q % 2 == 0 else ctr.x
+	var ny2: int = ctr.y if q % 2 == 0 else mirrored
 	var a: int = anchor_for(v["kind"], nd, nx2, ny2, int(v["cell"]))
 	if probe(vi, a, nd).is_empty():
 		put(vi, a, nd)
@@ -1171,6 +1279,10 @@ func from_dict(d: Dictionary) -> Dictionary:
 	o["color"] = Color(d["color"])
 	for k in ["cell", "dir", "spd", "charge", "hp", "dest", "driver", "stuck", "turn_at"]:
 		o[k] = int(o.get(k, 0))
+	if is_g8(String(o.get("kind", ""))) and not bool(o.get("d8", false)):
+		o["dir"] = int(o["dir"]) * 2                      # saved before ground vehicles had eight headings
+		o["turn_at"] = -1
+	o["d8"] = true
 	for k in ["parts", "pmax"]:
 		var pd: Dictionary = o[k]
 		for p in pd:

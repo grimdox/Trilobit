@@ -246,8 +246,8 @@ func run() -> Array:
 	cg.in_vehicle = -1
 	var e: int = int(cg.city.plan["trunk"])
 	var cy2: int = VS.lane_k2(e, 1)
-	var anchor: int = cg.vs.anchor_for("car", 3, 2 * 40, cy2, 0)
-	var vi2: int = cg.vs.spawn("car", anchor, 3, Color.RED)
+	var anchor: int = cg.vs.anchor_for("car", 6, 2 * 40, cy2, 0)
+	var vi2: int = cg.vs.spawn("car", anchor, 6, Color.RED)
 	check.call("a car stands in the westbound lane of the main street", vi2 >= 0)
 	var spot := -1
 	for cc in cg.vs.cells(cg.vehicles[vi2]):
@@ -261,7 +261,7 @@ func run() -> Array:
 	var guard := 0
 	while w.game == cg and guard < 60:
 		guard += 1
-		cg.act_move(-1, 0)
+		cg.act_move(0, -1)                  # Up: the car faces west, so forward is west
 		w.poll()
 	check.call("driving west carries the car over the border (%d moves)" % guard, w.game.zone != ISL.CITY_ZONE and w.game.in_vehicle >= 0 and w.game.vehicles[w.game.in_vehicle]["kind"] == "car")
 	var wv = w.game.vehicles[w.game.in_vehicle]

@@ -47,43 +47,43 @@ def wheel(v, x, y, w, h):
     v.u.shade(v.u.rrect(x + w * 0.2, y + h * 0.3, w * 0.6, h * 0.4, 4), '#6a7480', bevel=3, strength=0.4, spec=0.8) if False else None
 
 
-# ------------------------------------------------------------------------------------------------ car 4x6
+# ------------------------------------------------------------------------------------------------ car 3x5
 def car():
-    v = V(256, 384)
+    v = V(192, 320)
     u, p, o = v.u, v.p, v.o
-    body = p.rrect(22, 6, 212, 372, 48)
-    u.shadow(body, 4, 6, 8, 0.5)
-    for (x, y) in ((0, 66), (226, 66), (0, 264), (226, 264)):
-        wheel(v, x, y, 30, 58)
-    paint(v, body, bevel=14, seed=2)
-    roof = p.rrect(50, 124, 156, 140, 26)
-    paint(v, roof, bevel=7, strength=0.6, seed=5)
+    body = p.rrect(16, 5, 160, 310, 38)
+    u.shadow(body, 3, 5, 7, 0.5)
+    for (x, y) in ((0, 56), (170, 56), (0, 222), (170, 222)):
+        wheel(v, x, y, 22, 48)
+    paint(v, body, bevel=11, seed=2)
+    roof = p.rrect(38, 104, 116, 116, 22)
+    paint(v, roof, bevel=6, strength=0.6, seed=5)
     # glass
-    glass(v, o.poly([(58, 124), (198, 124), (186, 84), (70, 84)]))
-    glass(v, o.poly([(60, 264), (196, 264), (186, 300), (70, 300)]))
-    glass(v, o.rrect(36, 134, 14, 120, 6))
-    glass(v, o.rrect(206, 134, 14, 120, 6))
-    o.fill(o.line(84, 112, 150, 92, 2.2), '#6fb7d4', 0.55)
+    glass(v, o.poly([(44, 104), (148, 104), (140, 70), (52, 70)]))
+    glass(v, o.poly([(45, 220), (147, 220), (140, 250), (52, 250)]))
+    glass(v, o.rrect(27, 112, 11, 100, 5))
+    glass(v, o.rrect(154, 112, 11, 100, 5))
+    o.fill(o.line(64, 94, 112, 77, 2.0), '#6fb7d4', 0.55)
     # bonnet and boot detail
     for k in range(4):
-        o.fill(o.rect(90, 24 + k * 9, 76, 3), '#1a1c21', 0.85)
-    o.fill(o.rect(126, 8, 4, 76), '#1a1c21', 0.35)
-    o.fill(o.rect(126, 300, 4, 70), '#1a1c21', 0.35)
+        o.fill(o.rect(68, 20 + k * 8, 56, 3), '#1a1c21', 0.85)
+    o.fill(o.rect(94, 7, 4, 63), '#1a1c21', 0.35)
+    o.fill(o.rect(94, 250, 4, 58), '#1a1c21', 0.35)
     # door seams and mirrors
-    for y in (170, 232):
-        o.fill(o.rect(30, y, 4, 2), '#1a1c21', 0.7)
-    for (x, y) in ((10, 112), (232, 112)):
-        o.shade(o.rrect(x, y, 14, 16, 5), '#aab3bd', bevel=3, strength=0.5, spec=0.8)
+    for y in (142, 193):
+        o.fill(o.rect(22, y, 4, 2), '#1a1c21', 0.7)
+    for (x, y) in ((8, 94), (174, 94)):
+        o.shade(o.rrect(x, y, 11, 14, 4), '#aab3bd', bevel=3, strength=0.5, spec=0.8)
     # lamps, light strips
-    lamp(v, 36, 6, 46, 14, '#f6fcff')
-    lamp(v, 174, 6, 46, 14, '#f6fcff')
-    lamp(v, 34, 360, 54, 12, '#ff2a3a')
-    lamp(v, 168, 360, 54, 12, '#ff2a3a')
-    o.shade(o.rect(94, 362, 68, 5), MG, bevel=1.2, strength=0.1, emit=1.0)
-    o.shade(o.rrect(24, 146, 5, 96, 2), CY, bevel=1.0, strength=0.1, emit=1.0)
-    o.shade(o.rrect(227, 146, 5, 96, 2), CY, bevel=1.0, strength=0.1, emit=1.0)
+    lamp(v, 27, 5, 34, 12, '#f6fcff')
+    lamp(v, 131, 5, 34, 12, '#f6fcff')
+    lamp(v, 25, 300, 40, 10, '#ff2a3a')
+    lamp(v, 127, 300, 40, 10, '#ff2a3a')
+    o.shade(o.rect(70, 302, 52, 4), MG, bevel=1.2, strength=0.1, emit=1.0)
+    o.shade(o.rrect(18, 122, 4, 80, 2), CY, bevel=1.0, strength=0.1, emit=1.0)
+    o.shade(o.rrect(170, 122, 4, 80, 2), CY, bevel=1.0, strength=0.1, emit=1.0)
     # antenna
-    o.shade(o.rrect(124, 200, 8, 8, 4), '#222', bevel=2)
+    o.shade(o.rrect(93, 168, 6, 6, 3), '#222', bevel=2)
     edge(v, body)
     return v
 
@@ -344,7 +344,7 @@ def trainopen():
 
 BUILD = {'car': car, 'truck': truck, 'mech': mech, 'heli': heli, 'plane': plane}
 BUILD.update({'train': train, 'trainopen': trainopen})
-SIZES = {'car': (4, 6), 'truck': (6, 12), 'mech': (5, 5), 'heli': (6, 9), 'plane': (12, 10), 'train': (4, 6), 'trainopen': (4, 6)}
+SIZES = {'car': (3, 5), 'truck': (6, 12), 'mech': (5, 5), 'heli': (6, 9), 'plane': (12, 10), 'train': (4, 6), 'trainopen': (4, 6)}
 
 
 def sprites(items=None):
@@ -378,9 +378,63 @@ if __name__ == '__main__':
         print(k, comp.size, time.time() - t)
 
 
+def drive_mark(n=96):
+    """The "driving" marker on a car's roof: a glossy emerald orb with a bright core, a pale rim, a soft glow and a drop shadow.  n px square."""
+    from PIL import Image, ImageFilter
+    SSX = 4
+    N = n * SSX
+    yy, xx = np.mgrid[0:N, 0:N].astype(np.float32)
+    cx = cy = N / 2.0
+    R = N * 0.30
+    d = np.sqrt((xx - cx) ** 2 + (yy - cy) ** 2)
+    out = np.zeros((N, N, 4), np.float32)
+    # shadow on the roof: offset down, blurred
+    sh = Image.new('L', (N, N), 0)
+    sd = np.asarray(sh).astype(np.float32)
+    sd[np.sqrt((xx - cx - N * 0.02) ** 2 + (yy - cy - N * 0.04) ** 2) < R * 1.02] = 255
+    sh = Image.fromarray(sd.astype(np.uint8)).filter(ImageFilter.GaussianBlur(N * 0.025))
+    sa = np.asarray(sh).astype(np.float32) / 255.0 * 0.55
+    out[..., 3] = sa
+    # glow
+    glow = np.clip(1.0 - (d - R) / (N * 0.17), 0, 1) ** 2.2 * (d >= R * 0.9)
+    gcol = np.array([0.20, 1.0, 0.45])
+    for k in range(3):
+        out[..., k] = np.where(glow > 0, gcol[k], out[..., k])
+    out[..., 3] = np.maximum(out[..., 3], glow * 0.55)
+    # the orb: a sphere lit from the upper left
+    inside = d <= R
+    t = np.clip(d / R, 0, 1)
+    nz = np.sqrt(np.clip(1 - t * t, 0, 1))
+    lx, ly, lz = -0.45, -0.55, 0.70
+    nxv = (xx - cx) / R
+    nyv = (yy - cy) / R
+    lam = np.clip(nxv * lx + nyv * ly + nz * lz, 0, 1)
+    base_dark = np.array([0.02, 0.38, 0.17])
+    base_lite = np.array([0.45, 1.0, 0.62])
+    orb = base_dark[None, None, :] * (1 - lam[..., None]) + base_lite[None, None, :] * lam[..., None]
+    rim = np.clip((t - 0.80) / 0.20, 0, 1)[..., None]
+    orb = orb * (1 - rim * 0.35) + np.array([0.75, 1.0, 0.85])[None, None, :] * rim * 0.28
+    spec = np.exp(-(((xx - (cx - R * 0.34)) / (R * 0.30)) ** 2 + ((yy - (cy - R * 0.40)) / (R * 0.20)) ** 2))
+    orb = orb + spec[..., None] * 0.65
+    for k in range(3):
+        out[..., k] = np.where(inside, np.clip(orb[..., k], 0, 1), out[..., k])
+    out[..., 3] = np.where(inside, 1.0, out[..., 3])
+    # a thin dark outline and a white inner ring for a clean read on any paint
+    ring = (np.abs(d - R) < N * 0.008)
+    for k in range(3):
+        out[..., k] = np.where(ring, 0.03, out[..., k])
+    out[..., 3] = np.where(ring, 1.0, out[..., 3])
+    ring2 = (np.abs(d - R * 0.70) < N * 0.006)
+    for k in range(3):
+        out[..., k] = np.where(ring2, out[..., k] * 0.5 + 0.5, out[..., k])
+    im = Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8), 'RGBA')
+    return im.resize((n, n), Image.LANCZOS)
+
+
 def write(outdir):
     import os
     os.makedirs(outdir, exist_ok=True)
+    drive_mark().save(os.path.join(outdir, 'veh_drive_mark.png'))
     for k, f in BUILD.items():
         for name, im in zip(('u', 'p', 'o'), f().images()):
             im.save(os.path.join(outdir, 'veh_%s_%s.png' % (k, name)))
