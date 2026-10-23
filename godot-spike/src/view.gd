@@ -20,14 +20,20 @@ var S := 61.0 / 32.0      # TILE / 32: scale for hand-placed pixel offsets
 const ZOOM_NAMES := ["close", "middle", "far"]
 const ZOOM_SIDE := [10, 15, 20]
 const MAP_H := 837                  # the map's height in canvas pixels, above the message panel
+const VIS_W := 1542.0               # the map's visible width: the canvas less the 378 px HUD panel
+var shift := Vector2.ZERO           # the whole map is moved so the player's cell sits in the middle of the visible area
 func set_zoom(z: int) -> void:
 	z = clampi(z, 0, 2)
-	cols = ZOOM_SIDE[z] * 2 + 1
-	TILE = 1920 / cols
+	TILE = int(VIS_W / float(ZOOM_SIDE[z] * 2 + 1))       # N tiles either side of you fit in the visible width
 	S = TILE / 32.0
-	rows = MAP_H / TILE
+	cols = int(ceil(1920.0 / TILE))                        # draw on under the HUD so nothing is left bare
+	if cols % 2 == 0:
+		cols += 1
+	rows = int(ceil(float(MAP_H) / TILE)) + 1
 	if rows % 2 == 0:
-		rows -= 1
+		rows += 1
+	shift = Vector2(VIS_W / 2.0 - cols * TILE / 2.0, MAP_H / 2.0 - rows * TILE / 2.0)
+	position = shift
 	DOLL_S = 0.95 * float(TILE) / 27.0
 	queue_redraw()
 
@@ -600,6 +606,8 @@ func _draw() -> void:
 		if look_off != Vector2i.ZERO:
 			var pr := Rect2((px - ox) * T, (py - oy) * T, T, T)
 			draw_line(pr.get_center(), lr.get_center(), Color(0.3, 0.95, 1.0, 0.35), 2.0 * S)
+	draw_set_transform(-shift, 0.0, Vector2.ONE)       # the message bar below the map hides anything drawn past it
+	draw_rect(Rect2(0, MAP_H, 1920, 400), Color.BLACK)
 	_draw_hud()
 
 ## facing-arrow colours by attitude towards the player: friendly green, neutral blue, hostile red
@@ -783,7 +791,7 @@ func _meter(x: float, y: float, w: float, h: float, f: float, col: Color, label:
 ## the right-hand panel, as a sidebar: where and when, the (purchasable) nav slot, the body, the meters, status effects and gear.
 ## There is deliberately no minimap: that is an implant to buy.
 func _draw_hud() -> void:
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.5, 1.5))
+	draw_set_transform(-shift, 0.0, Vector2(1.5, 1.5))
 	var W: float = 1920.0 / 1.5
 	var x0: float = W - PANEL_W
 	var xi: float = x0 + 10.0

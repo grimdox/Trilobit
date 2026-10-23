@@ -4,6 +4,7 @@ extends SceneTree
 const MainScript = preload("res://src/main.gd")
 const GameScript = preload("res://src/game.gd")
 const VS = preload("res://src/vehicles.gd")
+const ZOOM_N := [10, 15, 20]
 var ok := 0
 var n := 0
 
@@ -12,6 +13,10 @@ func check(name: String, cond: bool) -> void:
 	if cond:
 		ok += 1
 	print(("  PASS " if cond else "  FAIL ") + name)
+
+## whole tiles either side of the player in the visible width
+func _side(m) -> int:
+	return (int(1542.0 / m.view.TILE) - 1) / 2
 
 func _person(g, fac: int) -> int:
 	for i in g.sim.n:
@@ -198,19 +203,19 @@ func _initialize() -> void:
 	check("activating it flips the setting and it is saved", m.settings.view_follows_move)
 	m.activate("vfm")
 	# ---- zoom
-	check("zoom defaults to middle: 15 tiles either side", m.settings.zoom == 1 and m.view.cols == 31)
+	check("zoom defaults to middle: 15 tiles either side", m.settings.zoom == 1 and _side(m) == 15)
 	m.cycle_zoom()
-	check("one press: far, 20 tiles either side", m.view.cols == 41 and m.settings.zoom == 2)
+	check("one press: far, 20 tiles either side", _side(m) == 20 and m.settings.zoom == 2)
 	m.cycle_zoom()
-	check("another: close, 10 tiles either side", m.view.cols == 21 and m.settings.zoom == 0)
+	check("another: close, 10 tiles either side", _side(m) == 10 and m.settings.zoom == 0)
 	var fits := true
 	for z in 3:
 		m.view.set_zoom(z)
-		if m.view.cols * m.view.TILE > 1920 or m.view.rows * m.view.TILE > 837 or m.view.rows % 2 == 0:
+		if m.view.cols * m.view.TILE < 1920 or m.view.rows * m.view.TILE < 837 or m.view.rows % 2 == 0 or m.view.cols % 2 == 0 or absf(m.view.shift.x + m.view.cols * m.view.TILE / 2.0 - 771.0) > 1.0 or absf(m.view.shift.y + m.view.rows * m.view.TILE / 2.0 - 418.5) > 1.0 or m.view.TILE * (ZOOM_N[z] * 2 + 1) > 1542:
 			fits = false
-	check("every zoom fits the canvas with an odd number of rows", fits)
+	check("every zoom covers the canvas, shows N tiles either side in the visible width, and puts the player in the middle of the area left of the HUD and above the message bar", fits)
 	m.cycle_zoom()
-	check("and it cycles back to middle", m.settings.zoom == 1 and m.view.cols == 31)
+	check("and it cycles back to middle", m.settings.zoom == 1 and _side(m) == 15)
 	press.call(KEY_EQUAL)
 	check("= is the zoom key", m.settings.zoom == 2)
 	press.call(KEY_EQUAL)
