@@ -1,0 +1,65 @@
+[
+ {
+  "id": "Q1",
+  "name": "every index decodes to a defined material",
+  "ok": true,
+  "value": "0 undefined materials",
+  "detail": ""
+ },
+ {
+  "id": "Q2",
+  "name": "stray pixels in the bare bodies",
+  "ok": false,
+  "value": "3.38 %",
+  "detail": ""
+ },
+ {
+  "id": "Q3",
+  "name": "the bare body is one piece in every frame",
+  "ok": true,
+  "value": "0 frames split",
+  "detail": ""
+ },
+ {
+  "id": "Q4",
+  "name": "feet on the ground line in every standing frame",
+  "ok": true,
+  "value": "0 frames off",
+  "detail": ""
+ },
+ {
+  "id": "Q8",
+  "name": "at most 7 shades of one material per body",
+  "ok": true,
+  "value": "0 over",
+  "detail": ""
+ },
+ {
+  "id": "Q5",
+  "name": "the outer edge is dark (ink outline)",
+  "ok": true,
+  "value": "99.9 %",
+  "detail": ""
+ },
+ {
+  "id": "Q6",
+  "name": "a full suit shows no skin below the chin",
+  "ok": false,
+  "value": "261 frames leak",
+  "detail": "f_l melee1/act/0 9 px; f_l melee1/hit/0 1 px; f_l melee1/hit/1 3 px; f_l melee1/idle/0 1 px"
+ },
+ {
+  "id": "Q7",
+  "name": "idle animation is stable (no popping)",
+  "ok": true,
+  "value": "0 steps unstable",
+  "detail": ""
+ },
+ {
+  "id": "Q9",
+  "name": "anchors present and inside the cell",
+  "ok": true,
+  "value": "0 bad",
+  "detail": ""
+ }
+]

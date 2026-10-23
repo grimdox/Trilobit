@@ -1,0 +1,169 @@
+[
+ {
+  "name": "operative_rifle",
+  "spec": {
+   "body": "m_m",
+   "garments": [
+    "under",
+    "bodysuit",
+    "boots",
+    "vest_heavy",
+    "harness"
+   ],
+   "hair": "crop",
+   "eyes": "sharp",
+   "expr": "focused",
+   "implants": [
+    "optic_r",
+    "shoulder_mount"
+   ],
+   "item": "trl_gun_vk74",
+   "colours": {
+    "cloth1": "gunmetal",
+    "cloth4": "olive",
+    "skin": "olive"
+   }
+  },
+  "frame": "rifle/idle/0",
+  "anim": "idle",
+  "i": 0
+ },
+ {
+  "name": "major_pistol",
+  "spec": {
+   "body": "f_m",
+   "garments": [
+    "under",
+    "bodysuit",
+    "boots_high",
+    "trench"
+   ],
+   "hair": "bob",
+   "eyes": "round",
+   "expr": "neutral",
+   "implants": [
+    "cortex"
+   ],
+   "item": "trl_gun_sp45",
+   "colours": {
+    "skin": "porcelain",
+    "hair": "violet black",
+    "cloth2": "drab"
+   }
+  },
+  "frame": "pistol/act/0",
+  "anim": "act",
+  "i": 0
+ },
+ {
+  "name": "android_blade",
+  "spec": {
+   "body": "f_s",
+   "android": true,
+   "garments": [
+    "under"
+   ],
+   "hair": "bald",
+   "eyes": "wide",
+   "expr": "neutral",
+   "implants": [
+    "optic_twin"
+   ],
+   "item": "trl_mel_wakizashi",
+   "colours": {
+    "skin": "pearl",
+    "synth": "pearl",
+    "glow": "violet"
+   }
+  },
+  "frame": "melee1/walk/3",
+  "anim": "walk",
+  "i": 3
+ },
+ {
+  "name": "enforcer_axe",
+  "spec": {
+   "body": "m_l",
+   "garments": [
+    "under",
+    "tee",
+    "cargo",
+    "boots",
+    "riot",
+    "kneepads"
+   ],
+   "hair": "mohawk",
+   "eyes": "hooded",
+   "expr": "angry",
+   "implants": [
+    "cyberarm_r",
+    "jaw"
+   ],
+   "item": "trl_mel_ono",
+   "colours": {
+    "skin": "deep",
+    "hair": "teal dye",
+    "cloth3": "olive"
+   }
+  },
+  "frame": "melee2/act/1",
+  "anim": "act",
+  "i": 1
+ },
+ {
+  "name": "runner_down",
+  "spec": {
+   "body": "f_l",
+   "garments": [
+    "under",
+    "tank",
+    "leggings",
+    "sneakers",
+    "hoodie"
+   ],
+   "hair": "ponytail",
+   "eyes": "almond",
+   "expr": "pain",
+   "implants": [
+    "neural_plate"
+   ],
+   "item": "",
+   "colours": {
+    "skin": "brown",
+    "hair": "cyan dye",
+    "cloth2": "teal"
+   }
+  },
+  "frame": "any/down/2",
+  "anim": "down",
+  "i": 2
+ },
+ {
+  "name": "detective_walk",
+  "spec": {
+   "body": "m_m",
+   "garments": [
+    "under",
+    "shirt",
+    "slacks",
+    "boots",
+    "trench"
+   ],
+   "hair": "slick",
+   "eyes": "almond",
+   "expr": "blink",
+   "implants": [
+    "smartlink"
+   ],
+   "item": "trl_mel_finka",
+   "colours": {
+    "skin": "fair",
+    "hair": "dark brown",
+    "cloth2": "khaki"
+   }
+  },
+  "frame": "melee1/walk/2",
+  "anim": "walk",
+  "i": 2
+ }
+]
