@@ -155,5 +155,40 @@ func _initialize() -> void:
 		if m.mode == "play" and not m.game.game_over:
 			break
 	check("after dying, New Game then Begin starts a fresh game", m.mode == "play" and not m.game.game_over)
+	# ---- keys: C movement prompt, Z ammo, X interact; old settings files migrate
+	var ST = load("res://src/settings.gd")
+	var st = ST.new()
+	check("defaults: C movement prompt, Z next ammo, X interact; no crouch or crawl key", st.binds["movement"] == [KEY_C] and st.binds["ammo"] == [KEY_Z] and st.binds["interact"] == [KEY_X] and not st.binds.has("crouch") and not st.binds.has("crawl"))
+	var old = ST.new()
+	old.from_dict({"binds": {"ammo": [KEY_X], "interact": [KEY_P], "crouch": [KEY_C], "crawl": [KEY_Z], "fire": [KEY_F]}})
+	check("an old settings file moves to the new keys, with no key bound twice", old.binds["ammo"] == [KEY_Z] and old.binds["interact"] == [KEY_X] and old.binds["movement"] == [KEY_C] and old.action_for(KEY_X) == "interact" and old.action_for(KEY_Z) == "ammo")
+	var ng = GameScript.new(21)
+	ng.setup(300)
+	var mv_ok := true
+	for want in [[0, 0, false], [1, 1, false], [2, 2, false], [3, 2, true]]:
+		ng.set_movement(want[0])
+		mv_ok = mv_ok and ng.stance == want[1] and ng.run_mode == want[2]
+	var sv: Dictionary = JSON.parse_string(JSON.stringify(ng.player_dict()))
+	var ng2 = GameScript.new(21)
+	ng2.setup(300)
+	ng2.apply_player(sv)
+	check("the movement prompt sets crawl, crouch, walk or run (run stays on) and run is carried to another zone (a loaded save, like stance, starts walking)", mv_ok and ng2.run_mode and ng2.stance == 2)
+	ng.set_movement(1)
+	check("choosing crouch turns running off", not ng.run_mode and ng.stance == 1)
+	# ---- the real key path: C opens the prompt, 4 runs, X with nothing near says so
+	m.mode = "play"
+	m.game.game_over = false
+	var press = func(k: int) -> void:
+		var ev := InputEventKey.new()
+		ev.keycode = k
+		ev.pressed = true
+		m._unhandled_key_input(ev)
+	press.call(KEY_C)
+	var opened: bool = m.mode == "movemenu"
+	press.call(KEY_4)
+	check("C opens the movement prompt and 4 chooses Run (no turn spent)", opened and m.mode == "play" and m.game.run_mode)
+	press.call(KEY_C)
+	press.call(KEY_ESCAPE)
+	check("Esc leaves the prompt unchanged", m.mode == "play" and m.game.run_mode)
 	print("TWEAKS %d/%d" % [ok, n])
 	quit(0 if ok == n else 1)

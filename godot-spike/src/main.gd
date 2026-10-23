@@ -27,7 +27,7 @@ var view
 var status: Label
 var logbox: RichTextLabel
 var panel: RichTextLabel
-var mode: String = "title"           # title, play, garage, inventory, talk, mods, jump, strike, shove, turn, look, waitmenu, waiting, consume, pause, options, visuals, keys, saves, loads, implants, skills, map, loading
+var mode: String = "title"           # title, play, garage, inventory, talk, mods, jump, strike, shove, turn, look, waitmenu, movemenu, waiting, consume, pause, options, visuals, keys, saves, loads, implants, skills, map, loading
 var menu_sel: int = 0                 # the highlighted line of the wait menu
 var consume_list: Array = []          # what the consume menu offers (see Game.consumables)
 var key_unicode: int = 0              # the character of the key being handled (the creation screen's name line reads it)
@@ -977,6 +977,22 @@ func show_inventory() -> void:
 	panel.visible = true
 
 ## the wait menu: fixed spans and "until" times (see clock.gd)
+const MOVE_ROWS := ["Crawl   [color=#8899aa](slow, hard to see or hear)[/color]", "Crouch   [color=#8899aa](quiet, steadier aim, cover)[/color]", "Walk", "Run   [color=#8899aa](fast and loud; costs stamina)[/color]"]
+
+func show_move() -> void:
+	var t := "[b]Movement[/b]   (1-4 or Up / Down and Enter chooses, Esc leaves)   now: %s\n\n" % ("running" if game.run_mode else game.stance_name())
+	for i in MOVE_ROWS.size():
+		var line: String = "%d) %s" % [i + 1, MOVE_ROWS[i]]
+		t += ("[color=#4de6ff]> %s[/color]\n" % line) if i == menu_sel else ("  %s\n" % line)
+	panel.text = t
+	panel.visible = true
+
+func choose_move(i: int) -> void:
+	game.set_movement(i)
+	mode = "play"
+	panel.visible = false
+	_after_act()
+
 func show_wait() -> void:
 	var g = game
 	var t := "[b]Wait[/b]   (1-8 or Up / Down and Enter chooses, Esc leaves)   it is %s\n\n" % CLK.text(g.sim.tick)
@@ -1155,6 +1171,23 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 			mode = "play"
 			refresh()
 		return
+	if mode == "movemenu":
+		if k == KEY_ESCAPE:
+			mode = "play"
+			panel.visible = false
+		elif k >= KEY_1 and k < KEY_1 + MOVE_ROWS.size():
+			choose_move(k - KEY_1)
+			return
+		elif k == KEY_UP or k == KEY_K:
+			menu_sel = (menu_sel + MOVE_ROWS.size() - 1) % MOVE_ROWS.size()
+		elif k == KEY_DOWN or k == KEY_J:
+			menu_sel = (menu_sel + 1) % MOVE_ROWS.size()
+		elif k == KEY_ENTER or k == KEY_KP_ENTER:
+			choose_move(menu_sel)
+			return
+		show_move()
+		refresh()
+		return
 	if mode == "waitmenu":
 		var rows_n: int = wait_rows().size()
 		if k == KEY_ESCAPE:
@@ -1212,7 +1245,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		act = "keysscreen"
 	var acted := true
 	g.tracers.clear()
-	var run: bool = ev.shift_pressed
+	var run: bool = ev.shift_pressed or g.run_mode
 	match act:
 		"north": g.act_move(0, -1, run)
 		"south": g.act_move(0, 1, run)
@@ -1261,8 +1294,11 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				mode = "pick"
 		"viewtarget": toggle_target_view()
 		"steal": g.act_steal()
-		"crouch": g.act_crouch()
-		"crawl": g.act_crawl()
+		"movement":
+			mode = "movemenu"
+			menu_sel = 3 if g.run_mode else g.stance
+			show_move()
+			return
 		"strike":
 			mode = "strike"
 			g.say("Strike which way?  (direction key; a long weapon reaches further)")

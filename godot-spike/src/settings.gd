@@ -21,14 +21,13 @@ const ACTIONS := [
 	["aim", "Aim", [KEY_A]],
 	["reload", "Reload", [KEY_R]],
 	["firemode", "Fire mode", [KEY_V]],
-	["ammo", "Next ammo kind", [KEY_X]],
+	["ammo", "Next ammo kind", [KEY_Z]],
 	["target", "Cycle target", [KEY_TAB]],
-	["interact", "Interact: doors, terminals, chargers, tables", [KEY_P]],
+	["interact", "Interact: doors, terminals, chargers, tables", [KEY_X]],
 	["viewtarget", "Switch the view to the target and back", [KEY_QUOTELEFT]],
 	["steal", "Pickpocket", [KEY_S]],
 	["siphon", "Draw power from a downed person", [KEY_MINUS]],
-	["crouch", "Crouch", [KEY_C]],
-	["crawl", "Crawl", [KEY_Z]],
+	["movement", "Movement select: crawl, crouch, walk or run", [KEY_C]],
 	["strike", "Strike (then direction)", [KEY_W]],
 	["shove", "Shove (then direction)", [KEY_O]],
 	["turn", "Turn to look (then direction, no time)", [KEY_SEMICOLON]],
@@ -125,10 +124,16 @@ func rebind(action: String, keycode: int) -> void:
 	binds[action] = [keycode]
 
 func to_dict() -> Dictionary:
-	return {"binds": binds, "sound": sound_on, "volume": volume, "tileset": tileset, "window_mode": window_mode, "resolution": [resolution.x, resolution.y]}
+	return {"keys_v": KEYS_VERSION, "binds": binds, "sound": sound_on, "volume": volume, "tileset": tileset, "window_mode": window_mode, "resolution": [resolution.x, resolution.y]}
+
+## version 2: Z is the ammo key and X interacts (they were X and P), C is the movement prompt (crouch and crawl keys are gone)
+const KEYS_VERSION := 2
 
 func from_dict(d: Dictionary) -> void:
-	var b: Dictionary = d.get("binds", {})
+	var b: Dictionary = d.get("binds", {}).duplicate()
+	if int(d.get("keys_v", 1)) < KEYS_VERSION:
+		for moved in ["ammo", "interact"]:
+			b.erase(moved)
 	for a in b:
 		if binds.has(a):
 			binds[a] = (b[a] as Array).map(func(k): return int(k))

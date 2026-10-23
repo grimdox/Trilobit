@@ -86,6 +86,7 @@ var stamina: int = STAMINA_MAX
 var ran_this_turn: bool = false
 var run_dir := Vector2i(0, 0)
 var run_streak: int = 0
+var run_mode: bool = false                     # chosen on the movement prompt: every move is a run (Shift also runs)
 var implants := {}                             # "legs": leg actuators, "jets": dorsal jump jets
 var fuel: int = 24
 var flying: bool = false
@@ -1477,8 +1478,30 @@ func talk_target() -> int:
 
 func _set_stance(s: int) -> void:
 	stance = s
+	if s <= CROUCH:
+		run_mode = false
 	crouch = s <= CROUCH
 	aim_turns = 0
+
+## the movement prompt: 0 crawl, 1 crouch, 2 walk, 3 run (no turn passes)
+func set_movement(m: int) -> void:
+	match m:
+		0:
+			_set_stance(CRAWL)
+			run_mode = false
+			say("You drop flat.  Slow, but hard to see or hear.")
+		1:
+			_set_stance(CROUCH)
+			run_mode = false
+			say("You crouch low.")
+		2:
+			_set_stance(WALKING)
+			run_mode = false
+			say("You walk.")
+		_:
+			_set_stance(WALKING)
+			run_mode = true
+			say("You run: every move costs stamina and makes noise.")
 
 func act_crouch() -> void:
 	if stance == CROUCH:
@@ -4628,7 +4651,7 @@ func outside_tile(x: int, y: int) -> int:
 func player_dict() -> Dictionary:
 	return {"done": done_contracts.duplicate(), "power": power, "power_state": power_state, "yen": yen, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
 		"name": player_name, "attrs": attrs.duplicate(), "app": app.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
-		"stamina": stamina, "stam_v": 2, "ap": ap, "stance": stance, "turn": turn, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "flying": flying,
+		"stamina": stamina, "stam_v": 2, "ap": ap, "stance": stance, "run_mode": run_mode, "turn": turn, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "flying": flying,
 		"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
 
 ## attributes, skills and XP from a save; saves from before the attribute system (or with the old skill names) keep what still exists and start the rest at the defaults
@@ -4687,6 +4710,7 @@ func apply_player(d: Dictionary) -> void:
 	last_ate = int(d.get("ate", int(d.get("tick", 0)))) * tk
 	last_drank = int(d.get("drank", int(d.get("tick", 0)))) * tk
 	stance = int(d["stance"])
+	run_mode = bool(d.get("run_mode", false))
 	turn = int(d["turn"]) * tk
 	sim.tick = int(d["tick"]) * tk
 	_was_hungry = hungry()
