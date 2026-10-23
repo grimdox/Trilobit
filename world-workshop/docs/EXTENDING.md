@@ -31,6 +31,12 @@ by what they are (`brass`, `lacquer_red`, `neon_green`) when the object is that 
 For the game to place it, add it to the view's district tables (`DECOR_KERB`, `DECOR_FRONT`, `DECOR_PARK` in
 `src/view.gd`) or to the world generator as a real tile (a new `EXTRA` entry in `src/citygen.gd`).
 
+## A new item icon
+
+Items come from the game's `data/items.json`.  `items.icon()` picks a builder by id (food by name in `FOODS`, ammunition
+by calibre and type, mods by name, armour, engines, charms, then `misc`); add a builder there and the next bake draws
+it.  A new item with no builder of its own gets a plain case, and QA T8 lists any item that has no icon.
+
 ## A new theme
 
 Copy a theme in `themes.py`, change its materials and its `wear`, `cracks`, `grime`, `moss`, `rust`, `litter`,
@@ -40,4 +46,4 @@ walkways), add a branch.  Then give it a place in the game's `theme_at`.
 ## Checks
 
 QA (`qa.py`): T1 coverage, T2 seams, T3 palette discipline, T4 noise, T5 outlines, T6 colour names, T7 every theme
-distinct.  All must pass.
+distinct, T8 item icons.  All must pass.

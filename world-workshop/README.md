@@ -17,6 +17,13 @@ doors, windows, 72 pieces of furniture) plus 42 new ids: 260 sprites a theme wit
 for each cell from its district (`theme_at` in the game's `src/view.gd`), so a street changes look where the money
 changes, and falls back to its base set for what the district sets do not draw (items, animals, vehicles).
 
+## Item icons
+
+A sixth set, `items`, holds a new icon for every item that is not a weapon (124: food and drink, ammunition, weapon
+mods, armour and bags, tools and job items, engines, charms), drawn by `items.py` with the same renderer.  Guns and
+melee weapons keep their approved designs from the game's own generators.  The game looks a sprite up in the cell's
+district set, then the icon set, then its base set.
+
 ## Running
 
 ```sh
@@ -51,9 +58,10 @@ tools/tilegen/terrain.py    ground: walkways, roads, floors, grass, water, rock,
 tools/tilegen/walls.py      walls (16 joined shapes), glass walls, doors (open, shut, locked), windows
 tools/tilegen/furniture.py  every piece of furniture the game places
 tools/tilegen/props.py      the new world objects and grounds
+tools/tilegen/items.py      item icons
 tools/tilegen/catalog.py    every id with its builder and variants
 tools/tilegen/bake.py       bake to sets/<theme> (cached per sprite in .cache/)
-tools/tilegen/qa.py         checks T1-T7
+tools/tilegen/qa.py         checks T1-T8
 tools/tilegen/sheets.py     review sheets and the random sample
 tools/sync_to_game.sh       copy sets into godot-spike/gfx/tiles_<theme>
 docs/ART_DIRECTION.md, docs/EXTENDING.md

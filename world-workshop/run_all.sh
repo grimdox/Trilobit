@@ -1,5 +1,5 @@
 #!/bin/bash
-# Bake every district tileset, check it (QA T1-T7), prove the bake is deterministic, and write the review sheets.
+# Bake every district tileset and the item icons, check them (QA T1-T8), prove the bake is deterministic, and write the review sheets.
 # Usage: bash run_all.sh [SHEETS_DIR]   (sheets default to ./review)
 set -e
 cd "$(dirname "$0")"

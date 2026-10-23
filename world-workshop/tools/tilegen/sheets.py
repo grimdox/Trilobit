@@ -3,7 +3,8 @@
 
   compare.png        the same ids side by side in all five themes (one theme per row)
   sheet_<theme>.png  every sprite of a theme over its floor
-  random_sample.png  seeds 1-6 of a small generated street block (road, kerb, building with door and windows,
+  icons.png          every item icon over a floor
+  random_sample.png  seeds 1-3 of a small generated street block (road, kerb, building with door and windows,
                      furnished interior, park) in every theme, exactly as generated: nothing picked or retouched
 """
 import os
@@ -163,6 +164,15 @@ def main(sets, out):
     for th in TH.ORDER:
         theme_sheet(S, th, out)
     random_sample(S, out)
+    if os.path.exists(os.path.join(sets, 'items', 'tile_config.json')):
+        icons, _ = load(sets, 'items')
+        fl = S['mid'][0]['t_floor.0']
+        names = list(icons)
+        cols = 16
+        img = Image.new('RGBA', (cols * 64, ((len(names) + cols - 1) // cols) * 64), BG)
+        for i, n in enumerate(names):
+            img.paste(over(fl, icons[n]), ((i % cols) * 64, (i // cols) * 64))
+        img.save(os.path.join(out, 'icons.png'))
     print('sheets written to', out)
 
 

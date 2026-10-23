@@ -268,10 +268,17 @@ func _load_themes() -> void:
 	if not theme_sets.is_empty() or tileset == null:
 		return
 	theme_sets["_tried"] = true
+	# item icons (world-workshop) sit between the district sets and the base set: district -> items -> base
+	var items_set = tileset.get_script().new()
+	var below = tileset
+	if items_set.load_dir("res://gfx/tiles_items"):
+		items_set.fallback = tileset
+		below = items_set
+		theme_sets["_items"] = items_set
 	for th in THEMES:
 		var ts = tileset.get_script().new()
 		if ts.load_dir("res://gfx/tiles_" + th):
-			ts.fallback = tileset
+			ts.fallback = below
 			theme_sets[th] = ts
 
 ## the district a cell belongs to: the country and the docks outside the city, sewers and tunnels underground, and in

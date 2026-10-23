@@ -52,6 +52,17 @@ func _initialize() -> void:
 				elif not sets[th].index.has(id3):
 					dec_missing.append("%s %s" % [th, id3])
 	check("every piece of street furniture is drawn by its district set", dec_missing.is_empty(), str(dec_missing))
+	# item icons: every item that is not a gun or melee weapon has one, and district sets reach it
+	var its = TS.new()
+	var items_ok: bool = its.load_dir("res://gfx/tiles_items")
+	var f := FileAccess.open("res://data/items.json", FileAccess.READ)
+	var all_items: Array = JSON.parse_string(f.get_as_text())
+	var no_icon := []
+	for it in all_items:
+		var iid: String = it["id"]
+		if not (iid.begins_with("trl_gun_") or iid.begins_with("trl_mel_")) and not its.index.has(iid):
+			no_icon.append(iid)
+	check("every item but the weapons has a new icon (%d)" % its.index.size(), items_ok and no_icon.is_empty(), str(no_icon.slice(0, 5)))
 	# district mapping in a real city
 	var w = WorldScript.new()
 	w.start(21, 300)
@@ -60,6 +71,9 @@ func _initialize() -> void:
 	v.game = g
 	v.tileset = base
 	v._load_themes()
+	check("district sets find item icons through the icon set", v.theme_sets.has("_items") and v.theme_sets["mid"].has("trl_food_cup_ramen")
+		and v.theme_sets["mid"].sprite("trl_food_cup_ramen")[0] == v.theme_sets["_items"].sprite("trl_food_cup_ramen")[0]
+		and v.theme_sets["mid"].has("trl_gun_vk74"))
 	var seen := {}
 	for c in range(0, g.s2, 997):
 		seen[v.theme_at(c)] = true

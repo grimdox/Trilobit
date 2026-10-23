@@ -8,6 +8,7 @@
   T5 outline      the outer edge of objects is dark on at least 90 % of its pixels (not where a piece runs on)
   T6 colour names an id that names a colour shows that colour (f_trl_neon_green is green)
   T7 distinct     the five themes draw the same id differently (walk, road, wall, floor differ between every pair)
+  T8 icons        every item that is not a weapon has an icon, outlined, big enough to read on the ground
 """
 import colorsys
 import json
@@ -159,6 +160,28 @@ def run(sets, base_cfg=None):
                 if d < 6:
                     bad.append('%s %s/%s %.1f' % (id_, a, b, d))
     rep('T7', 'every theme draws its own version', not bad, '%d too alike' % len(bad), '; '.join(bad[:4]))
+    # T8 item icons
+    ip = os.path.join(sets, 'items')
+    if os.path.exists(os.path.join(ip, 'tile_config.json')):
+        import items as IT
+        icons, _ = load(sets, 'items')
+        items_path = os.path.join(HERE, '..', '..', '..', 'godot-spike', 'data', 'items.json')
+        want_i = [i['id'] for i in json.load(open(items_path)) if IT.is_drawn_here(i)] if os.path.exists(items_path) else list(icons)
+        miss = [i for i in want_i if i not in icons]
+        dark = edges = 0
+        small = []
+        for k, im in icons.items():
+            op = im[..., 3] == 255
+            p = np.pad(op, 1, constant_values=False)
+            e = op & ~(p[:-2, 1:-1] & p[2:, 1:-1] & p[1:-1, :-2] & p[1:-1, 2:])
+            lum = im[..., :3].astype(float) @ np.array([0.3, 0.59, 0.11])
+            edges += int(e.sum())
+            dark += int((e & (lum < 96)).sum())
+            if op.sum() < 250:
+                small.append(k)
+        fr = dark / max(edges, 1)
+        rep('T8', 'every non-weapon item has a readable outlined icon', not miss and fr >= 0.85 and not small,
+            '%d missing, %.1f %% dark edge, %d too small' % (len(miss), fr * 100, len(small)), '; '.join((miss + small)[:4]))
     passed = sum(r['ok'] for r in res)
     print('TILES QA %d/%d' % (passed, len(res)))
     return res

@@ -29,7 +29,7 @@ import render as R         # noqa: E402
 
 COLS = 32
 CACHE_VERSION = 1
-SOURCES = ['canvas.py', 'render.py', 'color.py', 'terrain.py', 'walls.py', 'furniture.py', 'props.py']
+SOURCES = ['canvas.py', 'render.py', 'color.py', 'terrain.py', 'walls.py', 'furniture.py', 'props.py', 'items.py']
 
 
 def _src_key():
@@ -55,6 +55,36 @@ def render_one(args):
     return R.to_rgba(t, TH.Mats(theme))
 
 
+def render_icon(item):
+    import items as IT
+    return R.to_rgba(IT.icon(item), TH.Mats('mid'))
+
+
+def bake_items(out, items_path, jobs):
+    """the item icon set (sets/items): one icon per item the game has that is not a gun or melee weapon"""
+    import items as IT
+    its = [i for i in json.load(open(items_path)) if IT.is_drawn_here(i)]
+    with Pool(jobs) as pool:
+        imgs = pool.map(render_icon, its, chunksize=4)
+    rows = (len(its) + COLS - 1) // COLS
+    sheet = np.zeros((rows * 64, COLS * 64, 4), np.uint8)
+    tiles = []
+    for i, (it, img) in enumerate(zip(its, imgs)):
+        r, c = divmod(i, COLS)
+        sheet[r * 64:(r + 1) * 64, c * 64:(c + 1) * 64] = img
+        tiles.append({'id': it['id'], 'fg': i + 1})
+    od = os.path.join(out, 'items')
+    os.makedirs(od, exist_ok=True)
+    Image.fromarray(sheet, 'RGBA').save(os.path.join(od, 'sheet_tiles.png'), optimize=True)
+    cfg = {'tile_info': [{'pixelscale': 1, 'width': 64, 'height': 64}], 'variants': {}, 'doll': {},
+           'theme': {'id': 'items', 'name': 'Item icons', 'desc': 'every item that is not a gun or melee weapon'},
+           'tiles-new': [{'file': 'sheet_tiles.png', 'sprite_width': 64, 'sprite_height': 64, 'sprite_offset_x': 0,
+                          'sprite_offset_y': 0, 'tiles': tiles}]}
+    json.dump(cfg, open(os.path.join(od, 'tile_config.json'), 'w'), separators=(',', ':'), sort_keys=True)
+    print('  items: %d icons' % len(its), flush=True)
+    return len(its)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('out')
@@ -62,6 +92,8 @@ def main():
     ap.add_argument('--jobs', type=int, default=os.cpu_count() or 2)
     ap.add_argument('--no-cache', action='store_true')
     ap.add_argument('--cache', default=os.path.join(HERE, '..', '..', '.cache', 'tiles'))
+    ap.add_argument('--items', default=os.path.join(HERE, '..', '..', '..', 'godot-spike', 'data', 'items.json'),
+                    help="the game's item list, for the item icon set ('' to skip it)")
     a = ap.parse_args()
     t0 = time.time()
     src = _src_key()
@@ -119,6 +151,8 @@ def main():
         json.dump(cfg, open(os.path.join(od, 'tile_config.json'), 'w'), indent=None, separators=(',', ':'), sort_keys=True)
         total += len(entries)
         print('  %s: %d sprites (%d rendered)' % (theme, len(entries), len(jobs)), flush=True)
+    if a.items:
+        total += bake_items(a.out, a.items, a.jobs)
     print('baked %d sprites, rendered %d, in %.0fs' % (total, rendered, time.time() - t0))
 
 
