@@ -39,7 +39,7 @@ func _initialize() -> void:
 	key(m, KEY_LEFT)
 	check("Left lowers the volume", m.settings.volume < v0)
 	# key bindings
-	key(m, KEY_DOWN); key(m, KEY_DOWN); key(m, KEY_DOWN); key(m, KEY_ENTER)
+	key(m, KEY_DOWN); key(m, KEY_DOWN); key(m, KEY_DOWN); key(m, KEY_DOWN); key(m, KEY_ENTER)
 	check("key bindings list opens", m.mode == "keys" and m.screen.items.size() > 30)
 	check("fire is F by default", m.settings.action_for(KEY_F) == "fire")
 	key(m, KEY_ESCAPE)

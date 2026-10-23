@@ -14,10 +14,25 @@ var dimg = null               # DollImage for DOLLS_WORLD (loaded on first use)
 var _dspec := {}              # game spec -> doll spec
 var game
 var tileset
-const TILE := 27            # screen pixels per cell: sprites are drawn at 64x64 and scaled to this, whatever the tileset's own size
-const S := 27.0 / 32.0      # TILE / 32: scale for hand-placed pixel offsets
-var cols: int = 71          # 71 x 31 cells fill the 1920 x 1080 canvas above the message panel: you see 35 tiles either side, 15 up and down
-var rows: int = 31
+var TILE := 61            # screen pixels per cell: sprites are drawn at 64x64 and scaled to this, whatever the tileset's own size
+var S := 61.0 / 32.0      # TILE / 32: scale for hand-placed pixel offsets
+## zoom steps: tiles you see either side of you, and the tile size that fills the 1920-wide canvas
+const ZOOM_NAMES := ["close", "middle", "far"]
+const ZOOM_SIDE := [10, 15, 20]
+const MAP_H := 837                  # the map's height in canvas pixels, above the message panel
+func set_zoom(z: int) -> void:
+	z = clampi(z, 0, 2)
+	cols = ZOOM_SIDE[z] * 2 + 1
+	TILE = 1920 / cols
+	S = TILE / 32.0
+	rows = MAP_H / TILE
+	if rows % 2 == 0:
+		rows -= 1
+	DOLL_S = 0.95 * float(TILE) / 27.0
+	queue_redraw()
+
+var cols: int = 31         # the zoom step decides this: 15 tiles either side by default
+var rows: int = 13
 var font: Font = ThemeDB.fallback_font
 
 const TERRAIN := {0: "t_sidewalk", 1: "t_pavement", 2: "t_wall", 3: "t_floor", 4: "t_door_c", 5: "t_water_dp", 6: "t_grass", 7: "",
@@ -41,7 +56,7 @@ func _blit(id: String, pos: Vector2, mod: Color = Color.WHITE) -> bool:
 	if sp.is_empty():
 		return false
 	var r: Rect2 = sp[1]
-	var k: float = sp[3]
+	var k: float = float(sp[3]) * float(TILE) / 64.0
 	draw_texture_rect_region(sp[0], Rect2(pos + sp[2] * k, r.size * k), r, mod)
 	return true
 
@@ -124,7 +139,7 @@ func _draw_doll(spec: Dictionary, pos: Vector2, face_dir: Vector2i, mod: Color =
 		draw_texture_rect_region(pd.tex, Rect2(Vector2(-7, -14) * S, wr.size * pd.scale), wr, mod)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
-const DOLL_S := 0.95
+var DOLL_S := 0.95
 
 func _draw_doll64(spec: Dictionary, pos: Vector2, face_dir: Vector2i, mod: Color) -> void:
 	var lk: Dictionary = spec["look"]
@@ -477,6 +492,19 @@ func _draw() -> void:
 		var tid: String = "f_" + String(t["k"]) + ("_c" if t["k"] == "crate" else "")
 		if not _blit(tid, Vector2(tx * T, ty * T)):
 			draw_rect(Rect2(tx * T + 6 * S, ty * T + 6 * S, T - 12 * S, T - 12 * S), Color(0.6, 0.45, 0.25))
+	for cb in game.corpses:      # placeholder body: a dark slumped shape, art to come
+		var bc: int = cb["cell"]
+		if bc / s2 != base / s2 or game.fov.visible[bc] == 0:
+			continue
+		var bx: int = bc % size - ox
+		var by: int = (bc / size) % size - oy
+		if bx < 0 or by < 0 or bx >= cols or by >= rows:
+			continue
+		if not _blit("corpse", Vector2(bx * T, by * T)):
+			var bp := Vector2(bx * T, by * T)
+			draw_rect(Rect2(bp.x + T * 0.15, bp.y + T * 0.38, T * 0.7, T * 0.28), Color(0.28, 0.1, 0.1))
+			draw_rect(Rect2(bp.x + T * 0.1, bp.y + T * 0.42, T * 0.2, T * 0.2), Color(0.5, 0.4, 0.35))
+			draw_rect(Rect2(bp.x + T * 0.15, bp.y + T * 0.38, T * 0.7, T * 0.28), Color(0.7, 0.2, 0.2, 0.6), false, 1.0)
 	for k in game.critters:
 		if k["k"] == "":
 			continue
@@ -756,7 +784,7 @@ func _meter(x: float, y: float, w: float, h: float, f: float, col: Color, label:
 ## There is deliberately no minimap: that is an implant to buy.
 func _draw_hud() -> void:
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.5, 1.5))
-	var W: float = float(cols * tile()) / 1.5
+	var W: float = 1920.0 / 1.5
 	var x0: float = W - PANEL_W
 	var xi: float = x0 + 10.0
 	var wi: float = PANEL_W - 20.0

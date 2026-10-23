@@ -36,6 +36,7 @@ func run() -> Array:
 		log.append(("  PASS " if cond else "  FAIL ") + name)
 	var g = GameScript.new(41)
 	g.setup(1200)
+	g.specials_on = true
 	for l_ in g.BODY.LIMBS:
 		g.body.hp[l_] = 100000
 		g.body.mx[l_] = 100000

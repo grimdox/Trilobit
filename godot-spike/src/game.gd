@@ -139,6 +139,8 @@ var postc: PackedInt32Array
 var yenn: PackedInt32Array
 var gunc: PackedByteArray            # 0 unarmed, 1 pistol, 2 SMG, 3 rifle
 var cool: PackedByteArray
+## weapon specials (stun, trip, bleed, knock-back, disarm, sweep, brace) and status effects like stun are shelved for now; the data stays
+var specials_on := false
 var stun: PackedByteArray             # turns a person is stunned, tangled or tripped
 var bleed: PackedByteArray            # turns left bleeding (1 hp each)
 var mdis: PackedByteArray             # 1 = their melee weapon has been knocked away
@@ -147,6 +149,9 @@ var melee_all: Array = []
 var prev_wield = null
 var things: Array = []                # loose props: {k, cell, hp, loot}
 var thing_at: PackedInt32Array
+## bodies left by the dead: {cell, name, fac, kj}; the energy in them can still be drawn
+const CORPSE_CAP := 300
+var corpses: Array = []
 var critters: Array = []              # dogs and cats: {k, cell, hp, mood, stun}
 var crit_at: PackedInt32Array
 var fly_units: Dictionary = {}        # agent -> {"fly": true, ...}: per-unit movement traits (none spawn yet)
@@ -233,6 +238,7 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1), ms
 	veh_at = PackedInt32Array(); veh_at.resize(total); veh_at.fill(-1)
 	things = []
 	critters = []
+	corpses = []
 	thing_at = PackedInt32Array(); thing_at.resize(total); thing_at.fill(-1)
 	crit_at = PackedInt32Array(); crit_at.resize(total); crit_at.fill(-1)
 	_people()
@@ -967,12 +973,41 @@ func act_drop_wield() -> void:
 
 # ---------------------------------------------------------------- acting
 ## broken legs: every step on foot costs extra time (one leg: double, none: triple), and no running
-func act_move(dx: int, dy: int, run: bool = false) -> bool:
+func act_move(dx: int, dy: int, run: bool = false, turn: bool = true) -> bool:
 	var on_foot: bool = in_vehicle < 0 and transit.riding < 0 and not flying
 	var legs: int = body.legs_ok()
 	if on_foot and legs < 2:
 		run = false
-	return _act_move_core(dx, dy, run)
+	_no_turn = not turn
+	var ok: bool = _act_move_core(dx, dy, run)
+	_no_turn = false
+	return ok
+
+## walking into someone who means you no harm moves them aside instead of hitting them
+func _bump_pushes(i: int) -> bool:
+	return not hostile(i) and astate[i] != HUNTING and not provoked.has(i)
+
+## shove a bystander one cell on, straight ahead or to either side of it; takes a turn only if they move
+func _bump_push(who: int, dx: int, dy: int) -> bool:
+	var tries: Array = [[dx, dy]]
+	var k: int = DIR8.find([dx, dy])
+	if k >= 0:
+		for o in [1, 7]:
+			tries.append(DIR8[(k + o) % 8])
+	for t in tries:
+		var before: int = sim.pos[who]
+		var tx: int = before % size + int(t[0])
+		var ty: int = before / size + int(t[1])
+		if not in_bounds(tx, ty) or not _agent_open(ty * size + tx):
+			continue
+		if push_agent(who, int(t[0]), int(t[1])) and sim.pos[who] != before:
+			say("You push %s aside." % name_of(who))
+			end_turn()
+			return true
+	say("%s won't budge." % name_of(who))
+	return false
+
+var _no_turn := false        # a step that leaves the view where it was (strafing, backing up)
 
 func _act_move_core(dx: int, dy: int, run: bool = false) -> bool:
 	if game_over:
@@ -990,12 +1025,14 @@ func _act_move_core(dx: int, dy: int, run: bool = false) -> bool:
 	var ny: int = pc / size + dy
 	if not in_bounds(nx, ny):
 		return false
-	if facing != Vector2i(dx, dy):
+	if facing != Vector2i(dx, dy) and not _no_turn:
 		facing = Vector2i(dx, dy)
 		_compute_fov()
 	var c := ny * size + nx
 	var who: int = sim.at[c]
 	if who >= 0:
+		if _bump_pushes(who):
+			return _bump_push(who, dx, dy)
 		melee(who)
 		end_turn()
 		return true
@@ -1671,6 +1708,15 @@ func sight_radius() -> int:
 
 func _compute_fov() -> void:
 	fov.compute(pc % size, pc / size, sight_radius(), vision_arc(), facing.x, facing.y)
+
+## turn the view one step (+1 clockwise, -1 anticlockwise) of the eight directions; takes no time
+func turn_step(dir: int) -> void:
+	var k: int = DIR8.find([facing.x, facing.y])
+	if k < 0:
+		k = 4
+	var d: Array = DIR8[(k + dir + 8) % 8]
+	facing = Vector2i(d[0], d[1])
+	_compute_fov()
 
 func turn_to(dx: int, dy: int) -> void:
 	if dx == 0 and dy == 0:
@@ -2360,7 +2406,7 @@ func melee_line() -> String:
 	var bits: Array = ["dmg %d-%d" % [m["dmg"][0], m["dmg"][1]]]
 	if int(m["reach"]) > 1:
 		bits.append("reach %d" % m["reach"])
-	for k in ["parry", "stun", "sneak"]:
+	for k in (["parry", "stun", "sneak"] if specials_on else []):
 		if m.has(k):
 			bits.append("%s %s" % [k, str(m[k])])
 	if m.get("slow", false):
@@ -2464,7 +2510,7 @@ func melee(i: int, dist: int = 1) -> void:
 		dmg *= 2
 		_math("Unready: x2 = %d" % dmg)
 		say("You catch %s unready." % name_of(i))
-	if dist > 1 and ms.get("brace", false) and astate[i] == HUNTING:
+	if specials_on and dist > 1 and ms.get("brace", false) and astate[i] == HUNTING:
 		dmg = dmg * 3 / 2
 		say("You meet the charge on the point.")
 	_silent = behind
@@ -2472,12 +2518,12 @@ func melee(i: int, dist: int = 1) -> void:
 	_silent = false
 	if sim.alive[i] == 1:
 		_melee_effects(i, ms)
-		if msk == "unarmed" and discipline("pressure_points") and rng.randf() < 0.2:
+		if specials_on and msk == "unarmed" and discipline("pressure_points") and rng.randf() < 0.2:
 			stun[i] = 3
 			sim.ctl[i] = 1
 			say("%s is staggered by a nerve strike." % name_of(i))
 	skill_up(msk, 3 if hpmax[i] >= 40 else 1)
-	if ms.get("sweep", false):
+	if specials_on and ms.get("sweep", false):
 		_sweep_others(i, ms)
 
 ## damage to a person from a melee blow: their armor (less the weapon's piercing), then their Grit, both flat
@@ -2579,6 +2625,8 @@ func _npc_melee_attack(i: int) -> void:
 	player_melee_hurt(dmg, "%s %s" % [name_of(i), what], int(nm.get("pen", 1 if wmax >= 14 else 0)), crit)
 
 func _melee_effects(i: int, ms: Dictionary) -> void:
+	if not specials_on:
+		return
 	if ms.get("bleed", false) and bleed[i] < 6:
 		bleed[i] = 5
 		say_if_seen(sim.pos[i], "%s is bleeding." % name_of(i))
@@ -2769,11 +2817,30 @@ func kill(i: int) -> void:
 	var mw: String = npc_melee_id(i)
 	if mw != "" and rng.randf() < 0.5:
 		_put(c, _new_item(mw))
+	_leave_corpse(i)
 	stun[i] = 0
 	bleed[i] = 0
 	sim.remove_agent(i)
 	astate[i] = UNAWARE
 	_witness(c, 4 if _silent else 14, i)
+
+func _leave_corpse(i: int) -> void:
+	corpses.append({"cell": sim.pos[i], "name": name_of(i), "fac": int(fac[i]), "kj": int(energy[i]), "who": i})
+	if corpses.size() > CORPSE_CAP:
+		corpses.remove_at(0)
+
+## what is left in a body; the person's own record wins while they are still the one lying there
+func corpse_kj(b: Dictionary) -> int:
+	var wi: int = int(b.get("who", -1))
+	if wi >= 0 and wi < energy.size() and sim.alive[wi] == 0 and sim.pos[wi] == int(b["cell"]) and int(energy[wi]) >= 0:
+		b["kj"] = int(energy[wi])
+	return int(b["kj"])
+
+func corpse_at(c: int) -> int:
+	for k in corpses.size():
+		if int(corpses[k]["cell"]) == c:
+			return k
+	return -1
 
 ## people who see violence react: civilians panic
 func _witness(cell: int, radius: int, except: int) -> void:
@@ -4050,7 +4117,7 @@ func fall_crit(ki: int, over: int) -> void:
 		return
 	crit_at[lc[0]] = ki
 	sim.walk[lc[0]] = 0
-	k["stun"] = 3
+	k["stun"] = 3 if specials_on else 0
 	k["mood"] = 2 if kind == "cat" else 1
 
 ## push an animal one cell (it scrambles over rails too); over an edge it falls
@@ -4509,7 +4576,7 @@ func fall_agent(i: int, over: int) -> void:
 		say("%s plunges %d floor%s." % [name_of(i), levels, "" if levels == 1 else "s"])
 	sim.place(i, lc[0])
 	hpn[i] -= dmg
-	stun[i] = 4
+	stun[i] = 4 if specials_on else 0
 	bleed[i] = 0
 	if hpn[i] <= 0:
 		kill(i)
@@ -4604,7 +4671,7 @@ func act_shove(dx: int, dy: int) -> bool:
 		say("You shove %s." % name_of(who))
 		push_agent(who, dx, dy)
 		if sim.alive[who] == 1:
-			stun[who] = maxi(int(stun[who]), 1)
+			stun[who] = maxi(int(stun[who]), 1) if specials_on else 0
 			sim.ctl[who] = 1
 			_alert(who)
 	else:
@@ -4743,7 +4810,7 @@ func save_dict() -> Dictionary:
 	var vlist := []
 	for v in vehicles:
 		vlist.append(vs.to_dict(v))
-	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "in_vehicle": in_vehicle,
+	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "corpses": corpses, "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
 			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
 			"items_at": it_at, "open_doors": open_doors.keys(), "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
@@ -4823,6 +4890,9 @@ func load_dict(d: Dictionary) -> void:
 	crit_at.fill(-1)
 	things = []
 	critters = []
+	corpses = []
+	for cp in d.get("corpses", []):
+		corpses.append({"cell": int(cp["cell"]), "name": String(cp["name"]), "fac": int(cp["fac"]), "kj": int(cp["kj"]), "who": int(cp.get("who", -1))})
 	for t in d.get("things", []):
 		var ti: int = _add_thing(String(t["k"]), int(t["cell"]), bool(t["loot"]))
 		things[ti]["hp"] = int(t["hp"])
@@ -5123,6 +5193,26 @@ func recharge_vehicle(bank: int, vi: int, pct: int) -> bool:
 	sfx("pick")
 	return true
 
+func _siphon_corpse(k: int) -> bool:
+	var b: Dictionary = corpses[k]
+	var left_in: int = corpse_kj(b)
+	var room: float = power_cap() - power_left()
+	if room < 1.0:
+		say("Your own cells are full.")
+		return false
+	var take: int = mini(PW.siphon_take(left_in), int(room))
+	b["kj"] = left_in - take
+	var wi: int = int(b.get("who", -1))
+	if wi >= 0 and wi < energy.size() and sim.alive[wi] == 0 and sim.pos[wi] == int(b["cell"]):
+		energy[wi] = int(b["kj"])
+	power_add(float(take))
+	skill_up("engineering", 3)
+	_noise(pc, 3)
+	say("You clamp a lead to the body of %s and draw %d kJ (%d left).  Implants good for about %d hours." % [b["name"], take, int(b["kj"]), int(power_hours())])
+	sfx("select")
+	end_turn()
+	return true
+
 ## energy of one person (kJ)
 func npc_energy(i: int) -> int:
 	if int(energy[i]) >= 0:
@@ -5140,11 +5230,15 @@ func act_siphon() -> bool:
 		if cheb(sim.pos[i], pc) <= 1 and (sim.alive[i] == 0 or stun[i] > 0 or astate[i] == SURRENDERED) and npc_energy(i) > 0:
 			best = i
 			break
+	var body := -1
 	if best < 0:
-		for i in sim.n:
-			if sim.alive[i] == 0 and cheb(sim.pos[i], pc) <= 1 and npc_energy(i) > 0 and z_of(sim.pos[i]) == z_of(pc):
-				best = i
+		for k in corpses.size():
+			var cc: int = int(corpses[k]["cell"])
+			if cheb(cc, pc) <= 1 and corpse_kj(corpses[k]) > 0 and z_of(cc) == z_of(pc):
+				body = k
 				break
+	if best < 0 and body >= 0:
+		return _siphon_corpse(body)
 	if best < 0:
 		say("Nobody here to draw from: they must be down or helpless, next to you, and still carry a charge.")
 		return false

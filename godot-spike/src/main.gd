@@ -25,6 +25,7 @@ var game
 var tileset
 var view
 var status: Label
+var zoom_btn: Button
 var logbox: RichTextLabel
 var panel: RichTextLabel
 var mode: String = "title"           # title, play, garage, inventory, talk, mods, jump, strike, shove, turn, look, waitmenu, movemenu, waiting, consume, pause, options, visuals, keys, saves, loads, implants, skills, map, loading
@@ -152,12 +153,21 @@ func start_play(g) -> void:
 	view = ViewScript.new()
 	view.game = game
 	view.tileset = tileset
+	view.set_zoom(settings.zoom)
 	add_child(view)
 	play_nodes.append(view)
 	var layer := CanvasLayer.new()
 	layer.scale = Vector2(UI_S, UI_S)
 	add_child(layer)
 	play_nodes.append(layer)
+	zoom_btn = Button.new()
+	zoom_btn.position = Vector2(905, 534)
+	zoom_btn.size = Vector2(118, 22)
+	zoom_btn.focus_mode = Control.FOCUS_NONE
+	zoom_btn.add_theme_font_size_override("font_size", 12)
+	zoom_btn.pressed.connect(cycle_zoom)
+	layer.add_child(zoom_btn)
+	_zoom_label()
 	status = Label.new()
 	status.position = Vector2(8, 4)
 	status.add_theme_font_size_override("font_size", 16)
@@ -382,6 +392,7 @@ func _fill_options() -> void:
 		{"label": "Sound", "value": "ON" if settings.sound_on else "OFF", "id": "sound"},
 		{"label": "Volume", "value": "%d%%" % int(settings.volume * 100.0), "id": "volume"},
 		{"label": "Tileset", "value": TILESETS[ts_index].replace("_TopDown", ""), "id": "tileset"},
+		{"label": "Toggle view changes with move direction", "value": "ON" if settings.view_follows_move else "OFF", "id": "vfm"},
 		{"label": "Visuals...", "id": "visuals"},
 		{"label": "Key bindings...", "id": "keys"},
 		{"label": "Back", "id": "back"}]
@@ -475,6 +486,10 @@ func activate(id: String) -> void:
 		"options":
 			screen_back = "pause" if mode == "pause" else "title"
 			open_screen("options")
+		"vfm":
+			settings.view_follows_move = not settings.view_follows_move
+			settings.save()
+			_fill_options()
 		"keys": open_screen("keys")
 		"visuals": open_screen("visuals")
 		"wmode":
@@ -715,6 +730,8 @@ func screen_key(k: int) -> void:
 				sfx.play("shot")
 			elif id == "sound":
 				activate("sound")
+			elif id == "vfm":
+				activate("vfm")
 			elif id == "tileset":
 				_cycle_tileset(step)
 			elif id == "wmode":
@@ -1076,6 +1093,37 @@ func look_end() -> void:
 	mode = "play"
 	refresh()
 
+## the arrow keys and the numpad on foot (unless "view changes with move direction" is on): Up/Down walk forward/back along the view,
+## Left/Right turn it, numpad keys step in a compass direction without turning.  True if the key was handled here.
+func _scheme_key(k: int, act: String, run: bool) -> bool:
+	var g = game
+	if settings.view_follows_move or g.in_vehicle >= 0 or g.transit.riding >= 0 or g.flying:
+		return false
+	if not act in ["north", "south", "west", "east", "nw", "ne", "sw", "se"]:
+		return false
+	match k:
+		KEY_UP: g.act_move(g.facing.x, g.facing.y, run, false)
+		KEY_DOWN: g.act_move(-g.facing.x, -g.facing.y, run, false)
+		KEY_LEFT: g.turn_step(-1)
+		KEY_RIGHT: g.turn_step(1)
+		KEY_KP_1, KEY_KP_2, KEY_KP_3, KEY_KP_4, KEY_KP_6, KEY_KP_7, KEY_KP_8, KEY_KP_9:
+			var d := dir_of(k)
+			g.act_move(d.x, d.y, run, false)
+		_:
+			return false
+	return true
+
+func _zoom_label() -> void:
+	if zoom_btn != null:
+		zoom_btn.text = "Zoom: %s [=]" % view.ZOOM_NAMES[settings.zoom]
+
+## close -> middle -> far -> close
+func cycle_zoom() -> void:
+	settings.zoom = (settings.zoom + 1) % 3
+	settings.save()
+	view.set_zoom(settings.zoom)
+	_zoom_label()
+
 func dir_of(k: int) -> Vector2i:
 	match settings.action_for(k):
 		"north": return Vector2i(0, -1)
@@ -1246,6 +1294,9 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 	var acted := true
 	g.tracers.clear()
 	var run: bool = ev.shift_pressed or g.run_mode
+	if _scheme_key(k, act, run):
+		_after_act()
+		return
 	match act:
 		"north": g.act_move(0, -1, run)
 		"south": g.act_move(0, 1, run)
@@ -1271,6 +1322,9 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 			else:
 				menu = g.eco.menu_for(who)
 				mode = "talk"
+		"zoom":
+			cycle_zoom()
+			acted = false
 		"siphon": g.act_siphon()
 		"pickup":
 			if ev.shift_pressed and k == KEY_COMMA:
