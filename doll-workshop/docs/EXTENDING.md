@@ -19,6 +19,10 @@ in every frame by the next bake.
 The bake uses every core (`--jobs`, default all) and splits each body's frames into runs so one new part keeps every
 worker busy.  `--no-cache` renders everything from scratch; the result is byte-identical either way.
 
+Measured on a 2-core machine (2026-10-23): no change 17 s + 7 s; one new garment 1 min 41 s (64 px) + 41 s (32 px);
+a colour preset 3 s; the checks after a bake about 5 minutes.  A cold bake (empty cache) is about 50 minutes; more cores
+divide every figure.
+
 ## A colour (skin, hair, eyes, cloth, metal, lights)
 
 Add the preset to the table in `tools/dollgen/materials.py` (for skin, `SKIN_PRESETS`), then rewrite only the palette
