@@ -379,8 +379,9 @@ if __name__ == '__main__':
 
 
 def drive_mark(n=96):
-    """The "driving" marker on a car's roof: a glossy emerald orb with a bright core, a pale rim, a soft glow and a drop shadow.  n px square."""
-    from PIL import Image, ImageFilter
+    """The "driving" marker on a car's roof: a flat, glassy neon ring (a mint-to-teal gradient) with a small solid core and a faint glow; no lighting or highlights, so it reads as a
+    marker laid over the car and not as an object on it.  n px square."""
+    from PIL import Image
     SSX = 4
     N = n * SSX
     yy, xx = np.mgrid[0:N, 0:N].astype(np.float32)
@@ -388,45 +389,27 @@ def drive_mark(n=96):
     R = N * 0.30
     d = np.sqrt((xx - cx) ** 2 + (yy - cy) ** 2)
     out = np.zeros((N, N, 4), np.float32)
-    # shadow on the roof: offset down, blurred
-    sh = Image.new('L', (N, N), 0)
-    sd = np.asarray(sh).astype(np.float32)
-    sd[np.sqrt((xx - cx - N * 0.02) ** 2 + (yy - cy - N * 0.04) ** 2) < R * 1.02] = 255
-    sh = Image.fromarray(sd.astype(np.uint8)).filter(ImageFilter.GaussianBlur(N * 0.025))
-    sa = np.asarray(sh).astype(np.float32) / 255.0 * 0.55
-    out[..., 3] = sa
-    # glow
-    glow = np.clip(1.0 - (d - R) / (N * 0.17), 0, 1) ** 2.2 * (d >= R * 0.9)
-    gcol = np.array([0.20, 1.0, 0.45])
-    for k in range(3):
-        out[..., k] = np.where(glow > 0, gcol[k], out[..., k])
-    out[..., 3] = np.maximum(out[..., 3], glow * 0.55)
-    # the orb: a sphere lit from the upper left
-    inside = d <= R
-    t = np.clip(d / R, 0, 1)
-    nz = np.sqrt(np.clip(1 - t * t, 0, 1))
-    lx, ly, lz = -0.45, -0.55, 0.70
-    nxv = (xx - cx) / R
-    nyv = (yy - cy) / R
-    lam = np.clip(nxv * lx + nyv * ly + nz * lz, 0, 1)
-    base_dark = np.array([0.02, 0.38, 0.17])
-    base_lite = np.array([0.45, 1.0, 0.62])
-    orb = base_dark[None, None, :] * (1 - lam[..., None]) + base_lite[None, None, :] * lam[..., None]
-    rim = np.clip((t - 0.80) / 0.20, 0, 1)[..., None]
-    orb = orb * (1 - rim * 0.35) + np.array([0.75, 1.0, 0.85])[None, None, :] * rim * 0.28
-    spec = np.exp(-(((xx - (cx - R * 0.34)) / (R * 0.30)) ** 2 + ((yy - (cy - R * 0.40)) / (R * 0.20)) ** 2))
-    orb = orb + spec[..., None] * 0.65
-    for k in range(3):
-        out[..., k] = np.where(inside, np.clip(orb[..., k], 0, 1), out[..., k])
-    out[..., 3] = np.where(inside, 1.0, out[..., 3])
-    # a thin dark outline and a white inner ring for a clean read on any paint
-    ring = (np.abs(d - R) < N * 0.008)
-    for k in range(3):
-        out[..., k] = np.where(ring, 0.03, out[..., k])
-    out[..., 3] = np.where(ring, 1.0, out[..., 3])
-    ring2 = (np.abs(d - R * 0.70) < N * 0.006)
-    for k in range(3):
-        out[..., k] = np.where(ring2, out[..., k] * 0.5 + 0.5, out[..., k])
+    t = np.clip((xx + yy) / (2.0 * N), 0, 1)[..., None]              # a diagonal gradient across the mark
+    c0 = np.array([0.30, 1.00, 0.62])[None, None, :]                 # mint
+    c1 = np.array([0.12, 0.82, 0.78])[None, None, :]                 # teal
+    col = c0 * (1 - t) + c1 * t
+    def over(mask_a, colour):
+        """composite a layer of alpha mask_a and colour onto out"""
+        a_in = mask_a[..., None]
+        a_out = out[..., 3:4]
+        a_new = a_in + a_out * (1 - a_in)
+        rgb = np.where(a_new > 1e-6, (colour * a_in + out[..., :3] * a_out * (1 - a_in)) / np.maximum(a_new, 1e-6), 0)
+        out[..., :3] = rgb
+        out[..., 3:4] = a_new
+    glow = np.clip(1.0 - (d - R) / (N * 0.16), 0, 1) ** 2.4 * (d >= R * 0.85) * 0.28
+    over(glow.astype(np.float32), col)
+    fill = (d <= R).astype(np.float32) * 0.16                        # a faint glass fill
+    over(fill, col)
+    w = N * 0.022
+    ring = np.clip(1.0 - (np.abs(d - R) - w) / (N * 0.006), 0, 1) * 0.92
+    over(ring.astype(np.float32), col)
+    core = np.clip(1.0 - (d - R * 0.20) / (N * 0.006), 0, 1) * 0.95
+    over(core.astype(np.float32), col)
     im = Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8), 'RGBA')
     return im.resize((n, n), Image.LANCZOS)
 

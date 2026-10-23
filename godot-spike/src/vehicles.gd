@@ -613,10 +613,7 @@ func _step_ground(vi: int, dir: int, step_dir: int) -> bool:
 
 ## how fast a vehicle is going in km/h (a driven car's speed in tiles a turn; traffic runs at two)
 func kph(v: Dictionary) -> int:
-	var sp: int = absi(int(v["spd"]))
-	if sp == 0 and bool(v.get("ai", false)):
-		sp = 2
-	return sp * KPH_PER_TILE
+	return absi(int(v["spd"])) * KPH_PER_TILE
 
 ## a person struck by a car takes one point of damage for every km/h, split over the body: half to the legs (a quarter to each), the rest over chest 25%, arms 10% each and head 5%.
 const HIT_SPLIT := [["l_leg", 25], ["r_leg", 25], ["chest", 25], ["l_arm", 10], ["r_arm", 10], ["head", 5]]
@@ -1131,7 +1128,21 @@ func _ai_car(vi: int) -> void:
 	if int(v["dir"]) % 2 == 1:
 		v["dir"] = (int(v["dir"]) + 1) % 8                  # traffic only drives the four straight headings
 	var q: int = int(v["dir"]) / 2                         # the quarter-turn heading (0 N, 1 E, 2 S, 3 W)
-	for s in 2:
+	# a person (or you) in the lane ahead within four tiles makes traffic slow to one tile a turn; it never speeds up at anyone, and it only gets a chance to hit
+	# someone who is in its way while it is still moving (below)
+	var came_in_at: int = int(v["spd"])
+	var moving: bool = came_in_at > 0
+	var warned := false
+	var qd: Array = DIR4[q]
+	for k in range(1, 5):
+		var pk := probe(vi, int(v["cell"]) + qd[1] * g.size * k + qd[0] * k, q * 2)
+		if not pk.is_empty() and (String(pk["t"]) == "person" or String(pk["t"]) == "player"):
+			warned = true
+			break
+	var cruise: int = 1 if (warned or not moving) else 2
+	v["spd"] = cruise
+	var travelled := 0
+	for s in cruise:
 		var dir: int = q * 2
 		var d: Array = DIR4[q]
 		var a: int = int(v["cell"]) + d[1] * g.size + d[0]
@@ -1171,6 +1182,17 @@ func _ai_car(vi: int) -> void:
 		if road_ok:
 			put(vi, a, dir)
 			v["stuck"] = 0
+			travelled += 1
+		elif not pr.is_empty() and (String(pr["t"]) == "person" or String(pr["t"]) == "player") and moving:
+			# somebody is in the way and the car was moving: it brakes, but may not stop in time (more likely the faster it was going)
+			moving = false
+			if g.rng.randf() < (0.4 if came_in_at >= 2 else 0.12):
+				v["spd"] = came_in_at                  # it hits at the speed it came in at
+				run_down(vi, String(pr["t"]), int(pr["idx"]), int(pr["cell"]))
+				damage(vi, "body", 2)
+			v["spd"] = 0
+			v["stuck"] = int(v["stuck"]) + 1
+			break
 		elif pr.is_empty() and _ai_slide(vi, dir, a):
 			v["stuck"] = 0                              # the road bends here (a riverside boulevard): followed one column sideways
 			continue
@@ -1183,6 +1205,8 @@ func _ai_car(vi: int) -> void:
 				_ai_uturn(vi)
 				v["stuck"] = 0
 			break
+	if travelled == 0 and int(v["spd"]) > 0:
+		v["spd"] = 0                                   # it did not get anywhere this turn (waiting, or turning round)
 	if g.cheb(v["cell"], g.pc) < 30 and g.rng.randf() < 0.05:
 		g._noise_gentle(v["cell"], 5)
 

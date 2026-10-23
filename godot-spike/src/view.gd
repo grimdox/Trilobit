@@ -1043,7 +1043,7 @@ func _draw_body_sprite(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> bool
 						sn += 1
 				var an := int(v["cell"])
 				mp = Vector2((float(an % game.size) + 0.5 + sx / maxf(1.0, float(sn)) - float(ox)) * T, (float((an % game.s2) / game.size) + 0.5 + sy / maxf(1.0, float(sn)) - float(oy)) * T)
-			var msz: float = 2.1 * float(T)
+			var msz: float = 1.7 * float(T)
 			draw_texture_rect(mk, Rect2(mp - Vector2(msz, msz) * 0.5, Vector2(msz, msz)), false)
 	if wreck or game.vs.part_pct(v, "engine") < 30:
 		draw_circle(ctr + Vector2(0, -T * 0.6), 9.0 * S, Color(0.15, 0.15, 0.15, 0.5))

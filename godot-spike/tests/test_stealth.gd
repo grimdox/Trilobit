@@ -182,14 +182,19 @@ func run() -> Array:
 			g._notice(who, 5)
 		check.call("crawling gets noticed more slowly than walking (%d vs %d)" % [crawl_meter, g.meter[who]], crawl_meter < g.meter[who])
 		# knife in the back
+		g.hpmax[who] = 1000                            # limbs scale with it: a long run of blows must not kill him
 		var tot_back := 0
 		var tot_front := 0
 		for trial in 40:
+			g.limbn[who * 6] = -1
+			g.sim.alive[who] = 1
 			g.astate[who] = g.UNAWARE
 			g.hpn[who] = 1000
 			g.face[who] = 2
 			g.melee(who)
 			tot_back += 1000 - g.hpn[who]
+			g.limbn[who * 6] = -1
+			g.sim.alive[who] = 1
 			g.astate[who] = g.UNAWARE
 			g.hpn[who] = 1000
 			g.face[who] = 6

@@ -140,6 +140,58 @@ func _initialize() -> void:
 	check("a car saved with the old four headings (1 = east) loads as heading 2 of 8", back["dir"] == 2 and back["d8"] == true)
 	var rec2: Dictionary = vs.from_dict(vs.to_dict(g.vehicles[vk]))
 	check("a new record round-trips unchanged", rec2["dir"] == g.vehicles[vk]["dir"])
+	# AI traffic: slows for a person ahead, may hit one that is in its way while it moves, never when stopped, never aims
+	_clear(g)
+	g.in_vehicle = -1
+	var cars := -1
+	var ai_a := -1
+	for off in range(0, 400, 7):
+		ai_a = vs.anchor_for("car", 0, VS.lane_hi2(e), 2 * (mid_y + off), 0)
+		cars = vs.spawn("car", ai_a, 0, Color.GREEN, true)
+		if cars >= 0:
+			break
+	var av: Dictionary = g.vehicles[cars]
+	var pw := -1
+	for i in g.sim.n:
+		if g.sim.alive[i] == 1:
+			pw = i
+			break
+	g.sim.place(pw, ai_a - 4 * g.size)
+	g.hpn[pw] = 5000
+	g.hpmax[pw] = 5000
+	av["spd"] = 2
+	vs._ai_car(cars)
+	check("traffic slows to one tile a turn for somebody four tiles ahead (it moved %d, speed %d)" % [(ai_a - av["cell"]) / g.size, av["spd"]], av["spd"] == 1 and (ai_a - int(av["cell"])) / g.size == 1)
+	var hits := 0
+	var trials := 300
+	for t in trials:
+		vs.lift(cars)
+		av["cell"] = ai_a
+		vs.put(cars, ai_a, 0)
+		g.sim.place(pw, ai_a - 3 * g.size)
+		g.hpn[pw] = 5000
+		g.limbn[pw * 6] = -1                                   # whole again
+		g.sim.alive[pw] = 1
+		av["spd"] = 2
+		av["stuck"] = 0
+		av["turn_at"] = vs.center2("car", ai_a, 0).y * 4          # no turning at a cross street in this test
+		vs._ai_car(cars)
+		if g.hpn[pw] < 5000:
+			hits += 1
+	check("a person in its way while it is moving gets hit some of the time, not always (%d of %d)" % [hits, trials], hits > trials / 10 and hits < trials * 3 / 4)
+	var still := 0
+	for t in 100:
+		vs.lift(cars)
+		av["cell"] = ai_a
+		vs.put(cars, ai_a, 0)
+		g.sim.place(pw, ai_a - 3 * g.size)
+		g.hpn[pw] = 5000
+		av["spd"] = 0
+		av["stuck"] = 0
+		vs._ai_car(cars)
+		if g.hpn[pw] < 5000:
+			still += 1
+	check("a stopped car never hits anyone: it waits (%d hits in 100)" % still, still == 0)
 	# the marker art is there, and traffic still drives
 	check("the driving marker sprite exists", FileAccess.file_exists("res://gfx/Trilobit64/veh/veh_drive_mark.png"))
 	var g5 = GameScript.new(7)
