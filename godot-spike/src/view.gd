@@ -5,8 +5,13 @@ const PD = preload("res://src/paperdoll.gd")
 const DS = preload("res://src/dollspec.gd")
 const FG = preload("res://src/figure.gd")
 const CLK = preload("res://src/clock.gd")
+const DIMG = preload("res://addons/trilobit_doll/doll_image.gd")      # the layered dolls (doll-workshop), composed per look
+const ADAPT = preload("res://addons/trilobit_doll/trilobit_adapter.gd")
+const DOLLS_WORLD := "res://gfx/dolls32"     # the 32 px world set: drawn at TILE / 32, it is made for this size
 var pd = PD.new()
-var fig = FG.new()            # the standing dolls (gfx/figure), drawn for every person when present
+var fig = FG.new()            # the old standing dolls (gfx/figure): drawn only if the layered set is missing
+var dimg = null               # DollImage for DOLLS_WORLD (loaded on first use)
+var _dspec := {}              # game spec -> doll spec
 var game
 var tileset
 const TILE := 27            # screen pixels per cell: sprites are drawn at 64x64 and scaled to this, whatever the tileset's own size
@@ -54,9 +59,47 @@ func person_sprite(i: int) -> String:
 ## the paper doll.  People are drawn as standing dolls (gfx/figure, three-quarter turned, mirrored when facing left); without that
 ## atlas, the tileset's top-down layers (facing up, centred on the cell, stacked by z and turned to the facing) or the old 32px atlas.
 func doll_ready() -> bool:
-	return fig.ready() or (tileset != null and tileset.has("dl:d_legs"))
+	return _dolls() != null or fig.ready() or (tileset != null and tileset.has("dl:d_legs"))
+
+func _dolls():
+	if dimg == null:
+		dimg = DIMG.for_library(DOLLS_WORLD)
+	return dimg if dimg.ok() else null
+
+## the doll spec for a game spec (layers, weapon, look), made once per distinct look
+func doll_spec(spec: Dictionary, lib_path: String = DOLLS_WORLD):
+	var key := lib_path + str(spec)
+	if _dspec.has(key):
+		return _dspec[key]
+	var lk: Dictionary = spec["look"]
+	var ds = ADAPT.spec_from_game(spec["layers"], lk, String(spec.get("weapon", "")), String(lk.get("size", "m")), lib_path)
+	if bool(lk.get("hid", false)):
+		ds.hair = "bald"
+	if _dspec.size() > 4000:
+		_dspec.clear()
+	_dspec[key] = ds
+	return ds
+
+## a layered doll standing on the cell at pos: its ground point on the cell's foot point, mirrored when facing left
+func _draw_doll_layered(nd, spec: Dictionary, pos: Vector2, face_dir: Vector2i, mod: Color) -> void:
+	var ds = doll_spec(spec)
+	var tex: Texture2D = nd.texture(ds, "%s/idle/0" % ds.grip(nd.lib))
+	if tex == null:
+		return
+	var k := TILE / 32.0
+	draw_set_transform(pos + Vector2(TILE * 0.5, TILE - 1.0), 0.0, Vector2(-k if face_dir.x < 0 else k, k))
+	var sh := PackedVector2Array()
+	for n in 12:
+		sh.append(Vector2(cos(n * TAU / 12.0) * 8.5, sin(n * TAU / 12.0) * 2.4))
+	draw_colored_polygon(sh, Color(0, 0, 0, 0.32 * mod.a))
+	draw_texture(tex, -nd.origin(), mod)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 func _draw_doll(spec: Dictionary, pos: Vector2, face_dir: Vector2i, mod: Color = Color.WHITE) -> void:
+	var nd = _dolls()
+	if nd != null:
+		_draw_doll_layered(nd, spec, pos, face_dir, mod)
+		return
 	if fig.ready():
 		fig.draw(self, DS.figure_keys(spec, fig), pos, TILE / 64.0, face_dir.x < 0, mod)
 		return

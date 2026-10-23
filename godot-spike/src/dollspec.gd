@@ -24,6 +24,7 @@ const FIG_SKINS := ["skin_pale", "skin_fair", "skin_tan", "skin_brown", "skin_de
 const FIG_STYLES := ["short", "buzz", "mohawk", "long", "bob", "ponytail", "bun"]
 const EYE_SHAPES := ["round", "almond", "hooded", "wide"]
 const EYE_COUNT := 11
+const BODY_SIZES := ["s", "m", "m", "l"]      # the layered dolls' body frames for people (small, medium twice as often, large)
 
 ## body and look: the layers every figure has, plus skin and hair tints
 static func look(h: int, fem: bool, fac: int) -> Dictionary:
@@ -40,7 +41,8 @@ static func look(h: int, fem: bool, fac: int) -> Dictionary:
 	if (h >> 17) % 100 < COLOURED_EYE_PCT:
 		ei = NATURAL_EYES + (h >> 22) % (EYE_COUNT - NATURAL_EYES)
 	return {"fem": fem, "skin": SKINS[si], "hair": HAIRS[hs], "style": styles[(h >> 12) % styles.size()],
-		"skin_i": si, "hair_i": hs, "eye_i": ei, "eye_shape": EYE_SHAPES[(h >> 19) % EYE_SHAPES.size()]}
+		"skin_i": si, "hair_i": hs, "eye_i": ei, "eye_shape": EYE_SHAPES[(h >> 19) % EYE_SHAPES.size()],
+		"size": BODY_SIZES[(h >> 27) % BODY_SIZES.size()]}
 
 static func base_layers(look: Dictionary, hair_hidden: bool) -> Array:
 	var sx: String = "f" if look["fem"] else "m"

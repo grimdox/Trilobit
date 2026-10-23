@@ -8,6 +8,7 @@ const SPEC = preload("res://addons/trilobit_doll/doll_spec.gd")
 const GEN = preload("res://addons/trilobit_doll/doll_generator.gd")
 const RIG = preload("res://addons/trilobit_doll/doll_rig.gd")
 const ADAPT = preload("res://addons/trilobit_doll/trilobit_adapter.gd")
+const DIM = preload("res://addons/trilobit_doll/doll_image.gd")
 
 var passed := 0
 var total := 0
@@ -230,6 +231,27 @@ func _initialize() -> void:
 	check("a one-shot action fires its strike event once and then finishes", ev[0] == 1 and fin[0] == 1, "events %d finished %d" % [ev[0], fin[0]])
 	rig.facing_left = true
 	check("facing left mirrors around the feet", rig.scale.x < 0 and rig.scale.y > 0)
+	# ---------------------------------------------------------------- CPU composition (DollImage, for draw_* code)
+	var exp_dir := "res://tests/expected_%d" % int(man.get("lod", 64))
+	var cf := FileAccess.open(exp_dir.path_join("cases.json"), FileAccess.READ)
+	if cf != null:
+		var dim = DIM.new(lib)
+		var bad_px := []
+		var cases: Array = JSON.parse_string(cf.get_as_text())
+		for c in cases:
+			var got_img: Image = dim.image(SPEC.from_dict(c["spec"]), String(c["frame"]))
+			var want_img := Image.load_from_file(ProjectSettings.globalize_path(exp_dir.path_join("%s.png" % c["name"])))
+			want_img.convert(Image.FORMAT_RGBA8)
+			var d := 0
+			for y in got_img.get_height():
+				for x in got_img.get_width():
+					var a := got_img.get_pixel(x, y)
+					var b := want_img.get_pixel(x, y)
+					if not ((a.a < 0.5 and b.a < 0.5) or (a.a >= 0.5 and b.a >= 0.5 and a.to_rgba32() | 0xff == b.to_rgba32() | 0xff)):
+						d += 1
+			if d > 0:
+				bad_px.append("%s %d px" % [c["name"], d])
+		check("DollImage composes every reference doll pixel for pixel (%d cases)" % cases.size(), bad_px.is_empty(), str(bad_px))
 	_end()
 
 func _end() -> void:

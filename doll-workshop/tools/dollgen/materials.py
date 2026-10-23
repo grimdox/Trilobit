@@ -143,7 +143,9 @@ HAIR_PRESETS = {
     'platinum': '#c9ccd0', 'grey': '#7c7e86', 'teal dye': '#2c7f86', 'cyan dye': '#3fb5c8', 'violet dye': '#6a4a96', 'wine dye': '#6a2a3c',
 }
 EYE_PRESETS = {'brown': '#5a3a22', 'hazel': '#7a5a2a', 'green': '#4a7a4a', 'blue': '#4a6e9e', 'grey': '#7a8288', 'violet': '#6e5a9a',
-               'amber': '#b07a2a'}
+               'amber': '#b07a2a',
+               # the game's unusual eye colours
+               'red': '#9e3434', 'gold': '#c2a032', 'orange': '#c46e26', 'teal': '#328a8a'}
 CLOTH_PRESETS = {     # restrained city colours: olive drab, gunmetal, slate, ink navy, oxblood, bone, teal, black
     'black': '#24262c', 'gunmetal': '#3c4450', 'slate': '#56606a', 'ink navy': '#27304a', 'olive': '#4f5638', 'drab': '#6a6448',
     'oxblood': '#5a2830', 'bone': '#b9b2a0', 'teal': '#2f5a5e', 'rust': '#7a4a2e', 'khaki': '#8a7e5e', 'white': '#c8cdd2',

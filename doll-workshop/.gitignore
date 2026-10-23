@@ -2,3 +2,4 @@
 __pycache__/
 *.so
 tests/qa_report_*.json
+.cache/

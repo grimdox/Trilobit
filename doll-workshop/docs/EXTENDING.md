@@ -3,6 +3,22 @@
 Everything is data plus a few builder functions; nothing is hand-painted, so every addition is drawn on all six bodies
 in every frame by the next bake.
 
+## The loop: try, update, done
+
+1. **Try it** (seconds): `python3 tools/dollgen/try.py g:<garment>` (or `i:<implant>`, `h:<hair>`, `o:<outfit>`,
+   several at once) renders the part on every body in ten telling poses, writes `try.png` and checks that it draws in
+   every frame, has no noise, keeps a dark outer edge and, with `--on full`, lets no skin through a full suit.  Add
+   `--frames all` before a release, `--lod 32` for the world set.  Nothing is baked; iterate here.
+2. **Update** (minutes): `bash update.sh` bakes both sets, but only parts whose inputs changed are rendered (each
+   body's body, android body, garments, hair styles, implants, faces and held items are cached in `.cache/` under a
+   key made from the sources and the definition they depend on).  A new garment renders that garment alone; changing
+   `garments.py` renders every garment; changing the shader or the anatomy renders everything.  Then it runs every check
+   and copies the runtime and both sets into the game (`tools/sync_to_game.sh`).
+3. A colour preset needs no rendering at all: `bash update.sh --palette-only`.
+
+The bake uses every core (`--jobs`, default all) and splits each body's frames into runs so one new part keeps every
+worker busy.  `--no-cache` renders everything from scratch; the result is byte-identical either way.
+
 ## A colour (skin, hair, eyes, cloth, metal, lights)
 
 Add the preset to the table in `tools/dollgen/materials.py` (for skin, `SKIN_PRESETS`), then rewrite only the palette
@@ -61,4 +77,6 @@ directory, or extend `BODIES`.
 
 ## Checks to keep green
 
-`bash run_all.sh`: the Python QA pass (Q1-Q9), the Godot data and runtime tests, and the pixel-fidelity check.
+`bash run_all.sh` (also run by `update.sh`): the Python QA pass (Q1-Q9), the Godot data and runtime tests (including
+the CPU composer the game draws with), and the pixel-fidelity check.  In the game, `tests/run_dolls.gd` checks that
+every faction's people, every weapon kind and every creation colour reach the doll.

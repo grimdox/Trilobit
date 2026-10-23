@@ -32,8 +32,10 @@ with the .NET 8 SDK (8.0.4xx); port `doll_library.gd`, `doll_palette.gd`, `doll_
 ## Running
 
 ```sh
-python3 tools/dollgen/bake.py ../godot-spike/data/items.json dolls --jobs 2      # full bake (64 px)
-python3 tools/dollgen/bake.py ../godot-spike/data/items.json dolls32 --jobs 2 --lod 32   # the 32 px world set
+bash update.sh                                                                   # the usual way: changed parts only, checks, sync to the game
+python3 tools/dollgen/try.py g:trench --on full                                  # try a part in seconds, no bake
+python3 tools/dollgen/bake.py ../godot-spike/data/items.json dolls              # bake (64 px; cached parts reused)
+python3 tools/dollgen/bake.py ../godot-spike/data/items.json dolls32 --lod 32    # the 32 px world set
 python3 tools/dollgen/bake.py ../godot-spike/data/items.json dolls --palette-only  # colour presets only (seconds)
 python3 tools/dollgen/qa.py dolls                                                # quality checks on the bake
 godot --headless --path . --import                                               # import the pages

@@ -24,6 +24,10 @@ var cc_sel: int = 0                # the highlighted row of the create screen (s
 var cc_tileset = null              # the 64px tileset, for the doll preview when the standing dolls are missing
 var tm: Dictionary = {}            # the open mission terminal (main.gd): {cell, offers, sel, msg}
 var cc_fig = null                  # the standing-doll atlas, loaded when the creation screen first draws
+var cc_dolls = null                # the layered dolls (64 px set) for the creation preview
+const CC_DOLLS := "res://gfx/dolls"
+const DIMG = preload("res://addons/trilobit_doll/doll_image.gd")
+const ADAPT = preload("res://addons/trilobit_doll/trilobit_adapter.gd")
 var map_tex: ImageTexture = null
 var font: Font = ThemeDB.fallback_font
 var kana_font: Font = load("res://gfx/fonts/NotoSansJP-kana-subset.otf")
@@ -725,6 +729,16 @@ func _create(W: float, H: float) -> void:
 
 ## the standing doll; without its atlas, the doll in the tileset, unrotated, at `k` times its drawn size, centred on c (stand-in art: the supplied sprites will replace the tileset layers)
 func _cc_doll(c: Vector2, k: float, look: Dictionary) -> void:
+	if cc_dolls == null:
+		cc_dolls = DIMG.for_library(CC_DOLLS)
+	if cc_dolls.ok():                      # the layered doll (64 px set) at 3x, in underwear, no weapon, feet where the old doll's were
+		var ds = ADAPT.spec_from_game([], look, "", String(look.get("size", "m")), CC_DOLLS)
+		var tex: Texture2D = cc_dolls.texture(ds, "unarmed/idle/0")
+		if tex != null:
+			draw_set_transform(c + Vector2(0, 82), 0.0, Vector2(3, 3))
+			draw_texture(tex, -cc_dolls.origin())
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+			return
 	if cc_fig == null:
 		cc_fig = FG.new()
 	if cc_fig.ready():                     # the standing doll at 3x, in underwear, no weapon
