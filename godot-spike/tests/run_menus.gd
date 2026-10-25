@@ -83,32 +83,21 @@ func _initialize() -> void:
 	m._unhandled_key_input(ev)
 	check("Esc opens the pause menu", m.mode == "pause" and m.screen.visible)
 	var pl = m.screen.items.map(func(i): return i["label"])
-	check("pause offers Save, Load, Implants, Options", "Save Game" in pl and "Load Game" in pl and "Implants" in pl and "Options" in pl)
+	check("pause offers Save, Load, Character & Map, Options", "Save Game" in pl and "Load Game" in pl and "Character & Map" in pl and "Options" in pl)
 	key(m, KEY_DOWN); key(m, KEY_ENTER)
 	check("Save Game shows the slots", m.mode == "saves" and m.screen.items.size() == 4)
 	key(m, KEY_DOWN); key(m, KEY_ENTER)
 	check("saving to slot 2 writes the file", FileAccess.file_exists("user://test_save_2.json") and m.slot_meta(2).contains("Body"))
 	key(m, KEY_ESCAPE)
 	check("Esc returns to the pause menu", m.mode == "pause")
-	# implants screen
-	m.game.implants["legs"] = true
-	m.screen_back = "pause"
-	m.open_screen("implants")
-	check("the implants screen opens", m.mode == "implants")
-	var n0: int = m.screen.part_sel
-	key(m, KEY_DOWN)
-	check("Down moves to the next body part", m.screen.part_sel == n0 + 1)
-	check("every body part lists implants", m.IMP.PARTS.all(func(p): return m.IMP.for_part(p["id"]).size() > 0))
-	m.screen.part_sel = m.IMP.PARTS.size() - 1
-	await process_frame
-	check("legs carry the installed actuators", m.IMP.PARTS[m.screen.part_sel]["id"] == "legs" and m.game.has_implant("legs"))
-	key(m, KEY_ESCAPE)
-	check("Esc leaves the body map", m.mode == "pause")
-	# attributes and skills screen
-	check("the pause menu lists Attributes & Skills", m.screen.items.any(func(i): return i["id"] == "skills"))
-	m.screen_back = "pause"
-	m.open_screen("skills")
-	check("the skills screen opens", m.mode == "skills" and m.screen.kind == "skills" and m.screen.sk_sel == 0)
+	# the character tabs: equipment, implants, skills, map
+	m.tab_from = "pause"
+	m.open_screen("equipment")
+	check("the equipment tab opens", m.mode == "equipment" and m.screen.kind == "equipment")
+	key(m, KEY_PERIOD)
+	check("> steps to the implants tab", m.mode == "implants")
+	key(m, KEY_PERIOD)
+	check("> steps to the skills tab", m.mode == "skills" and m.screen.sk_sel == 0)
 	key(m, KEY_RIGHT)
 	check("Right moves along the attributes", m.screen.sk_sel == 1)
 	key(m, KEY_KP_2)
@@ -116,27 +105,50 @@ func _initialize() -> void:
 	var sel0: int = m.screen.sk_sel
 	key(m, KEY_DOWN)
 	check("Down moves to the next skill", m.screen.sk_sel == sel0 + 1)
-	var rc: Rect2 = m.screen.sk_rects(1280.0, 720.0)[12]
+	var rc: Rect2 = m.screen.sk_rects(1280.0, 720.0 - m.screen.TAB_H)[12]
 	var mm := InputEventMouseMotion.new()
-	mm.position = rc.get_center() * m.UI_S
+	mm.position = (rc.get_center() + Vector2(0, m.screen.TAB_H)) * m.UI_S
 	m._unhandled_input(mm)
 	check("the mouse highlights a line", m.screen.sk_sel == 12)
 	await process_frame
+	key(m, KEY_PERIOD)
+	check("> steps to the map tab", m.mode == "map")
+	key(m, KEY_TAB)
+	check("Tab switches to the local map", m.screen.map_local and m.screen.local_tex != null)
+	key(m, KEY_TAB)
+	key(m, KEY_PERIOD)
+	check("> wraps round to the equipment tab", m.mode == "equipment")
+	key(m, KEY_COMMA)
+	check("< steps back to the map tab", m.mode == "map")
 	key(m, KEY_ESCAPE)
-	check("Esc leaves the skills screen back to the pause menu", m.mode == "pause")
-	m.screen_back = "pause"
-	m.open_screen("skills")
-	var f7 := InputEventKey.new()
-	f7.keycode = KEY_F7
-	f7.pressed = true
-	m._unhandled_key_input(f7)
-	check("F7 also closes it", m.mode == "pause")
+	check("Esc leaves the tabs back to the pause menu", m.mode == "pause")
 	m.resume_play()
-	m._unhandled_key_input(f7)
-	check("F7 opens the screen from play", m.mode == "skills")
-	m._unhandled_key_input(f7)
-	key(m, KEY_ESCAPE)
-	check("and Esc then Esc is back in the game", m.mode == "play")
+	for pair in [[KEY_P, "equipment"], [KEY_I, "implants"], [KEY_O, "skills"], [KEY_M, "map"]]:
+		var kev := InputEventKey.new()
+		kev.keycode = pair[0]
+		kev.pressed = true
+		if m.mode != "play" and m.mode != pair[1]:
+			m._unhandled_key_input(kev)
+		else:
+			m._unhandled_key_input(kev)
+		check("%s opens the %s tab" % [OS.get_keycode_string(pair[0]), pair[1]], m.mode == pair[1])
+	var kev2 := InputEventKey.new()
+	kev2.keycode = KEY_M
+	kev2.pressed = true
+	m._unhandled_key_input(kev2)
+	check("the tab's own key closes it, back into the game", m.mode == "play")
+	var so := InputEventKey.new()
+	so.keycode = KEY_O
+	so.shift_pressed = true
+	so.pressed = true
+	m._unhandled_key_input(so)
+	check("Shift+O is shove, not the skills screen", m.mode == "shove")
+	var esc0 := InputEventKey.new()
+	esc0.keycode = KEY_ESCAPE
+	esc0.pressed = true
+	m._unhandled_key_input(esc0)
+	check("Esc cancels the shove", m.mode == "play")
+	check("the old function keys are free: F3 and F7 are not bound", m.settings.action_for(KEY_F3) == "" and m.settings.action_for(KEY_F7) == "")
 	var esc := InputEventKey.new()
 	esc.keycode = KEY_ESCAPE
 	esc.pressed = true

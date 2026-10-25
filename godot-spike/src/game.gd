@@ -14,6 +14,7 @@ const EC = preload("res://src/economy.gd")
 const GP = preload("res://src/gunplay.gd")
 const VS = preload("res://src/vehicles.gd")
 const IMP = preload("res://src/implants.gd")
+const INV = preload("res://src/inventory.gd")
 const BODY = preload("res://src/body.gd")
 const SK = preload("res://src/skills.gd")
 const CR = preload("res://src/creation.gd")
@@ -112,8 +113,37 @@ var app: Dictionary = {"sprite": 0, "skin": 0, "hair": 4, "style": 1, "eyes": 0,
 var attrs: Dictionary = SK.default_attrs()      # Strength, Perception, Agility, Cognition, Endurance (start at 10)
 var skills: Dictionary = SK.default_skills()    # BASE levels, raised by skill XP (see skills.gd for the effective level)
 var xp: Dictionary = SK.default_skills()        # skill-specific XP towards the next base level
-var worn: Array = []
-var wield = null
+## what you carry: nine equipment slots and a grid of one-tile items (src/inventory.gd)
+var inv = INV.new()
+## the weapon in your Right Hand (a two-handed weapon sits there too)
+var wield:
+	get:
+		return inv.equip.get("rhand")
+	set(v):
+		if v == null:
+			inv.equip.erase("rhand")
+		else:
+			inv.equip["rhand"] = v
+## pocket items you wear (coat, backpack, belt pouch, fanny pack)
+var worn: Array:
+	get:
+		return inv.equipped_items().filter(func(x): return x.def.has("pocket"))
+	set(v):
+		_set_worn(v, true)
+## armor you wear that is not also a pocket item (the coat's armor is counted with the pocket items)
+var armor_worn: Array:
+	get:
+		return inv.equipped_items().filter(func(x): return x.def.has("armor") and not x.def.has("pocket"))
+	set(v):
+		_set_worn(v, false)
+## replace what you wear (pocket items, or non-pocket armor): used by tests and scripted starts
+func _set_worn(list: Array, pockets: bool) -> void:
+	for x in inv.equipped_items():
+		if x.def.has("pocket") == pockets and (pockets or x.def.has("armor")):
+			inv.remove(x)
+	for x in list:
+		if inv.stow(x):
+			inv.auto_equip(x)
 var in_vehicle: int = -1
 var vs                                 # the vehicle system (vehicles.gd)
 var facing := Vector2i(0, 1)
@@ -662,7 +692,7 @@ func _loot() -> void:
 		if rng.randf() > 0.4:
 			continue
 		# no loose food, water or weapons: those are bought, in the shops and restaurants (and taken from people who carry them)
-		var kind := _weighted([["trl_yen", 50], ["ammo", 16], ["mod", 3], ["trl_backpack", 3], ["trl_coat", 2], ["trl_pouch", 3], ["trl_duffel", 1], ["armor", 8], ["trl_medkit", 4]])
+		var kind := _weighted([["trl_yen", 50], ["ammo", 16], ["mod", 3], ["trl_backpack", 3], ["trl_coat", 2], ["trl_pouch", 3], ["trl_fanny", 2], ["armor", 8], ["trl_medkit", 4]])
 		var it
 		match kind:
 			"trl_yen": it = _new_item("trl_yen", rng.randi_range(20, 220))
@@ -671,8 +701,7 @@ func _loot() -> void:
 			"melee": it = _new_item(_random_melee())
 			"armor": it = _new_item(["trl_helmet", "trl_vest", "trl_bracers", "trl_greaves", "trl_visor", "trl_vest_heavy", "trl_balaclava", "trl_jacket", "trl_kneepads"][rng.randi() % 9])
 			"water":
-				it = _new_item("trl_water_bottle")
-				it.pockets[0].append(_new_item("trl_water", 450))
+				it = new_bottle(450)
 			"gun":
 				it = _new_item(_random_gun())
 				_part_load(it)
@@ -713,16 +742,16 @@ func _start_player() -> void:
 				bd = d
 				best = i
 	pc = best if mission.is_empty() else int(city.get_meta("site")["entry"])
-	var coat = _new_item("trl_coat")
-	var pack = _new_item("trl_backpack")
-	worn = [coat, pack]
-	pack.insert(_new_item("trl_ration", 2))
-	var bottle = _new_item("trl_water_bottle")
-	bottle.pockets[0].append(_new_item("trl_water", 500))
-	coat.insert_deep(bottle)
-	coat.insert_deep(_new_item("trl_credstick"))
-	wield = _new_item("trl_gun_zp9")
+	inv = INV.new()
+	inv.equip["chest"] = _new_item("trl_coat")
+	inv.equip["back"] = _new_item("trl_backpack")
+	inv.equip["rhand"] = _new_item("trl_gun_zp9")
+	inv._ensure_group("chest")
+	inv._ensure_group("back")
 	_load_full(wield)
+	inv.stow(_new_item("trl_ration", 2))
+	inv.stow(new_bottle(500))
+	inv.stow(_new_item("trl_credstick"))
 
 # ---------------------------------------------------------------- helpers
 func cheb(a: int, b: int) -> int:
@@ -855,26 +884,23 @@ func npc_take(i: int, dmg: int) -> int:
 
 # ---------------------------------------------------------------- inventory
 func stow(it) -> bool:
-	for c in worn:
-		if c.insert_deep(it):
-			return true
-	return false
+	return inv.stow(it)
 
+## a water bottle with `ml` of water in it
+func new_bottle(ml: int):
+	var b = _new_item("trl_water_bottle")
+	b.fill = clampi(ml, 0, int(b.def["bottle"]["ml"]))
+	return b
+
+## every item you carry as [{item, depth, where, parent}]: equipment first, then the grid (kept in this shape for the menus that list things)
 func inventory_list() -> Array:
 	var out: Array = []
-	if wield != null:
-		out.append({"item": wield, "depth": 0, "where": "wielded", "parent": null})
-	for a in armor_worn:
-		out.append({"item": a, "depth": 0, "where": "worn armor", "parent": null})
-	for c in worn:
-		_walk_items(c, 0, "worn", null, out)
+	for s in INV.SLOTS:
+		if inv.equip.has(s):
+			out.append({"item": inv.equip[s], "depth": 0, "where": "wielded" if s == "rhand" else ("in your left hand" if s == "lhand" else "worn"), "parent": null})
+	for it in inv.grid_items():
+		out.append({"item": it, "depth": 0, "where": "in your pack", "parent": null})
 	return out
-
-func _walk_items(it, depth: int, where: String, parent, out: Array) -> void:
-	out.append({"item": it, "depth": depth, "where": where, "parent": parent})
-	for p in it.pockets:
-		for sub in p:
-			_walk_items(sub, depth + 1, "in " + it.def["name"], it, out)
 
 func item_label(it) -> String:
 	var s: String = it.def["name"]
@@ -890,14 +916,6 @@ func item_label(it) -> String:
 		var mxd: int = int(it.def["armor"]["dur"])
 		s += " [armor %d, %s]" % [int(it.def["armor"]["phys"]), "BROKEN" if left <= 0 else ("%d%%" % (100 * left / mxd))]
 	return s
-
-func total_weight_kg() -> float:
-	var g := 0
-	for c in worn:
-		g += c.weight()
-	if wield != null:
-		g += wield.weight()
-	return g / 1000.0
 
 func act_pickup() -> bool:
 	if in_vehicle >= 0 or not items_at.has(pc):
@@ -936,30 +954,40 @@ func act_pickup() -> bool:
 	return took > 0
 
 func act_wield(it) -> bool:
-	if it.def.has("armor") and not it.has_tag("container"):
-		return act_wear(it)
 	if it.has_tag("medical"):
 		return act_use_medical(it)
 	if it.has_tag("food"):
 		return act_eat(it)
 	if it.has_tag("charm"):
 		return act_use_charm(it)
+	if it.def.has("armor") or it.def.has("pocket"):
+		return act_wear(it)
 	if not (it.has_tag("gun") or it.has_tag("melee")):
 		say("You can't wield that as a weapon.")
 		return false
-	var holder = null
-	for c in worn:
-		if c == it or c.contains_item(it):
-			c.remove(it)
-			holder = c
+	if it == wield:
+		say("You already hold that.")
+		return false
+	var before: Dictionary = inv.find(it)
 	var old = wield
-	if wield != null:
-		if not stow(wield):
-			_put(pc, wield)
-			say("You drop the %s." % item_label(wield))
+	if not before.is_empty():
+		inv.remove(it)
+	if old != null:
+		inv.equip.erase("rhand")
+	var r: Dictionary = inv.put_equip("rhand", it)
+	if not r["ok"]:
+		if old != null:
+			inv.equip["rhand"] = old
+		if not before.is_empty():
+			inv.stow(it)
+		say(inv.last_err)
+		return false
+	if old != null:
+		if not inv.stow(old):
+			_put(pc, old)
+			say("You drop the %s." % item_label(old))
 			old = null
 	prev_wield = old
-	wield = it
 	say("You wield the %s." % item_label(it))
 	end_turn()
 	return true
@@ -1738,7 +1766,6 @@ func _face_toward(i: int, cell: int) -> void:
 ## Every hit lands on a limb.  Armor is a flat deduction from the damage (worn armor and implants both count) and wears out as it soaks damage.
 ## Damage types: only "phys" for now; armor entries can later carry their own numbers per type ("fire", "acid", "elec", "pierce", "blunt", "slash").
 var body = BODY.new()
-var armor_worn: Array = []                     # armor items worn over the body (helmet, vest, arm guards, shin guards)
 var imp_dur: Dictionary = {}                   # implant id -> armor durability left (absent = as new)
 var melee_arts: Array = []                     # learned melee arts: "parry", "riposte" (see _melee_arts_on_miss); empty until the player learns some
 var bless_left: int = 0                        # turns of blessing left: a little luck (+6% to hit, +4% to dodge a blade)
@@ -2164,14 +2191,7 @@ func parry_chance(nm: Dictionary) -> int:
 
 ## trauma patch: 25 health and the worst limb mended a little (a disabled limb comes back)
 func act_use_medical(it) -> bool:
-	var holder = null
-	for c in worn:
-		if c == it or c.contains_item(it):
-			holder = c
-	if holder != null and holder != it:
-		holder.remove(it)
-	elif holder == it:
-		worn.erase(it)
+	_consume_one(it)
 	var l: String = body.worst()
 	body.heal(l, maxi(8, int(body.mx[l]) / 3))
 	var spread: int = heal_body(25)
@@ -2184,15 +2204,7 @@ func _consume_one(it) -> void:
 	if it.count > 1:
 		it.count -= 1
 		return
-	var holder = null
-	for c in worn:
-		if c == it or c.contains_item(it):
-			holder = c
-	if holder != null and holder != it:
-		holder.remove(it)
-	elif holder == it:
-		worn.erase(it)
-	elif items_at.has(pc) and items_at[pc].has(it):
+	if not inv.remove(it) and items_at.has(pc) and items_at[pc].has(it):
 		items_at[pc].erase(it)
 
 ## --- food and drink.  A meal's kcal and a drink's millilitres are turned into time: 2,500 kcal = 24 hours before you are Hungry, 500 mL of water = 4 hours before you are Thirsty.
@@ -2283,14 +2295,11 @@ func consumables() -> Array:
 
 func _collect_ground(out: Array, it, parent, cell: int, where: String) -> void:
 	_add_consumable(out, it, parent, cell, where)
-	for p in it.pockets:
-		for sub in p:
-			_collect_ground(out, sub, it, cell, where)
 
 func _add_consumable(out: Array, it, parent, cell: int, where: String) -> void:
 	if it.has_tag("food"):
 		out.append({"item": it, "parent": parent, "cell": cell, "kind": "drink" if it.def.get("food", {}).get("drink", false) else "food", "where": where})
-	elif it.is_liquid() and it.def["id"] == "trl_water" and it.count > 0:
+	elif it.def.has("bottle") and it.fill > 0:
 		out.append({"item": it, "parent": parent, "cell": cell, "kind": "water", "where": where})
 
 func consumable_label(e: Dictionary) -> String:
@@ -2298,7 +2307,7 @@ func consumable_label(e: Dictionary) -> String:
 	var f: Dictionary = it.def.get("food", {})
 	match e["kind"]:
 		"water":
-			return "water, %d mL  (%s of thirst)" % [it.count, CLK.span_text(ml_turns(it.count))]
+			return "water bottle, %d mL  (%s of thirst)" % [it.fill, CLK.span_text(ml_turns(it.fill))]
 		"drink":
 			return "%s%s  (%d mL, %d kcal)" % [it.def["name"], " x%d" % it.count if it.count > 1 else "", int(f.get("ml", 0)), int(f.get("kcal", 0))]
 	return "%s%s  (%d kcal)" % [it.def["name"], " x%d" % it.count if it.count > 1 else "", int(f.get("kcal", 0))]
@@ -2310,9 +2319,7 @@ func _take_one(e: Dictionary) -> void:
 		it.count -= 1
 		return
 	if e["cell"] >= 0:
-		if e["parent"] != null:
-			e["parent"].remove(it)
-		elif items_at.has(e["cell"]):
+		if items_at.has(e["cell"]):
 			items_at[e["cell"]].erase(it)
 			if items_at[e["cell"]].is_empty():
 				items_at.erase(e["cell"])
@@ -2326,13 +2333,8 @@ func act_consume(e: Dictionary) -> bool:
 		if room < 25:
 			say("You are not thirsty: you are carrying all the water you can hold (%s)." % CLK.span_text(drink_left()))
 			return false
-		var ml: int = mini(it.count, room)
-		it.count -= ml
-		if it.count <= 0:
-			if e["parent"] != null:
-				e["parent"].remove(it)
-			elif e["cell"] >= 0 and items_at.has(e["cell"]):
-				items_at[e["cell"]].erase(it)
+		var ml: int = mini(it.fill, room)
+		it.fill -= ml
 		last_drank = _filled(THIRST_AFTER, drink_left(), ml_turns(ml))
 		say("You drink %d mL of water.  (water for %s more; %s in all)" % [ml, CLK.span_text(ml_turns(ml)), CLK.span_text(drink_left())])
 		sfx("pick")
@@ -2364,25 +2366,19 @@ func act_use_charm(it) -> bool:
 	end_turn()
 	return true
 
-## put armor on: it goes over the body in its slot; whatever was there goes into your pack (or the floor)
+## put armor or a pocket item on: it takes its slot, and whatever was there goes into your pack (or the floor)
 func act_wear(it) -> bool:
-	var slot: String = it.def["armor"]["slot"]
-	for c in worn:
-		if c == it:
-			say("You are already wearing that.")
+	var ref: Dictionary = inv.find(it)
+	if not ref.is_empty() and ref["t"] == "eq":
+		say("You are already wearing that.")
+		return false
+	if ref.is_empty():
+		if not inv.stow(it):
+			say("No room for the %s." % item_label(it))
 			return false
-	for c in worn:
-		if c.contains_item(it):
-			c.remove(it)
-	var old = null
-	for a in armor_worn:
-		if a.def["armor"]["slot"] == slot:
-			old = a
-	if old != null:
-		armor_worn.erase(old)
-		if not stow(old):
-			_put(pc, old)
-	armor_worn.append(it)
+	if not inv.auto_equip(it):
+		say(inv.last_err)
+		return false
 	say("You put on the %s." % item_label(it))
 	end_turn()
 	return true
@@ -3380,10 +3376,8 @@ func _take_item(it, ground: bool) -> void:
 		items_at[pc].erase(it)
 		if items_at[pc].is_empty():
 			items_at.erase(pc)
-	elif wield == it:
-		wield = null
 	else:
-		_holder_remove(it)
+		inv.remove(it)
 
 func act_fit_engine(vi: int, it, ground: bool) -> bool:
 	if in_vehicle >= 0 or vs.near_vehicle() != vi:
@@ -3444,12 +3438,7 @@ func _clamp_mag() -> void:
 		wield.loaded = int(st["mag"])
 
 func _holder_remove(it) -> void:
-	for c in worn:
-		if c == it:
-			worn.erase(c)
-			return
-		if c.remove(it):
-			return
+	inv.remove(it)
 
 func act_mod_install(modit) -> bool:
 	if gun_stats().is_empty():
@@ -4278,6 +4267,45 @@ func in_heli() -> bool:
 	return in_vehicle >= 0 and veh_kind(in_vehicle) == "heli"
 
 ## fitted AND its limbs work (a disabled limb gives no bonuses)
+## is there one of this item id in the grid or a slot?
+func carries_id(item_id: String) -> bool:
+	for it in inv.all_items():
+		if it.id() == item_id:
+			return true
+	return false
+
+## fit an implant item from your pack: it leaves the grid and goes into the body
+func act_install_implant(it) -> bool:
+	if not it.def.has("implant"):
+		say("That is not an implant.")
+		return false
+	var id: String = String(it.def["implant"])
+	if implants.get(id, false):
+		say("You already have the %s fitted." % it.def["name"])
+		return false
+	if inv.find(it).is_empty() or not inv.remove(it):
+		return false
+	implants[id] = true
+	power_install(id)
+	say("You fit the %s." % it.def["name"])
+	sfx("select")
+	return true
+
+## take a fitted implant out: it comes back as an item in your pack (or at your feet when the pack is full)
+func act_remove_implant(id: String) -> bool:
+	if not implants.get(id, false):
+		return false
+	var item = _new_item("trl_imp_" + id)
+	if inv.free_tiles() < 1:
+		say("No room in your pockets: make a tile free first.")
+		return false
+	implants.erase(id)
+	power_uninstall(id)
+	inv.stow(item)
+	say("You take out the %s." % item.def["name"])
+	sfx("select")
+	return true
+
 func has_implant(id: String) -> bool:
 	if not implants.get(id, false) or power_left() <= 0.0:
 		return false
@@ -4720,9 +4748,9 @@ func outside_tile(x: int, y: int) -> int:
 ## everything about the player that travels between zones
 func player_dict() -> Dictionary:
 	return {"done": done_contracts.duplicate(), "power": power, "power_state": power_state, "yen": yen, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
-		"name": player_name, "attrs": attrs.duplicate(), "app": app.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
+		"name": player_name, "attrs": attrs.duplicate(), "app": app.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "inv": inv.to_dict(),
 		"stamina": stamina, "stam_v": 2, "ap": ap, "stance": stance, "run_mode": run_mode, "turn": turn, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "flying": flying,
-		"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
+		"body": body.to_dict(), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
 
 ## attributes, skills and XP from a save; saves from before the attribute system (or with the old skill names) keep what still exists and start the rest at the defaults
 func _load_skills(d: Dictionary) -> void:
@@ -4745,9 +4773,6 @@ func _load_body(d: Dictionary) -> void:
 	body = BODY.new()
 	if d.has("body"):
 		body.from_dict(d["body"])
-	armor_worn = []
-	for x in d.get("armor_worn", []):
-		armor_worn.append(ItemScript.from_dict(x, db))
 	imp_dur = {}
 	for k in d.get("imp_dur", {}):
 		imp_dur[k] = int(d["imp_dur"][k])
@@ -4755,6 +4780,59 @@ func _load_body(d: Dictionary) -> void:
 	for a in d.get("arts", []):
 		melee_arts.append(String(a))
 	aim_frac = 0.0
+
+## the inventory from a save: the new format, or a save from before the grid (nested pockets, worn armor, a wielded weapon) flattened into it
+func _load_inventory(d: Dictionary) -> void:
+	inv = INV.new()
+	if d.has("inv"):
+		inv.load_dict(d["inv"], db)
+		return
+	var loose: Array = []
+	var gear: Array = []
+	for x in d.get("worn", []):
+		_legacy_item(x, loose, gear)
+	for x in d.get("armor_worn", []):
+		_legacy_item(x, loose, gear)
+	var hand = null
+	if d.get("wield") != null:
+		hand = _legacy_item(d["wield"], loose, gear, true)
+	# gear first: a pocket item or armor goes in its slot when that slot is free, otherwise it is just carried
+	if hand != null:
+		inv.equip["rhand"] = hand
+	for it in gear:
+		var opts: Array = INV.slot_options(it)
+		if not opts.is_empty() and opts[0] != "rhand" and not inv.equip.has(opts[0]):
+			inv.equip[opts[0]] = it
+			inv._ensure_group(opts[0])
+		else:
+			loose.append(it)
+	for it in loose:
+		if not inv.stow(it):
+			_put(pc, it)
+
+## one item from a save made before the grid: its contents are flattened into `loose`; armor and pocket items are returned in `gear` (and as the result);
+## things that no longer exist (duffel, holster) or are no longer carried (loose water, vehicle engines) are dropped, a bottle's water becomes its fill
+func _legacy_item(x: Dictionary, loose: Array, gear: Array, is_hand: bool = false):
+	var it = null
+	var id: String = String(x["id"])
+	if db.defs.has(id) and not (db.defs[id].has("engine") or id == "trl_water"):
+		it = ItemScript.from_dict(x, db)
+	for arr in x.get("contents", []):
+		for sub in arr:
+			if String(sub["id"]) == "trl_water":
+				if it != null and it.def.has("bottle"):
+					it.fill = mini(int(it.def["bottle"]["ml"]), it.fill + int(sub.get("count", 0)))
+				continue
+			_legacy_item(sub, loose, gear)
+	if it == null:
+		return null
+	if is_hand:
+		return it
+	if it.def.has("armor") or it.def.has("pocket"):
+		gear.append(it)
+	else:
+		loose.append(it)
+	return it
 
 func apply_player(d: Dictionary) -> void:
 	done_contracts = d.get("done", {})
@@ -4766,10 +4844,7 @@ func apply_player(d: Dictionary) -> void:
 	ammo_pool = d["ammo"]
 	want_kind = d["want_kind"]
 	_load_skills(d)
-	worn = []
-	for x in d["worn"]:
-		worn.append(ItemScript.from_dict(x, db))
-	wield = ItemScript.from_dict(d["wield"], db) if d["wield"] != null else null
+	_load_inventory(d)
 	stamina = int(d["stamina"])
 	if int(d.get("stam_v", 1)) < 2:          # old saves counted stamina out of 30
 		stamina = clampi(int(round(float(stamina) * STAM_LEGACY)), 0, STAMINA_MAX)
@@ -4811,8 +4886,8 @@ func save_dict() -> Dictionary:
 	for v in vehicles:
 		vlist.append(vs.to_dict(v))
 	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "corpses": corpses, "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "in_vehicle": in_vehicle,
-			"body": body.to_dict(), "armor_worn": armor_worn.map(func(x): return x.to_dict()), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
-			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "worn": worn.map(func(x): return x.to_dict()), "wield": (wield.to_dict() if wield != null else null),
+			"body": body.to_dict(), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
+			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "inv": inv.to_dict(),
 			"items_at": it_at, "open_doors": open_doors.keys(), "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
 					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc), "energy": Array(energy),
@@ -4858,10 +4933,7 @@ func load_dict(d: Dictionary) -> void:
 	in_vehicle = int(d["in_vehicle"])
 	_load_body(d)
 	rng.state = int(d["rng_state"])
-	worn = []
-	for x in d["worn"]:
-		worn.append(ItemScript.from_dict(x, db))
-	wield = ItemScript.from_dict(d["wield"], db) if d["wield"] != null else null
+	_load_inventory(d)
 	items_at = {}
 	for k in d["items_at"]:
 		var arr := []
@@ -5128,6 +5200,16 @@ func power_install(id: String) -> void:
 		return
 	var cap: float = power_cap()
 	power = minf(cap, power_left() + PW.draw_of(d) * PW.FULL_HOURS) if power >= 0.0 else -1.0
+	power_state = 0
+
+## taking an implant out takes its share of the charge with it
+func power_uninstall(id: String) -> void:
+	var d: Dictionary = IMP.get_def(id)
+	if d.is_empty():
+		return
+	var cap: float = power_cap()
+	if power >= 0.0:
+		power = clampf(power_left() - PW.draw_of(d) * PW.FULL_HOURS, 0.0, cap)
 	power_state = 0
 
 ## the district of a cell, 0 lower .. 2 upper (the price of power follows it)

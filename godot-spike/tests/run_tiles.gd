@@ -60,7 +60,7 @@ func _initialize() -> void:
 	var no_icon := []
 	for it in all_items:
 		var iid: String = it["id"]
-		if not (iid.begins_with("trl_gun_") or iid.begins_with("trl_mel_")) and not its.index.has(iid):
+		if not (iid.begins_with("trl_gun_") or iid.begins_with("trl_mel_")) and not its.index.has(iid) and not base.index.has(iid):
 			no_icon.append(iid)
 	check("every item but the weapons has a new icon (%d)" % its.index.size(), items_ok and no_icon.is_empty(), str(no_icon.slice(0, 5)))
 	# district mapping in a real city

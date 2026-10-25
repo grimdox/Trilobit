@@ -455,6 +455,13 @@ def pack(a, it, kind):
         a.shade(a.poly([(28, 16), (36, 16), (34, 56), (30, 56)]), '#15161c', bevel=0.8)
         for y in (26, 36, 46):
             a.shade(a.ellipse(36, y, 1.3), GOLD, bevel=0.6, spec=0.8)
+    elif kind == 'fanny':
+        rr(a, 8, 22, 48, 24, '#3a3350', 10, 5, strength=0.8, grain=0.35, seed=5)
+        a.shade(a.rrect(8, 22, 48, 10, 5), '#4a4266', bevel=3)
+        a.shade(a.rect(8, 41, 48, 3), '#15151c', bevel=0.6)
+        a.shade(a.rect(28, 26, 8, 14), '#15151c', bevel=0.8)
+        a.shade(a.ellipse(32, 33, 2.2), GOLD, bevel=1, spec=0.9)
+        led(a, 46, 29, MG, 1.0)
     else:   # water bottle
         sh(a, a.rrect(22, 18, 20, 36, 6), '#9fd8ec', 4, strength=0.4, spec=0.9)
         a.shade(a.rrect(24, 32, 16, 20, 4), '#2a9ac8', bevel=2, strength=0.3)
@@ -471,7 +478,7 @@ ARMOR = {
     'kneepads': lambda a, it: limb_guard(a, it, knee=True),
     'backpack': lambda a, it: pack(a, it, 'backpack'), 'holster': lambda a, it: pack(a, it, 'holster'),
     'coat': lambda a, it: pack(a, it, 'coat'), 'pouch': lambda a, it: pack(a, it, 'pouch'),
-    'duffel': lambda a, it: pack(a, it, 'duffel'), 'water_bottle': lambda a, it: pack(a, it, 'bottle'),
+    'fanny': lambda a, it: pack(a, it, 'fanny'), 'water_bottle': lambda a, it: pack(a, it, 'bottle'),
 }
 
 
@@ -572,6 +579,32 @@ def misc(a, it):
         rr(a, 14, 18, 36, 28, '#6a7480', 3, 3)
 
 
+IMP_COL = {'cortex': MG, 'optics': CY, 'thermal': '#ffb54a', 'jets': '#ff7a3a', 'reflex': CY, 'synapse': MG, 'dermal': '#9aa6b4', 'heart': '#ff5a7a',
+           'mantis': '#c8d0da', 'smartlink': CY, 'grip': '#7be0a0', 'legs': '#9aa6b4'}
+
+
+def implant_icon(a, it):
+    """a sealed implant module: graphite casing, chrome edge, a coloured status light and etched traces, a different mark per implant"""
+    c = IMP_COL.get(it['implant'], CY)
+    rr(a, 10, 14, 44, 36, '#2c323c', 5, 4, strength=0.8, spec=0.8, grain=0.2, seed=seed(it['id']))
+    a.shade(a.rrect(10, 14, 44, 7, 3), '#aeb6c0', bevel=2, strength=0.3, spec=0.9)
+    for i in range(4):
+        a.shade(a.rect(16, 27 + i * 5, 22 - (i % 2) * 6, 1.4), '#151a22', bevel=0.4)
+    led(a, 46, 36, c, 2.0)
+    led(a, 46, 43, c, 1.0)
+    k = it['implant']
+    if k in ('optics', 'thermal'):
+        el(a, 32, 36, 6, 6, '#12161c', 2)
+        a.shade(a.ellipse(32, 36, 2.6), c, bevel=1.2, spec=0.8, emit=0.8)
+    elif k == 'mantis':
+        sh(a, a.poly([(16, 44), (40, 30), (42, 33), (20, 46)]), '#d4dbe3', 1, spec=0.9)
+    elif k in ('jets',):
+        a.shade(a.rrect(20, 38, 6, 8, 2), '#12161c', bevel=1)
+        a.shade(a.rrect(30, 38, 6, 8, 2), '#12161c', bevel=1)
+    elif k in ('heart',):
+        a.shade(a.ellipse(26, 38, 4), c, bevel=1.5, spec=0.6, emit=0.4)
+
+
 def make(it):
     n = it['id']
     tags = it['tags']
@@ -601,6 +634,8 @@ def make(it):
         engine(a, it)
     elif tags[0] == 'charm':
         charm(a, it)
+    elif tags[0] == 'implant':
+        implant_icon(a, it)
     else:
         misc(a, it)
     return a.image(outline=0.85, fit=54, zmax=1.4)

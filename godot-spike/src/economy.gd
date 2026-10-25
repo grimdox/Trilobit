@@ -207,12 +207,7 @@ func _find(id: String):
 	return null
 
 func _remove(it) -> void:
-	if g.wield == it:
-		g.wield = null
-		return
-	for c in g.worn:
-		if c.remove(it):
-			return
+	g.inv.remove(it)
 
 func job_text() -> String:
 	if job.is_empty():
@@ -294,7 +289,7 @@ func menu_for(i: int) -> Dictionary:
 				m["options"].append({"label": "Rebuild: every limb to 70%%, replate implant armor  ¥%d" % mc, "op": "mend", "arg": mc})
 			var under: bool = cheap
 			for d in g.IMP.ALL:
-				if d["live"] and not g.implants.get(d["id"], false):
+				if d["live"] and not g.implants.get(d["id"], false) and not g.carries_id("trl_imp_" + String(d["id"])):
 					var pr: int = g.IMP.price(d["id"], under)
 					m["options"].append({"label": "%s  ¥%d  (%s)" % [d["name"], pr, d["desc"]], "op": "implant", "arg": [d["id"], pr]})
 		COOK:
@@ -396,6 +391,7 @@ func _stock(i: int = 0) -> Array:
 	var kind: int = i % 3
 	if kind != 1:
 		out.append(["trl_backpack", "backpack", 120])
+		out.append(["trl_fanny", "fanny pack", 25])
 	if i % 2 == 0:
 		out.append(["trl_vest", "ballistic vest", 500])
 		out.append(["trl_helmet", "ballistic helmet", 350])
@@ -417,9 +413,6 @@ func _stock(i: int = 0) -> Array:
 			var id: String = w + ("_f" if forged else "")
 			out.append([id, g.db.defs[id]["name"], int(g.db.defs[id]["price"]) * 3 / 2])
 	out.append(["trl_kit_repair", "field repair kit", 110])
-	if kind == 2:
-		for eid in ["trl_eng_mini", "trl_eng_city", "trl_eng_sport"]:
-			out.append([eid, g.db.defs[eid]["name"], int(g.db.defs[eid]["price"]) * 3 / 2])
 	return out
 
 func _grocery_stock(i: int) -> Array:
@@ -524,16 +517,13 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 				return m
 			var it = g._new_item(e[0])
 			if e[0] == "trl_water_bottle":
-				it.pockets[0].append(g._new_item("trl_water", 500))
+				it.fill = 500
 			if it.has_tag("ammo"):
 				var am: Dictionary = it.def["ammo"]
 				g.pool_add(am["cal"], am["kind"], int(am["rounds"]))
 			elif not g.stow(it):
-				if e[0] in ["trl_pouch", "trl_backpack"] and g.worn.size() < 4:
-					g.worn.append(it)
-				else:
-					g._put(g.pc, it)
-					g.say("No room; it falls at your feet.")
+				g._put(g.pc, it)
+				g.say("No room; it falls at your feet.")
 			g.yen -= int(e[2])
 			g.say("You buy the %s (¥%d)." % [e[1], e[2]])
 			_haggle_xp(m, int(e[2]))
@@ -575,15 +565,15 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 		"implant":
 			var im: Array = o["arg"]
 			if g.yen < int(im[1]):
-				g.say("You can't afford the surgery.")
+				g.say("You can't afford the implant.")
+				return m
+			var imp_item = g._new_item("trl_imp_" + String(im[0]))
+			if not g.stow(imp_item):
+				g.say("No room in your pockets for the %s.  Make a tile free first." % imp_item.def["name"])
 				return m
 			g.yen -= int(im[1])
-			g.implants[im[0]] = true
-			g.power_install(im[0])
-			if im[0] == "jets":
-				g.fuel = g.FUEL_MAX
-			g.say("The surgery takes an hour.  You wake with new hardware: %s." % g.IMP.get_def(im[0]).get("name", im[0]))
-			m["text"] = ["\"Don't test it indoors.\""]
+			g.say("You buy the %s (¥%d).  Fit it from the Implants screen." % [imp_item.def["name"], im[1]])
+			m["text"] = ["\"It is yours to fit.  Don't test it indoors.\""]
 			m["options"] = [{"label": "Leave", "op": "close", "arg": null}]
 			return m
 		"mend":

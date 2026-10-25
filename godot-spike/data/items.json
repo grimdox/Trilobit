@@ -48,7 +48,8 @@
     "stock"
    ],
    "jam": 1.0
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_sm9",
@@ -99,7 +100,8 @@
     "stock"
    ],
    "jam": 1.0
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_vs45",
@@ -150,7 +152,8 @@
     "stock"
    ],
    "jam": 1.0
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_zp19",
@@ -201,7 +204,8 @@
     "stock"
    ],
    "jam": 1.0
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_gk7",
@@ -252,7 +256,8 @@
     "stock"
    ],
    "jam": 1.0
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_ls5",
@@ -303,7 +308,8 @@
     "stock"
    ],
    "jam": 1.0
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_fs9",
@@ -354,7 +360,8 @@
     "stock"
    ],
    "jam": 1.0
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_sp45",
@@ -396,7 +403,8 @@
     "under"
    ],
    "jam": 0.6
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_zp9",
@@ -438,7 +446,8 @@
     "under"
    ],
    "jam": 0.6
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_fp7",
@@ -480,7 +489,8 @@
     "under"
    ],
    "jam": 0.6
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_hp40",
@@ -521,7 +531,8 @@
     "under"
    ],
    "jam": 0.1
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_gp10",
@@ -563,7 +574,8 @@
     "under"
    ],
    "jam": 0.6
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_lp22",
@@ -605,7 +617,8 @@
     "under"
    ],
    "jam": 0.6
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_vr38",
@@ -646,7 +659,8 @@
     "under"
    ],
    "jam": 0.1
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_sr44",
@@ -687,7 +701,8 @@
     "under"
    ],
    "jam": 0.1
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_gr500",
@@ -728,7 +743,8 @@
     "under"
    ],
    "jam": 0.1
-  }
+  },
+  "hands": 1
  },
  {
   "id": "trl_gun_ha5",
@@ -776,7 +792,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_sa14",
@@ -824,7 +841,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_vk74",
@@ -872,7 +890,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_zk15",
@@ -920,7 +939,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_ga10",
@@ -968,7 +988,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_lk95",
@@ -1016,7 +1037,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_fk9",
@@ -1064,7 +1086,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_gm14",
@@ -1112,7 +1135,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_vs44",
@@ -1160,7 +1184,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_lc30",
@@ -1208,7 +1233,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_hs10",
@@ -1250,7 +1276,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_zs20",
@@ -1292,7 +1319,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_gs12",
@@ -1334,7 +1362,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_ls12",
@@ -1376,7 +1405,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_ss12",
@@ -1418,7 +1448,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_fs410",
@@ -1460,7 +1491,8 @@
     "stock"
    ],
    "jam": 0.8
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_sd7",
@@ -1503,7 +1535,8 @@
     "stock"
    ],
    "jam": 0.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_vd62",
@@ -1546,7 +1579,8 @@
     "stock"
    ],
    "jam": 0.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_zd54",
@@ -1589,7 +1623,8 @@
     "stock"
    ],
    "jam": 0.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_fd338",
@@ -1632,7 +1667,8 @@
     "stock"
    ],
    "jam": 0.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_hd308",
@@ -1675,7 +1711,8 @@
     "stock"
    ],
    "jam": 0.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_gd300",
@@ -1718,7 +1755,8 @@
     "stock"
    ],
    "jam": 0.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_ld10",
@@ -1761,7 +1799,8 @@
     "stock"
    ],
    "jam": 0.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_vm12",
@@ -1805,7 +1844,8 @@
     "muzzle"
    ],
    "jam": 1.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_zm74",
@@ -1851,7 +1891,8 @@
     "stock"
    ],
    "jam": 1.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_gm134",
@@ -1895,7 +1936,8 @@
     "muzzle"
    ],
    "jam": 1.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_hm5",
@@ -1941,7 +1983,8 @@
     "stock"
    ],
    "jam": 1.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_lm7",
@@ -1987,7 +2030,8 @@
     "stock"
    ],
    "jam": 1.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_gl40",
@@ -2027,7 +2071,8 @@
     "under"
    ],
    "jam": 0.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_zl40",
@@ -2067,7 +2112,8 @@
     "under"
    ],
    "jam": 0.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_fl80",
@@ -2107,7 +2153,8 @@
     "under"
    ],
    "jam": 0.5
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_he3",
@@ -2151,7 +2198,8 @@
     "under"
    ],
    "jam": 0.0
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_se9",
@@ -2195,7 +2243,8 @@
     "under"
    ],
    "jam": 0.0
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_gun_fe7",
@@ -2239,7 +2288,8 @@
     "under"
    ],
    "jam": 0.0
-  }
+  },
+  "hands": 2
  },
  {
   "id": "trl_ammo_9mm_fmj",
@@ -3051,7 +3101,8 @@
    "bleed": true,
    "verb": "hook"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_kama_f",
@@ -3078,7 +3129,8 @@
    "bleed": true,
    "verb": "hook"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_kama_m",
@@ -3106,7 +3158,8 @@
    "verb": "hook",
    "parry": 5
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_wakizashi",
@@ -3133,7 +3186,8 @@
    "bleed": true,
    "verb": "cut"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_wakizashi_f",
@@ -3160,7 +3214,8 @@
    "bleed": true,
    "verb": "cut"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_wakizashi_m",
@@ -3187,7 +3242,8 @@
    "bleed": true,
    "verb": "cut"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_katana",
@@ -3213,7 +3269,8 @@
    "bleed": true,
    "verb": "cut"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_katana_f",
@@ -3239,7 +3296,8 @@
    "bleed": true,
    "verb": "cut"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_katana_m",
@@ -3265,7 +3323,8 @@
    "bleed": true,
    "verb": "cut"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_tanto",
@@ -3292,7 +3351,8 @@
    "bleed": true,
    "verb": "stab"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_tanto_f",
@@ -3319,7 +3379,8 @@
    "bleed": true,
    "verb": "stab"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_tanto_m",
@@ -3347,7 +3408,8 @@
    "verb": "stab",
    "parry": 5
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_nodachi",
@@ -3375,7 +3437,8 @@
    "knock": 0.35,
    "verb": "cleave"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_nodachi_f",
@@ -3403,7 +3466,8 @@
    "knock": 0.35,
    "verb": "cleave"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_nodachi_m",
@@ -3431,7 +3495,8 @@
    "knock": 0.35,
    "verb": "cleave"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_naginata",
@@ -3458,7 +3523,8 @@
    "bleed": true,
    "verb": "slash"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_naginata_f",
@@ -3485,7 +3551,8 @@
    "bleed": true,
    "verb": "slash"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_naginata_m",
@@ -3512,7 +3579,8 @@
    "bleed": true,
    "verb": "slash"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_yari",
@@ -3537,7 +3605,8 @@
    "brace": true,
    "verb": "thrust"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_yari_f",
@@ -3562,7 +3631,8 @@
    "brace": true,
    "verb": "thrust"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_yari_m",
@@ -3588,7 +3658,8 @@
    "verb": "thrust",
    "parry": 5
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_bo",
@@ -3615,7 +3686,8 @@
    "knock": 0.4,
    "verb": "crack"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_bo_f",
@@ -3642,7 +3714,8 @@
    "knock": 0.4,
    "verb": "crack"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_bo_m",
@@ -3669,7 +3742,8 @@
    "knock": 0.4,
    "verb": "crack"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_jo",
@@ -3695,7 +3769,8 @@
    "parry": 15,
    "verb": "rap"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_jo_f",
@@ -3721,7 +3796,8 @@
    "parry": 15,
    "verb": "rap"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_jo_m",
@@ -3747,7 +3823,8 @@
    "parry": 20,
    "verb": "rap"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_nunchaku",
@@ -3773,7 +3850,8 @@
    "stun": 0.1,
    "verb": "whip"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_nunchaku_f",
@@ -3799,7 +3877,8 @@
    "stun": 0.1,
    "verb": "whip"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_nunchaku_m",
@@ -3826,7 +3905,8 @@
    "verb": "whip",
    "parry": 5
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_kusarigama",
@@ -3852,7 +3932,8 @@
    "bleed": true,
    "verb": "lash"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_kusarigama_f",
@@ -3878,7 +3959,8 @@
    "bleed": true,
    "verb": "lash"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_kusarigama_m",
@@ -3905,7 +3987,8 @@
    "verb": "lash",
    "parry": 5
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 2
  },
  {
   "id": "trl_mel_sai",
@@ -3932,7 +4015,8 @@
    "fast": 0.2,
    "verb": "jab"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_sai_f",
@@ -3959,7 +4043,8 @@
    "fast": 0.2,
    "verb": "jab"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_sai_m",
@@ -3986,7 +4071,8 @@
    "fast": 0.2,
    "verb": "jab"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_jitte",
@@ -4013,7 +4099,8 @@
    "stun": 0.1,
    "verb": "strike"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_jitte_f",
@@ -4040,7 +4127,8 @@
    "stun": 0.1,
    "verb": "strike"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_jitte_m",
@@ -4067,7 +4155,8 @@
    "stun": 0.1,
    "verb": "strike"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_tessen",
@@ -4094,7 +4183,8 @@
    "fast": 0.3,
    "verb": "rap"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_tessen_f",
@@ -4121,7 +4211,8 @@
    "fast": 0.3,
    "verb": "rap"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_tessen_m",
@@ -4148,7 +4239,8 @@
    "fast": 0.3,
    "verb": "rap"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_kunai",
@@ -4174,7 +4266,8 @@
    "fast": 0.25,
    "verb": "stab"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_kunai_f",
@@ -4200,7 +4293,8 @@
    "fast": 0.25,
    "verb": "stab"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_kunai_m",
@@ -4227,7 +4321,8 @@
    "verb": "stab",
    "parry": 5
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_ono",
@@ -4254,7 +4349,8 @@
    "knock": 0.5,
    "verb": "chop"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_ono_f",
@@ -4281,7 +4377,8 @@
    "knock": 0.5,
    "verb": "chop"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_ono_m",
@@ -4309,7 +4406,8 @@
    "verb": "chop",
    "parry": 5
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_tonfa",
@@ -4335,7 +4433,8 @@
    "stun": 0.2,
    "verb": "strike"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_tonfa_f",
@@ -4361,7 +4460,8 @@
    "stun": 0.2,
    "verb": "strike"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_tonfa_m",
@@ -4387,7 +4487,8 @@
    "stun": 0.2,
    "verb": "strike"
   },
-  "culture": "Japanese"
+  "culture": "Japanese",
+  "hands": 1
  },
  {
   "id": "trl_mel_shashka",
@@ -4414,7 +4515,8 @@
    "bleed": true,
    "verb": "slash"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_shashka_f",
@@ -4441,7 +4543,8 @@
    "bleed": true,
    "verb": "slash"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_shashka_m",
@@ -4468,7 +4571,8 @@
    "bleed": true,
    "verb": "slash"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_kinzhal",
@@ -4495,7 +4599,8 @@
    "bleed": true,
    "verb": "stab"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_kinzhal_f",
@@ -4522,7 +4627,8 @@
    "bleed": true,
    "verb": "stab"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_kinzhal_m",
@@ -4550,7 +4656,8 @@
    "verb": "stab",
    "parry": 5
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_finka",
@@ -4577,7 +4684,8 @@
    "bleed": true,
    "verb": "stab"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_finka_f",
@@ -4604,7 +4712,8 @@
    "bleed": true,
    "verb": "stab"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_finka_m",
@@ -4632,7 +4741,8 @@
    "verb": "stab",
    "parry": 5
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_lopata",
@@ -4658,7 +4768,8 @@
    "knock": 0.3,
    "verb": "chop"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_lopata_f",
@@ -4684,7 +4795,8 @@
    "knock": 0.3,
    "verb": "chop"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_lopata_m",
@@ -4711,7 +4823,8 @@
    "verb": "chop",
    "parry": 5
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_kistien",
@@ -4738,7 +4851,8 @@
    "knock": 0.4,
    "verb": "smash"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_kistien_f",
@@ -4765,7 +4879,8 @@
    "knock": 0.4,
    "verb": "smash"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_kistien_m",
@@ -4793,7 +4908,8 @@
    "verb": "smash",
    "parry": 5
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_chekan",
@@ -4819,7 +4935,8 @@
    "stun": 0.1,
    "verb": "hack"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_chekan_f",
@@ -4845,7 +4962,8 @@
    "stun": 0.1,
    "verb": "hack"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_chekan_m",
@@ -4872,7 +4990,8 @@
    "verb": "hack",
    "parry": 5
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_topor",
@@ -4898,7 +5017,8 @@
    "knock": 0.3,
    "verb": "chop"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_topor_f",
@@ -4924,7 +5044,8 @@
    "knock": 0.3,
    "verb": "chop"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_topor_m",
@@ -4951,7 +5072,8 @@
    "verb": "chop",
    "parry": 5
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_kastet",
@@ -4977,7 +5099,8 @@
    "stun": 0.15,
    "verb": "punch"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_kastet_f",
@@ -5003,7 +5126,8 @@
    "stun": 0.15,
    "verb": "punch"
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_mel_kastet_m",
@@ -5030,77 +5154,36 @@
    "verb": "punch",
    "parry": 5
   },
-  "culture": "Russian"
+  "culture": "Russian",
+  "hands": 1
  },
  {
   "id": "trl_backpack",
   "name": "commuter backpack",
+  "desc": "A commuter backpack.  Worn on the back: 12 more inventory tiles.",
   "weight_g": 700,
   "volume_ml": 1500,
   "length_mm": 450,
   "price": 120,
   "tags": [
-   "container",
-   "worn"
+   "pocket"
   ],
-  "pockets": [
-   {
-    "id": "main",
-    "max_volume_ml": 22000,
-    "max_weight_g": 15000,
-    "flexible": true,
-    "allow_tags": [],
-    "watertight": false,
-    "max_item_length_mm": 0
-   },
-   {
-    "id": "side",
-    "max_volume_ml": 1500,
-    "max_weight_g": 3000,
-    "flexible": false,
-    "allow_tags": [
-     "bottle"
-    ],
-    "watertight": false,
-    "max_item_length_mm": 300
-   }
-  ]
- },
- {
-  "id": "trl_holster",
-  "name": "thigh holster",
-  "weight_g": 250,
-  "volume_ml": 400,
-  "length_mm": 300,
-  "price": 60,
-  "tags": [
-   "container",
-   "worn"
-  ],
-  "pockets": [
-   {
-    "id": "holster",
-    "max_volume_ml": 600,
-    "max_weight_g": 2500,
-    "flexible": false,
-    "allow_tags": [
-     "pistol",
-     "revolver"
-    ],
-    "watertight": false,
-    "max_item_length_mm": 260
-   }
-  ]
+  "pocket": {
+   "slot": "back",
+   "tiles": 12,
+   "allow": []
+  }
  },
  {
   "id": "trl_coat",
   "name": "long coat",
+  "desc": "A long coat with deep pockets and a little armor.  Worn on the chest: 4 more inventory tiles.",
   "weight_g": 1400,
   "volume_ml": 3000,
   "length_mm": 800,
   "price": 300,
   "tags": [
-   "container",
+   "pocket",
    "worn"
   ],
   "armor": {
@@ -5108,35 +5191,11 @@
    "phys": 1,
    "dur": 20
   },
-  "pockets": [
-   {
-    "id": "inner",
-    "max_volume_ml": 2500,
-    "max_weight_g": 4000,
-    "flexible": true,
-    "allow_tags": [],
-    "watertight": false,
-    "max_item_length_mm": 0
-   },
-   {
-    "id": "left",
-    "max_volume_ml": 600,
-    "max_weight_g": 1000,
-    "flexible": true,
-    "allow_tags": [],
-    "watertight": false,
-    "max_item_length_mm": 0
-   },
-   {
-    "id": "right",
-    "max_volume_ml": 600,
-    "max_weight_g": 1000,
-    "flexible": true,
-    "allow_tags": [],
-    "watertight": false,
-    "max_item_length_mm": 0
-   }
-  ]
+  "pocket": {
+   "slot": "chest",
+   "tiles": 4,
+   "allow": []
+  }
  },
  {
   "id": "trl_helmet",
@@ -5249,71 +5308,51 @@
  {
   "id": "trl_pouch",
   "name": "belt pouch",
+  "desc": "A pouch on the belt: 4 more inventory tiles.",
   "weight_g": 120,
   "volume_ml": 250,
   "length_mm": 180,
   "price": 20,
   "tags": [
-   "container"
+   "pocket"
   ],
-  "pockets": [
-   {
-    "id": "main",
-    "max_volume_ml": 1200,
-    "max_weight_g": 2000,
-    "flexible": true,
-    "allow_tags": [],
-    "watertight": false,
-    "max_item_length_mm": 0
-   }
-  ]
+  "pocket": {
+   "slot": "belt",
+   "tiles": 4,
+   "allow": []
+  }
  },
  {
-  "id": "trl_duffel",
-  "name": "duffel bag",
-  "weight_g": 900,
-  "volume_ml": 1800,
-  "length_mm": 700,
-  "price": 80,
+  "id": "trl_fanny",
+  "name": "fanny pack",
+  "desc": "A small pack worn on the belt: 3 more inventory tiles.",
+  "weight_g": 150,
+  "volume_ml": 300,
+  "length_mm": 200,
+  "price": 25,
   "tags": [
-   "container"
+   "pocket"
   ],
-  "pockets": [
-   {
-    "id": "main",
-    "max_volume_ml": 55000,
-    "max_weight_g": 30000,
-    "flexible": true,
-    "allow_tags": [],
-    "watertight": false,
-    "max_item_length_mm": 0
-   }
-  ]
+  "pocket": {
+   "slot": "belt",
+   "tiles": 3,
+   "allow": []
+  }
  },
  {
   "id": "trl_water_bottle",
   "name": "water bottle",
+  "desc": "Holds up to 500 mL of water.  Drink from it to ease thirst.",
   "weight_g": 80,
   "volume_ml": 600,
   "length_mm": 230,
   "price": 5,
   "tags": [
-   "container",
    "bottle"
   ],
-  "pockets": [
-   {
-    "id": "liquid",
-    "max_volume_ml": 500,
-    "max_weight_g": 600,
-    "flexible": false,
-    "allow_tags": [
-     "liquid"
-    ],
-    "watertight": true,
-    "max_item_length_mm": 0
-   }
-  ]
+  "bottle": {
+   "ml": 500
+  }
  },
  {
   "id": "trl_yen",
@@ -6681,5 +6720,173 @@
    "hp": 8,
    "msg": "You write a wish and hang it.  You feel lighter."
   }
+ },
+ {
+  "id": "trl_imp_cortex",
+  "name": "Neural Link",
+  "desc": "Wireless interface and skull lattice: +4% to hit, faster aim, 1 armor on the head.  Fits the head.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 4200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "cortex",
+  "part": "head"
+ },
+ {
+  "id": "trl_imp_optics",
+  "name": "Optic Suite",
+  "desc": "Ranging overlay: +2% to hit, +5% more at five or more tiles.  Fits the eyes.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 1800,
+  "tags": [
+   "implant"
+  ],
+  "implant": "optics",
+  "part": "eyes"
+ },
+ {
+  "id": "trl_imp_thermal",
+  "name": "Thermal Vision",
+  "desc": "Warm bodies stand out of cover and smoke: +3% to hit.  Fits the eyes.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 2600,
+  "tags": [
+   "implant"
+  ],
+  "implant": "thermal",
+  "part": "eyes"
+ },
+ {
+  "id": "trl_imp_jets",
+  "name": "Dorsal Jump Jets",
+  "desc": "Short flight, no falling damage while fuel lasts.  Fits the spine.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 3000,
+  "tags": [
+   "implant"
+  ],
+  "implant": "jets",
+  "part": "spine"
+ },
+ {
+  "id": "trl_imp_reflex",
+  "name": "Reflex Wires",
+  "desc": "Grade 3 wiring: 14% to dodge a bullet, 10% to dodge a blade, quicker aim and strikes.  Fits the spine.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 6200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "reflex",
+  "part": "spine"
+ },
+ {
+  "id": "trl_imp_synapse",
+  "name": "Synapse Accelerator",
+  "desc": "Military grade 4: time slows.  26% to dodge a bullet, 18% to dodge a blade, much faster strikes.  Fits the spine.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 11000,
+  "tags": [
+   "implant"
+  ],
+  "implant": "synapse",
+  "part": "spine"
+ },
+ {
+  "id": "trl_imp_dermal",
+  "name": "Dermal Plating",
+  "desc": "Subdermal plates over the whole body: 2 armor everywhere, until the plating wears through.  Fits the chest.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 2200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "dermal",
+  "part": "chest"
+ },
+ {
+  "id": "trl_imp_heart",
+  "name": "Cardiac Booster",
+  "desc": "Bigger stamina reserve.  Fits the chest.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 2800,
+  "tags": [
+   "implant"
+  ],
+  "implant": "heart",
+  "part": "chest"
+ },
+ {
+  "id": "trl_imp_mantis",
+  "name": "Mantis Blades",
+  "desc": "Forearm blades unfold when your hands are empty: fast, accurate, cannot be knocked away.  1 armor on the arms.  Fits the arms.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 3400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "mantis",
+  "part": "arms"
+ },
+ {
+  "id": "trl_imp_smartlink",
+  "name": "Smartlink Palm",
+  "desc": "Gun-to-hand link: +8% to hit with any firearm.  Fits the hands.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 1500,
+  "tags": [
+   "implant"
+  ],
+  "implant": "smartlink",
+  "part": "hands"
+ },
+ {
+  "id": "trl_imp_grip",
+  "name": "Gecko Grip",
+  "desc": "Climb sheer walls.  Fits the hands.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 1700,
+  "tags": [
+   "implant"
+  ],
+  "implant": "grip",
+  "part": "hands"
+ },
+ {
+  "id": "trl_imp_legs",
+  "name": "Leg Actuators",
+  "desc": "Long jumps and softer landings.  1 armor on the legs.  Fits the legs.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 1600,
+  "tags": [
+   "implant"
+  ],
+  "implant": "legs",
+  "part": "legs"
  }
 ]

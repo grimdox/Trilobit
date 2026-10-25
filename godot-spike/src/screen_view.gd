@@ -16,7 +16,6 @@ var footer: String = ""
 var overlay: bool = false          # dim the game behind instead of the title backdrop
 var prompt: String = ""            # "Press a key..." while rebinding
 var game                           # for the implants screen
-var part_sel: int = 0
 var sk_sel: int = 0                # the highlighted line of the attributes & skills screen (0-4 attributes, then the skills)
 var world = null
 var cc: Dictionary = {}            # the character being made on the create screen: {app, attrs}
@@ -87,17 +86,23 @@ func _fit(s: String, pos: Vector2, fsize: int, col: Color, max_w: float) -> void
 func _draw() -> void:
 	var W: float = size.x if size.x > 0 else 1280.0
 	var H: float = size.y if size.y > 0 else 720.0
-	if kind == "implants" or kind == "map" or kind == "skills" or kind == "create":
+	if kind in TAB_KINDS or kind == "create":
 		draw_rect(Rect2(0, 0, W, H), BG)
 	elif overlay:
 		draw_rect(Rect2(0, 0, W, H), Color(0, 0, 0, 0.72))
 	else:
 		_backdrop(W, H)
+	if kind in TAB_KINDS:
+		_gridlines(W, H)
+		_tabbar(W)
 	match kind:
-		"implants":
-			_implants(W, H)
+		"equipment", "implants":
+			if gear != null and game != null:
+				gear.draw(self, W, H, t, get_process_delta_time())
 		"skills":
-			_skills(W, H)
+			draw_set_transform(Vector2(0, TAB_H))
+			_skills(W, H - TAB_H)
+			draw_set_transform(Vector2.ZERO)
 		"create":
 			_create(W, H)
 		"terminal":
@@ -217,118 +222,94 @@ func _menu(W: float, H: float) -> void:
 		_txt(prompt, Vector2(x0 + 60, y0 + bh * 0.5 + 8), 24, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, bw - 120)
 	_txt(footer, Vector2(x0 + 28, y0 + bh - 14), 15, Color(0.6, 0.7, 0.8))
 
-# ---------------------------------------------------------------- the implants body map
-func part_screen_pos(part: Dictionary, r: Rect2) -> Vector2:
-	var a: Vector2 = part["at"]
-	return r.position + Vector2(a.x * r.size.x, a.y * r.size.y)
+# ---------------------------------------------------------------- the tab bar (equipment, implants, skills, map)
+const TAB_KINDS := ["equipment", "implants", "skills", "map"]
+const TAB_NAMES := {"equipment": "EQUIPMENT", "implants": "IMPLANTS", "skills": "SKILLS", "map": "MAP"}
+const TAB_H := 44.0
+var tab_keys: Dictionary = {}              # tab kind -> the key that opens it, for the label
+var gear = null                            # GearUI (gear_ui.gd): the equipment and implants tabs
+var map_local: bool = false                # the map tab shows the local map instead of the island
+var local_tex: ImageTexture = null
+var local_info: Dictionary = {}            # {origin: Vector2i of the PC in the window, radius, level, labels: [{dx, dy, text}]}
 
-func _body_rect(W: float, H: float) -> Rect2:
-	return Rect2(60, 60, 470, H - 110)
+func is_tab() -> bool:
+	return kind in TAB_KINDS
 
-func part_at_mouse(p: Vector2) -> int:
-	var r := _body_rect(size.x, size.y)
-	var best := -1
-	var bd := 46.0
-	for i in IMP.PARTS.size():
-		var d := part_screen_pos(IMP.PARTS[i], r).distance_to(p)
-		if d < bd:
-			bd = d
-			best = i
-	return best
+func tab_rect(i: int) -> Rect2:
+	var w := 200.0
+	var gap := 12.0
+	var x0: float = (1280.0 - (w * TAB_KINDS.size() + gap * (TAB_KINDS.size() - 1))) * 0.5
+	return Rect2(x0 + i * (w + gap), 4.0, w, 34.0)
 
-func _implants(W: float, H: float) -> void:
-	var r := _body_rect(W, H)
-	# blueprint grid
+func tab_arrow_rect(next: bool) -> Rect2:
+	return Rect2(1280.0 * 0.5 + (452.0 if next else -452.0 - 40.0), 4.0, 40.0, 34.0)
+
+## which tab a point is on: 0..3, or -1 / -2 for the < and > arrows, or -9 for none
+func tab_at(p: Vector2) -> int:
+	for i in TAB_KINDS.size():
+		if tab_rect(i).has_point(p):
+			return i
+	if tab_arrow_rect(false).has_point(p):
+		return -1
+	if tab_arrow_rect(true).has_point(p):
+		return -2
+	return -9
+
+func _tabbar(W: float) -> void:
+	draw_rect(Rect2(0, 0, W, TAB_H), Color(0.02, 0.03, 0.06))
+	draw_line(Vector2(0, TAB_H), Vector2(W, TAB_H), Color(0.3, 0.9, 1.0, 0.5), 1.5)
+	for nx in [false, true]:
+		var ar: Rect2 = tab_arrow_rect(nx)
+		_txt("<" if not nx else ">", Vector2(ar.position.x, ar.position.y + 27.0), 28, CYAN, HORIZONTAL_ALIGNMENT_CENTER, ar.size.x)
+	for i in TAB_KINDS.size():
+		var k: String = TAB_KINDS[i]
+		var r: Rect2 = tab_rect(i)
+		var on: bool = k == kind
+		if on:
+			draw_rect(r, Color(0.3, 0.9, 1.0, 0.22))
+			draw_rect(Rect2(r.position.x, r.end.y - 3.0, r.size.x, 3.0), MAGENTA)
+			draw_rect(r, CYAN, false, 1.5)
+		var col: Color = Color.WHITE if on else Color(0.5, 0.62, 0.75)
+		var label: String = TAB_NAMES[k]
+		var key: String = String(tab_keys.get(k, ""))
+		_txt(label, Vector2(r.position.x, r.position.y + 24.0), 20, col, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - (22.0 if key != "" else 0.0))
+		if key != "":
+			_rtxt("[%s]" % key, r.end.x - 8.0, r.position.y + 23.0, 13, Color(1.0, 0.8, 0.25) if on else Color(0.45, 0.55, 0.65))
+
+func _gridlines(W: float, H: float) -> void:
 	for gx in range(0, int(W), 32):
 		draw_line(Vector2(gx, 0), Vector2(gx, H), Color(0.3, 0.9, 1.0, 0.05))
 	for gy in range(0, int(H), 32):
 		draw_line(Vector2(0, gy), Vector2(W, gy), Color(0.3, 0.9, 1.0, 0.05))
-	_txt("IMPLANTS", Vector2(560, 56), 34, Color.WHITE)
-	_txt("Up / Down chooses a body part  -  Esc closes", Vector2(560, 82), 16, Color(0.6, 0.75, 0.9))
-	var lc := Color(0.3, 0.9, 1.0, 0.8)
-	var cx := r.position.x + r.size.x * 0.5
-	var cy := r.position.y + r.size.y * 0.42
-	# the Vitruvian circle and square
-	draw_arc(Vector2(cx, cy), r.size.x * 0.46, 0, TAU, 96, Color(0.3, 0.9, 1.0, 0.35), 1.5)
-	var sq := r.size.x * 0.46
-	draw_rect(Rect2(cx - sq, r.position.y + 10, sq * 2.0, r.size.y - 20), Color(0.3, 0.9, 1.0, 0.25), false, 1.5)
-	var P := func(u: float, v: float) -> Vector2: return r.position + Vector2(u * r.size.x, v * r.size.y)
-	# head
-	draw_arc(P.call(0.5, 0.115), r.size.x * 0.07, 0, TAU, 32, lc, 2.0)
-	draw_line(P.call(0.5, 0.17), P.call(0.5, 0.2), lc, 2.0)
-	# torso
-	var torso := PackedVector2Array([P.call(0.37, 0.2), P.call(0.63, 0.2), P.call(0.58, 0.5), P.call(0.42, 0.5), P.call(0.37, 0.2)])
-	draw_polyline(torso, lc, 2.0)
-	draw_line(P.call(0.5, 0.2), P.call(0.5, 0.5), Color(0.3, 0.9, 1.0, 0.3), 1.0)     # spine
-	for k in 6:
-		var yy := 0.23 + 0.04 * k
-		draw_line(P.call(0.44, yy), P.call(0.56, yy), Color(0.3, 0.9, 1.0, 0.2), 1.0)  # ribs
-	# arms: outstretched
-	draw_polyline(PackedVector2Array([P.call(0.37, 0.21), P.call(0.24, 0.3), P.call(0.13, 0.4), P.call(0.1, 0.47)]), lc, 2.0)
-	draw_polyline(PackedVector2Array([P.call(0.63, 0.21), P.call(0.76, 0.3), P.call(0.87, 0.4), P.call(0.9, 0.47)]), lc, 2.0)
-	# pelvis and legs
-	draw_polyline(PackedVector2Array([P.call(0.42, 0.5), P.call(0.36, 0.72), P.call(0.34, 0.93)]), lc, 2.0)
-	draw_polyline(PackedVector2Array([P.call(0.58, 0.5), P.call(0.64, 0.72), P.call(0.66, 0.93)]), lc, 2.0)
-	draw_line(P.call(0.42, 0.5), P.call(0.58, 0.5), lc, 2.0)
-	# the part markers
-	for i in IMP.PARTS.size():
-		var part: Dictionary = IMP.PARTS[i]
-		var pp := part_screen_pos(part, r)
-		var list: Array = IMP.for_part(part["id"])
-		var inst := 0
-		for d in list:
-			if game != null and game.has_implant(d["id"]):
-				inst += 1
-		var on := i == part_sel
-		var col := Color(1.0, 0.8, 0.25) if inst > 0 else Color(0.3, 0.9, 1.0)
-		if on:
-			var pulse := 0.5 + 0.5 * sin(t * 5.0)
-			draw_circle(pp, 26.0 + 4.0 * pulse, Color(col.r, col.g, col.b, 0.18))
-			draw_arc(pp, 22.0, 0, TAU, 32, MAGENTA, 2.5)
-			draw_line(pp + Vector2(22, 0), Vector2(545, pp.y), Color(1.0, 0.25, 0.65, 0.6), 1.5)
-		draw_circle(pp, 7.0, col)
-		draw_arc(pp, 11.0, 0, TAU, 24, Color(col.r, col.g, col.b, 0.6), 1.5)
-		if inst > 0:
-			_txt("%d" % inst, pp + Vector2(12, -10), 16, col)
-	# the detail panel
-	var part: Dictionary = IMP.PARTS[part_sel]
-	var px := 560.0
-	var py := 120.0
-	draw_rect(Rect2(px, py, W - px - 40, H - py - 60), Color(0.04, 0.06, 0.11, 0.9))
-	draw_rect(Rect2(px, py, W - px - 40, H - py - 60), CYAN, false, 1.5)
-	draw_rect(Rect2(px, py, W - px - 40, 4), MAGENTA)
-	_txt(part["name"].to_upper(), Vector2(px + 20, py + 44), 28, Color.WHITE)
-	var y := py + 90.0
-	for d in IMP.for_part(part["id"]):
-		var fitted: bool = game != null and game.implants.get(d["id"], false)
-		var have: bool = fitted
-		var status := "INSTALLED" if have else ("available - ripperdocs" if d["live"] else "not yet available")
-		status = "grade %d   " % int(d.get("grade", 1)) + status
-		if fitted and not game.has_implant(d["id"]):
-			status = "OFFLINE - the %s is disabled" % game.BODY.PART_GROUP.get(d["part"], "limb")
-		elif fitted and d.has("armor"):
-			status += "   armor %d  (plating %d/%d)" % [int(d["armor"]), int(game.imp_dur.get(d["id"], int(d["dur"]))), int(d["dur"])]
-		elif d.has("armor"):
-			status += "   armor %d" % int(d["armor"])
-		var col := Color(1.0, 0.8, 0.25) if have else (Color(0.5, 1.0, 0.7) if d["live"] else Color(0.55, 0.6, 0.68))
-		draw_rect(Rect2(px + 16, y - 26, W - px - 72, 92), Color(1, 1, 1, 0.04))
-		_txt(d["name"], Vector2(px + 28, y), 24, Color.WHITE if (have or d["live"]) else Color(0.7, 0.75, 0.82))
-		_txt(status, Vector2(px + 28, y + 26), 17, col)
-		_txt(d["desc"], Vector2(px + 28, y + 52), 16, Color(0.7, 0.82, 0.92))
-		if d["live"] and not have:
-			_txt("from ¥%d" % IMP.price(d["id"], true), Vector2(W - 190, y), 18, col)
-		y += 108.0
-	# overall tally
-	var total_have := 0
-	for d in IMP.ALL:
-		if game != null and game.implants.get(d["id"], false):
-			total_have += 1
-	_txt("%d of %d implants fitted" % [total_have, IMP.ALL.size()], Vector2(px + 20, H - 78), 16, Color(0.6, 0.75, 0.9))
 
 # ---------------------------------------------------------------- the island map
+func map_button_rect(local: bool) -> Rect2:
+	return Rect2(1280.0 - 24.0 - (140.0 if local else 280.0) - (0.0 if local else 8.0), TAB_H + 8.0, 140.0, 28.0)
+
+## 0 the island button, 1 the local button, -1 none
+func map_button_at(p: Vector2) -> int:
+	if map_button_rect(false).has_point(p):
+		return 0
+	if map_button_rect(true).has_point(p):
+		return 1
+	return -1
+
 func _map(W: float, H: float) -> void:
+	for loc in [false, true]:
+		var br: Rect2 = map_button_rect(loc)
+		var on: bool = map_local == loc
+		draw_rect(br, Color(0.3, 0.9, 1.0, 0.22) if on else Color(1, 1, 1, 0.04))
+		draw_rect(br, CYAN if on else Color(0.35, 0.45, 0.55), false, 1.5)
+		_txt("LOCAL" if loc else "ISLAND", Vector2(br.position.x, br.position.y + 20.0), 16, Color.WHITE if on else Color(0.55, 0.65, 0.78), HORIZONTAL_ALIGNMENT_CENTER, br.size.x)
+	if map_local:
+		_local_map(W, H)
+	else:
+		draw_set_transform(Vector2(0, TAB_H))
+		_island_map(W, H - TAB_H)
+		draw_set_transform(Vector2.ZERO)
+
+func _island_map(W: float, H: float) -> void:
 	var cyan := Color(0.3, 0.9, 1.0)
-	draw_string(font, Vector2(24, 34), "ISLAND MAP", HORIZONTAL_ALIGNMENT_LEFT, -1, 24, cyan)
 	if world == null or map_tex == null:
 		draw_string(font, Vector2(24, 80), "No chart of this place.", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color.WHITE)
 		return
@@ -361,7 +342,7 @@ func _map(W: float, H: float) -> void:
 	for lm in isl.landmarks():
 		var lp: Vector2 = P.call(float(lm["pos"].x), float(lm["pos"].y))
 		_txt(lm["name"], lp + Vector2(-30, 0), 13, Color(1, 1, 1, 0.9))
-	_rtxt("Island seed %d" % isl.seed_value, W - 24, 34, 16, Color(0.6, 0.85, 1.0))
+	_txt("Island seed %d" % isl.seed_value, Vector2(24, 30), 16, Color(0.6, 0.85, 1.0))
 	# you are here
 	if game != null and game.island != null:
 		var gp: Vector2i = game.global_pos()
@@ -373,7 +354,49 @@ func _map(W: float, H: float) -> void:
 		draw_line(pp + Vector2(-14, 0), pp + Vector2(14, 0), Color(1, 0.3, 0.6, 0.8), 1.0)
 		draw_line(pp + Vector2(0, -14), pp + Vector2(0, 14), Color(1, 0.3, 0.6, 0.8), 1.0)
 		draw_string(font, pp + Vector2(12, -12), "YOU", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(1, 0.4, 0.7))
-		draw_string(font, Vector2(24, H - 14), "You are at (%d, %d) in %s.   M or Esc closes." % [gp.x, gp.y, isl.zone_name(game.zone)], HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.8, 0.9, 1.0))
+		draw_string(font, Vector2(24, H - 14), "You are at (%d, %d) in %s.   Tab switches to the local map, Esc closes." % [gp.x, gp.y, isl.zone_name(game.zone)], HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.8, 0.9, 1.0))
+
+## the local map: every tile you have seen within 40 of you, drawn in plain neon colours (the picture is built by main.gd's _make_local_map)
+const LOCAL_PX := 7
+func _local_map(W: float, H: float) -> void:
+	var n: int = int(local_info.get("n", 81))
+	var side: float = float(n * LOCAL_PX)
+	var ox := 60.0
+	var oy: float = TAB_H + 44.0
+	if local_tex == null:
+		_txt("Nothing charted here.", Vector2(ox, oy + 30.0), 18, Color.WHITE)
+		return
+	draw_rect(Rect2(ox - 4.0, oy - 4.0, side + 8.0, side + 8.0), Color(0.04, 0.06, 0.11))
+	draw_rect(Rect2(ox - 4.0, oy - 4.0, side + 8.0, side + 8.0), CYAN, false, 1.5)
+	draw_texture_rect(local_tex, Rect2(ox, oy, side, side), false)
+	# you are here
+	var ctr: float = float(n / 2) * LOCAL_PX + LOCAL_PX * 0.5
+	var pp := Vector2(ox + ctr, oy + ctr)
+	var pulse: float = 0.5 + 0.5 * sin(t * 6.0)
+	draw_circle(pp, 7.0 + 3.0 * pulse, Color(1.0, 0.2, 0.5, 0.25 + 0.2 * pulse))
+	draw_circle(pp, 3.5, Color.WHITE)
+	# building names sit just above the middle tile of the building
+	for lb in local_info.get("labels", []):
+		var lp := Vector2(ox + (float(lb["dx"]) + float(n / 2) + 0.5) * LOCAL_PX, oy + (float(lb["dy"]) + float(n / 2)) * LOCAL_PX - 4.0)
+		_txt(String(lb["text"]), lp - Vector2(80, 0), 13, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, 160.0)
+	# the key
+	var kx: float = ox + side + 40.0
+	var ky: float = oy + 4.0
+	_txt("LOCAL MAP", Vector2(kx, ky + 14.0), 24, Color.WHITE)
+	_txt("Everything you have seen within %d tiles." % (n / 2), Vector2(kx, ky + 40.0), 16, Color(0.6, 0.75, 0.9))
+	var ky2: float = ky + 76.0
+	for e in LOCAL_KEY:
+		draw_rect(Rect2(kx, ky2 - 12.0, 18.0, 18.0), e[1])
+		draw_rect(Rect2(kx, ky2 - 12.0, 18.0, 18.0), Color(1, 1, 1, 0.25), false, 1.0)
+		_txt(String(e[0]), Vector2(kx + 30.0, ky2 + 3.0), 17, Color(0.85, 0.92, 1.0))
+		ky2 += 28.0
+	var lvl: int = int(local_info.get("level", 0))
+	_txt("You are at (%d, %d)%s.   Tab switches to the island map, Esc closes." % [int(local_info.get("gx", 0)), int(local_info.get("gy", 0)), "" if lvl == 0 else ", level %d" % lvl], Vector2(24, H - 14.0), 15, Color(0.8, 0.9, 1.0))
+
+## colours of the local map: [name, colour]
+const LOCAL_KEY := [["Wall", Color(1.0, 0.25, 0.65)], ["Window", Color(0.55, 0.9, 1.0)], ["Door", Color(1.0, 0.8, 0.25)], ["Road", Color(0.1, 0.14, 0.32)],
+	["Sidewalk", Color(0.24, 0.3, 0.5)], ["Floor", Color(0.07, 0.2, 0.28)], ["Obstacle", Color(0.62, 0.68, 0.8)], ["Water", Color(0.05, 0.12, 0.5)],
+	["Stairs, lift, ladder", Color(1.0, 0.65, 0.1)], ["Open ground", Color(0.06, 0.3, 0.26)]]
 
 # ---------------------------------------------------------------- attributes and skills
 ## one line per attribute (0-4) then per skill, in the order of SK.SKILLS
@@ -385,12 +408,12 @@ func sk_entries() -> Array:
 		out.append({"kind": "skill", "id": sd["id"]})
 	return out
 
-const SK_TOP := 50.0
+const SK_TOP := 28.0
 const SK_TOP_H := 158.0
 const SK_ROW := 34.0
 
 func sk_box_rect(group: int, W: float, H: float) -> Rect2:
-	var y0: float = SK_TOP + SK_TOP_H + 10.0
+	var y0: float = SK_TOP + SK_TOP_H + 12.0
 	var bw: float = (W - 80.0 - 16.0) * 0.5
 	var bh: float = (H - y0 - 34.0 - 12.0) * 0.5
 	return Rect2(40.0 + (group % 2) * (bw + 16.0), y0 + (group / 2) * (bh + 12.0), bw, bh)
@@ -409,7 +432,8 @@ func sk_rects(W: float, H: float) -> Array:
 
 func sk_at_mouse(p: Vector2) -> int:
 	var W: float = size.x if size.x > 0 else 1280.0
-	var H: float = size.y if size.y > 0 else 720.0
+	var H: float = (size.y if size.y > 0 else 720.0) - TAB_H
+	p.y -= TAB_H
 	var rects := sk_rects(W, H)
 	for i in rects.size():
 		if (rects[i] as Rect2).has_point(p):
@@ -419,7 +443,7 @@ func sk_at_mouse(p: Vector2) -> int:
 ## move the highlight to the nearest line in a direction; false if there is none
 func sk_move(dir: Vector2i) -> bool:
 	var W: float = size.x if size.x > 0 else 1280.0
-	var H: float = size.y if size.y > 0 else 720.0
+	var H: float = (size.y if size.y > 0 else 720.0) - TAB_H
 	var rects := sk_rects(W, H)
 	var c: Vector2 = (rects[sk_sel] as Rect2).get_center()
 	var best := -1
@@ -448,10 +472,6 @@ func sk_move(dir: Vector2i) -> bool:
 	return true
 
 func _skills(W: float, H: float) -> void:
-	for gx in range(0, int(W), 32):
-		draw_line(Vector2(gx, 0), Vector2(gx, H), Color(0.3, 0.9, 1.0, 0.05))
-	for gy in range(0, int(H), 32):
-		draw_line(Vector2(0, gy), Vector2(W, gy), Color(0.3, 0.9, 1.0, 0.05))
 	var entries := sk_entries()
 	var rects := sk_rects(W, H)
 	sk_sel = clampi(sk_sel, 0, entries.size() - 1)
@@ -462,10 +482,11 @@ func _skills(W: float, H: float) -> void:
 	var gov: Array = []                                     # attributes governing the selected skill
 	if sel["kind"] == "skill":
 		gov = SK.skill(sel["id"])["attrs"]
-	_txt("ATTRIBUTES & SKILLS", Vector2(40, 36), 30, Color.WHITE)
-	_rtxt("Arrows / numpad / mouse choose  -  Esc closes", W - 40, 34, 15, Color(0.6, 0.75, 0.9))
+	_rtxt("Arrows / numpad / mouse choose  -  Esc closes", W - 40, 18, 14, Color(0.6, 0.75, 0.9))
 	# the attribute box: one line, five attributes
-	var abox := Rect2(40, SK_TOP + 8.0, 580, SK_TOP_H - 8.0)
+	var b0 := sk_box_rect(0, W, H)
+	var b1 := sk_box_rect(1, W, H)
+	var abox := Rect2(b0.position.x, SK_TOP + 8.0, b0.size.x, SK_TOP_H - 8.0)       # the top boxes share the columns of the skill boxes under them
 	_panel(abox)
 	_txt("ATTRIBUTES", Vector2(abox.position.x + 14, abox.position.y + 26), 16, CYAN)
 	_rtxt("+1 to each skill it governs per 2 points over 10", abox.end.x - 14, abox.position.y + 26, 14, Color(0.6, 0.72, 0.85))
@@ -484,7 +505,7 @@ func _skills(W: float, H: float) -> void:
 		if bn != 0:
 			_rtxt("%+d" % bn, r.end.x - 8, r.position.y + 20, 15, Color(1.0, 0.8, 0.25) if bn > 0 else Color(1.0, 0.45, 0.4))
 	# the detail box
-	var dbox := Rect2(632, SK_TOP + 8.0, W - 632 - 40, SK_TOP_H - 8.0)
+	var dbox := Rect2(b1.position.x, SK_TOP + 8.0, b1.size.x, SK_TOP_H - 8.0)
 	_panel(dbox)
 	_skill_detail(dbox, sel, attrs, base)
 	# the four skill boxes

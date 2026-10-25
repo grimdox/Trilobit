@@ -99,24 +99,21 @@ for mid, name, culture, klass, dmg, reach, wt, ln, price, extra in MELEE:
 P = lambda i, vol, wt, flex=False, tags=None, water=False, length=0: {"id": i, "max_volume_ml": vol, "max_weight_g": wt, "flexible": flex,
                                                                     "allow_tags": tags or [], "watertight": water, "max_item_length_mm": length}
 items += [
-    {"id": "trl_backpack", "name": "commuter backpack", "weight_g": 700, "volume_ml": 1500, "length_mm": 450, "price": 120, "tags": ["container", "worn"],
-     "pockets": [P("main", 22000, 15000, True), P("side", 1500, 3000, False, ["bottle"], False, 300)]},
-    {"id": "trl_holster", "name": "thigh holster", "weight_g": 250, "volume_ml": 400, "length_mm": 300, "price": 60, "tags": ["container", "worn"],
-     "pockets": [P("holster", 600, 2500, False, ["pistol", "revolver"], False, 260)]},
-    {"id": "trl_coat", "name": "long coat", "weight_g": 1400, "volume_ml": 3000, "length_mm": 800, "price": 300, "tags": ["container", "worn"], "armor": {"slot": "chest", "phys": 1, "dur": 20},
-     "pockets": [P("inner", 2500, 4000, True), P("left", 600, 1000, True), P("right", 600, 1000, True)]},
+    {"id": "trl_backpack", "name": "commuter backpack", "desc": "A commuter backpack.  Worn on the back: 12 more inventory tiles.", "weight_g": 700, "volume_ml": 1500, "length_mm": 450, "price": 120, "tags": ["pocket"],
+     "pocket": {"slot": "back", "tiles": 12, "allow": []}},
+    {"id": "trl_coat", "name": "long coat", "desc": "A long coat with deep pockets and a little armor.  Worn on the chest: 4 more inventory tiles.", "weight_g": 1400, "volume_ml": 3000, "length_mm": 800, "price": 300, "tags": ["pocket", "worn"],
+     "armor": {"slot": "chest", "phys": 1, "dur": 20}, "pocket": {"slot": "chest", "tiles": 4, "allow": []}},
     {"id": "trl_helmet", "name": "ballistic helmet", "desc": "Armor 3 on the head.", "weight_g": 1200, "volume_ml": 3000, "length_mm": 300, "price": 350, "tags": ["armor", "worn"], "armor": {"slot": "head", "phys": 3, "dur": 40}},
     {"id": "trl_visor", "name": "riot visor helmet", "desc": "Armor 5 on the head.", "weight_g": 1900, "volume_ml": 4000, "length_mm": 320, "price": 800, "tags": ["armor", "worn"], "armor": {"slot": "head", "phys": 5, "dur": 60}},
     {"id": "trl_vest", "name": "ballistic vest", "desc": "Armor 4 on the chest.", "weight_g": 3200, "volume_ml": 5000, "length_mm": 500, "price": 500, "tags": ["armor", "worn"], "armor": {"slot": "chest", "phys": 4, "dur": 60}},
     {"id": "trl_vest_heavy", "name": "plate carrier", "desc": "Armor 7 on the chest.", "weight_g": 6800, "volume_ml": 8000, "length_mm": 520, "price": 1400, "tags": ["armor", "worn"], "armor": {"slot": "chest", "phys": 7, "dur": 90}},
     {"id": "trl_bracers", "name": "composite arm guards", "desc": "Armor 2 on both arms.", "weight_g": 1100, "volume_ml": 2000, "length_mm": 350, "price": 300, "tags": ["armor", "worn"], "armor": {"slot": "arms", "phys": 2, "dur": 40}},
     {"id": "trl_greaves", "name": "shin guards", "desc": "Armor 2 on both legs.", "weight_g": 1500, "volume_ml": 2500, "length_mm": 400, "price": 300, "tags": ["armor", "worn"], "armor": {"slot": "legs", "phys": 2, "dur": 40}},
-    {"id": "trl_pouch", "name": "belt pouch", "weight_g": 120, "volume_ml": 250, "length_mm": 180, "price": 20, "tags": ["container"],
-     "pockets": [P("main", 1200, 2000, True)]},
-    {"id": "trl_duffel", "name": "duffel bag", "weight_g": 900, "volume_ml": 1800, "length_mm": 700, "price": 80, "tags": ["container"],
-     "pockets": [P("main", 55000, 30000, True)]},
-    {"id": "trl_water_bottle", "name": "water bottle", "weight_g": 80, "volume_ml": 600, "length_mm": 230, "price": 5, "tags": ["container", "bottle"],
-     "pockets": [P("liquid", 500, 600, False, ["liquid"], True, 0)]},
+    {"id": "trl_pouch", "name": "belt pouch", "desc": "A pouch on the belt: 4 more inventory tiles.", "weight_g": 120, "volume_ml": 250, "length_mm": 180, "price": 20, "tags": ["pocket"],
+     "pocket": {"slot": "belt", "tiles": 4, "allow": []}},
+    {"id": "trl_fanny", "name": "fanny pack", "desc": "A small pack worn on the belt: 3 more inventory tiles.", "weight_g": 150, "volume_ml": 300, "length_mm": 200, "price": 25, "tags": ["pocket"],
+     "pocket": {"slot": "belt", "tiles": 3, "allow": []}},
+    {"id": "trl_water_bottle", "name": "water bottle", "desc": "Holds up to 500 mL of water.  Drink from it to ease thirst.", "weight_g": 80, "volume_ml": 600, "length_mm": 230, "price": 5, "tags": ["bottle"], "bottle": {"ml": 500}},
     {"id": "trl_yen", "name": "yen notes", "weight_g": 1, "volume_ml": 1, "length_mm": 0, "price": 1, "tags": ["money"]},
     {"id": "trl_ammo", "name": "ammo box", "weight_g": 120, "volume_ml": 70, "length_mm": 60, "price": 20, "tags": ["ammo"], "ammo": {"cal": "9mm", "kind": "fmj", "rounds": 12}},
     {"id": "trl_water", "name": "water", "weight_g": 1, "volume_ml": 1, "length_mm": 0, "price": 0, "tags": ["liquid"], "per_unit": True},
@@ -205,6 +202,31 @@ FAITH = [
 ]
 for fid, nm, pr, use in FAITH:
     items.append({"id": "trl_faith_" + fid, "name": nm, "desc": "A %s.  Use it for a small blessing." % nm, "weight_g": 80, "volume_ml": 100, "length_mm": 100, "price": pr, "tags": ["charm"], "use": use})
+
+# ---- implants: every implant is a physical item (src/implants.gd holds what each one does; keep these in step, tests/run_inventory.gd checks it)
+IMPLANTS = [
+    ("cortex", "head", "Neural Link", 4200, "Wireless interface and skull lattice: +4% to hit, faster aim, 1 armor on the head."),
+    ("optics", "eyes", "Optic Suite", 1800, "Ranging overlay: +2% to hit, +5% more at five or more tiles."),
+    ("thermal", "eyes", "Thermal Vision", 2600, "Warm bodies stand out of cover and smoke: +3% to hit."),
+    ("jets", "spine", "Dorsal Jump Jets", 3000, "Short flight, no falling damage while fuel lasts."),
+    ("reflex", "spine", "Reflex Wires", 6200, "Grade 3 wiring: 14% to dodge a bullet, 10% to dodge a blade, quicker aim and strikes."),
+    ("synapse", "spine", "Synapse Accelerator", 11000, "Military grade 4: time slows.  26% to dodge a bullet, 18% to dodge a blade, much faster strikes."),
+    ("dermal", "chest", "Dermal Plating", 2200, "Subdermal plates over the whole body: 2 armor everywhere, until the plating wears through."),
+    ("heart", "chest", "Cardiac Booster", 2800, "Bigger stamina reserve."),
+    ("mantis", "arms", "Mantis Blades", 3400, "Forearm blades unfold when your hands are empty: fast, accurate, cannot be knocked away.  1 armor on the arms."),
+    ("smartlink", "hands", "Smartlink Palm", 1500, "Gun-to-hand link: +8% to hit with any firearm."),
+    ("grip", "hands", "Gecko Grip", 1700, "Climb sheer walls."),
+    ("legs", "legs", "Leg Actuators", 1600, "Long jumps and softer landings.  1 armor on the legs."),
+]
+for iid, part, nm, cost, text in IMPLANTS:
+    items.append({"id": "trl_imp_" + iid, "name": nm, "desc": text + "  Fits the %s." % part, "weight_g": 0, "volume_ml": 0, "length_mm": 0, "price": cost, "tags": ["implant"], "implant": iid, "part": part})
+
+# ---- every weapon is held in one hand or two (a pistol, revolver, SMG or reach-1 melee weapon: one; everything else: both)
+for it in items:
+    if "gun" in it:
+        it["hands"] = 1 if any(t in it["tags"] for t in ("pistol", "revolver", "smg")) else 2
+    elif "melee" in it:
+        it["hands"] = 2 if int(it["melee"].get("reach", 1)) >= 2 else 1
 
 json.dump(items, open(os.path.join(HERE, "../data/items.json"), "w"), indent=1)
 print(len(items), "items exported")

@@ -1,27 +1,24 @@
 extends RefCounted
-## An item instance with nested pockets (volume, weight, tags, watertight, length).
-##  - rigid pocket: its capacity lives inside the item's own volume (the item does not grow)
-##  - flexible pocket: the item grows by the volume of what it holds (a bag collapses when empty)
-##  - a pocket can restrict by tag, require watertight for liquids, and cap item length
-## Items nest (pouch in backpack in coat); volume and weight roll up.
+## An item instance.  Every item is one tile in the inventory grid (src/game.gd); a stack of identical items is still one tile.
+##  - `count` is the stack size
+##  - a water bottle keeps its water in `fill` (millilitres, like rounds in a magazine)
+##  - guns keep their magazine, ammunition kind and fitted mods
 const ItemScript = preload("res://src/item.gd")
 
 var def: Dictionary
-var count: int = 1                         # stack size, or millilitres for per-unit liquids
-var pockets: Array = []                    # Array of Array[Item], parallel to def.pockets
+var count: int = 1                         # stack size
+var fill: int = 0                          # water in a bottle, mL
 # gun state (only used when def has a "gun" block)
 var loaded: int = 0                        # rounds in the magazine
 var kind: String = ""                      # ammunition kind loaded ("" when empty)
 var mods: Array = []                       # installed mod items
 var jammed: bool = false
 var mode: int = 0                          # index into gun.modes
-var cond: int = -1                         # wear: hit points left on an engine (-1 = as new)
+var cond: int = -1                         # wear: hit points left on armor or an engine (-1 = as new)
 
 func _init(d: Dictionary, n: int = 1) -> void:
 	def = d
 	count = n
-	for _p in d.get("pockets", []):
-		pockets.append([])
 
 func id() -> String:
 	return def["id"]
@@ -29,126 +26,21 @@ func id() -> String:
 func has_tag(t: String) -> bool:
 	return t in def.get("tags", [])
 
-func is_liquid() -> bool:
-	return has_tag("liquid")
-
-func unit_volume() -> int:
-	return int(def.get("volume_ml", 0))
-
-func contents_volume(pi: int) -> int:
-	var v := 0
-	for it in pockets[pi]:
-		v += it.volume()
-	return v
-
-func contents_weight(pi: int) -> int:
-	var w := 0
-	for it in pockets[pi]:
-		w += it.weight()
-	return w
-
-## total volume in ml: own volume (x count) plus the contents of flexible pockets
-func volume() -> int:
-	var v: int = unit_volume() * count
-	var defs: Array = def.get("pockets", [])
-	for i in defs.size():
-		if defs[i].get("flexible", false):
-			v += contents_volume(i)
-		else:
-			v += maxi(0, contents_volume(i) - int(defs[i]["max_volume_ml"]))   # cannot happen via insert, kept as a guard
-	return v
+## can another copy of this item share its tile?  Weapons, armor, pocket items, implants and bottles keep their own tile each.
+func stackable() -> bool:
+	return not (def.has("gun") or def.has("melee") or def.has("armor") or def.has("pocket") or def.has("implant") or def.has("bottle"))
 
 func weight() -> int:
-	var w: int = int(def.get("weight_g", 0)) * count
-	for m in mods:
-		w += m.weight()
-	for i in pockets.size():
-		w += contents_weight(i)
-	return w
+	return int(def.get("weight_g", 0)) * count
 
-func contains_item(other) -> bool:
-	for p in pockets:
-		for it in p:
-			if it == other or it.contains_item(other):
-				return true
-	return false
-
-## would `it` go into pocket pi of this item? returns "" if yes, otherwise the reason
-func why_not(pi: int, it) -> String:
-	if it == self or it.contains_item(self):
-		return "cycle"
-	var pd: Dictionary = def["pockets"][pi]
-	var allow: Array = pd.get("allow_tags", [])
-	if not allow.is_empty():
-		var ok := false
-		for t in allow:
-			if it.has_tag(t):
-				ok = true
-		if not ok:
-			return "restricted"
-	if it.is_liquid() and not pd.get("watertight", false):
-		return "not watertight"
-	if it.is_liquid() and not allow.has("liquid") and not allow.is_empty():
-		return "restricted"
-	var maxlen: int = int(pd.get("max_item_length_mm", 0))
-	if maxlen > 0 and int(it.def.get("length_mm", 0)) > maxlen:
-		return "too long"
-	if contents_volume(pi) + it.volume() > int(pd["max_volume_ml"]):
-		return "too big"
-	if contents_weight(pi) + it.weight() > int(pd["max_weight_g"]):
-		return "too heavy"
-	return ""
-
-## put `it` into the best-fitting pocket of this item (smallest free volume that still fits); false if none
-func insert(it) -> bool:
-	var best := -1
-	var best_free := 1 << 60
-	for i in pockets.size():
-		if why_not(i, it) == "":
-			var free: int = int(def["pockets"][i]["max_volume_ml"]) - contents_volume(i)
-			if free < best_free:
-				best_free = free
-				best = i
-	if best < 0:
-		return false
-	# stack identical items and per-unit liquids
-	for other in pockets[best]:
-		if other.id() == it.id() and other.pockets.is_empty():
-			other.count += it.count
-			return true
-	pockets[best].append(it)
-	return true
-
-## depth-first: try our own pockets, then those of items inside us
-func insert_deep(it) -> bool:
-	if insert(it):
-		return true
-	for p in pockets:
-		for sub in p:
-			if sub.insert_deep(it):
-				return true
-	return false
-
-func remove(it) -> bool:
-	for p in pockets:
-		if p.has(it):
-			p.erase(it)
-			return true
-		for sub in p:
-			if sub.remove(it):
-				return true
-	return false
+## grams of weapon, for the rules that use it (a heavy weapon knocks harder); the inventory itself has no weight
+func weapon_grams() -> int:
+	return int(def.get("weight_g", 0))
 
 func to_dict() -> Dictionary:
 	var out := {"id": id(), "count": count}
-	var cs := []
-	for p in pockets:
-		var arr := []
-		for it in p:
-			arr.append(it.to_dict())
-		cs.append(arr)
-	if not def.get("pockets", []).is_empty():
-		out["contents"] = cs
+	if def.has("bottle"):
+		out["fill"] = fill
 	if cond >= 0:
 		out["cond"] = cond
 	if def.has("gun"):
@@ -157,10 +49,7 @@ func to_dict() -> Dictionary:
 
 static func from_dict(d: Dictionary, db):
 	var it = ItemScript.new(db.defs[d["id"]], int(d.get("count", 1)))
-	if d.has("contents"):
-		for i in d["contents"].size():
-			for sub in d["contents"][i]:
-				it.pockets[i].append(from_dict(sub, db))
+	it.fill = int(d.get("fill", 0))
 	it.cond = int(d.get("cond", -1))
 	if d.has("gun"):
 		var gd: Dictionary = d["gun"]

@@ -895,8 +895,8 @@ func _draw_hud() -> void:
 	var mv: String = game.stance_name()
 	_txt(xi, gy + 4, "SPEED", 11, C_DIM)
 	_txt(xi, gy + 4, "%d%%  (%s)" % [int(round(game.speed_mult() * 100.0)), mv], 12, Color(1, 0.6, 0.4) if game.speed_mult() < 1.0 else Color.WHITE, wi, HORIZONTAL_ALIGNMENT_RIGHT)
-	_txt(xi, gy + 20, "CARRY", 11, C_DIM)
-	_txt(xi, gy + 20, "%.1f kg" % game.total_weight_kg(), 12, Color.WHITE, wi, HORIZONTAL_ALIGNMENT_RIGHT)
+	_txt(xi, gy + 20, "PACK", 11, C_DIM)
+	_txt(xi, gy + 20, "%d / %d tiles" % [game.inv.used(), game.inv.capacity()], 12, Color.WHITE, wi, HORIZONTAL_ALIGNMENT_RIGHT)
 	_txt(xi, gy + 38, game.gun_line(), 12, Color(0.95, 0.88, 0.7), wi)
 	if hud_extra != "":
 		_txt(xi, gy + 55, hud_extra.strip_edges(), 11, C_CYAN, wi)

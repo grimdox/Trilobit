@@ -29,15 +29,15 @@ const ACTIONS := [
 	["siphon", "Draw power from a downed person", [KEY_MINUS]],
 	["movement", "Movement select: crawl, crouch, walk or run", [KEY_C]],
 	["strike", "Strike (then direction)", [KEY_W]],
-	["shove", "Shove (then direction)", [KEY_O]],
+	["shove", "Shove (then direction)", []],
 	["turn", "Turn to look (then direction, no time)", [KEY_SEMICOLON, KEY_KP_SUBTRACT]],
 	["swap", "Swap weapon", [KEY_BACKSLASH]],
 	["jump", "Jump (then direction)", [KEY_Q]],
 	["vehicle", "Enter / leave vehicle", [KEY_E]],
 	["drop", "Drop wielded", [KEY_D]],
-	["inventory", "Inventory", [KEY_I]],
-	["implants", "Implants screen", [KEY_F3]],
-	["skills", "Attributes & skills screen", [KEY_F7]],
+	["inventory", "Equipment & inventory screen", [KEY_P]],
+	["implants", "Implants screen", [KEY_I]],
+	["skills", "Attributes & skills screen", [KEY_O]],
 	["map", "Island map", [KEY_M]],
 	["look", "Look (move the cursor, Esc ends)", [KEY_L]],
 	["consume", "Consume food or drink", [KEY_F8, KEY_APOSTROPHE]],
@@ -47,7 +47,7 @@ const ACTIONS := [
 ]
 
 ## keys that cannot be rebound but belong to an action, shown after its own keys
-const FIXED_KEYS := {"fullscreen": ["Alt+Enter"]}
+const FIXED_KEYS := {"fullscreen": ["Alt+Enter"], "shove": ["Shift+O"]}
 
 ## display modes and the window sizes offered for the windowed mode
 const WINDOW_MODES := ["Windowed", "Borderless fullscreen", "Fullscreen"]
@@ -131,13 +131,17 @@ func to_dict() -> Dictionary:
 	return {"keys_v": KEYS_VERSION, "binds": binds, "sound": sound_on, "volume": volume, "tileset": tileset, "view_follows_move": view_follows_move, "zoom": zoom, "window_mode": window_mode, "resolution": [resolution.x, resolution.y]}
 
 ## version 2: Z is the ammo key and X interacts (they were X and P), C is the movement prompt (crouch and crawl keys are gone)
-const KEYS_VERSION := 2
+## version 3: the screens are tabs: P equipment & inventory, I implants, O attributes & skills, M map; shove is Shift+O (fixed)
+const KEYS_VERSION := 3
 
 func from_dict(d: Dictionary) -> void:
 	var b: Dictionary = d.get("binds", {}).duplicate()
 	if int(d.get("keys_v", 1)) < KEYS_VERSION:
 		for moved in ["ammo", "interact"]:
 			b.erase(moved)
+	if int(d.get("keys_v", 1)) < 3:
+		for moved3 in ["inventory", "implants", "skills", "shove"]:
+			b.erase(moved3)
 	for a in b:
 		if binds.has(a):
 			binds[a] = (b[a] as Array).map(func(k): return int(k))

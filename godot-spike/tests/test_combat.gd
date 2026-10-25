@@ -92,7 +92,9 @@ func run() -> Array:
 	g.player_hurt(6, "Test", "phys", "chest")
 	check.call("and wears (%d/80 left)" % int(g.imp_dur.get("dermal", 80)), h0 - g.body.total() == 4 and int(g.imp_dur["dermal"]) == 78)
 	check.call("armor_status reports the bars (%s)" % str(g.armor_status()), g.armor_status()["left"] == 78 and g.armor_status()["max"] == 80)
-	g.armor_worn.append(g._new_item("trl_helmet"))
+	var helm = g._new_item("trl_helmet")
+	g.inv.stow(helm)
+	g.inv.auto_equip(helm)
 	check.call("worn armor and implants stack on a limb (head 2 + 3)", g.armor_value("head") == 5)
 	# armor on NPCs, flat
 	var thug := -1

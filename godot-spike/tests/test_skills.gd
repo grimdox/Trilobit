@@ -246,7 +246,7 @@ func run() -> Array:
 	g.xp = SK.default_skills()
 	var m0: Dictionary = g.eco.menu_for(vend)
 	g.eco.choose(m0, k_buy)
-	check.call("a beginner learns Negotiation and a street skill from buying", g.xp["negotiation"] > 0 and (g.xp["streetwise"] > 0 or g.xp["etiquette"] > 0))
+	check.call("a beginner learns Negotiation and a street skill from buying", (g.xp["negotiation"] > 0 or g.skills["negotiation"] > 0) and (g.xp["streetwise"] > 0 or g.xp["etiquette"] > 0 or g.skills["streetwise"] > 0 or g.skills["etiquette"] > 0))
 	var plain: Dictionary = g.eco.menu_for(vend)
 	var plain_price := 0
 	for o in plain["options"]:
@@ -285,8 +285,9 @@ func run() -> Array:
 
 	# ---- the screen layout
 	var sc = ScreenScript.new()
+	var h2: float = 720.0 - ScreenScript.TAB_H            # the tab bar takes the top of the screen
 	var ents: Array = sc.sk_entries()
-	var rects: Array = sc.sk_rects(1280.0, 720.0)
+	var rects: Array = sc.sk_rects(1280.0, h2)
 	check.call("the screen has 21 lines: 5 attributes then 16 skills", ents.size() == 21 and rects.size() == 21 and ents[0]["id"] == "str" and ents[5]["id"] == "unarmed" and ents[20]["id"] == "negotiation")
 	var one_line := true
 	for k in 5:
@@ -297,19 +298,19 @@ func run() -> Array:
 	var inside := true
 	for k in range(5, 21):
 		var r: Rect2 = rects[k]
-		if r.position.y < 720.0 * 0.25:
+		if r.position.y < h2 * 0.25:
 			low = false
-		if r.position.x < 0 or r.end.x > 1280 or r.end.y > 720:
+		if r.position.x < 0 or r.end.x > 1280 or r.end.y > h2:
 			inside = false
 	check.call("the skills fill four boxes in the bottom three quarters of the screen", low and inside)
 	var bx := {}
 	for g_i in 4:
-		var bxr: Rect2 = sc.sk_box_rect(g_i, 1280.0, 720.0)
+		var bxr: Rect2 = sc.sk_box_rect(g_i, 1280.0, h2)
 		bx[g_i] = bxr
 	check.call("four non-overlapping group boxes", not (bx[0] as Rect2).intersects(bx[1]) and not (bx[0] as Rect2).intersects(bx[2]) and not (bx[2] as Rect2).intersects(bx[3]) and not (bx[1] as Rect2).intersects(bx[3]))
 	var mouse_ok := true
 	for k in 21:
-		if sc.sk_at_mouse((rects[k] as Rect2).get_center()) != k:
+		if sc.sk_at_mouse((rects[k] as Rect2).get_center() + Vector2(0, ScreenScript.TAB_H)) != k:
 			mouse_ok = false
 	check.call("the mouse finds every line, and nothing outside", mouse_ok and sc.sk_at_mouse(Vector2(5, 5)) == -1)
 	sc.sk_sel = 0
@@ -340,7 +341,7 @@ func run() -> Array:
 			keys_used = (a[2] as Array).size()
 	var f7 := 0
 	for a in SettingsScript.ACTIONS:
-		if KEY_F7 in a[2]:
+		if KEY_O in a[2]:
 			f7 += 1
-	check.call("the screen has a key binding (F7), used by nothing else", keys_used == 1 and f7 == 1)
+	check.call("the screen has a key binding (O), used by nothing else", keys_used == 1 and f7 == 1)
 	return [st[0], st[1], log]

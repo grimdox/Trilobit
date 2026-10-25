@@ -154,7 +154,7 @@ func run() -> Array:
 	check.call("a mech reactor does not fit a car", not g.act_fit_engine(vi, mismatch, true))
 	# repairs
 	vs.damage(vi, "body", 30)
-	g.worn[1].insert(g._new_item("trl_kit_repair"))
+	g.inv.stow(g._new_item("trl_kit_repair"))
 	var b0: int = v["parts"]["body"]
 	check.call("a repair kit mends a part", g.act_repair(vi, "body") and v["parts"]["body"] == b0 + 25)
 	# crash into a wall

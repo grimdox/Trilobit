@@ -13,12 +13,14 @@ const SK = preload("res://src/skills.gd")
 const CR = preload("res://src/creation.gd")
 const CLK = preload("res://src/clock.gd")
 const MS = preload("res://src/missions.gd")
+const GearScript = preload("res://src/gear_ui.gd")
 const LOG_LINES := 10        # messages shown in the panel along the bottom
 const UI_S := 1.5          # the interface is laid out for 1280x720 and drawn at 1.5x on the 1920x1080 canvas
 const TILESETS := ["Trilobit64"]      # Trilobit's own 64px art (tools/content/gen_tiles64.py); more sets can be added here
 const SLOTS := 3
-const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "implants", "skills", "map", "create", "terminal"]
-const MOUSE_MODES := ["title", "pause", "options", "visuals", "keys", "saves", "loads", "implants", "map", "create"]
+const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "equipment", "implants", "skills", "map", "create", "terminal"]
+const MOUSE_MODES := ["title", "pause", "options", "visuals", "keys", "saves", "loads", "create"]
+const TAB_MODES := ["equipment", "implants", "skills", "map"]       # the paused character screens, one tab each (< and > step through them)
 
 var tm: Dictionary = {}                # the open mission terminal: {cell, offers, sel, msg}
 var game
@@ -37,6 +39,10 @@ var look_off := Vector2i.ZERO         # the look cursor, in tiles from the playe
 var menu: Dictionary = {}
 var ts_index: int = 0
 var inv_map: Dictionary = {}
+var gear = GearScript.new()            # the equipment and implants tabs (gear_ui.gd)
+var gear_base = null                   # item icons: the Trilobit64 set
+var gear_items = null
+var tab_from: String = "play"          # where Esc on a tab goes: "play" or "pause"
 var settings
 var sfx
 var screen
@@ -257,6 +263,9 @@ func save_slot(n: int) -> bool:
 
 # ---------------------------------------------------------------- screens (title, pause, options, keys, saves, implants)
 func open_screen(kind: String) -> void:
+	if kind in TAB_MODES:
+		open_tab(kind)
+		return
 	mode = kind
 	screen.kind = kind
 	screen.visible = true
@@ -285,7 +294,7 @@ func open_screen(kind: String) -> void:
 		"pause":
 			screen.overlay = true
 			screen.title = "PAUSED"
-			screen.items = [{"label": "Resume", "id": "resume"}, {"label": "Save Game", "id": "save"}, {"label": "Load Game", "id": "load"}, {"label": "Implants", "id": "implants"}, {"label": "Attributes & Skills", "id": "skills"},
+			screen.items = [{"label": "Resume", "id": "resume"}, {"label": "Save Game", "id": "save"}, {"label": "Load Game", "id": "load"}, {"label": "Character & Map", "id": "character"},
 				{"label": "Options", "id": "options"}, {"label": "Quit to Title", "id": "title"}, {"label": "Exit to Desktop", "id": "exit"}]
 		"options":
 			screen.title = "OPTIONS"
@@ -300,16 +309,6 @@ func open_screen(kind: String) -> void:
 		"saves", "loads":
 			screen.title = "SAVE GAME" if kind == "saves" else "LOAD GAME"
 			_fill_slots()
-		"implants":
-			screen.overlay = false
-			screen.part_sel = 0
-		"skills":
-			screen.overlay = false
-			screen.sk_sel = 0
-		"map":
-			screen.overlay = false
-			screen.world = world
-			_make_map()
 		"create":
 			screen.overlay = false
 			screen.cc = cc
@@ -445,9 +444,13 @@ func back_from_screen() -> void:
 				open_screen("title")
 		"create":
 			open_screen("title")
-		"implants", "skills":
-			open_screen("pause")
-		"map", "terminal":
+		"equipment", "implants", "skills", "map":
+			gear.close()
+			if tab_from == "pause" and game != null:
+				open_screen("pause")
+			else:
+				resume_play()
+		"terminal":
 			resume_play()
 		"pause":
 			resume_play()
@@ -505,8 +508,9 @@ func activate(id: String) -> void:
 			settings.save()
 			apply_window()
 			_fill_visuals()
-		"implants": open_screen("implants")
-		"skills": open_screen("skills")
+		"character":
+			tab_from = "pause"
+			open_tab("equipment")
 		"resume": resume_play()
 		"title":
 			game = null
@@ -658,6 +662,215 @@ func _cc_key(k: int) -> void:
 			cc_step(1)
 	_cc_sync()
 
+## open a tab of the paused character screens
+func open_tab(kind: String, from: String = "") -> void:
+	if from != "":
+		tab_from = from
+	gear.close()
+	var was_tab: bool = mode in TAB_MODES
+	mode = kind
+	screen.kind = kind
+	screen.visible = true
+	screen.overlay = false
+	screen.prompt = ""
+	screen.game = game
+	screen.gear = gear
+	var keys := {}
+	for pair in [["equipment", "inventory"], ["implants", "implants"], ["skills", "skills"], ["map", "map"]]:
+		var ks: Array = settings.binds.get(pair[1], [])
+		keys[pair[0]] = OS.get_keycode_string(ks[0]) if not ks.is_empty() else ""
+	screen.tab_keys = keys
+	match kind:
+		"equipment", "implants":
+			_gear_icons()
+			gear.open(game, gear_items, kind)
+		"skills":
+			if not was_tab:
+				screen.sk_sel = 0
+		"map":
+			screen.world = world
+			_make_map()
+			_make_local_map()
+
+## item icons for the equipment tabs: the item set, then the Trilobit64 set, then whatever tileset is loaded
+func _gear_icons() -> void:
+	if gear_base == null:
+		gear_base = TilesetScript.new()
+		gear_base.load_dir("res://gfx/Trilobit64")
+		gear_items = TilesetScript.new()
+		if gear_items.load_dir("res://gfx/tiles_items"):
+			gear_items.fallback = gear_base
+		else:
+			gear_items = gear_base
+	gear_base.fallback = tileset
+
+## step to the next (dir = 1) or previous tab
+func step_tab(dir: int) -> void:
+	var i: int = TAB_MODES.find(mode)
+	open_tab(TAB_MODES[(i + dir + TAB_MODES.size()) % TAB_MODES.size()])
+	sfx.play("blip")
+
+const LOCAL_R := 40
+
+## the colour of a map tile on the local map (transparent: not drawn)
+func _local_color(t: int) -> Color:
+	var CG = preload("res://src/citygen.gd")
+	if t == 7:
+		return Color(0, 0, 0, 0)
+	if t == 2 or t == 17 or t == 27 or t == 28:
+		return Color(1.0, 0.25, 0.65)
+	if t == 10 or t == 20 or t == CG.TID["window_broken"]:
+		return Color(0.55, 0.9, 1.0)
+	if t == 4 or t == 22 or t == CG.TID["door_closed"]:
+		return Color(1.0, 0.8, 0.25)
+	if t == 8 or t == 9 or t == 19:
+		return Color(1.0, 0.65, 0.1)
+	if t == 1 or t == 14:
+		return Color(0.1, 0.14, 0.32)
+	if t == 0 or t == 13 or t == 26:
+		return Color(0.24, 0.3, 0.5)
+	if t == 5 or t == 16:
+		return Color(0.05, 0.12, 0.5)
+	if t == 6 or t == 31 or t == 32 or t == 29:
+		return Color(0.06, 0.3, 0.26) if t != 29 else Color(0.08, 0.45, 0.36)
+	if t == 23 or t == 24 or t == 25 or t == 21:
+		return Color(0.62, 0.68, 0.8)
+	if t >= CG.EXTRA0:
+		return Color(0.62, 0.68, 0.8) if int(CG.WALK[t]) == 0 else Color(0.07, 0.2, 0.28)
+	return Color(0.07, 0.2, 0.28)
+
+## the picture of everything seen within LOCAL_R tiles of the player on this level
+func _make_local_map() -> void:
+	var g = game
+	var n: int = LOCAL_R * 2 + 1
+	var img := Image.create(n, n, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0.02, 0.03, 0.06))
+	if g != null:
+		var base: int = (g.pc / g.s2) * g.s2
+		var px: int = g.lx(g.pc)
+		var py: int = g.ly(g.pc)
+		for dy in range(-LOCAL_R, LOCAL_R + 1):
+			var y: int = py + dy
+			if y < 0 or y >= g.size:
+				continue
+			for dx in range(-LOCAL_R, LOCAL_R + 1):
+				var x: int = px + dx
+				if x < 0 or x >= g.size:
+					continue
+				var c: int = base + y * g.size + x
+				if g.fov.explored[c] == 0:
+					continue
+				var col: Color = _local_color(g.city.tiles[c])
+				if col.a > 0.0:
+					img.set_pixel(dx + LOCAL_R, dy + LOCAL_R, col)
+	screen.local_tex = ImageTexture.create_from_image(img)
+	var gp: Vector2i = g.global_pos() if g != null and g.island != null else Vector2i(g.lx(g.pc), g.ly(g.pc))
+	screen.local_info = {"n": n, "level": g.z_of(g.pc) if g != null else 0, "gx": gp.x, "gy": gp.y, "labels": local_labels()}
+
+## names of buildings to print above their middle tile on the local map: [{dx, dy, text}] relative to the player.  None are named yet.
+func local_labels() -> Array:
+	return []
+
+func _tab_key(k: int) -> void:
+	if k == KEY_ESCAPE:
+		if (mode == "equipment" or mode == "implants") and gear.cancel():
+			return
+		back_from_screen()
+		return
+	if k == KEY_LESS or k == KEY_COMMA or key_unicode == 60:
+		step_tab(-1)
+		return
+	if k == KEY_GREATER or k == KEY_PERIOD or key_unicode == 62:
+		step_tab(1)
+		return
+	var act: String = settings.action_for(k)
+	var want := ""
+	match act:
+		"inventory": want = "equipment"
+		"implants": want = "implants"
+		"skills": want = "skills"
+		"map": want = "map"
+	if want != "":
+		if want == mode:
+			back_from_screen()
+		else:
+			open_tab(want)
+		return
+	var dv := Vector2i.ZERO
+	match act:
+		"north": dv = Vector2i(0, -1)
+		"south": dv = Vector2i(0, 1)
+		"west": dv = Vector2i(-1, 0)
+		"east": dv = Vector2i(1, 0)
+	if mode == "skills":
+		if k == KEY_TAB:
+			dv = Vector2i(1, 0)
+		if dv != Vector2i.ZERO and screen.sk_move(dv):
+			sfx.play("blip")
+		return
+	if mode == "map":
+		if k == KEY_TAB or k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
+			screen.map_local = not screen.map_local
+			sfx.play("blip")
+		return
+	# equipment and implants
+	if dv != Vector2i.ZERO:
+		if gear.move(dv):
+			sfx.play("blip")
+	elif k == KEY_CTRL:
+		gear.auto()
+	elif k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
+		if Input.is_key_pressed(KEY_CTRL):
+			gear.auto()
+		else:
+			gear.press()
+	_after_gear()
+
+## the world around may have changed (a weapon wielded, armor on): redraw it and the HUD
+func _after_gear() -> void:
+	if game != null:
+		view.queue_redraw()
+
+func _tab_mouse(ev: InputEvent) -> void:
+	if ev is InputEventMouseMotion:
+		var p: Vector2 = ev.position / UI_S
+		if mode == "skills":
+			var si: int = screen.sk_at_mouse(p)
+			if si >= 0 and si != screen.sk_sel:
+				screen.sk_sel = si
+				sfx.play("blip")
+		elif mode == "equipment" or mode == "implants":
+			if gear.hover(p):
+				sfx.play("blip")
+		return
+	if not (ev is InputEventMouseButton) or not ev.pressed:
+		return
+	var pos: Vector2 = ev.position / UI_S
+	if ev.button_index == MOUSE_BUTTON_LEFT:
+		var ti: int = screen.tab_at(pos)
+		if ti >= 0:
+			if screen.TAB_KINDS[ti] != mode:
+				open_tab(screen.TAB_KINDS[ti])
+				sfx.play("blip")
+			return
+		if ti == -1 or ti == -2:
+			step_tab(-1 if ti == -1 else 1)
+			return
+		if mode == "map":
+			var b: int = screen.map_button_at(pos)
+			if b >= 0:
+				screen.map_local = b == 1
+				sfx.play("blip")
+		elif mode == "equipment" or mode == "implants":
+			gear.click(pos, false)
+			_after_gear()
+	elif ev.button_index == MOUSE_BUTTON_RIGHT:
+		if mode == "equipment" or mode == "implants":
+			gear.click(pos, true)
+			_after_gear()
+		else:
+			back_from_screen()
+
 func screen_key(k: int) -> void:
 	# waiting for a new key binding
 	if rebinding != "":
@@ -673,41 +886,14 @@ func screen_key(k: int) -> void:
 		screen.sel = keep
 		screen.scroll = sc
 		return
-	if mode == "map":
-		if k == KEY_ESCAPE or k == KEY_M or k == settings.binds["map"][0]:
-			back_from_screen()
+	if mode in TAB_MODES:
+		_tab_key(k)
 		return
 	if mode == "create":
 		_cc_key(k)
 		return
 	if mode == "terminal":
 		_terminal_key(k)
-		return
-	if mode == "skills":
-		if k == KEY_ESCAPE or k == settings.binds["skills"][0]:
-			back_from_screen()
-			return
-		var dv := Vector2i.ZERO
-		match settings.action_for(k):
-			"north": dv = Vector2i(0, -1)
-			"south": dv = Vector2i(0, 1)
-			"west": dv = Vector2i(-1, 0)
-			"east": dv = Vector2i(1, 0)
-		if k == KEY_TAB:
-			dv = Vector2i(1, 0)
-		if dv != Vector2i.ZERO and screen.sk_move(dv):
-			sfx.play("blip")
-		return
-	if mode == "implants":
-		var n := IMP.PARTS.size()
-		if k == KEY_ESCAPE or k == settings.binds["implants"][0]:
-			back_from_screen()
-		elif k == KEY_UP or k == KEY_LEFT or k == KEY_K or k == KEY_H:
-			screen.part_sel = (screen.part_sel + n - 1) % n
-			sfx.play("blip")
-		elif k == KEY_DOWN or k == KEY_RIGHT or k == KEY_J or k == KEY_L or k == KEY_TAB:
-			screen.part_sel = (screen.part_sel + 1) % n
-			sfx.play("blip")
 		return
 	match k:
 		KEY_ESCAPE:
@@ -783,34 +969,23 @@ func _cc_mouse(ev: InputEvent) -> void:
 			_cc_sync()
 
 func _unhandled_input(ev: InputEvent) -> void:
-	if mode == "skills" and ev is InputEventMouseMotion:
-		var si: int = screen.sk_at_mouse(ev.position / UI_S)
-		if si >= 0 and si != screen.sk_sel:
-			screen.sk_sel = si
-			sfx.play("blip")
-	elif mode == "skills" and ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-		back_from_screen()
-	if mode == "implants" and ev is InputEventMouseMotion:
-		var i: int = screen.part_at_mouse(ev.position / UI_S)
-		if i >= 0 and i != screen.part_sel:
-			screen.part_sel = i
-			sfx.play("blip")
+	if mode in TAB_MODES:
+		_tab_mouse(ev)
+		return
 	if mode == "create":
 		_cc_mouse(ev)
 		return
 	if not (mode in MOUSE_MODES):
 		return
 	# menus: hover highlights, left click chooses, right click goes back, wheel scrolls
-	if ev is InputEventMouseMotion and mode != "implants" and mode != "map" and rebinding == "":
+	if ev is InputEventMouseMotion and rebinding == "":
 		var h: int = screen.item_at_mouse(ev.position / UI_S)
 		if h >= 0 and h != screen.sel:
 			screen.sel = h
 			sfx.play("blip")
 	elif ev is InputEventMouseButton and ev.pressed:
 		if ev.button_index == MOUSE_BUTTON_LEFT:
-			if mode == "map":
-				back_from_screen()
-			elif mode != "implants" and rebinding == "":
+			if rebinding == "":
 				var h: int = screen.item_at_mouse(ev.position / UI_S)
 				if h >= 0:
 					screen.sel = h
@@ -827,7 +1002,7 @@ func _unhandled_input(ev: InputEvent) -> void:
 						activate(it["id"])
 		elif ev.button_index == MOUSE_BUTTON_RIGHT and mode != "title" and rebinding == "":
 			back_from_screen()
-		elif (ev.button_index == MOUSE_BUTTON_WHEEL_UP or ev.button_index == MOUSE_BUTTON_WHEEL_DOWN) and mode != "implants" and mode != "map" and screen.items.size() > 0:
+		elif (ev.button_index == MOUSE_BUTTON_WHEEL_UP or ev.button_index == MOUSE_BUTTON_WHEEL_DOWN) and screen.items.size() > 0:
 			var d: int = -1 if ev.button_index == MOUSE_BUTTON_WHEEL_UP else 1
 			screen.sel = clampi(screen.sel + d, 0, screen.items.size() - 1)
 			_scroll_fix()
@@ -895,9 +1070,7 @@ func refresh() -> void:
 	logbox.text = "\n".join(lines)
 	status.add_theme_color_override("font_color", Color(1, 0.4, 0.4) if g.body.frac("chest") < 0.34 or g.body.frac("head") < 0.34 else Color.WHITE)
 	_drain_sfx()
-	if mode == "inventory":
-		show_inventory()
-	elif mode == "talk":
+	if mode == "talk":
 		show_talk()
 	elif mode == "pick":
 		show_pick()
@@ -976,20 +1149,6 @@ func show_mods() -> void:
 		t += "%s) %s  [color=#8899aa]%s slot%s[/color]\n" % [key, m.def["name"], m.def["mod"]["slot"], "" if fits else ", does not fit"]
 		inv_map[key] = m
 		j += 1
-	panel.text = t
-	panel.visible = true
-
-func show_inventory() -> void:
-	inv_map.clear()
-	var t := "[b]Inventory[/b]   (a-z wields a gun, i or Esc closes)   ¥%d   loose rounds %d\n\n" % [game.yen, game.ammo_total()]
-	var k := 0
-	for e in game.inventory_list():
-		var key := char(97 + k) if k < 26 else "?"
-		var it = e["item"]
-		var vol := " %.1f L" % (it.volume() / 1000.0)
-		t += "%s%s) %s   [color=#8899aa]%s, %d g,%s[/color]\n" % ["    ".repeat(e["depth"]), key, game.item_label(it), e["where"], it.weight(), vol]
-		inv_map[key] = it
-		k += 1
 	panel.text = t
 	panel.visible = true
 
@@ -1147,18 +1306,6 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		return
 	if game == null:
 		return
-	if mode == "inventory":
-		if k == KEY_ESCAPE or k == KEY_I:
-			mode = "play"
-			panel.visible = false
-		else:
-			var key: String = OS.get_keycode_string(k).to_lower()
-			if inv_map.has(key):
-				game.act_wield(inv_map[key])
-				mode = "play"
-				panel.visible = false
-		refresh()
-		return
 	if mode == "pick":
 		if k == KEY_ESCAPE:
 			mode = "play"
@@ -1291,6 +1438,8 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 	var act: String = settings.action_for(k)
 	if k == KEY_SLASH and ev.shift_pressed:
 		act = "keysscreen"
+	if k == KEY_O and ev.shift_pressed:
+		act = "shove"
 	var acted := true
 	g.tracers.clear()
 	var run: bool = ev.shift_pressed or g.run_mode
@@ -1368,17 +1517,17 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 			g.say("Jump which way?  (direction key, Esc cancels)")
 		"vehicle": g.act_vehicle()
 		"drop": g.act_drop_wield()
-		"inventory": mode = "inventory"
+		"inventory":
+			open_tab("equipment", "play")
+			return
 		"implants":
-			screen_back = "pause"
-			open_screen("implants")
+			open_tab("implants", "play")
 			return
 		"skills":
-			screen_back = "pause"
-			open_screen("skills")
+			open_tab("skills", "play")
 			return
 		"map":
-			open_screen("map")
+			open_tab("map", "play")
 			return
 		"keysscreen":
 			screen_back = "play"

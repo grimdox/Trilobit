@@ -153,9 +153,9 @@ func _initialize() -> void:
 		if e["kind"] == "water":
 			water = e
 	g.last_drank = g.sim.tick - g.THIRST_AFTER
-	var ml0: int = water["item"].count
+	var ml0: int = water["item"].fill
 	g.act_consume(water)
-	check("drinking from the bottle takes up to 500 mL (%d left of %d) and buys 4 h" % [water["item"].count, ml0], g.drink_left() >= 2390 and ml0 - water["item"].count >= 497)
+	check("drinking from the bottle takes up to 500 mL (%d left of %d) and buys 4 h" % [water["item"].fill, ml0], g.drink_left() >= 2390 and ml0 - water["item"].fill >= 497)
 	var full_msg_before: int = g.log.size()
 	var again = null
 	for e in g.consumables():
@@ -305,7 +305,7 @@ func _initialize() -> void:
 	G.last_ate = G.sim.tick - G.HUNGER_AFTER + 100
 	G.last_drank = G.sim.tick - G.THIRST_AFTER + 100
 	press(m, KEY_F8)
-	check("F8 opens the consume menu listing the ration and the water with their kcal and mL", m.mode == "consume" and m.panel.text.contains("cyber ration bar") and m.panel.text.contains("water, ") and m.panel.text.contains("kcal"))
+	check("F8 opens the consume menu listing the ration and the water with their kcal and mL", m.mode == "consume" and m.panel.text.contains("cyber ration bar") and m.panel.text.contains("water bottle, ") and m.panel.text.contains("kcal"))
 	var wi := -1
 	for i in m.consume_list.size():
 		if m.consume_list[i]["kind"] == "water":
