@@ -807,6 +807,8 @@ func _tab_key(k: int) -> void:
 			dv = Vector2i(1, 0)
 		if dv != Vector2i.ZERO and screen.sk_move(dv):
 			sfx.play("blip")
+		elif k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
+			_spend_selected()
 		return
 	if mode == "map":
 		if k == KEY_TAB or k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
@@ -827,6 +829,15 @@ func _tab_key(k: int) -> void:
 	_after_gear()
 
 ## the world around may have changed (a weapon wielded, armor on): redraw it and the HUD
+## spend an earned attribute point on the attribute the Attributes & Skills cursor is on
+func _spend_selected() -> void:
+	if game == null or screen.sk_sel >= SK.ATTRS.size():
+		return
+	if game.spend_point(SK.ATTRS[screen.sk_sel]["id"]):
+		sfx.play("pick")
+	else:
+		sfx.play("blip")
+
 func _after_gear() -> void:
 	if game != null:
 		view.queue_redraw()
@@ -856,7 +867,12 @@ func _tab_mouse(ev: InputEvent) -> void:
 		if ti == -1 or ti == -2:
 			step_tab(-1 if ti == -1 else 1)
 			return
-		if mode == "map":
+		if mode == "skills":
+			var si: int = screen.sk_at_mouse(pos)
+			if si >= 0:
+				screen.sk_sel = si
+				_spend_selected()
+		elif mode == "map":
 			var b: int = screen.map_button_at(pos)
 			if b >= 0:
 				screen.map_local = b == 1

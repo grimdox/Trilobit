@@ -113,6 +113,8 @@ var app: Dictionary = {"sprite": 0, "skin": 0, "hair": 4, "style": 1, "eyes": 0,
 var attrs: Dictionary = SK.default_attrs()      # Strength, Perception, Agility, Cognition, Endurance (start at 10)
 var skills: Dictionary = SK.default_skills()    # BASE levels, raised by skill XP (see skills.gd for the effective level)
 var xp: Dictionary = SK.default_skills()        # skill-specific XP towards the next base level
+var pc_level: int = 0                           # character level 0..10, raised by skills (skills.gd LEVEL_REQS); only the player has one
+var attr_points: int = 0                        # attribute points earned by levelling and not yet spent
 ## what you carry: nine equipment slots and a grid of one-tile items (src/inventory.gd)
 var inv = INV.new()
 ## the weapon in your Right Hand (a two-handed weapon sits there too)
@@ -857,6 +859,23 @@ func skill_up(skill: String, difficulty: int) -> void:
 		xp[skill] = 0
 		skills[skill] += 1
 		say("Your %s skill rises to %d (level %d with attributes)." % [SK.skill(skill)["name"], skills[skill], lvl(skill)])
+		check_level()
+
+## raise the character level for as long as the skills qualify for the next one; each level earns an attribute point
+func check_level() -> void:
+	while pc_level < SK.LEVEL_MAX and SK.level_met(skills, pc_level + 1):
+		pc_level += 1
+		attr_points += 1
+		say("You reach level %d!  An attribute point is waiting on the Attributes & Skills screen." % pc_level)
+		sfx("pick")
+
+## spend an earned point on an attribute
+func spend_point(id: String) -> bool:
+	if attr_points <= 0 or not attrs.has(id):
+		return false
+	attrs[id] = int(attrs[id]) + 1
+	attr_points -= 1
+	return true
 
 ## which skill a strike uses: weapons use Melee; fists, kicks and implanted blades use Unarmed
 func melee_skill_id() -> String:
@@ -4748,7 +4767,7 @@ func outside_tile(x: int, y: int) -> int:
 ## everything about the player that travels between zones
 func player_dict() -> Dictionary:
 	return {"done": done_contracts.duplicate(), "power": power, "power_state": power_state, "yen": yen, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
-		"name": player_name, "attrs": attrs.duplicate(), "app": app.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "inv": inv.to_dict(),
+		"name": player_name, "attrs": attrs.duplicate(), "app": app.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "lvl": pc_level, "pts": attr_points, "inv": inv.to_dict(),
 		"stamina": stamina, "stam_v": 2, "ap": ap, "stance": stance, "run_mode": run_mode, "turn": turn, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "flying": flying,
 		"body": body.to_dict(), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
 
@@ -4768,6 +4787,10 @@ func _load_skills(d: Dictionary) -> void:
 	for k in d.get("xp", {}):
 		if xp.has(k):
 			xp[k] = int(d["xp"][k])
+	pc_level = int(d.get("lvl", 0))
+	attr_points = int(d.get("pts", 0))
+	if not d.has("lvl"):                         # a save from before levels: the level the skills already earn, with its points
+		check_level()
 
 func _load_body(d: Dictionary) -> void:
 	body = BODY.new()
@@ -4885,7 +4908,7 @@ func save_dict() -> Dictionary:
 	var vlist := []
 	for v in vehicles:
 		vlist.append(vs.to_dict(v))
-	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "corpses": corpses, "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "in_vehicle": in_vehicle,
+	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "corpses": corpses, "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "lvl": pc_level, "pts": attr_points, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
 			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "inv": inv.to_dict(),
 			"items_at": it_at, "open_doors": open_doors.keys(), "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),

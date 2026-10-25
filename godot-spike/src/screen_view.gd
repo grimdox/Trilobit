@@ -482,14 +482,23 @@ func _skills(W: float, H: float) -> void:
 	var gov: Array = []                                     # attributes governing the selected skill
 	if sel["kind"] == "skill":
 		gov = SK.skill(sel["id"])["attrs"]
-	_rtxt("Arrows / numpad / mouse choose  -  Esc closes", W - 40, 18, 14, Color(0.6, 0.75, 0.9))
+	var lv: int = game.pc_level if game != null else 0
+	var pts: int = game.attr_points if game != null else 0
+	var hint := "Arrows / numpad / mouse choose  -  Esc closes"
+	if pts > 0:
+		hint = "Enter or click an attribute to spend a point  -  " + hint
+	_rtxt(hint, W - 40, 18, 14, Color(0.6, 0.75, 0.9))
+	if lv < SK.LEVEL_MAX:
+		_txt("Level %d needs %s" % [lv + 1, SK.level_text(lv + 1)], Vector2(40, 18), 14, Color(1.0, 0.8, 0.25))
 	# the attribute box: one line, five attributes
 	var b0 := sk_box_rect(0, W, H)
 	var b1 := sk_box_rect(1, W, H)
 	var abox := Rect2(b0.position.x, SK_TOP + 8.0, b0.size.x, SK_TOP_H - 8.0)       # the top boxes share the columns of the skill boxes under them
 	_panel(abox)
 	_txt("ATTRIBUTES", Vector2(abox.position.x + 14, abox.position.y + 26), 16, CYAN)
-	_rtxt("+1 to each skill it governs per 2 points over 10", abox.end.x - 14, abox.position.y + 26, 14, Color(0.6, 0.72, 0.85))
+	_rtxt("+1 per 2 over 10", abox.end.x - 14, abox.position.y + 26, 14, Color(0.6, 0.72, 0.85))
+	_txt("LEVEL %d" % lv + ("  (max)" if lv >= SK.LEVEL_MAX else ""), Vector2(abox.position.x + 130, abox.position.y + 26), 16, Color(1.0, 0.8, 0.25))
+	_txt("POINTS %d" % pts, Vector2(abox.position.x + 250, abox.position.y + 26), 16, MAGENTA if pts > 0 else Color(0.5, 0.6, 0.72))
 	for k in SK.ATTRS.size():
 		var ad: Dictionary = SK.ATTRS[k]
 		var r: Rect2 = rects[k]
@@ -501,6 +510,8 @@ func _skills(W: float, H: float) -> void:
 		_txt((ad["name"] as String).substr(0, 3).to_upper(), Vector2(r.position.x, r.position.y + 22), 16, Color(0.75, 0.88, 1.0), HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
 		var v: int = int(attrs.get(ad["id"], 10))
 		_txt(str(v), Vector2(r.position.x, r.position.y + 56), 32, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
+		if pts > 0:
+			_txt("+", Vector2(r.position.x + 6, r.position.y + 20), 20, MAGENTA)
 		var bn: int = SK.attr_bonus(v)
 		if bn != 0:
 			_rtxt("%+d" % bn, r.end.x - 8, r.position.y + 20, 15, Color(1.0, 0.8, 0.25) if bn > 0 else Color(1.0, 0.45, 0.4))

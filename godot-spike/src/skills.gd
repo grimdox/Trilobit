@@ -137,6 +137,46 @@ static func bonus(attrs: Dictionary, id: String) -> int:
 static func level(attrs: Dictionary, base: Dictionary, id: String) -> int:
 	return int(base.get(id, 0)) + bonus(attrs, id)
 
+# ---------------------------------------------------------------- character level (the player only)
+const LEVEL_MAX := 10
+## what each character level asks for: base skill levels held by DIFFERENT skills, highest first (level n is LEVEL_REQS[n - 1])
+const LEVEL_REQS := [[1], [2, 1], [3, 2, 1], [4, 2, 2], [5, 3, 2, 2], [6, 3, 3, 3], [7, 4, 4, 3, 3], [8, 4, 4, 4, 4], [9, 5, 5, 5, 4, 4], [10, 5, 5, 5, 5, 5]]
+
+## do these base skill levels meet the requirements of character level n (1..LEVEL_MAX)?
+static func level_met(base: Dictionary, n: int) -> bool:
+	if n < 1 or n > LEVEL_MAX:
+		return false
+	var have: Array = base.values()
+	have.sort()
+	have.reverse()
+	var need: Array = LEVEL_REQS[n - 1]
+	if have.size() < need.size():
+		return false
+	for k in need.size():
+		if int(have[k]) < int(need[k]):
+			return false
+	return true
+
+## the highest character level these skills qualify for (0 when none)
+static func level_for(base: Dictionary) -> int:
+	var best := 0
+	for n in range(1, LEVEL_MAX + 1):
+		if level_met(base, n):
+			best = n
+	return best
+
+## "skill 4, two skills 2" style text of what level n asks for
+static func level_text(n: int) -> String:
+	var need: Array = LEVEL_REQS[n - 1]
+	var counts := {}
+	for v in need:
+		counts[v] = int(counts.get(v, 0)) + 1
+	var words := ["", "one", "two", "three", "four", "five"]
+	var parts: Array = []
+	for v in counts:
+		parts.append("%s skill%s at %d" % [words[counts[v]], "" if counts[v] == 1 else "s", v])
+	return ", ".join(parts)
+
 ## XP to go from base level n to n + 1 (the same curve the game has always used)
 static func xp_needed(base_level: int) -> int:
 	return 6 + base_level * 4

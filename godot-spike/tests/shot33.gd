@@ -18,6 +18,10 @@ func _initialize() -> void:
 	var args := OS.get_cmdline_user_args()
 	var prefix: String = args[0] if args.size() > 0 else "/tmp/claude-0/shot_tab"
 	var which: String = args[1] if args.size() > 1 else "equipment"
+	var sids: Array = ["melee", "ranged", "dodge", "grit", "engineering"]
+	for k in sids.size():
+		g.skills[sids[k]] = [4, 2, 2, 1, 0][k]
+	g.check_level()
 	m.game = g
 	m.screen.game = g
 	m.open_tab(which, "play")
