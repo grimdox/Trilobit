@@ -48,14 +48,15 @@ func run() -> Array:
 
 	# ---- skill XP
 	var needed: int = SK.xp_needed(0)
-	for k in needed:
+	check.call("XP to level: 250 x level + 2 ^ level (252, 504, 758)", needed == 252 and SK.xp_needed(1) == 504 and SK.xp_needed(2) == 758)
+	for k in needed / SK.XP_BASE + 1:
 		g.skill_up("dodge", 0)
-	check.call("skill XP levels a skill up (%d XP at level 0) and resets" % needed, g.skills["dodge"] == 1 and g.xp["dodge"] == 0 and g.skills["melee"] == 0 and g.xp["melee"] == 0)
+	check.call("skill XP levels a skill up (%d XP at level 0), the surplus carrying over" % needed, g.skills["dodge"] == 1 and g.xp["dodge"] == 8 and g.skills["melee"] == 0 and g.xp["melee"] == 0)
 	g.skills["melee"] = 6
 	g.skill_up("melee", 1)
 	check.call("an easy task teaches nothing", g.xp["melee"] == 0)
 	g.skill_up("melee", 9)
-	check.call("a hard task teaches more (+4)", g.xp["melee"] == 4 and g.xp["unarmed"] == 0)
+	check.call("a hard task teaches more (+40)", g.xp["melee"] == 40 and g.xp["unarmed"] == 0)
 	g.skills["melee"] = SK.BASE_MAX
 	g.skill_up("melee", 30)
 	check.call("the base level stops at %d" % SK.BASE_MAX, g.skills["melee"] == SK.BASE_MAX)

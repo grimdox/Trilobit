@@ -21,6 +21,9 @@ func _initialize() -> void:
 	var sids: Array = ["melee", "ranged", "dodge", "grit", "engineering"]
 	for k in sids.size():
 		g.skills[sids[k]] = [4, 2, 2, 1, 0][k]
+	g.xp["melee"] = 90
+	g.skills["unarmed"] = 18
+	g.xp["unarmed"] = 12345
 	g.check_level()
 	m.game = g
 	m.screen.game = g

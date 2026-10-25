@@ -545,11 +545,11 @@ func _skills(W: float, H: float) -> void:
 			var need: int = SK.xp_needed(b)
 			var have: int = int(xps.get(sd["id"], 0))
 			var bx: float = r.position.x + 226.0
-			var bw: float = r.end.x - bx - 70.0
+			var bw: float = r.end.x - bx - 110.0
 			draw_rect(Rect2(bx, ty - 12.0, bw, 10.0), Color(1, 1, 1, 0.1))
 			var f: float = 1.0 if b >= SK.BASE_MAX else clampf(float(have) / float(need), 0.0, 1.0)
 			draw_rect(Rect2(bx, ty - 12.0, bw * f, 10.0), CYAN if sd["live"] else Color(0.4, 0.5, 0.6))
-			_rtxt("%d/%d" % [have, need] if b < SK.BASE_MAX else "max", r.end.x - 8.0, ty - 2.0, 14, Color(0.65, 0.78, 0.9))
+			_rtxt("%s/%s" % [SK.short_num(have), SK.short_num(need)] if b < SK.BASE_MAX else "max", r.end.x - 8.0, ty - 2.0, 14, Color(0.65, 0.78, 0.9))
 
 ## text whose right edge sits at right_x
 func _rtxt(s: String, right_x: float, y: float, size_px: int, col: Color) -> void:

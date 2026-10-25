@@ -132,3 +132,5 @@ Why: the city was flat.  Verticality is also the cheapest big win for the NPC si
 **Tabbed character screens, tile inventory** (2026-10-25): `<`/`>` switch tabs while paused (I implants, P equipment and inventory, O attributes & skills, M map; shove moved to Shift+O, F3/F7 unbound, `KEYS_VERSION` 3). Inventory is tiles (15 base, pocket items add: backpack +12, coat +4, belt pouch 4, fanny pack 3), nine equipment slots on an android Vitruvian doll shared with the implants tab, click/right-click/keyboard moves, item cards; map tab toggles island and a 81x81 local map. `src/gear_ui.gd`, `tests/test_inventory.gd` (43). Weight, volume and the pockets system are gone.
 
 **Character levels** (2026-10-25): player-only levels 1-10 from base skill levels (`skills.gd` LEVEL_REQS), automatic, one attribute point each, spent on the O screen; saves keep `lvl`/`pts`, old saves get the level their skills earn. `tests/test_pclevel.gd` (24).
+
+**Skill XP curve** (2026-10-25): 250*N + 2^N XP to reach skill level N, base gain 10 per success (`SK.xp_needed`, `XP_BASE`); per-action gains to be set later.

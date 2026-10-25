@@ -177,9 +177,21 @@ static func level_text(n: int) -> String:
 		parts.append("%s skill%s at %d" % [words[counts[v]], "" if counts[v] == 1 else "s", v])
 	return ", ".join(parts)
 
-## XP to go from base level n to n + 1 (the same curve the game has always used)
+## XP a successful action is worth before any bonus
+const XP_BASE := 10
+
+## XP to go from base level n to n + 1: 250 * (the level you are reaching) + 2 ^ (that level)
 static func xp_needed(base_level: int) -> int:
-	return 6 + base_level * 4
+	var n: int = base_level + 1
+	return 250 * n + (1 << n)
+
+## a number short enough for the XP bar: 1,234 stays, 12,345 becomes 12.3k, 1,048,576 becomes 1.05M
+static func short_num(v: int) -> String:
+	if v >= 1000000:
+		return "%.2fM" % (v / 1000000.0)
+	if v >= 10000:
+		return "%.1fk" % (v / 1000.0)
+	return str(v)
 
 ## discipline ids unlocked at an effective level
 static func disciplines_at(id: String, lvl: int) -> Array:

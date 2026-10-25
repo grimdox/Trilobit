@@ -854,9 +854,9 @@ func skill_up(skill: String, difficulty: int) -> void:
 		return
 	if difficulty < skills[skill] - 1:
 		return
-	xp[skill] += 1 + maxi(0, difficulty - skills[skill])
+	xp[skill] += SK.XP_BASE * (1 + maxi(0, difficulty - skills[skill]))
 	if xp[skill] >= SK.xp_needed(skills[skill]):
-		xp[skill] = 0
+		xp[skill] -= SK.xp_needed(skills[skill])       # what is left over carries into the next level
 		skills[skill] += 1
 		say("Your %s skill rises to %d (level %d with attributes)." % [SK.skill(skill)["name"], skills[skill], lvl(skill)])
 		check_level()
