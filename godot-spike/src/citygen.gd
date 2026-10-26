@@ -129,6 +129,8 @@ var plan: Dictionary = {}              # the island city's layout (see island.ci
 var centre_pt := Vector2(-1.0, -1.0)   # the downtown's heart (the old city: the middle of the map) and the radius the district tests are scaled by
 var rad: float = -1.0
 var block_stats: Dictionary = {}       # how many blocks became what (null: nothing fits, park, core, merged, suburb): for the tests and the tuning
+var keep_park: PackedByteArray = PackedByteArray()   # cells of the parks the plan chose to keep (the infill leaves them green)
+var org: PackedByteArray = PackedByteArray()   # cells of the organic streets (diagonals, rings, meanders): kept when plain streets are pruned
 var dash_ofs: int = 0                  # global column of local column 0: keeps the dashes of a wide road in step with the island's own
 const LANE := 6
 var towers: Array = []                 # {x0,y0,x1,y1,door} of every core building: candidates for a tall tower
@@ -262,6 +264,9 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 		ys = _lines_around(mid_line, m, size - m)
 		ys_w = {}
 	var decks: Array = plan.get("decks", [])
+	if planned:
+		xs = _thin_lines(xs, ys_w, mid_line, false)
+		ys = _thin_lines(ys, ys_w, mid_line, true, decks)
 	for lx in xs:
 		for y in range(0 if not planned else 0, size):
 			if not planned and (y < m or y >= size - m):
@@ -278,6 +283,11 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 			for k in w:
 				_road_cell(x, ly + k, deck, trunk)
 	_paint_lanes()
+	if planned:
+		_organic_roads(seed)
+		_organic_city(seed)
+		_paint_boulevards()
+		return
 	# blocks between the lines.  Where the towers stand: the middle of the city has mega-towers that fill 2-3 blocks each way (4 to 9 blocks in
 	# all); the ring around it has buildings 1-2 blocks wide (1 to 4 blocks); beyond that the suburbs.
 	var centre := centre_pt if planned else Vector2(size * 0.5, size * 0.5)
@@ -350,7 +360,7 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 			block_stats["lot"] = int(block_stats.get("lot", 0)) + 1
 			continue
 		var r := rng.randf()
-		if r < (0.015 + d * 0.025 if planned else 0.06 + d * 0.12):
+		if r < (0.004 + d * 0.01 if planned else 0.06 + d * 0.12):
 			b["used"] = true
 			block_stats["park"] += 1
 			var rr: Rect2i = b["r"]
@@ -384,6 +394,7 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 			block_stats["exurb" if exurb else "suburb"] += 1
 			_suburb_block(rr3.position.x, rr3.position.y, rr3.end.x, rr3.end.y, 0.7 if exurb else 0.97)
 	if planned:
+		_infill()
 		_paint_boulevards()
 
 ## Parking lots and charging stations.  A lot is paved like a road and marked with bays (a bay is 4 x 6: a car is 3 wide by 5 long and has room to spare): a row of bays, an aisle six wide
@@ -470,7 +481,7 @@ func _prune_streets(grid: Array) -> void:
 		for y in range(maxi(y0, 0), mini(y1, size - 1) + 1):
 			for x in range(maxi(x0, 0), mini(x1, size - 1) + 1):
 				var k := y * size + x
-				if tiles[k] == ROAD:
+				if tiles[k] == ROAD and org[k] == 0:
 					tiles[k] = PARK
 					marks[k] = 0
 	var last_y: int = int(ys[ny - 1]) + int(ys_w.get(ys[ny - 1], rw))
@@ -498,6 +509,433 @@ func _prune_streets(grid: Array) -> void:
 			var any: bool = (j > 0 and vu[i][j - 1]) or (j < ny - 1 and vu[i][j]) or (i > 0 and hu[j][i - 1]) or (i < nx - 1 and hu[j][i])
 			if not any:
 				erase.call(int(xs[i]), int(ys[j]), int(xs[i]) + rw - 1, int(ys[j]) + rw - 1)
+
+## Organic streets.  The plain grid is broken up in places by streets that do not follow it: diagonal avenues that cut across blocks (with a slight
+## wander), arcs of ring road around the downtown, and winding lanes that follow a river bank or the edge of town.  They are painted before the blocks
+## are laid out and reserved, so the blocks beside them shrink to fit (the leftover wedges become green).  Water and the reserved ground stop them.
+func _organic_roads(seed_v: int) -> void:
+	var r := RandomNumberGenerator.new()
+	r.seed = seed_v ^ 0x5eed0a
+	org = PackedByteArray()
+	org.resize(size * size)
+	var res: PackedByteArray = plan["reserve"].duplicate()
+	var mask: PackedByteArray = plan["mask"]
+	var water: PackedByteArray = plan["water"]
+	var ctr: Vector2 = centre_pt
+	var stamp := func(pt: Vector2, rr: float) -> void:
+		var ir: int = int(ceil(rr))
+		for dy in range(-ir, ir + 1):
+			for dx in range(-ir, ir + 1):
+				if dx * dx + dy * dy > rr * rr:
+					continue
+				var x: int = int(pt.x) + dx
+				var y: int = int(pt.y) + dy
+				if x < 2 or y < 2 or x >= size - 2 or y >= size - 2:
+					continue
+				var i: int = y * size + x
+				if mask[i] == 0 or water[i] != 0 or res[i] == 1:
+					continue
+				if tiles[i] == ROAD or tiles[i] == GROUND or tiles[i] == PARK:
+					tiles[i] = ROAD
+					org[i] = 1
+					marks[i] = 0
+	var ok := func(pt: Vector2) -> bool:
+		var x: int = int(pt.x)
+		var y: int = int(pt.y)
+		if x < 4 or y < 4 or x >= size - 4 or y >= size - 4:
+			return false
+		var i: int = y * size + x
+		return mask[i] == 1 and water[i] == 0 and res[i] == 0
+	var trunk_y: int = int(plan["trunk"])
+	# diagonal avenues: chords that miss the very heart of downtown, running both ways until the city's edge or the water stops them
+	var made := 0
+	for k in 40:
+		if made >= 4:
+			break
+		var ang: float = r.randf_range(0.0, TAU)
+		var dirv := Vector2(cos(ang), sin(ang))
+		if absf(dirv.x) > 0.9 or absf(dirv.y) > 0.9:
+			continue
+		made += 1
+		var off: float = r.randf_range(0.28, 0.85) * rad * (1.0 if r.randf() < 0.5 else -1.0)
+		var start: Vector2 = ctr + Vector2(-dirv.y, dirv.x) * off
+		var ph: float = r.randf_range(0.0, TAU)
+		var amp: float = r.randf_range(1.5, 4.5)
+		for sgn in [1.0, -1.0]:
+			var t := 0.0
+			var gap := 0
+			while t < rad * 2.2 and gap < 12:
+				var pt: Vector2 = start + dirv * (sgn * t) + Vector2(-dirv.y, dirv.x) * (amp * sin(t * 0.045 + ph))
+				if ok.call(pt) and absf(pt.y - float(trunk_y) - 6.0) > 20.0:
+					stamp.call(pt, 4.0)
+					gap = 0
+				else:
+					gap += 1
+				t += 1.0
+	# ring road: arcs about the downtown
+	for k in 2:
+		var rr: float = rad * r.randf_range(0.42, 0.95)
+		var a0: float = r.randf_range(0.0, TAU)
+		var span: float = r.randf_range(1.6, 3.4)
+		var n: int = int(rr * span)
+		for q in n:
+			var a: float = a0 + span * float(q) / float(n)
+			var pt: Vector2 = ctr + Vector2(cos(a), sin(a)) * (rr + 3.0 * sin(a * 5.0))
+			if ok.call(pt) and absf(pt.y - float(trunk_y) - 6.0) > 20.0:
+				stamp.call(pt, 4.0)
+	# meanders: a winding lane beside each bank of the river (where the boulevard does not run) and along the town's edge
+	for side in [-1, 1]:
+		var ph2: float = r.randf_range(0.0, TAU)
+		for y in range(8, size - 8):
+			var bx := -1
+			for x in range(4, size - 4):
+				if water[y * size + x] == 1:
+					bx = x if side < 0 else maxi(bx, x)
+					if side < 0:
+						break
+			if bx < 0:
+				continue
+			var wob: float = 7.0 * sin(float(y) * 0.05 + ph2) + 4.0 * sin(float(y) * 0.13)
+			var pt := Vector2(float(bx) + side * (26.0 + wob), float(y))
+			if side < 0:
+				pt.x = float(bx) - 26.0 + wob
+			if ok.call(pt) and absf(float(y) - float(trunk_y) - 6.0) > 24.0:
+				stamp.call(pt, 3.5)
+	var edge_n := 0
+	for k in 3:
+		# a lane that bends along the town's outline: walk the outline inward by a margin
+		var yy: int = int(r.randf_range(0.2, 0.8) * size)
+		if absi(yy - trunk_y) < 60:
+			continue
+		var xe := -1
+		for x in range(size - 5, 4, -1):
+			if mask[yy * size + x] == 1 and water[yy * size + x] == 0:
+				xe = x
+				break
+		if xe < 0:
+			continue
+		var ph3: float = r.randf_range(0.0, TAU)
+		for t in range(0, 140):
+			var yv: float = float(yy + t)
+			var pt := Vector2(float(xe) - 18.0 - 9.0 * sin(float(t) * 0.07 + ph3), yv)
+			if ok.call(pt) and absf(yv - float(trunk_y) - 6.0) > 24.0:
+				stamp.call(pt, 3.5)
+		edge_n += 1
+	for i in size * size:
+		if org[i] == 1:
+			for dy in range(-1, 2):
+				for dx in range(-1, 2):
+					var j: int = i + dy * size + dx
+					if j >= 0 and j < size * size:
+						res[j] = 1
+	plan["reserve"] = res
+
+## Leftover grass inside the city's outline (the wedges between a diagonal or ring road and the grid, the strips between the last street and the edge)
+## is built over: a rectangle of free ground (up to 26 a side, at least 9) is cut into alley-separated buildings, or into rows of houses toward the
+## edge of town.  The parks the plan chose, the river banks, the rail strip and the dockland (all reserved) stay green.
+func _infill() -> void:
+	var mask: PackedByteArray = plan["mask"]
+	var res: PackedByteArray = plan["reserve"]
+	if keep_park.size() != size * size:
+		keep_park = PackedByteArray()
+		keep_park.resize(size * size)
+	var free := func(x: int, y: int) -> bool:
+		if x < 0 or y < 0 or x >= size or y >= size:
+			return false
+		var i: int = y * size + x
+		return tiles[i] == PARK and mask[i] == 1 and res[i] == 0 and keep_park[i] == 0
+	var made := 0
+	for y in range(2, size - 2):
+		for x in range(2, size - 2):
+			if not free.call(x, y):
+				continue
+			var w := 0
+			while w < 26 and free.call(x + w, y):
+				w += 1
+			if w < 9:
+				continue
+			var h := 1
+			while h < 26:
+				var okrow := true
+				for k in w:
+					if not free.call(x + k, y + h):
+						okrow = false
+						break
+				if not okrow:
+					break
+				h += 1
+			if h < 9:
+				continue
+			var dd: float = Vector2(float(x) + w * 0.5, float(y) + h * 0.5).distance_to(centre_pt) / rad
+			var x1: int = x + w - 1
+			var y1: int = y + h - 1
+			if dd < 0.85 or w < 14 or h < 14:
+				_subdivide(x, y, x1, y1, 0)
+			else:
+				_suburb_block(x, y, x1, y1, 0.92)
+			made += 1
+	block_stats["infill"] = made
+
+## keep every third street line (and every wide avenue, the trunk and the bridges): these are the straight arterials that carry the traffic, the sewers and
+## the subway; the streets between them are the organic ones (see _organic_city)
+func _thin_lines(lines: Array, wide: Dictionary, mid: int, horizontal: bool, decks: Array = []) -> Array:
+	var out: Array = []
+	for k in lines.size():
+		var e: int = int(lines[k])
+		if k == 0 or k == lines.size() - 1 or k % 3 == 1 or (horizontal and (wide.has(e) or e == mid or decks.has(e))):
+			out.append(e)
+	return out
+
+## The planned city's blocks.  Streets run radially and in rings from the downtown (the edges between the cells of a Voronoi diagram whose seeds sit on
+## rings round the centre, jittered and warped by noise), cut across by the straight arterials and the diagonals.  Each cell is a block, filled by packing
+## rectangles: towers downtown, mid-rise outside, rows of houses toward the edge, with parking lots, kiosks and bare concrete in the odd corners.  Some
+## cells are parks (more often beside the river).
+func _organic_city(seed_v: int) -> void:
+	var mask: PackedByteArray = plan["mask"]
+	var water: PackedByteArray = plan["water"]
+	var res: PackedByteArray = plan["reserve"]
+	var n: int = size / 2
+	var r := RandomNumberGenerator.new()
+	r.seed = seed_v ^ 0x71c0de
+	# --- seeds on rings
+	var seeds: Array = []
+	var ring_sp := 84.0
+	var k := 0
+	while true:
+		var rr: float = float(k) * ring_sp
+		if rr > rad * 2.1:
+			break
+		var cnt: int = 1 if k == 0 else 6 * k
+		var rot: float = r.randf_range(0.0, TAU)
+		for q in cnt:
+			var a: float = rot + TAU * (float(q) + r.randf_range(-0.28, 0.28)) / float(cnt)
+			var rj: float = rr + (r.randf_range(-20.0, 20.0) if k > 0 else 0.0)
+			seeds.append(centre_pt + Vector2(cos(a), sin(a)) * rj)
+		k += 1
+	var bin := 96
+	var nb: int = size / bin + 2
+	var bins: Array = []
+	bins.resize(nb * nb)
+	for bi in bins.size():
+		bins[bi] = []
+	for si in seeds.size():
+		var sp: Vector2 = seeds[si]
+		var bx: int = clampi(int(sp.x) / bin, 0, nb - 1)
+		var by: int = clampi(int(sp.y) / bin, 0, nb - 1)
+		bins[by * nb + bx].append(si)
+	var nz1 := FastNoiseLite.new()
+	nz1.seed = seed_v ^ 0x11a1
+	nz1.frequency = 0.012
+	var nz2 := FastNoiseLite.new()
+	nz2.seed = seed_v ^ 0x22b2
+	nz2.frequency = 0.012
+	# --- the cell of every 2x2 patch of tiles
+	var cid := PackedInt32Array()
+	cid.resize(n * n)
+	for cy in n:
+		for cx in n:
+			var px: float = float(cx * 2 + 1)
+			var py: float = float(cy * 2 + 1)
+			if mask[(cy * 2) * size + cx * 2] == 0 and mask[(cy * 2 + 1) * size + cx * 2 + 1] == 0:
+				cid[cy * n + cx] = -1
+				continue
+			var wx: float = px + 26.0 * nz1.get_noise_2d(px, py)
+			var wy: float = py + 26.0 * nz2.get_noise_2d(px, py)
+			var bx2: int = clampi(int(wx) / bin, 0, nb - 1)
+			var by2: int = clampi(int(wy) / bin, 0, nb - 1)
+			var best := -1
+			var bd := 1.0e12
+			for oy in range(-1, 2):
+				var yy: int = by2 + oy
+				if yy < 0 or yy >= nb:
+					continue
+				for ox in range(-1, 2):
+					var xx: int = bx2 + ox
+					if xx < 0 or xx >= nb:
+						continue
+					for si in bins[yy * nb + xx]:
+						var sp2: Vector2 = seeds[si]
+						var dx: float = sp2.x - wx
+						var dy: float = sp2.y - wy
+						var dd: float = dx * dx + dy * dy
+						if dd < bd:
+							bd = dd
+							best = si
+			cid[cy * n + cx] = best
+	# --- streets on the cell edges (a patch whose right or lower neighbour is another cell), three patches (6 tiles) wide
+	var rd := PackedByteArray()
+	rd.resize(n * n)
+	for cy in n - 1:
+		for cx in n - 1:
+			var c0: int = cid[cy * n + cx]
+			if c0 < 0:
+				continue
+			if cid[cy * n + cx + 1] != c0 or cid[(cy + 1) * n + cx] != c0:
+				rd[cy * n + cx] = 1
+				rd[cy * n + cx + 1] = 1 if cid[cy * n + cx + 1] >= 0 else 0
+				rd[(cy + 1) * n + cx] = 1 if cid[(cy + 1) * n + cx] >= 0 else 0
+	for cy in n:
+		for cx in n:
+			if rd[cy * n + cx] == 0:
+				continue
+			for dy in 2:
+				for dx in 2:
+					var x: int = cx * 2 + dx
+					var y: int = cy * 2 + dy
+					var i: int = y * size + x
+					if mask[i] == 1 and water[i] == 0 and res[i] == 0 and (tiles[i] == GROUND or tiles[i] == PARK):
+						tiles[i] = ROAD
+						marks[i] = 0
+	# --- which tiles near a street (the pavement: two tiles either side stay bare), coarse
+	var near := PackedByteArray()
+	near.resize(n * n)
+	for cy in range(1, n - 1):
+		for cx in range(1, n - 1):
+			var hit := false
+			for dy in range(-1, 2):
+				for dx in range(-1, 2):
+					var x2: int = (cx + dx) * 2
+					var y2: int = (cy + dy) * 2
+					if tiles[y2 * size + x2] == ROAD or tiles[(y2 + 1) * size + x2 + 1] == ROAD:
+						hit = true
+			if hit:
+				near[cy * n + cx] = 1
+	# --- parks: cells chosen by a hash, more near water
+	var park_cell := {}
+	var house_cell := {}
+	var cell_ctr := {}
+	for si in seeds.size():
+		var sp3: Vector2 = seeds[si]
+		var dc: float = sp3.distance_to(centre_pt) / rad
+		var p: float = 0.03 + 0.05 * dc
+		var wet := 0
+		for a2 in 8:
+			var ang: float = TAU * float(a2) / 8.0
+			for rr2 in [30.0, 55.0]:
+				var q2: Vector2 = sp3 + Vector2(cos(ang), sin(ang)) * rr2
+				if q2.x > 0 and q2.y > 0 and q2.x < size and q2.y < size and water[int(q2.y) * size + int(q2.x)] != 0:
+					wet += 1
+		if wet > 0:
+			p += 0.42
+		if dc < 0.18:
+			p = 0.0
+		if float(hash([seed_v, si, "pk"]) & 0xffff) / 65535.0 < p:
+			if hash([seed_v, si, "hs"]) & 1 == 1:
+				house_cell[si] = true           # half of the green cells are built over: houses, shacks in the poor districts
+			else:
+				park_cell[si] = true
+	if keep_park.size() != size * size:
+		keep_park = PackedByteArray()
+		keep_park.resize(size * size)
+	var nstat := {"park": 0, "core": 0, "mid": 0, "suburb": 0, "lot": 0, "kiosk": 0}
+	nstat["park"] = park_cell.size()
+	var freeb := PackedByteArray()
+	freeb.resize(size * size)
+	var housing := PackedByteArray()
+	housing.resize(size * size)
+	for y in range(2, size - 2):
+		for x in range(2, size - 2):
+			var i2: int = y * size + x
+			if tiles[i2] != GROUND or mask[i2] == 0 or res[i2] == 1 or near[(y >> 1) * n + (x >> 1)] == 1:
+				continue
+			var c1: int = cid[(y >> 1) * n + (x >> 1)]
+			if c1 < 0:
+				continue
+			if park_cell.has(c1):
+				tiles[i2] = PARK
+				keep_park[i2] = 1
+				continue
+			freeb[i2] = 1
+			if house_cell.has(c1):
+				housing[i2] = 1
+	# --- pack rectangles into the free ground
+	var dn := FastNoiseLite.new()
+	dn.seed = seed_v ^ 0x6d2b
+	dn.frequency = 0.018
+	var mega := 0.34
+	var tower_zone := 0.72
+	for y in range(2, size - 2):
+		for x in range(2, size - 2):
+			if freeb[y * size + x] == 0:
+				continue
+			var dd: float = Vector2(float(x), float(y)).distance_to(centre_pt) / rad
+			dd *= 1.0 + 0.16 * dn.get_noise_2d(float(x), float(y))
+			var cap: int = 68 if dd < mega else (34 if dd < tower_zone else 40)
+			var w := 0
+			while w < cap and freeb[y * size + x + w] == 1:
+				w += 1
+			if w < 9:
+				continue
+			var h := 1
+			while h < cap:
+				var okrow := true
+				for kx in w:
+					if freeb[(y + h) * size + x + kx] == 0:
+						okrow = false
+						break
+				if not okrow:
+					break
+				h += 1
+			if h < 9:
+				continue
+			var x1: int = x + w - 1
+			var y1: int = y + h - 1
+			var made_lot := false
+			if dd >= 0.12 and housing[y * size + x] == 0 and w >= 26 and h >= 22 and (hash([size, x / 8, y / 8, "lot"]) & 0x7fffffff) % 100 < 55:
+				var nbay: int = mini(10, (w - 4) / 4)
+				var ww: int = nbay * 4 + 2
+				var roll: int = (hash([size, x / 8, y / 8, "lk"]) & 0x7fffffff) % 100
+				_stamp_lot("station" if roll < 35 else "lot", Rect2i(x + (w - ww) / 2, y + (h - 20) / 2, ww, 20), (hash([size, x, y, "ev"]) & 0x7fffffff) % 3 == 0)
+				nstat["lot"] += 1
+				made_lot = true
+			elif dd < mega and w >= 60 and h >= 60 and r.randf() < 0.55:
+				_building(x + 2, y + 2, x1 - 2, y1 - 2, "core")
+				nstat["core"] += 1
+			elif dd < 0.5 and w >= 30 and h >= 30 and r.randf() < 0.55:
+				_building(x + 2, y + 2, x1 - 2, y1 - 2, "core")          # a downtown tower on its own plot
+				nstat["core"] += 1
+			elif housing[y * size + x] == 1 and w >= 12 and h >= 12:
+				_suburb_block(x, y, x1, y1, 0.95)
+				nstat["suburb"] += 1
+			elif dd < tower_zone or w < 14 or h < 14:
+				_subdivide(x, y, x1, y1, 0)
+				nstat["mid"] += 1
+			else:
+				var exurb: bool = dd > 1.0
+				_suburb_block(x, y, x1, y1, 0.7 if exurb else 0.95)
+				nstat["suburb"] += 1
+			for yy in range(y, y1 + 1):
+				for xx in range(x, x1 + 1):
+					freeb[yy * size + xx] = 0
+	# --- kiosks and small shops in the corners that were left (6x6 to 9x9), then bare concrete
+	for y in range(2, size - 2):
+		for x in range(2, size - 2):
+			if freeb[y * size + x] == 0:
+				continue
+			var w2 := 0
+			while w2 < 9 and freeb[y * size + x + w2] == 1:
+				w2 += 1
+			if w2 < 6:
+				continue
+			var h2 := 1
+			while h2 < 9:
+				var ok2 := true
+				for kx2 in w2:
+					if freeb[(y + h2) * size + x + kx2] == 0:
+						ok2 = false
+						break
+				if not ok2:
+					break
+				h2 += 1
+			if h2 < 6:
+				continue
+			_building(x, y, x + w2 - 1, y + h2 - 1, "mid")
+			nstat["kiosk"] += 1
+			for yy2 in range(y, y + h2):
+				for xx2 in range(x, x + w2):
+					freeb[yy2 * size + xx2] = 0
+	block_stats = {"null": 0, "park": nstat["park"], "core": nstat["core"] + nstat["mid"], "merged": nstat["core"], "suburb": nstat["suburb"], "exurb": 0, "lot": nstat["lot"], "kiosk": nstat["kiosk"], "null_list": []}
+
 
 ## is this cell somewhere a building may not stand?  (outside the city's outline, in or beside the river, on the rail strip)
 func _bad(x: int, y: int) -> bool:
@@ -703,9 +1141,13 @@ static func _wide_mark(gx: int, k: int, w: int) -> int:
 	return 0
 
 func _park(x0: int, y0: int, x1: int, y1: int) -> void:
+	if keep_park.size() != size * size:
+		keep_park = PackedByteArray()
+		keep_park.resize(size * size)
 	for y in range(y0, y1 + 1):
 		for x in range(x0, x1 + 1):
 			tiles[y * size + x] = PARK
+			keep_park[y * size + x] = 1
 
 ## one big mixed-use building filling the block, BSP rooms, doors on the street side
 func _core_block(x0: int, y0: int, x1: int, y1: int) -> void:
@@ -725,7 +1167,10 @@ func _subdivide(x0: int, y0: int, x1: int, y1: int, depth: int) -> void:
 	var limit: int = 18 + rng.randi_range(0, 6)
 	if (w <= limit and h <= limit) or depth > 4:
 		var kind := "mid"
-		if w * h >= 260 and rng.randf() < 0.3:
+		var dc: float = Vector2((x0 + x1) * 0.5, (y0 + y1) * 0.5).distance_to(centre_pt) / rad if rad > 0.0 else 1.0
+		if dc < 0.5 and w * h >= 150 and rng.randf() < (0.8 if dc < 0.3 else 0.5):
+			kind = "core"                   # the middle of the city is towers
+		elif w * h >= 260 and rng.randf() < 0.3:
 			kind = "core"
 		_building(x0, y0, x1, y1, kind)
 		return
@@ -747,7 +1192,7 @@ func _suburb_block(x0: int, y0: int, x1: int, y1: int, density: float = 0.9) -> 
 	if packed:
 		var y: int = y0 + 2
 		while true:
-			var depth: int = rng.randi_range(8, 10)
+			var depth: int = rng.randi_range(8, 10) if wealth_at(y * size + x0) != 0 else rng.randi_range(6, 8)      # shacks in the poor districts
 			if y + depth - 1 > y1 - 2:
 				break
 			rows.append([y, y + depth - 1])
@@ -762,7 +1207,7 @@ func _suburb_block(x0: int, y0: int, x1: int, y1: int, density: float = 0.9) -> 
 		var row: Array = rows[rid]
 		var x := x0 + 2
 		while x + (6 if packed else 9) <= x1 - 2:
-			var wdt := rng.randi_range(7, 11) if packed else rng.randi_range(10, 15)
+			var wdt := (rng.randi_range(7, 11) if wealth_at(row[0] * size + x) != 0 else rng.randi_range(6, 8)) if packed else rng.randi_range(10, 15)
 			if x + wdt > x1 - 2:
 				break
 			if rid < 2 and wdt >= 10 and not venue_plan.is_empty() and rng.randf() < 0.6 and (wdt >= 12 or packed):

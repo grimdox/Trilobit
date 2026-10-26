@@ -43,7 +43,8 @@ const IND_RECT := Rect2i(3105, 4770, 836, 1035)   # the heavy-industry sprawl on
 const CZS := 1024                      # the city's own map is larger than the wild zones' (every other zone is ZS x ZS)
 const CITY_ORIGIN := Vector2i(1890, 3883)   # ... and is placed so the highway runs along its middle row
 const CITY_OWN := Rect2i(1922, 3915, 960, 960)   # the ground the city zone owns: its whole map less 32 tiles all round
-const MARGIN_ZONE := 68                # the city keeps this much empty ground at its edge (32 are the next zone's, then room to see across the border)
+const RIM_R := 472.0                   # how far from the middle of the city map the caldera's floor reaches (the rim's foot)
+const MARGIN_ZONE := 44                # the city keeps this much empty ground at its edge (32 are the next zone's, then room to see across the border)
 const AVENUE_W := 24
 const BANK := 3                        # sand either side of the river
 const CITY_CX := 2402                  # the middle of the caldera
@@ -971,7 +972,7 @@ func city_mask() -> PackedByteArray:
 		var ang: float = (float(k) + 0.5) / float(nang) * TAU - PI
 		var big: float = clampf(nz.get_noise_2d(cos(ang) * 14.0, sin(ang) * 14.0) * 1.6, -1.0, 1.0)
 		var fine: float = nz.get_noise_2d(cos(ang) * 46.0 + 300.0, sin(ang) * 46.0)
-		var f: float = clampf(0.89 + 0.13 * big + 0.03 * fine, 0.70, 1.0)
+		var f: float = clampf(0.985 + 0.03 * big + 0.01 * fine, 0.93, 1.0)       # the city reaches the caldera's rim
 		fr[k] = f * f * f
 	for y in CZS:
 		var v: float = (float(y) + 0.5 - float(CZS) * 0.5) / half
@@ -982,7 +983,8 @@ func city_mask() -> PackedByteArray:
 			if q > 1.0:
 				continue
 			var k2: int = clampi(int((atan2(v, u) + PI) / TAU * float(nang)), 0, nang - 1)
-			_city_mask[y * CZS + x] = 1 if q <= fr[k2] else 0
+			var dd: float = Vector2(float(x) + 0.5 - float(CZS) * 0.5, float(y) + 0.5 - float(CZS) * 0.5).length()
+			_city_mask[y * CZS + x] = 1 if (q <= fr[k2] and dd <= RIM_R * (0.985 + 0.015 * clampf(nz.get_noise_2d(float(x) * 0.02, float(y) * 0.02) * 2.0, -1.0, 1.0))) else 0
 	for y in range(harb_y - 28, CZS):                  # the quay is the city's south edge
 		for x in CZS:
 			_city_mask[y * CZS + x] = 0

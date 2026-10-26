@@ -73,7 +73,7 @@ func run() -> Array:
 	for c in vault:
 		if g.items_at.has(c):
 			loot_cells += 1
-	check.call("vault holds loot", loot_cells >= 1)
+	check.call("vault holds no loose loot", loot_cells == 0)
 	var door := -1
 	var vc: int = vault[0]
 	for dy in range(-9, 10):

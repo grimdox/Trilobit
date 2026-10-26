@@ -68,7 +68,10 @@ func run() -> Array:
 		g.aim_turns = 2
 		g.stamina = g.STAMINA_MAX
 		g.ap = 199
+		g.body.reset()
+		g.game_over = false
 		g.log.clear()
+		g.wield.jammed = false
 		g.act_fire(false)
 		if g.hpn[who] < 100000:
 			landed_n += 1

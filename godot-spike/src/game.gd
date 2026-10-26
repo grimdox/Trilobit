@@ -424,8 +424,9 @@ func _roads_and_cars() -> void:
 ## fill the bays of the parking lots and charging stations with parked cars (normal cars: you can get in and drive them).  Each lot has its own fullness, from
 ## completely empty (one lot in seven) up to about nine bays in ten; a station is quieter than a lot, and a car beside a charger has run lower on charge.
 func _park_lots(cols: Array) -> void:
-	for lot in city.lots:
-		var fill: float = 0.0 if rng.randi() % 7 == 0 else 0.25 + rng.randf() * 0.65
+	for li in city.lots.size():
+		var lot: Dictionary = city.lots[li]
+		var fill: float = 0.0 if (rng.randi() % 7 == 0 or li % 6 == 3) else 0.25 + rng.randf() * 0.65
 		if lot["kind"] == "station":
 			fill *= 0.5
 		for bay in lot["bays"]:
@@ -688,48 +689,12 @@ func _random_gun() -> String:
 	return arr[rng.randi() % arr.size()]
 
 func _loot() -> void:
+	# nothing is left lying around: money, guns, ammo, armor and bags come from shops, people and jobs (only mission objects are placed)
 	if not mission.is_empty():
 		_mission_objects()
-		return
-	var markers: Array = []
-	markers.append_array(Array(city.homes))
-	markers.append_array(Array(city.works))
-	markers.append_array(Array(city.shops))
-	for c in markers:
-		if rng.randf() > 0.4:
-			continue
-		# no loose food, water or weapons: those are bought, in the shops and restaurants (and taken from people who carry them)
-		var kind := _weighted([["trl_yen", 50], ["ammo", 16], ["mod", 3], ["trl_backpack", 3], ["trl_coat", 2], ["trl_pouch", 3], ["trl_fanny", 2], ["armor", 8], ["trl_medkit", 4]])
-		var it
-		match kind:
-			"trl_yen": it = _new_item("trl_yen", rng.randi_range(20, 220))
-			"ammo": it = _new_item(_random_ammo() if rng.randf() < 0.6 else "trl_ammo", rng.randi_range(1, 3))
-			"mod": it = _new_item(_random_mod())
-			"melee": it = _new_item(_random_melee())
-			"armor": it = _new_item(["trl_helmet", "trl_vest", "trl_bracers", "trl_greaves", "trl_visor", "trl_vest_heavy", "trl_balaclava", "trl_jacket", "trl_kneepads"][rng.randi() % 9])
-			"water":
-				it = new_bottle(450)
-			"gun":
-				it = _new_item(_random_gun())
-				_part_load(it)
-			_: it = _new_item(kind)
-		_put(c, it)
 
 func _vault_loot() -> void:
-	if not mission.is_empty():
-		return
-	for cells in city.vaults:
-		var arr: PackedInt32Array = cells
-		if arr.is_empty():
-			continue
-		_put(arr[rng.randi() % arr.size()], _new_item("trl_yen", rng.randi_range(500, 1400)))
-		_put(arr[rng.randi() % arr.size()], _new_item(_random_ammo(), rng.randi_range(2, 4)))
-		_put(arr[rng.randi() % arr.size()], _new_item(["trl_helm_tac", "trl_vest_corp", "trl_bracers_heavy", "trl_greaves_heavy"][rng.randi() % 4]))
-		_put(arr[rng.randi() % arr.size()], _new_item(_random_mod()))
-		if rng.randf() < 0.5:
-			_put(arr[rng.randi() % arr.size()], _new_item(_random_mod()))
-		if rng.randf() < 0.5:
-			_put(arr[rng.randi() % arr.size()], _new_item("trl_backpack"))
+	pass                                    # locked rooms hold no loose loot either
 
 func _put(cell: int, it) -> void:
 	if z_of(cell) > 0 and city.tiles[cell] == CG.AIR:
@@ -4080,16 +4045,6 @@ func smash_thing(ti: int, why: String) -> void:
 	if kind == "":
 		return
 	say_if_seen(cell, "The %s %s." % [kind, why])
-	if t["loot"]:
-		var roll := rng.randf()
-		if roll < 0.35:
-			_put(cell, _new_item("trl_yen", rng.randi_range(30, 200)))
-		elif roll < 0.6:
-			_put(cell, _new_item(_random_ammo(), 1))
-		elif roll < 0.8:
-			_put(cell, _new_item("trl_yen", rng.randi_range(10, 80)))
-		else:
-			_put(cell, _new_item(_random_mod()))
 	_remove_thing(ti)
 	_noise_gentle(cell, 7)
 

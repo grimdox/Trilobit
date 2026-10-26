@@ -15,7 +15,13 @@ func run() -> Array:
 	g.setup(2000)
 	log.append("  (setup of a 256x256 city, 2,000 people, 30 cars, loot: %d ms)" % (Time.get_ticks_msec() - t0))
 	check.call("the player starts on a road with a pistol, a coat and a backpack", g.city.tiles[g.pc] == 1 and g.wield != null and g.worn.size() == 2)
-	check.call("loot is scattered through the city (more than 150 piles)", g.items_at.size() > 150)
+	var loose := 0
+	for c in g.items_at:
+		for it in g.items_at[c]:
+			var id: String = str(it.id) if "id" in it else ""
+			if id == "trl_yen" or id.begins_with("trl_ammo") or id.find("vest") >= 0 or id.find("backpack") >= 0:
+				loose += 1
+	check.call("no money, ammo, armor or bags lie around at the start (%d)" % loose, loose == 0)
 	check.call("there are cars, some driven by AI drivers", g.vehicles.size() > 20 and g.vehicles.filter(func(v): return v["ai"]).size() > 5)
 	# walk around
 	var moved := 0
@@ -25,11 +31,8 @@ func run() -> Array:
 			moved += 1
 	check.call("the player can walk and time passes (%d moves, turn %d)" % [moved, g.turn], moved > 10 and g.turn >= moved)
 	# pick up
-	var cell := -1
-	for c in g.items_at:
-		if g.city.tiles[c] == 1 or g.city.tiles[c] == 3:
-			cell = c
-			break
+	var cell: int = g.pc                   # nothing lies around any more: drop a purse on the street to pick up
+	g._put(cell, g._new_item("trl_yen", 50))
 	g.pc = cell
 	g.fov.compute(cell % g.size, cell / g.size, 18)
 	var before: int = g.yen + g.ammo_total() + g.inventory_list().size()
