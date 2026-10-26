@@ -12,7 +12,7 @@ const ATTR_MIN := 6
 const ATTR_MAX := 14
 
 # the doll still draws from the two bodies in the tileset; `fem` picks the layer set (d_torso_m / d_torso_f)
-const SPRITES := [{"id": "m", "name": "Frame A", "fem": false}, {"id": "f", "name": "Frame B", "fem": true}]
+const SPRITES := [{"id": "m", "name": "Male", "fem": false}, {"id": "f", "name": "Female", "fem": true}]
 const STYLES := ["short", "buzz", "mohawk", "long", "bob", "ponytail", "bun"]
 const SKIN_NAMES := ["Pale", "Light tan", "Tanned", "Dark", "Deep brown", "Blue", "Red", "Yellow", "Green", "Orange", "Purple", "Dark gray"]
 const HAIR_NAMES := ["Black", "Dark brown", "Chestnut", "Blond", "Grey", "Crimson dye", "Cyan dye"]
@@ -22,22 +22,25 @@ const EYES := [Color(0.34, 0.2, 0.1), Color(0.5, 0.36, 0.14), Color(0.3, 0.5, 0.
 	Color(0.62, 0.2, 0.2), Color(0.5, 0.32, 0.62), Color(0.78, 0.66, 0.2), Color(0.8, 0.45, 0.15), Color(0.2, 0.55, 0.55)]
 const EYE_NAMES := ["Brown", "Hazel", "Green", "Blue", "Grey", "Amber", "Red", "Violet", "Gold", "Orange", "Teal"]
 const EYE_SHAPE_NAMES := ["Round", "Almond", "Hooded", "Wide"]          # DollSpec.EYE_SHAPES order
-const FIELDS := ["sprite", "skin", "hair", "style", "eyes", "eye_shape"]
+## build: how broad the figure is drawn (look only, no effect on play).  The symbols are drawn by the screen; the names are the text form
+const BUILDS := [{"id": "slim", "name": "|  slim", "mark": "|", "width": 0.88}, {"id": "average", "name": "||  average", "mark": "||", "width": 1.0}, {"id": "broad", "name": "|||  broad", "mark": "|||", "width": 1.14}]
+const FIELDS := ["sprite", "build", "skin", "hair", "style", "eyes", "eye_shape"]
 # the appearance rows the screen shows.  The body frame has no row until the standing doll has a second body; `sprite` stays in `app`.
-const LOOK_ROWS := [{"id": "skin", "label": "Skin tone"}, {"id": "style", "label": "Hair style"}, {"id": "hair", "label": "Hair colour"},
+const LOOK_ROWS := [{"id": "sprite", "label": "Gender"}, {"id": "build", "label": "Type"}, {"id": "skin", "label": "Skin tone"}, {"id": "style", "label": "Hair style"}, {"id": "hair", "label": "Hair colour"},
 	{"id": "eye_shape", "label": "Eye shape"}, {"id": "eyes", "label": "Eye colour"}]
-const HIDDEN_LOOK := ["sprite"]
+const HIDDEN_LOOK := []
 
 const BACKGROUNDS := [{"id": "none", "name": "Not chosen yet", "desc": "Background and goals arrive in a later update.  Nothing on this page changes play yet."}]
 
 
 static func default_app() -> Dictionary:
 	# the figure the game has always drawn for the player: Frame A, light skin, grey hair, buzz cut, round brown eyes
-	return {"sprite": 0, "skin": 0, "hair": 4, "style": 1, "eyes": 0, "eye_shape": 0, "bg": "none"}
+	return {"sprite": 0, "build": 1, "skin": 0, "hair": 4, "style": 1, "eyes": 0, "eye_shape": 0, "bg": "none"}
 
 static func count(field: String) -> int:
 	match field:
 		"sprite": return SPRITES.size()
+		"build": return BUILDS.size()
 		"skin": return DS.SKINS.size()
 		"hair": return DS.HAIRS.size()
 		"style": return STYLES.size()
@@ -49,6 +52,7 @@ static func option_name(app: Dictionary, field: String) -> String:
 	var i: int = int(app.get(field, 0))
 	match field:
 		"sprite": return String(SPRITES[i]["name"])
+		"build": return String(BUILDS[i]["name"])
 		"skin": return SKIN_NAMES[i]
 		"hair": return HAIR_NAMES[i]
 		"style": return STYLE_NAMES[i]
@@ -85,7 +89,7 @@ static func sanitize(d: Dictionary) -> Dictionary:
 ## the look dictionary the paper doll and portrait draw from (same shape as DollSpec.look, plus eye colour)
 static func look_of(app: Dictionary) -> Dictionary:
 	var a: Dictionary = sanitize(app)
-	return {"fem": bool(SPRITES[a["sprite"]]["fem"]), "skin": DS.SKINS[a["skin"]], "hair": DS.HAIRS[a["hair"]], "style": STYLES[a["style"]], "eyes": EYES[a["eyes"]],
+	return {"fem": bool(SPRITES[a["sprite"]]["fem"]), "build": float(BUILDS[a["build"]]["width"]), "skin": DS.SKINS[a["skin"]], "hair": DS.HAIRS[a["hair"]], "style": STYLES[a["style"]], "eyes": EYES[a["eyes"]],
 		"skin_i": a["skin"], "hair_i": a["hair"], "eye_i": a["eyes"], "eye_shape": DS.EYE_SHAPES[a["eye_shape"]]}
 
 

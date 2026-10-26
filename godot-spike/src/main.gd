@@ -878,7 +878,7 @@ func _tab_mouse(ev: InputEvent) -> void:
 				screen.map_local = b == 1
 				sfx.play("blip")
 		elif mode == "equipment" or mode == "implants":
-			gear.click(pos, false)
+			gear.click(pos, false, ev.alt_pressed)
 			_after_gear()
 	elif ev.button_index == MOUSE_BUTTON_RIGHT:
 		if mode == "equipment" or mode == "implants":
@@ -1532,7 +1532,10 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 			mode = "jump"
 			g.say("Jump which way?  (direction key, Esc cancels)")
 		"vehicle": g.act_vehicle()
-		"drop": g.act_drop_wield()
+		"drop":
+			open_tab("equipment", "play")
+			gear.drop_mode = true
+			return
 		"inventory":
 			open_tab("equipment", "play")
 			return

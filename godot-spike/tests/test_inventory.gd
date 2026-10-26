@@ -150,9 +150,40 @@ func run() -> Array:
 	gear.press()
 	gear.close()
 	check.call("closing with an item on the cursor puts it back", gear.held == null and inv.grid["base"][7] == gun)
-	# click targets
+	# dropping
 	var tg: Array = gear.targets()
-	check.call("the tabs have a target for each slot and tile (9 + 15)", tg.size() == 9 + 15)
+	var floor0: int = (g.items_at[g.pc].size() if g.items_at.has(g.pc) else 0)
+	gear.cur = "g:base:7"
+	gear.press()
+	gear.cur = "d:drop"
+	gear.press()
+	check.call("moving the held item onto DROP puts it on the floor", gear.held == null and inv.find(gun).is_empty() and g.items_at.has(g.pc) and g.items_at[g.pc].size() == floor0 + 1)
+	var vest_b = g._new_item("trl_vest")
+	inv.stow(vest_b)
+	var idx: int = inv.find(vest_b)["i"]
+	var r2: Rect2 = gear.grid_rect(gear.group_layout()[0][1], gear.group_layout()[0][2], idx)
+	gear.click(r2.get_center(), false, true)
+	check.call("alt-click drops the item under the mouse", inv.find(vest_b).is_empty() and g.items_at[g.pc].size() == floor0 + 2)
+	var vest3 = g._new_item("trl_vest")
+	inv.stow(vest3)
+	inv.auto_equip(vest3)
+	gear.cur = "s:chest"
+	gear.click(gear.slot_rect("chest").get_center(), false, true)
+	check.call("alt-click drops a worn item too", not inv.equip.has("chest") and inv.find(vest3).is_empty())
+	gear.drop_mode = true
+	var jar = g._new_item("trl_ration", 2)
+	inv.stow(jar)
+	gear.cur = "g:base:%d" % inv.find(jar)["i"]
+	gear.press()
+	check.call("in drop mode choosing an item drops it (the whole stack)", inv.find(jar).is_empty())
+	gear.drop_mode = false
+	check.call("a target for DROP exists in the equipment tab only", tg.any(func(e): return e["key"] == "d:drop") and gear.DROP_RECT.end.x <= 1280.0 and gear.DROP_RECT.end.y <= 720.0)
+	var oldt := SettingsScript.new()
+	oldt.from_dict({"keys_v": 3, "binds": {"turn": [KEY_SEMICOLON]}})
+	check.call("an older save gets the keypad minus on turn-to-look", oldt.action_for(KEY_KP_SUBTRACT) == "turn" and oldt.action_for(KEY_SEMICOLON) == "turn")
+	# click targets
+	tg = gear.targets()
+	check.call("the tabs have a target for each slot and tile (9 + 15 + DROP)", tg.size() == 9 + 15 + 1)
 	var r0: Rect2 = gear.slot_rect("head")
 	check.call("a point on a slot finds it", gear.target_at(r0.get_center()) == "s:head")
 	var overlap := false
@@ -164,6 +195,8 @@ func run() -> Array:
 	var fits := true
 	for e in tg:
 		var rr: Rect2 = e["rect"]
+		if e["key"] == "d:drop":
+			continue
 		if rr.position.x < 0 or rr.end.x > GearScript.CARD.position.x or rr.end.y > 700:
 			fits = false
 	check.call("every tile sits left of the item card and above the footer", fits)

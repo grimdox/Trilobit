@@ -71,7 +71,7 @@ func run() -> Array:
 	check.call("twelve skin tones (five natural, seven muted colours), seven hair colours, seven styles, eleven eye colours, two sprites", CR.count("skin") == 12 and CR.count("hair") == 7 and CR.count("style") == 7 and CR.count("eyes") == 11 and CR.count("sprite") == 2 and CR.count("eye_shape") == 4)
 	check.call("every style the creator offers exists in the doll's hair layers", CR.STYLES.all(func(s): return s in DS.STYLES_M or s in DS.STYLES_F))
 	check.call("every option has a name", CR.FIELDS.all(func(f): return CR.option_name(app, f) != ""))
-	check.call("the screen offers skin tone, hair style, hair colour, eye shape and eye colour; the body frame stays in the data", CR.LOOK_ROWS.map(func(r): return r["id"]) == ["skin", "style", "hair", "eye_shape", "eyes"] and CR.HIDDEN_LOOK == ["sprite"])
+	check.call("the screen offers gender, build, skin tone, hair style, hair colour, eye shape and eye colour", CR.LOOK_ROWS.map(func(r): return r["id"]) == ["sprite", "build", "skin", "style", "hair", "eye_shape", "eyes"])
 	var bad: Dictionary = CR.sanitize({"sprite": 9, "skin": -3, "hair": 99, "style": 40, "eyes": 12, "eye_shape": 7, "bg": "zzz"})
 	check.call("out-of-range saved values are brought inside the tables", bad["sprite"] == 1 and bad["skin"] == 0 and bad["hair"] == 6 and bad["style"] == 6 and bad["eyes"] == 10 and bad["eye_shape"] == 3 and bad["bg"] == "none")
 	var old_app: Dictionary = CR.default_app()

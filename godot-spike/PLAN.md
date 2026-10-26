@@ -134,3 +134,5 @@ Why: the city was flat.  Verticality is also the cheapest big win for the NPC si
 **Character levels** (2026-10-25): player-only levels 1-10 from base skill levels (`skills.gd` LEVEL_REQS), automatic, one attribute point each, spent on the O screen; saves keep `lvl`/`pts`, old saves get the level their skills earn. `tests/test_pclevel.gd` (24).
 
 **Skill XP curve** (2026-10-25): 250*N + 2^N XP to reach skill level N, base gain 10 per success (`SK.xp_needed`, `XP_BASE`); per-action gains to be set later.
+
+**Creation Gender/Type, drop** (2026-10-25): create screen rows Gender and Type (`creation.gd` BUILDS), DROP button, alt-click and drop mode in `gear_ui.gd`, keypad minus on turn. Tests: creation 64, inventory 49.

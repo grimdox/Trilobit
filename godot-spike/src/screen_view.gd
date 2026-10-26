@@ -602,8 +602,8 @@ func _skill_detail(r: Rect2, sel: Dictionary, attrs: Dictionary, base: Dictionar
 
 # ---------------------------------------------------------------------------------------------- character creation
 ## rows: 0-4 appearance (CR.LOOK_ROWS), 5-9 attributes (SK.ATTRS), 10 Begin, 11 Back.  Everything fits one 1280x720 screen.
-const CC_LOOK_H := 38.0
-const CC_LOOK_STEP := 42.0
+const CC_LOOK_H := 32.0
+const CC_LOOK_STEP := 36.0
 const CC_LOOK_X := 40.0
 const CC_LOOK_Y := 356.0
 const CC_ATTR_X := 622.0
@@ -644,6 +644,19 @@ func cc_hit(p: Vector2) -> Dictionary:
 			return {"row": i, "dir": dir}
 	return {"row": -1, "dir": 0}
 
+## the gender symbol, drawn with lines (the font has no guaranteed glyph): male = ring with an arrow up and right, female = ring on a cross
+func _gender_mark(c: Vector2, fem: bool) -> void:
+	var col := Color(1.0, 0.35, 0.75) if fem else Color(0.3, 0.9, 1.0)
+	if fem:
+		draw_arc(c + Vector2(0, -4), 6.0, 0.0, TAU, 20, col, 2.0)
+		draw_line(c + Vector2(0, 2), c + Vector2(0, 12), col, 2.0)
+		draw_line(c + Vector2(-4, 7), c + Vector2(4, 7), col, 2.0)
+	else:
+		draw_arc(c + Vector2(-2, 3), 6.0, 0.0, TAU, 20, col, 2.0)
+		draw_line(c + Vector2(2, -1), c + Vector2(9, -8), col, 2.0)
+		draw_line(c + Vector2(3, -8), c + Vector2(9, -8), col, 2.0)
+		draw_line(c + Vector2(9, -2), c + Vector2(9, -8), col, 2.0)
+
 func _tri(c: Vector2, right: bool, on: bool) -> void:
 	var d: float = 9.0 if right else -9.0
 	draw_colored_polygon(PackedVector2Array([c + Vector2(d, 0), c + Vector2(-d * 0.6, -9), c + Vector2(-d * 0.6, 9)]), CYAN if on else Color(0.3, 0.38, 0.45))
@@ -672,16 +685,27 @@ func _create(W: float, H: float) -> void:
 		draw_rect(r, Color(0.3, 0.9, 1.0, 0.2) if on else Color(1, 1, 1, 0.04))
 		if on:
 			draw_rect(Rect2(r.position.x, r.position.y, 4, r.size.y), MAGENTA)
-		_txt(String(row["label"]).to_upper(), Vector2(r.position.x + 12, r.position.y + 13), 11, Color(0.6, 0.75, 0.9))
-		_tri(Vector2(r.position.x + 16, r.position.y + 24), false, true)
-		_tri(Vector2(r.end.x - 16, r.position.y + 24), true, true)
+		_txt(String(row["label"]).to_upper(), Vector2(r.position.x + 12, r.position.y + 11), 11, Color(0.6, 0.75, 0.9))
+		_tri(Vector2(r.position.x + 16, r.position.y + 21), false, true)
+		_tri(Vector2(r.end.x - 16, r.position.y + 21), true, true)
+		if row["id"] == "sprite" or row["id"] == "build":
+			var mk := Vector2(r.position.x + 44.0, r.position.y + 21.0)
+			if row["id"] == "sprite":
+				_gender_mark(mk, bool(look["fem"]))
+				_fit(CR.option_name(app, "sprite"), Vector2(mk.x + 22.0, r.position.y + 27), 16, Color.WHITE, r.end.x - 34.0 - mk.x - 22.0)
+			else:
+				var bars: int = int(app.get("build", 1)) + 1
+				for bi in bars:
+					draw_rect(Rect2(mk.x - 9.0 + bi * 7.0, r.position.y + 11.0, 3.0, 20.0), Color(1.0, 0.8, 0.25))
+				_fit(String(CR.BUILDS[int(app.get("build", 1))]["id"]).capitalize(), Vector2(mk.x + 22.0, r.position.y + 27), 16, Color.WHITE, r.end.x - 34.0 - mk.x - 22.0)
+			continue
 		var sw: Color = CR.option_color(app, row["id"])
 		var vx: float = r.position.x + 34.0
 		if sw.a > 0.0:
-			draw_rect(Rect2(vx, r.position.y + 18, 12, 12), sw)
-			draw_rect(Rect2(vx, r.position.y + 18, 12, 12), Color(1, 1, 1, 0.5), false, 1.0)
+			draw_rect(Rect2(vx, r.position.y + 15, 12, 12), sw)
+			draw_rect(Rect2(vx, r.position.y + 15, 12, 12), Color(1, 1, 1, 0.5), false, 1.0)
 			vx += 20.0
-		_fit(CR.option_name(app, row["id"]), Vector2(vx, r.position.y + 31), 17, Color.WHITE, r.end.x - 34.0 - vx)
+		_fit(CR.option_name(app, row["id"]), Vector2(vx, r.position.y + 27), 16, Color.WHITE, r.end.x - 34.0 - vx)
 	# ---- the name, then background and goals (placeholder)
 	var pb := Rect2(290, 66, 300, 560)
 	_panel(pb)
@@ -767,7 +791,7 @@ func _cc_doll(c: Vector2, k: float, look: Dictionary) -> void:
 		var ds = ADAPT.spec_from_game([], look, "", String(look.get("size", "m")), CC_DOLLS)
 		var tex: Texture2D = cc_dolls.texture(ds, "unarmed/idle/0")
 		if tex != null:
-			draw_set_transform(c + Vector2(0, 82), 0.0, Vector2(3, 3))
+			draw_set_transform(c + Vector2(0, 82), 0.0, Vector2(3.0 * float(look.get("build", 1.0)), 3))
 			draw_texture(tex, -cc_dolls.origin())
 			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 			return

@@ -34,7 +34,7 @@ const ACTIONS := [
 	["swap", "Swap weapon", [KEY_BACKSLASH]],
 	["jump", "Jump (then direction)", [KEY_Q]],
 	["vehicle", "Enter / leave vehicle", [KEY_E]],
-	["drop", "Drop wielded", [KEY_D]],
+	["drop", "Drop (opens the inventory)", [KEY_D]],
 	["inventory", "Equipment & inventory screen", [KEY_P]],
 	["implants", "Implants screen", [KEY_I]],
 	["skills", "Attributes & skills screen", [KEY_O]],
@@ -132,16 +132,19 @@ func to_dict() -> Dictionary:
 
 ## version 2: Z is the ammo key and X interacts (they were X and P), C is the movement prompt (crouch and crawl keys are gone)
 ## version 3: the screens are tabs: P equipment & inventory, I implants, O attributes & skills, M map; shove is Shift+O (fixed)
-const KEYS_VERSION := 3
+## version 4: the turn-to-look key gains the keypad minus on older saves, and D opens the inventory to drop
+const KEYS_VERSION := 4
 
 func from_dict(d: Dictionary) -> void:
 	var b: Dictionary = d.get("binds", {}).duplicate()
-	if int(d.get("keys_v", 1)) < KEYS_VERSION:
+	if int(d.get("keys_v", 1)) < 2:
 		for moved in ["ammo", "interact"]:
 			b.erase(moved)
 	if int(d.get("keys_v", 1)) < 3:
 		for moved3 in ["inventory", "implants", "skills", "shove"]:
 			b.erase(moved3)
+	if int(d.get("keys_v", 1)) < 4:
+		b.erase("turn")                           # so the keypad minus joins the turn key on saves that only had ;
 	for a in b:
 		if binds.has(a):
 			binds[a] = (b[a] as Array).map(func(k): return int(k))

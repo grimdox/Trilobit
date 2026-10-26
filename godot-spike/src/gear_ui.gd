@@ -24,6 +24,7 @@ const GRID_X := 40.0
 const GRID_Y := 396.0
 const POCKET_X := 368.0
 const CARD := Rect2(730.0, 56.0, 520.0, 612.0)
+const DROP_RECT := Rect2(1064.0, 612.0, 172.0, 44.0)       # the DROP button, bottom right (equipment tab)
 
 ## slot -> [side (-1 left of the figure, +1 right), tile centre y].  Left: Head, Chest, Arms, Left Hand, Legs.  Right: Eyes, Back, Belt, Right Hand.
 const SPOTS := {"head": Vector2(-1, 86), "eyes": Vector2(1, 86), "chest": Vector2(-1, 152), "back": Vector2(1, 152), "arms": Vector2(-1, 218),
@@ -45,6 +46,7 @@ var mouse := Vector2(-100, -100)
 var use_mouse := false                   # true once the mouse moved last (the item follows it), false for the keyboard (it follows the highlight)
 var msg: String = ""
 var msg_t: float = 0.0
+var drop_mode := false                   # opened by the drop key: choosing an item drops it
 var row_focus := false                   # implants tab: the keys move over the part's list
 var _rows: Array = []                    # the implant rows of the highlighted spot, rebuilt each draw / key
 
@@ -55,6 +57,7 @@ func open(g, tileset, which: String) -> void:
 	if held != null:
 		give_back()
 	set_tab(which)
+	drop_mode = false
 	msg = ""
 
 func set_tab(which: String) -> void:
@@ -106,6 +109,8 @@ func targets() -> Array:
 		var g: String = gl[0]
 		for i in game.inv.group_size(g):
 			out.append({"key": "g:%s:%d" % [g, i], "rect": grid_rect(gl[1], gl[2], i)})
+	if tab == "equipment":
+		out.append({"key": "d:drop", "rect": DROP_RECT})
 	if tab == "implants" and (cur.begins_with("s:") or cur.begins_with("r:")):
 		for k in _rows.size():
 			out.append({"key": "r:%d" % k, "rect": row_rect(k)})
@@ -241,8 +246,17 @@ func press() -> void:
 	if tab == "implants":
 		_press_implants()
 		return
+	if cur == "d:drop":
+		if held != null:
+			drop_held()
+		else:
+			say("Move an item here to drop it.")
+		return
 	if held == null:
-		pick_up(cur)
+		if drop_mode:
+			drop_at(cur)
+		else:
+			pick_up(cur)
 	else:
 		put_down(cur)
 
@@ -277,6 +291,31 @@ func auto() -> void:
 			game.sfx("pick")
 		else:
 			say(inv.last_err)
+
+## drop the item a key points at onto the floor at your feet (the whole stack; free, no turn)
+func drop_at(key: String) -> void:
+	var it = item_at(key)
+	if it == null:
+		return
+	if not game.inv.remove(it):
+		say(game.inv.last_err if game.inv.last_err != "" else "You cannot drop that right now.")
+		return
+	_to_floor(it)
+
+## the held item goes onto the floor
+func drop_held() -> void:
+	if held == null:
+		return
+	var it = held
+	held = null
+	held_from = {}
+	_to_floor(it)
+
+func _to_floor(it) -> void:
+	game._put(game.pc, it)
+	game.say("You drop the %s%s." % [it.def["name"], (" x%d" % it.count) if it.count > 1 else ""])
+	game.sfx("pick")
+	say("Dropped the %s." % it.def["name"])
 
 func pick_up(key: String) -> void:
 	var it = item_at(key)
@@ -369,12 +408,16 @@ func _press_implants() -> void:
 		else:
 			say("Nothing for that part in your pack.")
 
-func click(p: Vector2, right: bool) -> void:
+func click(p: Vector2, right: bool, alt: bool = false) -> void:
 	_sync_rows()
 	hover(p)
 	var k: String = target_at(p)
+	if alt and not right and tab == "equipment" and held == null:
+		if k != "" and k != "d:drop":
+			drop_at(k)
+		return
 	if right:
-		if k != "":
+		if k != "" and k != "d:drop":
 			auto()
 		return
 	if k == "":
@@ -514,6 +557,16 @@ func draw(c: CanvasItem, W: float, H: float, t: float, dt: float) -> void:
 			if cur == "g:%s:%d" % [g, i]:
 				_cursor(c, r2, t)
 	_card_panel(c, t)
+	if tab == "equipment":
+		var db: Rect2 = DROP_RECT
+		var hot: bool = cur == "d:drop"
+		var armed: bool = held != null or drop_mode
+		c.draw_rect(db, Color(1.0, 0.25, 0.65, 0.28 if armed else 0.12))
+		c.draw_rect(db, MAGENTA if (hot or armed) else Color(0.55, 0.3, 0.45), false, 2.0 if hot else 1.5)
+		var dw: float = font.get_string_size("DROP", HORIZONTAL_ALIGNMENT_LEFT, -1, 22).x
+		_txt(c, "DROP", Vector2(db.position.x + (db.size.x - dw) * 0.5, db.position.y + 30.0), 22, Color.WHITE if (hot or armed) else Color(0.8, 0.6, 0.72))
+		if hot:
+			_cursor(c, db, t)
 	# the held item follows the mouse, or the highlight when the keys are driving
 	if held != null:
 		var hp: Vector2 = mouse - Vector2(T, T) * 0.5
@@ -530,9 +583,11 @@ func draw(c: CanvasItem, W: float, H: float, t: float, dt: float) -> void:
 	if on_imp:
 		hint = "Arrows / numpad / mouse move  -  Enter, Ctrl or click fits a carried implant  -  Enter on a spot opens its list  -  Esc closes"
 	elif held != null:
-		hint = "Holding the %s  -  Enter or click puts it down  -  Esc puts it back" % held.def["name"]
+		hint = "Holding the %s  -  Enter or click puts it down, on DROP drops it  -  Esc puts it back" % held.def["name"]
+	elif drop_mode:
+		hint = "DROP: Enter or click an item to drop it onto the floor  -  Esc closes"
 	else:
-		hint = "Arrows / numpad / mouse move  -  Enter or click picks up  -  Ctrl or right-click equips / takes off  -  Esc closes"
+		hint = "Arrows / numpad / mouse move  -  Enter or click picks up  -  Ctrl or right-click equips / takes off  -  Alt-click drops  -  Esc closes"
 	_txt(c, hint, Vector2(40, H - 12.0), 14, Color(0.6, 0.72, 0.85))
 
 func _part_index(part: String) -> int:
@@ -749,7 +804,7 @@ func _card_panel(c: CanvasItem, t: float) -> void:
 	if game != null:
 		_txt(c, "¥%d     loose rounds %d" % [game.yen, game.ammo_total()], Vector2(x, fy), 16, YELLOW)
 	if msg != "" and msg_t > 0.0:
-		var lines: Array = wrap_text(msg, 16, maxw)
+		var lines: Array = wrap_text(msg, 16, maxw - (190.0 if tab == "equipment" else 0.0))
 		var my: float = fy - 28.0 - (lines.size() - 1) * 20.0
 		for ln in lines:
 			_txt(c, ln, Vector2(x, my), 16, MAGENTA)

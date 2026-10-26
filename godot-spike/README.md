@@ -113,3 +113,5 @@ Tests: `./run_all.sh` (inventory, pclevel, world, scale, levels, game, vertical,
 Centring: the map is shifted so the player's cell sits in the middle of the area left of the HUD and above the message bar (`View.shift`); zoom steps are now N tiles either side within that visible width.
 
 - **Skill XP** (2026-10-25): a skill goes from level n to n+1 for `250*(n+1) + 2^(n+1)` XP (252, 504, 758 ...); a successful action is worth `XP_BASE` 10 (times 1 + how far the task out-ranks you), surplus carries over.  Per-action values are still to be defined.
+
+- **Creation, drop, keys** (2026-10-25): the create screen has Gender (male/female symbol, picks Frame A/B) and Type (`|` slim, `||` average, `|||` broad: the figure is drawn 0.88/1.0/1.14 wide, look only).  `D` opens the equipment tab in drop mode (pick an item to drop it, whole stack, no turn); on that tab alt-click drops an item and a held item put on the DROP button (bottom right) drops too.  Keypad minus is a default turn-to-look key (older saves get it via `KEYS_VERSION` 4).

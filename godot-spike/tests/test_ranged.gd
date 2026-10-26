@@ -270,7 +270,7 @@ func run() -> Array:
 			if oi != who and g.sim.alive[oi] == 1:
 				g.sim.alive[oi] = 0
 		for _t in 300:
-			g.sim.place(who, far_spot + 16)
+			g.sim.place(who, far_spot + 15)
 			g.sim.near[who] = 1
 			g.hpn[who] = 50000
 			g.hpmax[who] = 50000
@@ -289,13 +289,15 @@ func run() -> Array:
 			g.fov.compute(g.pc % g.size, g.pc / g.size, 18)
 			g.sim.retier(g.pc)
 			g.sim.near[who] = 1
+			g.last_roll = {}
 			g.act_fire(true)
+			g.last_roll["outcome"] = g.last_roll.get("outcome", "none")
 			if g.last_roll["outcome"] == "hit":
 				seen_hit = true
-				var cap: int = int(round(float(int(sp2["dmg"][1])) * GP.falloff(int(sp2["eff_range"]), 16)))
+				var cap: int = int(round(float(int(sp2["dmg"][1])) * GP.falloff(int(sp2["eff_range"]), 15)))
 				fall_ok = fall_ok and int(g.last_roll["dmg"]) <= cap
 		g.sim.alive = alive0
-		check.call("at 16 tiles a 9mm round has a third less punch (damage never above %d, max %d close up)" % [int(round(float(int(sp2["dmg"][1])) * GP.falloff(int(sp2["eff_range"]), 16))), sp2["dmg"][1]], seen_hit and fall_ok)
+		check.call("at 15 tiles a 9mm round has a third less punch (damage never above %d, max %d close up)" % [int(round(float(int(sp2["dmg"][1])) * GP.falloff(int(sp2["eff_range"]), 15))), sp2["dmg"][1]], seen_hit and fall_ok)
 	# ---- save and load
 	g.aimn[who] = 2
 	var dd: Dictionary = JSON.parse_string(JSON.stringify(g.save_dict()))

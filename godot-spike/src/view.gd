@@ -108,7 +108,8 @@ func _draw_doll_layered(nd, spec: Dictionary, pos: Vector2, face_dir: Vector2i, 
 	if tex == null:
 		return
 	var k := TILE / float(nd.lib.man.get("lod", 32))      # the set's own size: 32 px dolls at TILE / 32, 64 px at TILE / 64
-	draw_set_transform(pos + Vector2(TILE * 0.5, TILE - 1.0), 0.0, Vector2(-k if face_dir.x < 0 else k, k))
+	var kx: float = k * float((spec["look"] as Dictionary).get("build", 1.0))      # the player's build widens or slims the figure
+	draw_set_transform(pos + Vector2(TILE * 0.5, TILE - 1.0), 0.0, Vector2(-kx if face_dir.x < 0 else kx, k))
 	var sh := PackedVector2Array()
 	for n in 12:
 		sh.append(Vector2(cos(n * TAU / 12.0) * 8.5, sin(n * TAU / 12.0) * 2.4) * (float(nd.lib.man.get("lod", 32)) / 32.0))        # same size on screen for either set

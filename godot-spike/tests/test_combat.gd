@@ -273,6 +273,8 @@ func run() -> Array:
 		g.sim.ctl[who] = 1
 		g.stun[who] = 0
 		g.bleed[who] = 0
+		g.skills["melee"] = 3                     # trials must not train the skill, or later batches would be easier than earlier ones
+		g.xp["melee"] = 0
 	var hit_rate = func(f: int, trials: int) -> int:
 		var n := 0
 		for _t in trials:
