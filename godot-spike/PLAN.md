@@ -136,3 +136,5 @@ Why: the city was flat.  Verticality is also the cheapest big win for the NPC si
 **Skill XP curve** (2026-10-25): 250*N + 2^N XP to reach skill level N, base gain 10 per success (`SK.xp_needed`, `XP_BASE`); per-action gains to be set later.
 
 **Creation Gender/Type, drop** (2026-10-25): create screen rows Gender and Type (`creation.gd` BUILDS), DROP button, alt-click and drop mode in `gear_ui.gd`, keypad minus on turn. Tests: creation 64, inventory 49.
+
+**Round of 2026-10-26**: barter screen live; credsticks removed; window/furniture/door cover; station clocks; city density (`_subdivide`, packed suburb rows).  Still to do: a larger city zone (1536) needs the island's caldera, pass and airstrip re-laid; organic, diagonal and circular roads and meandering park/river edges.

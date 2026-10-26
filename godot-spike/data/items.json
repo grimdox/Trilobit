@@ -5459,17 +5459,6 @@
   "repair": 25
  },
  {
-  "id": "trl_credstick",
-  "name": "credstick",
-  "weight_g": 10,
-  "volume_ml": 4,
-  "length_mm": 80,
-  "price": 0,
-  "tags": [
-   "card"
-  ]
- },
- {
   "id": "trl_eng_city",
   "name": "Kuroda CE-120 city motor",
   "desc": "Vehicle engine: top speed 4, 60 hp, fits car, truck.",

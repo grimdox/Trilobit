@@ -333,7 +333,8 @@ func load_dict(d: Dictionary, db) -> void:
 	equip = {}
 	grid = {"base": _blank(BASE)}
 	for s in d.get("equip", {}):
-		equip[s] = ItemScript.from_dict(d["equip"][s], db)
+		if db.defs.has(String(d["equip"][s]["id"])):                # an item that no longer exists (a credstick, say) is left out of an old save
+			equip[s] = ItemScript.from_dict(d["equip"][s], db)
 	for g in groups():
 		grid[g] = _blank(group_size(g))
 	for g in d.get("grid", {}):
@@ -341,5 +342,5 @@ func load_dict(d: Dictionary, db) -> void:
 			continue
 		var src: Array = d["grid"][g]
 		for i in mini(src.size(), (grid[g] as Array).size()):
-			if src[i] != null:
+			if src[i] != null and db.defs.has(String(src[i]["id"])):
 				grid[g][i] = ItemScript.from_dict(src[i], db)

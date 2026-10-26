@@ -1139,6 +1139,28 @@ def mission_terminal():
     return done(a)
 
 
+def station_clock():
+    """a wall clock terminal for platforms: a face with hands above a digital countdown strip"""
+    a = A()
+    box(a, 12, 6, 40, 52, '#232830', r=4, bevel=3, spec=0.5)
+    face = a.ellipse(32, 22, 14)
+    a.shade(face, '#06151c', bevel=2, strength=0.5)
+    ring = a.ellipse(32, 22, 14) & ~a.ellipse(32, 22, 12)
+    a.fill(ring, GLOW_C, 0.95)
+    for k in range(12):
+        ang = k * 3.14159265 / 6.0
+        a.fill(a.ellipse(32 + 11 * np.sin(ang), 22 - 11 * np.cos(ang), 0.9), '#c8d6e0', 0.9)
+    a.fill(a.line(32, 22, 32, 13, 1.3), GLOW_M, 0.95)
+    a.fill(a.line(32, 22, 39, 25, 1.3), '#e8eef4', 0.95)
+    a.fill(a.ellipse(32, 22, 1.5), GLOW_M, 1.0)
+    a.shade(a.rrect(16, 40, 32, 14, 2), '#06151c', bevel=1.2, strength=0.4)
+    for i in range(5):
+        a.fill(a.rect(19 + i * 6, 44, 4, 6), GLOW_C, 0.9)
+    a.fill(a.rect(26, 46, 2, 2), '#06151c', 1.0)
+    a.glow(32, 30, 26, GLOW_C, 0.2)
+    return done(a)
+
+
 def mission_portal():
     a = A()
     ring = a.ellipse(32, 32, 24)
@@ -1239,7 +1261,7 @@ FURN = {
     'f_trl_shelf_clean': shelf_clean, 'f_trl_produce_bin': produce_bin, 'f_trl_freezer_case': freezer_case, 'f_trl_checkout': checkout,
     'f_trl_vending': vending, 'f_trl_water_cooler': water_cooler,
     'f_trl_charger': charging_post, 'f_trl_gunsmith_table': gunsmith_table,
-    'f_trl_ev_nw': lambda: _ev_part(0, 0), 'f_trl_ev_ne': lambda: _ev_part(1, 0), 'f_trl_ev_sw': lambda: _ev_part(0, 1), 'f_trl_ev_se': lambda: _ev_part(1, 1), 'f_trl_terminal': mission_terminal, 'f_trl_portal': mission_portal, 'f_trl_device': mission_device,
+    'f_trl_ev_nw': lambda: _ev_part(0, 0), 'f_trl_ev_ne': lambda: _ev_part(1, 0), 'f_trl_ev_sw': lambda: _ev_part(0, 1), 'f_trl_ev_se': lambda: _ev_part(1, 1), 'f_trl_terminal': mission_terminal, 'f_trl_station_clock': station_clock, 'f_trl_portal': mission_portal, 'f_trl_device': mission_device,
     'f_trl_implant_chair': implant_chair, 'f_trl_implant_printer': implant_printer, 'f_trl_limb_bin': limb_bin,
     'f_trl_autodoc_imp_m': autodoc, 'f_trl_hospital_bed': hospital_bed, 'f_trl_ward_bed': lambda: hospital_bed('#7fae8a'),
     'f_trl_scanner': scanner, 'f_trl_med_cabinet': med_cabinet, 'f_trl_iv_stand': iv_stand, 'f_trl_reception': reception, 'f_trl_exam_couch': exam_couch,

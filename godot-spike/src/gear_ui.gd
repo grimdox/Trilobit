@@ -812,7 +812,8 @@ func _card_panel(c: CanvasItem, t: float) -> void:
 
 func _kv(c: CanvasItem, y: float, k: String, v: String, x: float, maxw: float) -> float:
 	_txt(c, k, Vector2(x, y), 16, Color(0.6, 0.72, 0.85))
-	_fit_txt(c, v, Vector2(x + 150.0, y), 17, Color.WHITE, maxw - 150.0)
+	var kw: float = minf(150.0, maxw * 0.4)
+	_fit_txt(c, v, Vector2(x + kw, y), 17, Color.WHITE, maxw - kw)
 	return y + 23.0
 
 func _item_card(c: CanvasItem, it, x: float, y0: float, maxw: float) -> void:
@@ -823,7 +824,7 @@ func _item_card(c: CanvasItem, it, x: float, y0: float, maxw: float) -> void:
 	var eq: String = INV.equip_text(it)
 	if d.has("implant"):
 		eq = "Implant: %s" % String(IMP.PARTS[_part_index(String(d.get("part", "head")))]["name"]).split(" /")[0].to_lower()
-	_txt(c, eq, Vector2(x, y), 17, YELLOW if INV.is_equipment(it) or d.has("implant") else Color(0.6, 0.7, 0.8))
+	_fit_txt(c, eq, Vector2(x, y), 17, YELLOW if INV.is_equipment(it) or d.has("implant") else Color(0.6, 0.7, 0.8), maxw)
 	y += 12.0
 	var desc: String = String(d.get("desc", ""))
 	if desc != "":

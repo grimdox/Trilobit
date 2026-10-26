@@ -122,7 +122,6 @@ items += [
     {"id": "trl_datacase", "name": "encrypted data case", "weight_g": 1800, "volume_ml": 6000, "length_mm": 420, "price": 400, "tags": ["job"]},
     {"id": "trl_medkit", "name": "trauma patch", "weight_g": 120, "volume_ml": 100, "length_mm": 120, "price": 40, "tags": ["medical"], "desc": "Heals 25 and mends your worst limb a little."},
     {"id": "trl_kit_repair", "name": "field repair kit", "desc": "Patch plates, hoses and wiring.  Restores 25 points to one vehicle part.", "weight_g": 1500, "volume_ml": 3000, "length_mm": 350, "price": 90, "tags": ["tool"], "repair": 25},
-    {"id": "trl_credstick", "name": "credstick", "weight_g": 10, "volume_ml": 4, "length_mm": 80, "price": 0, "tags": ["card"]},
 ]
 
 # vehicle engines: power = top speed in tiles a turn, drain = turns per battery point, hp = hit points of the engine part, fits = the vehicle kinds it can drive

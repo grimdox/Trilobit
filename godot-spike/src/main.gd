@@ -13,12 +13,13 @@ const SK = preload("res://src/skills.gd")
 const CR = preload("res://src/creation.gd")
 const CLK = preload("res://src/clock.gd")
 const MS = preload("res://src/missions.gd")
+const BarterUIScript = preload("res://src/barter_ui.gd")
 const GearScript = preload("res://src/gear_ui.gd")
 const LOG_LINES := 10        # messages shown in the panel along the bottom
 const UI_S := 1.5          # the interface is laid out for 1280x720 and drawn at 1.5x on the 1920x1080 canvas
 const TILESETS := ["Trilobit64"]      # Trilobit's own 64px art (tools/content/gen_tiles64.py); more sets can be added here
 const SLOTS := 3
-const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "equipment", "implants", "skills", "map", "create", "terminal"]
+const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "equipment", "implants", "skills", "map", "create", "terminal", "barter"]
 const MOUSE_MODES := ["title", "pause", "options", "visuals", "keys", "saves", "loads", "create"]
 const TAB_MODES := ["equipment", "implants", "skills", "map"]       # the paused character screens, one tab each (< and > step through them)
 
@@ -40,6 +41,8 @@ var menu: Dictionary = {}
 var ts_index: int = 0
 var inv_map: Dictionary = {}
 var gear = GearScript.new()            # the equipment and implants tabs (gear_ui.gd)
+var clock_cell: int = -1                 # the station clock being read (mode "clock")
+var bt = BarterUIScript.new()          # the barter screen (barter_ui.gd)
 var gear_base = null                   # item icons: the Trilobit64 set
 var gear_items = null
 var tab_from: String = "play"          # where Esc on a tab goes: "play" or "pause"
@@ -663,6 +666,72 @@ func _cc_key(k: int) -> void:
 	_cc_sync()
 
 ## open a tab of the paused character screens
+## the barter screen with merchant `who` (vendors, grocers, ripperdocs, doctors); the text menu stays for everybody else
+func open_barter(who: int) -> void:
+	_gear_icons()
+	var m: Dictionary = game.eco.menu_for(who)
+	bt.open(game, gear_items, who, m)
+	mode = "barter"
+	screen.kind = "barter"
+	screen.visible = true
+	screen.overlay = false
+	screen.prompt = ""
+	screen.game = game
+	screen.bt = bt
+	panel.visible = false
+
+func _barter_key(k: int) -> void:
+	if k == KEY_ESCAPE:
+		if bt.cancel():
+			return
+		bt.close()
+		resume_play()
+		return
+	var act: String = settings.action_for(k)
+	var dv := Vector2i.ZERO
+	match act:
+		"north": dv = Vector2i(0, -1)
+		"south": dv = Vector2i(0, 1)
+		"west": dv = Vector2i(-1, 0)
+		"east": dv = Vector2i(1, 0)
+	match k:
+		KEY_UP: dv = Vector2i(0, -1)
+		KEY_DOWN: dv = Vector2i(0, 1)
+		KEY_LEFT: dv = Vector2i(-1, 0)
+		KEY_RIGHT: dv = Vector2i(1, 0)
+	if dv != Vector2i.ZERO:
+		if bt.move(dv):
+			sfx.play("blip")
+	elif k == KEY_CTRL:
+		bt.auto()
+	elif k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
+		if Input.is_key_pressed(KEY_CTRL):
+			bt.auto()
+		else:
+			bt.press(ev_shift())
+	if game != null:
+		view.queue_redraw()
+
+func ev_shift() -> bool:
+	return Input.is_key_pressed(KEY_SHIFT)
+
+func _barter_mouse(ev: InputEvent) -> void:
+	if ev is InputEventMouseMotion:
+		if bt.hover(ev.position / UI_S):
+			sfx.play("blip")
+		return
+	if not (ev is InputEventMouseButton) or not ev.pressed:
+		return
+	var pos: Vector2 = ev.position / UI_S
+	if ev.button_index == MOUSE_BUTTON_LEFT:
+		bt.click(pos, false, ev.shift_pressed)
+	elif ev.button_index == MOUSE_BUTTON_RIGHT:
+		bt.click(pos, true)
+	elif ev.button_index == MOUSE_BUTTON_WHEEL_UP:
+		bt.scroll(-1, pos)
+	elif ev.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+		bt.scroll(1, pos)
+
 func open_tab(kind: String, from: String = "") -> void:
 	if from != "":
 		tab_from = from
@@ -905,6 +974,9 @@ func screen_key(k: int) -> void:
 	if mode in TAB_MODES:
 		_tab_key(k)
 		return
+	if mode == "barter":
+		_barter_key(k)
+		return
 	if mode == "create":
 		_cc_key(k)
 		return
@@ -987,6 +1059,9 @@ func _cc_mouse(ev: InputEvent) -> void:
 func _unhandled_input(ev: InputEvent) -> void:
 	if mode in TAB_MODES:
 		_tab_mouse(ev)
+		return
+	if mode == "barter":
+		_barter_mouse(ev)
 		return
 	if mode == "create":
 		_cc_mouse(ev)
@@ -1075,7 +1150,7 @@ func refresh() -> void:
 		line2 += "   [ON THE TRAIN]"
 	var tgt: int = g.current_target()
 	if tgt >= 0:
-		var cov: int = g.cover_vs(g.pc, g.sim.pos[tgt], false)
+		var cov: int = g.cover_vs(g.pc, g.sim.pos[tgt], false) + int(g.shield_vs(g.pc, g.sim.pos[tgt])["pct"])
 		line2 += "   |   Target: %s, %d tiles, %d%%%s" % [g.name_of(tgt), g.cheb(g.sim.pos[tgt], g.pc), g.hit_chance_on(tgt), (" (in cover)" if cov > 0 else "")]
 	var jt: String = g.eco.job_text()
 	var mt: String = MS.status_text(g)
@@ -1088,6 +1163,8 @@ func refresh() -> void:
 	_drain_sfx()
 	if mode == "talk":
 		show_talk()
+	elif mode == "clock":
+		show_clock()
 	elif mode == "pick":
 		show_pick()
 	elif mode == "mods":
@@ -1096,6 +1173,20 @@ func refresh() -> void:
 		show_wait()
 	elif mode == "consume":
 		show_consume()
+
+## the station clock: the time and the countdown to the next train, live while it is open
+func show_clock() -> void:
+	var info: Dictionary = game.station_clock_info(clock_cell)
+	var t := "[b]STATION CLOCK[/b]   %s   (Esc leaves)\n\n" % info["name"]
+	t += "Time now:   %s\n\n" % CLK.text(game.sim.tick)
+	if info["dwelling"]:
+		t += "A train is at the platform: doors open, boarding now."
+	else:
+		var turns: int = int(info["turns"])
+		var secs: int = turns * CLK.TURN_SEC
+		t += "Next train:  %d min %02d s   (%d turns)" % [secs / 60, secs % 60, turns]
+	panel.text = t
+	panel.visible = true
 
 func show_pick() -> void:
 	var t := "[b]Use which?[/b]   (1-9 chooses, Esc cancels)\n\n"
@@ -1365,6 +1456,12 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				game.act_strike(jd.x, jd.y)
 		refresh()
 		return
+	if mode == "clock":
+		if k == KEY_ESCAPE or k == KEY_E or k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
+			mode = "play"
+			panel.visible = false
+		refresh()
+		return
 	if mode == "talk":
 		if k == KEY_ESCAPE:
 			mode = "play"
@@ -1484,6 +1581,9 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 			var who: int = g.talk_target()
 			if who < 0:
 				g.say("Nobody close enough to talk to.")
+			elif g.barter.trades(who):
+				open_barter(who)
+				return
 			else:
 				menu = g.eco.menu_for(who)
 				mode = "talk"
@@ -1585,7 +1685,11 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 
 ## what using something asks the front end for: a menu, a screen, the gun bench
 func _after_act() -> void:
-	if mode == "play" and game.charger_hit >= 0:
+	if mode == "play" and game.clock_hit >= 0:
+		clock_cell = game.clock_hit
+		game.clock_hit = -1
+		mode = "clock"
+	elif mode == "play" and game.charger_hit >= 0:
 		menu = game.eco.charger_menu(game.charger_hit)
 		game.charger_hit = -1
 		mode = "talk"

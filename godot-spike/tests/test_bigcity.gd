@@ -54,7 +54,8 @@ func run() -> Array:
 			bld += 1
 	var share: float = float(bld) / float(area)
 	check.call("the city covers more than twice the old area (%d tiles vs 226,000)" % area, area > 2 * 226000)
-	check.call("and is more jam-packed: %.1f%% of it is building (it was 24.5%%)" % (100.0 * share), share > 0.22)
+	# buildings are smaller and separated by 1-2 tile alleys, so the footprint share is a little lower than with big blocks but there are twice as many of them
+	check.call("and is more jam-packed: %d buildings (it was 344), %.1f%% of it under a roof" % [c.buildings, 100.0 * share], share > 0.18 and c.buildings > 600)
 	check.call("it holds far more people (%d)" % g.sim.n, g.sim.n >= 300 and World.CITY_PEOPLE >= 2000)
 	var blv_w: PackedInt32Array = c.plan["blv_w"]
 	var blv_e: PackedInt32Array = c.plan["blv_e"]

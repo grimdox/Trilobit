@@ -86,7 +86,7 @@ func _fit(s: String, pos: Vector2, fsize: int, col: Color, max_w: float) -> void
 func _draw() -> void:
 	var W: float = size.x if size.x > 0 else 1280.0
 	var H: float = size.y if size.y > 0 else 720.0
-	if kind in TAB_KINDS or kind == "create":
+	if kind in TAB_KINDS or kind == "create" or kind == "barter":
 		draw_rect(Rect2(0, 0, W, H), BG)
 	elif overlay:
 		draw_rect(Rect2(0, 0, W, H), Color(0, 0, 0, 0.72))
@@ -96,6 +96,10 @@ func _draw() -> void:
 		_gridlines(W, H)
 		_tabbar(W)
 	match kind:
+		"barter":
+			_gridlines(W, H)
+			if bt != null and game != null:
+				bt.draw(self, W, H, t, get_process_delta_time())
 		"equipment", "implants":
 			if gear != null and game != null:
 				gear.draw(self, W, H, t, get_process_delta_time())
@@ -227,6 +231,7 @@ const TAB_KINDS := ["equipment", "implants", "skills", "map"]
 const TAB_NAMES := {"equipment": "EQUIPMENT", "implants": "IMPLANTS", "skills": "SKILLS", "map": "MAP"}
 const TAB_H := 44.0
 var tab_keys: Dictionary = {}              # tab kind -> the key that opens it, for the label
+var bt = null                              # BarterUI (barter_ui.gd): the merchant screen
 var gear = null                            # GearUI (gear_ui.gd): the equipment and implants tabs
 var map_local: bool = false                # the map tab shows the local map instead of the island
 var local_tex: ImageTexture = null

@@ -522,13 +522,13 @@ func _doll_head(c: CanvasItem) -> void:
 	var tex: Texture2D = _doll_lib.texture(ds, "unarmed/idle/0")
 	if tex == null:
 		return
-	var org: Vector2 = _doll_lib.origin()
-	# the head and shoulders are the top of the standing figure: the figure's feet are at `org`, so its top is about 56 px above the head line
-	var sz: Vector2 = tex.get_size()
-	var src := Rect2(0, 0, sz.x, minf(sz.y, org.y * 0.46))
-	var k: float = FACE.size.x / maxf(src.size.x, 1.0)
-	k = minf(k, FACE.size.y / maxf(src.size.y, 1.0)) * 0.96
-	var dst := Rect2(FACE.get_center().x - src.size.x * k * 0.5, FACE.position.y + 6.0, src.size.x * k, src.size.y * k)
+	# head and shoulders: the top 34% of the figure's opaque area, as wide as the shoulders
+	var used: Rect2i = tex.get_image().get_used_rect()
+	if used.size.x <= 0:
+		return
+	var src := Rect2(float(used.position.x) - 2.0, float(used.position.y) - 2.0, float(used.size.x) + 4.0, float(used.size.y) * 0.34)
+	var k: float = minf(FACE.size.x / src.size.x, FACE.size.y / src.size.y) * 0.94
+	var dst := Rect2(FACE.get_center().x - src.size.x * k * 0.5, FACE.position.y + 8.0, src.size.x * k, src.size.y * k)
 	c.draw_texture_rect_region(tex, dst, src)
 
 func _log(c: CanvasItem) -> void:

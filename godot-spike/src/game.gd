@@ -11,6 +11,7 @@ const FOV = preload("res://src/fov.gd")
 const LV = preload("res://src/levels.gd")
 const TR = preload("res://src/transit.gd")
 const EC = preload("res://src/economy.gd")
+const BT = preload("res://src/barter.gd")
 const GP = preload("res://src/gunplay.gd")
 const VS = preload("res://src/vehicles.gd")
 const IMP = preload("res://src/implants.gd")
@@ -65,6 +66,7 @@ var rows: int = 0                    # rows of the stacked map
 var total: int = 0                   # cells in all levels
 var transit
 var eco
+var barter = BT.new(self)            # merchants' shelves for the barter screen (barter.gd)
 var turn: int = 0
 var game_over: bool = false
 var log: Array = []
@@ -97,6 +99,7 @@ var mission: Dictionary = {}
 # implant power (power.gd): kJ in the store, -1 for a rig that has never been charged (it starts full the first time it is needed); at 0 every implant is off
 var power: float = -1.0
 var power_state: int = 0                       # 0 fine, 1 low (a quarter), 2 critical (a tenth), 3 dark: so each warning is said once
+var clock_hit: int = -1                        # a station clock the player just used (the front end shows its readout and clears this)
 var charger_hit: int = -1                      # a charging post the player just used (the front end opens its menu and clears this)
 var energy: PackedInt32Array                   # kJ left in each person: -1 until it is first needed (then power.gd works it out from the clock); frozen when they die or are drained
 var done_contracts: Dictionary = {}           # ids of the contracts the player has completed and been paid for: a posted contract pays once
@@ -287,9 +290,11 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1), ms
 	_start_player()
 	transit = TR.new()
 	transit.setup(self)
+	_place_station_clocks()
 	_prof("transit", _t0)
 	eco = EC.new()
 	eco.setup(self)
+	barter = BT.new(self)
 	if not mission.is_empty():
 		_mission_roles()
 	_npc_energy_init()                                  # after the economy has settled everyone's faction
@@ -753,7 +758,6 @@ func _start_player() -> void:
 	_load_full(wield)
 	inv.stow(_new_item("trl_ration", 2))
 	inv.stow(new_bottle(500))
-	inv.stow(_new_item("trl_credstick"))
 
 # ---------------------------------------------------------------- helpers
 func cheb(a: int, b: int) -> int:
@@ -1367,6 +1371,8 @@ func interactables() -> Array:
 				out.append({"kind": "door", "cell": c, "label": ("Locked door" if t == CG.LOCKED else ("Door (shut)" if t == CG.TID["door_closed"] else "Door (open)"))})
 			elif t == CG.TID["terminal"]:
 				out.append({"kind": "terminal", "cell": c, "label": "Mission terminal"})
+			elif t == CG.TID["station_clock"]:
+				out.append({"kind": "clock", "cell": c, "label": "Station clock"})
 			elif t == CG.TID["charger"]:
 				out.append({"kind": "charger", "cell": c, "label": "Charging post (implants)"})
 			elif t == CG.TID["gunsmith_table"]:
@@ -1380,6 +1386,69 @@ func interactables() -> Array:
 					out.append({"kind": "ev", "cell": nw, "label": "Vehicle charging bank"})
 	return out
 
+## Two clocks on the platform of every station in this zone: wall units on the outer row (the tiles against the tunnel wall), the nearest ones to the middle of the train
+## and at least six tiles apart.  They read the timetable (station_clock_info).
+func _place_station_clocks() -> void:
+	if transit == null or not transit.any_here:
+		return
+	for si in transit.stop_heads.size():
+		var sc: int = transit.stop_cell(si)
+		if sc < 0 or sc >= total:
+			continue
+		var lvl_base: int = (sc / s2) * s2
+		var cx: int = sc % size
+		var cy: int = (sc % s2) / size
+		var cands: Array = []
+		for dy in range(-12, 13):
+			for dx in range(-14, 15):
+				var x: int = cx + dx
+				var y: int = cy + dy
+				if not in_bounds(x, y):
+					continue
+				var c: int = lvl_base + y * size + x
+				if city.tiles[c] != CG.PLATFORM:
+					continue
+				var against_wall := false
+				for dd in [[0, -1], [0, 1], [-1, 0], [1, 0]]:
+					var nx: int = x + int(dd[0])
+					var ny: int = y + int(dd[1])
+					if in_bounds(nx, ny) and city.tiles[lvl_base + ny * size + nx] == CG.EARTH:
+						against_wall = true
+				if against_wall:
+					cands.append([maxi(absi(dx), absi(dy)), c])
+		cands.sort_custom(func(a, b): return a[0] < b[0])
+		var placed: Array = []
+		for e in cands:
+			var ok := true
+			for pcell in placed:
+				if cheb(int(e[1]), int(pcell)) < 6:
+					ok = false
+			if not ok:
+				continue
+			city.tiles[int(e[1])] = CG.TID["station_clock"]
+			sim.tiles[int(e[1])] = CG.TID["station_clock"]
+			sim.walk[int(e[1])] = 0
+			placed.append(int(e[1]))
+			if placed.size() >= 2:
+				break
+
+## the readout of the station clock on cell c: {name, turns, dwelling}
+func station_clock_info(c: int) -> Dictionary:
+	var best := -1
+	var bd := 1 << 30
+	for si in transit.stop_heads.size():
+		var sc: int = transit.stop_cell(si)
+		if sc < 0:
+			continue
+		var d: int = cheb(sc, c) + (999 if (sc / s2) != (c / s2) else 0)
+		if d < bd:
+			bd = d
+			best = si
+	if best < 0:
+		return {"name": "", "turns": 0, "dwelling": false}
+	var t: int = transit.turns_to(best)
+	return {"name": transit.stop_name(best), "turns": t, "dwelling": t == 0}
+
 ## use one thing from interactables().  True if it took a turn or opened something.
 func act_interact_with(it: Dictionary) -> bool:
 	var c: int = int(it["cell"])
@@ -1389,6 +1458,11 @@ func act_interact_with(it: Dictionary) -> bool:
 		"terminal":
 			terminal_hit = c
 			say("The terminal's screen wakes.")
+			sfx("blip")
+			return true
+		"clock":
+			clock_hit = c
+			say("The station clock counts down to the next train.")
 			sfx("blip")
 			return true
 		"charger":
@@ -1718,11 +1792,50 @@ func cover_vs(from: int, to: int, crouched: bool = false) -> int:
 		var v := 0
 		if veh_at[c] != -1:
 			v = 40 if crouched else 28
-		elif t in CG.LOW_COVER or thing_at[c] != -1:
-			v = 32 if crouched else 20
+		elif (t in CG.LOW_COVER and t < CG.EXTRA0) or thing_at[c] != -1:
+			v = 32 if crouched else 20           # street cover (crates, dumpsters, planters, railings, loose things): crouching behind it helps
 		elif t == CG.WALL:
 			v = 15
 		best = maxi(best, v)
+	return best
+
+## furniture, doors and windows next to the target on the shooter's side each stop a shot at a flat chance, whatever the shooter's skill (to be refined):
+## furniture and doors 25%, windows 50%.  Returns the best of the three neighbours, as a percent; 0 for none.
+const SHIELD_FURNITURE := 25
+const SHIELD_DOOR := 25
+const SHIELD_WINDOW := 50
+func shield_vs(from: int, to: int) -> Dictionary:
+	var tx: int = to % size
+	var ty: int = to / size
+	var sx: int = signi(from % size - tx)
+	var sy: int = signi(from / size - ty)
+	var best := {"pct": 0, "what": ""}
+	if sx == 0 and sy == 0:
+		return best
+	for off in [[sx, sy], [sx, 0], [0, sy]]:
+		if off[0] == 0 and off[1] == 0:
+			continue
+		var nx: int = tx + off[0]
+		var ny: int = ty + off[1]
+		if not in_bounds(nx, ny):
+			continue
+		var c: int = ny * size + nx
+		if z_of(c) != z_of(to):
+			continue
+		var t: int = city.tiles[c]
+		var v := 0
+		var what := ""
+		if t == CG.GLASS:
+			v = SHIELD_WINDOW
+			what = "window"
+		elif t == CG.DOOR or t == CG.TID["door_closed"] or t == CG.LOCKED:
+			v = SHIELD_DOOR
+			what = "door"
+		elif t >= CG.EXTRA0 and t in CG.LOW_COVER:
+			v = SHIELD_FURNITURE
+			what = "furniture"
+		if v > int(best["pct"]):
+			best = {"pct": v, "what": what}
 	return best
 
 ## how well person i sees toward a cell given where they face: 1 in front (about 120 degrees), less at the sides, none behind.  Alerted people look wider.
@@ -3013,7 +3126,8 @@ func _ranged_extra(d: int) -> int:
 ## percent to hit on the target for the shot_index'th bullet (the 2d10 model, averaged over the gun's natural-range roll), cover included
 func _shot_chance(st: Dictionary, t: int, aimed: int, shot_index: int) -> int:
 	var d: int = cheb(sim.pos[t], pc)
-	return GP.hit_chance(st, d, aimed, moved, crouch, lvl("ranged"), 0, shot_index, stance == CRAWL, _ranged_extra(d), cover_vs(pc, sim.pos[t], false))
+	var base: int = GP.hit_chance(st, d, aimed, moved, crouch, lvl("ranged"), 0, shot_index, stance == CRAWL, _ranged_extra(d), cover_vs(pc, sim.pos[t], false))
+	return int(round(float(base) * float(100 - int(shield_vs(pc, sim.pos[t])["pct"])) / 100.0))
 
 ## one-line description of the wielded gun and what it is aimed at
 func gun_line() -> String:
@@ -3209,6 +3323,10 @@ func act_fire(any: bool = false) -> bool:
 		var bonus: int = GP.bonus_points(st, aim_turns, moved, crouch, skill, 0, stance == CRAWL, _ranged_extra(vd))
 		var total: int = GP.shot_total(nat, bonus, GP.range_penalty(st, vd, rr), cover_vs(pc, sim.pos[victim], false))
 		var out: String = SK.melee_outcome(nat, total, npc_lvl(victim, "grit"))
+		var shield: Dictionary = shield_vs(pc, sim.pos[victim])
+		if (out == "hit" or out == "crit") and rng.randi() % 100 < int(shield["pct"]):
+			out = "miss"
+			say_if_seen(sim.pos[victim], "Your shot is stopped by the %s." % String(shield["what"]))
 		var loc: String = body.pick_melee(rng)
 		var rpen_shown: int = GP.range_penalty(st, vd, rr)
 		var cov_shown: int = cover_vs(pc, sim.pos[victim], false)
@@ -3842,6 +3960,10 @@ func _hunt_act(i: int, d: int, sees: bool) -> void:
 		var bonus: int = skill + int(aimn[i]) + [-3, -2, 0, -1][stance] - (3 if in_vehicle >= 0 else 0) - (3 if npc_arms_ok(i) < 2 else 0) - (1 if npc_head_hurt(i) else 0)
 		var total: int = GP.shot_total(nat, bonus, absi(d - rr), cover_vs(c, pc, crouch))
 		var out: String = SK.melee_outcome(nat, total, lvl("grit"))
+		var pshield: Dictionary = shield_vs(c, pc)
+		if (out == "hit" or out == "crit") and rng.randi() % 100 < int(pshield["pct"]):
+			out = "miss"
+			say_if_seen(c, "%s's shot is stopped by the %s." % [name_of(i), String(pshield["what"])])
 		var ncov: int = cover_vs(c, pc, crouch)
 		_math("%s fires at you from %d tiles: dice %d + bonus %d (%s) - range %d (their gun's natural range rolled %d, off by %d) = %d%s.  Hits at %d, critical at 19+ or %d.  %s" % [name_of(i), d, nat, bonus,
 			_terms([["Ranged", skill], ["aim", int(aimn[i])], ["stance", [-3, -2, 0, -1][stance]], ["you in a vehicle", -3 if in_vehicle >= 0 else 0], ["one arm", -3 if npc_arms_ok(i) < 2 else 0], ["head wound", -1 if npc_head_hurt(i) else 0]]),
@@ -3871,9 +3993,34 @@ func _hunt_act(i: int, d: int, sees: bool) -> void:
 	if d <= 1:
 		_npc_melee_attack(i)
 		return
+	var wcell: int = _window_toward(i)
+	if wcell >= 0 and (not sees or d <= 3):
+		# a hunter with no gun and a window between them and you smashes through it rather than standing at the glass
+		say_if_seen(c, "%s smashes the window." % name_of(i))
+		break_window(wcell)
+		apn[i] -= AP_BASE
+		return
 	if not _step_field(i):
 		_step_to(i, pc)
 	apn[i] -= AP_BASE * (2 - npc_legs_ok(i))          # a bad leg doubles the cost of a step, two make them crawl
+
+## a window tile next to person i that lies towards the player (so closer to you than they are), or -1
+func _window_toward(i: int) -> int:
+	var c: int = sim.pos[i]
+	if c >= s2:
+		return -1
+	var best := -1
+	var bd: int = cheb(c, pc)
+	for dd in DIR8:
+		var nx: int = c % size + int(dd[0])
+		var ny: int = c / size + int(dd[1])
+		if not in_bounds(nx, ny):
+			continue
+		var nc: int = ny * size + nx
+		if city.tiles[nc] == CG.GLASS and cheb(nc, pc) < bd:
+			bd = cheb(nc, pc)
+			best = nc
+	return best
 
 ## a fighter's stamina in percent, brought up to date: 1 back per turn, plus 1 per 2 points of their Grit
 func npc_stamina(i: int) -> int:
@@ -4768,7 +4915,7 @@ func outside_tile(x: int, y: int) -> int:
 func player_dict() -> Dictionary:
 	return {"done": done_contracts.duplicate(), "power": power, "power_state": power_state, "yen": yen, "implants": implants.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
 		"name": player_name, "attrs": attrs.duplicate(), "app": app.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "lvl": pc_level, "pts": attr_points, "inv": inv.to_dict(),
-		"stamina": stamina, "stam_v": 2, "ap": ap, "stance": stance, "run_mode": run_mode, "turn": turn, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "flying": flying,
+		"stamina": stamina, "stam_v": 2, "ap": ap, "stance": stance, "run_mode": run_mode, "turn": turn, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "barter": barter.to_dict(), "flying": flying,
 		"body": body.to_dict(), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
 
 ## attributes, skills and XP from a save; saves from before the attribute system (or with the old skill names) keep what still exists and start the rest at the defaults
@@ -4884,6 +5031,7 @@ func apply_player(d: Dictionary) -> void:
 	_was_hungry = hungry()
 	_was_thirsty = thirsty()
 	eco.load_from(JSON.parse_string(JSON.stringify(d["eco"])))
+	barter.load_dict(JSON.parse_string(JSON.stringify(d.get("barter", {}))))
 	eco.job = {}
 	flying = bool(d.get("flying", false))
 	followers = []
@@ -4910,7 +5058,7 @@ func save_dict() -> Dictionary:
 		vlist.append(vs.to_dict(v))
 	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "corpses": corpses, "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "lvl": pc_level, "pts": attr_points, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
-			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "inv": inv.to_dict(),
+			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "barter": barter.to_dict(), "inv": inv.to_dict(),
 			"items_at": it_at, "open_doors": open_doors.keys(), "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
 					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc), "energy": Array(energy),
@@ -5005,6 +5153,7 @@ func load_dict(d: Dictionary) -> void:
 	_was_thirsty = thirsty()
 	transit.load_from(d["transit"])
 	eco.load_from(d["eco"])
+	barter.load_dict(d.get("barter", {}))
 	var nn: Dictionary = d["npc"]
 	provoked = {}
 	for k in nn.get("prov", []):

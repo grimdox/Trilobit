@@ -61,6 +61,7 @@ const EXTRA := [
 	["charger", "f_trl_charger", 0, 0], ["gunsmith_table", "f_trl_gunsmith_table", 0, 1],
 	["ev_charger_nw", "f_trl_ev_nw", 0, 0], ["ev_charger_ne", "f_trl_ev_ne", 0, 0], ["ev_charger_sw", "f_trl_ev_sw", 0, 0], ["ev_charger_se", "f_trl_ev_se", 0, 0],
 	["door_closed", "t_door_closed", 1, 0], ["window_broken", "t_window_broken", 1, 0],
+	["station_clock", "f_trl_station_clock", 0, 0],
 ]
 const EXTRA0 := 33
 static var TID: Dictionary = _tids()
@@ -356,10 +357,12 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 			_park(rr.position.x, rr.position.y, rr.end.x, rr.end.y)
 		elif d < tower_zone:
 			var shapes: Array = []
-			if d < mega_zone and rng.randf() < 0.8:
+			if d < mega_zone and rng.randf() < (0.25 if planned else 0.8):
 				shapes = [[3, 3], [3, 2], [2, 3], [2, 2]] if rng.randf() < 0.5 else [[2, 2], [3, 2], [2, 3], [3, 3]]
 			elif d < tower_zone:
 				var pick := rng.randf()
+				if planned and rng.randf() < 0.7:
+					pick = 0.99                       # most tower-zone blocks stay single (and are cut into alley-separated buildings)
 				shapes = [[2, 2], [2, 1], [1, 2], [1, 1]] if pick < 0.2 else ([[2, 1], [1, 1]] if pick < 0.45 else ([[1, 2], [1, 1]] if pick < 0.7 else [[1, 1]]))
 			var done := false
 			for sh in shapes:
@@ -592,7 +595,10 @@ func _try_merge(grid: Array, i: int, j: int, w: int, h: int, mid_line: int, dmax
 				if t == ROAD:
 					tiles[y * size + x] = GROUND
 				marks[y * size + x] = 0
-	_building(r0.position.x + 2, r0.position.y + 2, r1.end.x - 2, r1.end.y - 2, "core")
+	if w * h == 1 and not plan.is_empty():
+		_core_block(r0.position.x, r0.position.y, r0.end.x, r0.end.y)
+	else:
+		_building(r0.position.x + 2, r0.position.y + 2, r1.end.x - 2, r1.end.y - 2, "core")
 	return true
 
 ## vertical road lines (left edge x) between lo and hi, block interiors of 34-48 tiles
@@ -703,37 +709,68 @@ func _park(x0: int, y0: int, x1: int, y1: int) -> void:
 
 ## one big mixed-use building filling the block, BSP rooms, doors on the street side
 func _core_block(x0: int, y0: int, x1: int, y1: int) -> void:
-	var bx0 := x0 + 2
-	var by0 := y0 + 2
-	var bx1 := x1 - 2
-	var by1 := y1 - 2
-	_building(bx0, by0, bx1, by1, "core")
+	# downtown: one block in four keeps a single big tower, the rest are cut by 1-2 tile alleys into a cluster of mid-size buildings
+	if plan.is_empty() or rng.randf() < 0.25:
+		_building(x0 + 2, y0 + 2, x1 - 2, y1 - 2, "core")
+		return
+	_subdivide(x0 + 1, y0 + 1, x1 - 1, y1 - 1, 0)
+
+## cut a rectangle into buildings with alleys (1 or 2 tiles of open ground) between them.  A building up to about 22 tiles a side is built; a larger one is split
+## across its longer side.  A building of 260+ tiles may still be a tower; the rest are mid-rise (shops, offices and flats, no tower of their own).
+func _subdivide(x0: int, y0: int, x1: int, y1: int, depth: int) -> void:
+	var w: int = x1 - x0 + 1
+	var h: int = y1 - y0 + 1
+	if w < 7 or h < 7:
+		return
+	var limit: int = 18 + rng.randi_range(0, 6)
+	if (w <= limit and h <= limit) or depth > 4:
+		var kind := "mid"
+		if w * h >= 260 and rng.randf() < 0.3:
+			kind = "core"
+		_building(x0, y0, x1, y1, kind)
+		return
+	var alley: int = 1 + (1 if rng.randf() < 0.3 else 0)
+	if w >= h:
+		var cut: int = x0 + int(float(w) * rng.randf_range(0.38, 0.62))
+		_subdivide(x0, y0, cut - 1, y1, depth + 1)
+		_subdivide(cut + alley, y0, x1, y1, depth + 1)
+	else:
+		var cut2: int = y0 + int(float(h) * rng.randf_range(0.38, 0.62))
+		_subdivide(x0, y0, x1, cut2 - 1, depth + 1)
+		_subdivide(x0, cut2 + alley, x1, y1, depth + 1)
 
 func _suburb_block(x0: int, y0: int, x1: int, y1: int, density: float = 0.9) -> void:
-	# rows of houses along the north and south edges of the block (a third through the middle of a deep one), yards between.  The island city packs
-	# them: three rows wherever the block is deep enough, houses close together.
-	var depth := 11
-	var h: int = y1 - y0 + 1
+	# rows of houses across the whole block with a 1-2 tile alley between rows and between houses.  The island city packs them: small houses, rows as
+	# deep as the block allows.  (The alleys run out to the sidewalk at the block's edge, so every house is reachable.)
 	var packed: bool = not plan.is_empty()
-	var rows := [[y0 + 2, y0 + 2 + depth - 1], [y1 - 2 - depth + 1, y1 - 2]]
-	if (h >= 40) if packed else (y1 - y0 >= 46):
-		var free: int = (y1 - 2 - depth) - (y0 + 2 + depth)          # the rows between the north and the south row
-		var md: int = mini(depth - 1, free - 4) if packed else depth
-		var mid := (y0 + y1) / 2
-		rows.append([mid - md / 2, mid - md / 2 + md - 1])
-	for row in rows:
+	var rows: Array = []
+	if packed:
+		var y: int = y0 + 2
+		while true:
+			var depth: int = rng.randi_range(8, 10)
+			if y + depth - 1 > y1 - 2:
+				break
+			rows.append([y, y + depth - 1])
+			y += depth + (1 if rng.randf() < 0.7 else 2)
+	else:
+		var depth0 := 11
+		rows = [[y0 + 2, y0 + 2 + depth0 - 1], [y1 - 2 - depth0 + 1, y1 - 2]]
+		if y1 - y0 >= 46:
+			var mid := (y0 + y1) / 2
+			rows.append([mid - depth0 / 2, mid - depth0 / 2 + depth0 - 1])
+	for rid in rows.size():
+		var row: Array = rows[rid]
 		var x := x0 + 2
-		while x + 9 <= x1 - 2:
-			var wdt := rng.randi_range(9, 13) if packed else rng.randi_range(10, 15)
+		while x + (6 if packed else 9) <= x1 - 2:
+			var wdt := rng.randi_range(7, 11) if packed else rng.randi_range(10, 15)
 			if x + wdt > x1 - 2:
 				break
-			var rid: int = rows.find(row)
-			if rid < 2 and wdt >= 12 and not venue_plan.is_empty() and rng.randf() < 0.6:
+			if rid < 2 and wdt >= 10 and not venue_plan.is_empty() and rng.randf() < 0.6 and (wdt >= 12 or packed):
 				var kind: String = venue_plan.pop_front()
 				VN.stamp(self, kind, x, row[0], x + wdt, row[1], 0 if rid == 0 else 1, 0 if wealth_at(row[0] * size + x) == 0 else 1)
 			elif rng.randf() < density:
 				_building(x, row[0], x + wdt, row[1], "house")
-			x += wdt + (rng.randi_range(2, 4) if packed else rng.randi_range(3, 6))
+			x += wdt + ((1 if rng.randf() < 0.7 else 2) if packed else rng.randi_range(3, 6))
 
 ## the riverside boulevards (island city): a two-lane street along each bank, white edges and a double yellow centre, painted wherever there is not
 ## already a street (the crossings keep the cross street's own paint)
@@ -772,7 +809,7 @@ func _building(bx0: int, by0: int, bx1: int, by1: int, kind: String) -> void:
 		tiles[y * size + bx0] = WALL
 		tiles[y * size + bx1] = WALL
 	var rooms := []
-	_split(bx0 + 1, by0 + 1, bx1 - 1, by1 - 1, rooms, 0 if kind == "core" else 1)
+	_split(bx0 + 1, by0 + 1, bx1 - 1, by1 - 1, rooms, 0 if (kind == "core" or kind == "mid") else 1)
 	# a door on the wall that faces the nearest road
 	var side := _street_side(bx0, by0, bx1, by1)
 	var door := _wall_cell(bx0, by0, bx1, by1, side)

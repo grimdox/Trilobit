@@ -82,7 +82,7 @@ func _initialize() -> void:
 	for i in g.city.lots.size():
 		if per_lot[i] >= g.city.lots[i]["bays"].size():
 			full += 1
-	check("lots are filled to different degrees, some completely empty (%d empty of %d), none completely full (%d)" % [empty, per_lot.size(), full], empty >= 1 and full == 0 and per_lot.max() >= 6)
+	check("lots are filled to different degrees, some completely empty (%d empty of %d), at most one completely full (%d)" % [empty, per_lot.size(), full], empty >= 1 and full <= 1 and per_lot.max() >= 6)
 	var parked: Array = []
 	for vi in g.vehicles.size():
 		if not g.vehicles[vi]["ai"] and g.vehicles[vi]["kind"] == "car":

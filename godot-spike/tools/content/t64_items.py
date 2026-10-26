@@ -561,10 +561,6 @@ def misc(a, it):
         a.shade(a.rrect(22, 12, 20, 9, 3), '#1c1f24', bevel=2)
         a.shade(a.rect(14, 30, 36, 3), '#2a2f36', bevel=0.5)
         a.shade(a.ellipse(48, 40, 2.4), STEEL, bevel=1, spec=0.9)
-    elif n == 'trl_credstick':
-        sh(a, a.poly([(10, 44), (14, 38), (50, 22), (54, 26), (50, 36), (14, 50)]), '#2a2f3c', 2, strength=0.7, spec=0.8)
-        led(a, 44, 28, CY, 1.4)
-        a.shade(a.line(16, 44, 36, 36, 1.4), GOLD, bevel=0.5, spec=0.8)
     elif n == 'trl_parcel':
         rr(a, 10, 16, 44, 32, '#b98a52', 2, 2, grain=0.5, seed=2)
         a.shade(a.rect(28, 16, 8, 32), '#d9c08a', bevel=0.8, strength=0.2)
