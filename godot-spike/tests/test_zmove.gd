@@ -154,7 +154,7 @@ func run() -> Array:
 	for y in range(int(tall["y0"]) + 2, int(tall["y1"]) - 2):
 		for x in range(int(tall["x0"]) + 2, int(tall["x1"]) - 2):
 			var c: int = y * g.size + x
-			if g.city.tiles[c] == CG.FLOOR and g.city.haslink[c] == 0 and g.city.tiles[c + g.s2] != CG.AIR and ceil_cell < 0:
+			if CG.is_floor(g.city.tiles[c]) and g.city.haslink[c] == 0 and g.city.tiles[c + g.s2] != CG.AIR and ceil_cell < 0:
 				ceil_cell = c
 	g.pc = ceil_cell
 	g.sim.retier(g.pc)

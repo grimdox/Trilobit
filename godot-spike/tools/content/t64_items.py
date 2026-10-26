@@ -601,6 +601,28 @@ def implant_icon(a, it):
         a.shade(a.ellipse(26, 38, 4), c, bevel=1.5, spec=0.6, emit=0.4)
 
 
+def good_icon(it):
+    """a stand-in until the real icon is drawn: a bevelled crate in the category's colour with the goods' initials"""
+    from PIL import ImageDraw, ImageFont
+    import goods_list
+    r, g, b = [int(goods_list.CATS[it['tags'][1]][1].lstrip('#')[i:i + 2], 16) for i in (0, 2, 4)]
+    im = Image.new('RGBA', (64, 64), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle((13, 22, 53, 52), 4, fill=(0, 0, 0, 90))
+    d.rounded_rectangle((11, 18, 50, 48), 4, fill=(r // 2, g // 2, b // 2, 255))
+    d.rounded_rectangle((13, 20, 48, 45), 3, fill=(r, g, b, 255))
+    d.rectangle((15, 22, 46, 26), fill=(min(255, r + 40), min(255, g + 40), min(255, b + 40), 255))
+    words = [w for w in it['name'].replace('-', ' ').split() if w[0].isalpha() and w not in ('of', 'a', 'the')]
+    ini = ''.join(w[0] for w in words[:2]).upper()
+    try:
+        f = ImageFont.load_default(size=14)
+    except TypeError:
+        f = ImageFont.load_default()
+    lum = 0.3 * r + 0.59 * g + 0.11 * b
+    d.text((30, 35), ini, fill=(20, 20, 24, 255) if lum > 130 else (240, 240, 244, 255), font=f, anchor='mm')
+    return im
+
+
 def make(it):
     n = it['id']
     tags = it['tags']
@@ -613,6 +635,8 @@ def make(it):
             if base.endswith(g):
                 grade, base = g, base[:-2]
         return ML.melee_icon(base, it, grade)
+    if tags[0] == 'good':
+        return good_icon(it)
     a = A()
     k = n[len('trl_food_'):] if n.startswith('trl_food_') else None
     kk = n[4:]

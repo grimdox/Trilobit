@@ -9,6 +9,7 @@ extends RefCounted
 ##   -1: a subway loop under the road grid (four stations, a scheduled train) with maintenance catwalks, hatches up to the street
 ##   -2: sewers under every road line, ladders up to the tunnels, manholes up to the street, and lairs for squatters
 const CG = preload("res://src/citygen.gd")
+const TP = preload("res://src/tower_plan.gd")
 
 static func build(c, seed: int) -> void:
 	var rng := RandomNumberGenerator.new()
@@ -61,8 +62,13 @@ static func build(c, seed: int) -> void:
 		all.append_array(air)
 	for _z in 2:
 		all.append_array(rock)
+	c.tiles = all                                         # the businesses built into the lobbies write straight into the stack
 	var links := {}
+	c.apartments = []
 	c.tower_info = []
+	c.under_up = PackedByteArray()
+	c.under_up.resize(all.size())
+	c.under_up.fill(3)
 	c.vaults = []
 	c.homes_t = PackedInt32Array()
 	c.works_t = PackedInt32Array()
@@ -70,7 +76,13 @@ static func build(c, seed: int) -> void:
 	var idx := 0
 	for t in cands:
 		idx += 1
-		_tower(c, all, links, t, rng, seed + idx * 31)
+		_tower(c, all, links, t, rng, idx)
+	# the floor under every cell of every level (the lobbies' and shops' floors are the ground part), for the furniture standing on it
+	var under_all: PackedByteArray = c.under_up
+	for i in mini(c.under.size(), s2):
+		under_all[i] = c.under[i]
+	c.under = under_all
+	c.under_up = PackedByteArray()
 	_bridges(c, all, rng)
 	_underground(c, all, links, rng)
 
@@ -144,18 +156,13 @@ static func _props(c, all: PackedByteArray, links: Dictionary, rng: RandomNumber
 		var x: int = rng.randi_range(2, size - 3)
 		var y: int = rng.randi_range(2, size - 3)
 		_prop_try(c, all, skip, y * size + x, size, rng)
-	# floors and roofs of each tower
+	# (the floors of the towers are furnished by tower_plan.gd; only the roofs get the odd crate)
 	for t in c.tower_info:
-		var x0: int = t["x0"]
-		var y0: int = t["y0"]
-		var x1: int = t["x1"]
-		var y1: int = t["y1"]
-		for z in range(1, int(t["h"]) + 1):
-			var base: int = c.lvl_of_z(z) * s2
-			for _n in 7:
-				var x: int = rng.randi_range(x0 + 2, x1 - 2)
-				var y: int = rng.randi_range(y0 + 2, y1 - 2)
-				_prop_try(c, all, skip, base + y * size + x, size, rng)
+		var rbase: int = c.lvl_of_z(int(t["h"])) * s2
+		for _n in 3:
+			var x: int = rng.randi_range(int(t["x0"]) + 2, int(t["x1"]) - 2)
+			var y: int = rng.randi_range(int(t["y0"]) + 2, int(t["y1"]) - 2)
+			_prop_try(c, all, skip, rbase + y * size + x, size, rng)
 
 static func _prop_try(c, all: PackedByteArray, skip: Dictionary, cell: int, size: int, rng: RandomNumberGenerator) -> void:
 	if skip.has(cell):
@@ -199,7 +206,7 @@ static func _link(links: Dictionary, a: int, b: int) -> void:
 	links[b].append(a)
 
 # ------------------------------------------------------------------ towers
-static func _tower(c, all: PackedByteArray, links: Dictionary, t: Dictionary, rng: RandomNumberGenerator, plan_seed: int) -> void:
+static func _tower(c, all: PackedByteArray, links: Dictionary, t: Dictionary, rng: RandomNumberGenerator, tower_no: int) -> void:
 	var size: int = c.size
 	var s2 := size * size
 	var x0: int = t["x0"]
@@ -207,56 +214,42 @@ static func _tower(c, all: PackedByteArray, links: Dictionary, t: Dictionary, rn
 	var x1: int = t["x1"]
 	var y1: int = t["y1"]
 	var h: int = t["h"]
-	var plan_a: Dictionary = c.floor_plan(x0, y0, x1, y1, plan_seed + 1)
-	var plan_b: Dictionary = c.floor_plan(x0, y0, x1, y1, plan_seed + 2)
-	var pa: PackedByteArray = plan_a["tiles"]
-	var pb: PackedByteArray = plan_b["tiles"]
-	# what the ground floor lets you reach from the street door
-	var door: Vector2i = t["door"]
-	var reach := PackedByteArray()
-	reach.resize(s2)
-	var q := PackedInt32Array()
-	for dd in [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]:
-		var n: Vector2i = door + dd
-		if all[n.y * size + n.x] == CG.FLOOR:
-			q.append(n.y * size + n.x)
-			reach[n.y * size + n.x] = 1
-	var head := 0
-	while head < q.size():
-		var cur := q[head]
-		head += 1
-		for nb in [cur - 1, cur + 1, cur - size, cur + size]:
-			var nx: int = nb % size
-			var ny: int = nb / size
-			if nx < x0 or nx > x1 or ny < y0 or ny > y1 or reach[nb] == 1:
-				continue
-			if all[nb] == CG.FLOOR or all[nb] == CG.DOOR:
-				reach[nb] = 1
-				q.append(nb)
-	# shaft cells: floor on the ground, in both upper plans, reachable from the street; as close to the middle as possible
-	var cx: int = (x0 + x1) / 2
-	var cy: int = (y0 + y1) / 2
-	var ok_cells: Array = []
-	for y in range(y0 + 1, y1):
-		for x in range(x0 + 1, x1):
-			var i := y * size + x
-			if all[i] == CG.FLOOR and reach[i] == 1 and pa[i] == CG.FLOOR and pb[i] == CG.FLOOR:
-				ok_cells.append(i)
-	if ok_cells.size() < 4:
-		return
-	var s_cell := _nearest(ok_cells, size, cx - 2, cy, -1)
-	var e_cell := _nearest(ok_cells, size, cx + 2, cy, s_cell)
+	var side: int = int(t.get("side", 1))
+	var fr := TP.Fr.new(x0, y0, x1, y1, side, size)
+	var lay: Dictionary = TP.layout(fr.F, fr.D)
+	var wealth: int = clampi(c.wealth_at(((y0 + y1) / 2) * size + (x0 + x1) / 2), 0, 2)
+	# what the tower is: offices, flats, or offices low down and flats above (tall towers only)
+	var d: float = float(t.get("d", 0.5))
+	var use := "office" if rng.randf() < (0.62 if d < 0.2 else 0.42) else "apartment"
+	if h >= 12 and rng.randf() < 0.3:
+		use = "hybrid"
+	t["use"] = use
+	t["split"] = rng.randi_range(3, maxi(3, h / 2)) if use == "hybrid" else 0
+	var first_flat: int = 1 if use == "apartment" else (int(t["split"]) if use == "hybrid" else 99)
+	t["gym_z"] = first_flat if first_flat < h else -1               # the lowest residential floor is the gym
+	# the lobby (with a shop on the street where there is room); the lifts and the stairs are in the corridor above it
+	var rng_state: int = c.rng.state                                 # the shops use the city's own random stream: leave it as it was for what comes after
+	var g: Dictionary = TP.ground(c, all, fr, lay, "office" if use == "office" else "apartment", rng)
+	c.rng.state = rng_state
+	if g.is_empty():
+		return                                                     # nowhere to put a street door: leave it a plain building
+	t["door"] = g["door"]
+	var s_cell: int = fr.idx(int(lay["fs"]), int(lay["sn"]))
+	var e_cell: int = fr.idx(int(lay["fe"]), int(lay["sn"]))
+	var units := 0
 	for z in range(1, h + 1):
 		var base := z * s2
 		if z < h:
-			var plan: Dictionary = plan_a if z % 2 == 1 else plan_b
-			var pt: PackedByteArray = plan["tiles"]
-			for y in range(y0, y1 + 1):
-				for x in range(x0, x1 + 1):
-					all[base + y * size + x] = pt[y * size + x]
-			_markers(c, plan["rooms"], pt, base, z, rng, [s_cell, e_cell], size)
-			if z >= 4 and z % 3 == 1 and rng.randf() < 0.55:
-				_vault(c, all, plan["rooms"], pt, base, rng, [s_cell, e_cell], size)
+			var kind: String = TP.floor_use(t, z)
+			var res: Dictionary
+			match kind:
+				"apartment": res = TP.apartment_floor(all, c.under_up, base, fr, lay, wealth)
+				"gym": res = TP.gym_floor(all, c.under_up, base, fr, lay)
+				_: res = TP.office_floor(all, c.under_up, base, fr, lay, rng)
+			_floor_markers(c, res, base, z, kind, tower_no)
+			units += int(res.get("units", []).size())
+			if kind == "office" and z >= 4 and z % 3 == 1 and rng.randf() < 0.55:
+				_vault(c, all, res["rooms"], base, rng, [s_cell, e_cell], size)
 		else:
 			for y in range(y0, y1 + 1):
 				for x in range(x0, x1 + 1):
@@ -275,7 +268,17 @@ static func _tower(c, all: PackedByteArray, links: Dictionary, t: Dictionary, rn
 		_link(links, base - s2 + e_cell, base + e_cell)
 	all[s_cell] = CG.STAIRS
 	all[e_cell] = CG.ELEVATOR
-	c.tower_info.append({"x0": x0, "y0": y0, "x1": x1, "y1": y1, "h": h, "stairs": s_cell, "elev": e_cell})
+	c.tower_info.append({"x0": x0, "y0": y0, "x1": x1, "y1": y1, "h": h, "stairs": s_cell, "elev": e_cell, "use": use, "side": side,
+		"no": tower_no, "door": t["door"], "gym_z": int(t["gym_z"]), "split": int(t["split"]), "units": units, "shops": g["biz"].size()})
+
+## the markers a floor leaves: homes in flats (and a record of each flat for later), places to work in offices and the gym
+static func _floor_markers(c, res: Dictionary, base: int, z: int, kind: String, tower_no: int) -> void:
+	for i in res.get("homes", []):
+		c.homes_t.append(base + int(i))
+	for u in res.get("units", []):
+		c.apartments.append({"cell": base + int(u["cell"]), "tower": tower_no, "z": z, "rect": u["rect"]})
+	for i in res.get("works", []):
+		c.works_t.append(base + int(i))
 
 static func _nearest(cells: Array, size: int, tx: int, ty: int, skip: int) -> int:
 	var best: int = -1
@@ -311,17 +314,17 @@ static func _markers(c, rooms: Array, pt: PackedByteArray, base: int, z: int, rn
 			else:
 				c.homes_t.append(base + i)
 
-## lock every door of the smallest room on a floor and remember its cells for loot
-static func _vault(c, all: PackedByteArray, rooms: Array, pt: PackedByteArray, base: int, rng: RandomNumberGenerator, skip: Array, size: int) -> void:
+## lock every door of the smallest closed room on a floor and remember its cells
+static func _vault(c, all: PackedByteArray, rooms: Array, base: int, rng: RandomNumberGenerator, skip: Array, size: int) -> void:
 	var best: Rect2i = Rect2i()
 	var ba := 1 << 30
 	for r in rooms:
 		var rr: Rect2i = r
+		var has_shaft := false
 		for sc in skip:
 			if rr.has_point(Vector2i(sc % size, sc / size)):
-				ba = -1
-		if ba == -1:
-			ba = 1 << 30
+				has_shaft = true
+		if has_shaft:
 			continue
 		if rr.get_area() < ba and rr.get_area() >= 12:
 			ba = rr.get_area()
@@ -340,7 +343,7 @@ static func _vault(c, all: PackedByteArray, rooms: Array, pt: PackedByteArray, b
 	var cells := PackedInt32Array()
 	for y in range(best.position.y, best.end.y):
 		for x in range(best.position.x, best.end.x):
-			if pt[y * size + x] == CG.FLOOR:
+			if CG.WALK[all[base + y * size + x]] == 1:
 				cells.append(base + y * size + x)
 	c.vaults.append(cells)
 
@@ -479,6 +482,7 @@ static func _underground(c, all: PackedByteArray, links: Dictionary, rng: Random
 	var hh := yb - yt
 	var sides := [[0, w, true], [w, hh, false], [w + hh, w, true], [2 * w + hh, hh, false]]
 	var stops: Array = []
+	c.station_doors = PackedInt32Array()
 	var ring_len := ring.size()
 	var si := 0
 	for sd in sides:
@@ -510,6 +514,7 @@ static func _underground(c, all: PackedByteArray, links: Dictionary, rng: Random
 						all[p] = CG.STAIRS
 						all[l1 + p] = CG.STAIRS
 						_link(links, p, l1 + p)
+						c.station_doors.append(p)
 						break
 		si += 1
 	c.subway = {"ring": ring, "stops": stops}

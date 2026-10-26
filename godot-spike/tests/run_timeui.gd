@@ -212,19 +212,31 @@ func _initialize() -> void:
 	g.wait_step(1)
 	check("a wait stops when you are hurt", not g.waiting() and g.body.total() < hp0)
 	g.body.mend_to(1.0)
-	# the clock moves the daily schedule: people go to work at 07:00, not at 07 minutes past six
-	g.sim.tick = 7 * CLK.HOUR
+	# the clock moves the daily schedule: people go to work from 06:00 to 08:30 on their own timetable, not all at once and not on every turn
+	for i in g.sim.n:                                           # a clean night: everyone at home, nobody mid-trip
+		if g.sim.sticky[i] == 0:
+			g.sim.com.forget(i)
+			g.sim.goal[i] = g.sim.HOME
+			if g.sim.near[i] == 1:
+				g.sim.at[g.sim.pos[i]] = -1
+				g.sim._demote(i)
+			g.sim.arrive[i] = -1
+			g.sim.pos[i] = g.sim.home_cell[i]
+			g.sim.dest[i] = g.sim.home_cell[i]
+	g.sim.buckets.clear()
+	g.sim.tick = (g.sim.tick / CLK.DAY + 1) * CLK.DAY + 6 * CLK.HOUR
 	var work0: int = 0
 	for i in g.sim.n:
 		if g.sim.goal[i] == g.sim.WORK:
 			work0 += 1
-	g.end_turn()
+	for _k in 600:                                              # the morning rush: everyone leaves at a time of their own between 06:00 and 08:30
+		g.end_turn()
 	var work1: int = 0
 	for i in g.sim.n:
 		if g.sim.goal[i] == g.sim.WORK:
 			work1 += 1
-	check("at 07:00 commuters head for work (%d -> %d)" % [work0, work1], work1 != work0)
-	g.sim.tick = 7 * CLK.HOUR + 5
+	check("in the hour after 07:00 commuters head for work (%d -> %d)" % [work0, work1], work1 != work0)
+	g.sim.tick = (g.sim.tick / CLK.DAY) * CLK.DAY + 9 * CLK.HOUR + 5
 	var snap: Array = Array(g.sim.goal)
 	g.end_turn()
 	check("... and not on every turn after it", Array(g.sim.goal) == snap)

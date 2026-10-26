@@ -192,6 +192,9 @@ func _below(c: int) -> int:
 	while l > 0:
 		l -= 1
 		var t: int = game.city.tiles[l * s2 + local]
+		if t >= CG.EXTRA0:                      # furniture or a special floor: what you see from above is the floor under it
+			var u: int = game.city.under[l * s2 + local] if l * s2 + local < game.city.under.size() else 3
+			return u if u != 0 else 3
 		if t != 7:
 			return t
 	return -1
@@ -442,7 +445,7 @@ func _draw() -> void:
 			if t == 7:
 				var bt := _below(c)
 				if bt >= 0:
-					_blit(tileset.pick(TERRAIN[bt], c), pos, mod * below_mod)
+					_blit(tileset.pick(String(CG.TILE_SPRITE.get(bt, "t_floor")) if bt >= CG.EXTRA0 else TERRAIN[bt], c), pos, mod * below_mod)
 				continue
 			if (t == CG.TID["window_broken"] or t == CG.TID["door_closed"]) and tileset.index.has("t_door_closed"):
 				_blit(tileset.pick("t_floor", c), pos, mod)

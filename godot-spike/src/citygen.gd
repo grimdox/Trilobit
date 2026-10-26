@@ -71,6 +71,7 @@ static var TID: Dictionary = _tids()
 static var TILE_SPRITE: Dictionary = _tile_sprites()
 static var WALK: Array = _walk_table()
 static var LOW_COVER: Array = _low_cover()
+static var FLOOR_IDS: Dictionary = _floor_ids()   # tile ids of the special floors (a venue's, a lobby's, a flat's)
 
 static func _tids() -> Dictionary:
 	var d := {}
@@ -89,6 +90,17 @@ static func _walk_table() -> Array:
 	for e in EXTRA:
 		w.append(e[2])
 	return w
+
+## a plain floor or one of the special floors (a lobby's marble, a flat's lino, an office's carpet)
+static func is_floor(t: int) -> bool:
+	return t == FLOOR or FLOOR_IDS.has(t)
+
+static func _floor_ids() -> Dictionary:
+	var d := {}
+	for k in EXTRA.size():
+		if String(EXTRA[k][0]).begins_with("floor_"):
+			d[EXTRA0 + k] = true
+	return d
 
 static func _low_cover() -> Array:
 	var c := [20, 23, 24, 25]
@@ -155,8 +167,12 @@ var lairs: PackedInt32Array = PackedInt32Array()     # cells underground where s
 var vaults: Array = []                 # Array of PackedInt32Array: the cells of each locked room (loot goes here)
 var movables: Array = []               # [cell, kind] props the game turns into pushable things (crates, tables, chairs)
 var tower_info: Array = []             # {x0,y0,x1,y1,h,stairs,elev} per built tower
+var station_doors: PackedInt32Array = PackedInt32Array()   # the street cell of each subway station's stairs
 var subway: Dictionary = {}            # {ring: PackedInt32Array of track cells (level -1), stops: Array of ring indices}
 var rng := RandomNumberGenerator.new()
+var houses: Array = []                 # every house: {cell, x0, y0, x1, y1} (a floor cell inside it): who lives where is decided from this and from `apartments`
+var apartments: Array = []             # every flat in every tower: {cell, tower, z, rect} (for later: who lives where)
+var under_up: PackedByteArray = PackedByteArray()   # while the towers are built: the floor under every cell of every level
 var businesses: Array = []             # every business built (see business.gd): {type, ver, tag, tier, name, cat, x0..y1, door, side, role, jobs, staff: cells, keeper}
 var venues: Array = []                 # {kind, style, tier, x0, y0, x1, y1, door, keeper: cell, name}: shops, clinics, churches, shrines
 var venue_plan: Array = []             # kinds still to place while the suburbs are laid out
@@ -236,6 +252,8 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 	towers = []
 	venues = []
 	businesses = []
+	houses = []
+	apartments = []
 	biz_count = {}
 	venue_plan = VN.city_plan(rng)
 	var planned: bool = not plan.is_empty()
@@ -946,11 +964,11 @@ func _organic_city(seed_v: int) -> void:
 								freeb[yy * size + xx] = 0
 						nstat["ind"] += 1
 						continue
-			if dd >= 0.12 and czone != "ind" and housing[y * size + x] == 0 and w >= 26 and h >= 22 and (hash([size, x / 8, y / 8, "lot"]) & 0x7fffffff) % 100 < 55:
+			if dd >= 0.12 and czone != "ind" and housing[y * size + x] == 0 and w >= 22 and h >= 22 and (hash([size, x / 8, y / 8, "lot"]) & 0x7fffffff) % 100 < 55:
 				var nbay: int = mini(10, (w - 4) / 4)
 				var ww: int = nbay * 4 + 2
 				var roll: int = (hash([size, x / 8, y / 8, "lk"]) & 0x7fffffff) % 100
-				_stamp_lot("station" if roll < 35 else "lot", Rect2i(x + (w - ww) / 2, y + (h - 20) / 2, ww, 20), (hash([size, x, y, "ev"]) & 0x7fffffff) % 3 == 0)
+				_stamp_lot("station" if roll < 40 else "lot", Rect2i(x + (w - ww) / 2, y + (h - 20) / 2, ww, 20), (hash([size, x, y, "ev"]) & 0x7fffffff) % 3 == 0)
 				nstat["lot"] += 1
 				made_lot = true
 			elif dd < mega and w >= 60 and h >= 60 and r.randf() < 0.55:
@@ -1494,6 +1512,19 @@ func _building(bx0: int, by0: int, bx1: int, by1: int, kind: String) -> void:
 					shops.append(idx)
 				else:
 					homes.append(idx)
+	if kind == "house":
+		var hc := Vector2i((bx0 + bx1) / 2, (by0 + by1) / 2)
+		var best := -1
+		var bd := 1 << 30
+		for y in range(by0 + 1, by1):
+			for x in range(bx0 + 1, bx1):
+				if tiles[y * size + x] == FLOOR:
+					var dd := absi(x - hc.x) + absi(y - hc.y)
+					if dd < bd:
+						bd = dd
+						best = y * size + x
+		if best >= 0:
+			houses.append({"cell": best, "x0": bx0, "y0": by0, "x1": bx1, "y1": by1})
 
 ## the plan of an upper storey: outer wall with windows, BSP rooms with doors, no street door.  Returns {tiles, rooms}.
 func floor_plan(bx0: int, by0: int, bx1: int, by1: int, plan_seed: int) -> Dictionary:

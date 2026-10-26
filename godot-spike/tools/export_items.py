@@ -220,6 +220,11 @@ IMPLANTS = [
 for iid, part, nm, cost, text in IMPLANTS:
     items.append({"id": "trl_imp_" + iid, "name": nm, "desc": text + "  Fits the %s." % part, "weight_g": 0, "volume_ml": 0, "length_mm": 0, "price": cost, "tags": ["implant"], "implant": iid, "part": part})
 
+# ---- trade goods of the businesses, flats and offices: no stats, no function (see tools/content/goods_list.py)
+import goods_list
+for gid, nm, cat, who, text, wg, vol, pr in goods_list.GOODS:
+    items.append({"id": "trl_good_" + gid, "name": nm, "desc": text, "weight_g": wg, "volume_ml": vol, "length_mm": 0, "price": pr, "tags": ["good", cat]})
+
 # ---- every weapon is held in one hand or two (a pistol, revolver, SMG or reach-1 melee weapon: one; everything else: both)
 for it in items:
     if "gun" in it:

@@ -50,7 +50,7 @@ func run() -> Array:
 			continue
 		area += 1
 		var t: int = c.tiles[i]
-		if t == CG.FLOOR or t == CG.WALL or t == CG.DOOR or t == CG.LOCKED:
+		if t == CG.FLOOR or t == CG.WALL or t == CG.DOOR or t == CG.LOCKED or t >= CG.EXTRA0:   # (the lobbies, flats and shops have their own floors and furniture)
 			bld += 1
 	var share: float = float(bld) / float(area)
 	check.call("the city covers more than twice the old area (%d tiles vs 226,000)" % area, area > 2 * 226000)

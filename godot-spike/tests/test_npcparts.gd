@@ -46,6 +46,12 @@ func run() -> Array:
 		var j: int = g.sim.near_list[k]
 		if g.sim.alive[j] == 1 and g.z_of(g.sim.pos[j]) == 0 and who < 0:
 			who = j
+	if who < 0:                                               # (most people are up in the flats at this hour: bring one down to the street)
+		for j in g.sim.n:
+			if g.sim.alive[j] == 1 and g.sim.sticky[j] == 0:
+				g.sim.place(j, spot + 1)
+				who = j
+				break
 	var fresh = func(cell: int, hp_each: int = 60) -> void:
 		g.sim.alive[who] = 1
 		g.sim.place(who, cell)

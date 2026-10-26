@@ -138,3 +138,5 @@ Why: the city was flat.  Verticality is also the cheapest big win for the NPC si
 **Creation Gender/Type, drop** (2026-10-25): create screen rows Gender and Type (`creation.gd` BUILDS), DROP button, alt-click and drop mode in `gear_ui.gd`, keypad minus on turn. Tests: creation 64, inventory 49.
 
 **Round of 2026-10-26**: barter screen live; credsticks removed; window/furniture/door cover; station clocks; city density (`_subdivide`, packed suburb rows).  Still to do: a larger city zone (1536) needs the island's caldera, pass and airstrip re-laid; organic, diagonal and circular roads and meandering park/river edges.
+
+**Towers, goods, population, commute** (2026-10-26): `tower_plan.gd` (office/apartment/gym floors, lobbies, street shops), 111 goods (`tools/content/goods_list.py`, `docs/goods_list.md`), `docs/furniture_list.md`, dwelling-based homes, jobs for everyone (`Game._assign_jobs`), the daily commute (`commute.gd`: walk/subway/car legs, A* ground grid built on a thread, BFS through towers), player starts in a random flat.  Not done: owning flats, barter stock for the new goods, island re-lay to 1536 (asked earlier, still open), real sprites for goods.

@@ -7,6 +7,7 @@ extends RefCounted
 ## Struct-of-arrays storage, a bucketed arrival queue, and a rolling slice for tier checks keep the per-tick cost bounded.
 const CLK = preload("res://src/clock.gd")
 const FF = preload("res://src/flowfield.gd")
+const COM = preload("res://src/commute.gd")
 const HOME := 0
 const WORK := 1
 const SHOP := 2
@@ -24,6 +25,7 @@ var works_t: PackedInt32Array
 var shops_g: PackedInt32Array
 var shops_t: PackedInt32Array
 var tiles: PackedByteArray
+var floorish: PackedByteArray      # per tile id: a plain floor or one of the special floors (lobbies, flats, shops): where people may stand about
 var walk: PackedByteArray
 var opaque: PackedByteArray
 var fields: Array = []
@@ -33,6 +35,9 @@ var shops: PackedInt32Array
 var n: int = 0
 var near_radius: int = 45
 var rng := RandomNumberGenerator.new()
+var com                            # the daily commute (commute.gd)
+var station_doors: PackedInt32Array = PackedInt32Array()
+var road_id: int = 1
 
 var pos: PackedInt32Array          # cell index
 var dest: PackedInt32Array         # specific destination cell
@@ -64,6 +69,8 @@ func setup(city, count: int, seed: int) -> void:
 	works = city.works
 	shops = city.shops
 	s2 = size * size
+	station_doors = city.station_doors
+	road_id = city.ROAD
 	rows = tiles.size() / size
 	links = city.links
 	haslink = city.haslink
@@ -83,8 +90,10 @@ func setup(city, count: int, seed: int) -> void:
 	walk.resize(tiles.size())
 	opaque.resize(tiles.size())
 	var lut := PackedByteArray()
+	floorish = PackedByteArray()
 	for t in 256:
 		lut.append(1 if (t < city.WALK.size() and city.WALK[t] == 1) else 0)
+		floorish.append(1 if city.is_floor(t) else 0)
 	# walkable / opaque per cell.  The upper levels are open air nearly everywhere (walk 0, opaque 0, which is what the arrays start as), so a
 	# run of 64 air cells is skipped by one comparison instead of 64 steps.
 	var shut_id: int = city.TID["door_closed"]          # a shut door and a locked door cannot be seen through
@@ -136,12 +145,111 @@ func setup(city, count: int, seed: int) -> void:
 	sticky = PackedByteArray(); sticky.resize(n)
 	alive = PackedByteArray(); alive.resize(n); alive.fill(1)
 	ctl = PackedByteArray(); ctl.resize(n)
+	var dw: PackedInt32Array = _dwellings(city, n)
 	for i in n:
-		var h := _scatter(_pick(homes_g, homes_t), 9)
+		var h: int = dw[i] if dw.size() == n else _scatter(_pick(homes_g, homes_t), 9)
 		home_cell[i] = h
 		pos[i] = h
 		dest[i] = h
 		goal[i] = HOME
+	com = COM.new()
+	com.setup(self)
+
+## One home cell per person.  Houses first (one to four people each, fewer in the rich districts, more in the poor), then the flats of the
+## towers (one to three), then the old home markers as households of one to three, until everyone has a roof.  Every person gets a cell of
+## their own inside the dwelling.  Returns an empty array for a map with no houses or flats (a harbour, a mission site).
+func _dwellings(city, count: int) -> PackedInt32Array:
+	var out := PackedInt32Array()
+	if city.houses.is_empty() and city.apartments.is_empty():
+		return out
+	var taken: Dictionary = {}
+	var hs: Array = city.houses.duplicate()
+	var fl: Array = city.apartments.duplicate()
+	_shuffle(hs)
+	_shuffle(fl)
+	var covered := PackedByteArray()                      # ground cells that belong to a house: the old home markers do not put their people in there
+	covered.resize(s2)
+	var skip: Dictionary = {}
+	for h in city.houses:
+		skip[int(h["cell"])] = true
+		for y in range(int(h["y0"]), int(h["y1"]) + 1):
+			for x in range(int(h["x0"]), int(h["x1"]) + 1):
+				covered[y * size + x] = 1
+	var legacy: Array = []                                # the old markers: generic ground-level homes (the flats are the apartment units)
+	for c in homes_g:
+		if not skip.has(c) and c < s2 and covered[c] == 0:
+			legacy.append(c)
+	_shuffle(legacy)
+	var odds: Array = [[0.20, 0.30, 0.30, 0.20], [0.15, 0.35, 0.30, 0.20], [0.30, 0.40, 0.20, 0.10]]     # 1..4 people: poor, middle, rich
+	for h in hs:
+		if out.size() >= count:
+			break
+		var k: int = _roll(odds[city.wealth_at(int(h["cell"]))]) + 1
+		for _p in k:
+			if out.size() < count:
+				out.append(_room(int(h["x0"]), int(h["y0"]), int(h["x1"]), int(h["y1"]), 0, int(h["cell"]), taken))
+	for a in fl:
+		if out.size() >= count:
+			break
+		var k2: int = _roll([0.4, 0.4, 0.2]) + 1
+		var r: Rect2i = a["rect"]
+		var base: int = (int(a["cell"]) / s2) * s2
+		for _p in k2:
+			if out.size() < count:
+				out.append(_room(r.position.x, r.position.y, r.end.x - 1, r.end.y - 1, base, int(a["cell"]), taken))
+	for m in legacy:
+		if out.size() >= count:
+			break
+		var k3: int = _roll([0.4, 0.4, 0.2]) + 1
+		for _p in k3:
+			if out.size() < count:
+				var cell: int = _scatter(m, 9)
+				for _r in 6:
+					if not taken.has(cell) and covered[cell % s2] == 0 and cell < s2:
+						break
+					cell = _scatter(m, 9)
+				if taken.has(cell) or covered[cell % s2] == 1:
+					cell = m
+				taken[cell] = true
+				out.append(cell)
+	var lap := 0
+	while out.size() < count and not legacy.is_empty() and lap < 12:          # more people than roofs: the old markers take another household each
+		for m in legacy:
+			if out.size() >= count:
+				break
+			var cell: int = _scatter(m, 9 + lap)
+			if taken.has(cell) or covered[cell % s2] == 1 or cell >= s2:
+				cell = m
+			taken[cell] = true
+			out.append(cell)
+		lap += 1
+	while out.size() < count:
+		out.append(_scatter(_pick(homes_g, homes_t), 9))
+	return out
+
+func _roll(p: Array) -> int:
+	var r: float = rng.randf()
+	for k in p.size():
+		r -= float(p[k])
+		if r < 0.0:
+			return k
+	return p.size() - 1
+
+func _shuffle(a: Array) -> void:
+	for k in range(a.size() - 1, 0, -1):
+		var j: int = rng.randi() % (k + 1)
+		var t = a[k]
+		a[k] = a[j]
+		a[j] = t
+
+## a free standing cell of its own inside a rectangle of one level
+func _room(x0: int, y0: int, x1: int, y1: int, base: int, fallback: int, taken: Dictionary) -> int:
+	for _t in 30:
+		var c: int = base + rng.randi_range(y0, y1) * size + rng.randi_range(x0, x1)
+		if c < tiles.size() and not taken.has(c) and floorish[tiles[c]] == 1 and walk[c] == 1:
+			taken[c] = true
+			return c
+	return fallback
 
 func _dist_to(cell_a: int, cell_b: int) -> int:
 	return maxi(absi(cell_a % size - cell_b % size), absi(cell_a / size - cell_b / size))
@@ -159,7 +267,7 @@ func _scatter(c: int, r: int) -> int:
 		if nx < 0 or ny < 0 or nx >= size or ny >= size:
 			continue
 		var nc := ny * size + nx
-		if tiles[nc] == 3 and walk[nc] == 1:
+		if floorish[tiles[nc]] == 1 and walk[nc] == 1:
 			return nc
 	return c
 
@@ -172,6 +280,8 @@ func _pick_dest(g: int, i: int) -> int:
 ## a new goal for agent i
 func set_goal(i: int, g: int) -> void:
 	if alive[i] == 0 or sticky[i] == 1:
+		return
+	if com.leg[i] != 0:
 		return
 	goal[i] = g
 	dest[i] = _pick_dest(g, i)
@@ -195,6 +305,17 @@ func _schedule() -> void:
 	for i in n:
 		var r := rng.randf()
 		var g := int(goal[i])
+		if com.leg[i] != 0:
+			continue
+		if com.wc[i] >= 0 and sticky[i] == 0:
+			# people with a job: the commute (commute.gd) takes them to work and home; the hour here only adds the lunch break and sends stragglers home
+			if hour == 12 and r < 0.25 and g == WORK:
+				set_goal(i, SHOP)
+			elif hour == 13 and g == SHOP:
+				com.start(i, WORK)
+			elif hour == 21 and g != HOME:
+				com.start(i, HOME)
+			continue
 		if hour == 7 and r < 0.6 and g == HOME:
 			set_goal(i, WORK)
 		elif hour == 12 and r < 0.25 and g == WORK:
@@ -210,7 +331,10 @@ func _schedule() -> void:
 
 func _promote(i: int) -> void:
 	# reconstruct the position of an agent that was in transit
-	if arrive[i] >= 0:
+	if com.leg[i] == 1 or com.leg[i] == 3:
+		com.reconstruct(i)
+		arrive[i] = -1
+	elif arrive[i] >= 0:
 		var elapsed := mini(tick - depart[i], 400)
 		var f: PackedInt32Array = fields[goal[i]]
 		var c := pos[i]
@@ -263,7 +387,9 @@ func _demote(i: int) -> void:
 	ctl[i] = 0
 	if at[pos[i]] == i:
 		at[pos[i]] = -1
-	if idle[i] == 0 and sticky[i] == 0:
+	if com.leg[i] == 1 or com.leg[i] == 3:
+		com.on_demote(i)
+	elif idle[i] == 0 and sticky[i] == 0:
 		var d: int = fields[goal[i]][pos[i]]
 		if d < FF.UNREACHED:
 			depart[i] = tick
@@ -298,7 +424,7 @@ func _sees(a: int, b: int, limit: int) -> bool:
 
 ## promote or demote one agent according to its distance to the player (a different level is always far)
 func _tier(i: int) -> void:
-	if alive[i] == 0:
+	if alive[i] == 0 or com.leg[i] == 2:
 		return
 	var d := _dist_to(pos[i], player)
 	if near[i] == 0:
@@ -322,11 +448,13 @@ func _tier(i: int) -> void:
 ## examine everyone now (after the player changes level, or on load) instead of waiting for the rolling slice
 func retier(player_cell: int) -> void:
 	player = player_cell
+	com.budget = 60
 	for i in n:
 		_tier(i)
 
 func step(player_cell: int) -> void:
 	player = player_cell
+	com.step()
 	if tick % CLK.HOUR == 0:
 		_schedule()
 	for _c in churn_per_tick:
@@ -337,6 +465,8 @@ func step(player_cell: int) -> void:
 			if arrive[i] == tick and near[i] == 0 and alive[i] == 1:
 				pos[i] = dest[i]
 				arrive[i] = -1
+				if com.leg[i] != 0:
+					com.arrived(i)
 		buckets.erase(tick)
 	# tier checks on a rolling slice (each agent is examined once every 8 ticks)
 	var slice := n / 8 + 1
@@ -353,7 +483,12 @@ func step(player_cell: int) -> void:
 		if perception_standin and absi(c % size - plx) <= 25 and absi(c / size - ply) <= 25:
 			if _sees(c, player, 25):
 				seen_player += 1
-		if idle[i] == 1 or ctl[i] == 1 or sticky[i] == 1:
+		if ctl[i] == 1 or sticky[i] == 1:
+			continue
+		if com.leg[i] != 0:
+			com.follow(i)
+			continue
+		if idle[i] == 1:
 			continue
 		var f: PackedInt32Array = fields[goal[i]]
 		var cur: int = f[c]
@@ -389,6 +524,16 @@ func step(player_cell: int) -> void:
 			at[c] = -1
 			at[best] = i
 			pos[i] = best
+	if not com.boarding.is_empty():
+		for i in com.boarding:
+			if near[i] == 1:
+				_vanish(i)
+		com.boarding.clear()
+	if not com.demoting.is_empty():
+		for i in com.demoting:
+			if near[i] == 1:
+				_demote(i)
+		com.demoting.clear()
 	tick += 1
 
 
@@ -396,6 +541,7 @@ func step(player_cell: int) -> void:
 func place(i: int, cell: int) -> void:
 	if alive[i] == 0:
 		return
+	com.forget(i)
 	if near[i] == 1:
 		idle[i] = 1
 		_demote(i)
@@ -421,3 +567,17 @@ func remove_agent(i: int) -> void:
 	alive[i] = 0
 	arrive[i] = -1
 	ctl[i] = 0
+	com.forget(i)
+
+## a near agent goes out of sight on a ride (it is not on the map until it steps out the other end)
+func _vanish(i: int) -> void:
+	var sl := near_slot[i]
+	var last := near_list[near_list.size() - 1]
+	near_list[sl] = last
+	near_slot[last] = sl
+	near_list.resize(near_list.size() - 1)
+	near_slot[i] = -1
+	near[i] = 0
+	ctl[i] = 0
+	if at[pos[i]] == i:
+		at[pos[i]] = -1

@@ -22,6 +22,16 @@ func _beside(g, vi: int) -> int:
 				return nc
 	return -1
 
+## nobody stands within r tiles of the car (people are random; the steering checks are about the car)
+func _no_people(g, vi: int, r: int) -> void:
+	var ctr: int = g.vehicles[vi]["cell"]
+	for dy in range(-r, r + 1):
+		for dx in range(-r, r + 1):
+			var c: int = ctr + dy * g.size + dx
+			if c >= 0 and c < g.sim.at.size() and g.sim.at[c] != -1:
+				var who: int = g.sim.at[c]
+				g.sim.place(who, g.sim.home_cell[who])
+
 func run() -> Array:
 	var st := [0, 0]
 	var log := []
@@ -117,6 +127,12 @@ func run() -> Array:
 		g.act_move(0, 1)
 		presses += 1
 	check.call("the opposite key brakes to a halt", g.vehicles[vi]["spd"] == 0)
+	_no_people(g, vi, 8)
+	# the arc of the right turn may have run the car up to the kerb: set it back in the middle of its lane, still heading north-east and standing, then turn left
+	var back: int = vs.anchor_for("car", 1, VS.lane_hi2(e), 2 * mid_y, 0)
+	if vs.probe(vi, back, 1).is_empty():
+		vs.put(vi, back, 1)
+		g.pc = g.vehicles[vi]["cell"]
 	g.act_move(-1, 0)
 	check.call("Left turns it back to the left of its own heading, and the view follows (%s)" % str(g.facing), g.vehicles[vi]["dir"] == 0 and g.facing == Vector2i(0, -1))
 	# standing still, Right pivots on the spot

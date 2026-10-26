@@ -91,7 +91,13 @@ func run() -> Array:
 		var j: int = g.sim.near_list[k]
 		if g.sim.alive[j] == 1 and g.z_of(g.sim.pos[j]) == 0 and who < 0:
 			who = j
-	check.call("someone to fight", who >= 0)
+	if who < 0:                                               # (most people are up in the flats at this hour: bring one down to the street)
+		for j in g.sim.n:
+			if g.sim.alive[j] == 1 and g.sim.sticky[j] == 0:
+				g.sim.place(j, spot + 1)
+				who = j
+				break
+	check.call("someone to fight", who >= 0 and g.sim.near[who] == 1)
 	var put = func(cell: int) -> void:
 		g.sim.at[g.sim.pos[who]] = -1
 		g.sim.pos[who] = cell

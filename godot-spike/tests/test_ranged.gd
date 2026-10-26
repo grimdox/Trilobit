@@ -107,6 +107,12 @@ func run() -> Array:
 		var j: int = g.sim.near_list[k]
 		if g.sim.alive[j] == 1 and g.z_of(g.sim.pos[j]) == 0 and who < 0:
 			who = j
+	if who < 0:                                               # (most people are up in the flats at this hour: bring one down to the street)
+		for j in g.sim.n:
+			if g.sim.alive[j] == 1 and g.sim.sticky[j] == 0:
+				g.sim.place(j, spot + 1)
+				who = j
+				break
 	var put = func(cell: int) -> void:
 		g.sim.at[g.sim.pos[who]] = -1
 		g.sim.pos[who] = cell

@@ -92,11 +92,11 @@ func run() -> Array:
 	check.call("a locked door guards the vault", door >= 0)
 	var from := -1
 	for nb in [door - 1, door + 1, door - g.size, door + g.size]:
-		if g.city.tiles[nb] == CG.FLOOR and g.sim.at[nb] == -1 and not vault.has(nb):
+		if CG.is_floor(g.city.tiles[nb]) and g.sim.at[nb] == -1 and not vault.has(nb):
 			from = nb
 	if from < 0:
 		for nb in [door - 1, door + 1, door - g.size, door + g.size]:
-			if g.city.tiles[nb] == CG.FLOOR and g.sim.at[nb] == -1:
+			if CG.is_floor(g.city.tiles[nb]) and g.sim.at[nb] == -1:
 				from = nb
 	g.pc = from
 	var dx2: int = (door % g.size) - (from % g.size)

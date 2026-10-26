@@ -62,6 +62,7 @@ var db
 var fov
 var size: int
 var s2: int = 0                      # cells per level
+static var street_start: bool = OS.get_environment("TRL_STREET") != ""   # tests: begin on a road instead of in a flat
 var rows: int = 0                    # rows of the stacked map
 var total: int = 0                   # cells in all levels
 var transit
@@ -298,12 +299,94 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1), ms
 	barter = BT.new(self)
 	if not mission.is_empty():
 		_mission_roles()
+	_assign_jobs()
 	_npc_energy_init()                                  # after the economy has settled everyone's faction
 	_prof("eco", _t0)
 	_compute_fov()
 	_prof("fov", _t0)
 	if island == null or zone == island.CITY_ZONE:
 		say("You step out onto the street.  Morning in the city.  [?] for keys.")
+
+## Everyone who is not nailed to a post gets one place to work.  The shops, offices, gyms and lobbies of the new buildings are staffed by ordinary
+## people only (never the gangs), the keeper of a shop that trades is a merchant; whoever is left works at one of the old workplace markers,
+## and the gangs hang about on the street.  Each job goes to the nearest of a few unemployed people, so the commute is short more often than not.
+func _assign_jobs() -> void:
+	if not mission.is_empty() or (island != null and zone != island.CITY_ZONE):
+		return
+	var com = sim.com
+	var pool: Array = []
+	for i in sim.n:
+		if sim.sticky[i] == 0 and sim.alive[i] == 1 and fac[i] == CIV and eco.role[i] == eco.NONE:
+			pool.append(i)
+	var staffed: Dictionary = {}
+	var jobs: Array = []                                   # [cell, merchant?]
+	for b in city.businesses:
+		if b.get("legacy", false):
+			continue
+		var st: Array = b["staff"]
+		for k in st.size():
+			jobs.append([int(st[k]), k == 0 and b["role"] == "vendor" and int(b["keeper"]) == int(st[k])])
+			staffed[int(st[k])] = true
+	for c in city.works_t:
+		jobs.append([int(c), false])
+		staffed[int(c)] = true
+	var filled := 0
+	for jb in jobs:
+		if pool.is_empty():
+			break
+		var cell: int = jb[0]
+		var best := -1
+		var bd := 1 << 30
+		for _t in 24:
+			var pk: int = rng.randi() % pool.size()
+			var d: int = com.manh(sim.home_cell[pool[pk]], cell)
+			if d < bd:
+				bd = d
+				best = pk
+		var who: int = pool[best]
+		pool[best] = pool[pool.size() - 1]
+		pool.pop_back()
+		com.assign(who, cell)
+		if jb[1]:
+			eco.role[who] = eco.VENDOR
+			eco.look[who] = ["backpack", "courier"]
+		filled += 1
+	# everyone else: an old workplace marker (the nearest of a dozen), or the street for the gangs
+	var general: Array = []
+	for c in city.works_g:
+		if not staffed.has(int(c)):
+			general.append(int(c))
+	for i in sim.n:
+		if sim.sticky[i] == 1 or sim.alive[i] == 0 or com.wc[i] >= 0:
+			continue
+		var cell2 := -1
+		if fac[i] == CIV and not general.is_empty():
+			var bd2 := 1 << 30
+			for _t in 12:
+				var c2: int = general[rng.randi() % general.size()]
+				var d2: int = com.manh(sim.home_cell[i], c2)
+				if d2 < bd2:
+					bd2 = d2
+					cell2 = c2
+			cell2 = sim._scatter(cell2, 3)
+		else:
+			cell2 = _loiter_cell(int(sim.home_cell[i]))
+		if cell2 >= 0:
+			com.assign(i, cell2)
+	com.index()
+
+## a bit of pavement or park near a cell (where the gangs stand about)
+func _loiter_cell(home: int) -> int:
+	var hx: int = home % size
+	var hy: int = (home / size) % size
+	for _t in 80:
+		var x: int = clampi(hx + rng.randi_range(-40, 40), 1, size - 2)
+		var y: int = clampi(hy + rng.randi_range(-40, 40), 1, size - 2)
+		var c: int = y * size + x
+		var tt: int = city.tiles[c]
+		if (tt == CG.GROUND or tt == CG.PARK) and sim.walk[c] == 1:
+			return c
+	return -1
 
 ## TRL_PROF=1 prints how long each stage of building a zone took (milliseconds since the start of setup)
 func _prof(label: String, t0: int) -> void:
@@ -338,15 +421,14 @@ func _people() -> void:
 	fem = PackedByteArray(); fem.resize(n)
 	noticed_you = PackedByteArray(); noticed_you.resize(n)
 	nname = PackedStringArray(); nname.resize(n)
+	var rolled := PackedByteArray()
+	rolled.resize(n)
 	for i in n:
-		var r := rng.randf()
-		var f := CIV
-		if r < 0.045:
-			f = BRATVA
-		elif r < 0.085:
-			f = NAP
-		elif r < 0.105:
-			f = NASIM
+		var r0 := rng.randf()
+		rolled[i] = BRATVA if r0 < 0.045 else (NAP if r0 < 0.085 else (NASIM if r0 < 0.105 else CIV))
+	_factions_out_of_flats(rolled)
+	for i in n:
+		var f: int = rolled[i]
 		fac[i] = f
 		hpmax[i] = [25, 40, 45, 30, 35][f]
 		hpn[i] = hpmax[i]
@@ -361,6 +443,25 @@ func _people() -> void:
 			gunc[i] = 1 if rng.randf() < 0.8 else 2
 		elif f == NASIM:
 			gunc[i] = 1 if rng.randf() < 0.2 else 0
+
+## the gangs live in houses, not in the flats of the towers: a gang member whose home is up a tower swaps homes with an ordinary person who has a house
+func _factions_out_of_flats(rolled: PackedByteArray) -> void:
+	var civ_low: Array = []
+	for i in sim.n:
+		if rolled[i] == CIV and int(sim.home_cell[i]) < s2:
+			civ_low.append(i)
+	var k := 0
+	for i in sim.n:
+		if rolled[i] != CIV and int(sim.home_cell[i]) >= s2 and k < civ_low.size():
+			var j: int = civ_low[k]
+			k += 1
+			var h: int = sim.home_cell[i]
+			sim.home_cell[i] = sim.home_cell[j]
+			sim.home_cell[j] = h
+			sim.pos[i] = sim.home_cell[i]
+			sim.dest[i] = sim.home_cell[i]
+			sim.pos[j] = h
+			sim.dest[j] = h
 
 ## the harbor's people: dock workers in the middle (they commute between their dorms and the quay and yard), unaffiliated criminals
 ## loitering about the warehouses in the north, the Bratva about the dormitories in the south
@@ -715,6 +816,12 @@ func _start_player() -> void:
 				bd = d
 				best = i
 	pc = best if mission.is_empty() else int(city.get_meta("site")["entry"])
+	if street_start:
+		pass
+	elif mission.is_empty() and not city.apartments.is_empty() and (island == null or zone == island.CITY_ZONE):
+		var flat: int = _start_flat()
+		if flat >= 0:
+			pc = flat
 	inv = INV.new()
 	inv.equip["chest"] = _new_item("trl_coat")
 	inv.equip["back"] = _new_item("trl_backpack")
@@ -724,6 +831,23 @@ func _start_player() -> void:
 	_load_full(wield)
 	inv.stow(_new_item("trl_ration", 2))
 	inv.stow(new_bottle(500))
+
+## a free floor cell in a flat chosen at random from every flat in every apartment building (who owns it is for later)
+func _start_flat() -> int:
+	var ap: Array = city.apartments
+	for _t in 60:
+		var a: Dictionary = ap[rng.randi() % ap.size()]
+		var r: Rect2i = a["rect"]
+		var base: int = (int(a["cell"]) / s2) * s2
+		var cells: Array = []
+		for y in range(r.position.y, r.end.y):
+			for x in range(r.position.x, r.end.x):
+				var c: int = base + y * size + x
+				if sim.walk[c] == 1 and sim.at[c] == -1 and CG.is_floor(city.tiles[c]):
+					cells.append(c)
+		if not cells.is_empty():
+			return cells[rng.randi() % cells.size()]
+	return -1
 
 # ---------------------------------------------------------------- helpers
 func cheb(a: int, b: int) -> int:
@@ -1520,7 +1644,7 @@ func _outside_t(t: int) -> bool:
 	return t == CG.GROUND or t == CG.ROAD or t == CG.PARK or t == CG.SAND
 
 func _inside_t(t: int) -> bool:
-	return t == CG.FLOOR or (t >= CG.EXTRA0 and t < CG.EXTRA0 + 9)
+	return t == CG.FLOOR or (t >= CG.EXTRA0 and t < CG.EXTRA0 + 9) or CG.FLOOR_IDS.has(t)
 
 func _window_run(run: Array) -> void:
 	var n: int = run.size()
@@ -4171,7 +4295,7 @@ func _spawn_critters() -> void:
 			var base: int = city.lvl_of_z(1 + rng.randi() % 2) * s2
 			for _n in 20:
 				var c2: int = base + rng.randi_range(int(t["y0"]) + 2, int(t["y1"]) - 2) * size + rng.randi_range(int(t["x0"]) + 2, int(t["x1"]) - 2)
-				if city.tiles[c2] == CG.FLOOR and sim.walk[c2] == 1 and sim.at[c2] == -1 and thing_at[c2] == -1 and crit_at[c2] == -1:
+				if CG.is_floor(city.tiles[c2]) and sim.walk[c2] == 1 and sim.at[c2] == -1 and thing_at[c2] == -1 and crit_at[c2] == -1:
 					_add_critter("cat", c2)
 					break
 
@@ -5074,7 +5198,7 @@ func save_dict() -> Dictionary:
 			"items_at": it_at, "open_doors": open_doors.keys(), "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
 			"npc": {"pos": Array(sim.pos), "dest": Array(sim.dest), "goal": Array(sim.goal), "near": Array(sim.near), "alive": Array(sim.alive), "depart": Array(sim.depart), "arrive": Array(sim.arrive),
 					"hp": Array(hpn), "state": Array(astate), "meter": Array(meter), "timer": Array(timer), "last": Array(lastpos), "post": Array(postc), "yen": Array(yenn), "gun": Array(gunc), "energy": Array(energy),
-					"prov": provoked.keys(), "apn": Array(apn), "stamn": Array(stamn), "stamt": Array(stamt), "aimn": Array(aimn), "limbs": _limbs_save(), "mdis": Array(mdis), "noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle)}}
+					"prov": provoked.keys(), "apn": Array(apn), "stamn": Array(stamn), "stamt": Array(stamt), "aimn": Array(aimn), "limbs": _limbs_save(), "mdis": Array(mdis), "noticed": Array(noticed_you), "ctl": Array(sim.ctl), "idle": Array(sim.idle), "home": Array(sim.home_cell), "com": sim.com.to_dict()}}
 
 func load_dict(d: Dictionary) -> void:
 	seed_value = int(d["seed"])
@@ -5200,6 +5324,8 @@ func load_dict(d: Dictionary) -> void:
 		sim.arrive[i] = int(nn["arrive"][i]) * tk2 if int(nn["arrive"][i]) >= 0 else -1
 		sim.ctl[i] = int(nn["ctl"][i])
 		sim.idle[i] = int(nn["idle"][i])
+		if nn.has("home"):
+			sim.home_cell[i] = int(nn["home"][i])
 		sim.near[i] = int(nn["near"][i])
 		sim.near_slot[i] = -1
 		hpn[i] = int(nn["hp"][i])
@@ -5221,6 +5347,8 @@ func load_dict(d: Dictionary) -> void:
 				sim.at[sim.pos[i]] = i
 			elif sim.arrive[i] >= 0:
 				sim._bucket(sim.arrive[i], i)
+	if nn.has("com"):
+		sim.com.from_dict(nn["com"], tk2)
 	log = []
 	for l in d["log"]:
 		log.append(str(l))

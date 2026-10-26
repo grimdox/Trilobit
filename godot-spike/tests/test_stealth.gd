@@ -44,9 +44,9 @@ func run() -> Array:
 	check.call("ground level has crates, dumpsters and planters (%d)" % props, props > 60 and by_kind[23] > 5 and by_kind[24] > 5 and by_kind[25] > 5)
 	var upstairs := 0
 	for i in range(g.s2, g.city.tiles.size()):
-		if g.city.tiles[i] >= 23 and g.city.tiles[i] <= 25:
+		if (g.city.tiles[i] >= 23 and g.city.tiles[i] <= 25) or g.city.tiles[i] >= CG.EXTRA0:
 			upstairs += 1
-	check.call("tower floors have props too (%d)" % upstairs, upstairs > 20)
+	check.call("tower floors are furnished (%d)" % upstairs, upstairs > 20)
 
 	var open := _open_cell(g, g.pc)
 	check.call("found open ground to test on", open >= 0)

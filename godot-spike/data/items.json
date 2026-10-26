@@ -6877,5 +6877,1448 @@
   ],
   "implant": "legs",
   "part": "legs"
+ },
+ {
+  "id": "trl_good_loaf_bread",
+  "name": "loaf of bread",
+  "desc": "A tall white loaf, still warm at the heel.",
+  "weight_g": 450,
+  "volume_ml": 900,
+  "length_mm": 0,
+  "price": 4,
+  "tags": [
+   "good",
+   "bakery"
+  ]
+ },
+ {
+  "id": "trl_good_melon_pan",
+  "name": "melon bun",
+  "desc": "A sweet bun with a crackled sugar crust.",
+  "weight_g": 120,
+  "volume_ml": 250,
+  "length_mm": 0,
+  "price": 2,
+  "tags": [
+   "good",
+   "bakery"
+  ]
+ },
+ {
+  "id": "trl_good_pastry_box",
+  "name": "box of pastries",
+  "desc": "A ribboned cardboard box of assorted pastries.",
+  "weight_g": 600,
+  "volume_ml": 1800,
+  "length_mm": 0,
+  "price": 9,
+  "tags": [
+   "good",
+   "bakery"
+  ]
+ },
+ {
+  "id": "trl_good_coffee_beans",
+  "name": "bag of coffee beans",
+  "desc": "Dark roast beans in a foil bag, a valve on the front.",
+  "weight_g": 500,
+  "volume_ml": 900,
+  "length_mm": 0,
+  "price": 12,
+  "tags": [
+   "good",
+   "bakery"
+  ]
+ },
+ {
+  "id": "trl_good_tea_tin",
+  "name": "tin of loose tea",
+  "desc": "Green tea leaves in a lacquered tin.",
+  "weight_g": 250,
+  "volume_ml": 600,
+  "length_mm": 0,
+  "price": 8,
+  "tags": [
+   "good",
+   "bakery"
+  ]
+ },
+ {
+  "id": "trl_good_rice_sack",
+  "name": "sack of rice",
+  "desc": "A paper sack of short-grain rice.",
+  "weight_g": 5000,
+  "volume_ml": 6000,
+  "length_mm": 0,
+  "price": 25,
+  "tags": [
+   "good",
+   "grocery"
+  ]
+ },
+ {
+  "id": "trl_good_produce_crate",
+  "name": "crate of vegetables",
+  "desc": "Cabbage, daikon and leeks packed in a slatted crate.",
+  "weight_g": 8000,
+  "volume_ml": 20000,
+  "length_mm": 0,
+  "price": 30,
+  "tags": [
+   "good",
+   "grocery"
+  ]
+ },
+ {
+  "id": "trl_good_fish_crate",
+  "name": "crate of iced fish",
+  "desc": "Mackerel and squid on crushed ice.",
+  "weight_g": 9000,
+  "volume_ml": 22000,
+  "length_mm": 0,
+  "price": 45,
+  "tags": [
+   "good",
+   "grocery"
+  ]
+ },
+ {
+  "id": "trl_good_soy_sauce",
+  "name": "bottle of soy sauce",
+  "desc": "A litre of dark soy sauce.",
+  "weight_g": 700,
+  "volume_ml": 600,
+  "length_mm": 0,
+  "price": 3,
+  "tags": [
+   "good",
+   "grocery"
+  ]
+ },
+ {
+  "id": "trl_good_canned_fish",
+  "name": "tin of canned fish",
+  "desc": "Mackerel in miso, ring-pull lid.",
+  "weight_g": 220,
+  "volume_ml": 200,
+  "length_mm": 0,
+  "price": 2,
+  "tags": [
+   "good",
+   "grocery"
+  ]
+ },
+ {
+  "id": "trl_good_snack_bag",
+  "name": "bag of rice crackers",
+  "desc": "Salty rice crackers in a crinkling bag.",
+  "weight_g": 120,
+  "volume_ml": 500,
+  "length_mm": 0,
+  "price": 1,
+  "tags": [
+   "good",
+   "grocery"
+  ]
+ },
+ {
+  "id": "trl_good_detergent_box",
+  "name": "box of detergent",
+  "desc": "A large box of washing powder.",
+  "weight_g": 2000,
+  "volume_ml": 3000,
+  "length_mm": 0,
+  "price": 6,
+  "tags": [
+   "good",
+   "grocery"
+  ]
+ },
+ {
+  "id": "trl_good_sake_bottle",
+  "name": "bottle of sake",
+  "desc": "A square bottle of junmai sake.",
+  "weight_g": 1300,
+  "volume_ml": 1000,
+  "length_mm": 0,
+  "price": 14,
+  "tags": [
+   "good",
+   "drink"
+  ]
+ },
+ {
+  "id": "trl_good_whisky_bottle",
+  "name": "bottle of whisky",
+  "desc": "A peaty single malt from the northern islands.",
+  "weight_g": 1200,
+  "volume_ml": 900,
+  "length_mm": 0,
+  "price": 22,
+  "tags": [
+   "good",
+   "drink"
+  ]
+ },
+ {
+  "id": "trl_good_vodka_bottle",
+  "name": "bottle of vodka",
+  "desc": "Clear vodka with a screw cap and a blue label.",
+  "weight_g": 1100,
+  "volume_ml": 800,
+  "length_mm": 0,
+  "price": 15,
+  "tags": [
+   "good",
+   "drink"
+  ]
+ },
+ {
+  "id": "trl_good_beer_crate",
+  "name": "crate of beer",
+  "desc": "Twenty bottles of lager in a plastic crate.",
+  "weight_g": 12000,
+  "volume_ml": 14000,
+  "length_mm": 0,
+  "price": 35,
+  "tags": [
+   "good",
+   "drink"
+  ]
+ },
+ {
+  "id": "trl_good_cocktail_shaker",
+  "name": "cocktail shaker",
+  "desc": "A steel shaker, dented from years of use.",
+  "weight_g": 400,
+  "volume_ml": 500,
+  "length_mm": 0,
+  "price": 10,
+  "tags": [
+   "good",
+   "drink"
+  ]
+ },
+ {
+  "id": "trl_good_tumbler_box",
+  "name": "box of tumblers",
+  "desc": "A dozen heavy glass tumblers, wrapped in paper.",
+  "weight_g": 1500,
+  "volume_ml": 3000,
+  "length_mm": 0,
+  "price": 8,
+  "tags": [
+   "good",
+   "drink"
+  ]
+ },
+ {
+  "id": "trl_good_bandage_roll",
+  "name": "roll of bandage",
+  "desc": "Clean cotton bandage in a paper sleeve.",
+  "weight_g": 60,
+  "volume_ml": 80,
+  "length_mm": 0,
+  "price": 2,
+  "tags": [
+   "good",
+   "health"
+  ]
+ },
+ {
+  "id": "trl_good_pill_bottle",
+  "name": "bottle of pills",
+  "desc": "A white tub of tablets with a child-proof lid.",
+  "weight_g": 80,
+  "volume_ml": 90,
+  "length_mm": 0,
+  "price": 6,
+  "tags": [
+   "good",
+   "health"
+  ]
+ },
+ {
+  "id": "trl_good_cough_syrup",
+  "name": "bottle of cough syrup",
+  "desc": "A sticky red syrup with a measuring cap.",
+  "weight_g": 300,
+  "volume_ml": 250,
+  "length_mm": 0,
+  "price": 5,
+  "tags": [
+   "good",
+   "health"
+  ]
+ },
+ {
+  "id": "trl_good_saline_bag",
+  "name": "bag of saline",
+  "desc": "A clear drip bag with a tube coiled on top.",
+  "weight_g": 600,
+  "volume_ml": 550,
+  "length_mm": 0,
+  "price": 7,
+  "tags": [
+   "good",
+   "health"
+  ]
+ },
+ {
+  "id": "trl_good_surgical_gloves",
+  "name": "box of surgical gloves",
+  "desc": "A hundred sterile gloves, size medium.",
+  "weight_g": 250,
+  "volume_ml": 600,
+  "length_mm": 0,
+  "price": 4,
+  "tags": [
+   "good",
+   "health"
+  ]
+ },
+ {
+  "id": "trl_good_shampoo_bottle",
+  "name": "bottle of shampoo",
+  "desc": "A pump bottle of herbal shampoo.",
+  "weight_g": 500,
+  "volume_ml": 520,
+  "length_mm": 0,
+  "price": 5,
+  "tags": [
+   "good",
+   "health"
+  ]
+ },
+ {
+  "id": "trl_good_hair_dye_box",
+  "name": "box of hair dye",
+  "desc": "A box of dye in a colour that does not occur in nature.",
+  "weight_g": 300,
+  "volume_ml": 400,
+  "length_mm": 0,
+  "price": 7,
+  "tags": [
+   "good",
+   "health"
+  ]
+ },
+ {
+  "id": "trl_good_hair_wax_tin",
+  "name": "tin of hair wax",
+  "desc": "A flat tin of strong-hold wax.",
+  "weight_g": 150,
+  "volume_ml": 150,
+  "length_mm": 0,
+  "price": 4,
+  "tags": [
+   "good",
+   "health"
+  ]
+ },
+ {
+  "id": "trl_good_hairbrush",
+  "name": "hairbrush",
+  "desc": "A boar-bristle brush with a wooden back.",
+  "weight_g": 120,
+  "volume_ml": 300,
+  "length_mm": 0,
+  "price": 3,
+  "tags": [
+   "good",
+   "health"
+  ]
+ },
+ {
+  "id": "trl_good_laundry_basket",
+  "name": "laundry basket",
+  "desc": "A plastic basket with handles.",
+  "weight_g": 800,
+  "volume_ml": 18000,
+  "length_mm": 0,
+  "price": 5,
+  "tags": [
+   "good",
+   "health"
+  ]
+ },
+ {
+  "id": "trl_good_t_shirt",
+  "name": "t-shirt",
+  "desc": "A plain cotton t-shirt.",
+  "weight_g": 180,
+  "volume_ml": 800,
+  "length_mm": 0,
+  "price": 8,
+  "tags": [
+   "good",
+   "clothing"
+  ]
+ },
+ {
+  "id": "trl_good_jeans",
+  "name": "pair of jeans",
+  "desc": "Raw denim, stiff and dark.",
+  "weight_g": 700,
+  "volume_ml": 2500,
+  "length_mm": 0,
+  "price": 25,
+  "tags": [
+   "good",
+   "clothing"
+  ]
+ },
+ {
+  "id": "trl_good_sneakers",
+  "name": "pair of sneakers",
+  "desc": "White sneakers with a thick sole.",
+  "weight_g": 900,
+  "volume_ml": 6000,
+  "length_mm": 0,
+  "price": 40,
+  "tags": [
+   "good",
+   "clothing"
+  ]
+ },
+ {
+  "id": "trl_good_dress",
+  "name": "dress",
+  "desc": "A sleeveless dress on a hanger.",
+  "weight_g": 400,
+  "volume_ml": 2500,
+  "length_mm": 0,
+  "price": 35,
+  "tags": [
+   "good",
+   "clothing"
+  ]
+ },
+ {
+  "id": "trl_good_kimono",
+  "name": "kimono",
+  "desc": "A folded silk kimono with a wide obi.",
+  "weight_g": 1800,
+  "volume_ml": 6000,
+  "length_mm": 0,
+  "price": 90,
+  "tags": [
+   "good",
+   "clothing"
+  ]
+ },
+ {
+  "id": "trl_good_scarf",
+  "name": "scarf",
+  "desc": "A long wool scarf.",
+  "weight_g": 200,
+  "volume_ml": 1200,
+  "length_mm": 0,
+  "price": 10,
+  "tags": [
+   "good",
+   "clothing"
+  ]
+ },
+ {
+  "id": "trl_good_television",
+  "name": "television set",
+  "desc": "A flat screen in a cardboard sleeve.",
+  "weight_g": 9000,
+  "volume_ml": 45000,
+  "length_mm": 0,
+  "price": 180,
+  "tags": [
+   "good",
+   "electronics"
+  ]
+ },
+ {
+  "id": "trl_good_radio",
+  "name": "table radio",
+  "desc": "A small radio with a telescoping aerial.",
+  "weight_g": 1200,
+  "volume_ml": 2500,
+  "length_mm": 0,
+  "price": 35,
+  "tags": [
+   "good",
+   "electronics"
+  ]
+ },
+ {
+  "id": "trl_good_headphones",
+  "name": "headphones",
+  "desc": "Over-ear headphones on a folded cord.",
+  "weight_g": 300,
+  "volume_ml": 900,
+  "length_mm": 0,
+  "price": 25,
+  "tags": [
+   "good",
+   "electronics"
+  ]
+ },
+ {
+  "id": "trl_good_game_console",
+  "name": "games console",
+  "desc": "A black box with two controllers.",
+  "weight_g": 1500,
+  "volume_ml": 3000,
+  "length_mm": 0,
+  "price": 90,
+  "tags": [
+   "good",
+   "electronics"
+  ]
+ },
+ {
+  "id": "trl_good_phone_handset",
+  "name": "phone handset",
+  "desc": "A slim handset in its box.",
+  "weight_g": 200,
+  "volume_ml": 200,
+  "length_mm": 0,
+  "price": 60,
+  "tags": [
+   "good",
+   "electronics"
+  ]
+ },
+ {
+  "id": "trl_good_desk_lamp",
+  "name": "desk lamp",
+  "desc": "A jointed lamp with a clamp.",
+  "weight_g": 800,
+  "volume_ml": 3000,
+  "length_mm": 0,
+  "price": 15,
+  "tags": [
+   "good",
+   "electronics"
+  ]
+ },
+ {
+  "id": "trl_good_paperback",
+  "name": "paperback novel",
+  "desc": "A thick paperback with a cracked spine.",
+  "weight_g": 300,
+  "volume_ml": 600,
+  "length_mm": 0,
+  "price": 3,
+  "tags": [
+   "good",
+   "books"
+  ]
+ },
+ {
+  "id": "trl_good_manga_volume",
+  "name": "manga volume",
+  "desc": "The fourth volume of a long-running series.",
+  "weight_g": 250,
+  "volume_ml": 500,
+  "length_mm": 0,
+  "price": 2,
+  "tags": [
+   "good",
+   "books"
+  ]
+ },
+ {
+  "id": "trl_good_magazine",
+  "name": "magazine",
+  "desc": "A glossy monthly with a neon cover.",
+  "weight_g": 200,
+  "volume_ml": 700,
+  "length_mm": 0,
+  "price": 2,
+  "tags": [
+   "good",
+   "books"
+  ]
+ },
+ {
+  "id": "trl_good_toner_cartridge",
+  "name": "toner cartridge",
+  "desc": "A heavy cartridge in an anti-static bag.",
+  "weight_g": 1800,
+  "volume_ml": 3000,
+  "length_mm": 0,
+  "price": 30,
+  "tags": [
+   "good",
+   "books"
+  ]
+ },
+ {
+  "id": "trl_good_label_printer",
+  "name": "label printer",
+  "desc": "A small thermal printer for shelf labels.",
+  "weight_g": 1200,
+  "volume_ml": 2500,
+  "length_mm": 0,
+  "price": 28,
+  "tags": [
+   "good",
+   "books"
+  ]
+ },
+ {
+  "id": "trl_good_toolbox",
+  "name": "toolbox",
+  "desc": "A steel box of spanners and screwdrivers.",
+  "weight_g": 4000,
+  "volume_ml": 12000,
+  "length_mm": 0,
+  "price": 40,
+  "tags": [
+   "good",
+   "hardware"
+  ]
+ },
+ {
+  "id": "trl_good_paint_can",
+  "name": "can of paint",
+  "desc": "A tin of grey emulsion with a drip down the side.",
+  "weight_g": 3000,
+  "volume_ml": 4000,
+  "length_mm": 0,
+  "price": 12,
+  "tags": [
+   "good",
+   "hardware"
+  ]
+ },
+ {
+  "id": "trl_good_rope_coil",
+  "name": "coil of rope",
+  "desc": "Twenty metres of braided nylon rope.",
+  "weight_g": 2000,
+  "volume_ml": 3500,
+  "length_mm": 0,
+  "price": 9,
+  "tags": [
+   "good",
+   "hardware"
+  ]
+ },
+ {
+  "id": "trl_good_padlock",
+  "name": "padlock",
+  "desc": "A brass padlock with two keys.",
+  "weight_g": 250,
+  "volume_ml": 150,
+  "length_mm": 0,
+  "price": 6,
+  "tags": [
+   "good",
+   "hardware"
+  ]
+ },
+ {
+  "id": "trl_good_nail_box",
+  "name": "box of nails",
+  "desc": "A cardboard box of galvanised nails.",
+  "weight_g": 1500,
+  "volume_ml": 700,
+  "length_mm": 0,
+  "price": 3,
+  "tags": [
+   "good",
+   "hardware"
+  ]
+ },
+ {
+  "id": "trl_good_lightbulb_pack",
+  "name": "pack of lightbulbs",
+  "desc": "Four bulbs in moulded cardboard.",
+  "weight_g": 400,
+  "volume_ml": 1500,
+  "length_mm": 0,
+  "price": 5,
+  "tags": [
+   "good",
+   "hardware"
+  ]
+ },
+ {
+  "id": "trl_good_extension_cord",
+  "name": "extension cord",
+  "desc": "A coiled four-way extension lead.",
+  "weight_g": 800,
+  "volume_ml": 1800,
+  "length_mm": 0,
+  "price": 6,
+  "tags": [
+   "good",
+   "hardware"
+  ]
+ },
+ {
+  "id": "trl_good_gi_uniform",
+  "name": "training uniform",
+  "desc": "A heavy white gi, folded with a belt on top.",
+  "weight_g": 900,
+  "volume_ml": 3000,
+  "length_mm": 0,
+  "price": 30,
+  "tags": [
+   "good",
+   "martial"
+  ]
+ },
+ {
+  "id": "trl_good_training_belt",
+  "name": "coloured belt",
+  "desc": "A rolled cotton belt.",
+  "weight_g": 150,
+  "volume_ml": 400,
+  "length_mm": 0,
+  "price": 8,
+  "tags": [
+   "good",
+   "martial"
+  ]
+ },
+ {
+  "id": "trl_good_hand_wraps",
+  "name": "hand wraps",
+  "desc": "Long cotton wraps in a ball.",
+  "weight_g": 100,
+  "volume_ml": 200,
+  "length_mm": 0,
+  "price": 4,
+  "tags": [
+   "good",
+   "martial"
+  ]
+ },
+ {
+  "id": "trl_good_tatami_roll",
+  "name": "rolled tatami mat",
+  "desc": "A tatami mat, rolled and tied.",
+  "weight_g": 6000,
+  "volume_ml": 30000,
+  "length_mm": 0,
+  "price": 40,
+  "tags": [
+   "good",
+   "martial"
+  ]
+ },
+ {
+  "id": "trl_good_protein_tub",
+  "name": "tub of protein powder",
+  "desc": "A large tub with a scoop inside.",
+  "weight_g": 1200,
+  "volume_ml": 2200,
+  "length_mm": 0,
+  "price": 28,
+  "tags": [
+   "good",
+   "martial"
+  ]
+ },
+ {
+  "id": "trl_good_gym_bag",
+  "name": "gym bag",
+  "desc": "A duffel bag with a worn shoulder strap.",
+  "weight_g": 800,
+  "volume_ml": 9000,
+  "length_mm": 0,
+  "price": 18,
+  "tags": [
+   "good",
+   "martial"
+  ]
+ },
+ {
+  "id": "trl_good_gym_towel",
+  "name": "gym towel",
+  "desc": "A grey towel with the gym's name on it.",
+  "weight_g": 300,
+  "volume_ml": 1200,
+  "length_mm": 0,
+  "price": 3,
+  "tags": [
+   "good",
+   "martial"
+  ]
+ },
+ {
+  "id": "trl_good_cleaning_kit",
+  "name": "gun cleaning kit",
+  "desc": "Rods, brushes and solvent in a roll-up case.",
+  "weight_g": 500,
+  "volume_ml": 1500,
+  "length_mm": 0,
+  "price": 18,
+  "tags": [
+   "good",
+   "guns"
+  ]
+ },
+ {
+  "id": "trl_good_gun_case",
+  "name": "gun case",
+  "desc": "A hard case with cut foam inside.",
+  "weight_g": 2500,
+  "volume_ml": 12000,
+  "length_mm": 0,
+  "price": 35,
+  "tags": [
+   "good",
+   "guns"
+  ]
+ },
+ {
+  "id": "trl_good_ear_defenders",
+  "name": "ear defenders",
+  "desc": "Heavy muffs on a spring band.",
+  "weight_g": 300,
+  "volume_ml": 900,
+  "length_mm": 0,
+  "price": 15,
+  "tags": [
+   "good",
+   "guns"
+  ]
+ },
+ {
+  "id": "trl_good_wristwatch",
+  "name": "wristwatch",
+  "desc": "A steel watch with a scratched crystal.",
+  "weight_g": 80,
+  "volume_ml": 60,
+  "length_mm": 0,
+  "price": 70,
+  "tags": [
+   "good",
+   "pawn"
+  ]
+ },
+ {
+  "id": "trl_good_gold_ring",
+  "name": "gold ring",
+  "desc": "A plain gold band, tagged with a ticket number.",
+  "weight_g": 10,
+  "volume_ml": 5,
+  "length_mm": 0,
+  "price": 120,
+  "tags": [
+   "good",
+   "pawn"
+  ]
+ },
+ {
+  "id": "trl_good_music_box",
+  "name": "music box",
+  "desc": "A wooden box with a tin comb inside.",
+  "weight_g": 400,
+  "volume_ml": 700,
+  "length_mm": 0,
+  "price": 45,
+  "tags": [
+   "good",
+   "pawn"
+  ]
+ },
+ {
+  "id": "trl_good_camera",
+  "name": "camera",
+  "desc": "An old film camera with a leather strap.",
+  "weight_g": 600,
+  "volume_ml": 900,
+  "length_mm": 0,
+  "price": 55,
+  "tags": [
+   "good",
+   "pawn"
+  ]
+ },
+ {
+  "id": "trl_good_guitar",
+  "name": "guitar",
+  "desc": "An acoustic guitar with a chipped neck.",
+  "weight_g": 3000,
+  "volume_ml": 60000,
+  "length_mm": 0,
+  "price": 85,
+  "tags": [
+   "good",
+   "pawn"
+  ]
+ },
+ {
+  "id": "trl_good_car_tire",
+  "name": "car tire",
+  "desc": "A fat black tire.",
+  "weight_g": 9000,
+  "volume_ml": 60000,
+  "length_mm": 0,
+  "price": 80,
+  "tags": [
+   "good",
+   "auto"
+  ]
+ },
+ {
+  "id": "trl_good_car_battery",
+  "name": "car battery",
+  "desc": "A heavy lead battery.",
+  "weight_g": 12000,
+  "volume_ml": 9000,
+  "length_mm": 0,
+  "price": 60,
+  "tags": [
+   "good",
+   "auto"
+  ]
+ },
+ {
+  "id": "trl_good_oil_can",
+  "name": "can of engine oil",
+  "desc": "Five litres of synthetic oil.",
+  "weight_g": 4000,
+  "volume_ml": 5000,
+  "length_mm": 0,
+  "price": 15,
+  "tags": [
+   "good",
+   "auto"
+  ]
+ },
+ {
+  "id": "trl_good_spark_plugs",
+  "name": "box of spark plugs",
+  "desc": "A box of six plugs.",
+  "weight_g": 150,
+  "volume_ml": 150,
+  "length_mm": 0,
+  "price": 12,
+  "tags": [
+   "good",
+   "auto"
+  ]
+ },
+ {
+  "id": "trl_good_key_fob",
+  "name": "car key fob",
+  "desc": "A key fob with a paper tag.",
+  "weight_g": 40,
+  "volume_ml": 40,
+  "length_mm": 0,
+  "price": 25,
+  "tags": [
+   "good",
+   "auto"
+  ]
+ },
+ {
+  "id": "trl_good_steel_bar",
+  "name": "steel bar",
+  "desc": "A length of bar stock.",
+  "weight_g": 8000,
+  "volume_ml": 2000,
+  "length_mm": 0,
+  "price": 18,
+  "tags": [
+   "good",
+   "industry"
+  ]
+ },
+ {
+  "id": "trl_good_bolt_crate",
+  "name": "crate of bolts",
+  "desc": "A small crate of assorted bolts and nuts.",
+  "weight_g": 6000,
+  "volume_ml": 5000,
+  "length_mm": 0,
+  "price": 14,
+  "tags": [
+   "good",
+   "industry"
+  ]
+ },
+ {
+  "id": "trl_good_scrap_bundle",
+  "name": "bundle of scrap",
+  "desc": "Mixed scrap metal, strapped together.",
+  "weight_g": 10000,
+  "volume_ml": 20000,
+  "length_mm": 0,
+  "price": 6,
+  "tags": [
+   "good",
+   "industry"
+  ]
+ },
+ {
+  "id": "trl_good_wire_spool",
+  "name": "spool of copper wire",
+  "desc": "A spool of heavy copper wire.",
+  "weight_g": 3000,
+  "volume_ml": 4000,
+  "length_mm": 0,
+  "price": 20,
+  "tags": [
+   "good",
+   "industry"
+  ]
+ },
+ {
+  "id": "trl_good_welding_rods",
+  "name": "bundle of welding rods",
+  "desc": "Fifty rods in a cardboard tube.",
+  "weight_g": 1500,
+  "volume_ml": 1500,
+  "length_mm": 0,
+  "price": 10,
+  "tags": [
+   "good",
+   "industry"
+  ]
+ },
+ {
+  "id": "trl_good_machine_part",
+  "name": "machine part",
+  "desc": "A greasy casting stamped with a part number.",
+  "weight_g": 5000,
+  "volume_ml": 4000,
+  "length_mm": 0,
+  "price": 35,
+  "tags": [
+   "good",
+   "industry"
+  ]
+ },
+ {
+  "id": "trl_good_candle_box",
+  "name": "box of candles",
+  "desc": "A box of tall white candles.",
+  "weight_g": 400,
+  "volume_ml": 700,
+  "length_mm": 0,
+  "price": 4,
+  "tags": [
+   "good",
+   "faith"
+  ]
+ },
+ {
+  "id": "trl_good_prayer_beads",
+  "name": "prayer beads",
+  "desc": "A string of dark wooden beads.",
+  "weight_g": 40,
+  "volume_ml": 30,
+  "length_mm": 0,
+  "price": 6,
+  "tags": [
+   "good",
+   "faith"
+  ]
+ },
+ {
+  "id": "trl_good_incense_sticks",
+  "name": "bundle of incense",
+  "desc": "A bundle of sandalwood incense.",
+  "weight_g": 80,
+  "volume_ml": 200,
+  "length_mm": 0,
+  "price": 3,
+  "tags": [
+   "good",
+   "faith"
+  ]
+ },
+ {
+  "id": "trl_good_ema_plaque",
+  "name": "wooden prayer plaque",
+  "desc": "A small wooden plaque to write a wish on.",
+  "weight_g": 100,
+  "volume_ml": 200,
+  "length_mm": 0,
+  "price": 2,
+  "tags": [
+   "good",
+   "faith"
+  ]
+ },
+ {
+  "id": "trl_good_holy_water",
+  "name": "bottle of holy water",
+  "desc": "A small glass bottle with a cork.",
+  "weight_g": 500,
+  "volume_ml": 500,
+  "length_mm": 0,
+  "price": 5,
+  "tags": [
+   "good",
+   "faith"
+  ]
+ },
+ {
+  "id": "trl_good_microphone",
+  "name": "microphone",
+  "desc": "A wired microphone with a foam head.",
+  "weight_g": 300,
+  "volume_ml": 500,
+  "length_mm": 0,
+  "price": 30,
+  "tags": [
+   "good",
+   "fun"
+  ]
+ },
+ {
+  "id": "trl_good_vinyl_record",
+  "name": "vinyl record",
+  "desc": "A twelve-inch record in a plain sleeve.",
+  "weight_g": 200,
+  "volume_ml": 700,
+  "length_mm": 0,
+  "price": 8,
+  "tags": [
+   "good",
+   "fun"
+  ]
+ },
+ {
+  "id": "trl_good_arcade_tokens",
+  "name": "roll of arcade tokens",
+  "desc": "A paper roll of brass tokens.",
+  "weight_g": 300,
+  "volume_ml": 200,
+  "length_mm": 0,
+  "price": 5,
+  "tags": [
+   "good",
+   "fun"
+  ]
+ },
+ {
+  "id": "trl_good_game_cartridge",
+  "name": "game cartridge",
+  "desc": "A cartridge with a peeling label.",
+  "weight_g": 40,
+  "volume_ml": 80,
+  "length_mm": 0,
+  "price": 15,
+  "tags": [
+   "good",
+   "fun"
+  ]
+ },
+ {
+  "id": "trl_good_glow_sticks",
+  "name": "bundle of glow sticks",
+  "desc": "A bundle of snap-and-shake light sticks.",
+  "weight_g": 150,
+  "volume_ml": 400,
+  "length_mm": 0,
+  "price": 2,
+  "tags": [
+   "good",
+   "fun"
+  ]
+ },
+ {
+  "id": "trl_good_towel_stack",
+  "name": "stack of towels",
+  "desc": "Folded white towels tied with a band.",
+  "weight_g": 1200,
+  "volume_ml": 6000,
+  "length_mm": 0,
+  "price": 10,
+  "tags": [
+   "good",
+   "service"
+  ]
+ },
+ {
+  "id": "trl_good_suitcase",
+  "name": "suitcase",
+  "desc": "A hard-shell suitcase with a luggage tag.",
+  "weight_g": 4000,
+  "volume_ml": 50000,
+  "length_mm": 0,
+  "price": 45,
+  "tags": [
+   "good",
+   "service"
+  ]
+ },
+ {
+  "id": "trl_good_room_key",
+  "name": "room key",
+  "desc": "A brass key on a heavy plastic fob.",
+  "weight_g": 30,
+  "volume_ml": 20,
+  "length_mm": 0,
+  "price": 1,
+  "tags": [
+   "good",
+   "service"
+  ]
+ },
+ {
+  "id": "trl_good_mail_sack",
+  "name": "mail sack",
+  "desc": "A canvas sack stencilled with a postal crest.",
+  "weight_g": 1500,
+  "volume_ml": 20000,
+  "length_mm": 0,
+  "price": 8,
+  "tags": [
+   "good",
+   "service"
+  ]
+ },
+ {
+  "id": "trl_good_packing_tape",
+  "name": "roll of packing tape",
+  "desc": "A fat roll of brown tape.",
+  "weight_g": 300,
+  "volume_ml": 400,
+  "length_mm": 0,
+  "price": 2,
+  "tags": [
+   "good",
+   "service"
+  ]
+ },
+ {
+  "id": "trl_good_handcuffs",
+  "name": "handcuffs",
+  "desc": "A steel pair with a key on a loop.",
+  "weight_g": 500,
+  "volume_ml": 300,
+  "length_mm": 0,
+  "price": 20,
+  "tags": [
+   "good",
+   "service"
+  ]
+ },
+ {
+  "id": "trl_good_evidence_bag",
+  "name": "evidence bag",
+  "desc": "A sealed bag with a number on the tag.",
+  "weight_g": 40,
+  "volume_ml": 100,
+  "length_mm": 0,
+  "price": 1,
+  "tags": [
+   "good",
+   "service"
+  ]
+ },
+ {
+  "id": "trl_good_coin_roll",
+  "name": "roll of coins",
+  "desc": "A paper-wrapped roll of coins.",
+  "weight_g": 400,
+  "volume_ml": 100,
+  "length_mm": 0,
+  "price": 50,
+  "tags": [
+   "good",
+   "service"
+  ]
+ },
+ {
+  "id": "trl_good_deposit_key",
+  "name": "deposit box key",
+  "desc": "A small flat key with a stamped number.",
+  "weight_g": 20,
+  "volume_ml": 10,
+  "length_mm": 0,
+  "price": 5,
+  "tags": [
+   "good",
+   "service"
+  ]
+ },
+ {
+  "id": "trl_good_rubber_stamp",
+  "name": "rubber stamp",
+  "desc": "A wooden stamp with a ward crest.",
+  "weight_g": 200,
+  "volume_ml": 200,
+  "length_mm": 0,
+  "price": 6,
+  "tags": [
+   "good",
+   "service"
+  ]
+ },
+ {
+  "id": "trl_good_blank_id_card",
+  "name": "blank identity card",
+  "desc": "A blank card with a chip, still in its sleeve.",
+  "weight_g": 5,
+  "volume_ml": 10,
+  "length_mm": 0,
+  "price": 10,
+  "tags": [
+   "good",
+   "service"
+  ]
+ },
+ {
+  "id": "trl_good_rice_cooker",
+  "name": "rice cooker",
+  "desc": "A squat white cooker with a single switch.",
+  "weight_g": 3000,
+  "volume_ml": 9000,
+  "length_mm": 0,
+  "price": 45,
+  "tags": [
+   "good",
+   "home"
+  ]
+ },
+ {
+  "id": "trl_good_kettle",
+  "name": "kettle",
+  "desc": "A steel kettle with a whistle.",
+  "weight_g": 900,
+  "volume_ml": 2500,
+  "length_mm": 0,
+  "price": 20,
+  "tags": [
+   "good",
+   "home"
+  ]
+ },
+ {
+  "id": "trl_good_cooking_pot",
+  "name": "cooking pot",
+  "desc": "A dented pot with a loose lid.",
+  "weight_g": 1500,
+  "volume_ml": 4000,
+  "length_mm": 0,
+  "price": 14,
+  "tags": [
+   "good",
+   "home"
+  ]
+ },
+ {
+  "id": "trl_good_bedding_bundle",
+  "name": "bedding bundle",
+  "desc": "A futon blanket and pillow, tied in a bundle.",
+  "weight_g": 3000,
+  "volume_ml": 30000,
+  "length_mm": 0,
+  "price": 25,
+  "tags": [
+   "good",
+   "home"
+  ]
+ },
+ {
+  "id": "trl_good_alarm_clock",
+  "name": "alarm clock",
+  "desc": "A wind-up clock with two bells.",
+  "weight_g": 300,
+  "volume_ml": 500,
+  "length_mm": 0,
+  "price": 8,
+  "tags": [
+   "good",
+   "home"
+  ]
+ },
+ {
+  "id": "trl_good_houseplant",
+  "name": "houseplant",
+  "desc": "A small plant in a plastic pot.",
+  "weight_g": 2500,
+  "volume_ml": 6000,
+  "length_mm": 0,
+  "price": 10,
+  "tags": [
+   "good",
+   "home"
+  ]
+ },
+ {
+  "id": "trl_good_tea_set",
+  "name": "tea set",
+  "desc": "A teapot and four cups on a tray.",
+  "weight_g": 1200,
+  "volume_ml": 3000,
+  "length_mm": 0,
+  "price": 18,
+  "tags": [
+   "good",
+   "home"
+  ]
+ },
+ {
+  "id": "trl_good_laptop",
+  "name": "laptop",
+  "desc": "A battered work laptop in a sleeve.",
+  "weight_g": 1800,
+  "volume_ml": 3500,
+  "length_mm": 0,
+  "price": 140,
+  "tags": [
+   "good",
+   "office"
+  ]
+ },
+ {
+  "id": "trl_good_briefcase",
+  "name": "briefcase",
+  "desc": "A black briefcase with brass catches.",
+  "weight_g": 1500,
+  "volume_ml": 12000,
+  "length_mm": 0,
+  "price": 35,
+  "tags": [
+   "good",
+   "office"
+  ]
+ },
+ {
+  "id": "trl_good_company_badge",
+  "name": "company badge",
+  "desc": "A staff badge on a lanyard.",
+  "weight_g": 20,
+  "volume_ml": 20,
+  "length_mm": 0,
+  "price": 1,
+  "tags": [
+   "good",
+   "office"
+  ]
+ },
+ {
+  "id": "trl_good_coffee_mug",
+  "name": "coffee mug",
+  "desc": "A white mug with a company logo.",
+  "weight_g": 300,
+  "volume_ml": 350,
+  "length_mm": 0,
+  "price": 3,
+  "tags": [
+   "good",
+   "office"
+  ]
+ },
+ {
+  "id": "trl_good_water_jug",
+  "name": "water cooler jug",
+  "desc": "A big blue jug of drinking water.",
+  "weight_g": 15000,
+  "volume_ml": 20000,
+  "length_mm": 0,
+  "price": 8,
+  "tags": [
+   "good",
+   "office"
+  ]
  }
 ]
