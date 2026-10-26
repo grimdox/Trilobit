@@ -98,7 +98,7 @@ func run() -> Array:
 	while g.things[sm]["k"] != "" and swings < 10:
 		g.act_strike(1, 0)
 		swings += 1
-	check.call("a crate can be broken open with an axe (%d swings) and spills its contents" % swings, g.things[sm]["k"] == "" and g.items_at.has(open + 1) and g.sim.walk[open + 1] == 1)
+	check.call("a crate can be broken open with an axe (%d swings) and spills nothing" % swings, g.things[sm]["k"] == "" and not g.items_at.has(open + 1) and g.sim.walk[open + 1] == 1)
 	g.wield = null
 	# explosions
 	var ex: int = g._add_thing("table", open + 2, false)

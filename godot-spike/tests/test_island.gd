@@ -62,8 +62,11 @@ func run() -> Array:
 	var ring_n := 0
 	for k in 36:
 		var ang: float = float(k) / 36.0 * TAU
-		var px: int = int(cvec.x + cos(ang) * 570.0)
-		var py: int = int(cvec.y + sin(ang) * 570.0)
+		var rr := 300.0
+		while rr < 900.0 and a._cald_r(cvec.x + cos(ang) * rr, cvec.y + sin(ang) * rr) < 570.0:
+			rr += 3.0                                  # the caldera is an egg-shaped oval: walk out to the crest of its rim
+		var px: int = int(cvec.x + cos(ang) * rr)
+		var py: int = int(cvec.y + sin(ang) * rr)
 		var from_south: float = absf(atan2(float(px) - cvec.x, float(py) - cvec.y))
 		if from_south < 1.2:
 			continue                                  # the ring is open to the south

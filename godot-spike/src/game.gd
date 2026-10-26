@@ -99,6 +99,7 @@ var mission: Dictionary = {}
 # implant power (power.gd): kJ in the store, -1 for a rig that has never been charged (it starts full the first time it is needed); at 0 every implant is off
 var power: float = -1.0
 var power_state: int = 0                       # 0 fine, 1 low (a quarter), 2 critical (a tenth), 3 dark: so each warning is said once
+var elev_hit: int = -1                         # an elevator the player just stepped into the call of: the front end shows the floor list (see elevator_floors)
 var clock_hit: int = -1                        # a station clock the player just used (the front end shows its readout and clears this)
 var charger_hit: int = -1                      # a charging post the player just used (the front end opens its menu and clears this)
 var energy: PackedInt32Array                   # kJ left in each person: -1 until it is first needed (then power.gd works it out from the clock); frozen when they die or are drained
@@ -4619,6 +4620,9 @@ func act_vertical(dir: int) -> bool:
 		say("There is no way %s from here." % ("up" if dir > 0 else "down"))
 		return false
 	var elevator: bool = city.tiles[pc] == CG.ELEVATOR
+	if elevator:
+		elev_hit = pc                         # the elevator always works: pick the floor from a list
+		return false
 	if sim.at[best] >= 0:
 		say("Someone is in the way.")
 		return false
@@ -4638,6 +4642,59 @@ func act_vertical(dir: int) -> bool:
 	if not elevator and dir < 0:
 		kind = kind.replace("climb", "descend") if "stairs" in kind else kind
 	_vertical_cost_and_move(cur, steps, elevator, kind)
+	return true
+
+## the floors an elevator at this cell reaches: {z, cell} from the lowest to the highest, following the shaft's links through every level
+func elevator_floors(cell: int) -> Array:
+	var col: int = cell % s2
+	var out: Array = []
+	var seen := {}
+	var stack: Array = [cell]
+	while not stack.is_empty():
+		var c: int = stack.pop_back()
+		if seen.has(c):
+			continue
+		seen[c] = true
+		out.append({"z": z_of(c), "cell": c})
+		if city.links.has(c):
+			for nb in city.links[c]:
+				if nb % s2 == col and city.tiles[nb] == CG.ELEVATOR:
+					stack.append(nb)
+	out.sort_custom(func(a, b): return int(a["z"]) < int(b["z"]))
+	return out
+
+func floor_label(z: int) -> String:
+	if z > 0:
+		return "Floor %d" % z
+	return "Ground floor" if z == 0 else "Basement %d" % (-z)
+
+## ride the elevator to the floor with this z.  It is always available to the player: whoever stands in the way is moved aside.
+func act_elevator_to(z: int) -> bool:
+	if not city.tiles[pc] == CG.ELEVATOR:
+		return false
+	var dest := -1
+	for f in elevator_floors(pc):
+		if int(f["z"]) == z:
+			dest = int(f["cell"])
+	if dest < 0 or dest == pc:
+		return false
+	if sim.at[dest] >= 0:
+		var who: int = sim.at[dest]
+		var spot := -1
+		for r in range(1, 6):
+			for dy in range(-r, r + 1):
+				for dx in range(-r, r + 1):
+					if spot >= 0 or maxi(absi(dx), absi(dy)) != r:
+						continue
+					var nc: int = dest + dy * size + dx
+					if z_of(nc) == z_of(dest) and sim.walk[nc] == 1 and sim.at[nc] == -1 and veh_at[nc] == -1 and thing_at[nc] == -1 and nc != pc and city.tiles[nc] != CG.ELEVATOR and city.tiles[nc] != CG.STAIRS:
+						spot = nc
+		if spot < 0:
+			return false
+		sim.place(who, spot)
+		say("%s steps out of the way." % name_of(who))
+	var steps: int = absi(z_of(dest) - z_of(pc))
+	_vertical_cost_and_move(dest, steps, true, "The elevator whirs")
 	return true
 
 func _jet_vertical(dir: int) -> bool:

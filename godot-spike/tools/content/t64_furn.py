@@ -1275,8 +1275,45 @@ FURN = {
 }
 
 
+def _hex(c):
+    c = c.lstrip('#')
+    return tuple(int(c[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def placeholder_furniture(fid, label, color, walk):
+    """A stand-in until the real sprite is drawn: a bevelled slab in the item's colour with its initials, low if it is a seat or rail."""
+    from PIL import ImageDraw, ImageFont
+    im = Image.new('RGBA', (64, 64), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    r, g, b = _hex(color)
+    top = 22 if walk else 10
+    d.rounded_rectangle((6, top + 3, 59, 59), 5, fill=(0, 0, 0, 90))
+    d.rounded_rectangle((5, top, 58, 56), 5, fill=(r // 2, g // 2, b // 2, 255))
+    d.rounded_rectangle((7, top + 2, 56, 53), 4, fill=(r, g, b, 255))
+    d.rectangle((9, top + 4, 54, top + 8), fill=(min(255, r + 40), min(255, g + 40), min(255, b + 40), 255))
+    words = [w for w in label.replace('-', ' ').split() if w[0].isalpha()]
+    ini = ''.join(w[0] for w in words[:2]).upper()
+    try:
+        f = ImageFont.load_default(size=16)
+    except TypeError:
+        f = ImageFont.load_default()
+    lum = 0.3 * r + 0.59 * g + 0.11 * b
+    d.text((32, top + 28 - (0 if not walk else 6)), ini, fill=(20, 20, 24, 255) if lum > 130 else (240, 240, 244, 255), font=f, anchor='mm')
+    return im
+
+
+def placeholder_floor(color, seed):
+    a = _floor_base(color, 0.88, 1.06, 10, seed)
+    return done(a, outline=0.0) if False else a.image(outline=0.0)
+
+
 def sprites(items=None):
+    import furniture_list as FL
     out = []
+    for i, (fid, label, cat, hexc) in enumerate(FL.FLOORS):
+        out.append(('t_trl_' + fid, placeholder_floor(hexc, 500 + i)))
+    for fid, label, cat, walk, cover, hexc in FL.FURN:
+        out.append(('f_trl_' + fid, placeholder_furniture(fid, label, hexc, walk)))
     for k, f in FLOORS.items():
         out.append((k, f()))
     for k, f in FURN.items():

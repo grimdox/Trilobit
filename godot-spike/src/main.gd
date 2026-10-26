@@ -41,6 +41,9 @@ var menu: Dictionary = {}
 var ts_index: int = 0
 var inv_map: Dictionary = {}
 var gear = GearScript.new()            # the equipment and implants tabs (gear_ui.gd)
+var elev_sel: int = 0                    # the floor highlighted in the elevator list (mode "elevator")
+var elev_list: Array = []
+var elev_typed: String = ""
 var clock_cell: int = -1                 # the station clock being read (mode "clock")
 var bt = BarterUIScript.new()          # the barter screen (barter_ui.gd)
 var gear_base = null                   # item icons: the Trilobit64 set
@@ -1165,6 +1168,8 @@ func refresh() -> void:
 		show_talk()
 	elif mode == "clock":
 		show_clock()
+	elif mode == "elevator":
+		show_elevator()
 	elif mode == "pick":
 		show_pick()
 	elif mode == "mods":
@@ -1173,6 +1178,54 @@ func refresh() -> void:
 		show_wait()
 	elif mode == "consume":
 		show_consume()
+
+## the elevator's floor list: up and down (or the digits) pick a floor, Enter rides there
+func show_elevator() -> void:
+	var t := "[b]ELEVATOR[/b]   (Up/Down or type a floor, Enter rides, Esc leaves)\n\n"
+	var n: int = elev_list.size()
+	var lo: int = clampi(elev_sel - 6, 0, maxi(0, n - 13))
+	for k in range(lo, mini(n, lo + 13)):
+		var f: Dictionary = elev_list[k]
+		var here: bool = int(f["cell"]) == game.pc
+		var line: String = game.floor_label(int(f["z"])) + ("   (you are here)" if here else "")
+		t += ("[color=#7fd6e8]> %s[/color]\n" % line) if k == elev_sel else ("  %s\n" % line)
+	if elev_typed != "":
+		t += "\nfloor: %s" % elev_typed
+	panel.text = t
+	panel.visible = true
+
+func _elevator_key(k: int) -> void:
+	var n: int = elev_list.size()
+	if k == KEY_ESCAPE:
+		mode = "play"
+		panel.visible = false
+	elif k == KEY_UP or k == KEY_KP_8:
+		elev_sel = mini(n - 1, elev_sel + 1)
+		elev_typed = ""
+	elif k == KEY_DOWN or k == KEY_KP_2:
+		elev_sel = maxi(0, elev_sel - 1)
+		elev_typed = ""
+	elif k == KEY_PAGEUP:
+		elev_sel = mini(n - 1, elev_sel + 5)
+	elif k == KEY_PAGEDOWN:
+		elev_sel = maxi(0, elev_sel - 5)
+	elif k == KEY_HOME:
+		elev_sel = n - 1
+	elif k == KEY_END:
+		elev_sel = 0
+	elif k >= KEY_0 and k <= KEY_9 and elev_typed.length() < 2:
+		elev_typed += str(k - KEY_0)
+		for q in n:
+			if int(elev_list[q]["z"]) == int(elev_typed):
+				elev_sel = q
+	elif k == KEY_BACKSPACE:
+		elev_typed = elev_typed.substr(0, maxi(0, elev_typed.length() - 1))
+	elif k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_E or k == KEY_SPACE:
+		var z: int = int(elev_list[elev_sel]["z"])
+		mode = "play"
+		panel.visible = false
+		game.act_elevator_to(z)
+	refresh()
 
 ## the station clock: the time and the countdown to the next train, live while it is open
 func show_clock() -> void:
@@ -1456,6 +1509,9 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				game.act_strike(jd.x, jd.y)
 		refresh()
 		return
+	if mode == "elevator":
+		_elevator_key(k)
+		return
 	if mode == "clock":
 		if k == KEY_ESCAPE or k == KEY_E or k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
 			mode = "play"
@@ -1685,7 +1741,16 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 
 ## what using something asks the front end for: a menu, a screen, the gun bench
 func _after_act() -> void:
-	if mode == "play" and game.clock_hit >= 0:
+	if mode == "play" and game.elev_hit >= 0:
+		elev_list = game.elevator_floors(game.elev_hit)
+		game.elev_hit = -1
+		elev_sel = 0
+		for q in elev_list.size():
+			if int(elev_list[q]["cell"]) == game.pc:
+				elev_sel = q
+		elev_typed = ""
+		mode = "elevator"
+	elif mode == "play" and game.clock_hit >= 0:
 		clock_cell = game.clock_hit
 		game.clock_hit = -1
 		mode = "clock"

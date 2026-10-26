@@ -43,7 +43,7 @@ const IND_RECT := Rect2i(3105, 4770, 836, 1035)   # the heavy-industry sprawl on
 const CZS := 1024                      # the city's own map is larger than the wild zones' (every other zone is ZS x ZS)
 const CITY_ORIGIN := Vector2i(1890, 3883)   # ... and is placed so the highway runs along its middle row
 const CITY_OWN := Rect2i(1922, 3915, 960, 960)   # the ground the city zone owns: its whole map less 32 tiles all round
-const RIM_R := 472.0                   # how far from the middle of the city map the caldera's floor reaches (the rim's foot)
+const RIM_R := 462.0                   # how far from the middle of the city map the caldera's floor reaches (the rim's foot)
 const MARGIN_ZONE := 44                # the city keeps this much empty ground at its edge (32 are the next zone's, then room to see across the border)
 const AVENUE_W := 24
 const BANK := 3                        # sand either side of the river
@@ -52,6 +52,7 @@ const NORTH_ROAD_X := 2310             # the north road's x where it meets the c
 const HARB_Y0 := 880                   # city-local row of the harbor's quay (the seed moves it a little)
 
 var seed_value: int = 0
+var _nc := FastNoiseLite.new()                # the caldera's outline (sampled on the unit circle)
 var _nw := FastNoiseLite.new()
 var _nn := FastNoiseLite.new()
 var _ns := FastNoiseLite.new()
@@ -108,6 +109,9 @@ func _init(sd: int = 1) -> void:
 	_nf.frequency = 0.011
 	_nt.frequency = 0.014
 	_nr.frequency = 0.021
+	_nc.frequency = 1.0
+	_nc.seed = sd ^ 0x0ca1de
+	_nc.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	_nr.seed = sd ^ 0x5151
 	_nr.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	_bay_depth = rng.randi_range(60, 80)
@@ -246,12 +250,27 @@ func _build_fields() -> void:
 				m = _mountain_mass(x, y, cc, mc)
 			_g_mt[gy * GXN + gx] = m
 
+## How far a point is from the middle of the caldera, measured on its own outline rather than a circle: the floor is an egg-shaped oval (a long axis about
+## 25 degrees off east-west, one end broader), its edge scalloped by overlapping collapses as in real calderas (Aso, Crater Lake, Toba).  A value of
+## 462 is the foot of the rim; the rim itself rises over the next 100 or so.
+func _cald_r(x: float, y: float) -> float:
+	var dx: float = x - float(CITY_CX)
+	var dy: float = y - float(HWY_Y)
+	var rot := 0.44
+	var u: float = dx * cos(rot) + dy * sin(rot)
+	var v: float = -dx * sin(rot) + dy * cos(rot)
+	var rr: float = sqrt((u / 1.04) * (u / 1.04) + (v / 0.88) * (v / 0.88))
+	var ang: float = atan2(v, u)
+	rr /= 1.0 + 0.07 * cos(ang - 0.35)                       # an egg: the north-east end is the broad one
+	rr /= 1.0 + 0.05 * _nc.get_noise_2d(cos(ang) * 1.7 + 40.0, sin(ang) * 1.7) + 0.022 * _nc.get_noise_2d(cos(ang) * 5.5, sin(ang) * 5.5 + 9.0)
+	return rr
+
 func _mountain_mass(x: float, y: float, cc: Vector2, mc: Vector2) -> float:
 	var m := 0.0
 	# the caldera's ring, open to the south
 	var dx: float = x - cc.x
 	var dy: float = y - cc.y
-	var r: float = sqrt(dx * dx + dy * dy)
+	var r: float = _cald_r(x, y)
 	if r > 440.0 and r < 700.0:
 		var v: float = clampf((1.0 - absf(r - 570.0) / 100.0) * 1.6, 0.0, 1.0)
 		var south: float = absf(atan2(dx, dy))                         # 0 straight south
@@ -983,8 +1002,8 @@ func city_mask() -> PackedByteArray:
 			if q > 1.0:
 				continue
 			var k2: int = clampi(int((atan2(v, u) + PI) / TAU * float(nang)), 0, nang - 1)
-			var dd: float = Vector2(float(x) + 0.5 - float(CZS) * 0.5, float(y) + 0.5 - float(CZS) * 0.5).length()
-			_city_mask[y * CZS + x] = 1 if (q <= fr[k2] and dd <= RIM_R * (0.985 + 0.015 * clampf(nz.get_noise_2d(float(x) * 0.02, float(y) * 0.02) * 2.0, -1.0, 1.0))) else 0
+			var dd: float = _cald_r(float(CITY_ORIGIN.x + x) + 0.5, float(CITY_ORIGIN.y + y) + 0.5)
+			_city_mask[y * CZS + x] = 1 if (dd <= RIM_R and (q <= fr[k2] or dd < RIM_R * 0.97)) else 0
 	for y in range(harb_y - 28, CZS):                  # the quay is the city's south edge
 		for x in CZS:
 			_city_mask[y * CZS + x] = 0

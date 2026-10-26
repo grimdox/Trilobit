@@ -83,7 +83,7 @@ func setup(city, count: int, seed: int) -> void:
 	walk.resize(tiles.size())
 	opaque.resize(tiles.size())
 	var lut := PackedByteArray()
-	for t in 128:
+	for t in 256:
 		lut.append(1 if (t < city.WALK.size() and city.WALK[t] == 1) else 0)
 	# walkable / opaque per cell.  The upper levels are open air nearly everywhere (walk 0, opaque 0, which is what the arrays start as), so a
 	# run of 64 air cells is skipped by one comparison instead of 64 steps.

@@ -29,17 +29,17 @@ func _initialize() -> void:
 		var t = sets[th]
 		for k in ViewScript.TERRAIN:
 			var id: String = ViewScript.TERRAIN[k]
-			if id != "" and not t.index.has(t.pick(id, 3)):
+			if id != "" and not t.index.has(t.pick(id, 3)) and not base.index.has(base.pick(id, 3)):
 				missing.append("%s %s" % [th, id])
 		for k in CG.TILE_SPRITE:
 			var id2: String = CG.TILE_SPRITE[k]
 			if id2.begins_with("f_") or id2.begins_with("t_"):
-				if not t.index.has(t.pick(id2, 5)):
+				if not t.index.has(t.pick(id2, 5)) and not base.index.has(base.pick(id2, 5)):
 					missing.append("%s %s" % [th, id2])
 		for m in 16:
 			if not t.index.has("t_wall.%d" % m) or not t.index.has("t_wall_glass.%d" % m):
 				missing.append("%s wall %d" % [th, m])
-	check("every terrain, furniture and wall sprite the world uses is in every district set", missing.is_empty(), str(missing.slice(0, 6)))
+	check("every terrain, furniture and wall sprite the world uses is drawn by every district set or by the base set it falls back to", missing.is_empty(), str(missing.slice(0, 6)))
 	var dec_missing := []
 	for table in [ViewScript.DECOR_KERB, ViewScript.DECOR_FRONT, ViewScript.DECOR_PARK]:
 		for th in table:

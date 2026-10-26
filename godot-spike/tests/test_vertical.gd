@@ -32,11 +32,19 @@ func run() -> Array:
 	g.act_vertical(-1)
 	check.call("and one flight down", g.z_of(g.pc) == 4)
 	g.pc = E
-	g.act_vertical(1)
-	check.call("an elevator rides three floors at a time", g.z_of(g.pc) == 3)
-	for k in 12:
-		g.act_vertical(1)
-	check.call("the elevator takes you to the roof of the 14-storey tower", g.z_of(g.pc) == 14 and g.city.tiles[g.pc] == CG.ELEVATOR)
+	check.call("using an elevator asks for a floor instead of moving", not g.act_vertical(1) and g.elev_hit == E)
+	g.elev_hit = -1
+	var floors: Array = g.elevator_floors(E)
+	check.call("the elevator list holds every floor from the ground to the roof (%d)" % floors.size(), floors.size() == int(tall["h"]) + 1 and int(floors[0]["z"]) == 0)
+	check.call("it rides straight to any floor (floor 7)", g.act_elevator_to(7) and g.z_of(g.pc) == 7 and g.city.tiles[g.pc] == CG.ELEVATOR)
+	# whoever stands on the arrival cell is moved aside: the elevator is always open to the player
+	var top_cell: int = g.pc % g.s2 + g.city.level_base(g.city.lvl_of_z(10))
+	g.sim.at[top_cell] = 1
+	check.call("someone is standing in the elevator at floor 10", g.sim.at[top_cell] == 1)
+	var rode: bool = g.act_elevator_to(10)
+	g.sim.at[top_cell] = -1
+	check.call("it still takes you there, and they step aside", rode and g.z_of(g.pc) == 10)
+	g.act_elevator_to(int(tall["h"]))
 	check.call("there is no way up from the roof", not g.act_vertical(1))
 	check.call("the roof is 14 storeys up", int(tall["h"]) == 14)
 	# --- people on upper floors become real agents when you arrive

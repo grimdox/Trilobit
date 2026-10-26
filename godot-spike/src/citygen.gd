@@ -3,6 +3,8 @@ extends RefCounted
 ## suburban houses and parks outside it, and a harbor on the side that faces the overworld's harbor.  Buildings are BSP rooms with doors;
 ## each building is placed with its door on the street side.  Produces home, work and shop markers for the NPC simulation.
 const VN = preload("res://src/venues.gd")
+const FG = preload("res://src/furniture_gen.gd")
+const BZ = preload("res://src/business.gd")
 const GROUND := 0
 const ROAD := 1
 const WALL := 2
@@ -38,7 +40,7 @@ const FIELD := 31       # ploughed or planted field
 const SAND := 32        # beach
 ## 1 where a tile can be walked on (indexed by tile id)
 ## the shops, clinics, churches and shrines add floors and furniture as tile ids from 33 up: [name, sprite, walkable, low cover]
-const EXTRA := [
+const EXTRA_BASE := [
 	["floor_checker", "t_trl_checker", 1, 0], ["floor_church", "t_trl_floor_church", 1, 0], ["floor_hinoki", "t_trl_floor_hinoki", 1, 0],
 	["floor_clean", "t_trl_floor_clean", 1, 0], ["floor_marble", "t_trl_marble", 1, 0], ["floor_steel", "t_trl_floor_steel", 1, 0],
 	["floor_wood", "t_trl_floor_wood", 1, 0], ["floor_tatami", "t_trl_tatami", 1, 0], ["floor_carpet", "t_trl_carpet_red", 1, 0],
@@ -63,6 +65,7 @@ const EXTRA := [
 	["door_closed", "t_door_closed", 1, 0], ["window_broken", "t_window_broken", 1, 0],
 	["station_clock", "f_trl_station_clock", 0, 0],
 ]
+static var EXTRA: Array = EXTRA_BASE + FG.NEW
 const EXTRA0 := 33
 static var TID: Dictionary = _tids()
 static var TILE_SPRITE: Dictionary = _tile_sprites()
@@ -130,6 +133,9 @@ var centre_pt := Vector2(-1.0, -1.0)   # the downtown's heart (the old city: the
 var rad: float = -1.0
 var block_stats: Dictionary = {}       # how many blocks became what (null: nothing fits, park, core, merged, suburb): for the tests and the tuning
 var keep_park: PackedByteArray = PackedByteArray()   # cells of the parks the plan chose to keep (the infill leaves them green)
+var biz_count: Dictionary = {}          # how many of each business type stand so far (types not yet built are favoured, so every type turns up)
+var cur_zone: String = "com"          # the district kind of the cell being built (core, com, res, ind): decides how likely a small building is a business
+var org_tips: Array = []                # the loose ends of the diagonals and arcs (joined to the street network by _connect_tips)
 var org: PackedByteArray = PackedByteArray()   # cells of the organic streets (diagonals, rings, meanders): kept when plain streets are pruned
 var dash_ofs: int = 0                  # global column of local column 0: keeps the dashes of a wide road in step with the island's own
 const LANE := 6
@@ -151,6 +157,7 @@ var movables: Array = []               # [cell, kind] props the game turns into 
 var tower_info: Array = []             # {x0,y0,x1,y1,h,stairs,elev} per built tower
 var subway: Dictionary = {}            # {ring: PackedInt32Array of track cells (level -1), stops: Array of ring indices}
 var rng := RandomNumberGenerator.new()
+var businesses: Array = []             # every business built (see business.gd): {type, ver, tag, tier, name, cat, x0..y1, door, side, role, jobs, staff: cells, keeper}
 var venues: Array = []                 # {kind, style, tier, x0, y0, x1, y1, door, keeper: cell, name}: shops, clinics, churches, shrines
 var venue_plan: Array = []             # kinds still to place while the suburbs are laid out
 var under: PackedByteArray = PackedByteArray()   # ground level: the floor tile under each piece of furniture
@@ -228,6 +235,8 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 	buildings = 0
 	towers = []
 	venues = []
+	businesses = []
+	biz_count = {}
 	venue_plan = VN.city_plan(rng)
 	var planned: bool = not plan.is_empty()
 	if planned:
@@ -518,6 +527,7 @@ func _organic_roads(seed_v: int) -> void:
 	r.seed = seed_v ^ 0x5eed0a
 	org = PackedByteArray()
 	org.resize(size * size)
+	org_tips = []
 	var res: PackedByteArray = plan["reserve"].duplicate()
 	var mask: PackedByteArray = plan["mask"]
 	var water: PackedByteArray = plan["water"]
@@ -533,9 +543,9 @@ func _organic_roads(seed_v: int) -> void:
 				if x < 2 or y < 2 or x >= size - 2 or y >= size - 2:
 					continue
 				var i: int = y * size + x
-				if mask[i] == 0 or water[i] != 0 or res[i] == 1:
+				if mask[i] == 0 or res[i] == 1:
 					continue
-				if tiles[i] == ROAD or tiles[i] == GROUND or tiles[i] == PARK:
+				if tiles[i] == ROAD or tiles[i] == GROUND or tiles[i] == PARK or tiles[i] == WATER or tiles[i] == SAND:        # a bridge over the river
 					tiles[i] = ROAD
 					org[i] = 1
 					marks[i] = 0
@@ -545,7 +555,7 @@ func _organic_roads(seed_v: int) -> void:
 		if x < 4 or y < 4 or x >= size - 4 or y >= size - 4:
 			return false
 		var i: int = y * size + x
-		return mask[i] == 1 and water[i] == 0 and res[i] == 0
+		return mask[i] == 1 and res[i] == 0
 	var trunk_y: int = int(plan["trunk"])
 	# diagonal avenues: chords that miss the very heart of downtown, running both ways until the city's edge or the water stops them
 	var made := 0
@@ -564,63 +574,37 @@ func _organic_roads(seed_v: int) -> void:
 		for sgn in [1.0, -1.0]:
 			var t := 0.0
 			var gap := 0
+			var last_ok := Vector2(-1.0, -1.0)
 			while t < rad * 2.2 and gap < 12:
 				var pt: Vector2 = start + dirv * (sgn * t) + Vector2(-dirv.y, dirv.x) * (amp * sin(t * 0.045 + ph))
 				if ok.call(pt) and absf(pt.y - float(trunk_y) - 6.0) > 20.0:
 					stamp.call(pt, 4.0)
+					last_ok = pt
 					gap = 0
 				else:
 					gap += 1
 				t += 1.0
+			if last_ok.x >= 0.0:
+				org_tips.append(last_ok)
 	# ring road: arcs about the downtown
 	for k in 2:
 		var rr: float = rad * r.randf_range(0.42, 0.95)
 		var a0: float = r.randf_range(0.0, TAU)
 		var span: float = r.randf_range(1.6, 3.4)
 		var n: int = int(rr * span)
+		var first_pt := Vector2(-1.0, -1.0)
+		var last_pt := Vector2(-1.0, -1.0)
 		for q in n:
 			var a: float = a0 + span * float(q) / float(n)
 			var pt: Vector2 = ctr + Vector2(cos(a), sin(a)) * (rr + 3.0 * sin(a * 5.0))
 			if ok.call(pt) and absf(pt.y - float(trunk_y) - 6.0) > 20.0:
 				stamp.call(pt, 4.0)
-	# meanders: a winding lane beside each bank of the river (where the boulevard does not run) and along the town's edge
-	for side in [-1, 1]:
-		var ph2: float = r.randf_range(0.0, TAU)
-		for y in range(8, size - 8):
-			var bx := -1
-			for x in range(4, size - 4):
-				if water[y * size + x] == 1:
-					bx = x if side < 0 else maxi(bx, x)
-					if side < 0:
-						break
-			if bx < 0:
-				continue
-			var wob: float = 7.0 * sin(float(y) * 0.05 + ph2) + 4.0 * sin(float(y) * 0.13)
-			var pt := Vector2(float(bx) + side * (26.0 + wob), float(y))
-			if side < 0:
-				pt.x = float(bx) - 26.0 + wob
-			if ok.call(pt) and absf(float(y) - float(trunk_y) - 6.0) > 24.0:
-				stamp.call(pt, 3.5)
-	var edge_n := 0
-	for k in 3:
-		# a lane that bends along the town's outline: walk the outline inward by a margin
-		var yy: int = int(r.randf_range(0.2, 0.8) * size)
-		if absi(yy - trunk_y) < 60:
-			continue
-		var xe := -1
-		for x in range(size - 5, 4, -1):
-			if mask[yy * size + x] == 1 and water[yy * size + x] == 0:
-				xe = x
-				break
-		if xe < 0:
-			continue
-		var ph3: float = r.randf_range(0.0, TAU)
-		for t in range(0, 140):
-			var yv: float = float(yy + t)
-			var pt := Vector2(float(xe) - 18.0 - 9.0 * sin(float(t) * 0.07 + ph3), yv)
-			if ok.call(pt) and absf(yv - float(trunk_y) - 6.0) > 24.0:
-				stamp.call(pt, 3.5)
-		edge_n += 1
+				if first_pt.x < 0.0:
+					first_pt = pt
+				last_pt = pt
+		if first_pt.x >= 0.0:
+			org_tips.append(first_pt)
+			org_tips.append(last_pt)
 	for i in size * size:
 		if org[i] == 1:
 			for dy in range(-1, 2):
@@ -786,6 +770,41 @@ func _organic_city(seed_v: int) -> void:
 					if mask[i] == 1 and water[i] == 0 and res[i] == 0 and (tiles[i] == GROUND or tiles[i] == PARK):
 						tiles[i] = ROAD
 						marks[i] = 0
+	# --- the perimeter ring road (a street just inside the caldera's foot, all the way round where nothing is in its way) and the quay lanes beside the
+	# river, which also catch the streets that would otherwise end at the bank
+	var outside := PackedByteArray()
+	outside.resize(n * n)
+	var wat := PackedByteArray()
+	wat.resize(n * n)
+	for cy in n:
+		for cx in n:
+			if cid[cy * n + cx] < 0:
+				outside[cy * n + cx] = 1
+			if water[(cy * 2) * size + cx * 2] != 0 or water[(cy * 2 + 1) * size + cx * 2 + 1] != 0:
+				wat[cy * n + cx] = 1
+	var d_edge: PackedByteArray = _coarse_dist(outside, n, 8)
+	var d_wat: PackedByteArray = _coarse_dist(wat, n, 8)
+	for cy in n:
+		for cx in n:
+			var ci: int = cy * n + cx
+			var ring: bool = d_edge[ci] >= 2 and d_edge[ci] <= 4
+			var quay: bool = wat[ci] == 0 and d_wat[ci] >= 3 and d_wat[ci] <= 5
+			if not (ring or quay):
+				continue
+			for dy in 2:
+				for dx in 2:
+					var i: int = (cy * 2 + dy) * size + cx * 2 + dx
+					if mask[i] == 1 and water[i] == 0 and res[i] == 0 and (tiles[i] == GROUND or tiles[i] == PARK):
+						tiles[i] = ROAD
+						marks[i] = 0
+	# --- the loose ends of the diagonals and arcs are joined to the nearest street
+	var plain := PackedByteArray()
+	plain.resize(size * size)
+	for i in size * size:
+		if tiles[i] == ROAD and org[i] == 0:
+			plain[i] = 1
+	for tip in org_tips:
+		_connect_tip(tip, plain, mask, res)
 	# --- which tiles near a street (the pavement: two tiles either side stay bare), coarse
 	var near := PackedByteArray()
 	near.resize(n * n)
@@ -827,7 +846,23 @@ func _organic_city(seed_v: int) -> void:
 	if keep_park.size() != size * size:
 		keep_park = PackedByteArray()
 		keep_park.resize(size * size)
-	var nstat := {"park": 0, "core": 0, "mid": 0, "suburb": 0, "lot": 0, "kiosk": 0}
+	# the kind of district each cell is: the middle is "core"; further out cells are commercial, residential or industrial (industry sits well out, and near the river)
+	var cell_zone := {}
+	for si in seeds.size():
+		var sp4: Vector2 = seeds[si]
+		var dc4: float = sp4.distance_to(centre_pt) / rad
+		var roll4: int = hash([seed_v, si, "zn"]) & 0x7fffffff
+		var zk := "com"
+		if dc4 < 0.42:
+			zk = "core"
+		else:
+			var pr: int = roll4 % 100
+			if dc4 > 0.55 and pr < 15:
+				zk = "ind"
+			elif pr < 15 + (35 if dc4 < 0.75 else 55):
+				zk = "res"
+		cell_zone[si] = zk
+	var nstat := {"park": 0, "core": 0, "mid": 0, "suburb": 0, "lot": 0, "kiosk": 0, "ind": 0}
 	nstat["park"] = park_cell.size()
 	var freeb := PackedByteArray()
 	freeb.resize(size * size)
@@ -881,7 +916,37 @@ func _organic_city(seed_v: int) -> void:
 			var x1: int = x + w - 1
 			var y1: int = y + h - 1
 			var made_lot := false
-			if dd >= 0.12 and housing[y * size + x] == 0 and w >= 26 and h >= 22 and (hash([size, x / 8, y / 8, "lot"]) & 0x7fffffff) % 100 < 55:
+			var czone: String = cell_zone.get(cid[(y >> 1) * n + (x >> 1)], "com")
+			if housing[y * size + x] == 1:
+				czone = "res"
+			cur_zone = czone
+			if (czone == "core" or czone == "com") and w >= 14 and h >= 13 and rng.randf() < 0.5:
+				# a type that has not been built yet takes the plot if it fits (so the big ones, hotels and banks and clubs, all turn up)
+				var want := ""
+				var wside: int = _street_side(x, y, x1, y1)
+				for tid in BZ.TYPES:
+					if int(biz_count.get(tid, 0)) == 0 and BZ.TYPES[tid]["zone"] != "ind" and not BZ.fitting_side(tid, w, h, wside).is_empty():
+						want = tid
+						break
+				if want != "":
+					var wrect = _stamp_business(want, x, y, x1, y1, wside)
+					if wrect != null:
+						for yy in range(maxi(wrect.position.y - 1, 0), mini(wrect.end.y + 1, size - 1)):
+							for xx in range(maxi(wrect.position.x - 1, 0), mini(wrect.end.x + 1, size - 1)):
+								freeb[yy * size + xx] = 0
+						continue
+			if czone == "ind" and w >= 12 and h >= 12:
+				var iside: int = _street_side(x, y, x1, y1)
+				var iid: String = _pick_business(w, h, iside, "ind")
+				if iid != "":
+					var irect = _stamp_business(iid, x, y, x1, y1, iside)
+					if irect != null:
+						for yy in range(maxi(irect.position.y - 1, 0), mini(irect.end.y + 1, size - 1)):
+							for xx in range(maxi(irect.position.x - 1, 0), mini(irect.end.x + 1, size - 1)):
+								freeb[yy * size + xx] = 0
+						nstat["ind"] += 1
+						continue
+			if dd >= 0.12 and czone != "ind" and housing[y * size + x] == 0 and w >= 26 and h >= 22 and (hash([size, x / 8, y / 8, "lot"]) & 0x7fffffff) % 100 < 55:
 				var nbay: int = mini(10, (w - 4) / 4)
 				var ww: int = nbay * 4 + 2
 				var roll: int = (hash([size, x / 8, y / 8, "lk"]) & 0x7fffffff) % 100
@@ -934,8 +999,77 @@ func _organic_city(seed_v: int) -> void:
 			for yy2 in range(y, y + h2):
 				for xx2 in range(x, x + w2):
 					freeb[yy2 * size + xx2] = 0
-	block_stats = {"null": 0, "park": nstat["park"], "core": nstat["core"] + nstat["mid"], "merged": nstat["core"], "suburb": nstat["suburb"], "exurb": 0, "lot": nstat["lot"], "kiosk": nstat["kiosk"], "null_list": []}
+	block_stats = {"null": 0, "park": nstat["park"], "core": nstat["core"] + nstat["mid"], "merged": nstat["core"], "suburb": nstat["suburb"], "exurb": 0, "lot": nstat["lot"], "kiosk": nstat["kiosk"], "ind": nstat["ind"], "biz": businesses.size(), "null_list": []}
 
+
+## distance (in coarse patches, up to `maxd`) of every patch from the nearest patch with src == 1; 255 beyond
+func _coarse_dist(src: PackedByteArray, n: int, maxd: int) -> PackedByteArray:
+	var d := PackedByteArray()
+	d.resize(n * n)
+	d.fill(255)
+	var q: Array = []
+	for i in n * n:
+		if src[i] == 1:
+			d[i] = 0
+			q.append(i)
+	var head := 0
+	while head < q.size():
+		var i: int = q[head]
+		head += 1
+		var dv: int = d[i]
+		if dv >= maxd:
+			continue
+		var x: int = i % n
+		var y: int = i / n
+		for o in [[1, 0], [-1, 0], [0, 1], [0, -1]]:
+			var nx: int = x + o[0]
+			var ny: int = y + o[1]
+			if nx < 0 or ny < 0 or nx >= n or ny >= n:
+				continue
+			var j: int = ny * n + nx
+			if d[j] == 255:
+				d[j] = dv + 1
+				q.append(j)
+	return d
+
+## join a loose end to the street network: nothing to do if a plain street is within 5 tiles; otherwise lay a street straight to the nearest one (up to 90 away)
+func _connect_tip(tip: Vector2, plain: PackedByteArray, mask: PackedByteArray, res: PackedByteArray) -> void:
+	var tx: int = int(tip.x)
+	var ty: int = int(tip.y)
+	var target := Vector2i(-1, -1)
+	for rr in range(1, 91, 2):
+		var best := 1 << 30
+		for k in range(-rr, rr + 1, 2):
+			for p in [Vector2i(tx + k, ty - rr), Vector2i(tx + k, ty + rr), Vector2i(tx - rr, ty + k), Vector2i(tx + rr, ty + k)]:
+				if p.x < 1 or p.y < 1 or p.x >= size - 1 or p.y >= size - 1:
+					continue
+				if plain[p.y * size + p.x] == 1:
+					var dd: int = (p.x - tx) * (p.x - tx) + (p.y - ty) * (p.y - ty)
+					if dd < best:
+						best = dd
+						target = p
+		if target.x >= 0:
+			if rr <= 6:
+				return                      # already touching
+			break
+	if target.x < 0:
+		return
+	var len: int = maxi(absi(target.x - tx), absi(target.y - ty))
+	for s in range(0, len + 1):
+		var x: int = tx + (target.x - tx) * s / len
+		var y: int = ty + (target.y - ty) * s / len
+		for dy in range(-3, 4):
+			for dx in range(-3, 4):
+				if dx * dx + dy * dy > 9:
+					continue
+				var xx: int = x + dx
+				var yy: int = y + dy
+				if xx < 1 or yy < 1 or xx >= size - 1 or yy >= size - 1:
+					continue
+				var i: int = yy * size + xx
+				if mask[i] == 1 and res[i] == 0 and (tiles[i] == GROUND or tiles[i] == PARK):
+					tiles[i] = ROAD
+					marks[i] = 0
 
 ## is this cell somewhere a building may not stand?  (outside the city's outline, in or beside the river, on the rail strip)
 func _bad(x: int, y: int) -> bool:
@@ -1164,10 +1298,12 @@ func _subdivide(x0: int, y0: int, x1: int, y1: int, depth: int) -> void:
 	var h: int = y1 - y0 + 1
 	if w < 7 or h < 7:
 		return
-	var limit: int = 18 + rng.randi_range(0, 6)
+	var limit: int = 18 + rng.randi_range(0, 6) + (8 if (not plan.is_empty() and (cur_zone == "core" or cur_zone == "com") and rng.randf() < 0.22) else 0)
 	if (w <= limit and h <= limit) or depth > 4:
 		var kind := "mid"
 		var dc: float = Vector2((x0 + x1) * 0.5, (y0 + y1) * 0.5).distance_to(centre_pt) / rad if rad > 0.0 else 1.0
+		if not plan.is_empty() and not (dc < 0.5 and w * h >= 150) and _leaf_business(x0, y0, x1, y1):
+			return
 		if dc < 0.5 and w * h >= 150 and rng.randf() < (0.8 if dc < 0.3 else 0.5):
 			kind = "core"                   # the middle of the city is towers
 		elif w * h >= 260 and rng.randf() < 0.3:
@@ -1183,6 +1319,84 @@ func _subdivide(x0: int, y0: int, x1: int, y1: int, depth: int) -> void:
 		var cut2: int = y0 + int(float(h) * rng.randf_range(0.38, 0.62))
 		_subdivide(x0, y0, x1, cut2 - 1, depth + 1)
 		_subdivide(x0, cut2 + alley, x1, y1, depth + 1)
+
+const LEGACY_TYPE := {"restaurant": "restaurant", "grocery": "grocery", "implant": "implant_shop", "clinic": "clinic", "church": "church", "temple": "shrine"}
+
+## a small building that is a business (shop, bar, office-counter, gym, ...) instead of a plain mid-rise: decided by the district kind and what fits
+func _leaf_business(x0: int, y0: int, x1: int, y1: int) -> bool:
+	var w: int = x1 - x0 + 1
+	var h: int = y1 - y0 + 1
+	if w < 8 or h < 8:
+		return false
+	var pb: float = {"core": 0.85, "com": 0.78, "res": 0.2, "ind": 0.0}.get(cur_zone, 0.3)
+	var forced := ""
+	if not venue_plan.is_empty() and cur_zone != "ind" and cur_zone != "res":
+		forced = LEGACY_TYPE.get(venue_plan[0], "")
+		pb = 1.0
+	if rng.randf() > pb:
+		return false
+	var side: int = _street_side(x0, y0, x1, y1)
+	var id := forced if forced != "" and not BZ.fitting_side(forced, w, h, side).is_empty() else _pick_business(w, h, side)
+	if id == "":
+		return false
+	if forced != "" and id == forced:
+		venue_plan.pop_front()
+	return _stamp_business(id, x0, y0, x1, y1, side) != null
+
+## choose a business type for a w x h rectangle, weighted by how well the district kind suits it
+func _pick_business(w: int, h: int, side: int, zones_only: String = "") -> String:
+	var weights: Array = []
+	var total := 0.0
+	for id in BZ.TYPES:
+		var T: Dictionary = BZ.TYPES[id]
+		if BZ.fitting_side(id, w, h, side).is_empty():
+			continue
+		var tz: String = T["zone"]
+		var wt: float = float(T["w"])
+		if zones_only != "":
+			if tz != zones_only:
+				continue
+		else:
+			if tz == "ind":
+				continue
+			match cur_zone:
+				"core": wt *= (3.0 if tz == "core" else (1.6 if tz == "any" else (1.0 if tz == "mid" else 0.2)))
+				"com": wt *= (3.0 if tz == "mid" else (2.0 if tz == "any" else (1.2 if tz == "core" else 0.8)))
+				"res": wt *= (3.0 if tz == "any" else (1.0 if tz == "mid" else (0.6 if tz == "edge" else 0.1)))
+		var have: int = int(biz_count.get(id, 0))
+		wt *= 5.0 if have == 0 else (2.0 if have < 3 else 1.0)
+		weights.append([id, wt])
+		total += wt
+	if weights.is_empty():
+		return ""
+	var roll: float = rng.randf() * total
+	for e in weights:
+		roll -= float(e[1])
+		if roll <= 0.0:
+			return String(e[0])
+	return String(weights[weights.size() - 1][0])
+
+## build business `id` inside the rectangle (x0,y0)-(x1,y1), centred on the side away from the door's street
+func _stamp_business(id: String, x0: int, y0: int, x1: int, y1: int, side: int):
+	var w: int = x1 - x0 + 1
+	var h: int = y1 - y0 + 1
+	var fits: Array = BZ.fitting_side(id, w, h, side)
+	if fits.is_empty():
+		return null
+	var ver: int = fits[rng.randi() % fits.size()]
+	if fits.size() > 1 and rng.randf() < 0.5:
+		ver = fits[fits.size() - 1]                       # leans to the bigger version when there is room
+	var sz: Vector2i = BZ.size_of(id, ver, side)
+	var px: int = x0 + (w - sz.x) / 2
+	var py: int = y0 + (h - sz.y) / 2
+	match side:
+		0: py = y0
+		1: py = y1 - sz.y + 1
+		2: px = x0
+		_: px = x1 - sz.x + 1
+	BZ.stamp(self, id, ver, px, py, side)
+	biz_count[id] = int(biz_count.get(id, 0)) + 1
+	return Rect2i(px, py, sz.x, sz.y)
 
 func _suburb_block(x0: int, y0: int, x1: int, y1: int, density: float = 0.9) -> void:
 	# rows of houses across the whole block with a 1-2 tile alley between rows and between houses.  The island city packs them: small houses, rows as
@@ -1416,8 +1630,8 @@ func reachable_fraction() -> float:
 
 func save_png(path: String, scale: int = 3) -> void:
 	var pal := [Color("#6b6b73"), Color("#2a2a30"), Color("#d8d8e0"), Color("#9a8f7a"), Color("#e0a030"), Color("#1d4f91"), Color("#4a9a4a")]
-	pal.resize(128)
-	for k in 128:
+	pal.resize(256)
+	for k in 256:
 		if pal[k] == null:
 			pal[k] = Color("#554455")
 	var img := Image.create(size * scale, size * scale, false, Image.FORMAT_RGBA8)

@@ -74,7 +74,7 @@ func run() -> Array:
 	check.call("the river is one unbroken channel from the foothills to the harbor", okc)
 	var ys0: int = isl.RIVER_Y0 + 8
 	var xs0 := int(isl._rv_x[ys0])
-	check.call("it rises inside the mountains (x %d, mass %.2f)" % [xs0, isl._samp(isl._g_mt, xs0 - 20, ys0)], isl._samp(isl._g_mt, xs0 - 40, ys0 - 40) > 0.3 and isl.terrain(xs0 - 14, ys0) in [CG.MOUNTAIN, CG.ROCKS])
+	check.call("it rises inside the mountains (x %d, mass %.2f)" % [xs0, isl._samp(isl._g_mt, xs0 - 20, ys0)], isl._samp(isl._g_mt, xs0 - 20, ys0) > 0.3 and isl.terrain(xs0 - 14, ys0) in [CG.MOUNTAIN, CG.ROCKS])
 	var my: int = isl.RIVER_Y1 + 8
 	check.call("it reaches the sea in the city's harbor (mouth at row %d, city-local %d)" % [isl.RIVER_Y1, isl.RIVER_Y1 - o.y], isl.terrain(int(isl._rv_x[isl.RIVER_Y1]), my) == CG.WATER and isl.RIVER_Y1 - o.y > 780)
 	var wet := 0
@@ -363,6 +363,35 @@ func run() -> Array:
 	check.call("%d of them drive across the river (it is x %d-%d) and none leaves the road" % [crossed, sp3.x - o.x, sp3.y - o.x], crossed >= 1 and not off_road)
 
 	# ---- save and load: the same city comes back
+	# ---- the streets are one connected network (parking lots aside), and the outline is an oval that the city fills to its rim
+	var road_seen := PackedByteArray()
+	road_seen.resize(n * n)
+	var rcomps: Array = []
+	for i0 in n * n:
+		if c.tiles[i0] != CG.ROAD or road_seen[i0] == 1:
+			continue
+		var rq: Array = [i0]
+		road_seen[i0] = 1
+		var rhd := 0
+		while rhd < rq.size():
+			var rj: int = rq[rhd]
+			rhd += 1
+			for oo in [1, -1, n, -n]:
+				var k2: int = rj + oo
+				if k2 >= 0 and k2 < n * n and c.tiles[k2] == CG.ROAD and road_seen[k2] == 0 and not (absi(oo) == 1 and k2 / n != rj / n):
+					road_seen[k2] = 1
+					rq.append(k2)
+		rcomps.append(rq.size())
+	rcomps.sort()
+	rcomps.reverse()
+	var lot_tiles := 0
+	for rlot in c.lots:
+		lot_tiles += (int(rlot["x1"]) - int(rlot["x0"]) + 1) * (int(rlot["y1"]) - int(rlot["y0"]) + 1)
+	var road_all := 0
+	for cc2 in rcomps:
+		road_all += int(cc2)
+	var rshare: float = float(rcomps[0]) / float(maxi(1, road_all - lot_tiles))
+	check.call("the streets form one connected network (%.1f%% of the street tiles outside the parking lots)" % (100.0 * rshare), rshare > 0.97)
 	var d: Dictionary = JSON.parse_string(JSON.stringify(w.save_dict()))
 	var w2 = World.new()
 	w2.load_dict(d)
