@@ -246,7 +246,7 @@ func run() -> Array:
 	for vi in cg.vehicles.size():
 		cg.vs.lift(vi)
 	cg.vehicles.clear()
-	cg.veh_at.fill(-1)
+	cg.veh_at.clear()
 	cg.in_vehicle = -1
 	var e: int = int(cg.city.plan["trunk"])
 	var cy2: int = VS.lane_k2(e, 1)
@@ -257,7 +257,7 @@ func run() -> Array:
 	for cc in cg.vs.cells(cg.vehicles[vi2]):
 		for d in cg.SIZE_DIRS:
 			var nc: int = cc + d[1] * cg.size + d[0]
-			if cg.veh_at[nc] == -1 and cg.sim.walk[nc] == 1 and cg.sim.at[nc] == -1:
+			if cg.veh_at.g(nc) == -1 and cg.sim.walk[nc] == 1 and cg.sim.at[nc] == -1:
 				spot = nc
 	cg.pc = spot
 	cg.sim.retier(cg.pc)

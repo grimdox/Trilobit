@@ -1,6 +1,7 @@
 extends RefCounted
 ## The playable slice: one city, one player, roughly two thousand people, awareness-driven hostiles, theft, shooting, pockets and cars.
 ## All rules live here and run headless; main.gd and view.gd only draw it and feed it keys.
+const SPARSE = preload("res://src/sparse.gd")
 const CG = preload("res://src/citygen.gd")
 const ISL = preload("res://src/island.gd")
 const SIM = preload("res://src/npc_sim.gd")
@@ -158,7 +159,7 @@ var facing := Vector2i(0, 1)
 # the world
 var items_at: Dictionary = {}        # cell -> Array of Item
 var vehicles: Array = []
-var veh_at: PackedInt32Array
+var veh_at                                  # a Sparse map (sparse.gd): the vehicle on each cell, -1 if none
 var waypoints: PackedInt32Array
 var way_fields: Array = []
 var road_walk: PackedByteArray
@@ -185,12 +186,12 @@ var melee_pool: Dictionary = {}       # faction -> melee weapon ids they carry
 var melee_all: Array = []
 var prev_wield = null
 var things: Array = []                # loose props: {k, cell, hp, loot}
-var thing_at: PackedInt32Array
+var thing_at                                # a Sparse map: the thing on each cell
 ## bodies left by the dead: {cell, name, fac, kj}; the energy in them can still be drawn
 const CORPSE_CAP := 300
 var corpses: Array = []
 var critters: Array = []              # dogs and cats: {k, cell, hp, mood, stun}
-var crit_at: PackedInt32Array
+var crit_at                                 # a Sparse map: the creature on each cell
 var fly_units: Dictionary = {}        # agent -> {"fly": true, ...}: per-unit movement traits (none spawn yet)
 var face: PackedByteArray              # which way each person looks: index into DIR8
 var prevpos: PackedInt32Array
@@ -239,7 +240,7 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1), ms
 	elif isl != null:
 		island = isl
 		zone = zn
-		city = island.build_zone(zn.x, zn.y)
+		city = island.build_zone_cached(zn.x, zn.y)
 		_prof("build_zone", _t0)
 		if zn == island.CITY_ZONE:
 			LV.build(city, island.seed_value)
@@ -272,12 +273,12 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1), ms
 	fov = FOV.new()
 	fov.setup(size, sim.opaque)
 	pf = PackedInt32Array(); pf.resize(total); pf.fill(FF.UNREACHED)
-	veh_at = PackedInt32Array(); veh_at.resize(total); veh_at.fill(-1)
+	veh_at = SPARSE.new(total)
 	things = []
 	critters = []
 	corpses = []
-	thing_at = PackedInt32Array(); thing_at.resize(total); thing_at.fill(-1)
-	crit_at = PackedInt32Array(); crit_at.resize(total); crit_at.fill(-1)
+	thing_at = SPARSE.new(total)
+	crit_at = SPARSE.new(total)
 	_people()
 	if not mission.is_empty():
 		_mission_people()
@@ -737,7 +738,7 @@ func _spawn_special_vehicles() -> void:
 	var centre: int = (size / 2) * size + size / 2
 	var start: int = centre
 	for i in size * size:
-		if city.tiles[i] == CG.ROAD and veh_at[i] == -1 and sim.at[i] == -1:
+		if city.tiles[i] == CG.ROAD and veh_at.g(i) == -1 and sim.at[i] == -1:
 			var d := maxi(absi(i % size - size / 2), absi(i / size - size / 2))
 			if d < 3:
 				start = i
@@ -746,7 +747,9 @@ func _spawn_special_vehicles() -> void:
 	var hs: int = vs.find_spot("heli", start, 8, 60, [CG.GROUND, CG.PARK, CG.ROAD], 0)
 	_add_special("heli", hs, Color("#7fd6e8"))
 	_add_special("mech", vs.find_spot("mech", start, 10, 160, [CG.GROUND, CG.PARK], 0), Color("#c0583a"))
-	var towers: Array = city.tower_info.duplicate()
+	var towers: Array = city.tower_info.filter(func(t): return int(t["h"]) < city.zmax)       # a helicopter needs air over its roof: not the tallest tower, whose roof is the top level
+	if towers.is_empty():
+		towers = city.tower_info.duplicate()
 	towers.sort_custom(func(a, b): return int(a["h"]) > int(b["h"]))
 	for k in mini(2, towers.size()):
 		var t: Dictionary = towers[k]
@@ -828,7 +831,7 @@ func _start_player() -> void:
 	var best := -1
 	var bd := 1 << 30
 	for i in (0 if not mission.is_empty() else size * size):
-		if city.tiles[i] == CG.ROAD and veh_at[i] == -1:
+		if city.tiles[i] == CG.ROAD and veh_at.g(i) == -1:
 			var d := maxi(absi(i % size - size / 2), absi(i / size - size / 2))
 			if d < bd and sim.at[i] == -1:
 				bd = d
@@ -1195,15 +1198,15 @@ func _act_move_core(dx: int, dy: int, run: bool = false) -> bool:
 		melee(who)
 		end_turn()
 		return true
-	if thing_at[c] != -1:
+	if thing_at.g(c) != -1:
 		return _bump_thing(c, dx, dy)
-	if crit_at[c] != -1:
+	if crit_at.g(c) != -1:
 		return _bump_crit(c, dx, dy)
 	var rt: int = _reach_target(dx, dy)
 	if rt >= 0 and sim.at[c] == -1:
 		return act_strike(dx, dy)
-	if veh_at[c] != -1:
-		say("A %s blocks the way.  [e] to get in." % vs.KINDS[vehicles[veh_at[c]]["kind"]]["name"])
+	if veh_at.g(c) != -1:
+		say("A %s blocks the way.  [e] to get in." % vs.KINDS[vehicles[veh_at.g(c)]["kind"]]["name"])
 		return false
 	if city.tiles[c] == CG.LOCKED:
 		return _pick_lock(c)
@@ -1231,7 +1234,7 @@ func _act_move_core(dx: int, dy: int, run: bool = false) -> bool:
 		var c2: int = c + dy * size + dx
 		var nx2: int = nx + dx
 		var ny2: int = ny + dy
-		if in_bounds(nx2, ny2) and z_of(c2) == z_of(c) and sim.walk[c2] == 1 and sim.at[c2] == -1 and veh_at[c2] == -1 and not items_at.has(c) \
+		if in_bounds(nx2, ny2) and z_of(c2) == z_of(c) and sim.walk[c2] == 1 and sim.at[c2] == -1 and veh_at.g(c2) == -1 and not items_at.has(c) \
 				and city.tiles[c2] != CG.LOCKED and city.tiles[c2] != CG.TRACK:
 			pc = c2
 	elif run and stamina < RUN_STAMINA:
@@ -1405,12 +1408,12 @@ func describe_at(c: int) -> String:
 			bits.append(name_of(sim.at[c]) + ((" (" + ["unaware", "suspicious", "searching", "hunting you"][int(astate[sim.at[c]])] + ")") if hostile(sim.at[c]) else "") + ((" - " + npc_wound_text(sim.at[c])) if npc_wound_text(sim.at[c]) != "" else ""))
 		if c == pc:
 			bits.append("you")
-		if veh_at[c] >= 0:
-			bits.append("a " + String(vs.KINDS[vehicles[veh_at[c]]["kind"]]["name"]))
-		if thing_at[c] >= 0:
-			bits.append("a " + String(things[thing_at[c]]["k"]))
-		if crit_at[c] >= 0:
-			bits.append("a " + String(critters[crit_at[c]]["k"]))
+		if veh_at.g(c) >= 0:
+			bits.append("a " + String(vs.KINDS[vehicles[veh_at.g(c)]["kind"]]["name"]))
+		if thing_at.g(c) >= 0:
+			bits.append("a " + String(things[thing_at.g(c)]["k"]))
+		if crit_at.g(c) >= 0:
+			bits.append("a " + String(critters[crit_at.g(c)]["k"]))
 		if items_at.has(c):
 			var names: Array = []
 			for it in items_at[c]:
@@ -1605,7 +1608,7 @@ func act_door(c: int) -> bool:
 		end_turn()
 		return true
 	if t == CG.DOOR:
-		if sim.at[c] >= 0 or veh_at[c] != -1 or items_at.has(c) or thing_at[c] != -1 or crit_at[c] != -1:
+		if sim.at[c] >= 0 or veh_at.g(c) != -1 or items_at.has(c) or thing_at.g(c) != -1 or crit_at.g(c) != -1:
 			say("Something is in the doorway.")
 			return false
 		_set_door(c, true)
@@ -1842,7 +1845,7 @@ func act_jump(dx: int, dy: int) -> bool:
 				clear = false
 		if not clear:
 			continue
-		if sim.walk[land] == 1 and sim.at[land] == -1 and veh_at[land] == -1 and city.tiles[land] != CG.LOCKED:
+		if sim.walk[land] == 1 and sim.at[land] == -1 and veh_at.g(land) == -1 and city.tiles[land] != CG.LOCKED:
 			pc = land
 			landed = true
 			break
@@ -1898,9 +1901,9 @@ func cover_vs(from: int, to: int, crouched: bool = false) -> int:
 			continue
 		var t: int = city.tiles[c]
 		var v := 0
-		if veh_at[c] != -1:
+		if veh_at.g(c) != -1:
 			v = 40 if crouched else 28
-		elif (t in CG.LOW_COVER and t < CG.EXTRA0) or thing_at[c] != -1:
+		elif (t in CG.LOW_COVER and t < CG.EXTRA0) or thing_at.g(c) != -1:
 			v = 32 if crouched else 20           # street cover (crates, dumpsters, planters, railings, loose things): crouching behind it helps
 		elif t == CG.WALL:
 			v = 15
@@ -2955,14 +2958,14 @@ func act_strike(dx: int, dy: int) -> bool:
 		if z_of(c2) != z_of(pc):
 			break
 		var dmg: int = rng.randi_range(int(ms["dmg"][0]), int(ms["dmg"][1])) + lvl(melee_skill_id()) / 2
-		if crit_at[c2] != -1:
+		if crit_at.g(c2) != -1:
 			facing = Vector2i(dx, dy)
-			crit_hit(crit_at[c2], dmg)
+			crit_hit(crit_at.g(c2), dmg)
 			end_turn()
 			return true
-		if thing_at[c2] != -1:
+		if thing_at.g(c2) != -1:
 			facing = Vector2i(dx, dy)
-			thing_hit(thing_at[c2], dmg)
+			thing_hit(thing_at.g(c2), dmg)
 			end_turn()
 			return true
 		if dist == 1 and city.tiles[c2] == CG.GLASS and c2 < s2:
@@ -3384,7 +3387,7 @@ func act_reload() -> bool:
 ## a vehicle standing in the line of fire stops the bullet: [vehicle index, cell] or []
 func _vehicle_in_line(t: int) -> Array:
 	for c in GP.line_cells(pc, sim.pos[t], size):
-		var vi: int = veh_at[c]
+		var vi: int = veh_at.g(c)
 		if vi != -1 and vi != in_vehicle and not vehicles[vi]["wreck"] and sim.at[c] != t:
 			return [vi, c]
 	return []
@@ -4176,22 +4179,22 @@ func thing_name(ti: int) -> String:
 func _spawn_things() -> void:
 	for m in city.movables:
 		var cell: int = m[0]
-		if thing_at[cell] != -1 or sim.at[cell] != -1 or veh_at[cell] != -1 or sim.walk[cell] == 0:
+		if thing_at.g(cell) != -1 or sim.at[cell] != -1 or veh_at.g(cell) != -1 or sim.walk[cell] == 0:
 			continue
 		_add_thing(String(m[1]), cell, rng.randf() < 0.5)
 
 func _add_thing(kind: String, cell: int, loot: bool) -> int:
 	things.append({"k": kind, "cell": cell, "hp": THING_HP[kind], "loot": loot and kind == "crate"})
-	thing_at[cell] = things.size() - 1
+	thing_at.s(cell, things.size() - 1)
 	sim.walk[cell] = 0
 	return things.size() - 1
 
 func _remove_thing(ti: int) -> void:
 	var t: Dictionary = things[ti]
 	var cell: int = t["cell"]
-	if thing_at[cell] == ti:
-		thing_at[cell] = -1
-		sim.walk[cell] = 1 if city.walkable(city.tiles[cell]) and veh_at[cell] == -1 else 0
+	if thing_at.g(cell) == ti:
+		thing_at.s(cell, -1)
+		sim.walk[cell] = 1 if city.walkable(city.tiles[cell]) and veh_at.g(cell) == -1 else 0
 	t["k"] = ""
 
 ## a thing is wrecked: crates spill what they held
@@ -4206,15 +4209,15 @@ func smash_thing(ti: int, why: String) -> void:
 	_noise_gentle(cell, 7)
 
 func _thing_open(c: int) -> bool:
-	return sim.walk[c] == 1 and sim.at[c] == -1 and veh_at[c] == -1 and thing_at[c] == -1 and crit_at[c] == -1 and c != pc
+	return sim.walk[c] == 1 and sim.at[c] == -1 and veh_at.g(c) == -1 and thing_at.g(c) == -1 and crit_at.g(c) == -1 and c != pc
 
 func _move_thing(ti: int, to: int) -> void:
 	var t: Dictionary = things[ti]
 	var from: int = t["cell"]
-	thing_at[from] = -1
-	sim.walk[from] = 1 if city.walkable(city.tiles[from]) and veh_at[from] == -1 and crit_at[from] == -1 else 0
+	thing_at.s(from, -1)
+	sim.walk[from] = 1 if city.walkable(city.tiles[from]) and veh_at.g(from) == -1 and crit_at.g(from) == -1 else 0
 	t["cell"] = to
-	thing_at[to] = ti
+	thing_at.s(to, ti)
 	sim.walk[to] = 0
 
 ## it goes into open air and drops: smashed from two floors up (a chair from one)
@@ -4250,7 +4253,7 @@ func push_thing(ti: int, dx: int, dy: int) -> bool:
 	if _thing_open(n1):
 		_move_thing(ti, n1)
 		return true
-	if (city.tiles[n1] in CG.LOW_COVER) and w <= 2 and thing_at[n1] == -1:
+	if (city.tiles[n1] in CG.LOW_COVER) and w <= 2 and thing_at.g(n1) == -1:
 		var n2x: int = nx + dx
 		var n2y: int = ny + dy
 		if in_bounds(n2x, n2y):
@@ -4266,7 +4269,7 @@ func push_thing(ti: int, dx: int, dy: int) -> bool:
 
 ## the player walks into a thing: push it, or it won't budge
 func _bump_thing(c: int, dx: int, dy: int) -> bool:
-	var ti: int = thing_at[c]
+	var ti: int = thing_at.g(c)
 	var kind: String = things[ti]["k"]
 	if not push_thing(ti, dx, dy):
 		say("The %s won't budge." % kind)
@@ -4316,7 +4319,7 @@ func _spawn_critters() -> void:
 		var t: int = city.tiles[c]
 		if t != CG.GROUND and t != CG.PARK and t != CG.FLOOR and t != CG.ROAD:
 			continue
-		if sim.walk[c] == 0 or sim.at[c] != -1 or veh_at[c] != -1 or thing_at[c] != -1 or crit_at[c] != -1:
+		if sim.walk[c] == 0 or sim.at[c] != -1 or veh_at.g(c) != -1 or thing_at.g(c) != -1 or crit_at.g(c) != -1:
 			continue
 		if t == CG.ROAD and rng.randf() < 0.7:
 			continue
@@ -4327,29 +4330,29 @@ func _spawn_critters() -> void:
 			var base: int = city.lvl_of_z(1 + rng.randi() % 2) * s2
 			for _n in 20:
 				var c2: int = base + rng.randi_range(int(t["y0"]) + 2, int(t["y1"]) - 2) * size + rng.randi_range(int(t["x0"]) + 2, int(t["x1"]) - 2)
-				if CG.is_floor(city.tiles[c2]) and sim.walk[c2] == 1 and sim.at[c2] == -1 and thing_at[c2] == -1 and crit_at[c2] == -1:
+				if CG.is_floor(city.tiles[c2]) and sim.walk[c2] == 1 and sim.at[c2] == -1 and thing_at.g(c2) == -1 and crit_at.g(c2) == -1:
 					_add_critter("cat", c2)
 					break
 
 func _add_critter(kind: String, cell: int) -> int:
 	critters.append({"k": kind, "cell": cell, "hp": 18 if kind == "dog" else 8, "mood": 0, "stun": 0, "face": 0, "ap": AP_BASE, "stam": STAMINA_MAX})
-	crit_at[cell] = critters.size() - 1
+	crit_at.s(cell, critters.size() - 1)
 	sim.walk[cell] = 0
 	return critters.size() - 1
 
 func _crit_free(c: int) -> bool:
-	return sim.walk[c] == 1 and sim.at[c] == -1 and veh_at[c] == -1 and thing_at[c] == -1 and crit_at[c] == -1 and c != pc
+	return sim.walk[c] == 1 and sim.at[c] == -1 and veh_at.g(c) == -1 and thing_at.g(c) == -1 and crit_at.g(c) == -1 and c != pc
 
 func _move_crit(ki: int, to: int) -> void:
 	var k: Dictionary = critters[ki]
 	var from: int = k["cell"]
-	crit_at[from] = -1
-	sim.walk[from] = 1 if city.walkable(city.tiles[from]) and veh_at[from] == -1 and thing_at[from] == -1 else 0
+	crit_at.s(from, -1)
+	sim.walk[from] = 1 if city.walkable(city.tiles[from]) and veh_at.g(from) == -1 and thing_at.g(from) == -1 else 0
 	k["cell"] = to
 	var fi: int = DIR8.find([signi(to % size - from % size), signi(to / size - from / size)])
 	if fi >= 0:
 		k["face"] = fi
-	crit_at[to] = ki
+	crit_at.s(to, ki)
 	sim.walk[to] = 0
 
 func _kill_crit(ki: int, why: String) -> void:
@@ -4358,9 +4361,9 @@ func _kill_crit(ki: int, why: String) -> void:
 		return
 	say_if_seen(k["cell"], "The %s %s." % [k["k"], why])
 	var cell: int = k["cell"]
-	if crit_at[cell] == ki:
-		crit_at[cell] = -1
-		sim.walk[cell] = 1 if city.walkable(city.tiles[cell]) and veh_at[cell] == -1 and thing_at[cell] == -1 else 0
+	if crit_at.g(cell) == ki:
+		crit_at.s(cell, -1)
+		sim.walk[cell] = 1 if city.walkable(city.tiles[cell]) and veh_at.g(cell) == -1 and thing_at.g(cell) == -1 else 0
 	k["k"] = ""
 
 func fall_crit(ki: int, over: int) -> void:
@@ -4369,9 +4372,9 @@ func fall_crit(ki: int, over: int) -> void:
 	var lc: Array = land_cell(over)
 	var levels: int = lc[1]
 	var cell: int = k["cell"]
-	if crit_at[cell] == ki:
-		crit_at[cell] = -1
-		sim.walk[cell] = 1 if city.walkable(city.tiles[cell]) and veh_at[cell] == -1 and thing_at[cell] == -1 else 0
+	if crit_at.g(cell) == ki:
+		crit_at.s(cell, -1)
+		sim.walk[cell] = 1 if city.walkable(city.tiles[cell]) and veh_at.g(cell) == -1 and thing_at.g(cell) == -1 else 0
 	var dmg: int = levels * 5
 	if kind == "cat":
 		dmg = dmg / 4                    # cats land on their feet
@@ -4382,7 +4385,7 @@ func fall_crit(ki: int, over: int) -> void:
 	if k["hp"] <= 0:
 		_kill_crit(ki, "does not survive the fall")
 		return
-	crit_at[lc[0]] = ki
+	crit_at.s(lc[0], ki)
 	sim.walk[lc[0]] = 0
 	k["stun"] = 3 if specials_on else 0
 	k["mood"] = 2 if kind == "cat" else 1
@@ -4404,7 +4407,7 @@ func push_crit(ki: int, dx: int, dy: int) -> bool:
 	if _crit_free(n1):
 		_move_crit(ki, n1)
 		return true
-	if (city.tiles[n1] in CG.LOW_COVER) and thing_at[n1] == -1:
+	if (city.tiles[n1] in CG.LOW_COVER) and thing_at.g(n1) == -1:
 		var n2x: int = nx + dx
 		var n2y: int = ny + dy
 		if in_bounds(n2x, n2y):
@@ -4419,7 +4422,7 @@ func push_crit(ki: int, dx: int, dy: int) -> bool:
 	return false
 
 func _bump_crit(c: int, dx: int, dy: int) -> bool:
-	var ki: int = crit_at[c]
+	var ki: int = crit_at.g(c)
 	var k: Dictionary = critters[ki]
 	facing = Vector2i(dx, dy)
 	if push_crit(ki, dx, dy):
@@ -4593,7 +4596,7 @@ func airborne() -> bool:
 	return flying or (in_vehicle >= 0 and bool(vehicles[in_vehicle].get("air", false)))
 
 func _free_for_player(c: int) -> bool:
-	return sim.walk[c] == 1 and sim.at[c] == -1 and veh_at[c] == -1 and thing_at[c] == -1 and crit_at[c] == -1 and c != pc
+	return sim.walk[c] == 1 and sim.at[c] == -1 and veh_at.g(c) == -1 and thing_at.g(c) == -1 and crit_at.g(c) == -1 and c != pc
 
 ## where something dropped from `cell` ends up: [landing cell, levels fallen].  Air columns open above ground, roofs and floors; a landing spot that is solid or taken
 ## is replaced by the nearest free walkable cell on that level.
@@ -4657,7 +4660,7 @@ func _fall_player(reason: String) -> void:
 
 ## ---- jump jets
 func _fly_ok_target(c: int) -> bool:
-	return city.tiles[c] == CG.AIR and sim.at[c] == -1 and veh_at[c] == -1
+	return city.tiles[c] == CG.AIR and sim.at[c] == -1 and veh_at.g(c) == -1
 
 func act_takeoff_or_climb() -> bool:
 	return act_vertical(1)
@@ -4673,7 +4676,7 @@ func fly_move(dx: int, dy: int) -> bool:
 	if sim.at[c] >= 0:
 		say("Someone is in the way.")
 		return false
-	if veh_at[c] != -1:
+	if veh_at.g(c) != -1:
 		return false
 	if city.tiles[c] == CG.AIR or city.tiles[c] in CG.LOW_COVER:
 		pc = c
@@ -4723,7 +4726,7 @@ func _process_followers() -> void:
 					var ny: int = cell / size + dy
 					if in_bounds(nx, ny):
 						var nc: int = ny * size + nx
-						if z_of(nc) == z_of(cell) and sim.walk[nc] == 1 and sim.at[nc] == -1 and nc != pc and veh_at[nc] == -1:
+						if z_of(nc) == z_of(cell) and sim.walk[nc] == 1 and sim.at[nc] == -1 and nc != pc and veh_at.g(nc) == -1:
 							best = nc
 		if best >= 0:
 			sim.place(i, best)
@@ -4843,7 +4846,7 @@ func act_elevator_to(z: int) -> bool:
 					if spot >= 0 or maxi(absi(dx), absi(dy)) != r:
 						continue
 					var nc: int = dest + dy * size + dx
-					if z_of(nc) == z_of(dest) and sim.walk[nc] == 1 and sim.at[nc] == -1 and veh_at[nc] == -1 and thing_at[nc] == -1 and nc != pc and city.tiles[nc] != CG.ELEVATOR and city.tiles[nc] != CG.STAIRS:
+					if z_of(nc) == z_of(dest) and sim.walk[nc] == 1 and sim.at[nc] == -1 and veh_at.g(nc) == -1 and thing_at.g(nc) == -1 and nc != pc and city.tiles[nc] != CG.ELEVATOR and city.tiles[nc] != CG.STAIRS:
 						spot = nc
 		if spot < 0:
 			return false
@@ -4884,7 +4887,7 @@ func _jet_vertical(dir: int) -> bool:
 	if z_of(pc) <= 0:
 		flying = false
 		return false
-	if sim.at[dn] >= 0 or veh_at[dn] != -1:
+	if sim.at[dn] >= 0 or veh_at.g(dn) != -1:
 		say("Someone is below you.")
 		return false
 	if city.tiles[dn] == CG.AIR:
@@ -4917,7 +4920,7 @@ func unit_traits(i: int) -> Dictionary:
 	return fly_units.get(i, {})
 
 func _agent_open(c: int) -> bool:
-	return sim.walk[c] == 1 and sim.at[c] == -1 and veh_at[c] == -1 and thing_at[c] == -1 and crit_at[c] == -1 and c != pc
+	return sim.walk[c] == 1 and sim.at[c] == -1 and veh_at.g(c) == -1 and thing_at.g(c) == -1 and crit_at.g(c) == -1 and c != pc
 
 ## person i has gone over an edge into the air cell `over`: they fall to the floor below.  Damage is 5 a floor (plus 0-3); a long fall kills.
 func fall_agent(i: int, over: int) -> void:
@@ -5006,19 +5009,19 @@ func act_shove(dx: int, dy: int) -> bool:
 		return false
 	var c: int = ny * size + nx
 	var who: int = sim.at[c]
-	if who < 0 and crit_at[c] != -1:
+	if who < 0 and crit_at.g(c) != -1:
 		facing = Vector2i(dx, dy)
-		var kc: Dictionary = critters[crit_at[c]]
+		var kc: Dictionary = critters[crit_at.g(c)]
 		say("You shove the %s." % kc["k"])
-		push_crit(crit_at[c], dx, dy)
+		push_crit(crit_at.g(c), dx, dy)
 		if kc["k"] != "":
 			kc["mood"] = 2 if kc["k"] == "cat" else (1 if rng.randf() < 0.4 else 2)
 		end_turn()
 		return true
-	if who < 0 and thing_at[c] != -1:
+	if who < 0 and thing_at.g(c) != -1:
 		facing = Vector2i(dx, dy)
-		var tn: String = things[thing_at[c]]["k"]
-		if push_thing(thing_at[c], dx, dy):
+		var tn: String = things[thing_at.g(c)]["k"]
+		if push_thing(thing_at.g(c), dx, dy):
 			say("You shove the %s." % tn)
 		else:
 			say("The %s won't budge." % tn)
@@ -5282,13 +5285,13 @@ func load_dict(d: Dictionary) -> void:
 	# vehicles: undo the freshly generated ones, then restore
 	for vi0 in vehicles.size():
 		vs.lift(vi0)
-	veh_at.fill(-1)
+	veh_at.clear()
 	vehicles = []
 	for v in d["vehicles"]:
 		var o: Dictionary = vs.from_dict(v)
 		vehicles.append(o)
 		for c in vs.cells(o):
-			veh_at[c] = vehicles.size() - 1
+			veh_at.s(c, vehicles.size() - 1)
 			sim.walk[c] = 0
 	# things and animals: undo the fresh ones, restore the saved
 	for t0 in things:
@@ -5297,8 +5300,8 @@ func load_dict(d: Dictionary) -> void:
 	for k0 in critters:
 		if k0["k"] != "":
 			sim.walk[k0["cell"]] = 1 if city.walkable(city.tiles[k0["cell"]]) else 0
-	thing_at.fill(-1)
-	crit_at.fill(-1)
+	thing_at.clear()
+	crit_at.clear()
 	things = []
 	critters = []
 	corpses = []
@@ -5456,7 +5459,7 @@ func portal_open(offer: Dictionary, term_cell: int) -> bool:
 			continue
 		var n: int = y * size + x
 		var t: int = city.tiles[n]
-		if sim.walk[n] == 0 or sim.at[n] != -1 or veh_at[n] != -1 or thing_at[n] != -1 or crit_at[n] != -1 or n == pc or items_at.has(n):
+		if sim.walk[n] == 0 or sim.at[n] != -1 or veh_at.g(n) != -1 or thing_at.g(n) != -1 or crit_at.g(n) != -1 or n == pc or items_at.has(n):
 			continue
 		if t in [CG.DOOR, CG.LOCKED, CG.STAIRS, CG.ELEVATOR, CG.LADDER, CG.MANHOLE, CG.TRACK, CG.PLATFORM] or n >= s2:
 			continue

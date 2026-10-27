@@ -20,7 +20,7 @@ func _open_cell(g, from: int, rad: int) -> int:
 				for oy in range(-rad, rad + 1):
 					for ox in range(-rad, rad + 1):
 						var c: int = (y + oy) * g.size + x + ox
-						if g.sim.walk[c] == 0 or g.sim.at[c] != -1 or g.veh_at[c] != -1 or g.items_at.has(c):
+						if g.sim.walk[c] == 0 or g.sim.at[c] != -1 or g.veh_at.g(c) != -1 or g.items_at.has(c):
 							ok = false
 				if ok:
 					return c0

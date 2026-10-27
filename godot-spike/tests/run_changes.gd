@@ -33,7 +33,7 @@ func _initialize() -> void:
 	for vi in g.vehicles.size():
 		g.vs.lift(vi)
 	g.vehicles.clear()
-	g.veh_at.fill(-1)
+	g.veh_at.clear()
 	var e: int = g.city.xs[3]
 	var a: int = g.vs.anchor_for("car", 0, VS.lane_hi2(e), 250, 0)
 	g.pc = a
@@ -157,7 +157,7 @@ func _initialize() -> void:
 		for oy in range(-2, 3):
 			for ox in range(-2, 3):
 				var cc: int = c + oy * gg.size + ox
-				if cc < 0 or cc >= gg.size * gg.size or gg.sim.walk[cc] == 0 or gg.sim.at[cc] != -1 or gg.thing_at[cc] != -1 or gg.crit_at[cc] != -1 or gg.veh_at[cc] != -1:
+				if cc < 0 or cc >= gg.size * gg.size or gg.sim.walk[cc] == 0 or gg.sim.at[cc] != -1 or gg.thing_at.g(cc) != -1 or gg.crit_at.g(cc) != -1 or gg.veh_at.g(cc) != -1:
 					ok_all = false
 		if ok_all:
 			spot = c

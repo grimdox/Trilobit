@@ -120,7 +120,7 @@ func run() -> Array:
 		var nb := -1
 		for d in g.SIZE_DIRS:
 			var c: int = g.sim.pos[j] + d[1] * g.size + d[0]
-			if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.veh_at[c] == -1:
+			if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.veh_at.g(c) == -1:
 				nb = c
 				break
 		if nb < 0:

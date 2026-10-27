@@ -17,7 +17,7 @@ func check(name: String, cond: bool) -> void:
 func stand_beside(g, cell: int) -> Vector2i:
 	for d in [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]:
 		var c: int = (cell / g.size + d.y) * g.size + cell % g.size + d.x
-		if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.thing_at[c] == -1 and g.veh_at[c] == -1 and not g.items_at.has(c):
+		if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.thing_at.g(c) == -1 and g.veh_at.g(c) == -1 and not g.items_at.has(c):
 			g.pc = c
 			g.last_pc = c
 			return Vector2i(-d.x, -d.y)
@@ -53,7 +53,7 @@ func _initialize() -> void:
 				in_lot += 1
 				break
 	check("no post stands loose on a street: every one is inside a lot", in_lot == posts.size())
-	check("a post is a solid, static tile", g.sim.walk[posts[0]] == 0 and g.thing_at[posts[0]] == -1)
+	check("a post is a solid, static tile", g.sim.walk[posts[0]] == 0 and g.thing_at.g(posts[0]) == -1)
 	var reach := 0
 	for p in posts:
 		var free := 0

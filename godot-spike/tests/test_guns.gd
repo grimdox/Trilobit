@@ -166,7 +166,7 @@ func run() -> Array:
 					if not g.in_bounds(nx, ny):
 						continue
 					var c: int = ny * g.size + nx
-					if g.city.walkable(g.city.tiles[c]) and g.sim.at[c] == -1 and g.veh_at[c] == -1 and g.sim._sees(c, tc, 20):
+					if g.city.walkable(g.city.tiles[c]) and g.sim.at[c] == -1 and g.veh_at.g(c) == -1 and g.sim._sees(c, tc, 20):
 						g.pc = c
 						placed = true
 	check.call("found a target to shoot (turn %d)" % g.turn, found >= 0 and placed)
@@ -196,7 +196,7 @@ func run() -> Array:
 							if not g.in_bounds(nx2, ny2):
 								continue
 							var c2: int = ny2 * g.size + nx2
-							if g.city.walkable(g.city.tiles[c2]) and g.sim.at[c2] == -1 and g.veh_at[c2] == -1 and g.sim._sees(c2, tcc, 20):
+							if g.city.walkable(g.city.tiles[c2]) and g.sim.at[c2] == -1 and g.veh_at.g(c2) == -1 and g.sim._sees(c2, tcc, 20):
 								g.pc = c2
 								g.last_pc = c2
 								break

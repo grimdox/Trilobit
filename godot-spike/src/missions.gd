@@ -273,7 +273,7 @@ static func _follow(g, h: int) -> void:
 		if nx < 0 or ny < 0 or nx >= size or ny >= size:
 			continue
 		var n: int = ny * size + nx
-		if not dist.has(n) or g.sim.at[n] != -1 or n == g.pc or g.thing_at[n] != -1 or g.city.tiles[n] == CG.TID["portal"]:
+		if not dist.has(n) or g.sim.at[n] != -1 or n == g.pc or g.thing_at.g(n) != -1 or g.city.tiles[n] == CG.TID["portal"]:
 			continue
 		if int(dist[n]) < bd or (best == c and int(dist[n]) == bd and n != int(g.mission.get("hostage_prev", -1))):
 			bd = int(dist[n])                              # (a step round whoever stands on the shortest way: an equal step, never straight back)

@@ -223,7 +223,7 @@ func _free_cell(g, near: int) -> int:
 				if not g.in_bounds(x, y):
 					continue
 				var c: int = y * g.size + x
-				if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.veh_at[c] == -1 and g.thing_at[c] == -1 and g.crit_at[c] == -1:
+				if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.veh_at.g(c) == -1 and g.thing_at.g(c) == -1 and g.crit_at.g(c) == -1:
 					return c
 	return near
 

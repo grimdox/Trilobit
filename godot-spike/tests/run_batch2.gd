@@ -83,7 +83,7 @@ func _initialize() -> void:
 	var stood := false
 	for d in [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]:
 		var c: int = (w / g.size + d.y) * g.size + w % g.size + d.x
-		if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.thing_at[c] == -1 and g.veh_at[c] == -1:
+		if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.thing_at.g(c) == -1 and g.veh_at.g(c) == -1:
 			g.pc = c
 			g.last_pc = c
 			g._compute_fov()

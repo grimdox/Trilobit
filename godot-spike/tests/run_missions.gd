@@ -20,7 +20,7 @@ func stand_beside(g, cell: int) -> Vector2i:
 		var x: int = cell % g.size + d.x
 		var y: int = cell / g.size + d.y
 		var c: int = y * g.size + x
-		if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.thing_at[c] == -1 and g.veh_at[c] == -1 and not g.items_at.has(c) and g.city.tiles[c] != CG.DOOR:
+		if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.thing_at.g(c) == -1 and g.veh_at.g(c) == -1 and not g.items_at.has(c) and g.city.tiles[c] != CG.DOOR:
 			g.pc = c
 			g.last_pc = c
 			return Vector2i(-d.x, -d.y)
@@ -56,7 +56,7 @@ func _initialize() -> void:
 			if t % g.size > int(v["x0"]) and t % g.size < int(v["x1"]) and t / g.size > int(v["y0"]) and t / g.size < int(v["y1"]):
 				venue_kinds[v["kind"]] = true
 	check("terminals stand inside venues of more than one kind", venue_kinds.size() >= 2)
-	check("a terminal is solid and static: no one can walk on it", g.sim.walk[terms[0]] == 0 and g.thing_at[terms[0]] == -1)
+	check("a terminal is solid and static: no one can walk on it", g.sim.walk[terms[0]] == 0 and g.thing_at.g(terms[0]) == -1)
 	var term: int = terms[0]
 	# bump it
 	var dv: Vector2i = stand_beside(g, term)

@@ -203,14 +203,14 @@ func probe(vi: int, anchor: int, dir: int, airborne: bool = false) -> Dictionary
 		elif g.pc == c and vi != g.in_vehicle and not g.flying:
 			hit = {"t": "player", "cell": c, "idx": -1}
 			r = 6
-		elif g.crit_at[c] != -1:
-			hit = {"t": "critter", "cell": c, "idx": g.crit_at[c]}
+		elif g.crit_at.g(c) != -1:
+			hit = {"t": "critter", "cell": c, "idx": g.crit_at.g(c)}
 			r = 5
-		elif g.veh_at[c] != -1 and g.veh_at[c] != vi:
-			hit = {"t": "vehicle", "cell": c, "idx": g.veh_at[c]}
+		elif g.veh_at.g(c) != -1 and g.veh_at.g(c) != vi:
+			hit = {"t": "vehicle", "cell": c, "idx": g.veh_at.g(c)}
 			r = 4
-		elif g.thing_at[c] != -1:
-			hit = {"t": "thing", "cell": c, "idx": g.thing_at[c]}
+		elif g.thing_at.g(c) != -1:
+			hit = {"t": "thing", "cell": c, "idx": g.thing_at.g(c)}
 			r = 3
 		elif not _tile_ok(kind, airborne, g.city.tiles[c]):
 			hit = {"t": "solid", "cell": c, "idx": -1}
@@ -224,13 +224,13 @@ func fits(vi: int, anchor: int, dir: int, airborne: bool = false) -> bool:
 	return probe(vi, anchor, dir, airborne).is_empty()
 
 func _restore_walk(c: int) -> void:
-	g.sim.walk[c] = 1 if (g.city.walkable(g.city.tiles[c]) and g.thing_at[c] == -1 and g.crit_at[c] == -1 and g.veh_at[c] == -1) else 0
+	g.sim.walk[c] = 1 if (g.city.walkable(g.city.tiles[c]) and g.thing_at.g(c) == -1 and g.crit_at.g(c) == -1 and g.veh_at.g(c) == -1) else 0
 
 func lift(vi: int) -> void:
 	var v: Dictionary = g.vehicles[vi]
 	for c in cells(v):
-		if g.veh_at[c] == vi:
-			g.veh_at[c] = -1
+		if g.veh_at.g(c) == vi:
+			g.veh_at.s(c, -1)
 		_restore_walk(c)
 
 func put(vi: int, anchor: int, dir: int) -> void:
@@ -239,7 +239,7 @@ func put(vi: int, anchor: int, dir: int) -> void:
 	v["cell"] = anchor
 	v["dir"] = dir
 	for c in cells(v):
-		g.veh_at[c] = vi
+		g.veh_at.s(c, vi)
 		g.sim.walk[c] = 0
 	if g.in_vehicle == vi:
 		g.pc = anchor
@@ -432,8 +432,8 @@ func near_vehicle() -> int:
 					continue
 				var nx: int = px + dx
 				var ny: int = py + dy
-				if g.in_bounds(nx, ny) and g.veh_at[base + ny * g.size + nx] != -1:
-					return g.veh_at[base + ny * g.size + nx]
+				if g.in_bounds(nx, ny) and g.veh_at.g(base + ny * g.size + nx) != -1:
+					return g.veh_at.g(base + ny * g.size + nx)
 		if r == 1:
 			break
 	return -1
@@ -1032,8 +1032,8 @@ func mech_move(dx: int, dy: int, run: bool) -> bool:
 				g.smash_thing(int(pr["idx"]), "is crushed underfoot")
 			elif t == "critter":
 				g.push_crit(int(pr["idx"]), dx, dy)
-				if g.crit_at[int(pr["cell"])] != -1:
-					g._kill_crit(g.crit_at[int(pr["cell"])], "is crushed")
+				if g.crit_at.g(int(pr["cell"])) != -1:
+					g._kill_crit(g.crit_at.g(int(pr["cell"])), "is crushed")
 			elif t == "solid":
 				var c: int = int(pr["cell"])
 				var tt: int = g.city.tiles[c]
@@ -1267,10 +1267,10 @@ func export_vehicle(vi: int) -> Dictionary:
 	for k in g.vehicles.size():
 		lift(k)
 	g.vehicles.remove_at(vi)
-	g.veh_at.fill(-1)
+	g.veh_at.clear()
 	for k in g.vehicles.size():
 		for c in cells(g.vehicles[k]):
-			g.veh_at[c] = k
+			g.veh_at.s(c, k)
 			g.sim.walk[c] = 0
 	if g.in_vehicle == vi:
 		g.in_vehicle = -1
@@ -1285,11 +1285,11 @@ func import_vehicle(d: Dictionary, anchor: int) -> int:
 	g.vehicles.append(o)
 	var vi: int = g.vehicles.size() - 1
 	for c in cells(o):
-		if c < 0 or c >= g.veh_at.size():
+		if c < 0 or c >= g.veh_at.n:
 			g.vehicles.pop_back()
 			return -1
 	for c in cells(o):
-		g.veh_at[c] = vi
+		g.veh_at.s(c, vi)
 		g.sim.walk[c] = 0
 	return vi
 

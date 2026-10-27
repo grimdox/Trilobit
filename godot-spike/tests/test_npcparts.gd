@@ -18,7 +18,7 @@ func _open_line(g, from: int, len: int) -> int:
 				for ox in range(-1, len + 2):
 					for oy in range(-1, 2):
 						var c: int = (y + oy) * g.size + x + ox
-						if g.sim.walk[c] == 0 or g.sim.at[c] != -1 or g.veh_at[c] != -1:
+						if g.sim.walk[c] == 0 or g.sim.at[c] != -1 or g.veh_at.g(c) != -1:
 							ok = false
 				if ok:
 					return y * g.size + x

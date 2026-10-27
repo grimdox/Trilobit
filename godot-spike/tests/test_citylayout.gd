@@ -331,7 +331,7 @@ func run() -> Array:
 	for vi in g.vehicles.size():
 		g.vs.lift(vi)
 	g.vehicles.clear()
-	g.veh_at.fill(-1)
+	g.veh_at.clear()
 	g.in_vehicle = -1
 	var start_x: int = sp3.x - o.x - 20
 	var cars := []

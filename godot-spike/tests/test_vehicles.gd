@@ -8,7 +8,7 @@ func _clear(g) -> void:
 	for vi in g.vehicles.size():
 		g.vs.lift(vi)
 	g.vehicles.clear()
-	g.veh_at.fill(-1)
+	g.veh_at.clear()
 	g.in_vehicle = -1
 
 func _beside(g, vi: int) -> int:
@@ -18,7 +18,7 @@ func _beside(g, vi: int) -> int:
 	for c in fp:
 		for d in [[1, 0], [-1, 0], [0, 1], [0, -1]]:
 			var nc: int = c + d[1] * g.size + d[0]
-			if not fp.has(nc) and g.veh_at[nc] == -1 and g.sim.walk[nc] == 1 and g.sim.at[nc] == -1:
+			if not fp.has(nc) and g.veh_at.g(nc) == -1 and g.sim.walk[nc] == 1 and g.sim.at[nc] == -1:
 				return nc
 	return -1
 
@@ -92,7 +92,7 @@ func run() -> Array:
 	check.call("a car fits a lane (spawned in the northbound lane)", vi >= 0)
 	var occupied := 0
 	for c in vs.cells(g.vehicles[vi]):
-		if g.veh_at[c] == vi and g.sim.walk[c] == 0:
+		if g.veh_at.g(c) == vi and g.sim.walk[c] == 0:
 			occupied += 1
 	check.call("every tile of the body is marked as occupied", occupied == 15)
 	var bx0 := 99999
@@ -156,7 +156,7 @@ func run() -> Array:
 	for c in vs.cells(v):
 		for d in g.SIZE_DIRS:
 			var nc: int = c + d[1] * size + d[0]
-			if g.veh_at[nc] == -1 and g.sim.walk[nc] == 1 and g.sim.at[nc] == -1:
+			if g.veh_at.g(nc) == -1 and g.sim.walk[nc] == 1 and g.sim.at[nc] == -1:
 				stand = nc
 	g.pc = stand
 	g.items_at.erase(stand)
@@ -280,7 +280,7 @@ func run() -> Array:
 	for c in g3.vs.cells(hel):
 		for d in g3.SIZE_DIRS:
 			var nc: int = c + d[1] * g3.size + d[0]
-			if g3.veh_at[nc] == -1 and g3.sim.walk[nc] == 1 and g3.sim.at[nc] == -1:
+			if g3.veh_at.g(nc) == -1 and g3.sim.walk[nc] == 1 and g3.sim.at[nc] == -1:
 				spot = nc
 	g3.pc = spot
 	check.call("you can climb into it", g3.act_vehicle() and g3.in_vehicle == hv and g3.pc == hel["cell"])
@@ -317,7 +317,7 @@ func run() -> Array:
 	for c in g4.vs.cells(mech):
 		for d in g4.SIZE_DIRS:
 			var nc: int = c + d[1] * g4.size + d[0]
-			if g4.veh_at[nc] == -1 and g4.sim.walk[nc] == 1 and g4.sim.at[nc] == -1:
+			if g4.veh_at.g(nc) == -1 and g4.sim.walk[nc] == 1 and g4.sim.at[nc] == -1:
 				spot2 = nc
 	g4.pc = spot2
 	g4.sim.retier(g4.pc)
@@ -331,7 +331,7 @@ func run() -> Array:
 	check.call("it walks, whole body at once", moved_m and mech["cell"] != mc)
 	# a crate in its path is crushed
 	var tc: int = mech["cell"] + 3
-	var ti: int = g4._add_thing("crate", tc, false) if g4.veh_at[tc] == -1 and g4.thing_at[tc] == -1 and g4.sim.walk[tc] == 1 else -1
+	var ti: int = g4._add_thing("crate", tc, false) if g4.veh_at.g(tc) == -1 and g4.thing_at.g(tc) == -1 and g4.sim.walk[tc] == 1 else -1
 	if ti >= 0:
 		mech["dir"] = 1
 		g4.act_move(1, 0)
@@ -368,7 +368,7 @@ func run() -> Array:
 		g5.vs.damage_cell(ve, cell_e, 40, "test")
 	check.call("enough hits wreck it", g5.vehicles[ve]["wreck"])
 	g5._explode(g5.vehicles[ve]["cell"], 4, 50)
-	check.call("a wreck stays as a block of cover", g5.veh_at[g5.vehicles[ve]["cell"]] == ve)
+	check.call("a wreck stays as a block of cover", g5.veh_at.g(g5.vehicles[ve]["cell"]) == ve)
 	# ---- save and load
 	var g6 = GameScript.new(41)
 	g6.setup(400)
@@ -381,7 +381,7 @@ func run() -> Array:
 	var occ_ok := true
 	for k in g7.vehicles.size():
 		for c in g7.vs.cells(g7.vehicles[k]):
-			if g7.veh_at[c] != k:
+			if g7.veh_at.g(c) != k:
 				occ_ok = false
 	check.call("save and load keep every vehicle, its parts and its engine", same and occ_ok)
 	return [st[0], st[1], log]

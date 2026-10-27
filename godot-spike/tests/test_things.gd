@@ -51,7 +51,7 @@ func run() -> Array:
 			var ok := true
 			for ox in range(-2, 5):
 				var cc: int = c + ox
-				if g.sim.walk[cc] == 0 or g.sim.at[cc] != -1 or g.veh_at[cc] != -1 or g.thing_at[cc] != -1 or g.crit_at[cc] != -1:
+				if g.sim.walk[cc] == 0 or g.sim.at[cc] != -1 or g.veh_at.g(cc) != -1 or g.thing_at.g(cc) != -1 or g.crit_at.g(cc) != -1:
 					ok = false
 			if ok:
 				open = c
@@ -62,7 +62,7 @@ func run() -> Array:
 	# push a crate
 	var ti: int = g._add_thing("crate", open + 1, true)
 	g.act_move(1, 0)
-	check.call("walking into a crate pushes it along and you follow", g.things[ti]["cell"] == open + 2 and g.pc == open + 1 and g.thing_at[open + 2] == ti and g.thing_at[open + 1] == -1)
+	check.call("walking into a crate pushes it along and you follow", g.things[ti]["cell"] == open + 2 and g.pc == open + 1 and g.thing_at.g(open + 2) == ti and g.thing_at.g(open + 1) == -1)
 	check.call("the cell it left is walkable again, the one it sits on is not", g.sim.walk[open + 1] == 1 and g.sim.walk[open + 2] == 0)
 	# blocked by a wall
 	g.city.tiles[open + 3] = CG.WALL
@@ -132,7 +132,7 @@ func run() -> Array:
 		var x: int = int(tall["x1"]) + dx
 		var y: int = (int(tall["y0"]) + int(tall["y1"])) / 2
 		var gc: int = y * g.size + x
-		if g.sim.walk[gc] == 1 and g.sim.at[gc] == -1 and g.thing_at[gc] == -1 and g.crit_at[gc] == -1 and g.city.tiles[lv.call(3) + gc] == CG.AIR and g.city.tiles[lv.call(1) + gc] == CG.AIR and g.city.tiles[lv.call(2) + gc] == CG.AIR:
+		if g.sim.walk[gc] == 1 and g.sim.at[gc] == -1 and g.thing_at.g(gc) == -1 and g.crit_at.g(gc) == -1 and g.city.tiles[lv.call(3) + gc] == CG.AIR and g.city.tiles[lv.call(1) + gc] == CG.AIR and g.city.tiles[lv.call(2) + gc] == CG.AIR:
 			air3 = lv.call(3) + gc
 			break
 	check.call("air three floors up", air3 >= 0)
@@ -143,14 +143,14 @@ func run() -> Array:
 	g._remove_thing(a1)
 	var cr: int = g._add_thing("crate", edge, false)
 	g.fall_thing(cr, air3 - 2 * g.s2)          # one floor up
-	check.call("a crate dropped one floor lands in one piece", g.thing_at[gcol] != -1 and g.things[g.thing_at[gcol]]["k"] == "crate")
-	g._remove_thing(g.thing_at[gcol])
+	check.call("a crate dropped one floor lands in one piece", g.thing_at.g(gcol) != -1 and g.things[g.thing_at.g(gcol)]["k"] == "crate")
+	g._remove_thing(g.thing_at.g(gcol))
 	var ch: int = g._add_thing("chair", edge, false)
 	g.fall_thing(ch, air3 - 2 * g.s2)
-	check.call("a chair dropped one floor breaks", g.thing_at[gcol] == -1)
+	check.call("a chair dropped one floor breaks", g.thing_at.g(gcol) == -1)
 	var cr3: int = g._add_thing("crate", edge, false)
 	g.fall_thing(cr3, air3)
-	check.call("a crate dropped three floors smashes", g.thing_at[gcol] == -1)
+	check.call("a crate dropped three floors smashes", g.thing_at.g(gcol) == -1)
 	# items fall
 	g.items_at.erase(gcol)
 	g._put(air3, g._new_item("trl_ration"))
@@ -171,7 +171,7 @@ func run() -> Array:
 		g.act_wait()
 	check.call("a cat walks away from you when you are close", g.cheb(g.critters[cat]["cell"], g.pc) >= d0 or g.critters[cat]["cell"] != open + 4)
 	# angry dog bites
-	var dg: int = g._add_critter("dog", open - 1) if g.crit_at[open - 1] == -1 and g.sim.walk[open - 1] == 1 else g.crit_at[open - 1]
+	var dg: int = g._add_critter("dog", open - 1) if g.crit_at.g(open - 1) == -1 and g.sim.walk[open - 1] == 1 else g.crit_at.g(open - 1)
 	g.pc = open + 1
 	g.critters[dg]["cell"] = g.critters[dg]["cell"]
 	g.critters[dg]["mood"] = 1
@@ -241,5 +241,5 @@ func run() -> Array:
 	for t in g2.things:
 		if t["k"] != "":
 			cnt2 += 1
-	check.call("save and load keep every thing and animal where it was (%d things)" % cnt2, cnt1 == cnt2 and g2.thing_at[open + 3] != -1 and g2.things[g2.thing_at[open + 3]]["hp"] == 7 and g2.crit_at[open + 5] != -1 and g2.sim.walk[open + 3] == 0)
+	check.call("save and load keep every thing and animal where it was (%d things)" % cnt2, cnt1 == cnt2 and g2.thing_at.g(open + 3) != -1 and g2.things[g2.thing_at.g(open + 3)]["hp"] == 7 and g2.crit_at.g(open + 5) != -1 and g2.sim.walk[open + 3] == 0)
 	return [st[0], st[1], log]

@@ -944,6 +944,61 @@ func build_zone(zx: int, zy: int):
 			"industry": _industry(c, zx, zy)
 	return c
 
+## The city's ground map takes about twenty seconds to generate, and it is the same every time for one seed, so it is kept on disk (user://gen_cache) the
+## first time and read back after that.  The key holds the seed, LAYOUT_VER and a stamp of the code that draws it: the modified times of the sources when
+## they are files (while developing), or of the program itself (in a build), so a new version never reads an old map.
+static var gen_cache: bool = true
+
+static func _gen_stamp() -> String:
+	var t := 0
+	for f in DirAccess.get_files_at("res://src"):
+		if f.ends_with(".gd"):
+			t += FileAccess.get_modified_time("res://src/" + f)
+	if t == 0:                                            # in a build the sources are not separate files: the program's own date stands for them
+		t = FileAccess.get_modified_time(OS.get_executable_path())
+	return str(t)
+
+func _gen_path(zx: int, zy: int) -> String:
+	return "user://gen_cache/zone_%d_%d_%d_v%d_%s.bin" % [seed_value, zx, zy, LAYOUT_VER, _gen_stamp()]
+
+func _cache_props(c) -> Array:
+	var out: Array = []
+	for p in c.get_property_list():
+		if (int(p["usage"]) & PROPERTY_USAGE_SCRIPT_VARIABLE) != 0 and p["name"] != "rng":
+			out.append(String(p["name"]))
+	return out
+
+func build_zone_cached(zx: int, zy: int):
+	if not gen_cache or Vector2i(zx, zy) != CITY_ZONE:
+		return build_zone(zx, zy)
+	var path := _gen_path(zx, zy)
+	if FileAccess.file_exists(path):
+		var f := FileAccess.open_compressed(path, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
+		if f != null:
+			var d = bytes_to_var(f.get_buffer(f.get_length()))
+			f.close()
+			if d is Dictionary and d.has("props") and d.has("rng_seed"):
+				var c = CG.new()
+				for k in d["props"]:
+					c.set(k, d["props"][k])
+				c.rng.seed = int(d["rng_seed"])
+				c.rng.state = int(d["rng_state"])
+				return c
+	var c2 = build_zone(zx, zy)
+	var props := {}
+	for k in _cache_props(c2):
+		props[k] = c2.get(k)
+	DirAccess.make_dir_recursive_absolute("user://gen_cache")
+	for old in DirAccess.get_files_at("user://gen_cache"):
+		if old.begins_with("zone_%d_%d_%d_" % [seed_value, zx, zy]):
+			DirAccess.remove_absolute("user://gen_cache/" + old)
+	var fw := FileAccess.open_compressed(path, FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
+	if fw != null:
+		var blob := var_to_bytes({"props": props, "rng_seed": c2.rng.seed, "rng_state": c2.rng.state})
+		fw.store_buffer(blob)
+		fw.close()
+	return c2
+
 func _put_t(c, x: int, y: int, t: int, m: int = 0) -> void:
 	if x < 0 or y < 0 or x >= c.size or y >= c.size:
 		return

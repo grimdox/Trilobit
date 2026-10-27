@@ -18,7 +18,7 @@ func check(name: String, cond: bool) -> void:
 func stand_beside(g, cell: int) -> Vector2i:
 	for d in [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]:
 		var c: int = (cell / g.size + d.y) * g.size + cell % g.size + d.x
-		if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.thing_at[c] == -1 and g.veh_at[c] == -1 and not g.items_at.has(c):
+		if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.thing_at.g(c) == -1 and g.veh_at.g(c) == -1 and not g.items_at.has(c):
 			g.pc = c
 			g.last_pc = c
 			g._compute_fov()
@@ -92,7 +92,7 @@ func _initialize() -> void:
 	for c in pcells:
 		for d in [1, -1, g.size, -g.size]:
 			var nb: int = c + d
-			if g.sim.walk[nb] == 1 and g.veh_at[nb] == -1 and g.sim.at[nb] == -1 and ent < 0:
+			if g.sim.walk[nb] == 1 and g.veh_at.g(nb) == -1 and g.sim.at[nb] == -1 and ent < 0:
 				ent = nb
 	g.pc = ent
 	g.last_pc = ent
@@ -160,7 +160,7 @@ func _initialize() -> void:
 	var door := -1
 	var dc: int = g.city.tiles.find(CG.TID["door_closed"])
 	while dc >= 0 and dc < g.s2:
-		if g.sim.at[dc] == -1 and g.thing_at[dc] == -1 and g.veh_at[dc] == -1 and not g.items_at.has(dc) and stand_beside(g, dc) != Vector2i.ZERO:
+		if g.sim.at[dc] == -1 and g.thing_at.g(dc) == -1 and g.veh_at.g(dc) == -1 and not g.items_at.has(dc) and stand_beside(g, dc) != Vector2i.ZERO:
 			door = dc
 			break
 		dc = g.city.tiles.find(CG.TID["door_closed"], dc + 1)
@@ -192,7 +192,7 @@ func _initialize() -> void:
 	var free := -1
 	for d2 in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 1), Vector2i(-1, -1)]:
 		var c2: int = g.pc + d2.y * g.size + d2.x
-		if g.sim.walk[c2] == 1 and g.sim.at[c2] == -1 and g.veh_at[c2] == -1 and g.thing_at[c2] == -1 and c2 != door and g.city.tiles[c2] != CG.DOOR:
+		if g.sim.walk[c2] == 1 and g.sim.at[c2] == -1 and g.veh_at.g(c2) == -1 and g.thing_at.g(c2) == -1 and c2 != door and g.city.tiles[c2] != CG.DOOR:
 			free = c2
 			break
 	var old_t: int = g.city.tiles[free]
