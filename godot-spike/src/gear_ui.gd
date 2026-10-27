@@ -32,8 +32,8 @@ const SPOTS := {"head": Vector2(-1, 86), "eyes": Vector2(1, 86), "chest": Vector
 ## where each leader line meets the body (x from the centre line, y on the figure)
 const ANCHOR := {"head": Vector2(-15, 74), "eyes": Vector2(9, 82), "chest": Vector2(-30, 160), "back": Vector2(42, 148), "arms": Vector2(-65, 172),
 	"belt": Vector2(29, 222), "lhand": Vector2(-69, 278), "rhand": Vector2(69, 278), "legs": Vector2(-28, 286)}
-## the implant part each doll spot stands for (the belt carries none)
-const SPOT_PART := {"head": "head", "eyes": "eyes", "back": "spine", "chest": "chest", "arms": "arms", "lhand": "hands", "rhand": "hands", "legs": "legs"}
+## the implant part each doll spot stands for (on the equipment tab the belt is a belt; on the implants tab its spot is the Dermal layer)
+const SPOT_PART := {"head": "head", "eyes": "eyes", "back": "spine", "chest": "chest", "belt": "dermal", "arms": "arms", "lhand": "hands", "rhand": "hands", "legs": "legs"}
 
 var game = null
 var ts = null                            # Tileset for item icons

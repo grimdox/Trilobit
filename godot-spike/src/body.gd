@@ -9,7 +9,7 @@ const WEIGHT := {"head": 8, "chest": 40, "l_arm": 13, "r_arm": 13, "l_leg": 13, 
 const MELEE_WEIGHT := {"head": 10, "chest": 30, "l_arm": 15, "r_arm": 15, "l_leg": 15, "r_leg": 15}
 ## the implant slot groups: which limbs an implant needs in working order
 const GROUP := {"head": "head", "chest": "chest", "l_arm": "arms", "r_arm": "arms", "l_leg": "legs", "r_leg": "legs"}
-const PART_GROUP := {"head": "head", "eyes": "head", "spine": "chest", "chest": "chest", "arms": "arms", "hands": "arms", "legs": "legs"}
+const PART_GROUP := {"head": "head", "eyes": "head", "spine": "chest", "chest": "chest", "dermal": "chest", "arms": "arms", "hands": "arms", "legs": "legs"}
 
 var hp: Dictionary = {}
 var mx: Dictionary = {}

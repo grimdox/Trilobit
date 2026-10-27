@@ -106,6 +106,17 @@ func run() -> Array:
 		if not g.db.defs.has("trl_imp_" + String(dd["id"])) or String(g.db.defs["trl_imp_" + String(dd["id"])]["part"]) != String(dd["part"]):
 			ids_ok = false
 	check.call("every implant in implants.gd has an item with the same part (tools/export_items.py is in step)", ids_ok)
+	# the Dermal layer is its own part, apart from Chest
+	var chest_ids: Array = IMP.for_part("chest").map(func(d): return d["id"])
+	check.call("Dermal is a layer of its own: Dermal Plating is fitted there and no longer in Chest", IMP.get_def("dermal")["part"] == "dermal" and IMP.for_part("dermal").size() == 1 and not chest_ids.has("dermal") and chest_ids.has("heart"))
+	var gear_d = GearScript.new()
+	gear_d.open(g, null, "implants")
+	gear_d.cur = "s:belt"
+	var dp = g._new_item("trl_imp_dermal")
+	g.inv.stow(dp)
+	check.call("on the implants tab the belt spot is the Dermal layer and lists the plating carried", gear_d.cur_part() == "dermal" and gear_d.part_rows("dermal").size() == 1 and gear_d.part_rows("chest").is_empty())
+	g.inv.remove(dp)
+	check.call("the Dermal layer still lives in the chest limb group (a wrecked chest disables it)", g.BODY.PART_GROUP["dermal"] == "chest")
 	# bottles
 	var b2 = g.new_bottle(500)
 	check.call("a bottle holds a stack of water and is one tile", b2.fill == 500 and not b2.stackable())

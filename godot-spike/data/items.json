@@ -6797,7 +6797,7 @@
  {
   "id": "trl_imp_dermal",
   "name": "Dermal Plating",
-  "desc": "Subdermal plates over the whole body: 2 armor everywhere, until the plating wears through.  Fits the chest.",
+  "desc": "Subdermal plates over the whole body: 2 armor everywhere, until the plating wears through.  Fits the dermal.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -6806,7 +6806,7 @@
    "implant"
   ],
   "implant": "dermal",
-  "part": "chest"
+  "part": "dermal"
  },
  {
   "id": "trl_imp_heart",

@@ -210,7 +210,7 @@ IMPLANTS = [
     ("jets", "spine", "Dorsal Jump Jets", 3000, "Short flight, no falling damage while fuel lasts."),
     ("reflex", "spine", "Reflex Wires", 6200, "Grade 3 wiring: 14% to dodge a bullet, 10% to dodge a blade, quicker aim and strikes."),
     ("synapse", "spine", "Synapse Accelerator", 11000, "Military grade 4: time slows.  26% to dodge a bullet, 18% to dodge a blade, much faster strikes."),
-    ("dermal", "chest", "Dermal Plating", 2200, "Subdermal plates over the whole body: 2 armor everywhere, until the plating wears through."),
+    ("dermal", "dermal", "Dermal Plating", 2200, "Subdermal plates over the whole body: 2 armor everywhere, until the plating wears through."),
     ("heart", "chest", "Cardiac Booster", 2800, "Bigger stamina reserve."),
     ("mantis", "arms", "Mantis Blades", 3400, "Forearm blades unfold when your hands are empty: fast, accurate, cannot be knocked away.  1 armor on the arms."),
     ("smartlink", "hands", "Smartlink Palm", 1500, "Gun-to-hand link: +8% to hit with any firearm."),
