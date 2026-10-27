@@ -747,9 +747,7 @@ func _spawn_special_vehicles() -> void:
 	var hs: int = vs.find_spot("heli", start, 8, 60, [CG.GROUND, CG.PARK, CG.ROAD], 0)
 	_add_special("heli", hs, Color("#7fd6e8"))
 	_add_special("mech", vs.find_spot("mech", start, 10, 160, [CG.GROUND, CG.PARK], 0), Color("#c0583a"))
-	var towers: Array = city.tower_info.filter(func(t): return int(t["h"]) < city.zmax)       # a helicopter needs air over its roof: not the tallest tower, whose roof is the top level
-	if towers.is_empty():
-		towers = city.tower_info.duplicate()
+	var towers: Array = city.tower_info.duplicate()
 	towers.sort_custom(func(a, b): return int(a["h"]) > int(b["h"]))
 	for k in mini(2, towers.size()):
 		var t: Dictionary = towers[k]

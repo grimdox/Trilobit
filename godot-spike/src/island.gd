@@ -930,7 +930,7 @@ func build_zone(zx: int, zy: int):
 	if z == CITY_ZONE:
 		c.grid_margin = MARGIN_ZONE
 		c.rail_row = rail_ret(RAIL_X1) + 2 - zone_origin(zx, zy).y
-		c.max_floors = 20
+		c.max_floors = 17
 		c.plan = city_plan(c.rng)
 		c.generate(seed_value, Vector2.ZERO, CZS)
 		_decorate_city(c)

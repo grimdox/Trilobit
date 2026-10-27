@@ -8,6 +8,7 @@ extends RefCounted
 ##   above ground: the tall core buildings become towers of up to 30 floors (offices, shops, flats), a roof, and a few skybridges
 ##   -1: a subway loop under the road grid (four stations, a scheduled train) with maintenance catwalks, hatches up to the street
 ##   -2: sewers under every road line, ladders up to the tunnels, manholes up to the street, and lairs for squatters
+const AIR_ABOVE := 3                    # levels of open air over the tallest tower's roof
 const CG = preload("res://src/citygen.gd")
 const TP = preload("res://src/tower_plan.gd")
 
@@ -47,6 +48,7 @@ static func build(c, seed: int) -> void:
 	var zmax := 0
 	for t in cands:
 		zmax = maxi(zmax, int(t["h"]))
+	zmax += AIR_ABOVE                                     # open air above the tallest roof, so a helicopter or a jet can reach it and fly off
 	c.zmax = zmax
 	c.nlev = zmax + 3
 

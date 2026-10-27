@@ -225,7 +225,7 @@ func run() -> Array:
 	for d in mid:
 		mean_mid += d
 	mean_mid /= maxf(1.0, float(mid.size()))
-	check.call("downtown: %d large towers of 9+ floors (tallest %d floors, %.0f tiles from the heart), averaging %.0f tiles out" % [tall.size(), tallest_h, tallest_d, mean_tall], tall.size() >= 3 and tallest_h >= 18 and tallest_d < 0.3 * rad)
+	check.call("downtown: %d large towers of 9+ floors (tallest %d floors, %.0f tiles from the heart), averaging %.0f tiles out" % [tall.size(), tallest_h, tallest_d, mean_tall], tall.size() >= 3 and tallest_h >= 17 and tallest_d < 0.3 * rad)
 	check.call("mid-rise round it: %d buildings of 3-8 floors, farther out on average (%.0f against %.0f)" % [mid.size(), mean_mid, mean_tall], mid.size() >= 6 and mean_mid > mean_tall)
 	var far_homes := 0
 	var near_homes := 0

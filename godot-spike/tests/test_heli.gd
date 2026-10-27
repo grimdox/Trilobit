@@ -16,13 +16,16 @@ func run() -> Array:
 	w.start(7, 300)
 	var g = w.game
 	var hv := -1
-	for k in g.vehicles.size():
-		if g.vehicles[k]["kind"] == "heli" and g.z_of(g.vehicles[k]["cell"]) > 0:
+	for k in g.vehicles.size():                               # (the one on the highest roof: the tallest tower)
+		if g.vehicles[k]["kind"] == "heli" and g.z_of(g.vehicles[k]["cell"]) > 0 and (hv < 0 or g.z_of(g.vehicles[k]["cell"]) > g.z_of(g.vehicles[hv]["cell"])):
 			hv = k
-			break
 	check.call("a helicopter stands on a tower roof of the island city (map %d)" % g.size, hv >= 0 and g.size == 1536)
 	if hv < 0:
 		return [st[0], st[1], log]
+	var tallest := 0
+	for ti in g.city.tower_info:
+		tallest = maxi(tallest, int(ti["h"]))
+	check.call("there is open air above the tallest roof (tallest %d floors, top level %d)" % [tallest, g.city.zmax], g.city.zmax >= tallest + 3 and tallest <= 17)
 	var hel: Dictionary = g.vehicles[hv]
 	var roof_z: int = g.z_of(hel["cell"])
 	# the tower it stands on, and the way into the cockpit from the roof

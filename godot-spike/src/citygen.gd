@@ -153,7 +153,7 @@ var dash_ofs: int = 0                  # global column of local column 0: keeps 
 const LANE := 6
 var towers: Array = []                 # {x0,y0,x1,y1,door} of every core building: candidates for a tall tower
 # the vertical world (filled in by levels.gd): all levels stacked in one array, ground first, so a cell index says which level it is on
-var zmax: int = 0                      # roof level of the tallest tower
+var zmax: int = 0                      # the top level: the tallest tower's roof plus levels.gd AIR_ABOVE of open air
 var nlev: int = 1                      # ground + upper levels + 2 underground
 var links: Dictionary = {}             # cell -> Array of cells it connects to (stairs, elevators, ladders)
 var haslink: PackedByteArray = PackedByteArray()
@@ -943,7 +943,7 @@ func _organic_city(seed_v: int) -> void:
 				var want := ""
 				var wside: int = _street_side(x, y, x1, y1)
 				for tid in BZ.TYPES:
-					if int(biz_count.get(tid, 0)) == 0 and BZ.TYPES[tid]["zone"] != "ind" and (not BZ.TYPES[tid].has("wealth_max") or wealth_at(y * size + x) <= int(BZ.TYPES[tid]["wealth_max"])) and not BZ.fitting_side(tid, w, h, wside).is_empty():
+					if int(biz_count.get(tid, 0)) == 0 and BZ.TYPES[tid]["zone"] != "ind" and (not BZ.TYPES[tid].has("wealth_max") or _plot_wealth(x, y, x1, y1) <= int(BZ.TYPES[tid]["wealth_max"])) and not BZ.fitting_side(tid, w, h, wside).is_empty():
 						want = tid
 						break
 				if want != "":
@@ -1354,7 +1354,7 @@ func _leaf_business(x0: int, y0: int, x1: int, y1: int) -> bool:
 	if rng.randf() > pb:
 		return false
 	var side: int = _street_side(x0, y0, x1, y1)
-	_pick_wealth = maxi(wealth_at(y0 * size + x0), wealth_at(y0 * size + x1))      # (a plot that reaches into a rich district counts as rich)
+	_pick_wealth = _plot_wealth(x0, y0, x1, y1)
 	if forced == "" and cur_zone != "ind" and _pick_wealth <= 1 and int(biz_count.get("labor_center", 0)) < LABOR_MIN and not BZ.fitting_side("labor_center", w, h, side).is_empty() and rng.randf() < 0.3:
 		return _stamp_business("labor_center", x0, y0, x1, y1, side) != null     # (the quota of labor centers: taken by plots in the middle and lower districts that have room)
 	var id := forced if forced != "" and not BZ.fitting_side(forced, w, h, side).is_empty() else _pick_business(w, h, side)
@@ -1366,6 +1366,14 @@ func _leaf_business(x0: int, y0: int, x1: int, y1: int) -> bool:
 
 ## choose a business type for a w x h rectangle, weighted by how well the district kind suits it
 var _pick_wealth: int = 1               # the district wealth (0 poor .. 2 rich) of the plot a business is being chosen for
+
+## the richest district any column of a plot reaches (a plot that reaches into a rich district counts as rich)
+func _plot_wealth(x0: int, y0: int, x1: int, y1: int) -> int:
+	var m := 0
+	for wy in range(y0, y1 + 1):
+		for wx in range(x0, x1 + 1):
+			m = maxi(m, wealth_at(wy * size + wx))
+	return m
 
 const LABOR_MIN := 25                      # labor centers every city has at least (the middle and lower districts)
 
