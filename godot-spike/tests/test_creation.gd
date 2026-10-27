@@ -104,6 +104,7 @@ func run() -> Array:
 	g4.setup(300)
 	g4.load_dict(old)
 	check.call("an old save with no look loads with the default figure", g4.app == CR.default_app())
+	g.implants = {}                 # (a new character wears a Trilobit, which swaps in the augmented body: that case is tested in run_dolls)
 	var spec: Dictionary = DS.for_player(g)
 	check.call("the player's doll uses the chosen skin and the other body frame", spec["look"]["skin"] == DS.SKINS[3] and spec["look"]["fem"] and spec["look"]["eyes"] == CR.EYES[3])
 	var FG = load("res://src/figure.gd")

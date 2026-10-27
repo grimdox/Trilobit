@@ -28,7 +28,7 @@ func has_tag(t: String) -> bool:
 
 ## can another copy of this item share its tile?  Weapons, armor, pocket items, implants and bottles keep their own tile each.
 func stackable() -> bool:
-	return not (def.has("gun") or def.has("melee") or def.has("armor") or def.has("pocket") or def.has("implant") or def.has("bottle"))
+	return not (def.has("gun") or def.has("melee") or def.has("armor") or def.has("pocket") or def.has("implant") or def.has("nano") or def.has("bottle"))
 
 func weight() -> int:
 	return int(def.get("weight_g", 0)) * count

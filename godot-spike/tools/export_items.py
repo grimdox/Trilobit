@@ -219,6 +219,16 @@ for d in gen_implants.catalogue():
     items.append({"id": "trl_imp_" + d["id"], "name": d["name"], "desc": text + "  Fits the %s." % PART_NAME[d["part"]], "weight_g": 0, "volume_ml": 0,
                   "length_mm": 0, "price": d["cost"], "tags": ["implant"], "implant": d["id"], "part": d["part"]})
 
+# ---- nanohack chips (src/nanohacks.gd holds what each does): one chip, one Trilobit slot
+NANOS = [("plating", "Plating", "Hardens the skin-weave: +1 armor on every body part for 10 minutes.", ["#4fd0ff", "#9fe8ff", "#2a7fd0"]),
+         ("reflex", "Reflex", "Overclocks the nerves: +1 Dodge for 10 minutes.", ["#ffe14a", "#ffb02a", "#fff3a0"]),
+         ("shock", "Shock", "Overloads a target in sight: 10 damage to a random implanted body part.", ["#ff3ec8", "#c23cff", "#ffd0f4"]),
+         ("strike", "Strike", "Primes the muscles: +1 Unarmed and +1 Melee for 10 minutes.", ["#ff5a4a", "#ff9a3a", "#d02a2a"]),
+         ("research", "Skill: Research", "A standing lookup routine: +1 Research while installed.", ["#6dff9a", "#2ad08a", "#c8ffd8"])]
+for nid, nm, text, cols in NANOS:
+    items.append({"id": "trl_nano_" + nid, "name": nm + " nanohack", "desc": text + "  A chip for a Trilobit slot; fit it on the Implants screen.", "weight_g": 0, "volume_ml": 0,
+                  "length_mm": 0, "price": 400, "tags": ["nanohack"], "nano": nid, "nano_cols": cols})
+
 # ---- trade goods of the businesses, flats and offices: no stats, no function (see tools/content/goods_list.py)
 import goods_list
 for gid, nm, cat, who, text, wg, vol, pr in goods_list.GOODS:

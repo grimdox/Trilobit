@@ -7719,6 +7719,96 @@
   "part": "legs"
  },
  {
+  "id": "trl_nano_plating",
+  "name": "Plating nanohack",
+  "desc": "Hardens the skin-weave: +1 armor on every body part for 10 minutes.  A chip for a Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "plating",
+  "nano_cols": [
+   "#4fd0ff",
+   "#9fe8ff",
+   "#2a7fd0"
+  ]
+ },
+ {
+  "id": "trl_nano_reflex",
+  "name": "Reflex nanohack",
+  "desc": "Overclocks the nerves: +1 Dodge for 10 minutes.  A chip for a Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "reflex",
+  "nano_cols": [
+   "#ffe14a",
+   "#ffb02a",
+   "#fff3a0"
+  ]
+ },
+ {
+  "id": "trl_nano_shock",
+  "name": "Shock nanohack",
+  "desc": "Overloads a target in sight: 10 damage to a random implanted body part.  A chip for a Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "shock",
+  "nano_cols": [
+   "#ff3ec8",
+   "#c23cff",
+   "#ffd0f4"
+  ]
+ },
+ {
+  "id": "trl_nano_strike",
+  "name": "Strike nanohack",
+  "desc": "Primes the muscles: +1 Unarmed and +1 Melee for 10 minutes.  A chip for a Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "strike",
+  "nano_cols": [
+   "#ff5a4a",
+   "#ff9a3a",
+   "#d02a2a"
+  ]
+ },
+ {
+  "id": "trl_nano_research",
+  "name": "Skill: Research nanohack",
+  "desc": "A standing lookup routine: +1 Research while installed.  A chip for a Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "research",
+  "nano_cols": [
+   "#6dff9a",
+   "#2ad08a",
+   "#c8ffd8"
+  ]
+ },
+ {
   "id": "trl_good_loaf_bread",
   "name": "loaf of bread",
   "desc": "A tall white loaf, still warm at the heel.",

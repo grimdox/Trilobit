@@ -1178,6 +1178,8 @@ func refresh() -> void:
 		show_wait()
 	elif mode == "consume":
 		show_consume()
+	elif mode == "nano":
+		show_nano()
 
 ## the elevator's floor list: up and down (or the digits) pick a floor, Enter rides there
 func show_elevator() -> void:
@@ -1381,6 +1383,84 @@ func open_consume() -> void:
 	mode = "consume"
 	show_consume()
 
+## the nanohack menu (N): the hacks your Trilobit runs.  Choosing Shock asks for a target in sight.
+var nano_list: Array = []
+var nano_pick: Array = []              # the targets offered while Shock waits for one (empty otherwise)
+var nano_pending: String = ""
+
+func show_nano() -> void:
+	var g = game
+	var t := ""
+	if nano_pending != "":
+		t = "[b]%s[/b]   choose a target in sight  (a-z chooses, Esc goes back)\n\n" % g.NANO.get_def(nano_pending)["name"]
+		for k in nano_pick.size():
+			var j: int = nano_pick[k]
+			t += "%s) %s   [color=#8899aa]%d tiles[/color]\n" % [char(97 + k) if k < 26 else "?", g.name_of(j), g.cheb(g.sim.pos[j], g.pc)]
+		panel.text = t
+		panel.visible = true
+		return
+	t = "[b]NANOHACKS[/b]   (a-z runs one, Esc leaves)\nBattery %d kJ   each use costs %d kJ   %d of %d slots used\n\n" % [int(g.power_left()), int(g.NANO.USE_KJ), g.nano_installed().size(), g.nano_slots()]
+	for k in nano_list.size():
+		var e: Dictionary = nano_list[k]
+		var st: String = "always on" if e["kind"] == "passive" else ("running, %s left" % CLK.span_text(int(e["left"])) if int(e["left"]) > 0 else "ready")
+		t += "%s) %s   [color=#8899aa]%s.  %s[/color]\n" % [char(97 + k) if k < 26 else "?", e["name"], st, e["text"]]
+	if nano_list.is_empty():
+		t += "[color=#8899aa]No nanohacks installed.  Fit chips on the Implants screen.[/color]\n"
+	panel.text = t
+	panel.visible = true
+
+func open_nano() -> void:
+	if game.nano_slots() <= 0:
+		game.say("You have no Trilobit fitted: no nanohacks to run.")
+		return
+	nano_list = game.nano_menu()
+	nano_pick = []
+	nano_pending = ""
+	mode = "nano"
+	show_nano()
+
+func nano_key(k: int) -> void:
+	if k == KEY_ESCAPE or settings.action_for(k) == "nano":
+		if nano_pending != "":
+			nano_pending = ""
+			nano_pick = []
+			show_nano()
+			return
+		mode = "play"
+		panel.visible = false
+		refresh()
+		return
+	var ck: String = OS.get_keycode_string(k).to_lower()
+	var ci: int = ck.unicode_at(0) - 97 if ck.length() == 1 else -1
+	if nano_pending != "":
+		if ci >= 0 and ci < nano_pick.size():
+			var hid: String = nano_pending
+			var tg: int = nano_pick[ci]
+			mode = "play"
+			panel.visible = false
+			nano_pending = ""
+			nano_pick = []
+			game.act_nano_use(hid, tg)
+			refresh()
+		return
+	if ci >= 0 and ci < nano_list.size():
+		var e: Dictionary = nano_list[ci]
+		if e["id"] == "shock":
+			nano_pick = game.nano_targets()
+			if nano_pick.is_empty():
+				game.say("Nobody in sight to shock.")
+				mode = "play"
+				panel.visible = false
+				refresh()
+				return
+			nano_pending = "shock"
+			show_nano()
+			return
+		mode = "play"
+		panel.visible = false
+		game.act_nano_use(String(e["id"]))
+		refresh()
+
 ## the look cursor, as a cell on the player's level; the view re-centres on it
 func look_cell() -> int:
 	var g = game
@@ -1569,6 +1649,9 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 			return
 		refresh()
 		return
+	if mode == "nano":
+		nano_key(k)
+		return
 	if mode == "consume":
 		if k == KEY_ESCAPE or settings.action_for(k) == "consume":
 			mode = "play"
@@ -1715,6 +1798,9 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 			return
 		"consume":
 			open_consume()
+			return
+		"nano":
+			open_nano()
 			return
 		"waitmenu":
 			mode = "waitmenu"

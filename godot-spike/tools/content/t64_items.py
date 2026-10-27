@@ -604,6 +604,25 @@ def implant_icon(a, it):
         a.shade(a.ellipse(26, 38, 4), c, bevel=1.5, spec=0.6, emit=0.4)
 
 
+def nano_icon(a, it):
+    """a nanohack chip: dark board, three glowing coloured tubes across the top, gold circuitry and a contact edge along the bottom (after Anarchy Online's nanos)"""
+    cols = it.get('nano_cols', ['#4fd0ff', '#ffe14a', '#ff3ec8'])
+    rr(a, 12, 10, 40, 44, '#1d2a22', 4, 3, strength=0.8, spec=0.5, grain=0.2, seed=seed(it['id']))
+    for i, c in enumerate(cols):
+        x = 17 + i * 12
+        rr(a, x, 13, 9, 19, '#10161c', 4, 1.5, spec=0.9)
+        a.shade(a.rrect(x + 1.5, 20 - i * 2, 6, 11 + i * 2, 3), c, bevel=1.2, spec=0.9, emit=0.7)
+        led(a, x + 4.5, 24, c, 1.0)
+    a.shade(a.rect(15, 35, 34, 1.4), '#c8a24a', bevel=0.4, spec=0.8)
+    a.shade(a.rect(15, 39, 22, 1.4), '#c8a24a', bevel=0.4, spec=0.8)
+    a.shade(a.rect(37, 39, 1.4, 6), '#c8a24a', bevel=0.4, spec=0.8)
+    a.shade(a.rect(22, 43, 20, 1.4), '#c8a24a', bevel=0.4, spec=0.8)
+    for x in (18, 28, 40):
+        a.shade(a.ellipse(x, 46.5, 1.6), '#e8d089', bevel=0.8, spec=0.9)
+    for i in range(7):
+        a.shade(a.rect(15 + i * 5, 50, 3, 3), '#d9b44f', bevel=0.5, spec=0.9)
+
+
 def good_icon(it):
     """a stand-in until the real icon is drawn: a bevelled crate in the category's colour with the goods' initials"""
     from PIL import ImageDraw, ImageFont
@@ -659,6 +678,8 @@ def make(it):
         charm(a, it)
     elif tags[0] == 'implant':
         implant_icon(a, it)
+    elif tags[0] == 'nanohack':
+        nano_icon(a, it)
     else:
         misc(a, it)
     return a.image(outline=0.85, fit=54, zmax=1.4)

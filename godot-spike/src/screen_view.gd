@@ -543,7 +543,7 @@ func _skills(W: float, H: float) -> void:
 				draw_rect(r, Color(1.0, 0.8, 0.25, 0.1))
 			var col := Color.WHITE if sd["live"] else Color(0.55, 0.62, 0.72)
 			var b: int = int(base.get(sd["id"], 0))
-			var eff: int = SK.level(attrs, base, sd["id"])
+			var eff: int = game.lvl(sd["id"]) if game != null else SK.level(attrs, base, sd["id"])
 			var ty: float = r.position.y + 22.0
 			_txt(sd["name"], Vector2(r.position.x + 14, ty), 18, col)
 			_txt(str(eff), Vector2(r.position.x + 170, ty), 22, Color(1.0, 0.8, 0.25) if eff > b else col, HORIZONTAL_ALIGNMENT_RIGHT, 40.0)
@@ -583,12 +583,13 @@ func _skill_detail(r: Rect2, sel: Dictionary, attrs: Dictionary, base: Dictionar
 		return
 	var sd: Dictionary = SK.skill(sel["id"])
 	var b: int = int(base.get(sd["id"], 0))
-	var eff: int = SK.level(attrs, base, sd["id"])
+	var eff: int = game.lvl(sd["id"]) if game != null else SK.level(attrs, base, sd["id"])
 	var parts: Array = []
 	for a in sd["attrs"]:
 		parts.append("%s %d (%+d)" % [SK.attr(a)["name"], int(attrs.get(a, 10)), SK.attr_bonus(int(attrs.get(a, 10)))])
 	_txt("%s   level %d" % [sd["name"].to_upper(), eff], Vector2(x, y), 20, Color.WHITE)
-	_rtxt("base %d" % b, r.end.x - 14.0, y, 15, dim)
+	var gear: int = eff - SK.level(attrs, base, sd["id"])
+	_rtxt("base %d" % b + ("   implants and hacks %+d" % gear if gear != 0 else ""), r.end.x - 14.0, y, 15, Color(1.0, 0.8, 0.25) if gear > 0 else dim)
 	draw_multiline_string(font, Vector2(x, y + 20.0), sd["desc"], HORIZONTAL_ALIGNMENT_LEFT, w, 14, 3, dim)
 	_txt("Governed by: " + ", ".join(parts), Vector2(x, y + 80.0), 14, Color(1.0, 0.8, 0.25))
 	var dl: Array = sd["disc"]

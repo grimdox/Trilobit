@@ -37,7 +37,7 @@ func run() -> Array:
 	var g = GameScript.new(5)
 	g.setup(300)
 	check.call("attributes start at 10 and every skill at 0", g.attrs.values().all(func(v): return v == 10) and g.attrs.size() == 5 and g.skills.values().all(func(v): return v == 0) and g.skills.size() == 16 and g.xp.values().all(func(v): return v == 0))
-	check.call("with default attributes every effective level is 0", SK.skill_ids().all(func(id): return g.lvl(id) == 0))
+	check.call("with default attributes every effective level is 0 (the starting Gutterline Trilobit adds 1 to Networking)", SK.skill_ids().all(func(id): return g.lvl(id) == (1 if id == "networking" else 0) and g.base_lvl(id) == 0))
 	g.attrs["str"] = 14
 	g.attrs["agi"] = 12
 	check.call("Strength 14 and Agility 12 give Unarmed/Melee +3, Manual +2, Ranged +0", g.lvl("unarmed") == 3 and g.lvl("melee") == 3 and g.lvl("manual") == 2 and g.lvl("grit") == 2 and g.lvl("ranged") == 0 and g.lvl("dodge") == 1)
