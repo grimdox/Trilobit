@@ -116,10 +116,10 @@ const TYPES := {
 		"names": ["Ward Office", "Permits & Licences", "Harbor Authority", "Housing Bureau", "Civil Registry", "Tax Office"],
 		"L": {"floor": ["floor_clean", "floor_carpet_grey", "floor_marble"], "counter": "service_window", "cu": 5, "body": "open", "row": "waiting_bench", "wall": "filing_cabinet", "front": ["notice_board"], "decor": ["queue_rail"], "glass": false, "line": true, "booths": 2},
 		"versions": [[12, 13, 0, "branch office"], [16, 14, 1, "ward office"], [20, 15, 1, "bureau"], [24, 16, 2, "ministry annex"]]},
-	"labor_center": {"name": "Labor Center", "cat": "civic", "zone": "mid", "w": 7, "role": "staff", "jobs": ["case officer", "clerk", "security"], "wealth_max": 1,
+	"labor_center": {"name": "Labor Center", "cat": "civic", "zone": "mid", "w": 3, "role": "staff", "jobs": ["case officer", "clerk", "security"], "wealth_max": 1,
 		"names": ["Ward Labor Center", "Day Labor Hall", "Dockworkers' Hall", "Workers' Employment Exchange", "Hokkai Job Center", "Union Hiring Hall"],
 		"L": {"floor": ["floor_clean", "floor_clean", "floor_carpet_grey"], "counter": "service_window", "cu": 4, "body": "open", "row": "waiting_bench", "wall": "notice_board", "front": ["notice_board", "vending"], "decor": ["queue_rail"], "glass": false, "line": true, "booths": 3},
-		"versions": [[14, 13, 0, "day-labor hall"], [18, 14, 1, "employment center"], [22, 15, 1, "labor exchange"]]},
+		"versions": [[9, 9, 0, "hiring window"], [11, 10, 0, "job office"], [14, 13, 0, "day-labor hall"], [18, 14, 1, "employment center"], [22, 15, 1, "labor exchange"]]},
 	"post_depot": {"name": "Post and courier depot", "cat": "service", "zone": "mid", "w": 5, "role": "staff", "jobs": ["clerk", "sorter", "courier"],
 		"names": ["Hokkai Post", "Swift Courier", "Parcel Point", "North Express", "Ward Post Office"],
 		"L": {"floor": ["floor_clean", "floor_concrete", "floor_clean"], "counter": "counter", "cu": 3, "body": "rows", "row": "parcel_shelf", "wall": "mail_sorter", "front": ["parcel_trolley"], "decor": ["scale"], "glass": true},
@@ -444,7 +444,7 @@ static func stamp(c, id: String, ver: int, x0: int, y0: int, side: int, tier_hin
 	var nb: int = int(L.get("booths", 0))
 	if nb > 0:
 		var placed := 0
-		for v in range(wi - 2, 0, -3):
+		for v in range(wi - 2, 0, -3 if wi >= 9 else -2):         # (closer together in a small office)
 			if placed >= nb:
 				break
 			if B.is_free(1, v):

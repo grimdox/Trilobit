@@ -142,9 +142,9 @@ func run() -> Array:
 	# ---- one person walks a real route: close to the player, they set off from home and get to the work cell step by step
 	var who := -1
 	for i in n:
-		if sim.sticky[i] == 0 and com.wc[i] >= 0 and sim.home_cell[i] < s2 and com.wc[i] < s2 and g.fac[i] == g.CIV:
+		if sim.sticky[i] == 0 and com.wc[i] >= 0 and sim.home_cell[i] < s2 and g.fac[i] == g.CIV:
 			var d: int = com.manh(sim.home_cell[i], com.wc[i])
-			if d >= 25 and d <= 60:
+			if d >= 20 and d <= 78:
 				who = i
 				break
 	var steps_ok := true

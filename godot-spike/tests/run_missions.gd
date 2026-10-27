@@ -310,5 +310,25 @@ func _initialize() -> void:
 	check("and leaving after the reload returns to the street and closes the portal", s4.mission_leave_request == "exit")
 	var res: Dictionary = w2.leave_mission("")
 	check("(the abandoned site pays nothing; the portal is closed in the restored street)", res["outcome"] == "abandoned" and w2.game.portal.is_empty() and w2.game.mission.is_empty())
+	# a freed hostage finds a way round a guard standing on the shortest route (it used to freeze behind one in about one site in eight)
+	var stuck := 0
+	var freed_n := 0
+	for k in 40:
+		var ro: Dictionary = MS.offers(1000 + k * 7, 4000 + k * 13, k % 9)[1]
+		var rs = preload("res://src/game.gd").new(int(ro["seed"]))
+		rs.setup(0, null, Vector2i(-1, -1), MS.new_state(ro))
+		var rh: int = MS.agent_with_role(rs, "hostage")
+		if rh >= 0:
+			rs.pc = rs.sim.pos[rh] + 1 if rs.sim.walk[rs.sim.pos[rh] + 1] == 1 and rs.sim.at[rs.sim.pos[rh] + 1] == -1 else rs.sim.pos[rh] - 1
+			rs.eco.choose(rs.eco.menu_for(rh), 0)
+			if rs.mission["freed"]:
+				freed_n += 1
+				rs.pc = int(rs.city.get_meta("site")["entry"]) - 64 * 4
+				for _k in 90:
+					rs.end_turn()
+				if rs.cheb(rs.sim.pos[rh], rs.pc) > 2:
+					stuck += 1
+		rs.dispose()
+	check("a freed hostage keeps up in every site tried (%d of %d stuck)" % [stuck, freed_n], freed_n >= 30 and stuck == 0)
 	print("MISSIONS %d/%d" % [ok, n])
 	quit(0 if ok == n else 1)

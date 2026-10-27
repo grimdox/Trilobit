@@ -1354,7 +1354,9 @@ func _leaf_business(x0: int, y0: int, x1: int, y1: int) -> bool:
 	if rng.randf() > pb:
 		return false
 	var side: int = _street_side(x0, y0, x1, y1)
-	_pick_wealth = wealth_at(y0 * size + x0)
+	_pick_wealth = maxi(wealth_at(y0 * size + x0), wealth_at(y0 * size + x1))      # (a plot that reaches into a rich district counts as rich)
+	if forced == "" and cur_zone != "ind" and _pick_wealth <= 1 and int(biz_count.get("labor_center", 0)) < LABOR_MIN and not BZ.fitting_side("labor_center", w, h, side).is_empty() and rng.randf() < 0.3:
+		return _stamp_business("labor_center", x0, y0, x1, y1, side) != null     # (the quota of labor centers: taken by plots in the middle and lower districts that have room)
 	var id := forced if forced != "" and not BZ.fitting_side(forced, w, h, side).is_empty() else _pick_business(w, h, side)
 	if id == "":
 		return false
@@ -1364,6 +1366,8 @@ func _leaf_business(x0: int, y0: int, x1: int, y1: int) -> bool:
 
 ## choose a business type for a w x h rectangle, weighted by how well the district kind suits it
 var _pick_wealth: int = 1               # the district wealth (0 poor .. 2 rich) of the plot a business is being chosen for
+
+const LABOR_MIN := 25                      # labor centers every city has at least (the middle and lower districts)
 
 func _pick_business(w: int, h: int, side: int, zones_only: String = "") -> String:
 	var weights: Array = []
@@ -1388,6 +1392,8 @@ func _pick_business(w: int, h: int, side: int, zones_only: String = "") -> Strin
 				"res": wt *= (3.0 if tz == "any" else (1.0 if tz == "mid" else (0.6 if tz == "edge" else 0.1)))
 		var have: int = int(biz_count.get(id, 0))
 		wt *= 5.0 if have == 0 else (2.0 if have < 3 else 1.0)
+		if id == "labor_center" and have < LABOR_MIN:
+			wt *= 14.0                                     # (every city has at least LABOR_MIN labor centers: they are picked far more often until it does)
 		weights.append([id, wt])
 		total += wt
 	if weights.is_empty():

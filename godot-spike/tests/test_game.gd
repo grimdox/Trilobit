@@ -170,7 +170,11 @@ func run() -> Array:
 	for k in pos0:
 		g.pc = g.vehicles[k]["cell"]      # stand by an AI car so it is simulated in full
 	for k in 20:
+		g.game_over = false                                   # (a runner who finds the player on the street must not end the check)
+		g.body.mend_to(1.0)
 		g.end_turn()
+	g.game_over = false
+	g.body.mend_to(1.0)
 	for k in pos0:
 		if g.vehicles[k]["cell"] != pos0[k]:
 			mv += 1

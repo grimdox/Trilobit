@@ -76,7 +76,7 @@ func run() -> Array:
 		elif bz["type"] == "gov_office" or bz["type"] == "police":
 			gov += 1
 			gov_booths += nterm
-	check.call("there are labor centers with mission booths (%d centers, %d booths)" % [labor, labor_booths], labor >= 1 and labor_booths >= labor * 3)
+	check.call("the city has at least 25 labor centers with mission booths (%d centers, %d booths)" % [labor, labor_booths], labor >= 25 and labor_booths >= labor * 3)
 	check.call("none of them stands in a rich district (%d)" % labor_rich, labor_rich == 0)
 	check.call("the government offices and police stations have booths too (%d buildings, %d booths)" % [gov, gov_booths], gov >= 1 and gov_booths >= gov)
 	# buildings are smaller and separated by 1-2 tile alleys, so the footprint share is a little lower than with big blocks but there are twice as many of them
