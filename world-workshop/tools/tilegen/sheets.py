@@ -4,6 +4,8 @@
   compare.png        the same ids side by side in all five themes (one theme per row)
   sheet_<theme>.png  every sprite of a theme over its floor
   icons.png          every item icon over a floor
+  rooms_sample.png   seeds 1-4 of a furnished room (kind, floor, fittings and pieces drawn by the seed) in every theme
+  furniture_<theme>  the business and home furniture and floors, three variants each
   random_sample.png  seeds 1-3 of a small generated street block (road, kerb, building with door and windows,
                      furnished interior, park) in every theme, exactly as generated: nothing picked or retouched
 """
@@ -157,6 +159,82 @@ def random_sample(S, out, seeds=range(1, 4)):
     img.save(os.path.join(out, 'random_sample.png'))
 
 
+# ------------------------------------------------------------------------------------------------ furnished rooms
+# the new furniture as the game lays it: a row of fittings on the back wall, the room's pieces in rows, its floor
+ROOM_KINDS = [
+    ('cafe', ['t_trl_floor_parquet', 't_trl_floor_tile'], ['coffee_bar', 'bakery_case', 'bread_rack'],
+     ['cafe_table', 'cafe_chair', 'cafe_chair', 'coffee_machine', 'armchair']),
+    ('bar', ['t_trl_floor_dance', 't_trl_floor_concrete'], ['bar_counter', 'speaker_stack', 'dj_booth'],
+     ['booth_seat', 'pool_table', 'card_table', 'jukebox', 'lounge_sofa', 'barrel', 'karaoke_booth']),
+    ('shop', ['t_trl_floor_lino', 't_trl_floor_concrete', 't_trl_floor_carpet_grey'], ['shoe_wall', 'tv_wall', 'electronics_shelf', 'bookshelf', 'pharmacy_shelf'],
+     ['clothing_rack', 'mannequin', 'display_case', 'mirror', 'office_shelf', 'hardware_rack']),
+    ('garage', ['t_trl_floor_concrete'], ['tool_wall', 'tire_rack', 'gun_rack'], ['lift_hoist', 'tool_chest', 'workbench', 'car_plinth', 'lumber_stack']),
+    ('service', ['t_trl_floor_tile', 't_trl_floor_carpet_grey'], ['teller_window', 'deposit_boxes', 'locker', 'salon_mirror', 'mail_sorter', 'key_rack'],
+     ['waiting_bench', 'queue_rail', 'atm', 'barber_chair', 'washing_machine', 'dryer', 'arcade_cabinet', 'claw_machine', 'pachinko_machine']),
+    ('gym', ['t_trl_floor_rubber', 't_trl_floor_mat'], ['locker', 'dumbbell_rack', 'weapon_rack', 'shoe_shelf'],
+     ['treadmill', 'weight_bench', 'squat_rack', 'punching_bag', 'training_dummy']),
+    ('works', ['t_trl_floor_concrete'], ['pallet_rack', 'parts_bin'], ['conveyor', 'lathe', 'mill', 'scrap_pile', 'baler', 'shredder', 'press_machine', 'pallet_stack']),
+    ('home', ['t_trl_floor_lino', 't_trl_floor_parquet', 't_trl_floor_mat'], ['kitchen_counter', 'kitchen_sink', 'wardrobe', 'dresser', 'home_shrine', 'tv_stand'],
+     ['bed_single', 'bed_double', 'bunk_bed', 'sofa', 'coffee_table', 'kotatsu', 'futon', 'toilet', 'bathtub', 'shower', 'shoe_rack']),
+    ('office', ['t_trl_floor_carpet_grey'], ['server_rack', 'whiteboard', 'mailboxes', 'filing_cabinet', 'directory_board'],
+     ['desk_workstation', 'office_chair', 'desk_executive', 'meeting_table', 'cubicle_divider', 'copier']),
+]
+RW, RH = 9, 6
+
+
+def room(spr, th, seed):
+    """one furnished room from a seed, exactly as generated: its kind, floor, wall fittings and pieces are drawn by
+    the seed; one variant per room as in the game"""
+    rng = Rng('room', th, seed)
+    name, floors, wall, pieces = ROOM_KINDS[rng.int(0, len(ROOM_KINDS) - 1)]
+    v = rng.int(0, 2)
+    fl = rng.pick(floors)
+    img = Image.new('RGBA', (RW * 64, RH * 64), BG)
+    for y in range(RH):
+        for x in range(RW):
+            edge = x in (0, RW - 1) or y in (0, RH - 1)
+            if edge:
+                bits = (1 if y > 0 and x in (0, RW - 1) else 0) | (2 if x < RW - 1 and y in (0, RH - 1) else 0) | \
+                       (4 if y < RH - 1 and x in (0, RW - 1) else 0) | (8 if x > 0 and y in (0, RH - 1) else 0)
+                img.alpha_composite(over(spr['t_concrete.0'], spr['t_wall.%d' % bits]), (x * 64, y * 64))
+                continue
+            layers = [spr['%s.%d' % (fl, v)]]
+            if y == 1:
+                w = wall[(x // 3 + seed) % len(wall)] if rng.chance(0.85) else None
+                if w:
+                    layers.append(spr['f_trl_%s.%d' % (w, v)])
+            elif y in (3, 4) and x not in (1, RW - 2) and rng.chance(0.55):
+                layers.append(spr['f_trl_%s.%d' % (rng.pick(pieces), v)])
+            img.alpha_composite(over(*layers), (x * 64, y * 64))
+    return img
+
+
+def rooms_sample(S, out, seeds=range(1, 5)):
+    pw, ph = RW * 64, RH * 64
+    img = Image.new('RGBA', (len(seeds) * (pw + 16), len(TH.ORDER) * (ph + 16)), BG)
+    for r, th in enumerate(TH.ORDER):
+        for c, s in enumerate(seeds):
+            img.paste(room(S[th][0], th, s), (c * (pw + 16), r * (ph + 16)))
+    img.save(os.path.join(out, 'rooms_sample.png'))
+
+
+def furniture_sheet(S, th, out):
+    """every new piece and floor of a theme, its three variants side by side"""
+    import furniture2 as F2
+    ids = ['t_trl_' + k for k in F2.FLOORS] + ['f_trl_' + k for k in F2.FURN]
+    spr = S[th][0]
+    per = 6
+    cols = per * 3
+    rows = (len(ids) + per - 1) // per
+    img = Image.new('RGBA', (cols * 66, rows * 66), BG)
+    for i, id_ in enumerate(ids):
+        for v in range(3):
+            under = None if id_.startswith('t_') else spr['t_floor.0']
+            c = (i % per) * 3 + v
+            img.paste(over(under, spr['%s.%d' % (id_, v)]), (c * 66 + (i % per) * 0, (i // per) * 66))
+    img.save(os.path.join(out, 'furniture_%s.png' % th))
+
+
 def main(sets, out):
     os.makedirs(out, exist_ok=True)
     S = {th: load(sets, th) for th in TH.ORDER}
@@ -164,6 +242,9 @@ def main(sets, out):
     for th in TH.ORDER:
         theme_sheet(S, th, out)
     random_sample(S, out)
+    rooms_sample(S, out)
+    for th in TH.ORDER:
+        furniture_sheet(S, th, out)
     if os.path.exists(os.path.join(sets, 'items', 'tile_config.json')):
         icons, _ = load(sets, 'items')
         fl = S['mid'][0]['t_floor.0']

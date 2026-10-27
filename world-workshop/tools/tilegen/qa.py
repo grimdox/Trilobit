@@ -9,6 +9,7 @@
   T6 colour names an id that names a colour shows that colour (f_trl_neon_green is green)
   T7 distinct     the five themes draw the same id differently (walk, road, wall, floor differ between every pair)
   T8 icons        every item that is not a weapon has an icon, outlined, big enough to read on the ground
+  T9 furniture    every piece and floor of the game's furniture list has its three variants in every theme, and they differ
 """
 import colorsys
 import json
@@ -182,6 +183,27 @@ def run(sets, base_cfg=None):
         fr = dark / max(edges, 1)
         rep('T8', 'every non-weapon item has a readable outlined icon', not miss and fr >= 0.85 and not small,
             '%d missing, %.1f %% dark edge, %d too small' % (len(miss), fr * 100, len(small)), '; '.join((miss + small)[:4]))
+    # T9 the furniture list
+    fl = os.path.join(HERE, '..', '..', '..', 'godot-spike', 'src', 'furniture_gen.gd')
+    if os.path.exists(fl):
+        import re
+        ids = re.findall(r'"((?:f_trl_|t_trl_floor_)[a-z_0-9]+)"', open(fl).read())
+        miss, same = [], []
+        for th in TH.ORDER:
+            for i in ids:
+                vs = ['%s.%d' % (i, v) for v in range(3)]
+                if not all(x in S[th][0] for x in vs):
+                    miss.append('%s %s' % (th, i))
+                    continue
+                a, b, c = (S[th][0][x].astype(int) for x in vs)
+
+                def dif(p, q):
+                    m = (p[..., 3] > 0) | (q[..., 3] > 0)
+                    return np.abs(p - q)[m].mean()
+                if min(dif(a, b), dif(b, c), dif(a, c)) < 4.0:
+                    same.append('%s %s' % (th, i))
+        rep('T9', 'every listed piece in 3 distinct variants per theme', ids and not miss and not same,
+            '%d ids, %d missing, %d alike' % (len(set(ids)), len(miss), len(same)), '; '.join((miss + same)[:4]))
     passed = sum(r['ok'] for r in res)
     print('TILES QA %d/%d' % (passed, len(res)))
     return res

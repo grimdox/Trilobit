@@ -13,13 +13,28 @@ nothing is hand-painted, so a new tile, a new theme or a changed material is red
 | `industry` | the docks and everything underground (sewers, tunnels) | riveted steel plate, hazard paint, bulkheads and barred gates, diamond-plate walkways, oil stains, fuel tanks, drums, pallets, machinery, murky water |
 
 Every theme draws all 109 tile ids the world already uses (terrain, 16 joined wall shapes, 16 glass wall shapes,
-doors, windows, 72 pieces of furniture) plus 42 new ids: 260 sprites a theme with variants.  The game picks the set
+doors, windows, 72 pieces of furniture) plus 42 new ids and the 124 business and home pieces and floors below: 757 sprites a theme with variants.  The game picks the set
 for each cell from its district (`theme_at` in the game's `src/view.gd`), so a street changes look where the money
 changes, and falls back to its base set for what the district sets do not draw (items, animals, vehicles).
 
+## Business and home furniture
+
+`furniture2.py` draws the game's furniture list (`godot-spike/tools/content/furniture_list.py`): 116 pieces for cafes,
+bars, shops, banks, police stations, post depots, hotels, gyms, dojos, salons, laundromats, arcades, workshops,
+factories, homes and offices, and 8 floors (bare concrete, lit dance floor, rubber, training mat, office carpet,
+bathroom tile, linoleum, parquet).  Each comes in three variants per theme, 1860 sprites in all.  The variant changes
+the colourway and some of the build: a round or square cafe table, wooden, plastic or cardboard crates, two or three
+sofa seats.  The theme changes the quality: marble, leather and brass downtown; laminate and fabric in mid-town;
+patched vinyl, tape, cracked screens and dead bulbs in the slums; timber, indigo cloth and tatami in the country;
+enamel and steel in industry.  The game shows one variant per room (`_room_of` in `src/view.gd`), so a cafe's chairs
+and its floor match.  Fittings that stand on the back wall (shelves, lockers, screens) fill the top of the cell and
+join the next cell without an outline, so a row of them reads as one.
+
+`goods.py` draws an icon for each of the 111 shop goods (`trl_good_*`) into the item set.
+
 ## Item icons
 
-A sixth set, `items`, holds a new icon for every item that is not a weapon (124: food and drink, ammunition, weapon
+A sixth set, `items`, holds a new icon for every item that is not a weapon (245: shop goods, food and drink, ammunition, weapon
 mods, armour and bags, tools and job items, engines, charms), drawn by `items.py` with the same renderer.  Guns and
 melee weapons keep their approved designs from the game's own generators.  The game looks a sprite up in the cell's
 district set, then the icon set, then its base set.
@@ -29,10 +44,13 @@ district set, then the icon set, then its base set.
 ```sh
 bash update.sh                       # bake (only changed tiles are redrawn), check, copy into the game
 bash run_all.sh [review_dir]         # bake, check, prove the bake is deterministic, write the review sheets
-python3 tools/tilegen/bake.py sets   # bake only (all five themes in about 12 s from scratch, 3 s when nothing changed)
+python3 tools/tilegen/bake.py sets   # bake only (all five themes in about 35 s from scratch, seconds when little changed)
 python3 tools/tilegen/qa.py sets ../godot-spike/gfx/Trilobit64/tile_config.json
 python3 tools/tilegen/sheets.py sets review
 ```
+
+The review sheets include `furniture_<theme>.png` (every new piece and floor, its three variants side by side) and
+`rooms_sample.png` (seeds 1 to 4 of a furnished room in every theme, exactly as generated).
 
 Python 3.10+ with numpy, scipy and Pillow.  No Blender, no web services, no AI services.  The game side is plain GDScript
 (Godot 4.3+, Compatibility renderer); the sets are ordinary PNG sheets with the game's `tile_config.json`.
@@ -58,10 +76,12 @@ tools/tilegen/terrain.py    ground: walkways, roads, floors, grass, water, rock,
 tools/tilegen/walls.py      walls (16 joined shapes), glass walls, doors (open, shut, locked), windows
 tools/tilegen/furniture.py  every piece of furniture the game places
 tools/tilegen/props.py      the new world objects and grounds
+tools/tilegen/furniture2.py the business and home furniture and floors, three variants each
 tools/tilegen/items.py      item icons
+tools/tilegen/goods.py      shop goods icons
 tools/tilegen/catalog.py    every id with its builder and variants
 tools/tilegen/bake.py       bake to sets/<theme> (cached per sprite in .cache/)
-tools/tilegen/qa.py         checks T1-T8
+tools/tilegen/qa.py         checks T1-T9
 tools/tilegen/sheets.py     review sheets and the random sample
 tools/sync_to_game.sh       copy sets into godot-spike/gfx/tiles_<theme>
 docs/ART_DIRECTION.md, docs/EXTENDING.md

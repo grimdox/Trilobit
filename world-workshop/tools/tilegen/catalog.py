@@ -5,6 +5,7 @@ import terrain as T
 import walls as W
 import furniture as F
 import props as P
+import furniture2 as F2
 
 # id -> (builder(theme, rng, variant), variants, kind)   kind: 'ground' (wraps, opaque) or 'object' (drawn over a floor)
 CATALOG = {}
@@ -66,6 +67,14 @@ for fid, f in F.BUILDERS.items():
     _o(fid, (lambda ff: lambda th, r, v: ff(th, r))(f), 2 if fid in ('f_crate_c', 'f_dumpster') else 1)
 for pid, f in P.BUILDERS.items():
     _o(pid, (lambda ff: lambda th, r, v: ff(th, r))(f), 1)
+
+# the business and home furniture and floors (furniture2.py): three variants each
+for fid, f in F2.FLOORS.items():
+    _g('t_trl_' + fid, f, F2.VARIANTS)
+for fid, f in F2.FURN.items():
+    _o('f_trl_' + fid, f, F2.VARIANTS)
+for fid, f in F2.EXTRA.items():
+    _o('f_trl_' + fid, f, 1)
 
 NEW_IDS = sorted(set(P.BUILDERS) | set(P.GROUND) | {'t_door_closed', 't_door_closed.v', 't_window_broken'})
 

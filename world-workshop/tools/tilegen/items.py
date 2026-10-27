@@ -661,7 +661,11 @@ def icon(item):
     n = item['id']
     tags = item.get('tags', [])
     t = piece()
-    if n.startswith('trl_food_') and n[9:] in FOODS:
+    if n.startswith('trl_good_'):
+        import goods
+        if not goods.g(n[9:], t):
+            box(t, 'kraft')
+    elif n.startswith('trl_food_') and n[9:] in FOODS:
         FOODS[n[9:]](t)
     elif n.startswith('trl_ammo_'):
         p = n.split('_')

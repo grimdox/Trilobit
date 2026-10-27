@@ -51,6 +51,31 @@ const DARK := Color(0.38, 0.4, 0.55)
 func tile() -> int:
 	return TILE
 
+## the room a furnished cell belongs to: the lowest cell of the run of special floors and furniture it joins (walls
+## bound it), found once and remembered.  Rooms pick their sprite variants by it.
+var _room_key := {}
+func _room_of(c: int) -> int:
+	if _room_key.has(c):
+		return int(_room_key[c])
+	var tiles = game.city.tiles
+	var n: int = tiles.size()
+	var seen := {c: true}
+	var todo := [c]
+	var lo := c
+	var i := 0
+	while i < todo.size() and i < 4000:
+		var k: int = todo[i]
+		i += 1
+		lo = mini(lo, k)
+		for d in [1, -1, game.size, -game.size]:
+			var m: int = k + d
+			if m >= 0 and m < n and not seen.has(m) and int(tiles[m]) >= CG.EXTRA0:
+				seen[m] = true
+				todo.append(m)
+	for k in seen:
+		_room_key[k] = lo
+	return lo
+
 func _blit(id: String, pos: Vector2, mod: Color = Color.WHITE) -> bool:
 	if id.begins_with("icon:"):
 		if not pd.has(id):
@@ -464,13 +489,15 @@ func _draw() -> void:
 				draw_rect(Rect2(pos + Vector2(6, 6) * S, Vector2(T - 12 * S, T - 12 * S)), Color(0.5, 0.36, 0.22) * mod)
 				draw_circle(pos + Vector2(T - 10 * S, T * 0.5), 2.2 * S, Color(0.9, 0.8, 0.4) * mod)
 			elif t >= CG.EXTRA0:
+				# one variant of every piece and floor per room, so a cafe's chairs and floor match
+				var vk: int = _room_of(c)
 				if t >= CG.EXTRA0 + 9:      # furniture stands on a floor
 					var under_t: int = game.city.under[c] if c < game.city.under.size() else 3
 					if under_t >= CG.EXTRA0:
-						_blit(tileset.pick(String(CG.TILE_SPRITE.get(under_t, "t_floor")), c), pos, mod)
+						_blit(tileset.pick(String(CG.TILE_SPRITE.get(under_t, "t_floor")), vk), pos, mod)
 					else:
 						_blit(tileset.pick(String(TERRAIN.get(under_t, "t_floor")), c), pos, mod)
-				if not _blit(tileset.pick(String(CG.TILE_SPRITE.get(t, "")), c), pos, mod):
+				if not _blit(tileset.pick(String(CG.TILE_SPRITE.get(t, "")), vk), pos, mod):
 					draw_rect(Rect2(pos + Vector2(4, 4) * S, Vector2(T - 8 * S, T - 8 * S)), Color(0.5, 0.4, 0.25) * mod)
 			else:
 				_cell_art(t, c, wx, wy, pos, mod, c < s2)

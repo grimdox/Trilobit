@@ -106,6 +106,8 @@ def shade_map(t, mats):
     inner = np.zeros((N, N), bool)
     for dy, dx in ((0, 1), (1, 0)):
         inner |= _edge(line, dy, dx, wrap) & t.obj & ~line
+    # not on parts too thin to carry it (a rail, a staff): there the rim would be all there is
+    inner &= ~_edge(line, 0, -1, wrap) & ~_edge(line, -1, 0, wrap)
     shade = np.where(inner & (rim > 0.5) & (shade <= 3), 6, shade)
     shade = np.where(line, 0, shade)
     # glow: banded by distance from the emissive edge

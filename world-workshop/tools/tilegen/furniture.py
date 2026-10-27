@@ -36,14 +36,14 @@ def legs(t, x0, y0, x1, y1, mat='trim', r=1.6, h=4):
         t.slab(Tile.disk_mask(x, y, r), mat, h, bevel=0.4)
 
 
-def finish(t, theme, rng, mask=None, shadow=True):
+def finish(t, theme, rng, mask=None, shadow=True, cells=4, amount=1.0):
     st = style(theme)
     o = t.obj if mask is None else mask
     if st['grime'] > 0.2:
-        t.mark(o & blotches(rng.int(0, 1 << 20), st['grime'] * 0.6, cells=4) & ~t.glow, -1)
+        t.mark(o & blotches(rng.int(0, 1 << 20), st['grime'] * 0.6 * amount, cells=cells) & ~t.glow, -1)
     if st['rust'] > 0.3:
         mt = np.isin(t.m, ['steel', 'dark_steel', 'body2', 'trim', 'chrome'])
-        t.paint(o & mt & blotches(rng.int(0, 1 << 20), st['rust'] * 0.35, cells=4) & ~t.glow, 'rust')
+        t.paint(o & mt & blotches(rng.int(0, 1 << 20), st['rust'] * 0.35 * amount, cells=cells) & ~t.glow, 'rust')
     if st['wear'] > 0.6:
         c = cracks(rng.int(0, 1 << 20), 1, 8, region=o) & o & ~t.glow
         t.mark(c, -1)
