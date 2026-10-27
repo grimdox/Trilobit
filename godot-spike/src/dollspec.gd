@@ -1,8 +1,9 @@
 extends RefCounted
 ## What each person looks like: the paper-doll layers drawn over the base sprite, and the weapon in hand.
 ## Everything shown is real equipment or a real implant (the player) or follows from faction and role (everyone else).
-const IMPLANT_LAYER := {"cortex": "imp_cortex", "optics": "imp_optics", "thermal": "imp_thermal", "jets": "imp_jets", "reflex": "imp_reflex",
-	"synapse": "imp_synapse", "dermal": "imp_dermal", "mantis": "imp_mantis", "legs": "imp_legs", "smartlink": "imp_smartlink", "heart": "imp_heart", "grip": "imp_grip"}
+## the doll art for a fitted implant is chosen by the body part it goes in (the art predates the catalogue)
+const PART_LAYER := {"head": "imp_cortex", "eyes": "imp_optics", "spine": "imp_reflex", "chest": "imp_heart", "dermal": "imp_dermal", "arms": "imp_mantis",
+	"hands": "imp_smartlink", "legs": "imp_legs"}
 # draw order: back pack, outfit, body armor, limb armor, head, implants
 const ARMOR_LAYER := {"trl_helmet": "helmet_ball", "trl_visor": "visor", "trl_helm_tac": "helm_tac", "trl_balaclava": "balaclava",
 	"trl_vest": "vest", "trl_vest_heavy": "vest_heavy", "trl_vest_corp": "vest_corp", "trl_jacket": "jacket", "trl_coat": "coat",
@@ -189,11 +190,15 @@ static func for_player(g) -> Dictionary:
 		var l2: String = ARMOR_LAYER.get(a.id(), "")
 		if l2 != "":
 			layers.append(l2)
-	for id in IMPLANT_LAYER:
-		if g.has_implant(id):
-			if id == "mantis" and g.wield != null:
-				continue
-			layers.append(IMPLANT_LAYER[id])
+	var shown := {}
+	for id in g.implants:
+		if not g.has_implant(String(id)):
+			continue
+		var part: String = String(g.IMP.get_def(String(id)).get("part", ""))
+		if part == "" or shown.has(part) or (part == "arms" and g.wield != null):
+			continue
+		shown[part] = true
+		layers.append(PART_LAYER[part])
 	# back and holster first, then the rest in the order worn, so a vest sits over a coat
 	layers.sort_custom(func(a, b): return _rank(a) < _rank(b))
 	var lk: Dictionary = load("res://src/creation.gd").look_of(g.app)      # loaded here, not preloaded: creation.gd reads this file's colour tables

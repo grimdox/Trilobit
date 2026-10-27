@@ -936,9 +936,17 @@ func _implant_list(c: CanvasItem, x: float, maxw: float, t: float) -> void:
 			if not game.has_implant(d["id"]):
 				status = "grade %d   OFFLINE - the %s is disabled" % [int(d.get("grade", 1)), game.BODY.PART_GROUP.get(d["part"], "limb")]
 			elif d.has("armor"):
-				status += "   plating %d/%d" % [int(game.imp_dur.get(d["id"], int(d["dur"]))), int(d["dur"])]
+				status += "   wear %d/%d" % [int(game.imp_dur.get(d["id"], int(d["dur"]))), int(d["dur"])]
 		else:
-			status += "in your pack  -  Enter fits it"
-			col = Color(0.5, 1.0, 0.7)
+			var lacks: Array = IMP.missing(d, game.base_lvl)
+			if lacks.is_empty():
+				status += "in your pack  -  Enter fits it"
+				col = Color(0.5, 1.0, 0.7)
+			else:
+				var bits: Array = []
+				for m in lacks:
+					bits.append("%s %d" % [IMP.skill_name(String(m["skill"])), int(m["need"])])
+				status += "needs " + ", ".join(bits)
+				col = Color(1.0, 0.5, 0.45)
 		_fit_txt(c, status, Vector2(tx, r.position.y + 48.0), 16, col, r.size.x - 82.0)
 		_fit_txt(c, String(d["desc"]), Vector2(tx, r.position.y + 72.0), 15, Color(0.7, 0.82, 0.92), r.size.x - 82.0)

@@ -84,6 +84,27 @@ func setup(game) -> void:
 			look[i] = ["coat", "imp_optics"]
 
 ## a venue's keeper stands at the counter, altar or desk for good, in the right clothes
+## what the implant seller i offers: a cyberdoc office (or a lone ripperdoc) a handful of Basic and Improved implants, a store its half of the body, by the district's wealth
+func ripper_stock(i: int) -> Array:
+	var v: Dictionary = venue_of.get(i, {})
+	var kind: String = String(v.get("kind", "cyberdoc"))
+	var cell: int = g.sim.pos[i]
+	var wealth: int = 0 if g.z_of(cell) < 0 else g.district_of(cell)
+	if v.is_empty() and g.z_of(cell) > 0:
+		wealth = 2                                           # the tower clinic
+	return g.IMP.stock(kind, String(v.get("style", "")), wealth, cell)
+
+## yen to repair every fitted implant: a quarter of its price at 100% wear, in proportion to the wear
+func repair_cost() -> int:
+	var t := 0
+	for id in g.implants:
+		if not g.implants[id]:
+			continue
+		var d: Dictionary = g.IMP.get_def(String(id))
+		if not d.is_empty():
+			t += g.IMP.repair_cost(d, int(g.imp_dur.get(id, g.IMP.dur(d))))
+	return t
+
 func _keeper(i: int, v: Dictionary) -> void:
 	var r := COOK
 	var outfit: Array = ["chef"]
@@ -91,7 +112,7 @@ func _keeper(i: int, v: Dictionary) -> void:
 		"grocery":
 			r = GROCER
 			outfit = ["overalls"]
-		"implant":
+		"implant", "cyberdoc":
 			r = RIPPER
 			outfit = ["suit", "imp_optics", "imp_cortex", "imp_reflex"] if int(v["tier"]) >= 1 else ["jacket_5", "imp_optics", "imp_mantis"]
 		"clinic":
@@ -284,14 +305,18 @@ func menu_for(i: int) -> Dictionary:
 			for l in g.BODY.LIMBS:
 				if int(g.body.hp[l]) < int(g.body.mx[l]):
 					wrecked += 1
-			if wrecked > 0 or g.armor_status()["left"] < g.armor_status()["max"]:
+			if wrecked > 0:
 				var mc: int = 90 + 70 * wrecked
-				m["options"].append({"label": "Rebuild: every limb to 70%%, replate implant armor  ¥%d" % mc, "op": "mend", "arg": mc})
+				m["options"].append({"label": "Rebuild: every limb to 70%%  ¥%d" % mc, "op": "mend", "arg": mc})
 			var under: bool = cheap
-			for d in g.IMP.ALL:
-				if d["live"] and not g.implants.get(d["id"], false) and not g.carries_id("trl_imp_" + String(d["id"])):
-					var pr: int = g.IMP.price(d["id"], under)
-					m["options"].append({"label": "%s  ¥%d  (%s)" % [d["name"], pr, d["desc"]], "op": "implant", "arg": [d["id"], pr]})
+			for iid in ripper_stock(i):
+				var d: Dictionary = g.IMP.get_def(String(iid))
+				if not g.implants.get(iid, false) and not g.carries_id("trl_imp_" + String(iid)):
+					var pr: int = g.IMP.price(iid, under)
+					m["options"].append({"label": "%s  ¥%d  (%s)" % [d["name"], pr, d["desc"]], "op": "implant", "arg": [iid, pr]})
+			var rep: int = repair_cost()
+			if rep > 0:
+				m["options"].append({"label": "Repair worn implants  ¥%d" % rep, "op": "repair", "arg": rep})
 		COOK:
 			var v: Dictionary = venue_of.get(i, {})
 			var st: Dictionary = VN.restaurant_style(String(v.get("style", "ramen")))
@@ -583,9 +608,22 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 				return m
 			g.yen -= mcost
 			g.body.mend_to(0.7)
-			g.imp_dur.clear()
-			g.say("Hours under the lamp.  Limbs rebuilt, implant plating replaced.")
+			g.say("Hours under the lamp.  Limbs rebuilt.")
 			m["text"] = ["\"Good as used.\""]
+			m["options"] = [{"label": "Leave", "op": "close", "arg": null}]
+			return m
+		"repair":
+			var rcost: int = repair_cost()
+			if rcost <= 0:
+				g.say("Nothing of yours needs repairing.")
+				return m
+			if g.yen < rcost:
+				g.say("You can't afford the repairs (¥%d)." % rcost)
+				return m
+			g.yen -= rcost
+			g.imp_dur.clear()
+			g.say("The implants are stripped, re-seated and tested (¥%d)." % rcost)
+			m["text"] = ["\"Good as new.  Almost.\""]
 			m["options"] = [{"label": "Leave", "op": "close", "arg": null}]
 			return m
 		"job":

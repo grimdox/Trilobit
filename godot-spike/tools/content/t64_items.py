@@ -579,16 +579,19 @@ IMP_COL = {'cortex': MG, 'optics': CY, 'thermal': '#ffb54a', 'jets': '#ff7a3a', 
            'mantis': '#c8d0da', 'smartlink': CY, 'grip': '#7be0a0', 'legs': '#9aa6b4'}
 
 
+IMP_PART_KEY = {'head': 'cortex', 'eyes': 'optics', 'spine': 'reflex', 'chest': 'heart', 'dermal': 'dermal', 'arms': 'mantis', 'hands': 'smartlink', 'legs': 'legs'}
+
+
 def implant_icon(a, it):
     """a sealed implant module: graphite casing, chrome edge, a coloured status light and etched traces, a different mark per implant"""
-    c = IMP_COL.get(it['implant'], CY)
+    k = IMP_PART_KEY.get(it.get('part'), it['implant'])          # one look per body part (the catalogue's implants share their part's drawing, each with its own marks)
+    c = IMP_COL.get(k, CY)
     rr(a, 10, 14, 44, 36, '#2c323c', 5, 4, strength=0.8, spec=0.8, grain=0.2, seed=seed(it['id']))
     a.shade(a.rrect(10, 14, 44, 7, 3), '#aeb6c0', bevel=2, strength=0.3, spec=0.9)
     for i in range(4):
         a.shade(a.rect(16, 27 + i * 5, 22 - (i % 2) * 6, 1.4), '#151a22', bevel=0.4)
     led(a, 46, 36, c, 2.0)
     led(a, 46, 43, c, 1.0)
-    k = it['implant']
     if k in ('optics', 'thermal'):
         el(a, 32, 36, 6, 6, '#12161c', 2)
         a.shade(a.ellipse(32, 36, 2.6), c, bevel=1.2, spec=0.8, emit=0.8)

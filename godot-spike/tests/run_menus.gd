@@ -14,6 +14,7 @@ func key(m, k: int) -> void:
 	m.screen_key(k)
 
 func _initialize() -> void:
+	preload("res://tests/legacy_implants.gd").install()
 	var m = MainScript.new()
 	m.save_prefix = "user://test_save_"
 	m.settings_path = "user://test_settings.json"

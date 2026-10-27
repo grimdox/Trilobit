@@ -945,6 +945,12 @@ func sees_cell(c: int) -> bool:
 
 ## the effective level of one of your skills: base level plus the bonus from its governing attributes
 func lvl(id: String) -> int:
+	if implants.is_empty():
+		return SK.level(attrs, skills, id)
+	return maxi(0, SK.level(attrs, skills, id) + IMP.skill_bonus(implants, id, _imp_active))
+
+## a skill level without the implants (what fitting an implant asks for)
+func base_lvl(id: String) -> int:
 	return SK.level(attrs, skills, id)
 
 ## an NPC's effective skill (attributes and skills come from faction and person index; see skills.gd)
@@ -4562,6 +4568,13 @@ func act_install_implant(it) -> bool:
 	if implants.get(id, false):
 		say("You already have the %s fitted." % it.def["name"])
 		return false
+	var need: Array = IMP.missing(IMP.get_def(id), base_lvl)
+	if not need.is_empty():
+		var bits: Array = []
+		for m in need:
+			bits.append("%s %d (you have %d)" % [IMP.skill_name(String(m["skill"])), int(m["need"]), int(m["have"])])
+		say("You can't fit the %s yet.  It needs %s." % [it.def["name"], ", ".join(bits)])
+		return false
 	if inv.find(it).is_empty() or not inv.remove(it):
 		return false
 	implants[id] = true
@@ -5544,7 +5557,7 @@ func power_install(id: String) -> void:
 	if d.is_empty():
 		return
 	var cap: float = power_cap()
-	power = minf(cap, power_left() + PW.draw_of(d) * PW.FULL_HOURS) if power >= 0.0 else -1.0
+	power = minf(cap, power_left() + PW.battery_of(d)) if power >= 0.0 else -1.0       # (a battery comes charged)
 	power_state = 0
 
 ## taking an implant out takes its share of the charge with it
@@ -5554,7 +5567,7 @@ func power_uninstall(id: String) -> void:
 		return
 	var cap: float = power_cap()
 	if power >= 0.0:
-		power = clampf(power_left() - PW.draw_of(d) * PW.FULL_HOURS, 0.0, cap)
+		power = clampf(power_left() - PW.battery_of(d), 0.0, cap)
 	power_state = 0
 
 ## the district of a cell, 0 lower .. 2 upper (the price of power follows it)

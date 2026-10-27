@@ -78,6 +78,22 @@ func run() -> Array:
 			gov_booths += nterm
 	check.call("the city has at least 25 labor centers with mission booths (%d centers, %d booths)" % [labor, labor_booths], labor >= 25 and labor_booths >= labor * 3)
 	check.call("none of them stands in a rich district (%d)" % labor_rich, labor_rich == 0)
+	var docs := 0
+	var doc_w := [0, 0, 0]
+	var st_senses := 0
+	var st_body := 0
+	for bz in c.businesses:
+		if bz["type"] == "cyberdoc":
+			docs += 1
+			doc_w[c.wealth_at(int(bz["y0"]) * c.size + int(bz["x0"]))] += 1
+	for v in c.venues:
+		if v["kind"] == "implant":
+			if v["style"] == "senses":
+				st_senses += 1
+			elif v["style"] == "body":
+				st_body += 1
+	check.call("the city has at least 12 Cyberdoc Offices spread through the districts (%d: %s by district)" % [docs, str(doc_w)], docs >= 12 and doc_w.filter(func(n): return n > 0).size() >= 2)
+	check.call("and both kinds of implant store (eyes/spine/head %d, the rest %d)" % [st_senses, st_body], st_senses >= 1 and st_body >= 1)
 	check.call("the government offices and police stations have booths too (%d buildings, %d booths)" % [gov, gov_booths], gov >= 1 and gov_booths >= gov)
 	# buildings are smaller and separated by 1-2 tile alleys, so the footprint share is a little lower than with big blocks but there are twice as many of them
 	check.call("and is more jam-packed: %d buildings (it was 344), %.1f%% of it under a roof" % [c.buildings, 100.0 * share], share > 0.18 and c.buildings > 600)

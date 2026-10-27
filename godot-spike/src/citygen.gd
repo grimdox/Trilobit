@@ -1338,7 +1338,7 @@ func _subdivide(x0: int, y0: int, x1: int, y1: int, depth: int) -> void:
 		_subdivide(x0, y0, x1, cut2 - 1, depth + 1)
 		_subdivide(x0, cut2 + alley, x1, y1, depth + 1)
 
-const LEGACY_TYPE := {"restaurant": "restaurant", "grocery": "grocery", "implant": "implant_shop", "clinic": "clinic", "church": "church", "temple": "shrine"}
+const LEGACY_TYPE := {"restaurant": "restaurant", "grocery": "grocery", "implant": "implant_shop", "cyberdoc": "cyberdoc", "clinic": "clinic", "church": "church", "temple": "shrine"}
 
 ## a small building that is a business (shop, bar, office-counter, gym, ...) instead of a plain mid-rise: decided by the district kind and what fits
 func _leaf_business(x0: int, y0: int, x1: int, y1: int) -> bool:
@@ -1357,6 +1357,10 @@ func _leaf_business(x0: int, y0: int, x1: int, y1: int) -> bool:
 	_pick_wealth = _plot_wealth(x0, y0, x1, y1)
 	if forced == "" and cur_zone != "ind" and _pick_wealth <= 1 and int(biz_count.get("labor_center", 0)) < LABOR_MIN and not BZ.fitting_side("labor_center", w, h, side).is_empty() and rng.randf() < 0.3:
 		return _stamp_business("labor_center", x0, y0, x1, y1, side) != null     # (the quota of labor centers: taken by plots in the middle and lower districts that have room)
+	if forced == "" and cur_zone != "ind" and int(biz_count.get("cyberdoc", 0)) < _cyberdoc_min() and not BZ.fitting_side("cyberdoc", w, h, side).is_empty() and rng.randf() < 0.25:
+		return _stamp_business("cyberdoc", x0, y0, x1, y1, side) != null         # (the quota of cyberdoc offices: any district that has a plot with room)
+	if forced == "implant_shop" and rng.randf() < 0.5:
+		forced = "implant_body"                                                   # (the two implant stores: eyes/spine/head, and the rest of the body)
 	var id := forced if forced != "" and not BZ.fitting_side(forced, w, h, side).is_empty() else _pick_business(w, h, side)
 	if id == "":
 		return false
@@ -1375,6 +1379,10 @@ func _plot_wealth(x0: int, y0: int, x1: int, y1: int) -> int:
 			m = maxi(m, wealth_at(wy * size + wx))
 	return m
 
+const CYBERDOC_MIN := 12                   # cyberdoc offices the island city (1536 tiles a side) has at least, spread through all districts; smaller cities scale with their area (at least 3)
+
+func _cyberdoc_min() -> int:
+	return clampi(int(float(CYBERDOC_MIN) * float(size) * float(size) / (1536.0 * 1536.0)), 3, CYBERDOC_MIN)
 const LABOR_MIN := 25                      # labor centers every city has at least (the middle and lower districts)
 
 func _pick_business(w: int, h: int, side: int, zones_only: String = "") -> String:
@@ -1400,6 +1408,8 @@ func _pick_business(w: int, h: int, side: int, zones_only: String = "") -> Strin
 				"res": wt *= (3.0 if tz == "any" else (1.0 if tz == "mid" else (0.6 if tz == "edge" else 0.1)))
 		var have: int = int(biz_count.get(id, 0))
 		wt *= 5.0 if have == 0 else (2.0 if have < 3 else 1.0)
+		if id == "cyberdoc" and have < _cyberdoc_min():
+			wt *= 14.0                                     # (picked far more often until the city has CYBERDOC_MIN of them)
 		if id == "labor_center" and have < LABOR_MIN:
 			wt *= 14.0                                     # (every city has at least LABOR_MIN labor centers: they are picked far more often until it does)
 		weights.append([id, wt])

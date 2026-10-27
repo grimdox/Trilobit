@@ -6711,171 +6711,1011 @@
   }
  },
  {
-  "id": "trl_imp_cortex",
-  "name": "Neural Link",
-  "desc": "Wireless interface and skull lattice: +4% to hit, faster aim, 1 armor on the head.  Fits the head.",
+  "id": "trl_imp_x101",
+  "name": "Gutterline Trilobit",
+  "desc": "Basic grade: Networking +1, armor 1, 2 nanohack slots, draws 0.5 kJ/h.  Fits the head.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
-  "price": 4200,
+  "price": 10000,
   "tags": [
    "implant"
   ],
-  "implant": "cortex",
+  "implant": "x101",
   "part": "head"
  },
  {
-  "id": "trl_imp_optics",
-  "name": "Optic Suite",
-  "desc": "Ranging overlay: +2% to hit, +5% more at five or more tiles.  Fits the eyes.",
+  "id": "trl_imp_x102",
+  "name": "Kowloon Surplus Trilobit",
+  "desc": "Basic grade: Analysis +1, armor 1, 2 nanohack slots, draws 0.5 kJ/h.  Fits the head.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
-  "price": 1800,
+  "price": 10400,
   "tags": [
    "implant"
   ],
-  "implant": "optics",
+  "implant": "x102",
+  "part": "head"
+ },
+ {
+  "id": "trl_imp_x103",
+  "name": "Rustbelt Cyber Trilobit",
+  "desc": "Basic grade: Implementation +1, armor 1, 2 nanohack slots, draws 0.5 kJ/h.  Fits the head.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 10800,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x103",
+  "part": "head"
+ },
+ {
+  "id": "trl_imp_x104",
+  "name": "Backalley Works Trilobit",
+  "desc": "Basic grade: Research +1, armor 1, 2 nanohack slots, draws 0.5 kJ/h.  Fits the head.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 11200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x104",
+  "part": "head"
+ },
+ {
+  "id": "trl_imp_x105",
+  "name": "Gutterline Optic",
+  "desc": "Basic grade: Streetwise +1, armor 1, draws 0.5 kJ/h.  Fits the eyes.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 12900,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x105",
   "part": "eyes"
  },
  {
-  "id": "trl_imp_thermal",
-  "name": "Thermal Vision",
-  "desc": "Warm bodies stand out of cover and smoke: +3% to hit.  Fits the eyes.",
+  "id": "trl_imp_x106",
+  "name": "Kowloon Surplus Lens",
+  "desc": "Basic grade: Analysis +1, armor 1, draws 0.5 kJ/h.  Fits the eyes.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
-  "price": 2600,
+  "price": 13400,
   "tags": [
    "implant"
   ],
-  "implant": "thermal",
+  "implant": "x106",
   "part": "eyes"
  },
  {
-  "id": "trl_imp_jets",
-  "name": "Dorsal Jump Jets",
-  "desc": "Short flight, no falling damage while fuel lasts.  Fits the spine.",
+  "id": "trl_imp_x107",
+  "name": "Rustbelt Cyber Scope",
+  "desc": "Basic grade: armor 1, draws 0.5 kJ/h.  Fits the eyes.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
-  "price": 3000,
+  "price": 5800,
   "tags": [
    "implant"
   ],
-  "implant": "jets",
+  "implant": "x107",
+  "part": "eyes"
+ },
+ {
+  "id": "trl_imp_x108",
+  "name": "Backalley Works Reflex Wiring",
+  "desc": "Basic grade: Melee +1, armor 2, draws 0.5 kJ/h.  Fits the spine.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 12900,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x108",
   "part": "spine"
  },
  {
-  "id": "trl_imp_reflex",
-  "name": "Reflex Wires",
-  "desc": "Grade 3 wiring: 14% to dodge a bullet, 10% to dodge a blade, quicker aim and strikes.  Fits the spine.",
+  "id": "trl_imp_x109",
+  "name": "Gutterline Balance Rod",
+  "desc": "Basic grade: Dodge +1, armor 1, draws 0.5 kJ/h.  Fits the spine.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
-  "price": 6200,
+  "price": 13400,
   "tags": [
    "implant"
   ],
-  "implant": "reflex",
+  "implant": "x109",
   "part": "spine"
  },
  {
-  "id": "trl_imp_synapse",
-  "name": "Synapse Accelerator",
-  "desc": "Military grade 4: time slows.  26% to dodge a bullet, 18% to dodge a blade, much faster strikes.  Fits the spine.",
+  "id": "trl_imp_x110",
+  "name": "Kowloon Surplus Nerve Weave",
+  "desc": "Basic grade: armor 2, draws 0.5 kJ/h.  Fits the spine.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
-  "price": 11000,
+  "price": 5800,
   "tags": [
    "implant"
   ],
-  "implant": "synapse",
+  "implant": "x110",
   "part": "spine"
  },
  {
-  "id": "trl_imp_dermal",
-  "name": "Dermal Plating",
-  "desc": "Subdermal plates over the whole body: 2 armor everywhere, until the plating wears through.  Fits the dermal.",
+  "id": "trl_imp_x111",
+  "name": "Rustbelt Cyber Lung Pack",
+  "desc": "Basic grade: Manual +1, armor 1, stores 672 kJ, draws 0.5 kJ/h.  Fits the chest.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
-  "price": 2200,
+  "price": 12900,
   "tags": [
    "implant"
   ],
-  "implant": "dermal",
-  "part": "dermal"
- },
- {
-  "id": "trl_imp_heart",
-  "name": "Cardiac Booster",
-  "desc": "Bigger stamina reserve.  Fits the chest.",
-  "weight_g": 0,
-  "volume_ml": 0,
-  "length_mm": 0,
-  "price": 2800,
-  "tags": [
-   "implant"
-  ],
-  "implant": "heart",
+  "implant": "x111",
   "part": "chest"
  },
  {
-  "id": "trl_imp_mantis",
-  "name": "Mantis Blades",
-  "desc": "Forearm blades unfold when your hands are empty: fast, accurate, cannot be knocked away.  1 armor on the arms.  Fits the arms.",
+  "id": "trl_imp_x112",
+  "name": "Backalley Works Heart Pump",
+  "desc": "Basic grade: Grit +1, armor 2, stores 672 kJ, draws 0.5 kJ/h.  Fits the chest.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
-  "price": 3400,
+  "price": 13400,
   "tags": [
    "implant"
   ],
-  "implant": "mantis",
+  "implant": "x112",
+  "part": "chest"
+ },
+ {
+  "id": "trl_imp_x113",
+  "name": "Gutterline Reserve Cell",
+  "desc": "Basic grade: armor 1, stores 2016 kJ, draws 0.5 kJ/h.  Fits the chest.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 20300,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x113",
+  "part": "chest"
+ },
+ {
+  "id": "trl_imp_x114",
+  "name": "Kowloon Surplus Dermal Plate",
+  "desc": "Basic grade: Negotiation -1, armor 2, draws 0.5 kJ/h.  Fits the dermal layer.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 5500,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x114",
+  "part": "dermal"
+ },
+ {
+  "id": "trl_imp_x115",
+  "name": "Rustbelt Cyber Skin Weave",
+  "desc": "Basic grade: Negotiation -1, armor 2, draws 0.5 kJ/h.  Fits the dermal layer.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 5700,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x115",
+  "part": "dermal"
+ },
+ {
+  "id": "trl_imp_x116",
+  "name": "Backalley Works Forearm Frame",
+  "desc": "Basic grade: armor 2, draws 0.5 kJ/h.  Fits the arms.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 5400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x116",
   "part": "arms"
  },
  {
-  "id": "trl_imp_smartlink",
-  "name": "Smartlink Palm",
-  "desc": "Gun-to-hand link: +8% to hit with any firearm.  Fits the hands.",
+  "id": "trl_imp_x117",
+  "name": "Gutterline Strike Servo",
+  "desc": "Basic grade: Melee +1, armor 1, draws 0.5 kJ/h.  Fits the arms.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
-  "price": 1500,
+  "price": 13400,
   "tags": [
    "implant"
   ],
-  "implant": "smartlink",
+  "implant": "x117",
+  "part": "arms"
+ },
+ {
+  "id": "trl_imp_x118",
+  "name": "Kowloon Surplus Haul Cabling",
+  "desc": "Basic grade: Unarmed +1, armor 2, draws 0.5 kJ/h.  Fits the arms.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 13900,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x118",
+  "part": "arms"
+ },
+ {
+  "id": "trl_imp_x119",
+  "name": "Rustbelt Cyber Smart Palm",
+  "desc": "Basic grade: armor 1, draws 0.5 kJ/h.  Fits the hands.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 5400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x119",
   "part": "hands"
  },
  {
-  "id": "trl_imp_grip",
-  "name": "Gecko Grip",
-  "desc": "Climb sheer walls.  Fits the hands.",
+  "id": "trl_imp_x120",
+  "name": "Backalley Works Fine-Motor Set",
+  "desc": "Basic grade: Engineering +1, armor 2, draws 0.5 kJ/h.  Fits the hands.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
-  "price": 1700,
+  "price": 13400,
   "tags": [
    "implant"
   ],
-  "implant": "grip",
+  "implant": "x120",
   "part": "hands"
  },
  {
-  "id": "trl_imp_legs",
-  "name": "Leg Actuators",
-  "desc": "Long jumps and softer landings.  1 armor on the legs.  Fits the legs.",
+  "id": "trl_imp_x121",
+  "name": "Gutterline Tool Fingers",
+  "desc": "Basic grade: Artisan +1, armor 1, draws 0.5 kJ/h.  Fits the hands.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
-  "price": 1600,
+  "price": 13900,
   "tags": [
    "implant"
   ],
-  "implant": "legs",
+  "implant": "x121",
+  "part": "hands"
+ },
+ {
+  "id": "trl_imp_x122",
+  "name": "Kowloon Surplus Actuator",
+  "desc": "Basic grade: armor 2, draws 0.5 kJ/h.  Fits the legs.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 5400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x122",
+  "part": "legs"
+ },
+ {
+  "id": "trl_imp_x123",
+  "name": "Rustbelt Cyber Shock Spring",
+  "desc": "Basic grade: Streetwise +1, armor 1, draws 0.5 kJ/h.  Fits the legs.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 13400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x123",
+  "part": "legs"
+ },
+ {
+  "id": "trl_imp_x124",
+  "name": "Backalley Works Sprint Tendons",
+  "desc": "Basic grade: Manual +1, armor 2, draws 0.5 kJ/h.  Fits the legs.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 13900,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x124",
+  "part": "legs"
+ },
+ {
+  "id": "trl_imp_x201",
+  "name": "Halden Medical Trilobit",
+  "desc": "Improved grade: Networking +1, armor 2, 4 nanohack slots, draws 1 kJ/h.  Fits the head.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 24800,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x201",
+  "part": "head"
+ },
+ {
+  "id": "trl_imp_x202",
+  "name": "Sumida-Reyes Trilobit",
+  "desc": "Improved grade: Analysis +1, armor 2, 4 nanohack slots, draws 1 kJ/h.  Fits the head.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 25900,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x202",
+  "part": "head"
+ },
+ {
+  "id": "trl_imp_x203",
+  "name": "Brightwater Biomed Trilobit",
+  "desc": "Improved grade: Implementation +1, armor 2, 4 nanohack slots, draws 1 kJ/h.  Fits the head.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 26900,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x203",
+  "part": "head"
+ },
+ {
+  "id": "trl_imp_x204",
+  "name": "Corvane Trilobit",
+  "desc": "Improved grade: Research +1, armor 2, 4 nanohack slots, draws 1 kJ/h.  Fits the head.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 28000,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x204",
+  "part": "head"
+ },
+ {
+  "id": "trl_imp_x205",
+  "name": "Halden Medical Optic",
+  "desc": "Improved grade: Streetwise +1, armor 2, draws 1 kJ/h.  Fits the eyes.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 30000,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x205",
+  "part": "eyes"
+ },
+ {
+  "id": "trl_imp_x206",
+  "name": "Sumida-Reyes Lens",
+  "desc": "Improved grade: Analysis +1, armor 2, draws 1 kJ/h.  Fits the eyes.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 31200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x206",
+  "part": "eyes"
+ },
+ {
+  "id": "trl_imp_x207",
+  "name": "Brightwater Biomed Scope",
+  "desc": "Improved grade: Ranged +1, armor 2, draws 1 kJ/h.  Fits the eyes.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 32400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x207",
+  "part": "eyes"
+ },
+ {
+  "id": "trl_imp_x208",
+  "name": "Corvane Reflex Wiring",
+  "desc": "Improved grade: Melee +1, armor 3, draws 1 kJ/h.  Fits the spine.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 30000,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x208",
+  "part": "spine"
+ },
+ {
+  "id": "trl_imp_x209",
+  "name": "Halden Medical Balance Rod",
+  "desc": "Improved grade: Dodge +1, armor 2, draws 1 kJ/h.  Fits the spine.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 31200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x209",
+  "part": "spine"
+ },
+ {
+  "id": "trl_imp_x210",
+  "name": "Sumida-Reyes Nerve Weave",
+  "desc": "Improved grade: Unarmed +1, armor 3, draws 1 kJ/h.  Fits the spine.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 32400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x210",
+  "part": "spine"
+ },
+ {
+  "id": "trl_imp_x211",
+  "name": "Brightwater Biomed Lung Pack",
+  "desc": "Improved grade: Manual +1, armor 2, stores 1344 kJ, draws 1 kJ/h.  Fits the chest.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 30000,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x211",
+  "part": "chest"
+ },
+ {
+  "id": "trl_imp_x212",
+  "name": "Corvane Heart Pump",
+  "desc": "Improved grade: Grit +1, armor 3, stores 1344 kJ, draws 1 kJ/h.  Fits the chest.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 31200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x212",
+  "part": "chest"
+ },
+ {
+  "id": "trl_imp_x213",
+  "name": "Halden Medical Reserve Cell",
+  "desc": "Improved grade: armor 2, stores 4032 kJ, draws 1 kJ/h.  Fits the chest.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 46000,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x213",
+  "part": "chest"
+ },
+ {
+  "id": "trl_imp_x214",
+  "name": "Sumida-Reyes Dermal Plate",
+  "desc": "Improved grade: Grit +1, Negotiation -1, armor 3, draws 1 kJ/h.  Fits the dermal layer.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 30600,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x214",
+  "part": "dermal"
+ },
+ {
+  "id": "trl_imp_x215",
+  "name": "Brightwater Biomed Skin Weave",
+  "desc": "Improved grade: Negotiation -1, armor 3, draws 1 kJ/h.  Fits the dermal layer.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 18200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x215",
+  "part": "dermal"
+ },
+ {
+  "id": "trl_imp_x216",
+  "name": "Corvane Forearm Frame",
+  "desc": "Improved grade: Unarmed +1, armor 3, draws 1 kJ/h.  Fits the arms.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 30000,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x216",
+  "part": "arms"
+ },
+ {
+  "id": "trl_imp_x217",
+  "name": "Halden Medical Strike Servo",
+  "desc": "Improved grade: Melee +1, armor 2, draws 1 kJ/h.  Fits the arms.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 31200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x217",
+  "part": "arms"
+ },
+ {
+  "id": "trl_imp_x218",
+  "name": "Sumida-Reyes Haul Cabling",
+  "desc": "Improved grade: Manual +1, armor 3, draws 1 kJ/h.  Fits the arms.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 32400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x218",
+  "part": "arms"
+ },
+ {
+  "id": "trl_imp_x219",
+  "name": "Brightwater Biomed Smart Palm",
+  "desc": "Improved grade: Ranged +1, armor 2, draws 1 kJ/h.  Fits the hands.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 30000,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x219",
+  "part": "hands"
+ },
+ {
+  "id": "trl_imp_x220",
+  "name": "Corvane Fine-Motor Set",
+  "desc": "Improved grade: Engineering +1, armor 3, draws 1 kJ/h.  Fits the hands.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 31200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x220",
+  "part": "hands"
+ },
+ {
+  "id": "trl_imp_x221",
+  "name": "Halden Medical Tool Fingers",
+  "desc": "Improved grade: Artisan +1, armor 2, draws 1 kJ/h.  Fits the hands.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 32400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x221",
+  "part": "hands"
+ },
+ {
+  "id": "trl_imp_x222",
+  "name": "Sumida-Reyes Actuator",
+  "desc": "Improved grade: Dodge +1, armor 3, draws 1 kJ/h.  Fits the legs.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 30000,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x222",
+  "part": "legs"
+ },
+ {
+  "id": "trl_imp_x223",
+  "name": "Brightwater Biomed Shock Spring",
+  "desc": "Improved grade: Streetwise +1, armor 2, draws 1 kJ/h.  Fits the legs.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 31200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x223",
+  "part": "legs"
+ },
+ {
+  "id": "trl_imp_x224",
+  "name": "Corvane Sprint Tendons",
+  "desc": "Improved grade: Manual +1, armor 3, draws 1 kJ/h.  Fits the legs.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 32400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x224",
+  "part": "legs"
+ },
+ {
+  "id": "trl_imp_x301",
+  "name": "Aegis-Tanaka Trilobit",
+  "desc": "Quality grade: Networking +2, armor 2, 6 nanohack slots, draws 2 kJ/h.  Fits the head.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 55900,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x301",
+  "part": "head"
+ },
+ {
+  "id": "trl_imp_x302",
+  "name": "Orlov & Voss Trilobit",
+  "desc": "Quality grade: Analysis +2, armor 2, 6 nanohack slots, draws 2 kJ/h.  Fits the head.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 58300,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x302",
+  "part": "head"
+ },
+ {
+  "id": "trl_imp_x303",
+  "name": "Meridian Cybernetics Trilobit",
+  "desc": "Quality grade: Implementation +2, armor 2, 6 nanohack slots, draws 2 kJ/h.  Fits the head.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 60700,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x303",
+  "part": "head"
+ },
+ {
+  "id": "trl_imp_x304",
+  "name": "Veyra Dynamics Trilobit",
+  "desc": "Quality grade: Research +2, armor 2, 6 nanohack slots, draws 2 kJ/h.  Fits the head.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 63100,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x304",
+  "part": "head"
+ },
+ {
+  "id": "trl_imp_x305",
+  "name": "Aegis-Tanaka Optic",
+  "desc": "Quality grade: Streetwise +1, Research +1, armor 2, draws 2 kJ/h.  Fits the eyes.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 62200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x305",
+  "part": "eyes"
+ },
+ {
+  "id": "trl_imp_x306",
+  "name": "Orlov & Voss Lens",
+  "desc": "Quality grade: Analysis +2, armor 2, draws 2 kJ/h.  Fits the eyes.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 64800,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x306",
+  "part": "eyes"
+ },
+ {
+  "id": "trl_imp_x307",
+  "name": "Meridian Cybernetics Scope",
+  "desc": "Quality grade: Ranged +1, Streetwise +1, armor 2, draws 2 kJ/h.  Fits the eyes.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 67400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x307",
+  "part": "eyes"
+ },
+ {
+  "id": "trl_imp_x308",
+  "name": "Veyra Dynamics Reflex Wiring",
+  "desc": "Quality grade: Melee +2, armor 3, draws 2 kJ/h.  Fits the spine.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 62200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x308",
+  "part": "spine"
+ },
+ {
+  "id": "trl_imp_x309",
+  "name": "Aegis-Tanaka Balance Rod",
+  "desc": "Quality grade: Melee +1, Dodge +1, armor 2, draws 2 kJ/h.  Fits the spine.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 64800,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x309",
+  "part": "spine"
+ },
+ {
+  "id": "trl_imp_x310",
+  "name": "Orlov & Voss Nerve Weave",
+  "desc": "Quality grade: Dodge +2, armor 3, draws 2 kJ/h.  Fits the spine.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 67400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x310",
+  "part": "spine"
+ },
+ {
+  "id": "trl_imp_x311",
+  "name": "Meridian Cybernetics Lung Pack",
+  "desc": "Quality grade: Manual +1, Negotiation +1, armor 2, stores 2688 kJ, draws 2 kJ/h.  Fits the chest.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 62200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x311",
+  "part": "chest"
+ },
+ {
+  "id": "trl_imp_x312",
+  "name": "Veyra Dynamics Heart Pump",
+  "desc": "Quality grade: Manual +2, armor 3, stores 2688 kJ, draws 2 kJ/h.  Fits the chest.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 64800,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x312",
+  "part": "chest"
+ },
+ {
+  "id": "trl_imp_x313",
+  "name": "Aegis-Tanaka Reserve Cell",
+  "desc": "Quality grade: armor 2, stores 8064 kJ, draws 2 kJ/h.  Fits the chest.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 94600,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x313",
+  "part": "chest"
+ },
+ {
+  "id": "trl_imp_x314",
+  "name": "Orlov & Voss Dermal Plate",
+  "desc": "Quality grade: Grit +1, Negotiation -1, armor 4, draws 2 kJ/h.  Fits the dermal layer.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 51500,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x314",
+  "part": "dermal"
+ },
+ {
+  "id": "trl_imp_x315",
+  "name": "Meridian Cybernetics Skin Weave",
+  "desc": "Quality grade: Negotiation -1, armor 4, draws 2 kJ/h.  Fits the dermal layer.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 41000,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x315",
+  "part": "dermal"
+ },
+ {
+  "id": "trl_imp_x316",
+  "name": "Veyra Dynamics Forearm Frame",
+  "desc": "Quality grade: Unarmed +2, armor 3, draws 2 kJ/h.  Fits the arms.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 62200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x316",
+  "part": "arms"
+ },
+ {
+  "id": "trl_imp_x317",
+  "name": "Aegis-Tanaka Strike Servo",
+  "desc": "Quality grade: Melee +1, Manual +1, armor 2, draws 2 kJ/h.  Fits the arms.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 64800,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x317",
+  "part": "arms"
+ },
+ {
+  "id": "trl_imp_x318",
+  "name": "Orlov & Voss Haul Cabling",
+  "desc": "Quality grade: Manual +2, armor 3, draws 2 kJ/h.  Fits the arms.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 67400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x318",
+  "part": "arms"
+ },
+ {
+  "id": "trl_imp_x319",
+  "name": "Meridian Cybernetics Smart Palm",
+  "desc": "Quality grade: Ranged +1, Engineering +1, armor 2, draws 2 kJ/h.  Fits the hands.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 62200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x319",
+  "part": "hands"
+ },
+ {
+  "id": "trl_imp_x320",
+  "name": "Veyra Dynamics Fine-Motor Set",
+  "desc": "Quality grade: Engineering +2, armor 3, draws 2 kJ/h.  Fits the hands.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 64800,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x320",
+  "part": "hands"
+ },
+ {
+  "id": "trl_imp_x321",
+  "name": "Aegis-Tanaka Tool Fingers",
+  "desc": "Quality grade: Artisan +1, Engineering +1, armor 2, draws 2 kJ/h.  Fits the hands.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 67400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x321",
+  "part": "hands"
+ },
+ {
+  "id": "trl_imp_x322",
+  "name": "Orlov & Voss Actuator",
+  "desc": "Quality grade: Dodge +2, armor 3, draws 2 kJ/h.  Fits the legs.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 62200,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x322",
+  "part": "legs"
+ },
+ {
+  "id": "trl_imp_x323",
+  "name": "Meridian Cybernetics Shock Spring",
+  "desc": "Quality grade: Streetwise +1, Grit +1, armor 2, draws 2 kJ/h.  Fits the legs.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 64800,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x323",
+  "part": "legs"
+ },
+ {
+  "id": "trl_imp_x324",
+  "name": "Veyra Dynamics Sprint Tendons",
+  "desc": "Quality grade: Manual +2, armor 3, draws 2 kJ/h.  Fits the legs.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 67400,
+  "tags": [
+   "implant"
+  ],
+  "implant": "x324",
   "part": "legs"
  },
  {

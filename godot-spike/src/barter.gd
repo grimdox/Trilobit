@@ -41,9 +41,9 @@ func _stock(i: int) -> Array:
 		var rv: Dictionary = g.eco.venue_of.get(i, {})
 		var cheap: bool = g.z_of(g.sim.pos[i]) < 0 or (not rv.is_empty() and int(rv["tier"]) == 0)
 		lines.append(["trl_medkit", "trauma patch", 40])
-		for d in g.IMP.ALL:
-			if d["live"] and not g.implants.get(d["id"], false) and not g.carries_id("trl_imp_" + String(d["id"])):
-				lines.append(["trl_imp_" + String(d["id"]), d["name"], g.IMP.price(d["id"], cheap), false])
+		for iid in g.eco.ripper_stock(i):
+			if not g.implants.get(iid, false) and not g.carries_id("trl_imp_" + String(iid)):
+				lines.append(["trl_imp_" + String(iid), g.IMP.get_def(String(iid))["name"], g.IMP.price(iid, cheap), false])
 	elif r == g.eco.DOCTOR:
 		lines.append(["trl_medkit", "trauma patch", 35])
 	var out: Array = []

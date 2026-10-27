@@ -153,6 +153,9 @@ func run() -> Array:
 		if found < 0:
 			g.end_turn()
 		tries += 1
+	var vis_from := func(c: int, t: int) -> bool:               # the shadow-casting view from c really shows t (the cheaper line check can disagree behind glass and corners)
+		g.fov.compute(c % g.size, c / g.size, 18)
+		return g.fov.visible[t] == 1
 	var placed := false
 	if found >= 0:
 		var tc: int = g.sim.pos[found]
@@ -166,7 +169,7 @@ func run() -> Array:
 					if not g.in_bounds(nx, ny):
 						continue
 					var c: int = ny * g.size + nx
-					if g.city.walkable(g.city.tiles[c]) and g.sim.at[c] == -1 and g.veh_at.g(c) == -1 and g.sim._sees(c, tc, 20):
+					if g.city.walkable(g.city.tiles[c]) and g.sim.at[c] == -1 and g.veh_at.g(c) == -1 and g.sim._sees(c, tc, 20) and vis_from.call(c, tc):
 						g.pc = c
 						placed = true
 	check.call("found a target to shoot (turn %d)" % g.turn, found >= 0 and placed)
@@ -185,7 +188,7 @@ func run() -> Array:
 			g.astate[found] = g.HUNTING
 			g.sim.near[found] = 1
 			var tcc: int = g.sim.pos[found]
-			if not g.sim._sees(g.pc, tcc, 20):
+			if not g.sim._sees(g.pc, tcc, 20) or not vis_from.call(g.pc, tcc):
 				for rr in range(3, 9):
 					for ddy in range(-rr, rr + 1):
 						for ddx in range(-rr, rr + 1):
@@ -196,10 +199,11 @@ func run() -> Array:
 							if not g.in_bounds(nx2, ny2):
 								continue
 							var c2: int = ny2 * g.size + nx2
-							if g.city.walkable(g.city.tiles[c2]) and g.sim.at[c2] == -1 and g.veh_at.g(c2) == -1 and g.sim._sees(c2, tcc, 20):
+							if g.city.walkable(g.city.tiles[c2]) and g.sim.at[c2] == -1 and g.veh_at.g(c2) == -1 and g.sim._sees(c2, tcc, 20) and vis_from.call(c2, tcc):
 								g.pc = c2
 								g.last_pc = c2
 								break
+			g.facing = Vector2i(signi(tcc % g.size - g.pc % g.size), signi(tcc / g.size - g.pc / g.size))       # (look at the target: the view is a half circle in front)
 			g.fov.compute(g.pc % g.size, g.pc / g.size, 18)
 		var before: int = gun2.loaded
 		var hp_before: int = g.hpn[found]
@@ -214,6 +218,7 @@ func run() -> Array:
 			if g.hpn[found] <= 0 or g.game_over:
 				break
 			gun2.loaded = int(GP.stats(gun2)["mag"])
+			g.hpn[found] = 400                                   # (an unarmoured target would die after a few volleys: keep it standing for the aiming and launcher checks)
 			var h0: int = g.hpn[found]
 			g.body.mend_to(1.0)
 			g.body.reset()

@@ -2,7 +2,7 @@ extends RefCounted
 ## The businesses of the city: 40 types, each in 3 to 5 versions of different size and quality.
 ## A type is DATA (see TYPES): where it likes to stand (zone), who works there, what fills it.  `stamp` builds one into a rectangle of the map:
 ## walls, a door on the street side (and a glass storefront for shops), a floor, furniture laid out by the type's archetype, and the cells where its
-## people stand.  The six older kinds (restaurant, grocery, implant shop, doctor's office, church, shrine) are drawn by venues.gd and listed here so that
+## people stand.  The older kinds (restaurant, grocery, the implant stores, cyberdoc offices, doctor's office, church, shrine) are drawn by venues.gd and listed here so that
 ## they share the catalogue; everything else is built by the generic builder below.
 ## No furniture here has stats or functions yet: it is scenery (see tools/content/furniture_list).
 const CG = preload("res://src/citygen.gd")
@@ -102,8 +102,12 @@ const TYPES := {
 	# ------------------------------------------------------------------ services
 	"clinic": {"name": "Doctor's office", "cat": "service", "zone": "mid", "w": 8, "role": "vendor", "legacy": "clinic", "jobs": ["doctor", "nurse", "receptionist"],
 		"versions": [[12, 13, 0, "walk-in"], [14, 13, 1, "practice"], [16, 14, 1, "surgery"], [20, 14, 2, "private clinic"]]},
-	"implant_shop": {"name": "Implant shop", "cat": "service", "zone": "core", "w": 6, "role": "vendor", "legacy": "implant", "jobs": ["technician", "surgeon"],
+	"implant_shop": {"name": "Implant store (eyes, spine, head)", "cat": "service", "zone": "core", "w": 4, "role": "vendor", "legacy": "implant", "style": "senses", "jobs": ["technician", "surgeon"],
 		"versions": [[12, 13, 0, "back alley"], [14, 13, 1, "shop"], [18, 14, 2, "boutique"]]},
+	"implant_body": {"name": "Implant store (limbs and frame)", "cat": "service", "zone": "core", "w": 4, "role": "vendor", "legacy": "implant", "style": "body", "jobs": ["technician", "surgeon"],
+		"versions": [[12, 13, 0, "back alley"], [14, 13, 1, "shop"], [18, 14, 2, "boutique"]]},
+	"cyberdoc": {"name": "Cyberdoc Office", "cat": "service", "zone": "any", "w": 7, "role": "vendor", "legacy": "cyberdoc", "jobs": ["cyberdoc", "nurse"],
+		"versions": [[12, 13, 0, "walk-in"], [14, 13, 1, "practice"], [16, 14, 2, "private office"]]},
 	"bank": {"name": "Bank", "cat": "service", "zone": "core", "w": 6, "role": "staff", "jobs": ["teller", "manager", "guard"],
 		"names": ["Hokkai Savings", "First Sakhalin", "Union Trust", "Tsugaru Bank", "Meridian Credit"],
 		"L": {"floor": ["floor_clean", "floor_marble", "floor_marble"], "counter": "teller_window", "cu": 5, "body": "open", "row": "queue_rail", "wall": "deposit_boxes", "front": ["atm", "atm"], "decor": ["vault_door"], "glass": true, "line": true},
@@ -494,7 +498,7 @@ static func stamp(c, id: String, ver: int, x0: int, y0: int, side: int, tier_hin
 
 static func _stamp_legacy(c, id: String, T: Dictionary, V: Array, bx0: int, by0: int, bx1: int, by1: int, side: int) -> Dictionary:
 	var vs_side: int = 0 if side == 0 or side >= 2 else 1
-	var rec: Dictionary = VN.stamp(c, String(T["legacy"]), bx0, by0, bx1, by1, vs_side, 1 if int(V[2]) >= 1 else 0)
+	var rec: Dictionary = VN.stamp(c, String(T["legacy"]), bx0, by0, bx1, by1, vs_side, 1 if int(V[2]) >= 1 else 0, String(T.get("style", "")))
 	var biz := {"type": id, "ver": 0, "tag": String(V[3]), "tier": int(V[2]), "name": rec["name"], "cat": T["cat"], "x0": bx0, "y0": by0, "x1": bx1, "y1": by1,
 		"door": rec["door"], "side": vs_side, "role": T["role"], "jobs": T["jobs"], "staff": [], "keeper": rec["keeper"], "legacy": true}
 	c.businesses.append(biz)

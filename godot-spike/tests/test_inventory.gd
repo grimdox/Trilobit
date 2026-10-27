@@ -7,6 +7,7 @@ const GearScript = preload("res://src/gear_ui.gd")
 const SettingsScript = preload("res://src/settings.gd")
 
 func run() -> Array:
+	preload("res://tests/legacy_implants.gd").install()
 	var cnt: Array = [0, 0]
 	var log: Array = []
 	var check := func(label: String, ok: bool) -> void:
@@ -96,25 +97,39 @@ func run() -> Array:
 	inv = INV.new()
 	g.inv = inv
 	g.implants = {}
-	var imp = g._new_item("trl_imp_optics")
+	var free_eyes: Array = IMP.DATA.ALL.filter(func(d): return d["part"] == "eyes" and d["grade"] == 1 and d.get("req", {}).is_empty())
+	var oid: String = String(free_eyes[0]["id"])
+	var imp = g._new_item("trl_imp_" + oid)
 	inv.stow(imp)
-	check.call("an implant item is carried in the grid and is not equipment", imp != null and imp.def["implant"] == "optics" and not INV.is_equipment(imp))
-	check.call("installing moves it into the body", g.act_install_implant(imp) and g.implants.get("optics", false) and inv.used() == 0)
-	check.call("taking it out brings the item back", g.act_remove_implant("optics") and not g.implants.get("optics", false) and inv.used() == 1 and inv.grid_items()[0].id() == "trl_imp_optics")
+	check.call("an implant item is carried in the grid and is not equipment", imp != null and imp.def["implant"] == oid and not INV.is_equipment(imp))
+	check.call("installing moves it into the body", g.act_install_implant(imp) and g.implants.get(oid, false) and inv.used() == 0)
+	check.call("taking it out brings the item back", g.act_remove_implant(oid) and not g.implants.get(oid, false) and inv.used() == 1 and inv.grid_items()[0].id() == "trl_imp_" + oid)
+	var hard: Array = IMP.DATA.ALL.filter(func(d): return d["grade"] == 3 and d["part"] == "head")
+	var hard_item = g._new_item("trl_imp_" + String(hard[0]["id"]))
+	inv.stow(hard_item)
+	check.call("an implant whose skill requirements you don't meet is refused and stays in the pack", not IMP.missing(hard[0], g.base_lvl).is_empty() and not g.act_install_implant(hard_item) and not g.implants.get(String(hard[0]["id"]), false) and not inv.find(hard_item).is_empty())
+	inv.remove(hard_item)
+	check.call("requirements are read from the data: Grit tier - 1, and the skill an implant raises at bonus + 1", hard[0]["req"].get("grit", 0) == 2 and hard[0]["req"].values().size() >= 1 and IMP.missing(hard[0], func(k): return 99).is_empty() and IMP.missing(hard[0], func(k): return 0).size() == hard[0]["req"].size())
 	var ids_ok := true
-	for dd in IMP.ALL:
+	for dd in IMP.DATA.ALL:
 		if not g.db.defs.has("trl_imp_" + String(dd["id"])) or String(g.db.defs["trl_imp_" + String(dd["id"])]["part"]) != String(dd["part"]):
 			ids_ok = false
 	check.call("every implant in implants.gd has an item with the same part (tools/export_items.py is in step)", ids_ok)
 	# the Dermal layer is its own part, apart from Chest
 	var chest_ids: Array = IMP.for_part("chest").map(func(d): return d["id"])
-	check.call("Dermal is a layer of its own: Dermal Plating is fitted there and no longer in Chest", IMP.get_def("dermal")["part"] == "dermal" and IMP.for_part("dermal").size() == 1 and not chest_ids.has("dermal") and chest_ids.has("heart"))
+	var derm_ids: Array = IMP.DATA.ALL.filter(func(d): return d["part"] == "dermal").map(func(d): return d["id"])
+	check.call("Dermal is a layer of its own: the dermal implants are in it and none are in Chest", derm_ids.size() == 6 and derm_ids.all(func(i): return not chest_ids.has(i)))
 	var gear_d = GearScript.new()
 	gear_d.open(g, null, "implants")
 	gear_d.cur = "s:belt"
-	var dp = g._new_item("trl_imp_dermal")
+	var dp = g._new_item("trl_imp_" + String(derm_ids[0]))
 	g.inv.stow(dp)
 	check.call("on the implants tab the belt spot is the Dermal layer and lists the plating carried", gear_d.cur_part() == "dermal" and gear_d.part_rows("dermal").size() == 1 and gear_d.part_rows("chest").is_empty())
+	var all_ok := true
+	for dd in IMP.DATA.ALL:
+		if int(dd["grade"]) > 3 or not dd["live"] or int(dd["armor"]) < 1 or not dd.has("req") and int(dd["grade"]) > 1:
+			all_ok = false
+	check.call("the catalogue holds only Basic, Improved and Quality implants (no Military or Prototype), each with armor of at least 1", all_ok and IMP.DATA.ALL.size() == 72)
 	g.inv.remove(dp)
 	check.call("the Dermal layer still lives in the chest limb group (a wrecked chest disables it)", g.BODY.PART_GROUP["dermal"] == "chest")
 	# bottles
@@ -219,24 +234,24 @@ func run() -> Array:
 		seen[gear.cur] = true
 	check.call("the highlight walks down the doll and into the grid (%s)" % ",".join(seen.keys()), seen.size() >= 7)
 	# the implants tab
-	var imp2 = g._new_item("trl_imp_cortex")
+	var imp2 = g._new_item("trl_imp_" + oid)
 	inv.stow(imp2)
 	gear.open(g, null, "implants")
-	gear.cur = "s:head"
+	gear.cur = "s:eyes"
 	gear.press()
 	check.call("Enter on a spot opens its list of carried implants", gear.row_focus and gear.cur == "r:0")
 	gear.press()
-	check.call("Enter on a row fits it", g.implants.get("cortex", false) and inv.find(imp2).is_empty())
-	gear.cur = "s:head"
+	check.call("Enter on a row fits it", g.implants.get(oid, false) and inv.find(imp2).is_empty())
+	gear.cur = "s:eyes"
 	gear.row_focus = false
 	gear.press()
 	gear.press()
-	check.call("and on a fitted one takes it out", not g.implants.get("cortex", false) and inv.used() >= 1)
+	check.call("and on a fitted one takes it out", not g.implants.get(oid, false) and inv.used() >= 1)
 	var it3 = null
 	for cand in inv.grid_items():
-		if cand.id() == "trl_imp_cortex":
+		if cand.id() == "trl_imp_" + oid:
 			it3 = cand
 	gear.cur = "g:base:%d" % inv.grid["base"].find(it3)
 	gear.auto()
-	check.call("Ctrl on a carried implant fits it", g.implants.get("cortex", false))
+	check.call("Ctrl on a carried implant fits it", g.implants.get(oid, false))
 	return [cnt[0], cnt[1], log]

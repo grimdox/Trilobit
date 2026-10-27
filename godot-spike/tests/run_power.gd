@@ -24,6 +24,7 @@ func stand_beside(g, cell: int) -> Vector2i:
 	return Vector2i.ZERO
 
 func _initialize() -> void:
+	preload("res://tests/legacy_implants.gd").install()
 	var r = preload("res://tests/test_power.gd").new().run()
 	for l in r[2]:
 		print(l)
@@ -78,14 +79,14 @@ func _initialize() -> void:
 	for id in ["smartlink", "optics", "legs", "dermal"]:
 		g.implants[id] = true
 	g.power_install("smartlink")
-	check("a fitted rig starts a full charge (576 kJ, 72 h)", g.power_cap() == 576.0 and g.power_left() == 576.0 and absf(g.power_hours() - 72.0) < 1e-6)
+	check("a fitted rig starts a full charge (the built-in 168 kJ cell, 84 h at 2 kJ/h)", g.power_cap() == 168.0 and g.power_left() == 168.0 and absf(g.power_hours() - 84.0) < 1e-6)
 	var acc0: float = g.imp_sum("acc")
 	var arm0: int = g.armor_value("chest")
 	check("charged implants work: accuracy %.0f, chest armor %d" % [acc0, arm0], acc0 > 0.0 and arm0 > 0 and g.has_implant("smartlink"))
 	var p0: float = g.power_left()
 	for _i in 600:
 		g.end_turn()
-	check("an hour of play (600 turns) costs the rig's 8 kJ", absf(p0 - g.power_left() - 8.0) < 0.01)
+	check("an hour of play (600 turns) costs the rig's 2 kJ", absf(p0 - g.power_left() - 2.0) < 0.01)
 	# ---- the warnings, then dark
 	g.power = 150.0
 	g.power_state = 0
@@ -93,7 +94,7 @@ func _initialize() -> void:
 	var saw_low := false
 	var saw_crit := false
 	var saw_dark := false
-	for stage in [[150.0, "power low"], [58.0, "power critical"], [0.5, "go dark"]]:
+	for stage in [[40.0, "power low"], [15.0, "power critical"], [0.5, "go dark"]]:
 		g.power = float(stage[0])
 		for _i in 3000:
 			g.end_turn()
@@ -123,7 +124,7 @@ func _initialize() -> void:
 	var post: int = posts[0]
 	var dir: Vector2i = stand_beside(g, post)
 	g.yen = 2000
-	var q: Dictionary = g.charge_quote(post, 576.0)
+	var q: Dictionary = g.charge_quote(post, 168.0)
 	var dist: int = g.district_of(post)
 	var turn0: int = g.turn
 	check("bumping a post does nothing but say what it is, and spends no time", dir != Vector2i.ZERO and not g.act_move(dir.x, dir.y) and g.charger_hit == -1 and g.turn == turn0)
@@ -140,7 +141,7 @@ func _initialize() -> void:
 	check("the menu offers a top-up with the real price (¥%d)" % int(q["total"]), full_idx >= 0 and String(menu["options"][full_idx]["label"]).contains("¥%d" % int(q["total"])))
 	var yen0: int = g.yen
 	g.eco.choose(menu, full_idx)
-	check("paying takes exactly the quoted yen and refills the store (¥%d, now %d kJ)" % [yen0 - g.yen, int(g.power_left())], yen0 - g.yen == int(q["total"]) and g.power_left() == 576.0)
+	check("paying takes exactly the quoted yen and refills the store (¥%d, now %d kJ)" % [yen0 - g.yen, int(g.power_left())], yen0 - g.yen == int(q["total"]) and g.power_left() == 168.0)
 	check("the implants wake again", g.imp_sum("acc") > 0.0 and g.armor_value("chest") > 0 and g.has_implant("legs"))
 	check("the post answers with a log line and a breakdown", String(g.log[-1]).contains("fee") and String(g.log[-1]).contains("power tax"))
 	# the same bill again: nothing to deliver
@@ -158,7 +159,8 @@ func _initialize() -> void:
 		if String(o["label"]).begins_with("Charge what I can afford"):
 			has_aff = true
 	check("and the menu does not offer an affordable charge it cannot sell", not has_aff)
-	g.yen = 1000
+	g.power = 0.0
+	g.yen = int(g.charge_quote(post, 1.0)["tax"]) + 110
 	var m4: Dictionary = g.eco.charger_menu(post)
 	var aff_idx := -1
 	for k in m4["options"].size():
@@ -166,7 +168,7 @@ func _initialize() -> void:
 			aff_idx = k
 	var pw1: float = g.power_left()
 	g.eco.choose(m4, aff_idx)
-	check("'what I can afford' charges as much as the purse pays for and not more (¥%d left, +%d kJ)" % [g.yen, int(g.power_left() - pw1)], aff_idx >= 0 and g.yen >= 0 and g.yen < 40 and g.power_left() > pw1)
+	check("'what I can afford' charges as much as the purse pays for and not more (¥%d left, +%d kJ)" % [g.yen, int(g.power_left() - pw1)], aff_idx >= 0 and g.yen >= 0 and g.yen < 3 and g.power_left() > pw1)
 	# place changes the bill
 	var lo := -1
 	var hi := -1
@@ -179,9 +181,12 @@ func _initialize() -> void:
 	# ---- the ripperdoc fits a charged implant
 	g.implants = {"optics": true}
 	g.power = 20.0
-	g.implants["smartlink"] = true
-	g.power_install("smartlink")
-	check("a newly fitted implant brings its own 72 hours of charge to the store (%d kJ)" % int(g.power_left()), absf(g.power_left() - (20.0 + 2.0 * 72.0)) < 0.01 or g.power_left() == g.power_cap())
+	g.implants["x211"] = true
+	g.power_install("x211")
+	check("a newly fitted chest battery arrives charged: the store fills to its 1,344 kJ (%d)" % int(g.power_left()), g.power_cap() == 1344.0 and g.power_left() == 1344.0)
+	g.implants.erase("x211")
+	g.power_uninstall("x211")
+	check("taking the battery out takes its charge with it", g.power_cap() == PW.BASE_CELL_KJ and g.power_left() == 0.0)
 	# ---- NPC energy
 	var bratva := -1
 	var nasim := -1
@@ -196,7 +201,7 @@ func _initialize() -> void:
 			nap = i
 		elif g.fac[i] == g.CIV and civ < 0:
 			civ = i
-	check("wired people hold a charge by faction: Bratva up to 576 kJ, NAP up to 1152; Nasim, gangs and civilians none", g.npc_energy(bratva) > 0 and g.npc_energy(bratva) <= 576 and g.npc_energy(nap) > 0 and g.npc_energy(nap) <= 1152 and g.npc_energy(nasim) == 0 and g.npc_energy(civ) == 0)
+	check("wired people hold a charge by faction: Bratva up to 144 kJ, NAP up to 360; Nasim, gangs and civilians none", g.npc_energy(bratva) > 0 and g.npc_energy(bratva) <= 144 and g.npc_energy(nap) > 0 and g.npc_energy(nap) <= 360 and g.npc_energy(nasim) == 0 and g.npc_energy(civ) == 0)
 	# ---- siphon
 	g.implants = {"smartlink": true, "optics": true}
 	g.power = 50.0

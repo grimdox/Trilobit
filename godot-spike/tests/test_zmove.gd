@@ -27,6 +27,7 @@ func _open_cell(g, from: int, rad: int) -> int:
 	return -1
 
 func run() -> Array:
+	preload("res://tests/legacy_implants.gd").install()
 	var st := [0, 0]
 	var log := []
 	var check = func(name: String, cond: bool) -> void:

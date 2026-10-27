@@ -4,6 +4,7 @@ const GameScript = preload("res://src/game.gd")
 const SK = preload("res://src/skills.gd")
 
 func run() -> Array:
+	preload("res://tests/legacy_implants.gd").install()
 	var st := [0, 0]
 	var log := []
 	var check = func(name: String, cond: bool) -> void:

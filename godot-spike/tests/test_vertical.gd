@@ -77,18 +77,22 @@ func run() -> Array:
 	# --- locked vault
 	check.call("there are locked vaults with loot", g.city.vaults.size() >= 3)
 	var vault: PackedInt32Array = g.city.vaults[0]
+	var door := -1
+	for vv in g.city.vaults:                                   # (the first vault whose locked door is within 9 tiles of its first cell)
+		var vc: int = vv[0]
+		for dy in range(-9, 10):
+			for dx in range(-9, 10):
+				var c: int = vc + dy * g.size + dx
+				if door < 0 and g.city.tiles[c] == CG.LOCKED:
+					door = c
+		if door >= 0:
+			vault = vv
+			break
 	var loot_cells := 0
 	for c in vault:
 		if g.items_at.has(c):
 			loot_cells += 1
 	check.call("vault holds no loose loot", loot_cells == 0)
-	var door := -1
-	var vc: int = vault[0]
-	for dy in range(-9, 10):
-		for dx in range(-9, 10):
-			var c: int = vc + dy * g.size + dx
-			if door < 0 and g.city.tiles[c] == CG.LOCKED:
-				door = c
 	check.call("a locked door guards the vault", door >= 0)
 	var from := -1
 	for nb in [door - 1, door + 1, door - g.size, door + g.size]:

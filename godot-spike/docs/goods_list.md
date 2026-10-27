@@ -43,8 +43,8 @@ Weight, volume and price are the properties every item has.  Item id = `trl_good
 | bandage_roll | roll of bandage | pharmacy, clinic | 60 | 80 | 2 |
 | pill_bottle | bottle of pills | pharmacy | 80 | 90 | 6 |
 | cough_syrup | bottle of cough syrup | pharmacy | 300 | 250 | 5 |
-| saline_bag | bag of saline | clinic, implant_shop | 600 | 550 | 7 |
-| surgical_gloves | box of surgical gloves | clinic, implant_shop | 250 | 600 | 4 |
+| saline_bag | bag of saline | clinic, implant_shop, implant_body, cyberdoc | 600 | 550 | 7 |
+| surgical_gloves | box of surgical gloves | clinic, implant_shop, implant_body, cyberdoc | 250 | 600 | 4 |
 | shampoo_bottle | bottle of shampoo | salon, pharmacy | 500 | 520 | 5 |
 | hair_dye_box | box of hair dye | salon, pharmacy | 300 | 400 | 7 |
 | hair_wax_tin | tin of hair wax | salon | 150 | 150 | 4 |

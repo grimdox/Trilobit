@@ -4,7 +4,7 @@ extends RefCounted
 ## `stamp` returns the venue record that economy.gd turns into a keeper with a menu.
 const CG = preload("res://src/citygen.gd")
 
-const KINDS := ["restaurant", "grocery", "implant", "clinic", "church", "temple"]
+const KINDS := ["restaurant", "grocery", "implant", "cyberdoc", "clinic", "church", "temple"]
 const RESTAURANTS := [
 	{"id": "ramen", "name": "Ramen stall", "floor": "floor_wood", "greet": "\"Irasshai!  Sit anywhere, the broth is hot.\"",
 		"menu": ["cup_ramen", "gyoza", "onigiri", "miso", "sencha", "beer"]},
@@ -23,6 +23,9 @@ const NAMES := {
 	"restaurant": ["Kuma-ya", "Babushka", "Hokkaido Table", "Red Lantern", "Taiga Kitchen", "Neon Noodle", "Sakhalin Grill", "Blue Crane", "Samovar", "Tsubame"],
 	"grocery": ["Daily Mart", "Harbor Provisions", "Kolkhoz Market", "Sunrise Grocer", "Tanuki Foods", "Northern Pantry"],
 	"implant": ["Back Alley Cyber", "Mizuki Implants", "Chrome Hand", "Zero Latency", "Kuroda Surgical", "Wire & Bone"],
+	"implant_senses": ["Zero Latency", "Optic Row", "Neural Gallery", "Chrome Eye", "Spinal Tap Cyber", "Kuroda Optics"],
+	"implant_body": ["Wire & Bone", "Chrome Hand", "Limb & Frame", "Mizuki Implants", "Back Alley Cyber", "Skin Deep"],
+	"cyberdoc": ["Cyberdoc Office", "Dr. Mori, Cyberdoc", "Sakura Cyberdoc", "Harbor Cyberdoc", "Dr. Ito's Cyber Surgery", "Kita Cyberdoc"],
 	"clinic": ["Eastgate Clinic", "Sakhalin Medical", "Dr. Aoki's Practice", "Pine Street Surgery", "Seaview Clinic"],
 	"church": ["Church of St. Nicholas", "Holy Intercession Church", "Church of the Savior", "St. Sergius Chapel"],
 	"temple": ["Inari Shrine", "Hachiman Shrine", "Suwa Shrine", "Sakura Shrine"],
@@ -84,7 +87,7 @@ class Lay:
 				put(u, v, name)
 
 ## stamp a venue into the lot.  side: 0 door on the north wall, 1 on the south wall.  tier: 0 poor, 1 mid.
-static func stamp(c, kind: String, bx0: int, by0: int, bx1: int, by1: int, side: int, tier: int) -> Dictionary:
+static func stamp(c, kind: String, bx0: int, by0: int, bx1: int, by1: int, side: int, tier: int, style_hint: String = "") -> Dictionary:
 	if c.under.size() != c.size * c.size:
 		c.under = PackedByteArray()
 		c.under.resize(c.size * c.size)
@@ -107,7 +110,9 @@ static func stamp(c, kind: String, bx0: int, by0: int, bx1: int, by1: int, side:
 	var mid: int = L.wi / 2
 	var wi: int = L.wi
 	var style := ""
-	var sname: String = NAMES[kind][rng.randi() % NAMES[kind].size()]
+	if kind == "implant":
+		style = style_hint if style_hint != "" else ("senses" if rng.randf() < 0.5 else "body")      # the two implant stores: eyes/spine/head, and the rest
+	var sname: String = NAMES[kind if kind != "implant" else "implant_" + style][rng.randi() % NAMES[kind if kind != "implant" else "implant_" + style].size()]
 	var keeper := Vector2i.ZERO
 	match kind:
 		"restaurant":
@@ -151,14 +156,14 @@ static func stamp(c, kind: String, bx0: int, by0: int, bx1: int, by1: int, side:
 			L.put(2, wi - 2, "water_cooler")
 			for k in range(1, wi - 2, 3):
 				L.put(3, k, "produce_bin")
-		"implant":
+		"implant", "cyberdoc":
 			L.floor_all(CG.TID["floor_steel"])
 			L.row(1, 2, wi - 3, "counter", [mid])
 			L.put(1, mid, "counter")
 			keeper = L.cell(2, mid)
 			L.put(2, 0, "neon"); L.put(2, wi - 1, "neon")
 			L.put(4, 1, "implant_chair"); L.put(4, 4, "implant_chair"); L.put(4, wi - 2, "autodoc")
-			L.put(6, 1, "implant_printer"); L.put(6, 3, "limb_bin"); L.put(6, wi - 2, "limb_bin")
+			L.put(6, 1, "implant_printer" if kind == "implant" else "exam_couch"); L.put(6, 3, "limb_bin"); L.put(6, wi - 2, "limb_bin")
 			L.row(8, 0, wi - 1, "med_cabinet", [mid, mid - 1])
 			if tier == 0:
 				L.floor_id = CG.TID["floor_steel"]
@@ -204,7 +209,7 @@ static func stamp(c, kind: String, bx0: int, by0: int, bx1: int, by1: int, side:
 				c.under[ty * c.size + dx] = c.tiles[ty * c.size + dx]
 				c.tiles[ty * c.size + dx] = CG.TID["torii"]
 	# a mission terminal in the corner by the door, in the places people wait or do business (see missions.gd)
-	if kind in ["restaurant", "grocery", "implant", "clinic"] and wi >= 7:
+	if kind in ["restaurant", "grocery", "implant", "cyberdoc", "clinic"] and wi >= 7:
 		L.put(0, wi - 1, "terminal")
 	# a floor underneath everything that is not furniture
 	var v_rec := {"kind": kind, "style": style, "tier": tier, "name": sname, "x0": bx0, "y0": by0, "x1": bx1, "y1": by1,

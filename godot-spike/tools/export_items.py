@@ -203,22 +203,21 @@ for fid, nm, pr, use in FAITH:
     items.append({"id": "trl_faith_" + fid, "name": nm, "desc": "A %s.  Use it for a small blessing." % nm, "weight_g": 80, "volume_ml": 100, "length_mm": 100, "price": pr, "tags": ["charm"], "use": use})
 
 # ---- implants: every implant is a physical item (src/implants.gd holds what each one does; keep these in step, tests/run_inventory.gd checks it)
-IMPLANTS = [
-    ("cortex", "head", "Neural Link", 4200, "Wireless interface and skull lattice: +4% to hit, faster aim, 1 armor on the head."),
-    ("optics", "eyes", "Optic Suite", 1800, "Ranging overlay: +2% to hit, +5% more at five or more tiles."),
-    ("thermal", "eyes", "Thermal Vision", 2600, "Warm bodies stand out of cover and smoke: +3% to hit."),
-    ("jets", "spine", "Dorsal Jump Jets", 3000, "Short flight, no falling damage while fuel lasts."),
-    ("reflex", "spine", "Reflex Wires", 6200, "Grade 3 wiring: 14% to dodge a bullet, 10% to dodge a blade, quicker aim and strikes."),
-    ("synapse", "spine", "Synapse Accelerator", 11000, "Military grade 4: time slows.  26% to dodge a bullet, 18% to dodge a blade, much faster strikes."),
-    ("dermal", "dermal", "Dermal Plating", 2200, "Subdermal plates over the whole body: 2 armor everywhere, until the plating wears through."),
-    ("heart", "chest", "Cardiac Booster", 2800, "Bigger stamina reserve."),
-    ("mantis", "arms", "Mantis Blades", 3400, "Forearm blades unfold when your hands are empty: fast, accurate, cannot be knocked away.  1 armor on the arms."),
-    ("smartlink", "hands", "Smartlink Palm", 1500, "Gun-to-hand link: +8% to hit with any firearm."),
-    ("grip", "hands", "Gecko Grip", 1700, "Climb sheer walls."),
-    ("legs", "legs", "Leg Actuators", 1600, "Long jumps and softer landings.  1 armor on the legs."),
-]
-for iid, part, nm, cost, text in IMPLANTS:
-    items.append({"id": "trl_imp_" + iid, "name": nm, "desc": text + "  Fits the %s." % part, "weight_g": 0, "volume_ml": 0, "length_mm": 0, "price": cost, "tags": ["implant"], "implant": iid, "part": part})
+import gen_implants
+PART_NAME = {"head": "head", "eyes": "eyes", "spine": "spine", "chest": "chest", "dermal": "dermal layer", "arms": "arms", "hands": "hands", "legs": "legs"}
+TIER_NAME = {1: "Basic", 2: "Improved", 3: "Quality"}
+for d in gen_implants.catalogue():
+    bits = []
+    for k, v in d.get("skills", {}).items():
+        bits.append("%s %+d" % (k.capitalize(), v))
+    bits.append("armor %d" % d["armor"])
+    if "battery" in d:
+        bits.append("stores %d kJ" % d["battery"])
+    if "nano" in d:
+        bits.append("%d nanohack slots" % d["nano"])
+    text = "%s grade: %s, draws %g kJ/h." % (TIER_NAME[d["grade"]], ", ".join(bits), d["draw"])
+    items.append({"id": "trl_imp_" + d["id"], "name": d["name"], "desc": text + "  Fits the %s." % PART_NAME[d["part"]], "weight_g": 0, "volume_ml": 0,
+                  "length_mm": 0, "price": d["cost"], "tags": ["implant"], "implant": d["id"], "part": d["part"]})
 
 # ---- trade goods of the businesses, flats and offices: no stats, no function (see tools/content/goods_list.py)
 import goods_list
