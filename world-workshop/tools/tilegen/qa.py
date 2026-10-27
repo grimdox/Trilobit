@@ -9,7 +9,8 @@
   T6 colour names an id that names a colour shows that colour (f_trl_neon_green is green)
   T7 distinct     the five themes draw the same id differently (walk, road, wall, floor differ between every pair)
   T8 icons        every item that is not a weapon has an icon, outlined, big enough to read on the ground
-  T9 furniture    every piece and floor of the game's furniture list has its three variants in every theme, and they differ
+  T9 furniture    every piece and floor of the game's furniture list has its three variants in every theme, and they differ;
+                  every piece is also drawn facing north, east and west
 """
 import colorsys
 import json
@@ -35,7 +36,8 @@ def load(sets, theme):
     for t in cfg['tiles-new'][0]['tiles']:
         k = t['fg'] - 1
         r, c = divmod(k, sheet.shape[1] // 64)
-        out[t['id']] = sheet[r * 64:(r + 1) * 64, c * 64:(c + 1) * 64]
+        for name in (t['id'] if isinstance(t['id'], list) else [t['id']]):
+            out[name] = sheet[r * 64:(r + 1) * 64, c * 64:(c + 1) * 64]
     return out, cfg
 
 
@@ -189,8 +191,11 @@ def run(sets, base_cfg=None):
         import re
         ids = re.findall(r'"((?:f_trl_|t_trl_floor_)[a-z_0-9]+)"', open(fl).read())
         miss, same = [], []
+        import furniture2 as F2
         for th in TH.ORDER:
             for i in ids:
+                if i.startswith('f_trl_') and i[6:] not in F2.NO_TURN:
+                    miss += ['%s %s%s' % (th, i, suf) for suf, k in F2.FACINGS for v in range(3) if '%s%s.%d' % (i, suf, v) not in S[th][0]]
                 vs = ['%s.%d' % (i, v) for v in range(3)]
                 if not all(x in S[th][0] for x in vs):
                     miss.append('%s %s' % (th, i))
@@ -202,7 +207,7 @@ def run(sets, base_cfg=None):
                     return np.abs(p - q)[m].mean()
                 if min(dif(a, b), dif(b, c), dif(a, c)) < 4.0:
                     same.append('%s %s' % (th, i))
-        rep('T9', 'every listed piece in 3 distinct variants per theme', ids and not miss and not same,
+        rep('T9', 'every listed piece in 3 distinct variants and 4 facings per theme', ids and not miss and not same,
             '%d ids, %d missing, %d alike' % (len(set(ids)), len(miss), len(same)), '; '.join((miss + same)[:4]))
     passed = sum(r['ok'] for r in res)
     print('TILES QA %d/%d' % (passed, len(res)))

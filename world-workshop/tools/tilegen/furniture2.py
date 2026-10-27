@@ -531,18 +531,34 @@ def clothing_rack(theme, rng, v):
 
 
 def mannequin(theme, rng, v):
+    """a shop dummy standing upright, seen like the people of the game: head, shoulders, arms, the garment it shows,
+    legs on a stand.  Featureless and pale (or graphite downtown), so it never reads as a person"""
     t, p = piece(), P(theme, v)
-    skin = 'graphite' if (p.rich and v == 1) else ('paint_w' if p.rich else 'skin_dummy')
-    garment = {'rich': ['fabric_cream', 'leather_k', 'velvet_teal'], 'mid': ['fabric_b', 'fabric_mustard', 'paint_w'],
+    skin = 'graphite' if (p.rich and v == 1) else 'skin_dummy'
+    garment = {'rich': ['fabric_cream', 'velvet_teal', 'leather_k'], 'mid': ['fabric_b', 'fabric_mustard', 'fabric_grey'],
                'slum': ['velvet_v', 'fabric_g', 'vinyl_r'], 'rural': ['fabric_indigo', 'linen', 'fabric_o'],
                'industry': ['canvas_bag', 'enamel_o', 'kevlar']}[theme][v]
-    t.slab(D(32, 46, 9, 5), p.metal, 2)
-    t.slab(L(32, 40, 32, 46, 2), p.metal, 12, bevel=0)
-    t.slab(D(14, 33, 4, 7), skin, 14, profile='dome')
-    t.slab(D(50, 33, 4, 7), skin, 14, profile='dome')
-    t.slab(D(32, 32, 16, 9), garment, 18, profile='dome')
-    t.mark(L(32, 26, 32, 40, 1) & D(32, 32, 16, 9), -1)
-    t.slab(D(32, 30, 6.5), skin, 24, profile='dome')
+    t.slab(D(32, 58, 11, 3.5), p.metal, 2, bevel=0.8)
+    t.slab(B(31, 50, 33, 58), p.metal, 4, bevel=0)
+    legs_m = B(25, 36, 30, 54, 1) | B(34, 36, 39, 54, 1)
+    t.slab(legs_m, skin if v == 0 else ('fabric_indigo' if garment != 'fabric_indigo' else 'graphite'), 6, profile='dome')
+    t.mark(B(31, 36, 33, 54) & legs_m, -1)
+    arms = B(15, 18, 19, 38, 2) | B(45, 18, 49, 38, 2)
+    t.slab(arms, skin, 6, profile='dome')
+    if v == 0:      # a dress: flares from the waist
+        body_m = Tile.poly_mask([(20, 16), (44, 16), (41, 30), (47, 47), (17, 47), (23, 30)])
+    elif v == 1:    # a jacket to the hip
+        body_m = Tile.poly_mask([(19, 16), (45, 16), (43, 40), (21, 40)])
+    else:           # a long coat, open at the front
+        body_m = Tile.poly_mask([(18, 16), (46, 16), (45, 52), (19, 52)])
+    t.slab(body_m, garment, 9, profile='dome')
+    if v != 0:
+        t.slab(B(15, 16, 19, 32, 2) | B(45, 16, 49, 32, 2), garment, 8, profile='dome')      # sleeves
+    t.mark(L(32, 17, 32, 40 if v else 30, 1) & body_m, -1)
+    if v == 2:
+        t.paint(L(32, 18, 32, 52, 2) & body_m, skin)
+    t.slab(B(30, 11, 34, 16), skin, 7, bevel=0.5)
+    t.slab(D(32, 8, 5.5, 6.5), skin, 9, profile='dome')
     return finish(t, theme, rng)
 
 
@@ -694,25 +710,27 @@ def filing_cabinet(theme, rng, v):
 
 
 def weapon_rack(theme, rng, v):
-    """practice weapons lying across pegs on a wall rack"""
+    """practice weapons on a wall rack: two pieces on two pegs, a plain board"""
     t, p = piece(), P(theme, v)
     wood = 'wood_dark' if theme in ('rich', 'rural') else 'wood'
-    wall_run(t, p, 2, 34, 8, wood)
-    for x in (8, 32, 56):
-        t.slab(B(x - 2, 4, x + 2, 32, 1), 'wood_light' if wood == 'wood_dark' else 'wood_dark', 10, bevel=0.4)
-    for k in range(3):
-        y = 9 + k * 9
-        kind = (k + v) % 3
-        if kind == 0:         # wooden sword: blade, guard, wrapped grip
-            t.slab(B(14, y - 1, 61, y + 2, 1), 'wood_light', 13, bevel=0.6)
-            t.slab(B(11, y - 3, 13, y + 4, 1), 'ink', 14, bevel=0.4)
-            t.slab(B(2, y - 1, 10, y + 2, 1), 'fabric_indigo', 13, bevel=0.4)
-        elif kind == 1:       # staff
-            t.slab(B(0, y - 1, 63, y + 2, 1), 'wood', 13, bevel=0.6)
-            t.mark(B(0, y + 1, 63, y + 1), -1)
-        else:                 # padded practice blade
-            t.slab(B(16, y - 2, 60, y + 2, 2), 'rubber', 13, bevel=0.8)
-            t.slab(B(4, y - 1, 15, y + 2, 1), 'leather_br', 13, bevel=0.5)
+    wall_run(t, p, 4, 30, 8, wood)
+    peg = 'wood_light' if wood == 'wood_dark' else 'wood_dark'
+    for x in (12, 52):
+        for y in (12, 23):
+            t.slab(B(x - 2, y - 2, x + 2, y + 2, 1), peg, 10, bevel=0.5)
+    items = [('sword', 'staff'), ('staff', 'pad'), ('pad', 'sword')][v]
+    for k, kind in enumerate(items):
+        y = 12 + k * 11
+        if kind == 'sword':         # wooden sword: blade, guard, wrapped grip
+            t.slab(B(16, y - 2, 60, y + 1, 1.5), 'wood_light', 12, bevel=1)
+            t.slab(B(13, y - 4, 15, y + 3, 1), 'lacquer_black', 13, bevel=0.5)
+            t.slab(B(3, y - 2, 12, y + 1, 1.5), 'fabric_indigo', 12, bevel=1)
+        elif kind == 'staff':
+            t.slab(B(1, y - 2, 62, y + 1, 1.5), 'wood', 12, bevel=1)
+        else:                       # padded practice blade
+            t.slab(B(17, y - 3, 59, y + 2, 2.5), 'rubber' if theme != 'rich' else 'leather_k', 12, bevel=1.5)
+            t.slab(B(5, y - 2, 16, y + 1, 1.5), 'leather_br', 12, bevel=1)
+    t.norim |= t.h > 9                  # the weapons and pegs: outline and light only, no rim on every thin edge
     return finish(t, theme, rng)
 
 
@@ -784,18 +802,19 @@ def safe(theme, rng, v):
 
 
 def gun_rack(theme, rng, v):
+    """long guns standing in a wall rack: three silhouettes, barrel up, on a plain board"""
     t, p = piece(), P(theme, v)
-    wall_run(t, p, 2, 44, 14, ['graphite', 'wood_dark', 'olive_d'][v])
-    t.mark(B(0, 2, 63, 44) & (((XX % 4) == 0) & ((YY % 4) == 0)), -1)
-    for k in range(4):
-        x = 6 + k * 15
-        if p.poor and rng.chance(0.3):
+    wall_run(t, p, 2, 44, 12, ['graphite', 'wood_dark', 'olive_d'][v])
+    t.slab(B(0, 36, 63, 42), p.metal, 15, bevel=0.6)
+    stock_m = ['wood', 'rubber', 'kevlar'][v]
+    for k in range(3):
+        x = 12 + k * 20
+        if p.poor and k == 1:
             continue
-        t.slab(L(x + 2, 5, x + 2, 30, 2.4), 'dark_steel', 17, bevel=0.4)         # barrel
-        t.slab(B(x, 26, x + 5, 34, 1), 'dark_steel', 18, bevel=0.5)               # receiver
-        t.slab(Tile.poly_mask([(x, 34), (x + 6, 34), (x + 7, 43), (x - 1, 43)]), ['wood', 'rubber', 'kevlar'][(k + v) % 3], 17, bevel=0.5)
-        t.slab(B(x + 5, 30, x + 8, 34), 'dark_steel', 17, bevel=0.3)              # magazine
-    t.slab(B(0, 40, 63, 44), p.metal, 16, bevel=0.5)
+        t.slab(B(x - 1, 5, x + 1, 26, 0.5), 'dark_steel', 16, bevel=0.5)                                   # barrel
+        t.slab(Tile.poly_mask([(x - 3, 24), (x + 3, 24), (x + 4, 44), (x - 4, 44)]), stock_m, 16, bevel=1)   # body and stock
+        t.slab(B(x - 2, 26, x + 2, 32, 1), 'dark_steel', 17, bevel=0.5)                                    # receiver
+    t.norim |= t.h > 13
     return finish(t, theme, rng)
 
 
@@ -2188,14 +2207,11 @@ def floor_dance(theme, rng, v):
 
 
 def floor_rubber(theme, rng, v):
+    """interlocking rubber gym tiles: plain, a fine bevel at each joint, no flecks"""
     t = Tile(['rubber_floor', 'rubber_blue', 'rubber_green'][v])
     seam, cell = grid(32, 32, 1)
     T._slab_seams(t, seam, 0.4)
-    fleck = ['paint_w', 'fabric_b', 'paint_y'][v]
-    fl = speckle(rng.int(0, 1 << 20), 0.008) & ~seam
-    t.paint(fl | (np.roll(fl, 1, 1) & ~seam), fleck)
-    if theme in ('slum', 'industry'):
-        t.mark(blotches(rng.int(0, 1 << 20), 0.12, cells=8) & ~seam, -1)
+    t.mark(np.roll(seam, 1, 0) | np.roll(seam, 1, 1), 1)
     return t
 
 
@@ -2312,6 +2328,21 @@ def station_clock(theme, rng, v):
 
 
 EXTRA = {'station_clock': station_clock}
+
+# ------------------------------------------------------------------------------------------------ facings
+# Every piece is drawn facing south (its back, or the wall it stands on, to the north).  The other three facings are
+# the same piece turned before it is lit, so the light still comes from the top left and the shadow still falls to
+# the bottom right.  Sprite ids: f_trl_<id> faces south, f_trl_<id>_fn north, _fe east, _fw west.
+FACINGS = (('_fn', 2), ('_fe', 1), ('_fw', -1))
+NO_TURN = {'mannequin'}          # drawn upright like the people, the same from every side
+
+
+def turned(t, k):
+    for name in ('h', 'm', 'obj', 'd', 'glow', 'solid', 'noline', 'norim'):
+        setattr(t, name, np.ascontiguousarray(np.rot90(getattr(t, name), k)))
+    t.shadow = np.zeros_like(t.shadow)
+    t.drop_shadow(t.solid.copy(), 3, 3, 0.42)
+    return t
 
 FURN = {
     'coffee_bar': coffee_bar, 'cafe_table': cafe_table, 'cafe_chair': cafe_chair, 'coffee_machine': coffee_machine,

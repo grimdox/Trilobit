@@ -13,7 +13,7 @@ nothing is hand-painted, so a new tile, a new theme or a changed material is red
 | `industry` | the docks and everything underground (sewers, tunnels) | riveted steel plate, hazard paint, bulkheads and barred gates, diamond-plate walkways, oil stains, fuel tanks, drums, pallets, machinery, murky water |
 
 Every theme draws all 109 tile ids the world already uses (terrain, 16 joined wall shapes, 16 glass wall shapes,
-doors, windows, 72 pieces of furniture) plus 42 new ids and the 124 business and home pieces and floors below: 757 sprites a theme with variants.  The game picks the set
+doors, windows, 72 pieces of furniture) plus 42 new ids and the 124 business and home pieces and floors below: 2215 sprites a theme with variants and facings.  The game picks the set
 for each cell from its district (`theme_at` in the game's `src/view.gd`), so a street changes look where the money
 changes, and falls back to its base set for what the district sets do not draw (items, animals, vehicles).
 
@@ -62,7 +62,7 @@ a cylinder), cut seams, and apply the theme's wear (cracks, grime, moss in the j
 `render.py` then lights every tile by the same rules: one key light from the top left, five shades per material on a
 hand-tuned OKLab ramp (cool violet shadows, warm lights: the same ramp builder as the doll workshop, so people and
 places light alike), creases darker, short cast shadows to the bottom right, a 1 px dark outline on raised objects,
-the city's cyan rim on their far edges, glints on metal and glass, neon and screens emissive.  Walls get a south face
+the city's cyan rim on their far edges, glints on metal and glass, neon and screens emissive.  Walls fill their cell (floors run right up to them) and get a south face
 so they read as height.  Ground tiles wrap at their edges so cells join without seams.
 
 ## Files

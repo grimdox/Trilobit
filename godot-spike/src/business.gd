@@ -435,6 +435,14 @@ static func stamp(c, id: String, ver: int, x0: int, y0: int, side: int, tier_hin
 		for v in range(0, wi):
 			if v % 6 != 3:
 				B.put(di - 1, v, wall_p)
+	# and along the side walls of a room big enough, a fitting every third cell where the floor beside it stays clear
+	# (the view turns each to face away from its wall)
+	if wall_p != "" and wi >= 7 and di >= 7:
+		for u in range(u0 + 1, di - 2, 3):
+			if B.is_free(u, 0) and B.is_free(u, 1):
+				B.put(u, 0, wall_p)
+			if B.is_free(u, wi - 1) and B.is_free(u, wi - 2):
+				B.put(u, wi - 1, wall_p)
 	for d in L.get("decor", []):
 		B.put(di - 1, 0, d)
 		break

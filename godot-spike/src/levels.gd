@@ -518,10 +518,17 @@ static func _underground(c, all: PackedByteArray, links: Dictionary, rng: Random
 						break
 		si += 1
 	c.subway = {"ring": ring, "stops": stops}
+	# no hatch or manhole in a parking bay (a bay is 4 x 6 of open paving for a car)
+	var bay := {}
+	for lot in c.lots:
+		for b in lot["bays"]:
+			for yy in 6:
+				for xx in 4:
+					bay[(int(b[1]) + yy) * size + int(b[0]) + xx] = true
 	# hatches from the street into the maintenance tunnels
 	var hatch: Array = []
 	for cell in catwalk:
-		if all[cell] == CG.ROAD and all[l1 + cell] == CG.TUNNEL:
+		if all[cell] == CG.ROAD and all[l1 + cell] == CG.TUNNEL and not bay.has(cell):
 			hatch.append(cell)
 	for cell in _pick_spaced(hatch, 5, 28, size, rng):
 		all[cell] = CG.MANHOLE
@@ -546,7 +553,7 @@ static func _underground(c, all: PackedByteArray, links: Dictionary, rng: Random
 			if all[l2 + i] == CG.SEWER:
 				if all[l1 + i] == CG.TUNNEL:
 					shared.append(i)
-				elif all[i] == CG.ROAD and all[l1 + i] == CG.EARTH:
+				elif all[i] == CG.ROAD and all[l1 + i] == CG.EARTH and not bay.has(i):
 					down.append(i)
 	for cell in _pick_spaced(shared, 4, 30, size, rng):
 		all[l1 + cell] = CG.LADDER

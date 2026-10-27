@@ -6,6 +6,7 @@ import walls as W
 import furniture as F
 import props as P
 import furniture2 as F2
+from canvas import Rng
 
 # id -> (builder(theme, rng, variant), variants, kind)   kind: 'ground' (wraps, opaque) or 'object' (drawn over a floor)
 CATALOG = {}
@@ -65,6 +66,16 @@ _o('t_tree', lambda th, r, v: F.tree(th, r, v), 3)
 _o('f_trl_container', lambda th, r, v: F.container(th, r, v), 4)
 for fid, f in F.BUILDERS.items():
     _o(fid, (lambda ff: lambda th, r, v: ff(th, r))(f), 2 if fid in ('f_crate_c', 'f_dumpster') else 1)
+# the older fittings that stand against a wall or face a room turn too
+OLD_TURN = ['f_chair', 'f_trl_shop_counter', 'f_trl_counter_noodle', 'f_trl_kitchen_range', 'f_trl_kitchen_fridge', 'f_trl_sushi_case',
+            'f_trl_pizza_oven', 'f_trl_menu_board', 'f_trl_liquor_shelf', 'f_trl_hot_plate', 'f_trl_shelf_clean', 'f_trl_freezer_case',
+            'f_trl_checkout', 'f_trl_vending', 'f_trl_med_cabinet', 'f_trl_reception', 'f_trl_church_bench', 'f_trl_iconostasis',
+            'f_trl_charm_counter', 'f_trl_cabinet_lacquer', 'f_trl_gunsmith_table', 'f_trl_hospital_bed', 'f_trl_exam_couch',
+            'f_trl_implant_chair', 'f_trl_terminal']
+for fid in OLD_TURN:
+    f0, n0, _ = CATALOG[fid]
+    for suf, k in F2.FACINGS:
+        _o(fid + suf, (lambda ff, fi, kk: lambda th, r, v: F2.turned(ff(th, Rng(th, fi, v), v), kk))(f0, fid, k), n0)
 for pid, f in P.BUILDERS.items():
     _o(pid, (lambda ff: lambda th, r, v: ff(th, r))(f), 1)
 
@@ -73,8 +84,16 @@ for fid, f in F2.FLOORS.items():
     _g('t_trl_' + fid, f, F2.VARIANTS)
 for fid, f in F2.FURN.items():
     _o('f_trl_' + fid, f, F2.VARIANTS)
+    if fid in F2.NO_TURN:
+        continue
+    for suf, k in F2.FACINGS:
+        # the same piece (same seed) turned: a shelf facing east holds the same stock as the one facing south
+        _o('f_trl_' + fid + suf, (lambda ff, fi, kk: lambda th, r, v: F2.turned(ff(th, Rng(th, 'f_trl_' + fi, v), v), kk))(f, fid, k),
+           F2.VARIANTS)
 for fid, f in F2.EXTRA.items():
     _o('f_trl_' + fid, f, 1)
+    for suf, k in F2.FACINGS:
+        _o('f_trl_' + fid + suf, (lambda ff, fi, kk: lambda th, r, v: F2.turned(ff(th, Rng(th, 'f_trl_' + fi, v), v), kk))(f, fid, k), 1)
 
 NEW_IDS = sorted(set(P.BUILDERS) | set(P.GROUND) | {'t_door_closed', 't_door_closed.v', 't_window_broken'})
 

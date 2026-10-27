@@ -122,25 +122,29 @@ def main():
                         os.replace(p + '.tmp', p)
         rendered += len(jobs)
         # the sheet: ids in catalogue order, variants together
+        # one sprite per image: the plain id of a varied sprite and the aliases name the first variant's sprite rather
+        # than repeat it (a sheet costs memory in the game: tens of MB a theme)
         entries = []
         variants = {}
+        first = {}
         for id_, (f, n, kind) in CA.CATALOG.items():
             names = sprite_names(n, id_)
             if n > 1:
                 variants[id_] = n
             for v, name in enumerate(names):
-                entries.append((name, cached[(id_, v)]))
+                entries.append(([name], cached[(id_, v)]))
+            first[id_] = len(entries) - n
             if n > 1:
-                entries.append((id_, cached[(id_, 0)]))
+                entries[first[id_]][0].append(id_)
         for alias, id_ in CA.ALIASES.items():
-            entries.append((alias, cached[(id_, 0)]))
+            entries[first[id_]][0].append(alias)
         rows = (len(entries) + COLS - 1) // COLS
         sheet = np.zeros((rows * 64, COLS * 64, 4), np.uint8)
         tiles = []
-        for i, (name, img) in enumerate(entries):
+        for i, (names, img) in enumerate(entries):
             r, c = divmod(i, COLS)
             sheet[r * 64:(r + 1) * 64, c * 64:(c + 1) * 64] = img
-            tiles.append({'id': name, 'fg': i + 1})
+            tiles.append({'id': names[0] if len(names) == 1 else names, 'fg': i + 1})
         od = os.path.join(a.out, theme)
         os.makedirs(od, exist_ok=True)
         Image.fromarray(sheet, 'RGBA').save(os.path.join(od, 'sheet_tiles.png'), optimize=True)
@@ -150,7 +154,7 @@ def main():
                               'sprite_offset_y': 0, 'tiles': tiles}]}
         json.dump(cfg, open(os.path.join(od, 'tile_config.json'), 'w'), indent=None, separators=(',', ':'), sort_keys=True)
         total += len(entries)
-        print('  %s: %d sprites (%d rendered)' % (theme, len(entries), len(jobs)), flush=True)
+        print('  %s: %d sprites, %d names (%d rendered)' % (theme, len(entries), sum(len(e[0]) for e in entries), len(jobs)), flush=True)
     if a.items:
         total += bake_items(a.out, a.items, a.jobs)
     print('baked %d sprites, rendered %d, in %.0fs' % (total, rendered, time.time() - t0))

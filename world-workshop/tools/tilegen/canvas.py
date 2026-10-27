@@ -98,6 +98,7 @@ class Tile:
         self.periodic = periodic                         # ground tiles wrap; objects do not
         self.solid = np.full((N, N), bool(base), bool)   # drawn at all (False: transparent)
         self.noline = np.zeros((N, N), bool)             # object pixels that join the next cell (no outline there)
+        self.norim = np.zeros((N, N), bool)              # small parts that take no cyan rim (a rack of thin things)
 
     # ---------------------------------------------------------------- masks
     @staticmethod

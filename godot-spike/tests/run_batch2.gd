@@ -104,15 +104,18 @@ func _initialize() -> void:
 	# ---- save/load of the name
 	g.player_name = "Mara Voss"
 	var d: Dictionary = JSON.parse_string(JSON.stringify(g.save_dict()))
+	# (one spare game at a time: a city is over a gigabyte)
 	var g3 = GameScript.new(21)
 	g3.setup(300)
 	g3.load_dict(d)
+	var name3: String = g3.player_name
+	g3.dispose()
 	var g4 = GameScript.new(21)
 	g4.setup(300)
 	g4.apply_player(JSON.parse_string(JSON.stringify(g.player_dict())))
-	check("the name survives a save and load and a zone change", g3.player_name == "Mara Voss" and g4.player_name == "Mara Voss")
-	g3.dispose()                                   # (a 512 city is over a gigabyte: let go of each spare game)
-	g4.dispose()                                   # (a 512 city is over a gigabyte: let go of each spare game)
+	var name4: String = g4.player_name
+	g4.dispose()
+	check("the name survives a save and load and a zone change", name3 == "Mara Voss" and name4 == "Mara Voss")
 	# ---- the screen: typing, HUD, mouse filter
 	var m = MainScript.new()
 	m.save_prefix = "user://test_b2_save_"

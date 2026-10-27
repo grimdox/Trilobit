@@ -3,7 +3,8 @@
 Walls join up: the game picks one of 16 shapes per cell from which neighbours are walls too (bits 1 north, 2 east,
 4 south, 8 west), and draws it over the floor.  A wall is a raised band (24 px thick, 14 px high) through the middle
 of the cell with an arm out to every joined side; where an arm meets the cell edge it carries on into the next cell,
-so it has no outline there.  Each theme gives the band its own build: marble with a chrome edge and teal inlay
+so it has no outline there.  Solid walls (not glass) fill their cell to the edge, so a room's floor runs right up to
+them: the top covers the cell and, where nothing joins to the south, the south face takes the bottom 9 px.  Each theme gives the band its own build: marble with a chrome edge and teal inlay
 downtown, panelled concrete in mid-town, patched sheet metal in the slums, timber frame and plaster in the country,
 riveted plate in the docks."""
 import numpy as np
@@ -89,16 +90,24 @@ def _along(bits):
     return ew
 
 
+def block(bits, d=0):
+    """the wall's top when it fills its cell, shrunk by d on every side that does not join a neighbour"""
+    bottom = N - 1 if bits & 4 else N - 1 - FACE
+    return Tile.box_mask(0 if bits & 8 else d, 0 if bits & 1 else d, N - 1 if bits & 2 else N - 1 - d,
+                         bottom if bits & 4 else bottom - d)
+
+
 def wall(theme, bits, rng, glass=False):
     t = Tile('', periodic=False)
-    m = band(bits)
     st = style(theme)
-    inner = band(bits, A + 3, B - 3)
+    m = block(bits)
+    inner = block(bits, 3)
     edge = m & ~inner
     if glass:
         # frame round the edge, glass in the middle with diagonal glints
-        t.slab(m, 'trim', H, bevel=1.0)
-        pane = band(bits, A + 3, B - 3)
+        t.slab(m, 'wall', H, bevel=1.0)                  # the wall the window sits in, to the cell edge
+        t.paint(band(bits) & m, 'trim')                  # its frame
+        pane = band(bits, A + 3, B - 3) & inner
         t.slab(pane, 'glass', -1.5, bevel=0.5, on=H)
         t.m[pane] = 'glass'
         gl = pane & (((XX + YY) % 23) < 2)
@@ -132,15 +141,13 @@ def wall(theme, bits, rng, glass=False):
         t.carve(joint & inner, 0.8)
         t.mark(joint & inner, -1)
         t.paint(edge, 'wall_side')
-        if rng.chance(0.25):
-            t.paint(m & blotches(rng.int(0, 1 << 20), 0.06, cells=4), 'grime')
     elif theme == 'slum':
         # sheet metal over block: ribs across the band, rust, a patched plate
         t.slab(m, 'wall', H, bevel=1.0)
         rib = inner & ((((XX % 6) < 2) & ((bits & 10) > 0)) | (((YY % 6) < 2) & ((bits & 5) > 0) & ~((bits & 10) > 0)))
         t.h[rib] += 0.8
         t.mark(rib, 1)
-        t.paint(m & blotches(rng.int(0, 1 << 20), 0.3, cells=4), 'rust')
+        t.paint(m & blotches(rng.int(0, 1 << 20), 0.12, cells=8), 'rust')
         t.paint(edge, 'wall_side')
         if rng.chance(0.5):
             pat = Tile.box_mask(rng.int(A, B - 10), rng.int(A, B - 10), 0, 0)
@@ -154,7 +161,7 @@ def wall(theme, bits, rng, glass=False):
         # timber frame (dark beams along both faces, posts every 16 px) with plaster between
         t.slab(m, 'wall', H, bevel=1.0)
         t.paint(edge, 'trim')
-        post = m & ((((XX % 16) < 3) & ((bits & 10) > 0)) | (((YY % 16) < 3) & ((bits & 5) > 0)) | Tile.box_mask(A, A, B, B) & ~band(0, A + 4, B - 4))
+        post = m & ((((XX % 16) < 3) & ((bits & 10) > 0)) | (((YY % 16) < 3) & ((bits & 5) > 0)))
         t.paint(post, 'trim')
         t.h[post] += 0.6
     else:
@@ -162,11 +169,11 @@ def wall(theme, bits, rng, glass=False):
         t.slab(m, 'wall', H, bevel=1.0)
         joint = inner & ((((XX % 32) == 0) & ((bits & 10) > 0)) | (((YY % 32) == 0) & ((bits & 5) > 0)))
         t.mark(joint, -1)
-        riv = inner & ~band(bits, A + 5, B - 5) & ((((XX % 8) == 4) & ((bits & 10) > 0)) | (((YY % 8) == 4) & ((bits & 5) > 0)))
+        riv = inner & ~block(bits, 5) & ((((XX % 8) == 4) & ((bits & 10) > 0)) | (((YY % 8) == 4) & ((bits & 5) > 0)))
         t.h[riv] += 0.7
         t.mark(riv, 1)
         t.paint(edge, 'wall_side')
-        t.paint(m & blotches(rng.int(0, 1 << 20), 0.18, cells=4), 'rust')
+        t.paint(m & blotches(rng.int(0, 1 << 20), 0.07, cells=8), 'rust')
     face = _face(t, m, bits, theme, rng)
     _open_edges(t, bits)
     # contact shadow on the floor to the bottom right of the wall and its face
@@ -183,7 +190,7 @@ def door(theme, rng, vertical=False, state='open', locked=False):
     def R(x0, y0, x1, y1, r=0.0):
         return Tile.box_mask(y0, x0, y1, x1, r) if vertical else Tile.box_mask(x0, y0, x1, y1, r)
 
-    post = R(0, A, 7, B) | R(N - 8, A, N - 1, B)
+    post = R(0, 0, 7, N - 1) | R(N - 8, 0, N - 1, N - 1)           # the posts are as thick as the walls they sit in
     t.slab(post, 'trim' if theme != 'rural' else 'trim', H + 1, bevel=1.0)
     if vertical:
         t.noline |= (YY == 0) | (YY == N - 1)

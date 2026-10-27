@@ -55,6 +55,7 @@ func tile() -> int:
 ## bound it), found once and remembered.  Rooms pick their sprite variants by it.
 var _room_key := {}
 func _room_of(c: int) -> int:
+	_check_caches()
 	if _room_key.has(c):
 		return int(_room_key[c])
 	var tiles = game.city.tiles
@@ -75,6 +76,80 @@ func _room_of(c: int) -> int:
 	for k in seen:
 		_room_key[k] = lo
 	return lo
+
+## Which way a piece of furniture faces.  Its sprite faces south (its back, or the wall it hangs on, to the north);
+## the district sets also draw it facing north (_fn), east (_fe) and west (_fw).  A seat beside a table faces the
+## table; anything else stands with its back to the wall beside it (on a run along a wall, the wall the run follows);
+## a run in the open faces the side with more floor.  Found once per cell and remembered.
+const SEATS := {"f_trl_cafe_chair": 1, "f_trl_booth_seat": 1, "f_trl_lounge_sofa": 1, "f_trl_armchair": 1, "f_trl_lobby_sofa": 1,
+	"f_trl_waiting_bench": 1, "f_trl_office_chair": 1, "f_trl_barber_chair": 1, "f_trl_sofa": 1, "f_trl_weight_bench": 1, "f_trl_hair_dryer": 1}
+const TABLES := {"f_trl_cafe_table": 1, "f_trl_card_table": 1, "f_trl_pool_table": 1, "f_trl_coffee_table": 1, "f_trl_kotatsu": 1,
+	"f_trl_meeting_table": 1, "f_trl_desk": 1, "f_trl_desk_workstation": 1, "f_trl_desk_executive": 1, "f_trl_folding_table": 1,
+	"f_trl_dining_table": 1, "f_trl_table_plastic": 1, "f_trl_tea_table": 1, "f_trl_gunsmith_table": 1, "f_trl_workbench": 1,
+	"f_trl_police_desk": 1, "f_trl_dj_booth": 1}
+const FACE_SUFFIX := ["", "_fe", "_fn", "_fw"]     # facing south, east, north, west (towards +y, +x, -y, -x)
+var _face_of := {}
+var _cache_city = null             # the city the two caches were filled for (zones swap cities under the view)
+func _check_caches() -> void:
+	if _cache_city != game.city:
+		_cache_city = game.city
+		_face_of.clear()
+		_room_key.clear()
+
+func _facing(c: int, sp: String) -> String:
+	_check_caches()
+	if _face_of.has(c):
+		return String(_face_of[c])
+	var tiles = game.city.tiles
+	var n: int = tiles.size()
+	var sz: int = game.size
+	var steps := [sz, 1, -sz, -1]                   # the cell to the south, east, north, west
+	var face := -1
+	if SEATS.has(sp):
+		for k in 4:
+			var m: int = c + steps[k]
+			if m >= 0 and m < n and TABLES.has(String(CG.TILE_SPRITE.get(int(tiles[m]), ""))):
+				face = k
+				break
+	if face < 0:
+		var run_h := false
+		var run_v := false
+		for k in 4:
+			var m2: int = c + steps[k]
+			if m2 >= 0 and m2 < n and String(CG.TILE_SPRITE.get(int(tiles[m2]), "")) == sp:
+				if k % 2 == 1:
+					run_h = true
+				else:
+					run_v = true
+		# a wall beside it: back to the wall.  On a run, the walls along the run first.
+		# a piece in a run only takes its back to a wall the run follows (an east-west run: north or south)
+		var order := [2, 0, 3, 1]
+		if run_h and not run_v:
+			order = [2, 0]
+		elif run_v and not run_h:
+			order = [3, 1]
+		for k in order:
+			var m3: int = c + steps[k]
+			if m3 >= 0 and m3 < n and _wall_tile(int(tiles[m3])):
+				face = (k + 2) % 4
+				break
+		if face < 0 and run_v and not run_h:
+			face = 1 if _open_floor(c + 1, 1) >= _open_floor(c - 1, -1) else 3
+	if face < 0:
+		face = 0
+	_face_of[c] = FACE_SUFFIX[face]
+	return String(_face_of[c])
+
+func _wall_tile(t: int) -> bool:
+	return t == CG.WALL or t == CG.GLASS or t == CG.TID["window_broken"]
+
+func _open_floor(c: int, step: int) -> int:
+	var k := 0
+	var n: int = game.city.tiles.size()
+	while k < 6 and c >= 0 and c < n and int(game.city.tiles[c]) < CG.EXTRA0 + 9 and not _wall_tile(int(game.city.tiles[c])):
+		k += 1
+		c += step
+	return k
 
 func _blit(id: String, pos: Vector2, mod: Color = Color.WHITE) -> bool:
 	if id.begins_with("icon:"):
@@ -293,9 +368,14 @@ var theme_sets := {}               # theme -> Tileset, or {} when the sets are m
 var base_set = null                # the base tileset (the one main.gd hands the view)
 var themed := false                # drawing a cell with a district set (no wealth tint: the set is the district)
 
+static var _shared_sets := {}       # the district and item sets, loaded once for every view (each sheet is tens of MB)
 func _load_themes() -> void:
 	if not theme_sets.is_empty() or tileset == null:
 		return
+	if not _shared_sets.is_empty():
+		theme_sets = _shared_sets
+		return
+	theme_sets = _shared_sets
 	theme_sets["_tried"] = true
 	# item icons (world-workshop) sit between the district sets and the base set: district -> items -> base
 	var items_set = tileset.get_script().new()
@@ -497,7 +577,12 @@ func _draw() -> void:
 						_blit(tileset.pick(String(CG.TILE_SPRITE.get(under_t, "t_floor")), vk), pos, mod)
 					else:
 						_blit(tileset.pick(String(TERRAIN.get(under_t, "t_floor")), c), pos, mod)
-				if not _blit(tileset.pick(String(CG.TILE_SPRITE.get(t, "")), vk), pos, mod):
+				var fsp: String = String(CG.TILE_SPRITE.get(t, ""))
+				if t >= CG.EXTRA0 + 9:
+					var turned: String = fsp + _facing(c, fsp)
+					if turned != fsp and tileset.has(turned):
+						fsp = turned
+				if not _blit(tileset.pick(fsp, vk), pos, mod):
 					draw_rect(Rect2(pos + Vector2(4, 4) * S, Vector2(T - 8 * S, T - 8 * S)), Color(0.5, 0.4, 0.25) * mod)
 			else:
 				_cell_art(t, c, wx, wy, pos, mod, c < s2)

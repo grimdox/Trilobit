@@ -162,33 +162,52 @@ def random_sample(S, out, seeds=range(1, 4)):
 # ------------------------------------------------------------------------------------------------ furnished rooms
 # the new furniture as the game lays it: a row of fittings on the back wall, the room's pieces in rows, its floor
 ROOM_KINDS = [
+    # name, floors, wall fittings, pieces, (table, seat)
     ('cafe', ['t_trl_floor_parquet', 't_trl_floor_tile'], ['coffee_bar', 'bakery_case', 'bread_rack'],
-     ['cafe_table', 'cafe_chair', 'cafe_chair', 'coffee_machine', 'armchair']),
+     ['coffee_machine', 'armchair', 'bread_rack'], ('cafe_table', 'cafe_chair')),
     ('bar', ['t_trl_floor_dance', 't_trl_floor_concrete'], ['bar_counter', 'speaker_stack', 'dj_booth'],
-     ['booth_seat', 'pool_table', 'card_table', 'jukebox', 'lounge_sofa', 'barrel', 'karaoke_booth']),
+     ['pool_table', 'jukebox', 'lounge_sofa', 'barrel', 'karaoke_booth'], ('card_table', 'booth_seat')),
     ('shop', ['t_trl_floor_lino', 't_trl_floor_concrete', 't_trl_floor_carpet_grey'], ['shoe_wall', 'tv_wall', 'electronics_shelf', 'bookshelf', 'pharmacy_shelf'],
-     ['clothing_rack', 'mannequin', 'display_case', 'mirror', 'office_shelf', 'hardware_rack']),
-    ('garage', ['t_trl_floor_concrete'], ['tool_wall', 'tire_rack', 'gun_rack'], ['lift_hoist', 'tool_chest', 'workbench', 'car_plinth', 'lumber_stack']),
+     ['clothing_rack', 'mannequin', 'display_case', 'mirror', 'office_shelf', 'hardware_rack'], None),
+    ('garage', ['t_trl_floor_concrete'], ['tool_wall', 'tire_rack', 'gun_rack'], ['lift_hoist', 'tool_chest', 'car_plinth', 'lumber_stack'],
+     ('workbench', None)),
     ('service', ['t_trl_floor_tile', 't_trl_floor_carpet_grey'], ['teller_window', 'deposit_boxes', 'locker', 'salon_mirror', 'mail_sorter', 'key_rack'],
-     ['waiting_bench', 'queue_rail', 'atm', 'barber_chair', 'washing_machine', 'dryer', 'arcade_cabinet', 'claw_machine', 'pachinko_machine']),
+     ['queue_rail', 'atm', 'washing_machine', 'dryer', 'arcade_cabinet', 'claw_machine', 'pachinko_machine'], ('folding_table', 'waiting_bench')),
     ('gym', ['t_trl_floor_rubber', 't_trl_floor_mat'], ['locker', 'dumbbell_rack', 'weapon_rack', 'shoe_shelf'],
-     ['treadmill', 'weight_bench', 'squat_rack', 'punching_bag', 'training_dummy']),
-    ('works', ['t_trl_floor_concrete'], ['pallet_rack', 'parts_bin'], ['conveyor', 'lathe', 'mill', 'scrap_pile', 'baler', 'shredder', 'press_machine', 'pallet_stack']),
+     ['treadmill', 'squat_rack', 'punching_bag', 'training_dummy', 'weight_bench'], None),
+    ('works', ['t_trl_floor_concrete'], ['pallet_rack', 'parts_bin'], ['conveyor', 'lathe', 'mill', 'scrap_pile', 'baler', 'shredder', 'press_machine', 'pallet_stack'], None),
     ('home', ['t_trl_floor_lino', 't_trl_floor_parquet', 't_trl_floor_mat'], ['kitchen_counter', 'kitchen_sink', 'wardrobe', 'dresser', 'home_shrine', 'tv_stand'],
-     ['bed_single', 'bed_double', 'bunk_bed', 'sofa', 'coffee_table', 'kotatsu', 'futon', 'toilet', 'bathtub', 'shower', 'shoe_rack']),
+     ['bed_single', 'bed_double', 'bunk_bed', 'kotatsu', 'futon', 'toilet', 'bathtub', 'shower', 'shoe_rack'], ('coffee_table', 'sofa')),
     ('office', ['t_trl_floor_carpet_grey'], ['server_rack', 'whiteboard', 'mailboxes', 'filing_cabinet', 'directory_board'],
-     ['desk_workstation', 'office_chair', 'desk_executive', 'meeting_table', 'cubicle_divider', 'copier']),
+     ['meeting_table', 'cubicle_divider', 'copier'], ('desk_workstation', 'office_chair')),
 ]
 RW, RH = 9, 6
 
 
 def room(spr, th, seed):
-    """one furnished room from a seed, exactly as generated: its kind, floor, wall fittings and pieces are drawn by
-    the seed; one variant per room as in the game"""
+    """one furnished room from a seed, exactly as generated, laid out the way the game turns furniture: fittings on
+    the back wall face south, those on the side walls face into the room, seats face their table; one variant per
+    room as in the game"""
     rng = Rng('room', th, seed)
-    name, floors, wall, pieces = ROOM_KINDS[rng.int(0, len(ROOM_KINDS) - 1)]
+    name, floors, wall, pieces, pair = ROOM_KINDS[rng.int(0, len(ROOM_KINDS) - 1)]
     v = rng.int(0, 2)
     fl = rng.pick(floors)
+    place = {}
+    for x in range(1, RW - 1):                                  # the back wall
+        if rng.chance(0.8):
+            place[(x, 1)] = (wall[(x // 3 + seed) % len(wall)], '')
+    for x, suf in ((1, '_fe'), (RW - 2, '_fw')):              # the side walls
+        place[(x, 3)] = (rng.pick(wall), suf)
+    if pair:
+        table, seat = pair
+        place[(4, 3)] = (table, '')
+        if seat:
+            place[(3, 3)] = (seat, '_fe')
+            place[(5, 3)] = (seat, '_fw')
+            place[(4, 4)] = (seat, '_fn')
+    for x in (2, 6):
+        if rng.chance(0.7):
+            place[(x, 4)] = (rng.pick(pieces), '')
     img = Image.new('RGBA', (RW * 64, RH * 64), BG)
     for y in range(RH):
         for x in range(RW):
@@ -199,12 +218,10 @@ def room(spr, th, seed):
                 img.alpha_composite(over(spr['t_concrete.0'], spr['t_wall.%d' % bits]), (x * 64, y * 64))
                 continue
             layers = [spr['%s.%d' % (fl, v)]]
-            if y == 1:
-                w = wall[(x // 3 + seed) % len(wall)] if rng.chance(0.85) else None
-                if w:
-                    layers.append(spr['f_trl_%s.%d' % (w, v)])
-            elif y in (3, 4) and x not in (1, RW - 2) and rng.chance(0.55):
-                layers.append(spr['f_trl_%s.%d' % (rng.pick(pieces), v)])
+            if (x, y) in place:
+                pid, suf = place[(x, y)]
+                key = 'f_trl_%s%s.%d' % (pid, suf, v)
+                layers.append(spr[key] if key in spr else spr['f_trl_%s.%d' % (pid, v)])
             img.alpha_composite(over(*layers), (x * 64, y * 64))
     return img
 

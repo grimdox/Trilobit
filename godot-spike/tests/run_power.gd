@@ -243,6 +243,8 @@ func _initialize() -> void:
 	check("power survives a save and load (%.1f kJ, state %d)" % [g2.power, g2.power_state], absf(g2.power - 123.5) < 0.01 and g2.power_state == 1)
 	check("a person's energy, and what a dead one held, survives a save and load", g2.npc_energy(nap) == 77 and g2.npc_energy(bratva) == 33)
 	var pd: Dictionary = JSON.parse_string(JSON.stringify(g.player_dict()))
+	var g2_paid: bool = g2.done_contracts.has("repair-0000abcd") and not g2.portal_open({"id": "repair-0000abcd"}, 0)
+	g2.dispose()                                         # (one 1536 city at a time)
 	w.game.dispose()                                     # (one 1536 city at a time: this one is finished with)
 	var w2 = WorldScript.new()
 	w2.start(21, 300)
@@ -256,8 +258,7 @@ func _initialize() -> void:
 	g3.setup(300)
 	g3.apply_player(pd)
 	check("power travels with the player between zones", absf(g3.power - 123.5) < 0.01)
-	check("a paid contract is remembered through a save and a zone change, and cannot be taken again (money must come from new work)", g2.done_contracts.has("repair-0000abcd") and g3.done_contracts.has("repair-0000abcd") and not g2.portal_open({"id": "repair-0000abcd"}, 0))
-	g2.dispose()
+	check("a paid contract is remembered through a save and a zone change, and cannot be taken again (money must come from new work)", g2_paid and g3.done_contracts.has("repair-0000abcd"))
 	g3.dispose()
 	var old: Dictionary = sd.duplicate(true)
 	old.erase("power")
@@ -268,18 +269,23 @@ func _initialize() -> void:
 	check("an old save (no power, no energy) loads: the rig is full and people hold their clock-based charge", g4.power_left() == g4.power_cap() and g4.npc_energy(nap) >= 0 and g4.npc_energy(nap) <= 1152)
 	g4.dispose()
 	# ---- the same seed plays the same
+	# (one after the other, not side by side: two 1536 cities do not fit in a small machine's memory)
 	var ga = preload("res://src/game.gd").new(7)
 	ga.setup(300)
 	ga.implants = {"smartlink": true, "optics": true}
+	for _i in 900:
+		ga.end_turn()
+	var left_a: float = ga.power_left()
+	var cap_a: float = ga.power_cap()
+	ga.dispose()
 	var gb = preload("res://src/game.gd").new(7)
 	gb.setup(300)
 	gb.implants = {"smartlink": true, "optics": true}
 	for _i in 900:
-		ga.end_turn()
 		gb.end_turn()
-	check("two games from one seed drain identically (%.4f)" % ga.power_left(), ga.power_left() == gb.power_left() and ga.power_left() < ga.power_cap())
-	ga.dispose()
+	var left_b: float = gb.power_left()
 	gb.dispose()
+	check("two games from one seed drain identically (%.4f)" % left_a, left_a == left_b and left_a < cap_a)
 	# ---- health is per limb; the head or chest at 0 ends the run
 	var gh = preload("res://src/game.gd").new(7)
 	gh.setup(300)
