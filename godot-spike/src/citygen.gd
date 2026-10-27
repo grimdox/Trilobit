@@ -943,7 +943,7 @@ func _organic_city(seed_v: int) -> void:
 				var want := ""
 				var wside: int = _street_side(x, y, x1, y1)
 				for tid in BZ.TYPES:
-					if int(biz_count.get(tid, 0)) == 0 and BZ.TYPES[tid]["zone"] != "ind" and not BZ.fitting_side(tid, w, h, wside).is_empty():
+					if int(biz_count.get(tid, 0)) == 0 and BZ.TYPES[tid]["zone"] != "ind" and (not BZ.TYPES[tid].has("wealth_max") or wealth_at(y * size + x) <= int(BZ.TYPES[tid]["wealth_max"])) and not BZ.fitting_side(tid, w, h, wside).is_empty():
 						want = tid
 						break
 				if want != "":
@@ -968,7 +968,7 @@ func _organic_city(seed_v: int) -> void:
 				var nbay: int = mini(10, (w - 4) / 4)
 				var ww: int = nbay * 4 + 2
 				var roll: int = (hash([size, x / 8, y / 8, "lk"]) & 0x7fffffff) % 100
-				_stamp_lot("station" if roll < 40 else "lot", Rect2i(x + (w - ww) / 2, y + (h - 20) / 2, ww, 20), (hash([size, x, y, "ev"]) & 0x7fffffff) % 3 == 0)
+				_stamp_lot("station" if roll < 40 and nbay >= 7 else "lot", Rect2i(x + (w - ww) / 2, y + (h - 20) / 2, ww, 20), (hash([size, x, y, "ev"]) & 0x7fffffff) % 3 == 0)
 				nstat["lot"] += 1
 				made_lot = true
 			elif dd < mega and w >= 60 and h >= 60 and r.randf() < 0.55:
@@ -1354,6 +1354,7 @@ func _leaf_business(x0: int, y0: int, x1: int, y1: int) -> bool:
 	if rng.randf() > pb:
 		return false
 	var side: int = _street_side(x0, y0, x1, y1)
+	_pick_wealth = wealth_at(y0 * size + x0)
 	var id := forced if forced != "" and not BZ.fitting_side(forced, w, h, side).is_empty() else _pick_business(w, h, side)
 	if id == "":
 		return false
@@ -1362,6 +1363,8 @@ func _leaf_business(x0: int, y0: int, x1: int, y1: int) -> bool:
 	return _stamp_business(id, x0, y0, x1, y1, side) != null
 
 ## choose a business type for a w x h rectangle, weighted by how well the district kind suits it
+var _pick_wealth: int = 1               # the district wealth (0 poor .. 2 rich) of the plot a business is being chosen for
+
 func _pick_business(w: int, h: int, side: int, zones_only: String = "") -> String:
 	var weights: Array = []
 	var total := 0.0
@@ -1371,6 +1374,8 @@ func _pick_business(w: int, h: int, side: int, zones_only: String = "") -> Strin
 			continue
 		var tz: String = T["zone"]
 		var wt: float = float(T["w"])
+		if T.has("wealth_max") and _pick_wealth > int(T["wealth_max"]):
+			continue                                       # (a labor center stands in the middle and lower districts only)
 		if zones_only != "":
 			if tz != zones_only:
 				continue

@@ -78,6 +78,7 @@ func _initialize() -> void:
 	var g2 = GameScript.new(21)
 	g2.setup(300)
 	check("windows are the same every time for the same seed", g2.city.tiles == g.city.tiles)
+	g2.dispose()                                   # (a 512 city is over a gigabyte: let go of each spare game)
 	# stand beside it on the open side and strike it
 	var stood := false
 	for d in [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]:
@@ -110,6 +111,8 @@ func _initialize() -> void:
 	g4.setup(300)
 	g4.apply_player(JSON.parse_string(JSON.stringify(g.player_dict())))
 	check("the name survives a save and load and a zone change", g3.player_name == "Mara Voss" and g4.player_name == "Mara Voss")
+	g3.dispose()                                   # (a 512 city is over a gigabyte: let go of each spare game)
+	g4.dispose()                                   # (a 512 city is over a gigabyte: let go of each spare game)
 	# ---- the screen: typing, HUD, mouse filter
 	var m = MainScript.new()
 	m.save_prefix = "user://test_b2_save_"
@@ -173,8 +176,10 @@ func _initialize() -> void:
 	ng2.setup(300)
 	ng2.apply_player(sv)
 	check("the movement prompt sets crawl, crouch, walk or run (run stays on) and run is carried to another zone (a loaded save, like stance, starts walking)", mv_ok and ng2.run_mode and ng2.stance == 2)
+	ng2.dispose()                                   # (a 512 city is over a gigabyte: let go of each spare game)
 	ng.set_movement(1)
 	check("choosing crouch turns running off", not ng.run_mode and ng.stance == 1)
+	ng.dispose()                                   # (a 512 city is over a gigabyte: let go of each spare game)
 	# ---- the real key path: C opens the prompt, 4 runs, X with nothing near says so
 	m.mode = "play"
 	m.game.game_over = false

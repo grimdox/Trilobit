@@ -46,6 +46,8 @@ var budget: int = 0
 var started: bool = false
 var starts: int = 0                  # trips begun (a statistic for the tests)
 var _astar: AStarGrid2D = null
+var _comp := PackedInt32Array()     # the connected piece of ground each ground cell belongs to (see _build_grid)
+var main_comp: int = 0
 var _thread: Thread = null
 var doors: PackedInt32Array = PackedInt32Array()   # subway station street entrances
 
@@ -95,7 +97,7 @@ func index() -> void:
 			any = true
 			break
 	if any:
-		prepare()
+		prepare()                                          # (a no-op when the sim started it at setup)
 
 ## the walking grid is built on a thread (about half a second on the big map), and waited for the first time a route is wanted
 func prepare() -> void:
@@ -117,6 +119,36 @@ func _build_grid(walk: PackedByteArray, sz: int) -> void:
 		for x in sz:
 			if walk[b + x] == 0:
 				a.set_point_solid(Vector2i(x, y), true)
+	# which streets and rooms are joined to which: one number per ground cell (0 = not walkable).  A path between two different numbers does not exist,
+	# and finding that out by search would mean searching the whole map.
+	var cm := PackedInt32Array()
+	cm.resize(sz * sz)
+	var stack := PackedInt32Array()
+	var label := 0
+	for st in sz * sz:
+		if walk[st] == 0 or cm[st] != 0:
+			continue
+		label += 1
+		cm[st] = label
+		stack.resize(0)
+		stack.append(st)
+		while not stack.is_empty():
+			var cur: int = stack[stack.size() - 1]
+			stack.resize(stack.size() - 1)
+			var cx: int = cur % sz
+			if cx > 0 and walk[cur - 1] == 1 and cm[cur - 1] == 0:
+				cm[cur - 1] = label
+				stack.append(cur - 1)
+			if cx < sz - 1 and walk[cur + 1] == 1 and cm[cur + 1] == 0:
+				cm[cur + 1] = label
+				stack.append(cur + 1)
+			if cur >= sz and walk[cur - sz] == 1 and cm[cur - sz] == 0:
+				cm[cur - sz] = label
+				stack.append(cur - sz)
+			if cur < sz * (sz - 1) and walk[cur + sz] == 1 and cm[cur + sz] == 0:
+				cm[cur + sz] = label
+				stack.append(cur + sz)
+	_comp = cm
 	_astar = a
 
 func _grid() -> AStarGrid2D:
@@ -127,6 +159,19 @@ func _grid() -> AStarGrid2D:
 
 func wait_ready() -> void:
 	_grid()
+
+## the piece of ground a cell belongs to: a ground cell itself, a tower floor by the street cell its way down comes out at
+func comp_of(c: int) -> int:
+	_grid()
+	if c < s2:
+		return _comp[c]
+	var g: PackedInt32Array = _to_ground(c)
+	return _comp[g[g.size() - 1]] if not g.is_empty() else 0
+
+## can a person get from a to b at all
+func connected(a: int, b: int) -> bool:
+	var ca: int = comp_of(a)
+	return ca != 0 and ca == comp_of(b)
 
 # ------------------------------------------------------------------ distances
 func _xy(c: int) -> Vector2i:
@@ -300,6 +345,16 @@ func reconstruct(i: int) -> void:
 # ------------------------------------------------------------------ routes
 ## cells from a to b (both included): up or down through the building at either end, A* over the ground between
 func build(a: int, b: int) -> PackedInt32Array:
+	var _t0 := Time.get_ticks_usec()
+	var r := _build(a, b)
+	builds += 1
+	build_us += Time.get_ticks_usec() - _t0
+	return r
+
+var builds: int = 0
+var build_us: int = 0
+
+func _build(a: int, b: int) -> PackedInt32Array:
 	var out := PackedInt32Array()
 	var ga: int = a
 	var head := PackedInt32Array()
@@ -320,7 +375,7 @@ func build(a: int, b: int) -> PackedInt32Array:
 		mid.append(ga)
 	else:
 		var gr := _grid()
-		if gr == null:
+		if gr == null or _comp[ga] != _comp[gb] or _comp[ga] == 0:
 			return out
 		var p: Array = gr.get_id_path(Vector2i(ga % size, ga / size), Vector2i(gb % size, gb / size))
 		if p.is_empty():

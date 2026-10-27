@@ -182,6 +182,7 @@ func _initialize() -> void:
 		var g2 = preload("res://src/game.gd").new(0)
 		g2.load_dict(d)
 		check("%s: a save made inside the site loads back into the same site, progress and all" % tid, g2.mission["offer"]["id"] == offer["id"] and g2.mission["done"] == s.mission["done"] and g2.mission["planted"] == s.mission["planted"] and g2.mission["freed"] == s.mission["freed"] and g2.mission["progress"] == s.mission["progress"] and g2.pc == s.pc and g2.city.tiles == s.city.tiles)
+		g2.dispose()
 		# leave through the exit portal
 		var ex: int = int(site["exit"])
 		var dx: Vector2i = stand_beside(s, ex)
@@ -290,6 +291,7 @@ func _initialize() -> void:
 	gl.island = w.island
 	gl.load_dict(sd)
 	check("an open portal survives a save and load (tile and offer)", not gl.portal.is_empty() and gl.portal["offer"]["id"] == g.portal["offer"]["id"] and gl.city.tiles[int(gl.portal["cell"])] == CG.TID["portal"])
+	gl.dispose()
 	# the whole world saves and loads inside a site
 	var cell_p: int = int(g.portal["cell"])
 	var nb2: Vector2i = stand_beside(g, cell_p)
@@ -297,6 +299,8 @@ func _initialize() -> void:
 	m.refresh()
 	var s3 = w.game
 	var wd: Dictionary = JSON.parse_string(JSON.stringify(w.save_dict()))
+	if w.origin_game != null:                           # (one 1536 city at a time: the first world is finished with once it is saved)
+		w.origin_game.dispose()
 	var w2 = WorldScript.new()
 	w2.load_dict(wd)
 	check("a world saved inside a site loads back inside it, with the street stored behind it", not w2.game.mission.is_empty() and w2.in_site())

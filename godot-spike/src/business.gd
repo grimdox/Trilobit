@@ -110,12 +110,16 @@ const TYPES := {
 		"versions": [[12, 13, 0, "credit union"], [16, 14, 1, "branch"], [20, 16, 2, "main branch"]]},
 	"police": {"name": "Police station", "cat": "service", "zone": "mid", "w": 4, "role": "staff", "jobs": ["officer", "desk sergeant", "detective"],
 		"names": ["Precinct 4", "Harbor Precinct", "Central Station", "North Ward Police", "Precinct 9"],
-		"L": {"floor": ["floor_clean", "floor_clean", "floor_clean"], "counter": "police_desk", "cu": 4, "body": "cells", "row": "holding_cell", "wall": "evidence_locker", "front": ["notice_board"], "decor": ["desk"], "glass": false, "line": true},
+		"L": {"floor": ["floor_clean", "floor_clean", "floor_clean"], "counter": "police_desk", "cu": 4, "body": "cells", "row": "holding_cell", "wall": "evidence_locker", "front": ["notice_board"], "decor": ["desk"], "glass": false, "line": true, "booths": 1},
 		"versions": [[14, 13, 0, "substation"], [18, 14, 1, "precinct"], [24, 16, 1, "headquarters"]]},
 	"gov_office": {"name": "Government office", "cat": "service", "zone": "core", "w": 6, "role": "staff", "jobs": ["clerk", "inspector", "supervisor"],
 		"names": ["Ward Office", "Permits & Licences", "Harbor Authority", "Housing Bureau", "Civil Registry", "Tax Office"],
-		"L": {"floor": ["floor_clean", "floor_carpet_grey", "floor_marble"], "counter": "service_window", "cu": 5, "body": "open", "row": "waiting_bench", "wall": "filing_cabinet", "front": ["notice_board"], "decor": ["queue_rail"], "glass": false, "line": true},
+		"L": {"floor": ["floor_clean", "floor_carpet_grey", "floor_marble"], "counter": "service_window", "cu": 5, "body": "open", "row": "waiting_bench", "wall": "filing_cabinet", "front": ["notice_board"], "decor": ["queue_rail"], "glass": false, "line": true, "booths": 2},
 		"versions": [[12, 13, 0, "branch office"], [16, 14, 1, "ward office"], [20, 15, 1, "bureau"], [24, 16, 2, "ministry annex"]]},
+	"labor_center": {"name": "Labor Center", "cat": "civic", "zone": "mid", "w": 7, "role": "staff", "jobs": ["case officer", "clerk", "security"], "wealth_max": 1,
+		"names": ["Ward Labor Center", "Day Labor Hall", "Dockworkers' Hall", "Workers' Employment Exchange", "Hokkai Job Center", "Union Hiring Hall"],
+		"L": {"floor": ["floor_clean", "floor_clean", "floor_carpet_grey"], "counter": "service_window", "cu": 4, "body": "open", "row": "waiting_bench", "wall": "notice_board", "front": ["notice_board", "vending"], "decor": ["queue_rail"], "glass": false, "line": true, "booths": 3},
+		"versions": [[14, 13, 0, "day-labor hall"], [18, 14, 1, "employment center"], [22, 15, 1, "labor exchange"]]},
 	"post_depot": {"name": "Post and courier depot", "cat": "service", "zone": "mid", "w": 5, "role": "staff", "jobs": ["clerk", "sorter", "courier"],
 		"names": ["Hokkai Post", "Swift Courier", "Parcel Point", "North Express", "Ward Post Office"],
 		"L": {"floor": ["floor_clean", "floor_concrete", "floor_clean"], "counter": "counter", "cu": 3, "body": "rows", "row": "parcel_shelf", "wall": "mail_sorter", "front": ["parcel_trolley"], "decor": ["scale"], "glass": true},
@@ -189,6 +193,8 @@ static func props_of(id: String) -> Array:
 			for p in L.get(k, []):
 				if not out.has(p):
 					out.append(p)
+		if int(L.get("booths", 0)) > 0 and not out.has("terminal"):
+			out.append("terminal")
 	return out
 
 # ------------------------------------------------------------------------------------------------ the layout frame
@@ -434,6 +440,16 @@ static func stamp(c, id: String, ver: int, x0: int, y0: int, side: int, tier_hin
 		break
 	if L.get("decor", []).size() > 1:
 		B.put(di - 1, wi - 1, L["decor"][1])
+	# mission booths (the mission terminals of missions.gd) in a row along the wall beside the door, where people wait their turn
+	var nb: int = int(L.get("booths", 0))
+	if nb > 0:
+		var placed := 0
+		for v in range(wi - 2, 0, -3):
+			if placed >= nb:
+				break
+			if B.is_free(1, v):
+				B.put(1, v, "terminal")
+				placed += 1
 	# the people: the keeper behind the counter, the rest of the staff on free floor
 	var free: Array = []
 	for u in range(maxi(cu + 1, 1), di):

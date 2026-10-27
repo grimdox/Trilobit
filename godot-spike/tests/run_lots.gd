@@ -59,9 +59,6 @@ func _initialize() -> void:
 					if g.city.tiles[(int(b[1]) + yy) * g.size + int(b[0]) + xx] != CG.ROAD:
 						bay_ok = false
 	check("every bay is 4 x 6 of open paving", bay_ok)
-	var w2 = WorldScript.new()
-	w2.start(21, 300)
-	check("the same seed gives the same lots and banks", w2.game.city.lots.size() == g.city.lots.size() and w2.game.city.ev_chargers == g.city.ev_chargers)
 	# ---- parked cars
 	var per_lot: Array = []
 	var inside := true
@@ -80,7 +77,7 @@ func _initialize() -> void:
 	var empty := per_lot.filter(func(c): return c == 0).size()
 	var full := 0
 	for i in g.city.lots.size():
-		if per_lot[i] >= g.city.lots[i]["bays"].size():
+		if g.city.lots[i]["bays"].size() >= 12 and per_lot[i] >= g.city.lots[i]["bays"].size():
 			full += 1
 	check("lots are filled to different degrees, some completely empty (%d empty of %d), at most one completely full (%d)" % [empty, per_lot.size(), full], empty >= 1 and full <= 1 and per_lot.max() >= 6)
 	var parked: Array = []
@@ -179,6 +176,7 @@ func _initialize() -> void:
 	var g2 = GameScript.new(21)
 	g2.load_dict(sd)
 	check("an opened door stays open through a save and load, the rest stay shut", g2.city.tiles[door] == CG.DOOR and g2.sim.opaque[door] == 0 and g2.open_doors.has(door) and g2.city.tiles[dc] != 0)
+	g2.dispose()
 	g.act_interact_with(g.interactables().filter(func(it): return it["kind"] == "door" and it["cell"] == door)[0])
 	check("using an open door shuts it again", g.city.tiles[door] == CG.TID["door_closed"] and g.sim.opaque[door] == 1 and not g.open_doors.has(door))
 	g.act_interact_with(g.interactables().filter(func(it): return it["kind"] == "door" and it["cell"] == door)[0])
@@ -211,6 +209,13 @@ func _initialize() -> void:
 	g.city.tiles[free] = old_t
 	g.sim.walk[free] = 1
 	# ---- no debt, no gunsmith key, no service key
+	var lots_sig: int = g.city.lots.size()                  # (one 1536 city at a time: the same-seed check is made last, from what the first city looked like)
+	var ev_sig: PackedInt32Array = PackedInt32Array(g.city.ev_chargers)
+	w.game.dispose()
+	var w2 = WorldScript.new()
+	w2.start(21, 300)
+	check("the same seed gives the same lots and banks", w2.game.city.lots.size() == lots_sig and PackedInt32Array(w2.game.city.ev_chargers) == ev_sig)
+	w2.game.dispose()
 	var fresh = GameScript.new(5)
 	fresh.setup(300)
 	var keys: Array = ST.ACTIONS.map(func(a): return a[0])

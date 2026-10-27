@@ -54,7 +54,7 @@ func run() -> Array:
 				edge_lo = mini(edge_lo, x)
 				edge_hi = maxi(edge_hi, x)
 				break
-	check.call("the outline is not a square: it fills %.0f%% of its bounding box and its edge wanders" % (fill * 100.0), fill < 0.9 and edge_lo < 140 and edge_hi < n)
+	check.call("the outline is not a square: it fills %.0f%% of its bounding box and its edge wanders" % (fill * 100.0), fill < 0.9 and edge_lo < n / 3 and edge_hi < n)
 	var edge_rows := []
 	for y in range(miny + 40, maxy - 40, 8):
 		for x in n:
@@ -74,7 +74,7 @@ func run() -> Array:
 	check.call("the river is one unbroken channel from the foothills to the harbor", okc)
 	var ys0: int = isl.RIVER_Y0 + 8
 	var xs0 := int(isl._rv_x[ys0])
-	check.call("it rises inside the mountains (x %d, mass %.2f)" % [xs0, isl._samp(isl._g_mt, xs0 - 20, ys0)], isl._samp(isl._g_mt, xs0 - 20, ys0) > 0.3 and isl.terrain(xs0 - 14, ys0) in [CG.MOUNTAIN, CG.ROCKS])
+	check.call("it rises inside the mountains (x %d, mass %.2f)" % [xs0, isl._samp(isl._g_mt, xs0 - 20, ys0)], isl._samp(isl._g_mt, xs0 - 20, ys0) > 0.3 and isl.terrain(xs0 - 24, ys0) in [CG.MOUNTAIN, CG.ROCKS])
 	var my: int = isl.RIVER_Y1 + 8
 	check.call("it reaches the sea in the city's harbor (mouth at row %d, city-local %d)" % [isl.RIVER_Y1, isl.RIVER_Y1 - o.y], isl.terrain(int(isl._rv_x[isl.RIVER_Y1]), my) == CG.WATER and isl.RIVER_Y1 - o.y > 780)
 	var wet := 0
@@ -135,10 +135,13 @@ func run() -> Array:
 		var nn: int = isl.hwy_n(x)
 		var ss: int = isl.hwy_s(x)
 		var width := 0
-		for dy in range(-30, 30):
-			if isl.terrain(x, hy + dy) in [CG.ROAD, CG.RAILING] and absi(isl.terrain(x, hy + dy) - CG.ROAD) < 100:
-				if isl.terrain(x, hy + dy) == CG.ROAD:
-					width += 1
+		for dy in range(-30, 30):                                  # (the run of road that holds the highway's own row: a side road may cross close by)
+			if isl.terrain(x, hy + dy) == CG.ROAD:
+				width += 1
+			elif dy >= 0 and width > 0 and hy + dy > hy + 0:
+				break
+			elif dy < 0:
+				width = 0
 		rows_checked += 1
 		var expect: int = nn + ss + 1
 		if x < isl.PASS_X0 - 18 or x >= ISL.PASS_X1 + 12:
@@ -393,14 +396,24 @@ func run() -> Array:
 	var rshare: float = float(rcomps[0]) / float(maxi(1, road_all - lot_tiles))
 	check.call("the streets form one connected network (%.1f%% of the street tiles outside the parking lots)" % (100.0 * rshare), rshare > 0.97)
 	var d: Dictionary = JSON.parse_string(JSON.stringify(w.save_dict()))
-	var w2 = World.new()
+	# (one 1536 city is about 3 GB, so what is compared is kept as a small signature and the first world is freed before the next is built)
+	var sig := [g.zone, g.size, c.xs.duplicate(), c.ys.duplicate(), c.ys_w.duplicate(), c.tiles.slice(0, n * n).hex_encode().hash(), t.path.duplicate(), g.pc]
+	var seed_v = w.seed_value
+	g = null
+	c = null
+	t = null
+	hz = null
+	isl = null
+	var w2 = w                                            # (loaded again into the same world, which lets go of the old city)
 	w2.load_dict(d)
 	var g2 = w2.game
-	check.call("save and load bring back the same city (plan, roads, river, line, player)", g2.zone == g.zone and g2.size == n and g2.city.xs == c.xs and g2.city.ys == c.ys and g2.city.ys_w == c.ys_w and g2.city.tiles.slice(0, n * n) == c.tiles.slice(0, n * n) and g2.transit.path == t.path and g2.pc == g.pc)
+	var sig2 := [g2.zone, g2.size, g2.city.xs.duplicate(), g2.city.ys.duplicate(), g2.city.ys_w.duplicate(), g2.city.tiles.slice(0, n * n).hex_encode().hash(), g2.transit.path.duplicate(), g2.pc]
+	check.call("save and load bring back the same city (plan, roads, river, line, player)", g2.size == n and sig == sig2)
+	g2 = null
 	# an old save (made before the revamp, so without a layout stamp) does not crash the load: it starts afresh on the same island
 	var old: Dictionary = d.duplicate(true)
 	old.erase("layout")
-	var w3 = World.new()
+	var w3 = w2                                           # (loaded again into the same world: a third 1536 city would not fit in memory)
 	w3.load_dict(old)
-	check.call("a save from before the revamp starts a fresh city on the same island with a notice (layout %d now)" % ISL.LAYOUT_VER, w3.game.zone == ISL.CITY_ZONE and w3.game.size == ISL.CZS and w3.seed_value == w.seed_value and w3.game.log.any(func(l): return String(l).contains("before the city was rebuilt")))
+	check.call("a save from before the revamp starts a fresh city on the same island with a notice (layout %d now)" % ISL.LAYOUT_VER, w3.game.zone == ISL.CITY_ZONE and w3.game.size == ISL.CZS and w3.seed_value == seed_v and w3.game.log.any(func(l): return String(l).contains("before the city was rebuilt")))
 	return [st[0], st[1], log]

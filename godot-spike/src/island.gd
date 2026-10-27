@@ -26,30 +26,30 @@ const GXN := 186
 const GYN := 326
 const HWY_Y := 4395                    # centre row of the highway.  Six lanes of six tiles (36 rows, HWY_Y-18 .. HWY_Y+17) on the plains and in the harbor,
                                        # narrowing to the old twelve rows (HWY_Y-6 .. HWY_Y+5) inside the mountain pass
-const PASS_X1 := 1890                  # the pass ends where the city's map begins
+const PASS_X1 := 1634                  # the pass ends where the city's map begins
 const HWY_N := 18                      # rows above HWY_Y that the wide highway covers, and below (HWY_S) it
 const HWY_S := 17
 const RAIL_BASE := 4                   # the return track's first row is this far below the highway's last row; the outbound track is four rows further
-const RAIL_X1 := 1952                  # the railway ends at the city's freight yard
+const RAIL_X1 := 1696                  # the railway ends at the city's freight yard
 const CITY_ZONE := Vector2i(5, 9)
 const OWN_INSET := 32
-const LAYOUT_VER := 4                  # bumped when the map changes shape so old saves are not read against it (1: before the city revamp, 2: before the big seeded city, 3: before the island remake)
+const LAYOUT_VER := 5                  # bumped when the map changes shape so old saves are not read against it (1: before the city revamp, 2: before the big seeded city, 3: before the island remake)
 const TOWN := Vector2i(2129, 2960)     # the town stands where the north road crosses the valley farms
 const TOWN_ZONE := Vector2i(4, 6)
 const AIR_ZONE := Vector2i(7, 10)
 const AIR_X0 := 3190                   # the runway's west end
 const AIR_Y := 4770
 const IND_RECT := Rect2i(3105, 4770, 836, 1035)   # the heavy-industry sprawl on the east peninsula (with its lagoons)
-const CZS := 1024                      # the city's own map is larger than the wild zones' (every other zone is ZS x ZS)
-const CITY_ORIGIN := Vector2i(1890, 3883)   # ... and is placed so the highway runs along its middle row
-const CITY_OWN := Rect2i(1922, 3915, 960, 960)   # the ground the city zone owns: its whole map less 32 tiles all round
-const RIM_R := 462.0                   # how far from the middle of the city map the caldera's floor reaches (the rim's foot)
+const CZS := 1536                      # the city's own map is larger than the wild zones' (every other zone is ZS x ZS)
+const CITY_ORIGIN := Vector2i(1634, 3627)   # ... and is placed so the highway runs along its middle row
+const CITY_OWN := Rect2i(1666, 3659, 1472, 1472)   # the ground the city zone owns: its whole map less 32 tiles all round
+const RIM_R := 700.0                   # how far from the middle of the city map the caldera's floor reaches (the rim's foot)
 const MARGIN_ZONE := 44                # the city keeps this much empty ground at its edge (32 are the next zone's, then room to see across the border)
 const AVENUE_W := 24
 const BANK := 3                        # sand either side of the river
 const CITY_CX := 2402                  # the middle of the caldera
-const NORTH_ROAD_X := 2310             # the north road's x where it meets the city (city-local 420)
-const HARB_Y0 := 880                   # city-local row of the harbor's quay (the seed moves it a little)
+const NORTH_ROAD_X := 2264             # the north road's x where it meets the city (city-local 420)
+const HARB_Y0 := 1320                   # city-local row of the harbor's quay (the seed moves it a little)
 
 var seed_value: int = 0
 var _nc := FastNoiseLite.new()                # the caldera's outline (sampled on the unit circle)
@@ -63,6 +63,11 @@ var _nf := FastNoiseLite.new()
 var _nt := FastNoiseLite.new()
 var _nr := FastNoiseLite.new()
 var _bay_depth: int = 70
+var _cscale: float = 1.0               # the caldera outline's scale (see _calibrate_caldera)
+var _c_rot: float = 0.44               # ... its tilt, the length of its long axis and a phase for its lopsidedness (all from the seed)
+var _c_ax: float = 1.04
+var _c_ph: float = 0.0
+var _land_blobs: Array = []            # extra land laid over the template's coast: [centre x, centre y, half width, half height]
 var _pass_phase: float = 0.0
 var PORT := Vector2i(0, HWY_Y)         # the harbor's centre: set from the seed's west coast at the highway's row
 var PORT_ZONE := Vector2i(1, 9)
@@ -120,6 +125,10 @@ func _init(sd: int = 1) -> void:
 	lay.seed = sd ^ 0x7a11c0
 	harb_y = HARB_Y0 + lay.randi_range(-20, 24)
 	_bay_dx = lay.randf_range(-70.0, 70.0)
+	_c_rot = 0.44 + lay.randf_range(-0.1, 0.1)
+	_c_ax = 1.04 + lay.randf_range(-0.04, 0.05)
+	_c_ph = lay.randf_range(0.0, TAU)
+	_calibrate_caldera()
 	_seed_shapes(lay)
 	_build_fields()
 	PORT = Vector2i(int(_coast_west(HWY_Y)) + 17 + _bay_depth, HWY_Y)
@@ -187,10 +196,17 @@ func _seed_shapes(r: RandomNumberGenerator) -> void:
 			pts.append([t.x + r.randf_range(-36.0, 36.0), t.y + r.randf_range(-24.0, 24.0), float(p[2]) * (1.0 + r.randf_range(-0.12, 0.12))])
 		_ridges.append(pts)
 	# the lagoons of the east peninsula: [centre x, centre y, half width, half height]
+	# land east of the caldera, so that its rim runs on and thins out into the sea instead of ending at the water; and the low ground south-east of it
+	# that leads to the swamp and the industrial flats
+	_land_blobs = [
+		[3230.0 + r.randf_range(-40.0, 40.0), 4300.0 + r.randf_range(-40.0, 40.0), 470.0, 520.0],
+		[3330.0 + r.randf_range(-40.0, 40.0), 4900.0 + r.randf_range(-30.0, 30.0), 420.0, 330.0],
+		[3050.0 + r.randf_range(-30.0, 30.0), 4700.0, 260.0, 240.0],
+	]
 	_lagoons = []
 	for lg in [[890, 1320, 123.0, 211.0], [965, 1262, 80.0, 80.0], [905, 1415, 70.0, 48.0]]:
 		var c: Vector2 = g2t(float(lg[0]), float(lg[1]))
-		_lagoons.append([c.x + r.randf_range(-40.0, 40.0), c.y + r.randf_range(-40.0, 40.0), float(lg[2]) * (1.0 + r.randf_range(-0.15, 0.15)), float(lg[3]) * (1.0 + r.randf_range(-0.15, 0.15))])
+		_lagoons.append([c.x + 150.0 + r.randf_range(-40.0, 40.0), c.y + r.randf_range(-40.0, 40.0), float(lg[2]) * (1.0 + r.randf_range(-0.15, 0.15)), float(lg[3]) * (1.0 + r.randf_range(-0.15, 0.15))])
 
 ## the template's signed distance to the coast (tiles, > 0 on land) at an island point, bilinear
 func _tpl_sd(x: float, y: float) -> float:
@@ -222,12 +238,29 @@ func _tpl_sd(x: float, y: float) -> float:
 ## blending back to the template's own coast over the next 360 tiles to either side
 func _bay_sd(x: float, y: float) -> float:
 	var dx: float = absf(x - (float(CITY_CX) + _bay_dx))
-	var w: float = 1.0 - smoothstep(560.0, 800.0, dx)
+	var w: float = 1.0 - smoothstep(700.0, 960.0, dx)
 	if w <= 0.0:
 		return 9000.0
-	var side: float = clampf((dx - 380.0) / 240.0, 0.0, 1.0)          # the inlet's shores curve away south at the sides
-	var hy: float = float(CITY_ORIGIN.y + harb_y) + 24.0 * _nw.get_noise_2d(x * 0.5, 4000.0) + 330.0 * side * side
+	var hy: float = _shore_y(x)
 	return lerpf(9000.0, hy - y, w) if w < 1.0 else hy - y
+
+## the row of the harbor's shore at a column: wanders with noise, and the shores curve away south at the sides of the inlet
+func _shore_y(x: float) -> float:
+	var dx: float = absf(x - (float(CITY_CX) + _bay_dx))
+	var side: float = clampf((dx - 520.0) / 300.0, 0.0, 1.0)
+	return float(CITY_ORIGIN.y + harb_y) + 70.0 * _nw.get_noise_2d(x * 0.28, 4000.0) + 30.0 * _nw.get_noise_2d(x * 0.8, 4100.0) + 500.0 * side * side
+
+## extra land: smooth ellipses (warped by noise so no outline is a clean curve) laid over the template's coast.  Positive inside, in tiles from the edge.
+func _blob_sd(x: float, y: float) -> float:
+	var best := -9000.0
+	for bl in _land_blobs:
+		var wx: float = x + 55.0 * _nw.get_noise_2d(x * 0.7, y * 0.7 + 200.0)
+		var wy: float = y + 55.0 * _nw.get_noise_2d(x * 0.7 + 300.0, y * 0.7)
+		var ex: float = (wx - float(bl[0])) / float(bl[2])
+		var ey: float = (wy - float(bl[1])) / float(bl[3])
+		var e: float = sqrt(ex * ex + ey * ey)
+		best = maxf(best, (1.0 - e) * minf(float(bl[2]), float(bl[3])) * 0.55)
+	return best
 
 func _build_fields() -> void:
 	var f := FileAccess.open("res://data/island_sdf.bin", FileAccess.READ)
@@ -243,6 +276,7 @@ func _build_fields() -> void:
 			var x: float = float(gx * GRID)
 			var y: float = float(gy * GRID)
 			var sd: float = _tpl_sd(x, y) + 46.0 * _nw.get_noise_2d(x, y) + 20.0 * _nn.get_noise_2d(x, y + 777.0)
+			sd = maxf(sd, _blob_sd(x, y))
 			sd = minf(sd, _bay_sd(x, y))
 			_g_sd[gy * GXN + gx] = sd
 			var m := 0.0
@@ -252,54 +286,84 @@ func _build_fields() -> void:
 
 ## How far a point is from the middle of the caldera, measured on its own outline rather than a circle: the floor is an egg-shaped oval (a long axis about
 ## 25 degrees off east-west, one end broader), its edge scalloped by overlapping collapses as in real calderas (Aso, Crater Lake, Toba).  A value of
-## 462 is the foot of the rim; the rim itself rises over the next 100 or so.
+## RIM_R is the foot of the rim; the rim itself rises over the next 150 or so.  `_cscale` (set once from the seed, see _calibrate_caldera) shrinks the
+## whole outline so that the floor always fits inside the city's square map: the city meets the foot of the rim all the way round.
 func _cald_r(x: float, y: float) -> float:
-	var dx: float = x - float(CITY_CX)
-	var dy: float = y - float(HWY_Y)
-	var rot := 0.44
+	var dx: float = (x - float(CITY_CX)) / _cscale
+	var dy: float = (y - float(HWY_Y)) / _cscale
+	var rot := _c_rot
 	var u: float = dx * cos(rot) + dy * sin(rot)
 	var v: float = -dx * sin(rot) + dy * cos(rot)
-	var rr: float = sqrt((u / 1.04) * (u / 1.04) + (v / 0.88) * (v / 0.88))
+	var rr: float = sqrt((u / _c_ax) * (u / _c_ax) + (v / 0.88) * (v / 0.88))
 	var ang: float = atan2(v, u)
-	rr /= 1.0 + 0.07 * cos(ang - 0.35)                       # an egg: the north-east end is the broad one
-	rr /= 1.0 + 0.05 * _nc.get_noise_2d(cos(ang) * 1.7 + 40.0, sin(ang) * 1.7) + 0.022 * _nc.get_noise_2d(cos(ang) * 5.5, sin(ang) * 5.5 + 9.0)
+	rr /= 1.0 + 0.09 * cos(ang - 0.35)                       # an egg: the north-east end is the broad one
+	rr /= 1.0 + 0.035 * cos(2.0 * ang + _c_ph)               # a little lopsided
+	var ca: float = cos(ang)
+	var sa: float = sin(ang)
+	rr /= 1.0 + 0.075 * _nc.get_noise_2d(ca * 1.7 + 40.0, sa * 1.7) + 0.04 * _nc.get_noise_2d(ca * 4.6, sa * 4.6 + 9.0) + 0.018 * _nc.get_noise_2d(ca * 11.0 + 5.0, sa * 11.0 + 21.0)
 	return rr
+
+## the outline is drawn with a seed-chosen tilt, and scaled so its floor lies inside the city's square (a margin of 44 and a little to spare)
+func _calibrate_caldera() -> void:
+	_cscale = 1.0
+	var ex := 0.0
+	var ey := 0.0
+	for k in 360:
+		var ang: float = TAU * float(k) / 360.0
+		var d: float = 200.0
+		while d < 1400.0 and _cald_r(float(CITY_CX) + cos(ang) * d, float(HWY_Y) + sin(ang) * d) < RIM_R:
+			d += 2.0
+		ex = maxf(ex, absf(cos(ang) * d))
+		ey = maxf(ey, absf(sin(ang) * d))
+	_cscale = minf(1.0, (float(CZS) * 0.5 - float(MARGIN_ZONE) - 10.0) / maxf(ex, ey))
 
 func _mountain_mass(x: float, y: float, cc: Vector2, mc: Vector2) -> float:
 	var m := 0.0
-	# the caldera's ring, open to the south
+	# the caldera's ring.  Its crest wanders in and out, the floor is the city's oval and the ring starts right at its foot, so nothing grassy lies between.
+	# It is open to the south and south-east (the road to the swamp and the flats and the harbor's bay), closed on the west and north, and on the east it
+	# stays high and then thins out over a long skirt towards the sea.
 	var dx: float = x - cc.x
 	var dy: float = y - cc.y
 	var r: float = _cald_r(x, y)
-	if r > 440.0 and r < 700.0:
-		var v: float = clampf((1.0 - absf(r - 570.0) / 100.0) * 1.6, 0.0, 1.0)
-		var south: float = absf(atan2(dx, dy))                         # 0 straight south
-		v *= smoothstep(0.55, 1.15, south)
+	if r > RIM_R - 40.0 and r < RIM_R + 450.0:
+		var ang: float = atan2(dx, dy)                                # 0 straight south, positive to the east
+		var crest: float = RIM_R + 70.0 + 28.0 * _nw.get_noise_2d(x * 0.5, y * 0.5 + 60.0)
+		var skirt: float = smoothstep(0.9, 1.5, ang) * (1.0 - smoothstep(2.6, 3.1, ang))
+		var hw: float = 140.0 + 90.0 * skirt
+		var v: float = clampf((1.0 - absf(r - crest) / hw) * 1.6, 0.0, 1.0)
+		if r > crest and skirt > 0.0:
+			v = maxf(v, skirt * clampf(0.72 * (1.0 - (r - crest) / 340.0), 0.0, 1.0))
+		var open: float = smoothstep(-0.5, -0.15, ang) * (1.0 - smoothstep(1.2, 1.55, ang))
+		v *= 1.0 - open
 		m = maxf(m, v)
 	# the massif across the pass
-	var ex: float = (x - mc.x) / 620.0
-	var ey: float = (y - mc.y) / 400.0
+	var wx: float = x + 90.0 * _nw.get_noise_2d(x * 0.4, y * 0.4 + 500.0)
+	var wy: float = y + 90.0 * _nw.get_noise_2d(x * 0.4 + 700.0, y * 0.4)
+	var ex: float = (wx - mc.x) / 620.0
+	var ey: float = (wy - mc.y) / 400.0
 	var e: float = sqrt(ex * ex + ey * ey)
 	if e < 1.0:
 		m = maxf(m, clampf((1.0 - e) / 0.35, 0.0, 1.0))
-	# the two ranges
+	# the two ranges, their spines meandering
+	var rx: float = x + 70.0 * _nw.get_noise_2d(x * 0.5 + 100.0, y * 0.5)
+	var ry: float = y + 70.0 * _nw.get_noise_2d(x * 0.5, y * 0.5 + 900.0)
 	for rd in _ridges:
 		for k in rd.size() - 1:
 			var p: Array = rd[k]
 			var q: Array = rd[k + 1]
-			var hwm: float = maxf(float(p[2]), float(q[2]))
-			if x < minf(float(p[0]), float(q[0])) - hwm or x > maxf(float(p[0]), float(q[0])) + hwm or y < minf(float(p[1]), float(q[1])) - hwm or y > maxf(float(p[1]), float(q[1])) + hwm:
+			var hwm: float = maxf(float(p[2]), float(q[2])) + 80.0
+			if rx < minf(float(p[0]), float(q[0])) - hwm or rx > maxf(float(p[0]), float(q[0])) + hwm or ry < minf(float(p[1]), float(q[1])) - hwm or ry > maxf(float(p[1]), float(q[1])) + hwm:
 				continue
 			var ax: float = float(p[0])
 			var ay: float = float(p[1])
 			var bx: float = float(q[0]) - ax
 			var by: float = float(q[1]) - ay
-			var t: float = clampf(((x - ax) * bx + (y - ay) * by) / (bx * bx + by * by), 0.0, 1.0)
-			var px: float = ax + bx * t - x
-			var py: float = ay + by * t - y
+			var t: float = clampf(((rx - ax) * bx + (ry - ay) * by) / (bx * bx + by * by), 0.0, 1.0)
+			var px: float = ax + bx * t - rx
+			var py: float = ay + by * t - ry
 			var d: float = sqrt(px * px + py * py)
-			var hw: float = lerpf(float(p[2]), float(q[2]), t)
-			m = maxf(m, clampf((1.0 - d / hw) / 0.45, 0.0, 1.0))
+			var hw2: float = lerpf(float(p[2]), float(q[2]), t)
+			m = maxf(m, clampf((1.0 - d / hw2) / 0.45, 0.0, 1.0))
 	return m
 
 ## bilinear sample of a coarse field
@@ -421,20 +485,21 @@ func rail_out(x: int) -> int:
 ## caldera's north rim and the mouth is in the harbor.
 const RIVER_PTS := [[96, 96.0, 3.0], [168, 122.0, 4.0], [218, 142.0, 7.0], [278, 212.0, 9.0], [348, 258.0, 13.0], [428, 284.0, 16.0], [512, 294.0, 17.0],
 	[608, 300.0, 17.0], [708, 292.0, 18.0], [768, 298.0, 19.0], [858, 316.0, 22.0], [958, 336.0, 26.0], [1058, 344.0, 30.0]]
-var RIVER_Y0: int = CITY_ORIGIN.y + 96
+const CSC := 1.5                       # the city map is 1536 where its layout was drawn for 1024: every city-local drawn coordinate is scaled by this
+var RIVER_Y0: int = CITY_ORIGIN.y + 144
 var RIVER_Y1: int = CITY_ORIGIN.y + HARB_Y0
 ## the control points as this seed drew them: the whole middle of the river slides east or west, each bend wanders and the width varies, but it
 ## always rises in the mountains, runs through the city and reaches the harbor
 func _seed_layout_river(r: RandomNumberGenerator) -> void:
-	var shift: float = r.randf_range(-56.0, 64.0)
+	var shift: float = r.randf_range(-56.0, 64.0) * CSC
 	river_pts = []
 	RIVER_Y1 = CITY_ORIGIN.y + harb_y - 2
 	for k in RIVER_PTS.size():
 		var p: Array = RIVER_PTS[k]
 		var t: float = clampf(float(int(p[0]) - 96) / 320.0, 0.0, 1.0)      # 0 at the source, 1 once the river is in the city
-		var jx: float = r.randf_range(-24.0, 24.0) * t
+		var jx: float = r.randf_range(-24.0, 24.0) * t * CSC
 		var jw: float = 1.0 + r.randf_range(-0.14, 0.14)
-		river_pts.append([int(p[0]) + CITY_ORIGIN.y, float(p[1]) + shift * t + jx + float(CITY_ORIGIN.x), float(p[2]) * jw])
+		river_pts.append([int(round(float(p[0]) * CSC)) + CITY_ORIGIN.y, float(p[1]) * CSC + shift * t + jx + float(CITY_ORIGIN.x), float(p[2]) * jw * 1.3])
 var _rv_x := PackedFloat32Array()       # per row: the centre line
 var _rv_w := PackedFloat32Array()       # ... the half-width of the water measured across the row (so a diagonal reach is wider)
 var _city_mask := PackedByteArray()
@@ -461,6 +526,10 @@ func _build_river() -> void:
 		# Catmull-Rom through the control points (parametrised by the row)
 		cx[y] = _cr(float(p0[1]), float(p1[1]), float(p2[1]), float(p3[1]), t)
 		cw[y] = _cr(float(p0[2]), float(p1[2]), float(p2[2]), float(p3[2]), t)
+	var y0: int = RIVER_Y0                                    # the river rises where the mountains are: the first row of its course that is in the rim
+	while y0 < RIVER_Y1 - 200 and _samp(_g_mt, cx[y0] - 20.0, float(y0)) < 0.5:
+		y0 += 1
+	RIVER_Y0 = y0
 	for y in range(RIVER_Y0, RIVER_Y1 + 1):
 		var ramp: float = clampf(float(y - RIVER_Y0) / 160.0, 0.0, 1.0)
 		var wob: float = 4.0 * ramp * _nr.get_noise_1d(y)
@@ -591,10 +660,35 @@ func _build_roads() -> void:
 		wp.append(g2t(float(g[0]), float(g[1])))
 	_roads_v.append(_road_v(wp))
 	# the east coast road: from the highway's end south round the bay to the east cape
-	var ep: Array = [Vector2(float(HWY_X1) - 8.0, float(HWY_Y) + float(HWY_S) + 4.0)]
-	for g in [[846, 1200], [840, 1290], [852, 1360], [884, 1420], [940, 1470], [990, 1530], [1010, 1620], [990, 1720], [972, 1780]]:
+	# it leaves the highway just east of the rim, runs south-west through the swamp and joins the old line down the peninsula
+	var ep: Array = [Vector2(3300.0, float(HWY_Y) + float(HWY_S) + 4.0), Vector2(3288.0, 4560.0), Vector2(3240.0, 4700.0), Vector2(3205.0, 4800.0), Vector2(3190.0, 4900.0), Vector2(3190.0, 5011.0), Vector2(3190.0, 5200.0), Vector2(3190.0, 5330.0)]
+	for g in [[884, 1420], [940, 1470], [990, 1530], [1010, 1620], [990, 1720], [972, 1780]]:
 		ep.append(g2t(float(g[0]), float(g[1])))
 	_roads_v.append(_road_v(ep))
+
+## the farm parcel a point lies in: (cell seed x, seed y, distance to the nearest other cell's border).  Cells are about 40 tiles across and irregular.
+func _parcel(px: float, py: float) -> Vector3:
+	var cs := 42.0
+	var ix: int = int(floor(px / cs))
+	var iy: int = int(floor(py / cs))
+	var d1 := 1e9
+	var d2 := 1e9
+	var sx := 0.0
+	var sy := 0.0
+	for j in range(-1, 2):
+		for i in range(-1, 2):
+			var h: int = _hash(ix + i + seed_value * 3, iy + j + 91)
+			var qx: float = (float(ix + i) + 0.2 + 0.6 * float(h & 255) / 255.0) * cs
+			var qy: float = (float(iy + j) + 0.2 + 0.6 * float((h >> 8) & 255) / 255.0) * cs
+			var d: float = sqrt((px - qx) * (px - qx) + (py - qy) * (py - qy))
+			if d < d1:
+				d2 = d1
+				d1 = d
+				sx = qx
+				sy = qy
+			elif d < d2:
+				d2 = d
+	return Vector3(sx, sy, (d2 - d1) * 0.5)
 
 func terrain(x: int, y: int) -> int:
 	if x < 0 or y < 0 or x >= W or y >= H:
@@ -640,8 +734,10 @@ func terrain(x: int, y: int) -> int:
 		return CG.ROCKS
 	if x > 2900 and y > 4600:                    # the east peninsula's lagoons
 		for lg in _lagoons:
-			var ex: float = (float(x) - lg[0]) / lg[2]
-			var ey: float = (float(y) - lg[1]) / lg[3]
+			var lwx: float = float(x) + 50.0 * _nf.get_noise_2d(float(x), float(y) + 500.0)       # the shores are warped: no true ellipse
+			var lwy: float = float(y) + 50.0 * _nf.get_noise_2d(float(x) + 700.0, float(y))
+			var ex: float = (lwx - lg[0]) / lg[2]
+			var ey: float = (lwy - lg[1]) / lg[3]
 			var e: float = (ex * ex + ey * ey) * (1.0 + 0.3 * nj)
 			if e < 1.0:
 				return CG.WATER
@@ -672,15 +768,28 @@ func terrain(x: int, y: int) -> int:
 		if m > 0.2 and nj > -0.2:
 			return CG.ROCKS if _hash(x, y) % 4 != 0 else CG.TREE
 	# the heavy-industry sprawl: bare ground, no trees
-	if IND_RECT.has_point(Vector2i(x, y)) and _nf.get_noise_2d(x * 0.6, y * 0.6 + 900.0) > -0.2:
+	if _ind_field(float(x), float(y)) > 0.0 and _nf.get_noise_2d(x * 0.6, y * 0.6 + 900.0) > -0.2:
 		return CG.GROUND if _nf.get_noise_2d(x, y) > -0.25 else (CG.ROCKS if _hash(x, y) % 3 == 0 else CG.GROUND)
-	# the valley farms: planted fields in parcels
-	var fxv: float = (float(x) - 2005.0) / 308.0
-	var fyv: float = (float(y) - 2811.0) / 396.0
-	if fxv * fxv + fyv * fyv < 1.0 + 0.25 * nj:
-		var fx := (x / 30) * 30
-		var fy := (y / 24) * 24
-		if _nf.get_noise_2d(fx, fy) > 0.0 and (x % 30) > 2 and (x % 30) < 28 and (y % 24) > 2 and (y % 24) < 22:
+	# the swamp: pools, mud banks and reeds on warped ground
+	if x > 2850 and y > 4350:
+		var sw: float = _swamp_field(float(x), float(y))
+		if sw > 0.0:
+			var sn: float = _nf.get_noise_2d(x * 0.9, y * 0.9 + 3000.0) + 0.5 * _nf.get_noise_2d(x * 2.3, y * 2.3) - 0.35 * (1.0 - clampf(sw * 3.0, 0.0, 1.0))
+			if sn < -0.22:
+				return CG.WATER
+			if sn < -0.05:
+				return CG.SAND
+			if sn > 0.25 and _hash(x, y) % 100 < 28:
+				return CG.TREE
+			return CG.PARK
+	# the valley farms: planted fields in curved parcels (the cells of a jittered lattice, each with a hedge between it and the next)
+	var fwx: float = float(x) + 60.0 * _nf.get_noise_2d(x * 0.3, y * 0.3 + 4100.0)
+	var fwy: float = float(y) + 60.0 * _nf.get_noise_2d(x * 0.3 + 4500.0, y * 0.3)
+	var fxv: float = (fwx - 2005.0) / 308.0
+	var fyv: float = (fwy - 2811.0) / 396.0
+	if fxv * fxv + fyv * fyv < 1.0:
+		var pc: Vector3 = _parcel(fwx, fwy)
+		if pc.z > 3.0 and _nf.get_noise_2d(pc.x * 0.7, pc.y * 0.7) > 0.0:
 			return CG.FIELD
 	var f := _nt.get_noise_2d(x, y)
 	if f > 0.12 and _hash(x, y) % 100 < 10 + int(f * 160.0):
@@ -721,7 +830,8 @@ func landmarks() -> Array:
 		{"name": "NORTH POINT", "pos": Vector2i(1560, 420), "kind": "shore"},
 		{"name": "WEST RANGE", "pos": Vector2i(int(mid_ridge[0]) - 90, int(mid_ridge[1])), "kind": "range"},
 		{"name": "AIRSTRIP", "pos": Vector2i(AIR_X0 + 60, AIR_Y - 40), "kind": "air"},
-		{"name": "INDUSTRIAL FLATS", "pos": Vector2i(IND_RECT.position.x + 220, IND_RECT.position.y + 520), "kind": "industry"},
+		{"name": "INDUSTRIAL FLATS", "pos": Vector2i(3440, 5240), "kind": "industry"},
+		{"name": "THE SWAMP", "pos": Vector2i(3200, 4800), "kind": "plain"},
 		{"name": "LAGOONS", "pos": Vector2i(int(l0[0]) - 40, int(l0[1]) - int(l0[3]) - 20), "kind": "lagoon"},
 		{"name": "SOUTH BAY", "pos": Vector2i(2050, 6000), "kind": "water"},
 		{"name": "WEST CAPE", "pos": Vector2i(int(sr[0]) - 80, 7200), "kind": "cape"},
@@ -861,11 +971,11 @@ func _clear_growth(c, x0: int, y0: int, x1: int, y1: int) -> void:
 ## ------------------------------------------------------------------------------------------------ the city's layout
 ## Local coordinates (the city zone's own 512 x 512 map).  The outline is a rounded square with a ragged edge; the river runs through the
 ## west third, the downtown lies east of it, and everything is planned here so citygen only has to fill it in.
-const CITY_RAD := 360.0                # the district tests (towers, mid-rise, suburbs, exurbs) are fractions of this distance from the downtown
+const CITY_RAD := 540.0                # the district tests (towers, mid-rise, suburbs, exurbs) are fractions of this distance from the downtown
 const BLV_W := 12                      # a riverside boulevard is a two-lane street ...
 const BLV_GAP := 4                     # ... this far back from the bank (room for the quay and a promenade)
-const RING_W := 200
-const RING_H := 230
+const RING_W := 300
+const RING_H := 345
 
 ## what the seed decides about the city: which three rows the bridge avenues take, where the downtown stands and the subway loop round it
 func _seed_layout_city(r: RandomNumberGenerator) -> void:
@@ -904,13 +1014,13 @@ func _seed_layout_city(r: RandomNumberGenerator) -> void:
 		var b2: int = s_lo + r.randi_range(0, 30)
 		var b3: int = b2 + 100 + r.randi_range(0, maxi(0, s_hi - (b2 + 100)))
 		bridges_y = [b1, b2, b3]
-	var yc: int = 520 + r.randi_range(-52, 72)
+	var yc: int = int(520.0 * CSC) + int(float(r.randi_range(-52, 72)) * CSC)
 	var rx_e := 0.0
 	for y in range(yc - RING_H / 2 - 20, yc + RING_H / 2 + 21):
 		var sp := river_span(CITY_ORIGIN.y + y)
 		if sp.x >= 0:
 			rx_e = maxf(rx_e, float(sp.y - CITY_ORIGIN.x))
-	var xc: float = rx_e + 52.0 + float(RING_W) * 0.5 + r.randf_range(8.0, 120.0)
+	var xc: float = rx_e + 78.0 + float(RING_W) * 0.5 + r.randf_range(12.0, 180.0)
 	downtown = Vector2(xc, float(yc))
 	city_ring = Rect2i(int(xc) - RING_W / 2, yc - RING_H / 2, RING_W, RING_H)
 
@@ -973,39 +1083,19 @@ func boulevards() -> Dictionary:
 		_blv["w" if side == 0 else "e"] = out
 	return _blv
 
-## 1 where the city stands
+## 1 where the city stands: the caldera's floor, to the foot of its rim all the way round (a scalloped oval, no straight edge anywhere), and on the
+## south the curved shore of the harbor
 func city_mask() -> PackedByteArray:
 	if not _city_mask.is_empty():
 		return _city_mask
-	var nz := FastNoiseLite.new()
-	nz.seed = seed_value ^ 0x2c2c
-	nz.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
-	nz.frequency = 0.05
 	_city_mask.resize(CZS * CZS)
-	var half: float = float(CZS) * 0.5 - float(MARGIN_ZONE)
-	# the radius of the outline at each angle: 0.70 .. 1.0 of the full half-width, so the coast of the city has bays and spurs; tabulated once
-	var nang := 2048
-	var fr := PackedFloat32Array()
-	fr.resize(nang)
-	for k in nang:
-		var ang: float = (float(k) + 0.5) / float(nang) * TAU - PI
-		var big: float = clampf(nz.get_noise_2d(cos(ang) * 14.0, sin(ang) * 14.0) * 1.6, -1.0, 1.0)
-		var fine: float = nz.get_noise_2d(cos(ang) * 46.0 + 300.0, sin(ang) * 46.0)
-		var f: float = clampf(0.985 + 0.03 * big + 0.01 * fine, 0.93, 1.0)       # the city reaches the caldera's rim
-		fr[k] = f * f * f
 	for y in CZS:
-		var v: float = (float(y) + 0.5 - float(CZS) * 0.5) / half
-		var v3: float = pow(absf(v), 3.0)
 		for x in CZS:
-			var u: float = (float(x) + 0.5 - float(CZS) * 0.5) / half
-			var q: float = pow(absf(u), 3.0) + v3
-			if q > 1.0:
-				continue
-			var k2: int = clampi(int((atan2(v, u) + PI) / TAU * float(nang)), 0, nang - 1)
 			var dd: float = _cald_r(float(CITY_ORIGIN.x + x) + 0.5, float(CITY_ORIGIN.y + y) + 0.5)
-			_city_mask[y * CZS + x] = 1 if (dd <= RIM_R and (q <= fr[k2] or dd < RIM_R * 0.97)) else 0
-	for y in range(harb_y - 28, CZS):                  # the quay is the city's south edge
-		for x in CZS:
+			_city_mask[y * CZS + x] = 1 if dd <= RIM_R else 0
+	for x in CZS:                                       # the quay follows the shore
+		var lim: int = int(_shore_y(float(CITY_ORIGIN.x + x)) - float(CITY_ORIGIN.y)) - 28
+		for y in range(maxi(lim, 0), CZS):
 			_city_mask[y * CZS + x] = 0
 	return _city_mask
 
@@ -1567,6 +1657,22 @@ func _south_harbor(c) -> void:
 			wk += 1
 
 ## zone kind by position: "city", "port" (the ferry port in the west), "town", "air", "industry" (the east peninsula's sprawl) or "wild"
+## > 0 inside the heavy-industry flats: a warped oval laid along the east peninsula (no straight edge: it follows the lagoon shores and the coast)
+func _ind_field(x: float, y: float) -> float:
+	var wx: float = x + 80.0 * _nf.get_noise_2d(x * 0.5, y * 0.5 + 1300.0)
+	var wy: float = y + 80.0 * _nf.get_noise_2d(x * 0.5 + 1700.0, y * 0.5)
+	var ex: float = (wx - 3523.0) / 450.0
+	var ey: float = (wy - 5290.0) / 560.0
+	return 1.0 - sqrt(ex * ex + ey * ey)
+
+## > 0 inside the swamp south-east of the caldera: a warped oval on the low ground between the rim and the flats
+func _swamp_field(x: float, y: float) -> float:
+	var wx: float = x + 90.0 * _nf.get_noise_2d(x * 0.4, y * 0.4 + 2300.0)
+	var wy: float = y + 90.0 * _nf.get_noise_2d(x * 0.4 + 2900.0, y * 0.4)
+	var ex: float = (wx - 3240.0) / 400.0
+	var ey: float = (wy - 4830.0) / 280.0
+	return 1.0 - sqrt(ex * ex + ey * ey)
+
 func zone_kind(z: Vector2i) -> String:
 	if z == CITY_ZONE:
 		return "city"
@@ -1576,7 +1682,8 @@ func zone_kind(z: Vector2i) -> String:
 		return "town"
 	if z == AIR_ZONE:
 		return "air"
-	if IND_RECT.grow(60).has_point(own_rect(z.x, z.y).get_center()):
+	var oc: Vector2i = own_rect(z.x, z.y).get_center()
+	if _ind_field(float(oc.x), float(oc.y)) > -0.14:
 		return "industry"
 	return "wild"
 
@@ -1600,18 +1707,20 @@ func _industry(c, zx: int, zy: int) -> void:
 	for lx in xs:
 		for yy in ZS:
 			for k in 12:
-				if int(c.tiles[yy * ZS + lx + k]) == CG.WATER or int(c.tiles[yy * ZS + lx + k]) == CG.SAND:
+				var ox: int = int(round(11.0 * _nw.get_noise_2d(float(o.x + lx), float(o.y + yy))))     # the roads wander: no ruled lines
+				if int(c.tiles[yy * ZS + lx + k + ox]) == CG.WATER or int(c.tiles[yy * ZS + lx + k + ox]) == CG.SAND:
 					continue
 				if (yy % 53) < 42 or rng.randf() < 0.3:        # the odd gap: a road that peters out
-					_put_t(c, lx + k, yy, CG.ROAD, CG.M_WHITE_V if (k == 0 or k == 11) else (CG.M_YELLOW_V if (k == 5 or k == 6) else 0))
+					_put_t(c, lx + k + ox, yy, CG.ROAD, CG.M_WHITE_V if (k == 0 or k == 11) else (CG.M_YELLOW_V if (k == 5 or k == 6) else 0))
 	for ly in ys:
 		for xx in ZS:
 			for k in 12:
-				var t0: int = c.tiles[(ly + k) * ZS + xx]
+				var oy: int = int(round(11.0 * _nw.get_noise_2d(float(o.x + xx) + 5000.0, float(o.y + ly))))
+				var t0: int = c.tiles[(ly + k + oy) * ZS + xx]
 				if t0 == CG.WATER or t0 == CG.SAND:
 					continue
 				if (xx % 61) < 48 or rng.randf() < 0.3:
-					_put_t(c, xx, ly + k, CG.ROAD, CG.M_WHITE_H if (k == 0 or k == 11) else (CG.M_YELLOW_H if (k == 5 or k == 6) else 0))
+					_put_t(c, xx, ly + k + oy, CG.ROAD, CG.M_WHITE_H if (k == 0 or k == 11) else (CG.M_YELLOW_H if (k == 5 or k == 6) else 0))
 	var cont: int = CG.TID["container"]
 	var homes_made := 0
 	for i in xs.size() - 1:
@@ -1633,13 +1742,22 @@ func _industry(c, zx: int, zy: int) -> void:
 			if wet * 3 > tot:
 				continue
 			var kind: int = rng.randi() % 8
+			var bcx: float = float(x0 + x1) * 0.5                    # a works fills an irregular patch of its block, not the whole rectangle
+			var bcy: float = float(y0 + y1) * 0.5
+			var brx: float = float(x1 - x0) * 0.5
+			var bry: float = float(y1 - y0) * 0.5
+			var inb := func(xx: int, yy: int) -> bool:
+				var ex: float = (float(xx) - bcx) / brx
+				var ey: float = (float(yy) - bcy) / bry
+				var edge: float = 0.9 + 0.35 * _nf.get_noise_2d(float(o.x + xx) * 3.0, float(o.y + yy) * 3.0)
+				return ex * ex + ey * ey <= edge * edge
 			match kind:
 				0, 7:                                       # a container yard, stacks askew
 					var yy2 := y0
 					while yy2 + 4 < y1:
 						var xx2 := x0 + rng.randi() % 5
 						while xx2 + 7 < x1:
-							if rng.randi() % 3 != 0:
+							if rng.randi() % 3 != 0 and inb.call(xx2 + 3, yy2 + 1):
 								for a in 3:
 									for b in 6:
 										if land.call(c.tiles[(yy2 + a) * ZS + xx2 + b]):
@@ -1653,6 +1771,8 @@ func _industry(c, zx: int, zy: int) -> void:
 						var r: int = rng.randi_range(6, 13)
 						var cx: int = rng.randi_range(x0 + r + 2, maxi(x0 + r + 3, x1 - r - 2))
 						var cy: int = rng.randi_range(y0 + r + 2, maxi(y0 + r + 3, y1 - r - 2))
+						if not inb.call(cx, cy):
+							continue
 						for yy in range(cy - r - 2, cy + r + 3):
 							for xx in range(cx - r - 2, cx + r + 3):
 								if yy < 0 or yy >= ZS or xx < 0 or xx >= ZS or not land.call(c.tiles[yy * ZS + xx]):
@@ -1667,21 +1787,22 @@ func _industry(c, zx: int, zy: int) -> void:
 					while bx + 18 < x1:
 						var by: int = y0 + 2 + rng.randi() % 8
 						var h: int = rng.randi_range(12, 24)
-						if by + h < y1:
+						if by + h < y1 and inb.call(bx + 8, by + h / 2):
 							c._building(bx, by, bx + rng.randi_range(14, 22), by + h, "house")
 							homes_made += 1
 						bx += 26 + rng.randi() % 10
 				3:                                          # pipe racks: long low runs with a gap now and then
 					for k in rng.randi_range(2, 4):
-						var py: int = rng.randi_range(y0 + 2, y1 - 2)
+						var py: int = rng.randi_range(int(bcy - bry * 0.6), int(bcy + bry * 0.6))
 						for xx in range(x0, x1):
-							if (xx % 17) < 13 and land.call(c.tiles[py * ZS + xx]):
-								c.tiles[py * ZS + xx] = CG.RAILING
+							var pyy: int = py + int(round(6.0 * _nf.get_noise_2d(float(o.x + xx) * 2.0, float(o.y + py))))      # the racks bend with the ground
+							if (xx % 17) < 13 and pyy >= 0 and pyy < ZS and inb.call(xx, pyy) and land.call(c.tiles[pyy * ZS + xx]):
+								c.tiles[pyy * ZS + xx] = CG.RAILING
 				4:                                          # scrap and slag: crates and rubble, scattered
 					for k in 90:
 						var sx: int = rng.randi_range(x0, x1)
 						var sy: int = rng.randi_range(y0, y1)
-						if land.call(c.tiles[sy * ZS + sx]):
+						if inb.call(sx, sy) and land.call(c.tiles[sy * ZS + sx]):
 							c.tiles[sy * ZS + sx] = CG.CRATE if rng.randi() % 3 == 0 else CG.ROCKS
 				5:                                          # drainage pools and cinder: sludge ponds
 					for k in 3:
@@ -1698,6 +1819,18 @@ func _industry(c, zx: int, zy: int) -> void:
 		var cell: int = wy * ZS + wx
 		if int(c.tiles[cell]) == CG.GROUND or int(c.tiles[cell]) == CG.PLATFORM:
 			c.works.append(cell)
+	var tries2 := 0                                          # a works with no shed at all still has someone living on it: one is put on dry ground
+	while homes_made == 0 and tries2 < 600:
+		tries2 += 1
+		var hx: int = rng.randi_range(20, ZS - 44)
+		var hy: int = rng.randi_range(20, ZS - 40)
+		var dry := true
+		for q in [Vector2i(0, 0), Vector2i(19, 0), Vector2i(0, 15), Vector2i(19, 15), Vector2i(9, 7)]:
+			if not land.call(c.tiles[(hy + q.y) * ZS + hx + q.x]):
+				dry = false
+		if dry:
+			c._building(hx, hy, hx + 18, hy + 14, "house")
+			homes_made += 1
 	c.xs = xs
 	c.ys = ys
 	c.ys_w = {}

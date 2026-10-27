@@ -314,6 +314,13 @@ func _assign_jobs() -> void:
 	if not mission.is_empty() or (island != null and zone != island.CITY_ZONE):
 		return
 	var com = sim.com
+	com.wait_ready()
+	var hcomp := {}                                       # the piece of ground each person's home belongs to (a job is only given to somebody who can walk to it)
+	var comp_of_home := func(i: int) -> int:
+		var h: int = sim.home_cell[i]
+		if not hcomp.has(h):
+			hcomp[h] = com.comp_of(h)
+		return hcomp[h]
 	var pool: Array = []
 	for i in sim.n:
 		if sim.sticky[i] == 0 and sim.alive[i] == 1 and fac[i] == CIV and eco.role[i] == eco.NONE:
@@ -335,14 +342,21 @@ func _assign_jobs() -> void:
 		if pool.is_empty():
 			break
 		var cell: int = jb[0]
+		var jcomp: int = com.comp_of(cell)
+		if jcomp == 0:
+			continue
 		var best := -1
 		var bd := 1 << 30
 		for _t in 24:
 			var pk: int = rng.randi() % pool.size()
+			if comp_of_home.call(pool[pk]) != jcomp:
+				continue
 			var d: int = com.manh(sim.home_cell[pool[pk]], cell)
 			if d < bd:
 				bd = d
 				best = pk
+		if best < 0:
+			continue
 		var who: int = pool[best]
 		pool[best] = pool[pool.size() - 1]
 		pool.pop_back()
@@ -362,21 +376,25 @@ func _assign_jobs() -> void:
 		var cell2 := -1
 		if fac[i] == CIV and not general.is_empty():
 			var bd2 := 1 << 30
+			var hc: int = comp_of_home.call(i)
 			for _t in 12:
 				var c2: int = general[rng.randi() % general.size()]
 				var d2: int = com.manh(sim.home_cell[i], c2)
-				if d2 < bd2:
+				if d2 < bd2 and com.comp_of(c2) == hc:
 					bd2 = d2
 					cell2 = c2
-			cell2 = sim._scatter(cell2, 3)
-		else:
-			cell2 = _loiter_cell(int(sim.home_cell[i]))
+			if cell2 >= 0:
+				cell2 = sim._scatter(cell2, 3)
+				if com.comp_of(cell2) != hc:
+					cell2 = -1
+		if cell2 < 0:
+			cell2 = _loiter_cell(int(sim.home_cell[i]), comp_of_home.call(i))
 		if cell2 >= 0:
 			com.assign(i, cell2)
 	com.index()
 
 ## a bit of pavement or park near a cell (where the gangs stand about)
-func _loiter_cell(home: int) -> int:
+func _loiter_cell(home: int, comp: int = 0) -> int:
 	var hx: int = home % size
 	var hy: int = (home / size) % size
 	for _t in 80:
@@ -384,9 +402,9 @@ func _loiter_cell(home: int) -> int:
 		var y: int = clampi(hy + rng.randi_range(-40, 40), 1, size - 2)
 		var c: int = y * size + x
 		var tt: int = city.tiles[c]
-		if (tt == CG.GROUND or tt == CG.PARK) and sim.walk[c] == 1:
+		if (tt == CG.GROUND or tt == CG.PARK) and sim.walk[c] == 1 and (comp == 0 or sim.com.comp_of(c) == comp):
 			return c
-	return -1
+	return int(home)
 
 ## TRL_PROF=1 prints how long each stage of building a zone took (milliseconds since the start of setup)
 func _prof(label: String, t0: int) -> void:
@@ -1955,6 +1973,20 @@ func sight_bonus() -> int:
 
 func sight_radius() -> int:
 	return BASE_SIGHT + sight_bonus()
+
+## let go of everything that points back at this game, so a game that has been put away is freed (these helpers and the game hold each other, and a loop
+## of references is never freed; a 1536 city is about 3 GB).  The game is not used afterwards.
+func dispose() -> void:
+	if sim != null and sim.get("com") != null:
+		sim.com.wait_ready()                    # (its route grid may still be building on a thread)
+		sim.com = null
+	sim = null
+	transit = null
+	eco = null
+	barter = null
+	vs = null
+	fov = null
+	world = null
 
 func _compute_fov() -> void:
 	fov.compute(pc % size, pc / size, sight_radius(), vision_arc(), facing.x, facing.y)

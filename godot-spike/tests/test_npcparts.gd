@@ -113,7 +113,7 @@ func run() -> Array:
 	for _t in 20:
 		g._npc_melee_attack(who)
 	var flail := false
-	for li in range(l0, g.log.size()):
+	for li in range(maxi(0, g.log.size() - 20), g.log.size()):             # (the log is capped, so its end rather than a remembered length)
 		if String(g.log[li]).contains("flails"):
 			flail = true
 	check.call("with both arms disabled they cannot attack (flail, no damage: %d)" % (164 - g.body.total()), g.npc_arms_ok(who) == 0 and flail and g.body.total() == 164)

@@ -29,6 +29,10 @@ func people_for(z: Vector2i) -> int:
 	return 0
 
 func start(sd: int, people: int = -1) -> void:
+	_reap()
+	if game != null:
+		game.dispose()
+		game = null
 	seed_value = sd
 	island = ISL.new(sd)
 	game = _make(ISL.CITY_ZONE, people)
@@ -67,8 +71,21 @@ func _catch_up(g) -> void:
 					sim.arrive[i] = -1
 			sim.buckets.erase(t)
 
+## a game that has been put away is let go of (see Game.dispose) -- but not at once: a switch can be made from inside that game's own turn (a train
+## carrying the player over a border), so it is let go of at the next switch
+var _retired: Array = []
+
+func _retire(g) -> void:
+	_retired.append(g)
+
+func _reap() -> void:
+	for g in _retired:
+		g.dispose()
+	_retired.clear()
+
 ## the player steps into an open portal: the physical world is put away whole, the site is generated from the offer's seed, and the player is carried in
 func enter_mission() -> bool:
+	_reap()
 	var g = game
 	if g.portal.is_empty() or not g.mission.is_empty():
 		return false
@@ -90,6 +107,7 @@ func enter_mission() -> bool:
 ## the player leaves the site (through the exit portal, or thrown out by a blast): the outcome is judged, the site is dropped, the physical world comes
 ## back as it was with the portal closed, and a won contract pays.  Returns the outcome dictionary.
 func leave_mission(forced: String = "") -> Dictionary:
+	_reap()
 	var g = game
 	if g.mission.is_empty() or not in_site():
 		return {}
@@ -115,6 +133,7 @@ func leave_mission(forced: String = "") -> Dictionary:
 	og.last_pc = og.pc
 	og.sim.retier(og.pc)
 	og._compute_fov()
+	_retire(g)
 	game = og
 	switches += 1
 	return res
@@ -138,6 +157,7 @@ func poll() -> bool:
 
 ## hand over to zone `dest`, carrying the player and any vehicle they are driving; false if there is nowhere to arrive
 func enter(dest: Vector2i) -> bool:
+	_reap()
 	var g = game
 	var p: Vector2i = g.global_pos()
 	var carry: Dictionary = g.player_dict()
@@ -182,6 +202,7 @@ func enter(dest: Vector2i) -> bool:
 	ng.sim.retier(ng.pc)
 	ng.fov.compute(ng.pc % ng.size, ng.pc / ng.size, ng.sight_radius())
 	cache[key(from_zone)] = saved
+	_retire(g)
 	game = ng
 	switches += 1
 	visited[dk] = true
@@ -228,6 +249,10 @@ func load_dict(d: Dictionary) -> void:
 	for k in d.get("visited", []):
 		visited[String(k)] = true
 	switches = int(d.get("switches", 0))
+	_reap()
+	if game != null:
+		game.dispose()
+		game = null
 	var g = GameScript.new(0)
 	g.world = self
 	g.island = island

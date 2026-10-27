@@ -141,8 +141,15 @@ func run() -> Array:
 		for k in g.sim.near_list.size():
 			var j: int = g.sim.near_list[k]
 			if g.sim.alive[j] == 1 and g.z_of(g.sim.pos[j]) == 0:
-				found = j
-				break
+				var alone := true                                   # (someone standing apart: in a crowd the nearest person would take the shots)
+				for k2 in g.sim.near_list.size():
+					var j2: int = g.sim.near_list[k2]
+					if j2 != j and g.sim.alive[j2] == 1 and maxi(absi(g.sim.pos[j2] % g.size - g.sim.pos[j] % g.size), absi(g.sim.pos[j2] / g.size - g.sim.pos[j] / g.size)) < 12:
+						alone = false
+						break
+				if alone:
+					found = j
+					break
 		if found < 0:
 			g.end_turn()
 		tries += 1

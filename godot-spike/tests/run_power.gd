@@ -63,13 +63,6 @@ func _initialize() -> void:
 		if free >= 2:
 			reach += 1
 	check("every post can be reached from at least two sides", reach == posts.size())
-	var w2 = WorldScript.new()
-	w2.start(21, 300)
-	var posts2: Array = []
-	for i in w2.game.s2:
-		if w2.game.city.tiles[i] == CG.TID["charger"]:
-			posts2.append(i)
-	check("the same seed gives the same posts", posts2 == posts)
 	# ---- no overall health pool
 	check("there is no overall health pool: the Game has no hp or hp_max", g.get("hp") == null and g.get("hp_max") == null)
 	# ---- a human has no power use at all
@@ -250,11 +243,22 @@ func _initialize() -> void:
 	check("power survives a save and load (%.1f kJ, state %d)" % [g2.power, g2.power_state], absf(g2.power - 123.5) < 0.01 and g2.power_state == 1)
 	check("a person's energy, and what a dead one held, survives a save and load", g2.npc_energy(nap) == 77 and g2.npc_energy(bratva) == 33)
 	var pd: Dictionary = JSON.parse_string(JSON.stringify(g.player_dict()))
+	w.game.dispose()                                     # (one 1536 city at a time: this one is finished with)
+	var w2 = WorldScript.new()
+	w2.start(21, 300)
+	var posts2: Array = []
+	for i in w2.game.s2:
+		if w2.game.city.tiles[i] == CG.TID["charger"]:
+			posts2.append(i)
+	check("the same seed gives the same posts", posts2 == posts)
+	w2.game.dispose()
 	var g3 = preload("res://src/game.gd").new(7)
 	g3.setup(300)
 	g3.apply_player(pd)
 	check("power travels with the player between zones", absf(g3.power - 123.5) < 0.01)
 	check("a paid contract is remembered through a save and a zone change, and cannot be taken again (money must come from new work)", g2.done_contracts.has("repair-0000abcd") and g3.done_contracts.has("repair-0000abcd") and not g2.portal_open({"id": "repair-0000abcd"}, 0))
+	g2.dispose()
+	g3.dispose()
 	var old: Dictionary = sd.duplicate(true)
 	old.erase("power")
 	old.erase("power_state")
@@ -262,6 +266,7 @@ func _initialize() -> void:
 	var g4 = preload("res://src/game.gd").new(7)
 	g4.load_dict(old)
 	check("an old save (no power, no energy) loads: the rig is full and people hold their clock-based charge", g4.power_left() == g4.power_cap() and g4.npc_energy(nap) >= 0 and g4.npc_energy(nap) <= 1152)
+	g4.dispose()
 	# ---- the same seed plays the same
 	var ga = preload("res://src/game.gd").new(7)
 	ga.setup(300)
@@ -273,6 +278,8 @@ func _initialize() -> void:
 		ga.end_turn()
 		gb.end_turn()
 	check("two games from one seed drain identically (%.4f)" % ga.power_left(), ga.power_left() == gb.power_left() and ga.power_left() < ga.power_cap())
+	ga.dispose()
+	gb.dispose()
 	# ---- health is per limb; the head or chest at 0 ends the run
 	var gh = preload("res://src/game.gd").new(7)
 	gh.setup(300)
@@ -281,11 +288,13 @@ func _initialize() -> void:
 	gh.player_hurt(500, "Test", "phys", "head")
 	gh.end_turn()
 	check("the head at 0 kills and ends the run", gh.game_over and gh.log.any(func(l): return String(l).contains("You are dead")))
+	gh.dispose()
 	var gc = preload("res://src/game.gd").new(7)
 	gc.setup(300)
 	gc.player_hurt(500, "Test", "phys", "chest")
 	gc.end_turn()
 	check("the chest at 0 kills and ends the run", gc.game_over)
+	gc.dispose()
 	var gf = preload("res://src/game.gd").new(7)
 	gf.setup(300)
 	gf.player_hurt(30, "Test", "phys", "chest")
@@ -294,11 +303,13 @@ func _initialize() -> void:
 	var healed: int = gf.heal_body(10)
 	check("healing closes wounds on the most hurt limb, never past full (%d points)" % healed, healed == 10 and gf.body.total() == tot0 + 10 and gf.body.hp["r_arm"] <= gf.body.mx["r_arm"])
 	check("a limb at 0 stays at 0 while healing points go elsewhere", gf.body.hp["r_arm"] == 0)
+	gf.dispose()
 	var gd = preload("res://src/game.gd").new(7)
 	gd.setup(300)
 	gd.player_hurt(500, "Test", "phys", "l_arm")
 	var before: int = gd.body.total()
 	gd.heal_body(50)
 	check("a disabled arm stays disabled when healing points are spread", not gd.body.ok("l_arm") and gd.body.total() == before)
+	gd.dispose()
 	print("POWER %d/%d" % [ok, n])
 	quit(0 if ok == n else 1)

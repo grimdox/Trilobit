@@ -120,6 +120,11 @@ func setup(city, count: int, seed: int) -> void:
 					var t := tiles[i]
 					walk[i] = lut[t]
 					opaque[i] = 1 if (t == 2 or t == 17 or t == 27 or t == 28 or t == 29 or t == 22 or t == shut_id) else 0
+	n = count
+	com = COM.new()
+	com.setup(self)
+	if not city.houses.is_empty() or not city.apartments.is_empty():
+		com.prepare()                                      # the walking grid is built on its own thread while the distance fields are
 	# the three distance fields (to home, work, shop) are independent: one thread each
 	var srcs := [homes, works, shops]
 	var made := [PackedInt32Array(), PackedInt32Array(), PackedInt32Array()]
@@ -131,7 +136,6 @@ func setup(city, count: int, seed: int) -> void:
 	for th in ths:
 		th.wait_to_finish()
 	fields = made
-	n = count
 	pos = PackedInt32Array(); pos.resize(n)
 	dest = PackedInt32Array(); dest.resize(n)
 	home_cell = PackedInt32Array(); home_cell.resize(n)
@@ -152,8 +156,6 @@ func setup(city, count: int, seed: int) -> void:
 		pos[i] = h
 		dest[i] = h
 		goal[i] = HOME
-	com = COM.new()
-	com.setup(self)
 
 ## One home cell per person.  Houses first (one to four people each, fewer in the rich districts, more in the poor), then the flats of the
 ## towers (one to three), then the old home markers as households of one to three, until everyone has a roof.  Every person gets a cell of

@@ -63,17 +63,17 @@ func run() -> Array:
 	for k in 36:
 		var ang: float = float(k) / 36.0 * TAU
 		var rr := 300.0
-		while rr < 900.0 and a._cald_r(cvec.x + cos(ang) * rr, cvec.y + sin(ang) * rr) < 570.0:
+		while rr < 900.0 and a._cald_r(cvec.x + cos(ang) * rr, cvec.y + sin(ang) * rr) < ISL.RIM_R + 70.0:
 			rr += 3.0                                  # the caldera is an egg-shaped oval: walk out to the crest of its rim
 		var px: int = int(cvec.x + cos(ang) * rr)
 		var py: int = int(cvec.y + sin(ang) * rr)
-		var from_south: float = absf(atan2(float(px) - cvec.x, float(py) - cvec.y))
-		if from_south < 1.2:
-			continue                                  # the ring is open to the south
+		var from_south: float = atan2(float(px) - cvec.x, float(py) - cvec.y)      # 0 straight south, positive east
+		if from_south > -0.6 and from_south < 1.6:
+			continue                                  # the ring is open to the south and the south-east (the harbor, the swamp and the flats)
 		ring_n += 1
 		if a._samp(a._g_mt, px, py) > 0.45:
 			ring_hits += 1
-	check.call("a ring of mountains closes the caldera except to the south (%d of %d points)" % [ring_hits, ring_n], ring_hits >= ring_n - 4)
+	check.call("a ring of mountains closes the caldera except to the south and south-east (%d of %d points)" % [ring_hits, ring_n], ring_hits >= ring_n - 4)
 	var south_open := 0
 	for k in 8:
 		var px2: int = int(cvec.x + (k - 3.5) * 40.0)
@@ -115,7 +115,7 @@ func run() -> Array:
 	var wind := 0
 	for x in range(a.PASS_X0, ISL.PASS_X1):
 		wind = maxi(wind, absi(a.pass_yc(x) - ISL.HWY_Y))
-	check.call("and it winds (up to %d rows off line) over a long way (%d columns)" % [wind, ISL.PASS_X1 - a.PASS_X0], wind >= 20 and ISL.PASS_X1 - a.PASS_X0 > 900)
+	check.call("and it winds (up to %d rows off line) over a long way (%d columns)" % [wind, ISL.PASS_X1 - a.PASS_X0], wind >= 20 and ISL.PASS_X1 - a.PASS_X0 > 700)
 	var xo: int = a.PASS_X0 - 60
 	check.call("the highway is six lanes wide (36 rows) outside the pass", a.pass_yc(xo) == ISL.HWY_Y and a.terrain(xo, ISL.HWY_Y - 18) == CG.ROAD and a.terrain(xo, ISL.HWY_Y + 17) == CG.ROAD and a.terrain(xo, ISL.HWY_Y - 19) != CG.ROAD)
 	# walk the pass: flood fill over the analytic map from the quay to the city edge
@@ -155,7 +155,7 @@ func run() -> Array:
 	# zones
 	check.call("zone ownership: the city owns its middle, the ferry port the west", ISL.zone_owner(ISL.CITY_CX, ISL.HWY_Y) == ISL.CITY_ZONE and ISL.zone_owner(a.PORT.x, a.PORT.y) == a.PORT_ZONE and ISL.zone_owner(ISL.TOWN.x, ISL.TOWN.y) == ISL.TOWN_ZONE and ISL.zone_owner(ISL.AIR_X0 + 100, ISL.AIR_Y) == ISL.AIR_ZONE)
 	var co: Rect2i = ISL.CITY_OWN
-	check.call("the city's territory is its big square (960 by 960), and its neighbours take over outside it", ISL.zone_owner(co.position.x, co.position.y + 480) == ISL.CITY_ZONE and ISL.zone_owner(co.end.x - 1, co.position.y + 480) == ISL.CITY_ZONE and ISL.zone_owner(co.position.x - 1, co.position.y + 480) != ISL.CITY_ZONE and ISL.zone_owner(co.end.x, co.position.y + 480) != ISL.CITY_ZONE and ISL.zone_owner(co.position.x + 480, co.position.y - 1) != ISL.CITY_ZONE and ISL.zone_owner(co.position.x + 480, co.end.y) != ISL.CITY_ZONE and co.size == Vector2i(960, 960))
+	check.call("the city's territory is its big square (1472 by 1472), and its neighbours take over outside it", ISL.zone_owner(co.position.x, co.position.y + 736) == ISL.CITY_ZONE and ISL.zone_owner(co.end.x - 1, co.position.y + 736) == ISL.CITY_ZONE and ISL.zone_owner(co.position.x - 1, co.position.y + 736) != ISL.CITY_ZONE and ISL.zone_owner(co.end.x, co.position.y + 736) != ISL.CITY_ZONE and ISL.zone_owner(co.position.x + 736, co.position.y - 1) != ISL.CITY_ZONE and ISL.zone_owner(co.position.x + 736, co.end.y) != ISL.CITY_ZONE and co.size == Vector2i(1472, 1472))
 	var kinds := {}
 	for zx in ISL.NZX:
 		for zy in ISL.NZY:
@@ -183,6 +183,7 @@ func run() -> Array:
 	w.start(7, 800)
 	log.append("  (world start incl. the city zone: %d ms)" % (Time.get_ticks_msec() - t0))
 	var g = w.game
+	var n_city: int = g.sim.n
 	check.call("play starts in the city zone on a road", g.zone == ISL.CITY_ZONE and g.city.tiles[g.pc] == CG.ROAD)
 	check.call("the city leaves its edges empty (no building within 60 of the border)", _clear_edges(g))
 	var gp: Vector2i = g.global_pos()
@@ -212,7 +213,7 @@ func run() -> Array:
 	check.call("walking back hands the city back", not w.poll())
 	hg.pc = (hg.global_pos().y - ISL.zone_origin(dest.x, dest.y).y) * hg.size + (CO.x + 60 - ISL.zone_origin(dest.x, dest.y).x)
 	check.call("and over again returns to the city", w.poll() and w.game.zone == ISL.CITY_ZONE)
-	check.call("the city is the one you left (cached), with your new yen", w.game.yen == 123 and w.game != g and w.game.sim.n == g.sim.n)
+	check.call("the city is the one you left (cached), with your new yen", w.game.yen == 123 and w.game != g and w.game.sim.n == n_city)
 	# the ferry port, built on its own
 	var pz: Vector2i = a.PORT_ZONE
 	t0 = Time.get_ticks_msec()
@@ -261,6 +262,7 @@ func run() -> Array:
 	cg.pc = spot
 	cg.sim.retier(cg.pc)
 	check.call("you get in", cg.act_vehicle() and cg.in_vehicle == vi2)
+	var cg_transit = cg.transit                              # (the city game is let go of once the car has crossed)
 	var guard := 0
 	while w.game == cg and guard < 60:
 		guard += 1
@@ -279,8 +281,8 @@ func run() -> Array:
 	var rx0: int = a.PORT.x + 50
 	var rail_row: int = (a.rail_ret(rx0) - wo.y) * wz.size
 	var rx: int = rx0 - wo.x
-	wz.transit.adopt(cg.transit)
-	check.call("the port shares the rail line with the city", wz.transit.active() and wz.transit.line.size() > 0 and wz.transit.path.size() == cg.transit.path.size())
+	wz.transit.adopt(cg_transit)
+	check.call("the port shares the rail line with the city", wz.transit.active() and wz.transit.line.size() > 0 and wz.transit.path.size() == cg_transit.path.size())
 	wz.pc = rail_row - 3 * wz.size + rx
 	wz.sim.retier(wz.pc)
 	var crossed := 0

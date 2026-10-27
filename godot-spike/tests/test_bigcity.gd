@@ -35,7 +35,7 @@ func run() -> Array:
 		themes = themes and rows_n >= 1 and rows_s >= 1
 		themes = themes and isl.downtown.x > isl.river_span(ISL.CITY_ORIGIN.y + int(isl.downtown.y)).y - ISL.CITY_ORIGIN.x      # downtown on the east bank
 	check.call("every seed keeps the themes: three bridges split north and south of the highway, downtown east of the river, a subway ring", themes)
-	check.call("the city is much bigger (%d square, owning %s)" % [ISL.CZS, str(ISL.CITY_OWN.size)], ISL.CZS == 1024 and ISL.CITY_OWN.size == Vector2i(960, 960))
+	check.call("the city is much bigger (%d square, owning %s)" % [ISL.CZS, str(ISL.CITY_OWN.size)], ISL.CZS == 1536 and ISL.CITY_OWN.size == Vector2i(1472, 1472))
 	# ---- the world, density, boulevards, station, passengers
 	var w = World.new()
 	w.start(7, 300)
@@ -54,6 +54,31 @@ func run() -> Array:
 			bld += 1
 	var share: float = float(bld) / float(area)
 	check.call("the city covers more than twice the old area (%d tiles vs 226,000)" % area, area > 2 * 226000)
+	# ---- labor centers and mission booths
+	var term: int = CG.TID["terminal"]
+	var labor := 0
+	var labor_rich := 0
+	var labor_booths := 0
+	var gov := 0
+	var gov_booths := 0
+	for bz in c.businesses:
+		var nterm := 0
+		if bz["type"] == "labor_center" or bz["type"] == "gov_office" or bz["type"] == "police":
+			for yy in range(int(bz["y0"]), int(bz["y1"]) + 1):
+				for xx in range(int(bz["x0"]), int(bz["x1"]) + 1):
+					if c.tiles[yy * c.size + xx] == term:
+						nterm += 1
+		if bz["type"] == "labor_center":
+			labor += 1
+			labor_booths += nterm
+			if c.wealth_at(int(bz["y0"]) * c.size + int(bz["x0"])) == 2:
+				labor_rich += 1
+		elif bz["type"] == "gov_office" or bz["type"] == "police":
+			gov += 1
+			gov_booths += nterm
+	check.call("there are labor centers with mission booths (%d centers, %d booths)" % [labor, labor_booths], labor >= 1 and labor_booths >= labor * 3)
+	check.call("none of them stands in a rich district (%d)" % labor_rich, labor_rich == 0)
+	check.call("the government offices and police stations have booths too (%d buildings, %d booths)" % [gov, gov_booths], gov >= 1 and gov_booths >= gov)
 	# buildings are smaller and separated by 1-2 tile alleys, so the footprint share is a little lower than with big blocks but there are twice as many of them
 	check.call("and is more jam-packed: %d buildings (it was 344), %.1f%% of it under a roof" % [c.buildings, 100.0 * share], share > 0.18 and c.buildings > 600)
 	check.call("it holds far more people (%d)" % g.sim.n, g.sim.n >= 300 and World.CITY_PEOPLE >= 2000)

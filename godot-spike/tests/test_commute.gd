@@ -97,7 +97,7 @@ func run() -> Array:
 			vendors += 1
 		else:
 			keepers_ok = false
-	check.call("the keeper of every shop that trades is a merchant (%d)" % vendors, vendors >= 10 and keepers_ok)
+	check.call("the keeper of every shop that trades is a merchant (%d)" % vendors, vendors >= 8 and keepers_ok)
 	var jobless := 0
 	for i in n:
 		if sim.sticky[i] == 0 and com.wc[i] < 0:

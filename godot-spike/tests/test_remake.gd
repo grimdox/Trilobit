@@ -59,22 +59,27 @@ func run() -> Array:
 			kinds[kd] = kinds.get(kd, 0) + 1
 			if kd == "industry":
 				ind.append(z)
-	var ig = w._make(ind[0])
 	var road := 0
 	var wall := 0
 	var rail := 0
 	var water := 0
-	for i in ig.size * ig.size:
-		var t: int = ig.city.tiles[i]
-		if t == CG.ROAD:
-			road += 1
-		elif t == CG.WALL:
-			wall += 1
-		elif t == CG.RAILING:
-			rail += 1
-		elif t == CG.WATER:
-			water += 1
-	check.call("an industrial zone %s is a mixed mess: service roads %d, walls %d, pipe racks %d, people %d" % [str(ind[0]), road, wall, rail, ig.sim.n], road > 4000 and wall > 600 and rail > 100 and ig.sim.n == 70)
+	var ig_n := 0
+	for zi in mini(3, ind.size()):                                # (the kinds of works are drawn per block, so the mix is judged over a few industrial zones)
+		var ig = w._make(ind[zi])
+		if zi == 0:
+			ig_n = ig.sim.n
+		for i in ig.size * ig.size:
+			var t: int = ig.city.tiles[i]
+			if t == CG.ROAD:
+				road += 1
+			elif t == CG.WALL:
+				wall += 1
+			elif t == CG.RAILING:
+				rail += 1
+			elif t == CG.WATER:
+				water += 1
+		ig.dispose()
+	check.call("an industrial zone %s is a mixed mess: service roads %d, walls %d, pipe racks %d, people %d" % [str(ind[0]), road, wall, rail, ig_n], road > 4000 and wall > 600 and rail > 100 and ig_n == 70)
 	var lag := 0
 	for z in ind:
 		var o: Vector2i = ISL.zone_origin(z.x, z.y)
@@ -94,11 +99,15 @@ func run() -> Array:
 	check.call("the chart is %dx%d and names %d places" % [img.get_width(), img.get_height(), names.size()], img.get_width() == 550 and img.get_height() == 968 and names.size() >= 8)
 	# save / load
 	var d: Dictionary = JSON.parse_string(JSON.stringify(w.save_dict()))
+	var pc0: int = g.pc                                        # (one 1536 city at a time: the first world is let go of once it is saved)
+	var harb0: int = a.harb_y
+	w.game.dispose()
 	var w2 = World.new()
 	w2.load_dict(d)
-	check.call("save and load round trip the new layout (v%d)" % ISL.LAYOUT_VER, w2.game.zone == ISL.CITY_ZONE and w2.game.pc == g.pc and w2.island.harb_y == a.harb_y)
+	check.call("save and load round trip the new layout (v%d)" % ISL.LAYOUT_VER, w2.game.zone == ISL.CITY_ZONE and w2.game.pc == pc0 and w2.island.harb_y == harb0)
 	d["layout"] = 3
 	var w3 = World.new()
 	w3.load_dict(d)
+	w2.game.dispose()
 	check.call("an old-layout save restarts on the same island instead of loading nonsense", w3.seed_value == 7 and w3.game.zone == ISL.CITY_ZONE)
 	return [st[0], st[1], log]
