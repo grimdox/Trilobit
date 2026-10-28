@@ -58,6 +58,7 @@ func run() -> Array:
 	var g = GameScript.new(11)
 	g.setup(1200)
 	g.implants = {}
+	g.infinite_power = true                                       # (these implants carry no battery: the power rules are tested in run_power)
 	var base_st: int = g.lvl("streetwise")
 	g.implants = {"x105": true}                                   # Gutterline Optic: Streetwise +1
 	check.call("a working implant adds its skill bonus to the level", g.lvl("streetwise") == base_st + 1 and g.base_lvl("streetwise") == base_st)

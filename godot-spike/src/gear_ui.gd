@@ -36,8 +36,10 @@ const SPOTS := {"head": Vector2(-1, 86), "eyes": Vector2(1, 86), "chest": Vector
 ## where each leader line meets the body (x from the centre line, y on the figure)
 const ANCHOR := {"head": Vector2(-15, 74), "eyes": Vector2(9, 82), "chest": Vector2(-30, 160), "back": Vector2(42, 148), "arms": Vector2(-65, 172),
 	"belt": Vector2(29, 222), "lhand": Vector2(-69, 278), "rhand": Vector2(69, 278), "legs": Vector2(-28, 286)}
+## where the Spine leader meets the body on the implants tab: the vertebrae down the middle (the Back spot is a backpack on the equipment tab and points at the shoulder)
+const SPINE_ANCHOR := Vector2(0, 176)
 ## the implant part each doll spot stands for (on the equipment tab the belt is a belt; on the implants tab its spot is the Dermal layer)
-const SPOT_PART := {"head": "head", "eyes": "eyes", "back": "spine", "chest": "chest", "belt": "dermal", "arms": "arms", "lhand": "hands", "rhand": "hands", "legs": "legs"}
+const SPOT_PART := {"head": "head", "eyes": "eyes", "back": "spine", "chest": "chest", "belt": "dermal", "arms": "arms", "rhand": "hands", "legs": "legs"}
 
 var game = null
 var ts = null                            # Tileset for item icons
@@ -562,6 +564,8 @@ func draw(c: CanvasItem, W: float, H: float, t: float, dt: float) -> void:
 		var r: Rect2 = slot_rect(slot)
 		var key: String = "s:" + slot
 		var isspot: bool = SPOT_PART.has(slot)
+		if on_imp and not isspot:
+			continue
 		var lab: String = INV.NAMES[slot] if not on_imp else (String(IMP.PARTS[_part_index(SPOT_PART[slot])]["name"]).split(" /")[0] if isspot else INV.NAMES[slot])
 		_txt(c, lab, Vector2(r.position.x + (T - font.get_string_size(lab, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x) * 0.5, r.position.y - 4.0), 12, Color(0.55, 0.65, 0.78, 0.55 if (on_imp and not isspot) else 1.0))
 		if not on_imp:
@@ -828,6 +832,11 @@ func _figure(c: CanvasItem) -> void:
 	_pair(c, [Vector2(3, 138), Vector2(20, 145), Vector2(40, 140)], fine, 1.1)
 	_pair(c, [Vector2(3, 168), Vector2(20, 173), Vector2(36, 166)], fine, 1.1)
 	c.draw_line(_fp(0, 122), _fp(0, 186), fine, 1.1)
+	if tab == "implants":                           # the spine, vertebra by vertebra, down the middle of the torso
+		var on_spine: bool = cur == "s:back"
+		for vy in range(112, 256, 9):
+			var vr := Rect2(_fp(-3.5, float(vy)), Vector2(7.0, 5.0))
+			c.draw_rect(vr, Color(1.0, 0.8, 0.25, 0.9) if on_spine else Color(0.75, 0.9, 1.0, 0.55))
 	var core: Vector2 = _fp(0, 150)
 	c.draw_circle(core, 11.0, Color(1.0, 0.25, 0.65, 0.16))
 	c.draw_circle(core, 7.0, Color(1.0, 0.25, 0.65, 0.3))
@@ -858,7 +867,8 @@ func _leaders(c: CanvasItem, on_imp: bool) -> void:
 		var r: Rect2 = slot_rect(slot)
 		var side: float = (SPOTS[slot] as Vector2).x
 		var a: Vector2 = Vector2(r.end.x if side < 0 else r.position.x, r.get_center().y)
-		var b: Vector2 = _fp((ANCHOR[slot] as Vector2).x, (ANCHOR[slot] as Vector2).y)
+		var an: Vector2 = SPINE_ANCHOR if (on_imp and slot == "back") else (ANCHOR[slot] as Vector2)
+		var b: Vector2 = _fp(an.x, an.y)
 		var active: bool = cur == "s:" + slot
 		var col: Color = Color(1.0, 0.8, 0.25, 0.9) if active else Color(0.3, 0.9, 1.0, 0.32)
 		var dist: float = a.distance_to(b)
@@ -942,7 +952,7 @@ func _item_card(c: CanvasItem, it, x: float, y0: float, maxw: float) -> void:
 	var eq: String = INV.equip_text(it)
 	if d.has("implant"):
 		eq = "Implant: %s" % String(IMP.PARTS[_part_index(String(d.get("part", "head")))]["name"]).split(" /")[0].to_lower()
-	_fit_txt(c, eq, Vector2(x, y), 17, YELLOW if INV.is_equipment(it) or d.has("implant") else Color(0.6, 0.7, 0.8), maxw)
+	_fit_txt(c, eq, Vector2(x, y), 17, YELLOW if INV.is_equipment(it) or d.has("implant") or d.has("nano") else Color(0.6, 0.7, 0.8), maxw)
 	y += 12.0
 	var desc: String = String(d.get("desc", ""))
 	if desc != "":

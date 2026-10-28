@@ -50,6 +50,8 @@ static func slot_label(slot: String) -> String:
 
 ## a short line for the item card: "Equip: Chest" or "Not equipment"
 static func equip_text(it) -> String:
+	if it.def.has("nano"):
+		return "Install in Trilobit"
 	var o: Array = slot_options(it)
 	if o.is_empty():
 		return "Not equipable"

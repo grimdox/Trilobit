@@ -19,7 +19,7 @@ const LOG_LINES := 10        # messages shown in the panel along the bottom
 const UI_S := 1.5          # the interface is laid out for 1280x720 and drawn at 1.5x on the 1920x1080 canvas
 const TILESETS := ["Trilobit64"]      # Trilobit's own 64px art (tools/content/gen_tiles64.py); more sets can be added here
 const SLOTS := 3
-const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "equipment", "implants", "skills", "map", "create", "terminal", "barter"]
+const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "equipment", "implants", "skills", "map", "create", "terminal", "barter", "elevator"]
 const MOUSE_MODES := ["title", "pause", "options", "visuals", "keys", "saves", "loads", "create"]
 const TAB_MODES := ["equipment", "implants", "skills", "map"]       # the paused character screens, one tab each (< and > step through them)
 
@@ -456,7 +456,7 @@ func back_from_screen() -> void:
 				open_screen("pause")
 			else:
 				resume_play()
-		"terminal":
+		"terminal", "elevator":
 			resume_play()
 		"pause":
 			resume_play()
@@ -782,7 +782,7 @@ func step_tab(dir: int) -> void:
 	open_tab(TAB_MODES[(i + dir + TAB_MODES.size()) % TAB_MODES.size()])
 	sfx.play("blip")
 
-const LOCAL_R := 40
+const LOCAL_R := 70
 
 ## the colour of a map tile on the local map (transparent: not drawn)
 func _local_color(t: int) -> Color:
@@ -810,6 +810,49 @@ func _local_color(t: int) -> Color:
 	if t >= CG.EXTRA0:
 		return Color(0.62, 0.68, 0.8) if int(CG.WALK[t]) == 0 else Color(0.07, 0.2, 0.28)
 	return Color(0.07, 0.2, 0.28)
+
+const MINI_R := 24
+
+## the minimap (bottom right of the HUD): a Trilobit, fitted and powered, charts the 49 x 49 tiles round you; the message log gives up the space it uses
+func _make_mini() -> void:
+	var g = game
+	var on: bool = g != null and g.nano_ok()
+	view.mini_on = on
+	logbox.size.x = 1264.0 - (172.0 if on else 0.0)
+	if not on:
+		view.mini_tex = null
+		return
+	var n: int = MINI_R * 2 + 1
+	var img := Image.create(n, n, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0.02, 0.03, 0.06))
+	var base: int = (g.pc / g.s2) * g.s2
+	var px: int = g.lx(g.pc)
+	var py: int = g.ly(g.pc)
+	for dy in range(-MINI_R, MINI_R + 1):
+		var y: int = py + dy
+		if y < 0 or y >= g.size:
+			continue
+		for dx in range(-MINI_R, MINI_R + 1):
+			var x: int = px + dx
+			if x < 0 or x >= g.size:
+				continue
+			var c: int = base + y * g.size + x
+			if g.fov.explored[c] == 0:
+				continue
+			var col: Color = _local_color(g.city.tiles[c])
+			if col.a > 0.0:
+				img.set_pixel(dx + MINI_R, dy + MINI_R, col if g.fov.visible[c] == 1 else col * Color(0.65, 0.65, 0.65))
+	for k in g.sim.near_list.size():                                  # people you can see
+		var pi: int = g.sim.near_list[k]
+		var pc2: int = g.sim.pos[pi]
+		if pc2 / g.s2 != base / g.s2 or g.fov.visible[pc2] == 0:
+			continue
+		var ex: int = pc2 % g.size - px + MINI_R
+		var ey: int = (pc2 / g.size) % g.size - py + MINI_R
+		if ex >= 0 and ey >= 0 and ex < n and ey < n:
+			img.set_pixel(ex, ey, Color(1.0, 0.85, 0.2))
+	img.set_pixel(MINI_R, MINI_R, Color.WHITE)
+	view.mini_tex = ImageTexture.create_from_image(img)
 
 ## the picture of everything seen within LOCAL_R tiles of the player on this level
 func _make_local_map() -> void:
@@ -841,7 +884,36 @@ func _make_local_map() -> void:
 
 ## names of buildings to print above their middle tile on the local map: [{dx, dy, text}] relative to the player.  None are named yet.
 func local_labels() -> Array:
-	return []
+	var out: Array = []
+	var g = game
+	if g == null or g.city == null or (g.pc / g.s2) != 0:
+		return out
+	var SG = preload("res://src/signage.gd")
+	var CG = preload("res://src/citygen.gd")
+	var px: int = g.lx(g.pc)
+	var py: int = g.ly(g.pc)
+	for sg in g.city.signs:                                      # one pictogram per building, at its middle, once you have seen its door
+		var d: int = int(sg["door"])
+		var m: int = int(sg["mid"])
+		var dx: int = m % g.size - px
+		var dy: int = m / g.size - py
+		if absi(dx) > LOCAL_R or absi(dy) > LOCAL_R or g.fov.explored[d] == 0:
+			continue
+		var kind: String = String(sg["kind"])
+		out.append({"dx": dx, "dy": dy, "glyph": sg["glyph"], "col": sg["col"], "small": kind == "house", "text": ""})
+	var tt: int = CG.TID["terminal"]
+	for dy2 in range(-LOCAL_R, LOCAL_R + 1):                    # the mission terminals
+		var y: int = py + dy2
+		if y < 0 or y >= g.size:
+			continue
+		for dx2 in range(-LOCAL_R, LOCAL_R + 1):
+			var x: int = px + dx2
+			if x < 0 or x >= g.size:
+				continue
+			var c: int = y * g.size + x
+			if g.city.tiles[c] == tt and g.fov.explored[c] == 1:
+				out.append({"dx": dx2, "dy": dy2, "glyph": "terminal", "col": SG.COL_TERMINAL, "small": false, "text": ""})
+	return out
 
 func _tab_key(k: int) -> void:
 	if k == KEY_ESCAPE:
@@ -986,6 +1058,9 @@ func screen_key(k: int) -> void:
 	if mode == "terminal":
 		_terminal_key(k)
 		return
+	if mode == "elevator":
+		_elevator_key(k)
+		return
 	match k:
 		KEY_ESCAPE:
 			if mode != "title":
@@ -1059,6 +1134,22 @@ func _cc_mouse(ev: InputEvent) -> void:
 				cc_step(h["dir"])
 			_cc_sync()
 
+func _elev_mouse(ev: InputEvent) -> void:
+	if ev is InputEventMouseMotion:
+		var h: int = screen.elev_at(ev.position / UI_S)
+		if h >= 0 and h != elev_sel:
+			elev_sel = h
+			sfx.play("blip")
+			_elev_sync()
+	elif ev is InputEventMouseButton and ev.pressed:
+		if ev.button_index == MOUSE_BUTTON_LEFT:
+			var h: int = screen.elev_at(ev.position / UI_S)
+			if h >= 0:
+				elev_sel = h
+				_elev_ride()
+		elif ev.button_index == MOUSE_BUTTON_RIGHT:
+			resume_play()
+
 func _unhandled_input(ev: InputEvent) -> void:
 	if mode in TAB_MODES:
 		_tab_mouse(ev)
@@ -1068,6 +1159,9 @@ func _unhandled_input(ev: InputEvent) -> void:
 		return
 	if mode == "create":
 		_cc_mouse(ev)
+		return
+	if mode == "elevator":
+		_elev_mouse(ev)
 		return
 	if not (mode in MOUSE_MODES):
 		return
@@ -1143,6 +1237,7 @@ func refresh() -> void:
 			view.focus_cell = g.sim.pos[ft]
 			extra += "  [VIEW: target]"
 	view.hud_extra = extra
+	_make_mini()
 	var tw: Dictionary = g.tower_at(g.pc) if g.z_of(g.pc) > 0 else {}
 	var line2: String = g.eco.status_text()
 	if g.transit.active():
@@ -1168,8 +1263,6 @@ func refresh() -> void:
 		show_talk()
 	elif mode == "clock":
 		show_clock()
-	elif mode == "elevator":
-		show_elevator()
 	elif mode == "pick":
 		show_pick()
 	elif mode == "mods":
@@ -1181,40 +1274,51 @@ func refresh() -> void:
 	elif mode == "nano":
 		show_nano()
 
-## the elevator's floor list: up and down (or the digits) pick a floor, Enter rides there
-func show_elevator() -> void:
-	var t := "[b]ELEVATOR[/b]   (Up/Down or type a floor, Enter rides, Esc leaves)\n\n"
-	var n: int = elev_list.size()
-	var lo: int = clampi(elev_sel - 6, 0, maxi(0, n - 13))
-	for k in range(lo, mini(n, lo + 13)):
-		var f: Dictionary = elev_list[k]
-		var here: bool = int(f["cell"]) == game.pc
-		var line: String = game.floor_label(int(f["z"])) + ("   (you are here)" if here else "")
-		t += ("[color=#7fd6e8]> %s[/color]\n" % line) if k == elev_sel else ("  %s\n" % line)
-	if elev_typed != "":
-		t += "\nfloor: %s" % elev_typed
-	panel.text = t
-	panel.visible = true
+## the elevator: a pad of floor buttons (highest at the top), one per floor the shaft serves.  Arrows or the numpad move over it, Enter rides, digits jump to a floor.
+func open_elevator() -> void:
+	var fl: Array = game.elevator_floors(game.elev_hit)
+	game.elev_hit = -1
+	fl.reverse()                                       # highest first, as on a real panel
+	elev_list = fl
+	elev_sel = 0
+	for q in fl.size():
+		if int(fl[q]["cell"]) == game.pc:
+			elev_sel = q
+	elev_typed = ""
+	open_screen("elevator")
+	screen.overlay = true
+	_elev_sync()
+	sfx.play("select")
+
+func _elev_sync() -> void:
+	var here := -1
+	for q in elev_list.size():
+		if int(elev_list[q]["cell"]) == game.pc:
+			here = q
+	var labels: Array = []
+	for f in elev_list:
+		labels.append(game.floor_button(int(f["z"])))
+	screen.ev = {"labels": labels, "sel": elev_sel, "here": here, "typed": elev_typed, "name": game.floor_label(game.z_of(game.pc))}
 
 func _elevator_key(k: int) -> void:
 	var n: int = elev_list.size()
+	var cols: int = screen.elev_cols(n)
+	var act: String = settings.action_for(k)
 	if k == KEY_ESCAPE:
-		mode = "play"
-		panel.visible = false
-	elif k == KEY_UP or k == KEY_KP_8:
-		elev_sel = mini(n - 1, elev_sel + 1)
-		elev_typed = ""
-	elif k == KEY_DOWN or k == KEY_KP_2:
-		elev_sel = maxi(0, elev_sel - 1)
-		elev_typed = ""
-	elif k == KEY_PAGEUP:
-		elev_sel = mini(n - 1, elev_sel + 5)
-	elif k == KEY_PAGEDOWN:
-		elev_sel = maxi(0, elev_sel - 5)
+		resume_play()
+		return
+	elif k == KEY_UP or act == "north":
+		elev_sel = elev_sel - cols if elev_sel - cols >= 0 else elev_sel
+	elif k == KEY_DOWN or act == "south":
+		elev_sel = elev_sel + cols if elev_sel + cols < n else elev_sel
+	elif k == KEY_LEFT or act == "west":
+		elev_sel = maxi(0, elev_sel - 1) if elev_sel % cols > 0 else elev_sel
+	elif k == KEY_RIGHT or act == "east":
+		elev_sel = elev_sel + 1 if (elev_sel % cols < cols - 1 and elev_sel + 1 < n) else elev_sel
 	elif k == KEY_HOME:
-		elev_sel = n - 1
-	elif k == KEY_END:
 		elev_sel = 0
+	elif k == KEY_END:
+		elev_sel = n - 1
 	elif k >= KEY_0 and k <= KEY_9 and elev_typed.length() < 2:
 		elev_typed += str(k - KEY_0)
 		for q in n:
@@ -1222,11 +1326,18 @@ func _elevator_key(k: int) -> void:
 				elev_sel = q
 	elif k == KEY_BACKSPACE:
 		elev_typed = elev_typed.substr(0, maxi(0, elev_typed.length() - 1))
-	elif k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_E or k == KEY_SPACE:
-		var z: int = int(elev_list[elev_sel]["z"])
-		mode = "play"
-		panel.visible = false
-		game.act_elevator_to(z)
+	elif k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
+		_elev_ride()
+		return
+	else:
+		return
+	sfx.play("blip")
+	_elev_sync()
+
+func _elev_ride() -> void:
+	var z: int = int(elev_list[elev_sel]["z"])
+	resume_play()
+	game.act_elevator_to(z)
 	refresh()
 
 ## the station clock: the time and the countdown to the next train, live while it is open
@@ -1589,9 +1700,6 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				game.act_strike(jd.x, jd.y)
 		refresh()
 		return
-	if mode == "elevator":
-		_elevator_key(k)
-		return
 	if mode == "clock":
 		if k == KEY_ESCAPE or k == KEY_E or k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
 			mode = "play"
@@ -1828,14 +1936,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 ## what using something asks the front end for: a menu, a screen, the gun bench
 func _after_act() -> void:
 	if mode == "play" and game.elev_hit >= 0:
-		elev_list = game.elevator_floors(game.elev_hit)
-		game.elev_hit = -1
-		elev_sel = 0
-		for q in elev_list.size():
-			if int(elev_list[q]["cell"]) == game.pc:
-				elev_sel = q
-		elev_typed = ""
-		mode = "elevator"
+		open_elevator()
 	elif mode == "play" and game.clock_hit >= 0:
 		clock_cell = game.clock_hit
 		game.clock_hit = -1

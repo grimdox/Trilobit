@@ -258,6 +258,7 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1), ms
 		zone = Vector2i(-1, -1)
 		city = CG.new()
 		city.generate(seed_value, Vector2(1, 0.2))
+		city.signs = preload("res://src/signage.gd").make(city, seed_value)
 		LV.build(city, seed_value)
 	size = city.size
 	s2 = size * size
@@ -862,17 +863,24 @@ func _start_player() -> void:
 ## a free floor cell in a flat chosen at random from every flat in every apartment building (who owns it is for later)
 func _start_flat() -> int:
 	var ap: Array = city.apartments
-	for _t in 60:
+	var lived := {}                                  # every cell somebody calls home or stands on: a flat holding one of them is somebody's
+	for i in sim.n:
+		lived[int(sim.home_cell[i])] = true
+		lived[int(sim.pos[i])] = true
+	for _t in mini(ap.size(), 400):
 		var a: Dictionary = ap[rng.randi() % ap.size()]
 		var r: Rect2i = a["rect"]
 		var base: int = (int(a["cell"]) / s2) * s2
 		var cells: Array = []
+		var empty := true
 		for y in range(r.position.y, r.end.y):
 			for x in range(r.position.x, r.end.x):
 				var c: int = base + y * size + x
+				if lived.has(c):
+					empty = false
 				if sim.walk[c] == 1 and sim.at[c] == -1 and CG.is_floor(city.tiles[c]):
 					cells.append(c)
-		if not cells.is_empty():
+		if empty and not cells.is_empty():
 			return cells[rng.randi() % cells.size()]
 	return -1
 
@@ -2497,6 +2505,9 @@ func ml_turns(ml: int, hydr: float = 1.0) -> int:
 	return int(round(float(ml) * hydr * TURNS_PER_ML))
 
 ## the effect of a meal or drink: hunger and thirst clocks, health, stamina; strong drink dulls the aim for a while.  Returns the turns of food and drink it added.
+var last_healed: int = 0                       # health points the last meal actually restored (food cannot heal what is not hurt, or a disabled limb)
+var last_stam: int = 0
+
 func eat_now(it) -> Array:
 	var f: Dictionary = it.def.get("food", {})
 	var got_food: int = 0
@@ -2508,9 +2519,12 @@ func eat_now(it) -> Array:
 	if f.get("drink", false):
 		got_drink = ml_turns(int(f.get("ml", 0)), float(f.get("hydr", 1.0)))
 		last_drank = _filled(THIRST_AFTER, drink_left(), got_drink)
+	last_healed = 0
 	if int(f.get("hp", 0)) > 0:
-		heal_body(int(f["hp"]))
+		last_healed = heal_body(int(f["hp"]))
+	var stam0: int = stamina
 	stamina = mini(STAMINA_MAX, stamina + int(round(float(f.get("stam", 0)) * STAM_LEGACY)))
+	last_stam = stamina - stam0
 	if f.get("alcohol", false):
 		drunk_left = mini(240 * CLK.MIN, drunk_left + 60 * CLK.MIN)
 	return [got_food, got_drink]
@@ -2523,9 +2537,10 @@ func _eat_report(it, before_food: int, before_drink: int) -> String:
 	if f.get("drink", false) and int(f.get("ml", 0)) > 0:
 		parts.append("%d mL, water for %s more" % [int(f["ml"]), CLK.span_text(drink_left() - before_drink)] if drink_left() > before_drink else "%d mL wasted: you are not thirsty" % int(f["ml"]))
 	if int(f.get("hp", 0)) > 0:
-		parts.append("health +%d" % int(f["hp"]))
+		parts.append("health +%d" % last_healed if last_healed >= int(f["hp"]) else "health +%d of %d (all that was hurt)" % [last_healed, int(f["hp"])])
 	if int(f.get("stam", 0)) > 0:
-		parts.append("stamina +%d" % int(round(float(f["stam"]) * STAM_LEGACY)))
+		var offered: int = int(round(float(f["stam"]) * STAM_LEGACY))
+		parts.append("stamina +%d" % last_stam if last_stam >= offered else "stamina +%d of %d (you were rested)" % [last_stam, offered])
 	return ", ".join(parts)
 
 func act_eat(it) -> bool:
@@ -3762,7 +3777,10 @@ func _noise(cell: int, radius: int) -> void:
 		if cheb(sim.pos[j], cell) > radius:
 			continue
 		if fac[j] == CIV:
-			_flee(j, 15)
+			# a door, a lock or a clamp is not a scare: only a real noise sends people running, and a shopkeeper or fixer only stirs at gunfire and the like (radius 9+)
+			var keeper: bool = eco != null and int(eco.role[j]) != 0
+			if radius >= (9 if keeper else 5):
+				_flee(j, 15)
 		elif astate[j] == UNAWARE or astate[j] == RETURNING:
 			astate[j] = SUSPICIOUS
 			meter[j] = maxi(meter[j], 55)
@@ -4591,6 +4609,8 @@ func act_install_implant(it) -> bool:
 	implants[id] = true
 	power_install(id)
 	say("You fit the %s." % it.def["name"])
+	if power_cap() <= 0.0:
+		say("Nothing in you stores power yet: fit a chest battery or a Trilobit, or the implants stay off.")
 	sfx("select")
 	return true
 
@@ -5057,6 +5077,12 @@ func elevator_floors(cell: int) -> Array:
 					stack.append(nb)
 	out.sort_custom(func(a, b): return int(a["z"]) < int(b["z"]))
 	return out
+
+## the text on an elevator button
+func floor_button(z: int) -> String:
+	if z > 0:
+		return str(z)
+	return "G" if z == 0 else "B%d" % (-z)
 
 func floor_label(z: int) -> String:
 	if z > 0:
@@ -5728,7 +5754,11 @@ func portal_close() -> void:
 
 # ---------------------------------------------------------------- implant power (power.gd)
 ## the kJ in the store; a rig that has never been charged counts as full
+var infinite_power: bool = false                  # tests and debugging: the store never runs down (and implants need no battery)
+
 func power_left() -> float:
+	if infinite_power:
+		return 1.0e9
 	return power if power >= 0.0 else float(PW.loadout(implants)["cap"])
 
 func power_cap() -> float:

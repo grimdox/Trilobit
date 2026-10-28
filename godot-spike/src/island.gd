@@ -9,6 +9,7 @@ extends RefCounted
 ##   north         a road up the valley farms past the town to the north point
 ##   east          the airstrip, lagoons and a sprawl of heavy industry on the east peninsula, and a coast road to the east cape
 ## Scale: one pixel of the guide image is 4.4 tiles (see README).
+const SG = preload("res://src/signage.gd")
 const CG = preload("res://src/citygen.gd")
 
 const W := 4400
@@ -942,6 +943,7 @@ func build_zone(zx: int, zy: int):
 			"town": _town(c)
 			"air": _airstrip(c)
 			"industry": _industry(c, zx, zy)
+	c.signs = SG.make(c, seed_value + zx * 131 + zy * 7)
 	return c
 
 ## The city's ground map takes about twenty seconds to generate, and it is the same every time for one seed, so it is kept on disk (user://gen_cache) the

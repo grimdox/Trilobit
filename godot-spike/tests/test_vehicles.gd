@@ -106,10 +106,10 @@ func run() -> Array:
 	check.call("a person cannot stand on the body", g.sim.walk[g.vehicles[vi]["cell"]] == 0)
 	# (a street crate or dumpster scattered beside the road can sit where the turned body needs room: clear them from this stretch)
 	for yy in range(mid_y - 40, mid_y + 6):
-		for xx in range(e + 11, e + 15):
-			if cc.tiles[yy * size + xx] in [23, 24, 25]:
-				cc.tiles[yy * size + xx] = cc.tiles[yy * size + e + 14]
-				g.sim.walk[yy * size + xx] = 1 if CG.is_floor(cc.tiles[yy * size + xx]) else 0
+		for xx in range(e + 11, e + 22):
+			if cc.tiles[yy * size + xx] in [23, 24, 25, 6]:
+				cc.tiles[yy * size + xx] = CG.GROUND          # (the verge beside the road: plain pavement, whatever the city built there)
+				g.sim.walk[yy * size + xx] = 1
 	# ---- getting in, driving
 	g.pc = _beside(g, vi)
 	g.sim.retier(g.pc)

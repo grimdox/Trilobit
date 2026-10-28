@@ -6713,7 +6713,7 @@
  {
   "id": "trl_imp_x101",
   "name": "Gutterline Trilobit",
-  "desc": "Basic grade: Networking +1, armor 1, 2 nanohack slots, draws 0.5 kJ/h.  Fits the head.",
+  "desc": "Basic grade: Networking +1, armor 1, stores 224 kJ, 2 nanohack slots, draws 0.5 kJ/h.  Fits the head.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -6727,7 +6727,7 @@
  {
   "id": "trl_imp_x102",
   "name": "Kowloon Surplus Trilobit",
-  "desc": "Basic grade: Analysis +1, armor 1, 2 nanohack slots, draws 0.5 kJ/h.  Fits the head.",
+  "desc": "Basic grade: Analysis +1, armor 1, stores 224 kJ, 2 nanohack slots, draws 0.5 kJ/h.  Fits the head.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -6741,7 +6741,7 @@
  {
   "id": "trl_imp_x103",
   "name": "Rustbelt Cyber Trilobit",
-  "desc": "Basic grade: Implementation +1, armor 1, 2 nanohack slots, draws 0.5 kJ/h.  Fits the head.",
+  "desc": "Basic grade: Implementation +1, armor 1, stores 224 kJ, 2 nanohack slots, draws 0.5 kJ/h.  Fits the head.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -6755,7 +6755,7 @@
  {
   "id": "trl_imp_x104",
   "name": "Backalley Works Trilobit",
-  "desc": "Basic grade: Research +1, armor 1, 2 nanohack slots, draws 0.5 kJ/h.  Fits the head.",
+  "desc": "Basic grade: Research +1, armor 1, stores 224 kJ, 2 nanohack slots, draws 0.5 kJ/h.  Fits the head.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -7049,7 +7049,7 @@
  {
   "id": "trl_imp_x201",
   "name": "Halden Medical Trilobit",
-  "desc": "Improved grade: Networking +1, armor 2, 4 nanohack slots, draws 1 kJ/h.  Fits the head.",
+  "desc": "Improved grade: Networking +1, armor 2, stores 448 kJ, 4 nanohack slots, draws 1 kJ/h.  Fits the head.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -7063,7 +7063,7 @@
  {
   "id": "trl_imp_x202",
   "name": "Sumida-Reyes Trilobit",
-  "desc": "Improved grade: Analysis +1, armor 2, 4 nanohack slots, draws 1 kJ/h.  Fits the head.",
+  "desc": "Improved grade: Analysis +1, armor 2, stores 448 kJ, 4 nanohack slots, draws 1 kJ/h.  Fits the head.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -7077,7 +7077,7 @@
  {
   "id": "trl_imp_x203",
   "name": "Brightwater Biomed Trilobit",
-  "desc": "Improved grade: Implementation +1, armor 2, 4 nanohack slots, draws 1 kJ/h.  Fits the head.",
+  "desc": "Improved grade: Implementation +1, armor 2, stores 448 kJ, 4 nanohack slots, draws 1 kJ/h.  Fits the head.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -7091,7 +7091,7 @@
  {
   "id": "trl_imp_x204",
   "name": "Corvane Trilobit",
-  "desc": "Improved grade: Research +1, armor 2, 4 nanohack slots, draws 1 kJ/h.  Fits the head.",
+  "desc": "Improved grade: Research +1, armor 2, stores 448 kJ, 4 nanohack slots, draws 1 kJ/h.  Fits the head.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -7385,7 +7385,7 @@
  {
   "id": "trl_imp_x301",
   "name": "Aegis-Tanaka Trilobit",
-  "desc": "Quality grade: Networking +2, armor 2, 6 nanohack slots, draws 2 kJ/h.  Fits the head.",
+  "desc": "Quality grade: Networking +2, armor 2, stores 896 kJ, 6 nanohack slots, draws 2 kJ/h.  Fits the head.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -7399,7 +7399,7 @@
  {
   "id": "trl_imp_x302",
   "name": "Orlov & Voss Trilobit",
-  "desc": "Quality grade: Analysis +2, armor 2, 6 nanohack slots, draws 2 kJ/h.  Fits the head.",
+  "desc": "Quality grade: Analysis +2, armor 2, stores 896 kJ, 6 nanohack slots, draws 2 kJ/h.  Fits the head.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -7413,7 +7413,7 @@
  {
   "id": "trl_imp_x303",
   "name": "Meridian Cybernetics Trilobit",
-  "desc": "Quality grade: Implementation +2, armor 2, 6 nanohack slots, draws 2 kJ/h.  Fits the head.",
+  "desc": "Quality grade: Implementation +2, armor 2, stores 896 kJ, 6 nanohack slots, draws 2 kJ/h.  Fits the head.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -7427,7 +7427,7 @@
  {
   "id": "trl_imp_x304",
   "name": "Veyra Dynamics Trilobit",
-  "desc": "Quality grade: Research +2, armor 2, 6 nanohack slots, draws 2 kJ/h.  Fits the head.",
+  "desc": "Quality grade: Research +2, armor 2, stores 896 kJ, 6 nanohack slots, draws 2 kJ/h.  Fits the head.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,

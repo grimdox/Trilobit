@@ -174,6 +174,8 @@ var houses: Array = []                 # every house: {cell, x0, y0, x1, y1} (a 
 var apartments: Array = []             # every flat in every tower: {cell, tower, z, rect} (for later: who lives where)
 var under_up: PackedByteArray = PackedByteArray()   # while the towers are built: the floor under every cell of every level
 var businesses: Array = []             # every business built (see business.gd): {type, ver, tag, tier, name, cat, x0..y1, door, side, role, jobs, staff: cells, keeper}
+var signs: Array = []                  # the signs out front of every building (see signage.gd), made once the zone is built
+var bldgs: Array = []                  # every plain building (houses, mid-rises, towers): {x0, y0, x1, y1, kind, door, side, filled}: what _building made, for the census and the signs
 var venues: Array = []                 # {kind, style, tier, x0, y0, x1, y1, door, keeper: cell, name}: shops, clinics, churches, shrines
 var venue_plan: Array = []             # kinds still to place while the suburbs are laid out
 var under: PackedByteArray = PackedByteArray()   # ground level: the floor tile under each piece of furniture
@@ -253,6 +255,7 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 	venues = []
 	businesses = []
 	houses = []
+	bldgs = []
 	apartments = []
 	biz_count = {}
 	venue_plan = VN.city_plan(rng)
@@ -1346,7 +1349,7 @@ func _leaf_business(x0: int, y0: int, x1: int, y1: int) -> bool:
 	var h: int = y1 - y0 + 1
 	if w < 8 or h < 8:
 		return false
-	var pb: float = {"core": 0.85, "com": 0.78, "res": 0.2, "ind": 0.0}.get(cur_zone, 0.3)
+	var pb: float = {"core": 0.97, "com": 0.95, "res": 0.5, "ind": 0.92}.get(cur_zone, 0.6)
 	var forced := ""
 	if not venue_plan.is_empty() and cur_zone != "ind" and cur_zone != "res":
 		forced = LEGACY_TYPE.get(venue_plan[0], "")
@@ -1361,7 +1364,7 @@ func _leaf_business(x0: int, y0: int, x1: int, y1: int) -> bool:
 		return _stamp_business("cyberdoc", x0, y0, x1, y1, side) != null         # (the quota of cyberdoc offices: any district that has a plot with room)
 	if forced == "implant_shop" and rng.randf() < 0.5:
 		forced = "implant_body"                                                   # (the two implant stores: eyes/spine/head, and the rest of the body)
-	var id := forced if forced != "" and not BZ.fitting_side(forced, w, h, side).is_empty() else _pick_business(w, h, side)
+	var id := forced if forced != "" and not BZ.fitting_side(forced, w, h, side).is_empty() else _pick_business(w, h, side, "ind" if cur_zone == "ind" else "")
 	if id == "":
 		return false
 	if forced != "" and id == forced:
@@ -1501,6 +1504,63 @@ func _paint_boulevards() -> void:
 				else:
 					marks[i] = 0
 
+const EMPTY_SHARE := 0.09              # the share of plain buildings left bare (condemned, for rent, gutted)
+
+## furnish the rooms of a plain building as a home.  The first room is the living room (kitchen along a wall, sofa, a table), the others bedrooms and odd rooms.  Furniture only
+## goes on the cells along the walls, never beside a door, so the middle of every room stays open.  Returns whether anything was placed.
+func _furnish_home(rooms: Array, door: Vector2i, kind: String, frng: RandomNumberGenerator) -> bool:
+	var placed := 0
+	var di := 0
+	if under.size() != size * size:
+		under = PackedByteArray()
+		under.resize(size * size)
+	var rich: bool = wealth_at(door.y * size + door.x) >= 1
+	for r in rooms:
+		var rect: Rect2i = r
+		if rect.size.x < 3 or rect.size.y < 2:
+			continue
+		var edge: Array = []
+		for y in range(rect.position.y, rect.end.y):
+			for x in range(rect.position.x, rect.end.x):
+				if x != rect.position.x and x != rect.end.x - 1 and y != rect.position.y and y != rect.end.y - 1:
+					continue
+				if tiles[y * size + x] != FLOOR:
+					continue
+				var nd := false
+				for oy in range(-1, 2):
+					for ox in range(-1, 2):
+						if tiles[(y + oy) * size + x + ox] == DOOR:
+							nd = true
+				if not nd:
+					edge.append(Vector2i(x, y))
+		for k in range(edge.size() - 1, 0, -1):
+			var j: int = frng.randi() % (k + 1)
+			var tmp = edge[k]
+			edge[k] = edge[j]
+			edge[j] = tmp
+		var items: Array = []
+		var living: bool = di == 0 or (rooms.size() == 1)
+		if living:
+			items = ["kitchen_counter", "kitchen_sink", "fridge", "sofa", "tv_stand", "coffee_table"] if rich else ["kitchen_counter", "hot_plate", "kotatsu", "sofa"]
+			if rooms.size() == 1 or rect.get_area() < 14:
+				items.append("bed_single")
+			items.append("shoe_rack")
+		else:
+			items = ["bed_double" if rich else "bed_single", "wardrobe", "dresser"] if di % 3 != 2 else ["desk", "bookshelf", "cabinet"]
+		di += 1
+		var n: int = mini(items.size(), maxi(2, edge.size() / 3))
+		for k in n:
+			if k >= edge.size():
+				break
+			var nm: String = items[k]
+			if not TID.has(nm):
+				continue
+			var c: Vector2i = edge[k]
+			tiles[c.y * size + c.x] = TID[nm]
+			under[c.y * size + c.x] = FLOOR
+			placed += 1
+	return placed > 0
+
 func _building(bx0: int, by0: int, bx1: int, by1: int, kind: String) -> void:
 	if bx1 - bx0 < 5 or by1 - by0 < 5:
 		return
@@ -1520,6 +1580,13 @@ func _building(bx0: int, by0: int, bx1: int, by1: int, kind: String) -> void:
 	var side := _street_side(bx0, by0, bx1, by1)
 	var door := _wall_cell(bx0, by0, bx1, by1, side)
 	tiles[door.y * size + door.x] = DOOR
+	var rec := {"x0": bx0, "y0": by0, "x1": bx1, "y1": by1, "kind": kind, "door": door, "side": side, "filled": false}
+	bldgs.append(rec)
+	if kind != "core":
+		var frng := RandomNumberGenerator.new()                           # (its own random stream: the rest of the city is laid out the same with or without the furniture)
+		frng.seed = hash([bx0, by0, size, "home"])
+		if frng.randf() >= EMPTY_SHARE:
+			rec["filled"] = _furnish_home(rooms, door, kind, frng)
 	if kind == "core":
 		towers.append({"x0": bx0, "y0": by0, "x1": bx1, "y1": by1, "door": door, "side": side})
 	# markers: houses get one home per room with some probability; towers get several desks, flats and counters per room

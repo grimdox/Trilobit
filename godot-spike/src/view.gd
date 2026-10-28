@@ -1,5 +1,6 @@
 extends Node2D
 ## Draws the game around the player with the Trilobit tileset: terrain, items, cars, people with awareness marks, a target bracket.
+const SG = preload("res://src/signage.gd")
 const CG = preload("res://src/citygen.gd")
 const PD = preload("res://src/paperdoll.gd")
 const DS = preload("res://src/dollspec.gd")
@@ -803,6 +804,17 @@ func _draw() -> void:
 			_facing_mark(Vector2(kx * T, ky * T), int(k.get("face", 0)), ATT_COL[2])
 		if not _blit("mon_" + String(k["k"]), Vector2(kx * T, ky * T)):
 			draw_string(font, Vector2(kx * T + T * 0.3, ky * T + T * 0.7), "d" if k["k"] == "dog" else "c", HORIZONTAL_ALIGNMENT_LEFT, -1, 30, Color(0.9, 0.7, 0.4))
+	# the signs out front of the buildings (ground level only)
+	if base == 0 and not game.city.signs.is_empty():
+		for sg in game.city.signs:
+			var sc: int = int(sg["cell"])
+			var sgx: int = sc % size - ox
+			var sgy: int = sc / size - oy
+			if sgx < -7 or sgy < -7 or sgx >= cols + 7 or sgy >= rows + 7:
+				continue
+			if sc < 0 or sc >= s2 or game.fov.explored[sc] == 0:
+				continue
+			SG.draw_sign(self, font, sg, Vector2(sgx * T, sgy * T), float(T), game.fov.visible[sc] == 1)
 	# vehicles: whole bodies, a tile for every tile of the footprint
 	for vi in game.vehicles.size():
 		var v: Dictionary = game.vehicles[vi]
@@ -845,8 +857,7 @@ func _draw() -> void:
 	# the player
 	var centre := Vector2((px - ox) * T, (py - oy) * T)
 	if game.in_vehicle >= 0:
-		draw_circle(centre + Vector2(T / 2.0, T / 2.0), T * 0.22, Color(0.95, 0.8, 0.65))
-		draw_arc(centre + Vector2(T / 2.0, T / 2.0), T * 0.22, PI, TAU, 12, Color(0.15, 0.1, 0.1), 3.0 * S)
+		pass                                    # (inside a vehicle you are not drawn: the green orb on the vehicle marks it as driven)
 	elif game.transit.riding < 0:
 		if game.flying:
 			draw_circle(centre + Vector2(T / 2.0, T * 0.9), T * 0.28, Color(0, 0, 0, 0.35))
@@ -1068,6 +1079,9 @@ func _meter(x: float, y: float, w: float, h: float, f: float, col: Color, label:
 
 ## the right-hand panel, as a sidebar: where and when, the (purchasable) nav slot, the body, the meters, status effects and gear.
 ## There is deliberately no minimap: that is an implant to buy.
+var mini_on: bool = false
+var mini_tex: ImageTexture = null
+
 func _draw_hud() -> void:
 	draw_set_transform(-shift, 0.0, Vector2(1.5, 1.5))
 	var W: float = 1920.0 / 1.5
@@ -1097,8 +1111,17 @@ func _draw_hud() -> void:
 		draw_line(Vector2(xi + dash, ny), Vector2(xi + minf(dash + 6.0, wi), ny), Color(0.35, 0.5, 0.6, 0.7), 1.0)
 		draw_line(Vector2(xi + dash, ny + 50), Vector2(xi + minf(dash + 6.0, wi), ny + 50), Color(0.35, 0.5, 0.6, 0.7), 1.0)
 		dash += 10.0
-	_txt(xi, ny + 21, "NAV IMPLANT: NOT INSTALLED", 12, C_DIM, wi, HORIZONTAL_ALIGNMENT_CENTER)
-	_txt(xi, ny + 37, "minimap available from a ripperdoc", 11, Color(0.4, 0.46, 0.55), wi, HORIZONTAL_ALIGNMENT_CENTER)
+	if mini_on:
+		_txt(xi, ny + 21, "NAV: TRILOBIT ONLINE", 12, C_CYAN, wi, HORIZONTAL_ALIGNMENT_CENTER)
+		_txt(xi, ny + 37, "minimap at the bottom right", 11, Color(0.4, 0.46, 0.55), wi, HORIZONTAL_ALIGNMENT_CENTER)
+	else:
+		_txt(xi, ny + 21, "NAV IMPLANT: NOT INSTALLED", 12, C_DIM, wi, HORIZONTAL_ALIGNMENT_CENTER)
+		_txt(xi, ny + 37, "a powered Trilobit gives a minimap", 11, Color(0.4, 0.46, 0.55), wi, HORIZONTAL_ALIGNMENT_CENTER)
+	if mini_on and mini_tex != null:
+		var mr := Rect2(W - 164.0, 564.0, 156.0, 156.0)
+		draw_rect(mr.grow(3.0), Color(0.03, 0.04, 0.08))
+		draw_texture_rect(mini_tex, mr, false)
+		draw_rect(mr.grow(3.0), Color(0.25, 0.8, 0.95, 0.7), false, 1.5)
 	# the figure and the limb readouts
 	var fy: float = 116.0
 	_draw_person(x0 + 62.0, fy, 21.0)
@@ -1489,8 +1512,8 @@ func _draw_body_sprite(vi: int, v: Dictionary, ox: int, oy: int, T: int) -> bool
 		draw_circle(HELI_MAST, 12.0, Color(0.18, 0.2, 0.24))
 		draw_circle(HELI_MAST, 6.0, Color(0.6, 0.63, 0.68))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-	# the driving marker: a green orb on the roof of the car or truck you are driving (the driver is not drawn); it stays upright however the vehicle turns
-	if int(v["driver"]) == -2 and game.vs.is_g8(kind) and not wreck:
+	# the driving marker: a green orb on the roof of the car, truck, mech or aircraft you are driving (the driver is not drawn); it stays upright however the vehicle turns
+	if int(v["driver"]) == -2 and not wreck:
 		var mk = _veh_tex("drive", "mark")
 		if mk != null:
 			var mp: Vector2 = ctr

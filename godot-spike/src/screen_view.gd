@@ -21,6 +21,7 @@ var world = null
 var cc: Dictionary = {}            # the character being made on the create screen: {app, attrs}
 var cc_sel: int = 0                # the highlighted row of the create screen (see cc_row_rect)
 var cc_tileset = null              # the 64px tileset, for the doll preview when the standing dolls are missing
+var ev: Dictionary = {}            # the open elevator pad (main.gd): {labels (top floor first), sel, here, typed, name}
 var tm: Dictionary = {}            # the open mission terminal (main.gd): {cell, offers, sel, msg}
 var cc_fig = null                  # the standing-doll atlas, loaded when the creation screen first draws
 var cc_dolls = null                # the layered dolls (64 px set) for the creation preview
@@ -111,6 +112,8 @@ func _draw() -> void:
 			_create(W, H)
 		"terminal":
 			_terminal(W, H)
+		"elevator":
+			_elevator(W, H)
 		"map":
 			_map(W, H)
 		"title":
@@ -233,7 +236,7 @@ const TAB_H := 44.0
 var tab_keys: Dictionary = {}              # tab kind -> the key that opens it, for the label
 var bt = null                              # BarterUI (barter_ui.gd): the merchant screen
 var gear = null                            # GearUI (gear_ui.gd): the equipment and implants tabs
-var map_local: bool = false                # the map tab shows the local map instead of the island
+var map_local: bool = true                # the map tab shows the local map instead of the island
 var local_tex: ImageTexture = null
 var local_info: Dictionary = {}            # {origin: Vector2i of the PC in the window, radius, level, labels: [{dx, dy, text}]}
 
@@ -362,39 +365,56 @@ func _island_map(W: float, H: float) -> void:
 		draw_string(font, Vector2(24, H - 14), "You are at (%d, %d) in %s.   Tab switches to the local map, Esc closes." % [gp.x, gp.y, isl.zone_name(game.zone)], HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.8, 0.9, 1.0))
 
 ## the local map: every tile you have seen within 40 of you, drawn in plain neon colours (the picture is built by main.gd's _make_local_map)
-const LOCAL_PX := 7
+const SG = preload("res://src/signage.gd")
 func _local_map(W: float, H: float) -> void:
 	var n: int = int(local_info.get("n", 81))
-	var side: float = float(n * LOCAL_PX)
-	var ox := 60.0
-	var oy: float = TAB_H + 44.0
+	var ox := 40.0
+	var oy: float = TAB_H + 40.0
+	var lpx: int = maxi(3, int((H - oy - 40.0) / float(n)))
+	var side: float = float(n * lpx)
 	if local_tex == null:
 		_txt("Nothing charted here.", Vector2(ox, oy + 30.0), 18, Color.WHITE)
 		return
 	draw_rect(Rect2(ox - 4.0, oy - 4.0, side + 8.0, side + 8.0), Color(0.04, 0.06, 0.11))
 	draw_rect(Rect2(ox - 4.0, oy - 4.0, side + 8.0, side + 8.0), CYAN, false, 1.5)
 	draw_texture_rect(local_tex, Rect2(ox, oy, side, side), false)
+	# a pictogram on each building says what it is (houses small, towers and shops full size)
+	for lb in local_info.get("labels", []):
+		var lp := Vector2(ox + (float(lb["dx"]) + float(n / 2) + 0.5) * lpx, oy + (float(lb["dy"]) + float(n / 2) + 0.5) * lpx)
+		var rr: float = maxf(4.0, lpx * (0.9 if bool(lb.get("small", false)) else 1.35))
+		draw_circle(lp, rr + 1.5, Color(0.02, 0.03, 0.07, 0.85))
+		SG.draw_glyph(self, String(lb["glyph"]), lp, rr, lb["col"])
 	# you are here
-	var ctr: float = float(n / 2) * LOCAL_PX + LOCAL_PX * 0.5
+	var ctr: float = float(n / 2) * lpx + lpx * 0.5
 	var pp := Vector2(ox + ctr, oy + ctr)
 	var pulse: float = 0.5 + 0.5 * sin(t * 6.0)
 	draw_circle(pp, 7.0 + 3.0 * pulse, Color(1.0, 0.2, 0.5, 0.25 + 0.2 * pulse))
 	draw_circle(pp, 3.5, Color.WHITE)
-	# building names sit just above the middle tile of the building
-	for lb in local_info.get("labels", []):
-		var lp := Vector2(ox + (float(lb["dx"]) + float(n / 2) + 0.5) * LOCAL_PX, oy + (float(lb["dy"]) + float(n / 2)) * LOCAL_PX - 4.0)
-		_txt(String(lb["text"]), lp - Vector2(80, 0), 13, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, 160.0)
-	# the key
+	# the key: colours, then the pictograms in two columns
 	var kx: float = ox + side + 40.0
 	var ky: float = oy + 4.0
 	_txt("LOCAL MAP", Vector2(kx, ky + 14.0), 24, Color.WHITE)
 	_txt("Everything you have seen within %d tiles." % (n / 2), Vector2(kx, ky + 40.0), 16, Color(0.6, 0.75, 0.9))
-	var ky2: float = ky + 76.0
+	var ky2: float = ky + 70.0
+	var col_i := 0
 	for e in LOCAL_KEY:
-		draw_rect(Rect2(kx, ky2 - 12.0, 18.0, 18.0), e[1])
-		draw_rect(Rect2(kx, ky2 - 12.0, 18.0, 18.0), Color(1, 1, 1, 0.25), false, 1.0)
-		_txt(String(e[0]), Vector2(kx + 30.0, ky2 + 3.0), 17, Color(0.85, 0.92, 1.0))
-		ky2 += 28.0
+		var cx2: float = kx + (col_i % 2) * 230.0
+		draw_rect(Rect2(cx2, ky2 - 12.0, 16.0, 16.0), e[1])
+		draw_rect(Rect2(cx2, ky2 - 12.0, 16.0, 16.0), Color(1, 1, 1, 0.25), false, 1.0)
+		_txt(String(e[0]), Vector2(cx2 + 26.0, ky2 + 2.0), 15, Color(0.85, 0.92, 1.0))
+		col_i += 1
+		if col_i % 2 == 0:
+			ky2 += 24.0
+	ky2 += 40.0
+	_txt("BUILDINGS", Vector2(kx, ky2 - 6.0), 18, Color.WHITE)
+	ky2 += 18.0
+	var gi := 0
+	for e in SG.legend():
+		var cx3: float = kx + (gi % 3) * 320.0
+		var cy3: float = ky2 + (gi / 3) * 30.0
+		SG.draw_glyph(self, String(e[0]), Vector2(cx3 + 12.0, cy3), 9.0, e[1])
+		_txt(String(e[2]), Vector2(cx3 + 30.0, cy3 + 6.0), 14, Color(0.85, 0.92, 1.0))
+		gi += 1
 	var lvl: int = int(local_info.get("level", 0))
 	_txt("You are at (%d, %d)%s.   Tab switches to the island map, Esc closes." % [int(local_info.get("gx", 0)), int(local_info.get("gy", 0)), "" if lvl == 0 else ", level %d" % lvl], Vector2(24, H - 14.0), 15, Color(0.8, 0.9, 1.0))
 
@@ -831,6 +851,73 @@ func _cc_doll(c: Vector2, k: float, look: Dictionary) -> void:
 # ---------------------------------------------------------------------------------------------- the mission terminal
 const MS = preload("res://src/missions.gd")
 const TM_ROW := 98.0
+
+## ---- the elevator pad: a grid of buttons, as many as the shaft has floors
+const EV_BTN := Vector2(76, 58)
+const EV_GAP := 12.0
+
+func elev_cols(n: int) -> int:
+	return 2 if n <= 4 else (3 if n <= 12 else (4 if n <= 20 else 5))
+
+## the button rects (top-left button first, left to right then down) and the panel round them
+func elev_rects() -> Array:
+	var W: float = size.x if size.x > 0 else 1280.0
+	var H: float = size.y if size.y > 0 else 720.0
+	var n: int = (ev.get("labels", []) as Array).size()
+	var cols: int = elev_cols(n)
+	var rows: int = (n + cols - 1) / cols
+	var gw: float = cols * EV_BTN.x + (cols - 1) * EV_GAP
+	var gh: float = rows * EV_BTN.y + (rows - 1) * EV_GAP
+	var px: float = (W - gw) * 0.5
+	var py: float = (H - gh) * 0.5 + 24.0
+	var out: Array = []
+	for i in n:
+		out.append(Rect2(px + (i % cols) * (EV_BTN.x + EV_GAP), py + (i / cols) * (EV_BTN.y + EV_GAP), EV_BTN.x, EV_BTN.y))
+	return out
+
+func elev_at(p: Vector2) -> int:
+	var rs: Array = elev_rects()
+	for i in rs.size():
+		if (rs[i] as Rect2).has_point(p):
+			return i
+	return -1
+
+func _elevator(W: float, H: float) -> void:
+	draw_rect(Rect2(0, 0, W, H), Color(0.0, 0.0, 0.0, 0.55))
+	var labels: Array = ev.get("labels", [])
+	var rs: Array = elev_rects()
+	if rs.is_empty():
+		return
+	var first: Rect2 = rs[0]
+	var last: Rect2 = rs[rs.size() - 1]
+	var left: float = first.position.x
+	var right: float = left
+	var bottom: float = last.end.y
+	for r in rs:
+		right = maxf(right, (r as Rect2).end.x)
+	var panel := Rect2(left - 34.0, first.position.y - 96.0, right - left + 68.0, bottom - first.position.y + 96.0 + 66.0)
+	draw_rect(panel, Color(0.07, 0.08, 0.1, 0.97))
+	draw_rect(panel, Color(0.62, 0.66, 0.72), false, 3.0)
+	draw_rect(panel.grow(-8.0), Color(0.3, 0.33, 0.38), false, 1.0)
+	_txt("ELEVATOR", Vector2(panel.position.x, panel.position.y + 34.0), 22, Color(0.85, 0.9, 0.95), HORIZONTAL_ALIGNMENT_CENTER, panel.size.x)
+	var disp := Rect2(panel.position.x + 40.0, panel.position.y + 46.0, panel.size.x - 80.0, 32.0)      # the floor display
+	draw_rect(disp, Color(0.02, 0.03, 0.03))
+	draw_rect(disp, Color(0.35, 0.37, 0.4), false, 1.0)
+	var shown: String = String(ev.get("typed", ""))
+	_txt(("go to: " + shown) if shown != "" else String(ev.get("name", "")), Vector2(disp.position.x, disp.position.y + 24.0), 18, Color(1.0, 0.5, 0.25), HORIZONTAL_ALIGNMENT_CENTER, disp.size.x)
+	var sel: int = int(ev.get("sel", 0))
+	var here: int = int(ev.get("here", -1))
+	for i in rs.size():
+		var r: Rect2 = rs[i]
+		var on: bool = i == sel
+		var cur: bool = i == here
+		draw_rect(r, Color(0.2, 0.24, 0.3) if on else Color(0.13, 0.15, 0.19))
+		draw_rect(r, MAGENTA if on else (Color(0.5, 1.0, 0.6) if cur else Color(0.55, 0.6, 0.68)), false, 3.0 if on else 2.0)
+		var lc := Color(1.0, 0.85, 0.4) if (on or cur) else Color(0.85, 0.9, 0.95)
+		_txt(String(labels[i]), Vector2(r.position.x, r.position.y + 38.0), 26, lc, HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
+		if cur:
+			draw_circle(Vector2(r.end.x - 10.0, r.position.y + 10.0), 4.0, Color(0.5, 1.0, 0.6))
+	_txt("Arrows / numpad / mouse choose  -  Enter or click rides  -  digits jump  -  Esc leaves", Vector2(panel.position.x, panel.end.y - 22.0), 13, Color(0.6, 0.75, 0.9), HORIZONTAL_ALIGNMENT_CENTER, panel.size.x)
 
 func _terminal(W: float, H: float) -> void:
 	draw_rect(Rect2(0, 0, W, H), Color(0.0, 0.0, 0.0, 0.55))

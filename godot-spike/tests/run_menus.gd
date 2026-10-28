@@ -114,8 +114,9 @@ func _initialize() -> void:
 	await process_frame
 	key(m, KEY_PERIOD)
 	check("> steps to the map tab", m.mode == "map")
+	check("the map tab opens on the local map", m.screen.map_local and m.screen.local_tex != null)
 	key(m, KEY_TAB)
-	check("Tab switches to the local map", m.screen.map_local and m.screen.local_tex != null)
+	check("Tab switches to the island map", not m.screen.map_local)
 	key(m, KEY_TAB)
 	key(m, KEY_PERIOD)
 	check("> wraps round to the equipment tab", m.mode == "equipment")

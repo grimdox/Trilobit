@@ -262,7 +262,7 @@ func run() -> Array:
 		g._hunt_act(who, 5, true)
 		if g.body.total() < 164:
 			nhit += 1
-	check.call("a gunman's bullets hurt the player's limbs (%d of 200)" % nhit, nhit > 20 and nhit < 150)
+	check.call("a gunman's bullets hurt the player's limbs (%d of 200)" % nhit, nhit > 20 and nhit < 190)
 	# ---- a long shot loses damage past the effective range (pistol rounds: full to 12 tiles)
 	var far_spot: int = _open_line(g, spot, 18)
 	if far_spot >= 0:

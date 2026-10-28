@@ -2,8 +2,8 @@ extends RefCounted
 ## Implant power: what implants draw, what a full charge holds, and what a government charging post asks for a recharge.  Pure data and rules;
 ## game.gd owns the store and the clock, economy.gd the menu at the post.
 ##   Every fitted implant has a latent draw in kJ per hour (the catalogue's `draw`: 1 for an Improved one, doubling with each tier).  Chest implants are batteries
-##   (`battery`, kJ); a body has a built-in cell of BASE_CELL_KJ that holds the store until a battery is fitted (the batteries then replace it), so a person with nothing in the chest can still run a few implants.  An all-Improved rig of
-##   eight implants (one per layer) draws 8 kJ/h and drains one Improved chest battery (1344 kJ) in exactly a week.
+##   (`battery`, kJ) and so is each Trilobit (about a third of its tier's chest battery).  The store holds the sum of the fitted batteries and there is no other source: a body with
+##   no battery fitted has no power, and every implant is off.  An all-Improved rig of eight implants (one per layer) draws 8 kJ/h and drains one Improved chest battery (1344 kJ) in exactly a week.
 ##   At 0 the implants stop (game.gd gates has_implant, imp_sum and armor on it): the player is "just" a normal human until recharged.
 ## The price of a recharge is four parts:
 ##   1  (no quality fee any more: repairing worn implants is its own service, a quarter of the price at 100% wear, see implants.gd repair_cost)
@@ -14,7 +14,6 @@ extends RefCounted
 const IMP = preload("res://src/implants.gd")
 
 const FULL_HOURS := 72.0                                    # NPCs: a full charge is this many hours of their rig's draw
-const BASE_CELL_KJ := 168.0                                 # the built-in cell: a week of one Improved implant
 const TIER_DRAW := {1: 0.5, 2: 1.0, 3: 2.0}                 # kJ per hour by tier (the catalogue's own `draw` wins)
 const QUALITY_FEE := 0                                      # (kept so old callers read 0)
 const TAX_PCT := 5.0
@@ -40,7 +39,7 @@ static func tier_of(d: Dictionary) -> int:
 static func draw_of(d: Dictionary) -> float:
 	return float(d.get("draw", TIER_DRAW[tier_of(d)]))
 
-## kJ this implant adds to the body's store (chest batteries)
+## kJ this implant adds to the body's store (chest batteries, and a third as much in a Trilobit)
 static func battery_of(d: Dictionary) -> float:
 	return float(d.get("battery", 0.0))
 
@@ -62,7 +61,7 @@ static func loadout(implants: Dictionary) -> Dictionary:
 		q += tier_of(d)
 		value += int(d["cost"])
 		n += 1
-	return {"count": n, "draw": draw, "cap": (bat if bat > 0.0 else BASE_CELL_KJ) if n > 0 else 0.0, "quality": q, "value": value}
+	return {"count": n, "draw": draw, "cap": bat if n > 0 else 0.0, "quality": q, "value": value}
 
 ## how much one turn costs the store
 static func turn_draw(implants: Dictionary) -> float:
