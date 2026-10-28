@@ -2537,7 +2537,7 @@ func _eat_report(it, before_food: int, before_drink: int) -> String:
 	if f.get("drink", false) and int(f.get("ml", 0)) > 0:
 		parts.append("%d mL, water for %s more" % [int(f["ml"]), CLK.span_text(drink_left() - before_drink)] if drink_left() > before_drink else "%d mL wasted: you are not thirsty" % int(f["ml"]))
 	if int(f.get("hp", 0)) > 0:
-		parts.append("health +%d" % last_healed if last_healed >= int(f["hp"]) else "health +%d of %d (all that was hurt)" % [last_healed, int(f["hp"])])
+		parts.append("health +%d" % last_healed if last_healed >= int(f["hp"]) else "health +%d of %d (%s)" % [last_healed, int(f["hp"]), "the rest of your damage is in disabled limbs: food cannot mend those, a doctor can" if _disabled_hurt() else "all that was hurt"])
 	if int(f.get("stam", 0)) > 0:
 		var offered: int = int(round(float(f["stam"]) * STAM_LEGACY))
 		parts.append("stamina +%d" % last_stam if last_stam >= offered else "stamina +%d of %d (you were rested)" % [last_stam, offered])
@@ -5973,6 +5973,13 @@ func body_missing() -> int:
 	return m
 
 ## close up to n points of wounds, one at a time on the most hurt working limb (the head and chest first on a tie); a disabled limb is not touched.  Returns the points healed.
+## true when some limb is disabled (at 0): meals and ordinary healing skip it
+func _disabled_hurt() -> bool:
+	for l in BODY.LIMBS:
+		if not body.ok(l):
+			return true
+	return false
+
 func heal_body(n: int) -> int:
 	var done := 0
 	while done < n:
