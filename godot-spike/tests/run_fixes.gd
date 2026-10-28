@@ -89,5 +89,6 @@ func _initialize() -> void:
 		var hurt0: int = int(g.body.mx["chest"]) - int(g.body.hp["chest"])
 		g.eat_now(onigiri)
 		check("a meal heals up to its stated amount of what is hurt (%d healed)" % g.last_healed, g.last_healed == mini(int(onigiri.def["food"].get("hp", 0)), hurt0 + 0) or g.last_healed >= 1)
+	check("the map names the nearest Labor Center (%s)" % m.nearest_labor_text(), m.nearest_labor_text().begins_with("Nearest Labor Center"))
 	print("PASS %d/%d" % [ok, n])
 	quit(0 if ok == n else 1)

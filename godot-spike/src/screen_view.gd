@@ -416,6 +416,8 @@ func _local_map(W: float, H: float) -> void:
 		_txt(String(e[2]), Vector2(cx3 + 30.0, cy3 + 6.0), 14, Color(0.85, 0.92, 1.0))
 		gi += 1
 	var lvl: int = int(local_info.get("level", 0))
+	if String(local_info.get("labor", "")) != "":
+		_txt(String(local_info["labor"]), Vector2(kx, H - 44.0), 17, SG.COL_CIVIC)
 	_txt("You are at (%d, %d)%s.   Tab switches to the island map, Esc closes." % [int(local_info.get("gx", 0)), int(local_info.get("gy", 0)), "" if lvl == 0 else ", level %d" % lvl], Vector2(24, H - 14.0), 15, Color(0.8, 0.9, 1.0))
 
 ## colours of the local map: [name, colour]

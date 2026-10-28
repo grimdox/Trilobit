@@ -880,7 +880,31 @@ func _make_local_map() -> void:
 					img.set_pixel(dx + LOCAL_R, dy + LOCAL_R, col)
 	screen.local_tex = ImageTexture.create_from_image(img)
 	var gp: Vector2i = g.global_pos() if g != null and g.island != null else Vector2i(g.lx(g.pc), g.ly(g.pc))
-	screen.local_info = {"n": n, "level": g.z_of(g.pc) if g != null else 0, "gx": gp.x, "gy": gp.y, "labels": local_labels()}
+	screen.local_info = {"n": n, "level": g.z_of(g.pc) if g != null else 0, "gx": gp.x, "gy": gp.y, "labels": local_labels(), "labor": nearest_labor_text()}
+
+## the Labor Centers are public knowledge: the map says where the nearest one is, seen or not
+func nearest_labor_text() -> String:
+	var g = game
+	if g == null or g.city == null or g.city.businesses.is_empty():
+		return ""
+	var px: int = g.lx(g.pc)
+	var py: int = g.ly(g.pc)
+	var best: Dictionary = {}
+	var bd := 1 << 30
+	for b in g.city.businesses:
+		if b["type"] != "labor_center":
+			continue
+		var d: int = absi(int(b["door"].x) - px) + absi(int(b["door"].y) - py)
+		if d < bd:
+			bd = d
+			best = b
+	if best.is_empty():
+		return "No Labor Center in this district."
+	var dx: int = int(best["door"].x) - px
+	var dy: int = int(best["door"].y) - py
+	var ew: String = "" if dx == 0 else "%d %s" % [absi(dx), "east" if dx > 0 else "west"]
+	var ns: String = "" if dy == 0 else "%d %s" % [absi(dy), "south" if dy > 0 else "north"]
+	return "Nearest Labor Center: %s (%s)." % [", ".join([ew, ns].filter(func(t): return t != "")), String(best.get("name", "Labor Center"))]
 
 ## names of buildings to print above their middle tile on the local map: [{dx, dy, text}] relative to the player.  None are named yet.
 func local_labels() -> Array:

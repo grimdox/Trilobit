@@ -560,8 +560,10 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 				return m
 			g.yen -= int(de[2])
 			var meal = g._new_item(de[0])
+			var bf: int = g.food_left()
+			var bd: int = g.drink_left()
 			g.eat_now(meal)
-			g.say("You order the %s (¥%d) and eat it at the counter." % [de[1], de[2]])
+			g.say("You order the %s (¥%d) and eat it at the counter.  (%s)" % [de[1], de[2], g._eat_report(meal, bf, bd)])
 			_haggle_xp(m, int(de[2]))
 			return m
 		"treat":
