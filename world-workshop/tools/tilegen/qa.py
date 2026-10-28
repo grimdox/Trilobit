@@ -50,11 +50,11 @@ def run(sets, base_cfg=None):
     S = {th: load(sets, th) for th in TH.ORDER}
     # T1
     missing = []
-    want = []
-    for id_, (f, n, kind) in CA.CATALOG.items():
-        want += [id_] if n == 1 else ['%s.%d' % (id_, v) for v in range(n)]
     for th in TH.ORDER:
-        missing += ['%s %s' % (th, w) for w in want if w not in S[th][0]]
+        for id_, (f, n, kind) in CA.CATALOG.items():
+            if CA.drawn(id_, th):
+                want = [id_] if n == 1 else ['%s.%d' % (id_, v) for v in range(n)]
+                missing += ['%s %s' % (th, w) for w in want if w not in S[th][0]]
     if base_cfg and os.path.exists(base_cfg):
         base = json.load(open(base_cfg))
         ids = {t['id'] for t in base['tiles-new'][0]['tiles']}
@@ -69,7 +69,7 @@ def run(sets, base_cfg=None):
     bad = []
     for th in TH.ORDER:
         for id_, (f, n, kind) in CA.CATALOG.items():
-            if kind != 'ground':
+            if kind != 'ground' or not CA.drawn(id_, th):
                 continue
             for v in range(n):
                 im = S[th][0][id_ if n == 1 else '%s.%d' % (id_, v)][..., :3].astype(int)
@@ -97,7 +97,7 @@ def run(sets, base_cfg=None):
     lone = tot = 0
     for th in TH.ORDER:
         for id_, (f, n, kind) in CA.CATALOG.items():
-            if kind != 'object':
+            if kind != 'object' or not CA.drawn(id_, th):
                 continue
             for v in range(n):
                 im = S[th][0][id_ if n == 1 else '%s.%d' % (id_, v)]
@@ -121,7 +121,7 @@ def run(sets, base_cfg=None):
     dark = edges = 0
     for th in TH.ORDER:
         for id_, (f, n, kind) in CA.CATALOG.items():
-            if kind != 'object':
+            if kind != 'object' or not CA.drawn(id_, th):
                 continue
             for v in range(n):
                 im = S[th][0][id_ if n == 1 else '%s.%d' % (id_, v)]

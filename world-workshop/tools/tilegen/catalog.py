@@ -10,6 +10,12 @@ from canvas import Rng
 
 # id -> (builder(theme, rng, variant), variants, kind)   kind: 'ground' (wraps, opaque) or 'object' (drawn over a floor)
 CATALOG = {}
+# ids drawn only in some themes (the underground set lives in the industry set, which the game uses below ground)
+ONLY = {}
+
+
+def drawn(id_, theme):
+    return theme in ONLY.get(id_, (theme,))
 
 
 def _g(id_, f, n=1):
@@ -94,6 +100,42 @@ for fid, f in F2.EXTRA.items():
     _o('f_trl_' + fid, f, 1)
     for suf, k in F2.FACINGS:
         _o('f_trl_' + fid + suf, (lambda ff, fi, kk: lambda th, r, v: F2.turned(ff(th, Rng(th, 'f_trl_' + fi, v), v), kk))(f, fid, k), 1)
+
+# rock: mountains and red cliffs everywhere, the rock round the tunnels in the industry set; rough rocky ground
+import rock as RK
+for bits in range(16):
+    # sixteen cut positions each (the game picks the one for the cell's place in the 4 x 4 repeat of the rock field),
+    # one shape per set of open sides and inside corners: mountains and cliffs in the country set, which the game draws
+    # all rock from; the deep rock below ground in the industry set (it only ever shows whole)
+    for cn in RK.corner_sets(bits):
+        for kind, name in (('grey', 't_mtn'), ('red', 't_cliff')):
+            id_ = '%s.%d_%d' % (name, bits, cn)
+            _o(id_, (lambda kd, b, cc: lambda th, r, v: RK.massif(kd, th, r, v, b, cc))(kind, bits, cn), RK.CELLS)
+            ONLY[id_] = ('rural',)
+_o('t_ugrock.0_0', lambda th, r, v: RK.massif('under', th, r, v, 0, 0), RK.CELLS)
+ONLY['t_ugrock.0_0'] = ('industry',)
+_g('t_rocky', RK.rocky_ground, 4)
+
+# the underground (industry set only: the game draws everything below ground with it)
+import underground as UG
+for opn in range(16):
+    _o('t_ugwall.%d' % opn, (lambda o: lambda th, r, v: UG.lining(th, r, v, o))(opn), 3)
+    _o('t_ugbrick.%d' % opn, (lambda o: lambda th, r, v: UG.lining(th, r, v, o, brick=True))(opn), 3)
+    ONLY['t_ugwall.%d' % opn] = ONLY['t_ugbrick.%d' % opn] = ('industry',)
+for gid, f in (('t_ug_tunnel', UG.tunnel_floor), ('t_ug_platform', UG.platform), ('t_ug_walk', UG.sewer_walk),
+               ('t_ug_sludge', UG.sludge), ('t_ug_track', UG.track),
+               ('t_ug_track.v', lambda th, r, v: UG.track(th, r, v, vertical=True))):
+    _g(gid, f, 3)
+    ONLY[gid] = ('industry',)
+for fid, f in list(UG.WALL_FITTINGS.items()) + [('edge', UG.edge_strip)]:
+    _o('f_ug_' + fid, f, 3)
+    ONLY['f_ug_' + fid] = ('industry',)
+    for suf, k in F2.FACINGS:
+        _o('f_ug_' + fid + suf, (lambda ff, fi, kk: lambda th, r, v: F2.turned(ff(th, Rng(th, 'f_ug_' + fi, v), v), kk))(f, fid, k), 3)
+        ONLY['f_ug_' + fid + suf] = ('industry',)
+for fid, f in UG.FLOOR_FITTINGS.items():
+    _o('f_ug_' + fid, f, 3)
+    ONLY['f_ug_' + fid] = ('industry',)
 
 NEW_IDS = sorted(set(P.BUILDERS) | set(P.GROUND) | {'t_door_closed', 't_door_closed.v', 't_window_broken'})
 

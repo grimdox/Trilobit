@@ -27,11 +27,12 @@ STEP = 0.105          # lit value per shade band
 def _shift(a, dy, dx, wrap, fill):
     if wrap:
         return np.roll(np.roll(a, dy, 0), dx, 1)
+    M = a.shape[0]
     out = np.full_like(a, fill)
-    ys = slice(max(dy, 0), N + min(dy, 0))
-    yd = slice(max(-dy, 0), N + min(-dy, 0))
-    xs = slice(max(dx, 0), N + min(dx, 0))
-    xd = slice(max(-dx, 0), N + min(-dx, 0))
+    ys = slice(max(dy, 0), M + min(dy, 0))
+    yd = slice(max(-dy, 0), M + min(-dy, 0))
+    xs = slice(max(dx, 0), M + min(dx, 0))
+    xd = slice(max(-dx, 0), M + min(-dx, 0))
     out[ys, xs] = a[yd, xd]
     return out
 
@@ -40,14 +41,16 @@ def _edge(a, dy, dx, wrap):
     """neighbour value with the tile edge replicated (objects continue past the edge) or wrapped (ground)"""
     if wrap:
         return np.roll(np.roll(a, -dy, 0), -dx, 1)
+    M = a.shape[0]
     p = np.pad(a, 1, mode='edge')
-    return p[1 + dy:1 + dy + N, 1 + dx:1 + dx + N]
+    return p[1 + dy:1 + dy + M, 1 + dx:1 + dx + M]
 
 
 def shade_map(t, mats):
     """per-pixel (material name, shade 0-7) and the translucent shadow alpha"""
     wrap = t.periodic
     h = t.h.astype(np.float32)
+    M = h.shape[0]          # 64, or more for a tile cut from a larger piece (see to_rgba)
     hx = (_edge(h, 0, 1, wrap) - _edge(h, 0, -1, wrap)) * 0.5
     hy = (_edge(h, 1, 0, wrap) - _edge(h, -1, 0, wrap)) * 0.5
     # smooth normals within an object so bevels read as volume, not stair steps
@@ -58,9 +61,9 @@ def shade_map(t, mats):
     v = nrm @ LIGHT
     shade = np.clip(np.round(3 + (v - FLAT) / STEP), 1, 5).astype(np.int16)
     # per-material texture: roughness lets a field of noise move the band by one (stone, rust), smooth materials hold
-    rough = np.zeros((N, N), np.float32)
-    gloss = np.zeros((N, N), np.float32)
-    rim = np.zeros((N, N), np.float32)
+    rough = np.zeros((M, M), np.float32)
+    gloss = np.zeros((M, M), np.float32)
+    rim = np.zeros((M, M), np.float32)
     names = [n for n in np.unique(t.m[t.solid]) if n]
     for n in names:
         sel = t.m == n
@@ -72,6 +75,8 @@ def shade_map(t, mats):
     if rough.any():
         from canvas import periodic_noise
         nz = periodic_noise(_seed_of(t), 16, 2)
+        if M != N:
+            nz = np.tile(nz, (M // N + 1, M // N + 1))[:M, :M]
         shade += np.where(nz > 1 - rough * 0.22, 1, 0).astype(np.int16) - np.where(nz < rough * 0.22, 1, 0).astype(np.int16)
         shade = np.clip(shade, 1, 5)
     # creases: lower than the 5 x 5 mean by more than a pixel
@@ -79,7 +84,7 @@ def shade_map(t, mats):
     crease = (mean - h) > 0.9
     shade = np.where(crease & t.solid, shade - 1, shade)
     # cast shadows to the bottom right
-    sh = np.zeros((N, N), np.int16)
+    sh = np.zeros((M, M), np.int16)
     for k in range(1, 7):
         hk = _shift(h, k, k, wrap, -1e9)
         sh = np.maximum(sh, np.where(hk > h + 1.2 * k, 1 if k > 3 else 2, 0).astype(np.int16))
@@ -89,13 +94,13 @@ def shade_map(t, mats):
     spec = (v > FLAT + 2.2 * STEP) & (gloss > 0.5)
     shade = np.where(spec, 7, shade)
     # outline: an object pixel next to empty space, ground, or a much lower pixel (not where it runs past the tile edge)
-    line = np.zeros((N, N), bool)
-    rimm = np.zeros((N, N), bool)
+    line = np.zeros((M, M), bool)
+    rimm = np.zeros((M, M), bool)
     for dy, dx in ((0, 1), (1, 0), (0, -1), (-1, 0)):
         nsolid = _edge(t.solid, dy, dx, wrap)
         nobj = _edge(t.obj, dy, dx, wrap)
         nh = _edge(h, dy, dx, wrap)
-        edge = t.obj & (~nsolid | ~nobj | (nh < h - 2.5))
+        edge = t.obj & (~nsolid | ~nobj | (nh < h - getattr(t, 'line_drop', 2.5)))
         if not wrap:
             # the tile border itself: the replicated neighbour is the pixel itself, so no line unless marked
             pass
@@ -103,7 +108,7 @@ def shade_map(t, mats):
         if (dy, dx) in ((0, 1), (1, 0)):
             rimm |= edge
     # rim: the pixel just inside the bottom-right outline
-    inner = np.zeros((N, N), bool)
+    inner = np.zeros((M, M), bool)
     for dy, dx in ((0, 1), (1, 0)):
         # (the line must be this surface's own edge, not the foot of something taller standing on it)
         inner |= _edge(line, dy, dx, wrap) & t.obj & ~line & (h >= _edge(h, dy, dx, wrap) - 0.5)
@@ -132,7 +137,8 @@ def _seed_of(t):
 def _strays(mat, shade, solid, keep, wrap=False):
     _, inv = np.unique(mat.astype(str), return_inverse=True)          # a stable index per material name
     code = np.where(solid, inv.reshape(mat.shape) * 8 + shade, -1)
-    same = np.zeros((N, N), np.int16)
+    M = mat.shape[0]
+    same = np.zeros((M, M), np.int16)
     for dy in (-1, 0, 1):
         for dx in (-1, 0, 1):
             if dy or dx:
@@ -148,8 +154,8 @@ def _strays(mat, shade, solid, keep, wrap=False):
             for dx in (-1, 0, 1):
                 yy, xx = y + dy, x + dx
                 if wrap:
-                    yy, xx = yy % N, xx % N
-                if (dy or dx) and 0 <= yy < N and 0 <= xx < N and solid[yy, xx] and mat[yy, xx] == mat[y, x] and 1 <= shade[yy, xx] <= 5:
+                    yy, xx = yy % M, xx % M
+                if (dy or dx) and 0 <= yy < M and 0 <= xx < M and solid[yy, xx] and mat[yy, xx] == mat[y, x] and 1 <= shade[yy, xx] <= 5:
                     votes[shade[yy, xx]] = votes.get(shade[yy, xx], 0) + 1
         if votes:
             out[y, x] = max(votes.items(), key=lambda kv: (kv[1], -abs(kv[0] - shade[y, x])))[0]
@@ -157,9 +163,11 @@ def _strays(mat, shade, solid, keep, wrap=False):
 
 
 def to_rgba(t, mats):
-    """the finished sprite: an RGBA uint8 array"""
+    """the finished sprite: an RGBA uint8 array.  A tile cut from a larger piece (t.crop = offset) is lit whole, its
+    neighbours' pixels around it, and cut out after, so light, creases, outlines and shadows run on across cells"""
     shade, shadow = shade_map(t, mats)
-    out = np.zeros((N, N, 4), np.uint8)
+    M = t.h.shape[0]
+    out = np.zeros((M, M, 4), np.uint8)
     names = [n for n in np.unique(t.m[t.solid]) if n]
     for n in names:
         ramp = mats(n)['ramp']
@@ -170,4 +178,7 @@ def to_rgba(t, mats):
     sh = (shadow > 0) & ~t.solid
     out[sh] = [8, 6, 16, 0]
     out[sh, 3] = (shadow[sh] * 255).astype(np.uint8)
+    c = getattr(t, 'crop', None)
+    if c is not None:
+        out = np.ascontiguousarray(out[c:c + N, c:c + N])
     return out

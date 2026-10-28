@@ -104,30 +104,10 @@ def wall(theme, bits, rng, glass=False):
     inner = block(bits, 3)
     edge = m & ~inner
     if glass:
-        # frame round the edge, glass in the middle with diagonal glints
-        t.slab(m, 'wall', H, bevel=1.0)                  # the wall the window sits in, to the cell edge
-        t.paint(band(bits) & m, 'trim')                  # its frame
-        pane = band(bits, A + 3, B - 3) & inner
-        t.slab(pane, 'glass', -1.5, bevel=0.5, on=H)
-        t.m[pane] = 'glass'
-        gl = pane & (((XX + YY) % 23) < 2)
-        t.mark(gl, 2)
-        mull = pane & ((((XX % 21) == 10) & ((bits & 10) > 0)) | (((YY % 21) == 10) & ((bits & 5) > 0)))
-        t.paint(mull, 'trim')
-        t.h[mull] = H
-        if theme == 'rural':
-            # paper screens (shoji) in a lattice
-            t.m[pane] = 'paper'
-            lat = pane & (((XX % 8) == 0) | ((YY % 8) == 0))
-            t.paint(lat, 'trim')
-        if theme in ('slum', 'industry'):
-            wire = pane & ((((XX + YY) % 6) == 0) | (((XX - YY) % 6) == 0))
-            t.mark(wire, -1)
-            if theme == 'slum':
-                t.paint(pane & blotches(rng.int(0, 1 << 20), 0.25, cells=4), 'grime')
-        face = _face(t, m, bits, theme, rng, mat='trim')
-        _open_edges(t, bits)
-        t.drop_shadow(m | face, 4, 4, 0.35)
+        # a window is the district's own wall with glazing set into it, so it carries the wall's materials, wear and
+        # face; only the glazing differs by district
+        t = wall(theme, bits, rng, glass=False)
+        _glaze(t, theme, bits, rng)
         return t
     if theme == 'rich':
         t.slab(m, 'wall', H, bevel=1.5)
@@ -179,6 +159,66 @@ def wall(theme, bits, rng, glass=False):
     # contact shadow on the floor to the bottom right of the wall and its face
     t.drop_shadow(m | face, 4, 4, 0.4)
     return t
+
+
+GLAZE = {'rich': ('glass_smoke', 'trim'), 'mid': ('glass_mid', 'wall_side'), 'slum': ('glass_grime', 'trim'),
+         'rural': ('paper', 'trim'), 'industry': ('glass_block', 'dark_steel')}
+
+
+def _glaze(t, theme, bits, rng):
+    """set a window into a wall top: a frame proud of the wall, the glazing sunk below it, mullions along the run, and
+    the glazing carried down the south face so the window reads from the street"""
+    glaze, frame_m = GLAZE[theme]
+    inner = block(bits, 3)
+    pane = band(bits, 16, 47) & inner
+    frame = band(bits, 13, 50) & inner & ~pane
+    t.paint(frame, frame_m)
+    t.h[frame] = H + 0.6
+    t.m[pane] = glaze
+    t.h[pane] = H - 2.6
+    t.d[pane] = 0
+    along_x = (bits & 10) > 0 or not (bits & 5)
+    if along_x:
+        mull = pane & ((XX % 16) == 8)
+    else:
+        mull = pane & ((YY % 16) == 8)
+    if theme == 'rural':
+        lat = pane & (((XX % 8) == 0) | ((YY % 8) == 0))
+        t.paint(lat, 'trim')
+        t.h[lat] = H - 1.8
+    elif theme == 'industry':
+        # glass block: a grid of thick lenses in mortar
+        mortar = pane & (((XX % 6) == 0) | ((YY % 6) == 0))
+        t.paint(mortar, 'concrete')
+        t.h[mortar] = H - 1.8
+        lens = pane & ~mortar
+        t.mark(lens & (((XX % 6) == 1) | ((YY % 6) == 1)), 1)
+        t.mark(lens & (((XX % 6) == 5) | ((YY % 6) == 5)), -1)
+    else:
+        t.paint(mull, frame_m)
+        t.h[mull] = H - 1.0
+        # reflections: broad diagonal sheen bands, the city light caught in the glass
+        sheen = pane & ~mull & ((((XX + YY) % 29) < 3) | ((((XX + YY) % 29) == 5)))
+        t.mark(sheen, 2 if theme == 'rich' else 1)
+        if theme == 'rich':
+            t.emit(pane & ~mull & (((XX - YY) % 64) == 40) & (((XX + YY) % 7) < 4), 'neon_cyan')
+        if theme == 'slum':
+            wire = pane & ~mull & ((((XX + YY) % 6) == 0) | (((XX - YY) % 6) == 0))
+            t.mark(wire, -1)
+            t.paint(pane & blotches(rng.int(0, 1 << 20), 0.22, cells=8), 'grime')
+            if rng.chance(0.4):        # a broken pane boarded over
+                bx0 = rng.pick([0, 16, 32, 48])
+                board = pane & ((XX >= bx0) & (XX < bx0 + 16) if along_x else (YY >= bx0) & (YY < bx0 + 16))
+                t.paint(board, 'wood')
+                t.h[board] = H - 0.5
+                t.mark(board & ((((YY if along_x else XX) % 5) == 0)), -1)
+    # the glazing seen down the south face
+    if not bits & 4:
+        cols = np.any(pane, axis=0)
+        face = (t.m == 'wall_side') & (YY > N - 1 - FACE) & cols[None, :] & (XX > 2) & (XX < N - 3)
+        if theme != 'rural':
+            t.paint(face & (YY > N - FACE + 1) & (YY < N - 2), glaze)
+            t.mark(face & (YY == N - FACE + 2), 1)
 
 
 # ------------------------------------------------------------------------------------------------ doors and windows

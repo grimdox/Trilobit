@@ -29,7 +29,7 @@ import render as R         # noqa: E402
 
 COLS = 32
 CACHE_VERSION = 1
-SOURCES = ['canvas.py', 'render.py', 'color.py', 'terrain.py', 'walls.py', 'furniture.py', 'props.py', 'items.py', 'furniture2.py', 'goods.py']
+SOURCES = ['canvas.py', 'render.py', 'color.py', 'terrain.py', 'walls.py', 'furniture.py', 'props.py', 'items.py', 'furniture2.py', 'goods.py', 'rock.py', 'underground.py']
 
 
 def _src_key():
@@ -103,6 +103,8 @@ def main():
         tk = _theme_key(theme)
         jobs, keys, cached = [], [], {}
         for id_, (f, n, kind) in CA.CATALOG.items():
+            if not CA.drawn(id_, theme):
+                continue
             for v in range(n):
                 k = hashlib.sha256(('%d|%s|%s|%s|%s|%d' % (CACHE_VERSION, src, tk, theme, id_, v)).encode()).hexdigest()[:32]
                 p = os.path.join(a.cache, k + '.npy.gz')
@@ -128,6 +130,8 @@ def main():
         variants = {}
         first = {}
         for id_, (f, n, kind) in CA.CATALOG.items():
+            if not CA.drawn(id_, theme):
+                continue
             names = sprite_names(n, id_)
             if n > 1:
                 variants[id_] = n

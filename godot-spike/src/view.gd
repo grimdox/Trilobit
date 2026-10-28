@@ -462,6 +462,159 @@ func _use_theme(c: int) -> void:
 	tileset = ts if ts != null else base_set
 	themed = ts != null
 
+## ---- rock and the underground (world-workshop: rock.py, underground.py) ----
+## Rock (mountain, cliff, the earth below ground) is drawn by which sides open onto something that is not rock, and by
+## the cell's place in the 4 x 4 repeat of its rock field, so a mountain reads as one continuous mass; past its broken
+## edge the neighbouring ground shows through.  Below ground, rock beside a built passage is its lining (concrete, or
+## brick along the sewers) with fittings along it; the passages have their own floors.  Mountains and cliffs come from
+## the country set and everything below ground from the industry set, whatever the district.
+const ROCK_T := {17: true, 27: true, 28: true}
+const PASSAGE_T := {8: true, 9: true, 12: true, 13: true, 14: true, 15: true, 16: true, 19: true, 3: true, 4: true, 22: true}
+const UG_FLOOR := {12: "t_ug_tunnel", 13: "t_ug_platform", 15: "t_ug_walk", 16: "t_ug_sludge"}
+const UG_RUNS := ["pipes", "cables", "duct"]
+const UG_SPOTS := ["panel", "valve", "fan", "lamp", "graffiti", "lamp", "", "", "graffiti", "", "panel", ""]
+const SIDE_SUFFIX := {1: "_fn", 2: "_fe", 4: "", 8: "_fw"}
+
+func _tile_at(base: int, x: int, y: int, fallback: int) -> int:
+	if x < 0 or y < 0 or x >= game.size or y >= game.size:
+		return fallback
+	return int(game.city.tiles[base + y * game.size + x])
+
+func _with_set(th: String) -> bool:
+	var ts = theme_sets.get(th) if not theme_sets.is_empty() else null
+	if ts == null:
+		return false
+	tileset = ts
+	return true
+
+func _rock_or_underground(t: int, c: int, wx: int, wy: int, base: int, pos: Vector2, mod: Color) -> bool:
+	var ug: bool = c / game.s2 > game.city.zmax
+	var steps := [[1, 0, -1], [2, 1, 0], [4, 0, 1], [8, -1, 0]]
+	if ROCK_T.has(t):
+		var opn := 0
+		var built := false
+		var sewer := false
+		var under_t := -1
+		for st in steps:
+			var nt: int = _tile_at(base, wx + st[1], wy + st[2], t)
+			if not ROCK_T.has(nt) and nt != 7:
+				opn |= int(st[0])
+				if under_t < 0:
+					under_t = nt
+				if PASSAGE_T.has(nt) or nt == 2 or nt >= CG.EXTRA0:
+					built = true
+				if nt == 15 or nt == 16:
+					sewer = true
+		var keep_set = tileset
+		if ug and opn != 0 and built and _with_set("industry"):
+			var lid: String = ("t_ugbrick." if sewer else "t_ugwall.") + str(opn)
+			if tileset.has(lid):
+				_blit(tileset.pick(lid, c), pos, mod)
+				var fit := _ug_fitting(c, wx, wy, opn, sewer, 1.0)
+				if fit != "" and tileset.has(fit):
+					_blit(fit, pos, mod)
+				tileset = keep_set
+				return true
+		var kind: String = "ugrock" if ug else ("cliff" if t == 27 else "mtn")
+		# inside corners: both sides closed, the cell diagonally beyond open
+		var cn := 0
+		for cs in [[1, 1, -1, 1, 2], [2, 1, 1, 4, 2], [4, -1, 1, 4, 8], [8, -1, -1, 1, 8]]:
+			if not (opn & int(cs[3])) and not (opn & int(cs[4])):
+				var dt: int = _tile_at(base, wx + cs[1], wy + cs[2], t)
+				if not ROCK_T.has(dt) and dt != 7:
+					cn |= int(cs[0])
+		if ug:
+			opn = 0
+			cn = 0
+		if _with_set("industry" if ug else "rural"):
+			var rid: String = "t_%s.%d_%d.%d" % [kind, opn, cn, (wy % 4) * 4 + wx % 4]
+			if tileset.has(rid):
+				if opn != 0 or cn != 0:
+					# the ground beyond the edge shows through: the open neighbour's own ground
+					tileset = keep_set
+					var ut: int = under_t
+					if ut < 0:
+						for cs2 in [[1, -1], [1, 1], [-1, 1], [-1, -1]]:
+							var dt2: int = _tile_at(base, wx + cs2[0], wy + cs2[1], t)
+							if not ROCK_T.has(dt2) and dt2 != 7:
+								ut = dt2
+								break
+					if ut >= CG.EXTRA0:
+						_blit(tileset.pick(String(CG.TILE_SPRITE.get(ut, "t_floor")), c), pos, mod)
+					elif ut == 30 and tileset.has("t_rocky"):
+						_blit(tileset.pick("t_rocky", c), pos, mod)
+					else:
+						_blit(tileset.pick(String(TERRAIN.get(maxi(ut, 0), "t_grass")), c), pos, mod)
+					_with_set("industry" if ug else "rural")
+				_blit(rid, pos, mod)
+				tileset = keep_set
+				return true
+		tileset = keep_set
+		return false
+	if t == 30 and tileset.has("t_rocky"):
+		_blit(tileset.pick("t_rocky", c), pos, mod)
+		return true
+	if not ug:
+		return false
+	var keep2 = tileset
+	if not _with_set("industry"):
+		return false
+	var done := false
+	if UG_FLOOR.has(t) and tileset.has(String(UG_FLOOR[t])):
+		_blit(tileset.pick(String(UG_FLOOR[t]), c), pos, mod)
+		if t == 13:
+			for st in steps:
+				if _tile_at(base, wx + st[1], wy + st[2], 13) == 14:
+					_blit(tileset.pick("f_ug_edge" + String(SIDE_SUFFIX[st[0]]), c), pos, mod)
+					break
+		if (t == 12 or t == 13 or t == 15) and ((c * 2654435761) >> 7) % 23 == 0:
+			_blit(tileset.pick(["f_ug_puddle", "f_ug_drain", "f_ug_rubbish"][((c * 40503) >> 5) % 3], c), pos, mod)
+		done = true
+	elif t == 14 and tileset.has("t_ug_track"):
+		var vert: bool = _tile_at(base, wx, wy - 1, 0) == 14 and _tile_at(base, wx, wy + 1, 0) == 14 and not (_tile_at(base, wx - 1, wy, 0) == 14 and _tile_at(base, wx + 1, wy, 0) == 14)
+		_blit(tileset.pick("t_ug_track.v" if vert else "t_ug_track", c), pos, mod)
+		done = true
+	elif t == 2:
+		# a basement or plant-room wall: the wall as usual, then a fitting along the side it faces a room on
+		tileset = keep2
+		var m := 0
+		if _joins(base, wx, wy - 1): m |= 1
+		if _joins(base, wx + 1, wy): m |= 2
+		if _joins(base, wx, wy + 1): m |= 4
+		if _joins(base, wx - 1, wy): m |= 8
+		_blit(tileset.pick("t_concrete", c), pos, mod)
+		_blit("t_wall." + str(m), pos, mod)
+		_with_set("industry")
+		var opn2 := 0
+		for st in steps:
+			var nt2: int = _tile_at(base, wx + st[1], wy + st[2], 2)
+			if nt2 == 3 or nt2 >= CG.EXTRA0 or nt2 == 12 or nt2 == 13:
+				opn2 |= int(st[0])
+		var fit2 := _ug_fitting(c, wx, wy, opn2, false, 0.6)
+		if fit2 != "" and tileset.has(fit2):
+			_blit(fit2, pos, mod)
+		done = true
+	tileset = keep2
+	return done
+
+## the fitting on a lining or basement wall cell, on the first side (south, north, east, west) it opens to: runs of pipe,
+## cable tray or duct that carry on for several cells, else now and then a panel, valve, fan, lamp or some paint
+func _ug_fitting(c: int, wx: int, wy: int, opn: int, sewer: bool, density: float) -> String:
+	for bit in [4, 1, 2, 8]:
+		if opn & bit:
+			var along: int = wx if bit == 1 or bit == 4 else wy
+			var across: int = wy if bit == 1 or bit == 4 else wx
+			var run: int = (hash([along / 6, across, bit]) & 0x7fffffff) % 4
+			var kind := ""
+			if run < 3 and not (run == 2 and sewer):
+				kind = UG_RUNS[run]
+			else:
+				kind = UG_SPOTS[(hash([wx, wy, bit]) & 0x7fffffff) % UG_SPOTS.size()]
+			if kind == "" or float((hash([wx, wy, 7]) & 1023)) / 1023.0 > density:
+				return ""
+			return tileset.pick("f_ug_" + kind + String(SIDE_SUFFIX[bit]), c)
+	return ""
+
 func _cell_art(t: int, c: int, wx: int, wy: int, pos: Vector2, mod: Color, ground: bool) -> void:
 	var T := TILE
 	var wl: int = game.city.wealth_at(c)
@@ -470,8 +623,10 @@ func _cell_art(t: int, c: int, wx: int, wy: int, pos: Vector2, mod: Color, groun
 		if t == 3 and tileset.has("t_trl_marble") and tileset.has("t_concrete"):
 			_blit(tileset.pick("t_trl_marble" if wl == 2 else "t_concrete", c), pos, mod)
 			return
-	var own: bool = tileset.index.has("t_wall.0")      # the Trilobit set has joined-up walls and doors
 	var base: int = (c / game.s2) * game.s2
+	if _rock_or_underground(t, c, wx, wy, base, pos, mod):
+		return
+	var own: bool = tileset.index.has("t_wall.0")      # the Trilobit set has joined-up walls and doors
 	if own and (t == 2 or t == 10):
 		var m := 0
 		if _joins(base, wx, wy - 1): m |= 1

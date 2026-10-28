@@ -32,6 +32,26 @@ join the next cell without an outline, so a row of them reads as one.
 
 `goods.py` draws an icon for each of the 111 shop goods (`trl_good_*`) into the item set.
 
+## Rock and the underground
+
+`rock.py` draws mountains (grey), cliffs (red) and the rock the tunnels run through (dark).  A rock mass is one 256 px
+height field per kind (big angular faces along the rock's grain, smaller faces breaking them up, moss in the hollows,
+grass tufts, cracks, mineral veins below ground), cut into 4 x 4 cells; each cell is lit with its neighbours' pixels
+round it, then cut out, so light and shadow run on across cells.  The game picks the cut by the cell's place in the
+repeat and the shape by which sides open onto something that is not rock, plus any inside corners: 47 shapes x 16
+cuts.  An open side ends in a broken edge that is shared by every cell along it, roots hang over it, scree lies at its
+foot, and on the south side the cliff face shows.  `t_rocky` is the rough rocky ground of coasts and mountain feet.
+
+`underground.py` draws the industry set's underground (the game draws everything below ground with that set): concrete
+tunnel linings and brick sewer linings in 16 shapes, tunnel walkway, station platform with its tactile edge, subway
+track with its third rail (both ways), sewer catwalk, sewage, and wall fittings that the view runs along the linings
+and basement walls in all four facings: pipe runs, cable trays, ductwork, electrical panels, valve stations, extract
+fans, caged lamps (some dead) and graffiti (shapes and colour only, never letters); puddles, drains and rubbish on the
+floor.
+
+Windows are their district's own wall with the glazing set into it: smoked glass downtown, blue-grey in mid-town,
+wired and grimy (sometimes boarded) in the slums, shoji in the country, glass block in industry.
+
 ## Item icons
 
 A sixth set, `items`, holds a new icon for every item that is not a weapon (245: shop goods, food and drink, ammunition, weapon
@@ -79,6 +99,8 @@ tools/tilegen/props.py      the new world objects and grounds
 tools/tilegen/furniture2.py the business and home furniture and floors, three variants each
 tools/tilegen/items.py      item icons
 tools/tilegen/goods.py      shop goods icons
+tools/tilegen/rock.py       mountains, cliffs, underground rock, rocky ground
+tools/tilegen/underground.py tunnels, stations, sewers: linings, floors, fittings
 tools/tilegen/catalog.py    every id with its builder and variants
 tools/tilegen/bake.py       bake to sets/<theme> (cached per sprite in .cache/)
 tools/tilegen/qa.py         checks T1-T9
