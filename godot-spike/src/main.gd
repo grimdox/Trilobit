@@ -30,6 +30,7 @@ var view
 var status: Label
 var zoom_btn: Button
 var logbox: RichTextLabel
+var log_bg: ColorRect
 var panel: RichTextLabel
 var mode: String = "title"           # title, play, garage, inventory, talk, mods, jump, strike, shove, turn, look, waitmenu, movemenu, waiting, consume, pause, options, visuals, keys, saves, loads, implants, skills, map, loading
 var menu_sel: int = 0                 # the highlighted line of the wait menu
@@ -192,7 +193,8 @@ func start_play(g) -> void:
 	logbox.bbcode_enabled = true
 	logbox.scroll_following = true
 	layer.add_child(logbox)
-	var bg := ColorRect.new()
+	log_bg = ColorRect.new()
+	var bg := log_bg
 	bg.color = Color(0, 0, 0, 0.92)
 	bg.position = Vector2(0, 558)
 	bg.size = Vector2(1280, 162)
@@ -762,6 +764,7 @@ func open_tab(kind: String, from: String = "") -> void:
 		"map":
 			screen.world = world
 			_make_map()
+			screen.map_pan = Vector2i.ZERO
 			_make_local_map()
 
 ## item icons for the equipment tabs: the item set, then the Trilobit64 set, then whatever tileset is loaded
@@ -771,6 +774,9 @@ func _gear_icons() -> void:
 		gear_base.load_dir("res://gfx/Trilobit64")
 		gear_items = TilesetScript.new()
 		if gear_items.load_dir("res://gfx/tiles_items"):
+			for k in gear_items.index.keys():                  # (the Trilobit set has the real icons for implants and nanohack chips; the items set only holds grey stand-ins)
+				if String(k).begins_with("trl_imp_") or String(k).begins_with("trl_nano_"):
+					gear_items.index.erase(k)
 			gear_items.fallback = gear_base
 		else:
 			gear_items = gear_base
@@ -782,7 +788,8 @@ func step_tab(dir: int) -> void:
 	open_tab(TAB_MODES[(i + dir + TAB_MODES.size()) % TAB_MODES.size()])
 	sfx.play("blip")
 
-const LOCAL_R := 70
+const LOCAL_R := 190                  # the local map is charted this far round you (the screen shows 141 x 141 of it and scrolls)
+const LOCAL_VIEW_R := 70
 
 ## the colour of a map tile on the local map (transparent: not drawn)
 func _local_color(t: int) -> Color:
@@ -811,28 +818,32 @@ func _local_color(t: int) -> Color:
 		return Color(0.62, 0.68, 0.8) if int(CG.WALK[t]) == 0 else Color(0.07, 0.2, 0.28)
 	return Color(0.07, 0.2, 0.28)
 
-const MINI_R := 24
+const MINI_RX := 31                    # tiles either side of you across the minimap, and
+const MINI_RY := 19                    # up and down: 63 x 39 tiles, drawn 4 HUD units to the tile (as wide as the HUD bar)
 
-## the minimap (bottom right of the HUD): a Trilobit, fitted and powered, charts the 49 x 49 tiles round you; the message log gives up the space it uses
+## the minimap (bottom right of the HUD, under the HUD bar and as wide): a Trilobit, fitted and powered, charts the tiles round you; the message log gives up the space it uses
 func _make_mini() -> void:
 	var g = game
 	var on: bool = g != null and g.nano_ok()
 	view.mini_on = on
-	logbox.size.x = 1264.0 - (172.0 if on else 0.0)
+	logbox.size.x = 1264.0 - (268.0 if on else 0.0)
+	if log_bg != null:
+		log_bg.size.x = 1028.0 if on else 1280.0          # the message backdrop must not dim the minimap
 	if not on:
 		view.mini_tex = null
 		return
-	var n: int = MINI_R * 2 + 1
-	var img := Image.create(n, n, false, Image.FORMAT_RGBA8)
-	img.fill(Color(0.02, 0.03, 0.06))
+	var nx: int = MINI_RX * 2 + 1
+	var ny: int = MINI_RY * 2 + 1
+	var img := Image.create(nx, ny, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0.07, 0.09, 0.16))
 	var base: int = (g.pc / g.s2) * g.s2
 	var px: int = g.lx(g.pc)
 	var py: int = g.ly(g.pc)
-	for dy in range(-MINI_R, MINI_R + 1):
+	for dy in range(-MINI_RY, MINI_RY + 1):
 		var y: int = py + dy
 		if y < 0 or y >= g.size:
 			continue
-		for dx in range(-MINI_R, MINI_R + 1):
+		for dx in range(-MINI_RX, MINI_RX + 1):
 			var x: int = px + dx
 			if x < 0 or x >= g.size:
 				continue
@@ -841,18 +852,24 @@ func _make_mini() -> void:
 				continue
 			var col: Color = _local_color(g.city.tiles[c])
 			if col.a > 0.0:
-				img.set_pixel(dx + MINI_R, dy + MINI_R, col if g.fov.visible[c] == 1 else col * Color(0.65, 0.65, 0.65))
+				col = Color(minf(1.0, col.r * 2.3 + 0.16), minf(1.0, col.g * 2.3 + 0.16), minf(1.0, col.b * 2.3 + 0.16))
+				img.set_pixel(dx + MINI_RX, dy + MINI_RY, col if g.fov.visible[c] == 1 else col * Color(0.75, 0.75, 0.75))
 	for k in g.sim.near_list.size():                                  # people you can see
 		var pi: int = g.sim.near_list[k]
 		var pc2: int = g.sim.pos[pi]
 		if pc2 / g.s2 != base / g.s2 or g.fov.visible[pc2] == 0:
 			continue
-		var ex: int = pc2 % g.size - px + MINI_R
-		var ey: int = (pc2 / g.size) % g.size - py + MINI_R
-		if ex >= 0 and ey >= 0 and ex < n and ey < n:
-			img.set_pixel(ex, ey, Color(1.0, 0.85, 0.2))
-	img.set_pixel(MINI_R, MINI_R, Color.WHITE)
+		var ex: int = pc2 % g.size - px + MINI_RX
+		var ey: int = (pc2 / g.size) % g.size - py + MINI_RY
+		if ex >= 0 and ey >= 0 and ex < nx and ey < ny:
+			img.set_pixel(ex, ey, Color(1.0, 0.9, 0.2))
+	img.set_pixel(MINI_RX, MINI_RY, Color.WHITE)
 	view.mini_tex = ImageTexture.create_from_image(img)
+
+func _pan_local(d: Vector2i) -> void:
+	var lim: int = LOCAL_R - LOCAL_VIEW_R
+	screen.map_pan = Vector2i(clampi(screen.map_pan.x + d.x, -lim, lim), clampi(screen.map_pan.y + d.y, -lim, lim))
+	sfx.play("blip")
 
 ## the picture of everything seen within LOCAL_R tiles of the player on this level
 func _make_local_map() -> void:
@@ -880,7 +897,7 @@ func _make_local_map() -> void:
 					img.set_pixel(dx + LOCAL_R, dy + LOCAL_R, col)
 	screen.local_tex = ImageTexture.create_from_image(img)
 	var gp: Vector2i = g.global_pos() if g != null and g.island != null else Vector2i(g.lx(g.pc), g.ly(g.pc))
-	screen.local_info = {"n": n, "level": g.z_of(g.pc) if g != null else 0, "gx": gp.x, "gy": gp.y, "labels": local_labels(), "labor": nearest_labor_text()}
+	screen.local_info = {"n": LOCAL_VIEW_R * 2 + 1, "full": n, "level": g.z_of(g.pc) if g != null else 0, "gx": gp.x, "gy": gp.y, "labels": local_labels(), "labor": nearest_labor_text()}
 
 ## the Labor Centers are public knowledge: the map says where the nearest one is, seen or not
 func nearest_labor_text() -> String:
@@ -982,6 +999,21 @@ func _tab_key(k: int) -> void:
 		if k == KEY_TAB or k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
 			screen.map_local = not screen.map_local
 			sfx.play("blip")
+		elif screen.map_local:
+			var pd: Vector2i = dir_of(k)
+			if k == KEY_HOME or k == KEY_5 or k == KEY_KP_5:
+				screen.map_pan = Vector2i.ZERO
+				sfx.play("blip")
+			elif k == KEY_UP:
+				pd = Vector2i(0, -1)
+			elif k == KEY_DOWN:
+				pd = Vector2i(0, 1)
+			elif k == KEY_LEFT:
+				pd = Vector2i(-1, 0)
+			elif k == KEY_RIGHT:
+				pd = Vector2i(1, 0)
+			if pd != Vector2i.ZERO:
+				_pan_local(pd * (40 if Input.is_key_pressed(KEY_SHIFT) else 10))
 		return
 	# equipment and implants
 	if dv != Vector2i.ZERO:
@@ -1025,6 +1057,9 @@ func _tab_mouse(ev: InputEvent) -> void:
 	if not (ev is InputEventMouseButton) or not ev.pressed:
 		return
 	var pos: Vector2 = ev.position / UI_S
+	if mode == "map" and screen.map_local and (ev.button_index == MOUSE_BUTTON_WHEEL_UP or ev.button_index == MOUSE_BUTTON_WHEEL_DOWN):
+		_pan_local(Vector2i(0, -10 if ev.button_index == MOUSE_BUTTON_WHEEL_UP else 10))
+		return
 	if ev.button_index == MOUSE_BUTTON_LEFT:
 		var ti: int = screen.tab_at(pos)
 		if ti >= 0:
@@ -1350,7 +1385,7 @@ func _elevator_key(k: int) -> void:
 				elev_sel = q
 	elif k == KEY_BACKSPACE:
 		elev_typed = elev_typed.substr(0, maxi(0, elev_typed.length() - 1))
-	elif k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
+	elif k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE or act == "interact":
 		_elev_ride()
 		return
 	else:

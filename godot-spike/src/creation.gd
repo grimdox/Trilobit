@@ -23,7 +23,7 @@ const EYES := [Color(0.34, 0.2, 0.1), Color(0.5, 0.36, 0.14), Color(0.3, 0.5, 0.
 const EYE_NAMES := ["Brown", "Hazel", "Green", "Blue", "Grey", "Amber", "Red", "Violet", "Gold", "Orange", "Teal"]
 const EYE_SHAPE_NAMES := ["Round", "Almond", "Hooded", "Wide"]          # DollSpec.EYE_SHAPES order
 ## build: how broad the figure is drawn (look only, no effect on play).  The symbols are drawn by the screen; the names are the text form
-const BUILDS := [{"id": "slim", "name": "|  slim", "mark": "|", "width": 0.88}, {"id": "average", "name": "||  average", "mark": "||", "width": 1.0}, {"id": "broad", "name": "|||  broad", "mark": "|||", "width": 1.14}]
+const BUILDS := [{"id": "slim", "name": "|  slim", "mark": "|", "width": 0.88, "size": "s"}, {"id": "average", "name": "||  average", "mark": "||", "width": 1.0, "size": "m"}, {"id": "broad", "name": "|||  broad", "mark": "|||", "width": 1.14, "size": "l"}]
 const FIELDS := ["sprite", "build", "skin", "hair", "style", "eyes", "eye_shape"]
 # the appearance rows the screen shows.  The body frame has no row until the standing doll has a second body; `sprite` stays in `app`.
 const LOOK_ROWS := [{"id": "sprite", "label": "Gender"}, {"id": "build", "label": "Type"}, {"id": "skin", "label": "Skin tone"}, {"id": "style", "label": "Hair style"}, {"id": "hair", "label": "Hair colour"},
@@ -89,7 +89,7 @@ static func sanitize(d: Dictionary) -> Dictionary:
 ## the look dictionary the paper doll and portrait draw from (same shape as DollSpec.look, plus eye colour)
 static func look_of(app: Dictionary) -> Dictionary:
 	var a: Dictionary = sanitize(app)
-	return {"fem": bool(SPRITES[a["sprite"]]["fem"]), "build": float(BUILDS[a["build"]]["width"]), "skin": DS.SKINS[a["skin"]], "hair": DS.HAIRS[a["hair"]], "style": STYLES[a["style"]], "eyes": EYES[a["eyes"]],
+	return {"fem": bool(SPRITES[a["sprite"]]["fem"]), "build": float(BUILDS[a["build"]]["width"]), "size": String(BUILDS[a["build"]]["size"]), "skin": DS.SKINS[a["skin"]], "hair": DS.HAIRS[a["hair"]], "style": STYLES[a["style"]], "eyes": EYES[a["eyes"]],
 		"skin_i": a["skin"], "hair_i": a["hair"], "eye_i": a["eyes"], "eye_shape": DS.EYE_SHAPES[a["eye_shape"]]}
 
 

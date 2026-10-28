@@ -170,27 +170,12 @@ func remove(it) -> bool:
 		return true
 	return _unseat(ref["slot"])
 
-## empty the extra tiles of a pocket slot into free tiles elsewhere and take the pocket item out of the slot (the caller keeps it); false (nothing changed) if there is no room
+## take a pocket item off its slot: its tiles go with it and what is in them stays in them (the item keeps them as its `stash`)
 func _clear_group(slot: String) -> bool:
-	if not grid.has(slot):
-		equip.erase(slot)
-		return true
-	var held: Array = []
-	for it in grid[slot]:
-		if it != null:
-			held.append(it)
-	if held.size() > free_tiles(slot):
-		last_err = "Empty the %s first: its tiles hold %d things and the rest of your pockets have room for %d." % [equip[slot].def["name"], held.size(), free_tiles(slot)]
-		return false
-	var owner = equip[slot]
-	var saved: Dictionary = grid.duplicate()
+	if grid.has(slot) and equip.has(slot):
+		equip[slot].stash = grid[slot]
 	grid.erase(slot)
 	equip.erase(slot)
-	for it in held:
-		if not stow(it):
-			grid = saved
-			equip[slot] = owner
-			return false
 	return true
 
 func _unseat(slot: String) -> bool:
@@ -241,8 +226,32 @@ func put_equip(slot: String, it) -> Dictionary:
 func _ensure_group(slot: String) -> void:
 	var it = equip.get(slot)
 	if it != null and it.def.has("pocket"):
-		if not grid.has(slot):
-			grid[slot] = _blank(pocket_tiles(it))
+		if it.stash.size() != pocket_tiles(it):
+			it.stash.resize(pocket_tiles(it))
+		grid[slot] = it.stash                    # one array: the worn pocket's tiles and the item's own contents
+
+## put `it` inside a pocket item `box` (worn or not): joins a stack or takes the first free tile.  Containers do not nest.
+func put_in(box, it) -> bool:
+	if box == null or not box.def.has("pocket"):
+		last_err = "That is not a container."
+		return false
+	if it == box or it.def.has("pocket"):
+		last_err = "A container will not fit inside another."
+		return false
+	var n: int = pocket_tiles(box)
+	if box.stash.size() != n:
+		box.stash.resize(n)
+	if it.stackable():
+		for other in box.stash:
+			if other != null and other.id() == it.id() and other.stackable():
+				other.count += it.count
+				return true
+	for i in n:
+		if box.stash[i] == null:
+			box.stash[i] = it
+			return true
+	last_err = "The %s is full." % box.def["name"]
+	return false
 
 ## drop an item in a grid tile; an item already there is handed back (it swaps), identical stacks merge
 func put_grid(g: String, i: int, it) -> Dictionary:
@@ -346,3 +355,6 @@ func load_dict(d: Dictionary, db) -> void:
 		for i in mini(src.size(), (grid[g] as Array).size()):
 			if src[i] != null and db.defs.has(String(src[i]["id"])):
 				grid[g][i] = ItemScript.from_dict(src[i], db)
+	for g in groups():
+		if g != "base":
+			equip[g].stash = grid[g]                  # worn pockets: the item's own tiles are these tiles

@@ -204,6 +204,14 @@ func _menu(W: float, H: float) -> void:
 		_txt(subtitle, Vector2(x0 + 28, y0 + 76), 16, Color(0.6, 0.75, 0.9))
 	var y := y0 + 118.0
 	var shown := mini(rows, items.size() - scroll)
+	# the key screen is a grid: one font size for every row (the smallest any row needs), actions on the left, keys right-justified
+	var grid_sz := 22
+	if kind == "keys":
+		var rg: Array = rooms(bw, x0, true)
+		for it2 in items:
+			grid_sz = mini(grid_sz, fit_size(String(it2["label"]), 22, rg[0]))
+			if it2.has("value"):
+				grid_sz = mini(grid_sz, fit_size(str(it2["value"]), 22, rg[1]))
 	for k in shown:
 		var i := scroll + k
 		var it: Dictionary = items[i]
@@ -215,9 +223,16 @@ func _menu(W: float, H: float) -> void:
 		# the label gets the room up to the value column and the value the room after it; text too long for its room is shrunk, never drawn over its neighbour
 		var has_v: bool = it.has("value")
 		var rm: Array = rooms(bw, x0, has_v)
-		_fit(it["label"], Vector2(x0 + 34, y), 22, col, rm[0])
-		if has_v:
-			_fit(str(it["value"]), Vector2(rm[2], y), 22, CYAN if on else Color(0.55, 0.8, 0.95), rm[1])
+		if kind == "keys":
+			if not on and k % 2 == 1:
+				draw_rect(Rect2(x0 + 14, y - 24, bw - 28, 32), Color(0.3, 0.6, 0.9, 0.05))
+			_txt(String(it["label"]), Vector2(x0 + 34, y), grid_sz, col)
+			if has_v:
+				_txt(str(it["value"]), Vector2(rm[2], y), grid_sz, CYAN if on else Color(0.55, 0.8, 0.95), HORIZONTAL_ALIGNMENT_RIGHT, rm[1])
+		else:
+			_fit(it["label"], Vector2(x0 + 34, y), 22, col, rm[0])
+			if has_v:
+				_fit(str(it["value"]), Vector2(rm[2], y), 22, CYAN if on else Color(0.55, 0.8, 0.95), rm[1])
 		y += 34.0
 	if scroll > 0:
 		_txt("^ more", Vector2(x0 + bw - 100, y0 + 100), 14, Color(0.6, 0.7, 0.8))
@@ -236,6 +251,7 @@ const TAB_H := 44.0
 var tab_keys: Dictionary = {}              # tab kind -> the key that opens it, for the label
 var bt = null                              # BarterUI (barter_ui.gd): the merchant screen
 var gear = null                            # GearUI (gear_ui.gd): the equipment and implants tabs
+var map_pan: Vector2i = Vector2i.ZERO         # how far the local map is scrolled (tiles) from centred on you
 var map_local: bool = true                # the map tab shows the local map instead of the island
 var local_tex: ImageTexture = null
 var local_info: Dictionary = {}            # {origin: Vector2i of the PC in the window, radius, level, labels: [{dx, dy, text}]}
@@ -367,7 +383,8 @@ func _island_map(W: float, H: float) -> void:
 ## the local map: every tile you have seen within 40 of you, drawn in plain neon colours (the picture is built by main.gd's _make_local_map)
 const SG = preload("res://src/signage.gd")
 func _local_map(W: float, H: float) -> void:
-	var n: int = int(local_info.get("n", 81))
+	var n: int = int(local_info.get("n", 141))
+	var full: int = int(local_info.get("full", n))
 	var ox := 40.0
 	var oy: float = TAB_H + 40.0
 	var lpx: int = maxi(3, int((H - oy - 40.0) / float(n)))
@@ -377,48 +394,58 @@ func _local_map(W: float, H: float) -> void:
 		return
 	draw_rect(Rect2(ox - 4.0, oy - 4.0, side + 8.0, side + 8.0), Color(0.04, 0.06, 0.11))
 	draw_rect(Rect2(ox - 4.0, oy - 4.0, side + 8.0, side + 8.0), CYAN, false, 1.5)
-	draw_texture_rect(local_tex, Rect2(ox, oy, side, side), false)
+	var c0: int = full / 2 - n / 2 + map_pan.x
+	var r0: int = full / 2 - n / 2 + map_pan.y
+	draw_texture_rect_region(local_tex, Rect2(ox, oy, side, side), Rect2(c0, r0, n, n))
 	# a pictogram on each building says what it is (houses small, towers and shops full size)
 	for lb in local_info.get("labels", []):
-		var lp := Vector2(ox + (float(lb["dx"]) + float(n / 2) + 0.5) * lpx, oy + (float(lb["dy"]) + float(n / 2) + 0.5) * lpx)
+		var lcx: int = int(lb["dx"]) - map_pan.x + n / 2
+		var lcy: int = int(lb["dy"]) - map_pan.y + n / 2
+		if lcx < 0 or lcy < 0 or lcx >= n or lcy >= n:
+			continue
+		var lp := Vector2(ox + (float(lcx) + 0.5) * lpx, oy + (float(lcy) + 0.5) * lpx)
 		var rr: float = maxf(4.0, lpx * (0.9 if bool(lb.get("small", false)) else 1.35))
 		draw_circle(lp, rr + 1.5, Color(0.02, 0.03, 0.07, 0.85))
 		SG.draw_glyph(self, String(lb["glyph"]), lp, rr, lb["col"])
 	# you are here
-	var ctr: float = float(n / 2) * lpx + lpx * 0.5
-	var pp := Vector2(ox + ctr, oy + ctr)
+	var pcx: int = n / 2 - map_pan.x
+	var pcy: int = n / 2 - map_pan.y
+	var pp := Vector2(ox + (float(pcx) + 0.5) * lpx, oy + (float(pcy) + 0.5) * lpx)
+	var you_on: bool = pcx >= 0 and pcy >= 0 and pcx < n and pcy < n
 	var pulse: float = 0.5 + 0.5 * sin(t * 6.0)
-	draw_circle(pp, 7.0 + 3.0 * pulse, Color(1.0, 0.2, 0.5, 0.25 + 0.2 * pulse))
-	draw_circle(pp, 3.5, Color.WHITE)
-	# the key: colours, then the pictograms in two columns
+	if you_on:
+		draw_circle(pp, 7.0 + 3.0 * pulse, Color(1.0, 0.2, 0.5, 0.25 + 0.2 * pulse))
+		draw_circle(pp, 3.5, Color.WHITE)
+	# the key: colours, then the pictograms, three columns each
 	var kx: float = ox + side + 40.0
 	var ky: float = oy + 4.0
 	_txt("LOCAL MAP", Vector2(kx, ky + 14.0), 24, Color.WHITE)
-	_txt("Everything you have seen within %d tiles." % (n / 2), Vector2(kx, ky + 40.0), 16, Color(0.6, 0.75, 0.9))
+	_txt("Everything you have seen within %d tiles." % (full / 2), Vector2(kx, ky + 40.0), 16, Color(0.6, 0.75, 0.9))
 	var ky2: float = ky + 70.0
 	var col_i := 0
 	for e in LOCAL_KEY:
-		var cx2: float = kx + (col_i % 2) * 230.0
+		var cx2: float = kx + (col_i % 3) * 206.0
 		draw_rect(Rect2(cx2, ky2 - 12.0, 16.0, 16.0), e[1])
 		draw_rect(Rect2(cx2, ky2 - 12.0, 16.0, 16.0), Color(1, 1, 1, 0.25), false, 1.0)
 		_txt(String(e[0]), Vector2(cx2 + 26.0, ky2 + 2.0), 15, Color(0.85, 0.92, 1.0))
 		col_i += 1
-		if col_i % 2 == 0:
-			ky2 += 24.0
-	ky2 += 40.0
+		if col_i % 3 == 0:
+			ky2 += 28.0
+	ky2 += 28.0 if col_i % 3 != 0 else 12.0
 	_txt("BUILDINGS", Vector2(kx, ky2 - 6.0), 18, Color.WHITE)
 	ky2 += 18.0
-	var gi := 0
-	for e in SG.legend():
-		var cx3: float = kx + (gi % 3) * 320.0
-		var cy3: float = ky2 + (gi / 3) * 30.0
-		SG.draw_glyph(self, String(e[0]), Vector2(cx3 + 12.0, cy3), 9.0, e[1])
-		_txt(String(e[2]), Vector2(cx3 + 30.0, cy3 + 6.0), 14, Color(0.85, 0.92, 1.0))
-		gi += 1
+	var lg: Array = SG.legend()
+	var per_col: int = (lg.size() + 2) / 3                              # three columns, filled down: the order of the list reads down each column
+	for gi in lg.size():
+		var e: Array = lg[gi]
+		var cx3: float = kx + (gi / per_col) * 206.0
+		var cy3: float = ky2 + (gi % per_col) * 30.0
+		SG.draw_glyph(self, String(e[0]), Vector2(cx3 + 8.0, cy3), 7.0, e[1])
+		_txt(String(e[2]), Vector2(cx3 + 24.0, cy3 + 6.0), 15, Color(0.85, 0.92, 1.0))
 	var lvl: int = int(local_info.get("level", 0))
 	if String(local_info.get("labor", "")) != "":
 		_txt(String(local_info["labor"]), Vector2(kx, H - 44.0), 17, SG.COL_CIVIC)
-	_txt("You are at (%d, %d)%s.   Tab switches to the island map, Esc closes." % [int(local_info.get("gx", 0)), int(local_info.get("gy", 0)), "" if lvl == 0 else ", level %d" % lvl], Vector2(24, H - 14.0), 15, Color(0.8, 0.9, 1.0))
+	_txt("You are at (%d, %d)%s.   Arrows or the wheel scroll the map (Shift: faster, Home: back to you), Tab switches to the island map, Esc closes." % [int(local_info.get("gx", 0)), int(local_info.get("gy", 0)), "" if lvl == 0 else ", level %d" % lvl], Vector2(24, H - 14.0), 15, Color(0.8, 0.9, 1.0))
 
 ## colours of the local map: [name, colour]
 const LOCAL_KEY := [["Wall", Color(1.0, 0.25, 0.65)], ["Window", Color(0.55, 0.9, 1.0)], ["Door", Color(1.0, 0.8, 0.25)], ["Road", Color(0.1, 0.14, 0.32)],
@@ -819,7 +846,7 @@ func _cc_doll(c: Vector2, k: float, look: Dictionary) -> void:
 		var ds = ADAPT.spec_from_game([], look, "", String(look.get("size", "m")), CC_DOLLS)
 		var tex: Texture2D = cc_dolls.texture(ds, "unarmed/idle/0")
 		if tex != null:
-			draw_set_transform(c + Vector2(0, 82), 0.0, Vector2(3.0 * float(look.get("build", 1.0)), 3))
+			draw_set_transform(c + Vector2(0, 82), 0.0, Vector2(3.0, 3))
 			draw_texture(tex, -cc_dolls.origin())
 			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 			return
@@ -897,7 +924,9 @@ func _elevator(W: float, H: float) -> void:
 	var bottom: float = last.end.y
 	for r in rs:
 		right = maxf(right, (r as Rect2).end.x)
-	var panel := Rect2(left - 34.0, first.position.y - 96.0, right - left + 68.0, bottom - first.position.y + 96.0 + 66.0)
+	var pw: float = maxf(right - left + 68.0, 340.0)                     # wide enough for the key line under the buttons
+	var pcx: float = (left + right) * 0.5
+	var panel := Rect2(pcx - pw * 0.5, first.position.y - 96.0, pw, bottom - first.position.y + 96.0 + 84.0)
 	draw_rect(panel, Color(0.07, 0.08, 0.1, 0.97))
 	draw_rect(panel, Color(0.62, 0.66, 0.72), false, 3.0)
 	draw_rect(panel.grow(-8.0), Color(0.3, 0.33, 0.38), false, 1.0)
@@ -919,7 +948,18 @@ func _elevator(W: float, H: float) -> void:
 		_txt(String(labels[i]), Vector2(r.position.x, r.position.y + 38.0), 26, lc, HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
 		if cur:
 			draw_circle(Vector2(r.end.x - 10.0, r.position.y + 10.0), 4.0, Color(0.5, 1.0, 0.6))
-	_txt("Arrows / numpad / mouse choose  -  Enter or click rides  -  digits jump  -  Esc leaves", Vector2(panel.position.x, panel.end.y - 22.0), 13, Color(0.6, 0.75, 0.9), HORIZONTAL_ALIGNMENT_CENTER, panel.size.x)
+	var fy: float = panel.end.y - 52.0                                    # the key line: a rule, then two short rows of "key  action"
+	draw_line(Vector2(panel.position.x + 24.0, fy - 14.0), Vector2(panel.end.x - 24.0, fy - 14.0), Color(0.3, 0.33, 0.38), 1.0)
+	var half: float = panel.size.x * 0.5
+	var kc := Color(1.0, 0.85, 0.4)
+	var ac := Color(0.6, 0.75, 0.9)
+	var rows: Array = [["Arrows", "move", "X / Enter", "ride"], ["0-9", "jump to floor", "Esc", "leave"]]
+	for q in 2:
+		var ry: float = fy + q * 22.0
+		_txt(String(rows[q][0]), Vector2(panel.position.x + 26.0, ry), 14, kc)
+		_txt(String(rows[q][1]), Vector2(panel.position.x + 26.0 + 64.0, ry), 14, ac)
+		_txt(String(rows[q][2]), Vector2(panel.position.x + half + 4.0, ry), 14, kc)
+		_txt(String(rows[q][3]), Vector2(panel.position.x + half + 4.0 + 76.0, ry), 14, ac)
 
 func _terminal(W: float, H: float) -> void:
 	draw_rect(Rect2(0, 0, W, H), Color(0.0, 0.0, 0.0, 0.55))

@@ -15,6 +15,15 @@ var mods: Array = []                       # installed mod items
 var jammed: bool = false
 var mode: int = 0                          # index into gun.modes
 var cond: int = -1                         # wear: hit points left on armor or an engine (-1 = as new)
+var stash: Array = []                      # a pocket item's own tiles (items or null); worn, these ARE the inventory's tiles for that slot, so what is inside stays inside when it comes off
+
+## how many things a container holds
+func stash_count() -> int:
+	var n := 0
+	for x in stash:
+		if x != null:
+			n += 1
+	return n
 
 func _init(d: Dictionary, n: int = 1) -> void:
 	def = d
@@ -43,6 +52,8 @@ func to_dict() -> Dictionary:
 		out["fill"] = fill
 	if cond >= 0:
 		out["cond"] = cond
+	if stash_count() > 0:
+		out["stash"] = stash.map(func(x): return null if x == null else x.to_dict())
 	if def.has("gun"):
 		out["gun"] = {"loaded": loaded, "kind": kind, "jammed": jammed, "mode": mode, "mods": mods.map(func(m): return m.to_dict())}
 	return out
@@ -51,6 +62,9 @@ static func from_dict(d: Dictionary, db):
 	var it = ItemScript.new(db.defs[d["id"]], int(d.get("count", 1)))
 	it.fill = int(d.get("fill", 0))
 	it.cond = int(d.get("cond", -1))
+	if d.has("stash"):
+		for x in d["stash"]:
+			it.stash.append(null if x == null or not db.defs.has(String(x["id"])) else from_dict(x, db))
 	if d.has("gun"):
 		var gd: Dictionary = d["gun"]
 		it.loaded = int(gd["loaded"])

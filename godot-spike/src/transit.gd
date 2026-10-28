@@ -549,6 +549,9 @@ func _sweep(cell: int) -> void:
 
 ## the player's move while riding.  Returns true if the move was consumed.
 func ride_move(dx: int, dy: int) -> bool:
+	if g.facing != Vector2i(dx, dy) and not g._no_turn:    # a move key turns you on a train too, as it does on foot (the turn is free), even when the way is blocked
+		g.facing = Vector2i(dx, dy)
+		g._compute_fov()
 	var to: int = g.pc + dy * g.size + dx
 	var r := car_on(to)
 	if not r.is_empty():

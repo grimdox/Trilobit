@@ -209,7 +209,7 @@ func _draw_doll_layered(nd, spec: Dictionary, pos: Vector2, face_dir: Vector2i, 
 	if tex == null:
 		return
 	var k := TILE / float(nd.lib.man.get("lod", 32))      # the set's own size: 32 px dolls at TILE / 32, 64 px at TILE / 64
-	var kx: float = k * float((spec["look"] as Dictionary).get("build", 1.0))      # the player's build widens or slims the figure
+	var kx: float = k                                    # the build is the doll's own body (s / m / l), not a stretched copy
 	draw_set_transform(pos + Vector2(TILE * 0.5, TILE - 1.0), 0.0, Vector2(-kx if face_dir.x < 0 else kx, k))
 	var sh := PackedVector2Array()
 	for n in 12:
@@ -382,6 +382,9 @@ func _load_themes() -> void:
 	var items_set = tileset.get_script().new()
 	var below = tileset
 	if items_set.load_dir("res://gfx/tiles_items"):
+		for k in items_set.index.keys():                       # (implants and nanohack chips: the Trilobit set has the real icons)
+			if String(k).begins_with("trl_imp_") or String(k).begins_with("trl_nano_"):
+				items_set.index.erase(k)
 		items_set.fallback = tileset
 		below = items_set
 		theme_sets["_items"] = items_set
@@ -398,24 +401,21 @@ func theme_at(c: int) -> String:
 		return "industry" if game.zone == game.island.PORT_ZONE else "rural"
 	if c / game.s2 > game.city.zmax:
 		return "industry"
-	# the district of the 16 x 16 block the cell is in, so borders run straight instead of in steps across a lot
-	var g: int = c % game.s2
-	var bx: int = mini((g % game.size) / 16 * 16 + 8, game.size - 1)
-	var by: int = mini((g / game.size) / 16 * 16 + 8, game.size - 1)
-	return WEALTH_THEME[clampi(game.city.wealth_at(by * game.size + bx), 0, 2)]
+	# the district comes from the city's own block map: a block (and its buildings) is one district, and it changes only across a street or the river
+	return WEALTH_THEME[clampi(game.city.wealth_at(c % game.s2), 0, 2)]
 
 ## street furniture by district, drawn over the ground (it does not block): lamps and street trees along the kerb,
 ## neon, benches, flowerbeds, rubbish and spills along building fronts, fountains, statues and shrubs in parks, drums
 ## and pallets in the docks.  Chosen by a hash of the cell, so it is the same every time you pass.
-const DECOR_KERB := {"rich": [[4, "f_trl_tree_street"], [9, "f_trl_streetlight"]], "mid": [[7, "f_trl_streetlight"], [13, "f_trl_tree_street"]],
+const DECOR_KERB := {"rich": [[9, "f_trl_streetlight"]], "mid": [[7, "f_trl_streetlight"]],
 	"slum": [[9, "f_trl_streetlight_broken"], [13, "f_trl_streetlight"], [17, "f_trl_trash"]], "industry": [[8, "f_trl_streetlight"], [15, "f_trl_barrels"]],
 	"rural": [[19, "f_trl_streetlight"]]}
-const DECOR_FRONT := {"rich": [[11, "f_trl_flowerbed"], [17, "f_trl_bench"], [23, "f_trl_neon_cyan"]],
-	"mid": [[10, "neon"], [19, "f_trl_bench"], [29, "f_trl_flowerbed"]],
-	"slum": [[6, "neon"], [9, "f_trl_spill_chem"], [11, "f_trl_trash"], [14, "f_trl_puddle"], [23, "f_trl_bench_broken"]],
-	"industry": [[9, "f_trl_spill_oil"], [11, "f_trl_pallet"], [13, "f_trl_barrels"], [19, "neon"]],
+const DECOR_FRONT := {"rich": [[11, "f_trl_flowerbed"]],
+	"mid": [[29, "f_trl_flowerbed"]],
+	"slum": [[9, "f_trl_spill_chem"], [11, "f_trl_trash"], [14, "f_trl_puddle"]],
+	"industry": [[9, "f_trl_spill_oil"], [11, "f_trl_pallet"], [13, "f_trl_barrels"]],
 	"rural": [[9, "f_trl_woodpile"], [15, "f_trl_fence"]]}
-const DECOR_PARK := {"rich": [[23, "f_trl_flowerbed"], [61, "f_trl_fountain"], [67, "f_trl_statue"]], "mid": [[37, "f_trl_bench"], [97, "f_trl_statue"], [41, "f_trl_hedge"]],
+const DECOR_PARK := {"rich": [[23, "f_trl_flowerbed"], [61, "f_trl_fountain"], [67, "f_trl_statue"]], "mid": [[97, "f_trl_statue"], [41, "f_trl_hedge"]],
 	"slum": [[13, "f_trl_shrub_wild"], [29, "f_trl_trash"], [113, "f_trl_statue_broken"]], "industry": [[17, "f_trl_shrub_wild"], [31, "f_trl_barrels"]],
 	"rural": [[53, "f_trl_haystack"], [71, "f_trl_well"], [29, "f_trl_shrub_wild"], [43, "f_trl_bamboo"]]}
 const NEON_BY_THEME := {"rich": ["cyan"], "mid": ["pink", "cyan"], "slum": ["pink", "green", "violet", "red"], "industry": ["amber", "cyan"], "rural": ["amber"]}
@@ -1118,10 +1118,11 @@ func _draw_hud() -> void:
 		_txt(xi, ny + 21, "NAV IMPLANT: NOT INSTALLED", 12, C_DIM, wi, HORIZONTAL_ALIGNMENT_CENTER)
 		_txt(xi, ny + 37, "a powered Trilobit gives a minimap", 11, Color(0.4, 0.46, 0.55), wi, HORIZONTAL_ALIGNMENT_CENTER)
 	if mini_on and mini_tex != null:
-		var mr := Rect2(W - 164.0, 564.0, 156.0, 156.0)
-		draw_rect(mr.grow(3.0), Color(0.03, 0.04, 0.08))
+		var mr := Rect2(W - PANEL_W + 2.0, 562.0, PANEL_W - 2.0, 156.0)
+		draw_rect(mr, Color(0.03, 0.04, 0.08))
 		draw_texture_rect(mini_tex, mr, false)
-		draw_rect(mr.grow(3.0), Color(0.25, 0.8, 0.95, 0.7), false, 1.5)
+		draw_rect(mr, Color(0.25, 0.8, 0.95, 0.8), false, 1.5)
+		draw_circle(mr.get_center() + Vector2(2.0, 2.0), 3.5, Color(1.0, 0.25, 0.5))
 	# the figure and the limb readouts
 	var fy: float = 116.0
 	_draw_person(x0 + 62.0, fy, 21.0)

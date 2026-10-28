@@ -30,12 +30,12 @@ const NANO_X0 := 590.0
 const NANO_Y0 := 116.0
 const DROP_RECT := Rect2(1064.0, 612.0, 172.0, 44.0)       # the DROP button, bottom right (equipment tab)
 
-## slot -> [side (-1 left of the figure, +1 right), tile centre y].  Left: Head, Chest, Arms, Left Hand, Legs.  Right: Eyes, Back, Belt, Right Hand.
+## slot -> [side (-1 left of the figure, +1 right), tile centre y].  Left of the screen: Head, Chest, Arms, Right Hand, Legs.  Right: Eyes, Back, Belt, Left Hand (the figure faces you, so its right hand is on your left).
 const SPOTS := {"head": Vector2(-1, 86), "eyes": Vector2(1, 86), "chest": Vector2(-1, 152), "back": Vector2(1, 152), "arms": Vector2(-1, 218),
-	"belt": Vector2(1, 218), "lhand": Vector2(-1, 284), "rhand": Vector2(1, 284), "legs": Vector2(-1, 350)}
+	"belt": Vector2(1, 218), "rhand": Vector2(-1, 284), "lhand": Vector2(1, 284), "legs": Vector2(-1, 350)}
 ## where each leader line meets the body (x from the centre line, y on the figure)
 const ANCHOR := {"head": Vector2(-15, 74), "eyes": Vector2(9, 82), "chest": Vector2(-30, 160), "back": Vector2(42, 148), "arms": Vector2(-65, 172),
-	"belt": Vector2(29, 222), "lhand": Vector2(-69, 278), "rhand": Vector2(69, 278), "legs": Vector2(-28, 286)}
+	"belt": Vector2(29, 222), "rhand": Vector2(-69, 278), "lhand": Vector2(69, 278), "legs": Vector2(-28, 286)}
 ## where the Spine leader meets the body on the implants tab: the vertebrae down the middle (the Back spot is a backpack on the equipment tab and points at the shoulder)
 const SPINE_ANCHOR := Vector2(0, 176)
 ## the implant part each doll spot stands for (on the equipment tab the belt is a belt; on the implants tab its spot is the Dermal layer)
@@ -276,6 +276,17 @@ func press() -> void:
 func auto() -> void:
 	_sync_rows()
 	if held != null:
+		var box = item_at(cur)
+		if box != null and box.def.has("pocket"):
+			var what = held
+			if game.inv.put_in(box, what):
+				held = null
+				held_from = {}
+				game.say("You put the %s in the %s." % [what.def["name"], box.def["name"]])
+				game.sfx("pick")
+				say("Put the %s in the %s." % [what.def["name"], box.def["name"]])
+			else:
+				say(game.inv.last_err)
 		return
 	if tab == "implants":
 		var it = item_at(cur)
@@ -790,12 +801,59 @@ func _joint(c: CanvasItem, x: float, y: float, r: float, both: bool = true) -> v
 		c.draw_arc(p, r * 0.6, 0, TAU, 20, Color(1.0, 0.8, 0.25, 0.9), 1.4, true)
 		c.draw_circle(p, 1.4, Color(1.0, 0.8, 0.25, 0.95))
 
-## The generic figure, an android in the manner of the Vitruvian Man (one pair of arms and legs, arms down): grey shaded plates joined by dark
-## ball joints, a glowing core, with the circle of the canon and the eighths of the height behind.  Only blue, pink, yellow and grey.
+const MAN_LIGHT := Color(0.98, 0.985, 1.0)
+const MAN_MID := Color(0.80, 0.83, 0.89)
+const MAN_DARK := Color(0.33, 0.38, 0.52)
+const MAN_LINE := Color(0.16, 0.2, 0.33, 0.95)
+const MAN_SEAM := Color(0.2, 0.25, 0.4, 0.55)
+
+## one rounded solid of the mannequin: a soft body tone darkening to the shadow side, two stacked highlights toward the upper left (the light) and a fine dark contour
+func _solid(c: CanvasItem, pts: Array) -> void:
+	var ring: PackedVector2Array = _sample(pts, true)
+	var lo := Vector2(1.0e9, 1.0e9)
+	var hi := Vector2(-1.0e9, -1.0e9)
+	var cen := Vector2.ZERO
+	for p in ring:
+		lo = Vector2(minf(lo.x, p.x), minf(lo.y, p.y))
+		hi = Vector2(maxf(hi.x, p.x), maxf(hi.y, p.y))
+		cen += p
+	cen /= float(ring.size())
+	var sz: Vector2 = hi - lo
+	var cols := PackedColorArray()
+	for p in ring:
+		var tx: float = clampf((p.x - lo.x) / maxf(sz.x, 1.0), 0.0, 1.0)
+		var ty: float = clampf((p.y - lo.y) / maxf(sz.y, 1.0), 0.0, 1.0)
+		cols.append(MAN_MID.lerp(MAN_DARK, clampf(pow(tx, 1.6) * 0.85 + ty * 0.12, 0.0, 1.0)))
+	c.draw_polygon(ring, cols)
+	for layer in [[0.86, Vector2(-0.06, -0.03), 0.16], [0.72, Vector2(-0.09, -0.05), 0.16], [0.58, Vector2(-0.12, -0.07), 0.17], [0.44, Vector2(-0.15, -0.09), 0.18], [0.30, Vector2(-0.18, -0.11), 0.2], [0.16, Vector2(-0.2, -0.12), 0.22]]:
+		var sc: float = layer[0]
+		var off: Vector2 = Vector2(sz.x * layer[1].x, sz.y * layer[1].y)
+		var hl := PackedVector2Array()
+		for p in ring:
+			hl.append(cen + (p - cen) * sc + off)
+		c.draw_colored_polygon(hl, Color(MAN_LIGHT.r, MAN_LIGHT.g, MAN_LIGHT.b, layer[2]))
+	var loop := PackedVector2Array(ring)
+	loop.append(ring[0])
+	c.draw_polyline(loop, Color(0.3, 0.9, 1.0, 0.10), 4.0, true)
+	c.draw_polyline(loop, MAN_LINE, 1.3, true)
+
+func _solid_both(c: CanvasItem, pts: Array) -> void:
+	_solid(c, pts)
+	_solid(c, _mirror(pts))
+
+func _solid_sym(c: CanvasItem, half: Array) -> void:
+	var full: Array = half.duplicate()
+	var back: Array = _mirror(half)
+	back.reverse()
+	for i in range(1, back.size() - 1):
+		full.append(back[i])
+	_solid(c, full)
+
+## The generic figure: a high-end display mannequin, eight heads tall, in the canon of proportions.  Smooth matte limbs, a blank egg-shaped head (no face, no hair), articulation seams
+## at the neck, waist, shoulders, elbows, wrists, knees and ankles, soft studio shading from the upper left.  Nothing about it is a person: it is a body to dress.
 func _figure(c: CanvasItem) -> void:
 	var line := Color(0.3, 0.9, 1.0, 0.07)
 	var faint := Color(0.3, 0.9, 1.0, 0.16)
-	var fine := Color(0.75, 0.9, 1.0, 0.5)
 	var navel: Vector2 = _fp(0, 200)
 	c.draw_arc(navel, 150.0, 0, TAU, 128, Color(0.3, 0.9, 1.0, 0.22), 1.5, true)
 	c.draw_arc(navel, 145.0, 0, TAU, 128, Color(1.0, 0.25, 0.65, 0.12), 1.0, true)
@@ -805,59 +863,45 @@ func _figure(c: CanvasItem) -> void:
 		c.draw_line(_fp(-112, yy), _fp(-104, yy), faint, 1.0)
 		c.draw_line(_fp(112, yy), _fp(104, yy), faint, 1.0)
 	c.draw_line(_fp(0, 52), _fp(0, 404), Color(0.3, 0.9, 1.0, 0.12), 1.0)
-	# legs, then arms (behind the torso)
-	_both(c, [Vector2(11, 252), Vector2(31, 256), Vector2(31, 270), Vector2(28, 292), Vector2(24, 314), Vector2(10, 314), Vector2(8, 292), Vector2(7, 270)])           # thighs
-	_both(c, [Vector2(10, 326), Vector2(24, 326), Vector2(25, 342), Vector2(22, 362), Vector2(18, 378), Vector2(11, 378), Vector2(9, 362), Vector2(9, 342)])            # shins
-	_both(c, [Vector2(10, 314), Vector2(24, 314), Vector2(25, 322), Vector2(17, 331), Vector2(9, 322)])                                                                   # knee plates
-	_both(c, [Vector2(8, 384), Vector2(21, 384), Vector2(24, 391), Vector2(23, 395), Vector2(5, 395), Vector2(5, 390)])                                                  # feet
-	_pair(c, [Vector2(29, 262), Vector2(27, 290), Vector2(24, 310)], PINK, 1.1)
-	_pair(c, [Vector2(23, 334), Vector2(21, 358)], PINK, 1.1)
-	_both(c, [Vector2(50, 146), Vector2(63, 146), Vector2(66, 160), Vector2(65, 176), Vector2(63, 187), Vector2(53, 187), Vector2(50, 172), Vector2(48, 158)])        # upper arms
-	_both(c, [Vector2(52, 200), Vector2(65, 200), Vector2(68, 214), Vector2(69, 234), Vector2(67, 250), Vector2(58, 250), Vector2(56, 234), Vector2(53, 214)])        # forearms
-	_both(c, [Vector2(57, 258), Vector2(67, 258), Vector2(70, 268), Vector2(71, 280), Vector2(68, 288), Vector2(63, 291), Vector2(58, 288), Vector2(56, 278), Vector2(55, 268)])   # hands
-	_both(c, [Vector2(55, 262), Vector2(52, 268), Vector2(52, 277), Vector2(55, 279)])                                                                                     # thumbs
-	_pair(c, [Vector2(60, 277), Vector2(60, 288)], fine, 1.0)
-	_pair(c, [Vector2(64, 277), Vector2(64, 289)], fine, 1.0)
-	_pair(c, [Vector2(65, 150), Vector2(65, 182)], PINK, 1.1)
-	_pair(c, [Vector2(67, 206), Vector2(68, 246)], PINK, 1.1)
-	# the pelvis, waist, chest, neck and head
-	_sym(c, [Vector2(0, 203), Vector2(16, 203), Vector2(26, 209), Vector2(30, 221), Vector2(28, 236), Vector2(21, 246), Vector2(11, 252), Vector2(0, 254)])
-	_pair(c, [Vector2(1, 214), Vector2(16, 215), Vector2(29, 213)], PINK, 1.2)
-	_pair(c, [Vector2(8, 218), Vector2(12, 232), Vector2(8, 246)], fine, 1.0)
-	_sym(c, [Vector2(0, 187), Vector2(19, 187), Vector2(18, 196), Vector2(17, 205), Vector2(0, 205)], JOINT_DARK, Color(0.1, 0.13, 0.22, 0.97), Color(0.3, 0.9, 1.0, 0.5))
-	for ry in [191.0, 195.0, 199.0, 203.0]:
-		c.draw_line(_fp(-17, ry), _fp(17, ry), Color(0.75, 0.9, 1.0, 0.3), 1.0)
-	_sym(c, [Vector2(0, 118), Vector2(20, 118), Vector2(38, 121), Vector2(49, 127), Vector2(51, 136), Vector2(47, 152), Vector2(41, 170), Vector2(33, 184), Vector2(20, 189), Vector2(0, 190)])
-	_pair(c, [Vector2(10, 120), Vector2(28, 126), Vector2(47, 130)], PINK, 1.2)
-	_pair(c, [Vector2(3, 138), Vector2(20, 145), Vector2(40, 140)], fine, 1.1)
-	_pair(c, [Vector2(3, 168), Vector2(20, 173), Vector2(36, 166)], fine, 1.1)
-	c.draw_line(_fp(0, 122), _fp(0, 186), fine, 1.1)
+	# a soft floor shadow
+	c.draw_colored_polygon(_sample([Vector2(-34, 398), Vector2(0, 404), Vector2(34, 398), Vector2(0, 392)], true), Color(0.0, 0.0, 0.0, 0.35))
+	# legs: thigh, knee cap, shin and calf, ankle, a simple foot
+	_solid_both(c, [Vector2(3, 230), Vector2(18, 226), Vector2(31, 230), Vector2(35, 252), Vector2(32, 284), Vector2(26, 316), Vector2(15, 319), Vector2(10, 296), Vector2(5, 262)])
+	_solid_both(c, [Vector2(12, 322), Vector2(24, 322), Vector2(27, 334), Vector2(25, 352), Vector2(21, 370), Vector2(14, 372), Vector2(10, 352), Vector2(9, 335)])
+	_solid_both(c, [Vector2(13, 316), Vector2(22, 316), Vector2(24, 324), Vector2(18, 329), Vector2(12, 324)])
+	_solid_both(c, [Vector2(10, 370), Vector2(21, 370), Vector2(24, 384), Vector2(27, 392), Vector2(25, 396), Vector2(8, 396), Vector2(7, 386)])
+	_pair(c, [Vector2(11, 321), Vector2(18, 324), Vector2(25, 321)], MAN_SEAM, 1.0)
+	_pair(c, [Vector2(11, 371), Vector2(17, 373), Vector2(23, 371)], MAN_SEAM, 1.0)
+	# arms: upper arm, elbow, forearm, wrist, hand
+	_solid_both(c, [Vector2(48, 140), Vector2(58, 138), Vector2(66, 146), Vector2(66, 162), Vector2(63, 180), Vector2(59, 194), Vector2(51, 194), Vector2(48, 176), Vector2(46, 156)])
+	_solid_both(c, [Vector2(51, 190), Vector2(61, 190), Vector2(66, 204), Vector2(66, 226), Vector2(62, 246), Vector2(56, 247), Vector2(52, 226), Vector2(50, 206)])
+	_solid_both(c, [Vector2(55, 246), Vector2(63, 246), Vector2(68, 258), Vector2(69, 272), Vector2(66, 286), Vector2(62, 291), Vector2(58, 287), Vector2(55, 274), Vector2(54, 260)])
+	_solid_both(c, [Vector2(54, 256), Vector2(50, 263), Vector2(50, 272), Vector2(53, 275)])
+	_pair(c, [Vector2(51, 193), Vector2(56, 196), Vector2(61, 192)], MAN_SEAM, 1.0)
+	_pair(c, [Vector2(55, 248), Vector2(59, 250), Vector2(63, 247)], MAN_SEAM, 1.0)
+	_pair(c, [Vector2(59, 270), Vector2(59, 286)], MAN_SEAM, 0.9)
+	_pair(c, [Vector2(63, 270), Vector2(63, 285)], MAN_SEAM, 0.9)
+	# neck, then the torso from the shoulders to the hips in one form, the pelvis below it
+	_solid_sym(c, [Vector2(0, 100), Vector2(7, 101), Vector2(8, 112), Vector2(13, 121), Vector2(0, 125)])
+	_solid_sym(c, [Vector2(0, 188), Vector2(27, 189), Vector2(32, 200), Vector2(34, 213), Vector2(33, 225), Vector2(27, 234), Vector2(15, 239), Vector2(0, 236)])      # the hips, then the torso over their top edge
+	_solid_sym(c, [Vector2(0, 118), Vector2(14, 119), Vector2(30, 121), Vector2(43, 126), Vector2(48, 136), Vector2(45, 150), Vector2(38, 164), Vector2(32, 178), Vector2(29, 188), Vector2(31, 196), Vector2(0, 198)])
+	_both_shoulder(c)
+	_pair(c, [Vector2(3, 122), Vector2(16, 126), Vector2(30, 124)], MAN_SEAM, 1.0)              # the collar line
+	_pair(c, [Vector2(4, 152), Vector2(18, 158), Vector2(34, 152)], Color(0.2, 0.25, 0.4, 0.28), 1.5)   # the lower edge of the chest
+	_pair(c, [Vector2(1, 197), Vector2(16, 199), Vector2(31, 196)], MAN_SEAM, 1.0)               # the waist joint
+	c.draw_line(_fp(0, 126), _fp(0, 234), Color(0.2, 0.25, 0.4, 0.22), 1.0)                      # the centre line
 	if tab == "implants":                           # the spine, vertebra by vertebra, down the middle of the torso
 		var on_spine: bool = cur == "s:back"
-		for vy in range(112, 256, 9):
+		for vy in range(112, 232, 9):
 			var vr := Rect2(_fp(-3.5, float(vy)), Vector2(7.0, 5.0))
 			c.draw_rect(vr, Color(1.0, 0.8, 0.25, 0.9) if on_spine else Color(0.75, 0.9, 1.0, 0.55))
-	var core: Vector2 = _fp(0, 150)
-	c.draw_circle(core, 11.0, Color(1.0, 0.25, 0.65, 0.16))
-	c.draw_circle(core, 7.0, Color(1.0, 0.25, 0.65, 0.3))
-	c.draw_circle(core, 4.4, Color(1.0, 0.5, 0.8, 0.95))
-	c.draw_arc(core, 7.0, 0, TAU, 20, Color(0.3, 0.9, 1.0, 0.85), 1.2, true)
-	_sym(c, [Vector2(0, 104), Vector2(6, 105), Vector2(6.5, 112), Vector2(8, 120), Vector2(0, 120)], JOINT_DARK, Color(0.1, 0.13, 0.22, 0.97), Color(0.3, 0.9, 1.0, 0.5))
-	_sym(c, [Vector2(0, 62), Vector2(12, 64), Vector2(17, 74), Vector2(18, 86), Vector2(14, 98), Vector2(7, 105), Vector2(0, 107)])
-	_sym(c, [Vector2(0, 77), Vector2(12, 77), Vector2(14, 81), Vector2(12, 86), Vector2(0, 86)], Color(0.1, 0.45, 0.6, 0.85), Color(0.3, 0.9, 1.0, 0.8), Color(0.3, 0.9, 1.0, 0.95))     # the visor
-	_pair(c, [Vector2(2, 94), Vector2(7, 95)], fine, 1.0)
-	_pair(c, [Vector2(10, 66), Vector2(13, 72)], fine, 1.0)
-	for sg in [1.0, -1.0]:
-		c.draw_circle(_fp(18.5 * sg, 88), 3.4, Color(0.55, 0.62, 0.74, 0.9))
-		c.draw_arc(_fp(18.5 * sg, 88), 3.4, 0, TAU, 14, EDGE, 1.1, true)
-	# shoulder caps and the joints, over everything
-	_both(c, [Vector2(42, 122), Vector2(55, 121), Vector2(63, 127), Vector2(64, 135), Vector2(55, 139), Vector2(46, 135)])
-	_joint(c, 56, 141, 7.5)
-	_joint(c, 58.5, 194, 6.0)
-	_joint(c, 62, 254, 4.2)
-	_joint(c, 21, 253, 8.0)
-	_joint(c, 17, 321, 6.5)
-	_joint(c, 14.5, 381, 4.2)
+	# the head: a blank egg, a touch of jaw, nothing on it
+	_solid_sym(c, [Vector2(0, 61), Vector2(10, 62), Vector2(16, 70), Vector2(17, 82), Vector2(15, 93), Vector2(10, 101), Vector2(5, 105), Vector2(0, 106)])
+	_pair(c, [Vector2(6, 103), Vector2(0, 106)], MAN_SEAM, 1.0)
+
+## the rounded caps of the shoulders over the join of arm and torso
+func _both_shoulder(c: CanvasItem) -> void:
+	_solid_both(c, [Vector2(40, 122), Vector2(52, 122), Vector2(61, 130), Vector2(64, 142), Vector2(55, 148), Vector2(46, 142), Vector2(42, 132)])
 
 ## dotted lines from the slot tiles to the body part each stands for
 func _leaders(c: CanvasItem, on_imp: bool) -> void:
@@ -971,6 +1015,11 @@ func _item_card(c: CanvasItem, it, x: float, y0: float, maxw: float) -> void:
 		y = _kv(c, y, "Armor", "%d   (%s)" % [int(d["armor"]["phys"]), "BROKEN" if left <= 0 else "%d%% left" % (100 * left / maxi(1, int(d["armor"]["dur"])))], x, maxw)
 	if d.has("pocket"):
 		y = _kv(c, y, "Pockets", "+%d tiles" % int(d["pocket"]["tiles"]), x, maxw)
+		var inside: Array = []
+		for sx in it.stash:
+			if sx != null:
+				inside.append(String(sx.def["name"]) + (" x%d" % sx.count if sx.count > 1 else ""))
+		y = _kv(c, y, "Holds", "%d / %d%s" % [inside.size(), int(d["pocket"]["tiles"]), ("  " + ", ".join(inside)) if not inside.is_empty() else ""], x, maxw)
 	if d.has("bottle"):
 		y = _kv(c, y, "Water", "%d / %d mL" % [it.fill, int(d["bottle"]["ml"])], x, maxw)
 	if d.has("food"):

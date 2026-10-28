@@ -51,7 +51,13 @@ func run() -> Array:
 	var carry = g._new_item("trl_ration")
 	inv.put_grid("back", 0, carry)
 	check.call("an item can sit in the backpack's tiles", inv.find(carry)["g"] == "back")
-	check.call("taking the backpack off moves its contents into free tiles", inv.auto_unequip("back") and inv.find(carry)["g"] == "base" and inv.capacity() == 19)
+	var pack_item = inv.equip["back"]
+	check.call("taking the backpack off leaves its contents inside it", inv.auto_unequip("back") and inv.find(carry).is_empty() and pack_item.stash[0] == carry and inv.capacity() == 19)
+	check.call("wearing it again brings the contents back", inv.auto_equip(pack_item) and inv.find(carry)["g"] == "back")
+	inv.auto_unequip("back")
+	var apple = g.new_bottle(300)
+	check.call("an item can be put into a container that is not worn", inv.put_in(pack_item, apple) and pack_item.stash_count() == 2)
+	check.call("a container will not go in a container", not inv.put_in(pack_item, g._new_item("trl_fanny")))
 	# two hands
 	inv = INV.new()
 	g.inv = inv

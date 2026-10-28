@@ -934,6 +934,90 @@ func hostile(i: int) -> bool:
 ## how a person stands towards the player, for the facing arrow: 0 friendly (green), 1 neutral (blue), 2 hostile (red).
 ## Nobody is friendly yet: recruited allies will put their index in `allies`.
 var allies: Dictionary = {}
+## Law and order (first pass).  A criminal (Bratva, gang, Nasim) who shoots or strikes someone in view is an offender for a while; any NAP officer who sees an offender within 16 tiles goes after him
+## (shoots, strikes or closes in) instead of warning the player, and does not nag the player at all while an offender is hunting nearby (that is self-defence).
+var offenders: Dictionary = {}                 # person -> the turn of their last offence
+var law_busy: Dictionary = {}                  # officer -> the turn they last acted against an offender
+var law_warned: Dictionary = {}                # officer -> the turn they last warned the player
+var law_called: Dictionary = {}                # officer -> the turn they last called out "Police!"
+
+func _offence(i: int) -> void:
+	if fac[i] == BRATVA or fac[i] == GANG or fac[i] == NASIM:
+		offenders[i] = turn
+
+## the player is being hunted by an offender close by: the police do not warn someone defending themselves
+func _self_defence() -> bool:
+	for o in offenders:
+		if sim.alive[o] == 1 and turn - int(offenders[o]) <= 25 and cheb(sim.pos[o], pc) <= 30:
+			return true
+	return false
+
+func _law_tick() -> void:
+	if offenders.is_empty():
+		return
+	for o in offenders.keys():
+		if sim.alive[o] == 0 or turn - int(offenders[o]) > 40:
+			offenders.erase(o)
+	if offenders.is_empty():
+		return
+	for k in sim.near_list.size():
+		var j: int = sim.near_list[k]
+		if sim.alive[j] == 0 or fac[j] != NAP or stun[j] > 0 or astate[j] == FLEEING or astate[j] == SURRENDERED or astate[j] == HUNTING:
+			continue
+		var jc: int = sim.pos[j]
+		var best := -1
+		var bd := 99
+		for o in offenders:
+			var oc: int = sim.pos[o]
+			var dd: int = cheb(jc, oc)
+			if dd <= 16 and dd < bd and oc / s2 == jc / s2 and sim._sees(jc, oc, 16):
+				bd = dd
+				best = o
+		if best < 0:
+			continue
+		law_busy[j] = turn
+		sim.ctl[j] = 1
+		_face_toward(j, sim.pos[best])
+		if turn - int(law_called.get(j, -99)) > 30:
+			law_called[j] = turn
+			say_if_seen(jc, "%s: \"Police!  Drop it!\"" % name_of(j))
+		_law_act(j, best, bd)
+
+func _law_act(j: int, o: int, d: int) -> void:
+	var jc: int = sim.pos[j]
+	var g: int = gunc[j]
+	if g > 0 and d >= 2 and d <= int(GP.NPC_GUN[g]["range"][1]) + 3 and npc_arms_ok(j) > 0:
+		var ng: Dictionary = GP.NPC_GUN[g]
+		npc_stamina_spend(j, GP.STAM_FIRE)
+		_noise(jc, int(ng["noise"]))
+		var chance: int = clampi(62 - d * 3 + npc_lvl(j, "ranged") * 4, 15, 90)
+		if rng.randi() % 100 < chance:
+			var nb: Dictionary = GP.bullet(String(ng["cal"]), "fmj")
+			var dmg: int = rng.randi_range(int(nb["dmg"][0]), int(nb["dmg"][1])) + npc_lvl(j, "ranged") / 2
+			dmg = maxi(1, dmg - npc_armor_for(o))
+			say_if_seen(sim.pos[o], "%s shoots %s (%d)." % [name_of(j), name_of(o), dmg])
+			hurt(o, dmg, false)
+		else:
+			say_if_seen(sim.pos[o], "%s shoots at %s and misses." % [name_of(j), name_of(o)])
+		return
+	if d <= 1:
+		var nm: Dictionary = _npc_swing_stats(j)
+		npc_stamina_spend(j, int(nm["kg"]))
+		if rng.randi() % 100 < clampi(62 + npc_lvl(j, String(nm["skill"])) * 4, 20, 92):
+			var dmg2: int = rng.randi_range(int(nm["dmg"][0]), int(nm["dmg"][1])) + npc_lvl(j, String(nm["skill"])) / 2
+			dmg2 = maxi(1, dmg2 - npc_armor_for(o))
+			say_if_seen(sim.pos[o], "%s strikes %s (%d)." % [name_of(j), name_of(o), dmg2])
+			hurt(o, dmg2, false)
+		else:
+			say_if_seen(sim.pos[o], "%s swings at %s and misses." % [name_of(j), name_of(o)])
+		return
+	if not _step_to(j, sim.pos[o]):
+		_step_away(j)
+
+## armor on a person for the law's shots: the general figure of their faction (see npc_armor, the torso value)
+func npc_armor_for(i: int) -> int:
+	return 1 if fac[i] == BRATVA else (0 if fac[i] == GANG else 2)
+
 ## unaffiliated people (citizens, shopkeepers, ...) you have shot at, hit or robbed in view: they now count as marked, with a red arrow
 var provoked: Dictionary = {}
 
@@ -1488,6 +1572,8 @@ func interactables() -> Array:
 						out.append({"kind": "ev", "cell": nw, "label": "Vehicle charging bank"})
 		return out
 	var base: int = (pc / s2) * s2
+	if city.tiles[pc] == CG.ELEVATOR:
+		out.append({"kind": "elevator", "cell": pc, "label": "Elevator panel"})         # standing in a lift: X opens its buttons
 	for dy in range(-1, 2):
 		for dx in range(-1, 2):
 			if dx == 0 and dy == 0:
@@ -1590,6 +1676,9 @@ func act_interact_with(it: Dictionary) -> bool:
 			terminal_hit = c
 			say("The terminal's screen wakes.")
 			sfx("blip")
+			return true
+		"elevator":
+			elev_hit = c
 			return true
 		"clock":
 			clock_hit = c
@@ -2863,6 +2952,7 @@ func _npc_swing_stats(i: int) -> Dictionary:
 
 ## an NPC strikes the player.  Same rules as yours: 2d10 + their skill - your Dodge, a locational hit, weapon roll + skill - your armor - your Grit.
 func _npc_melee_attack(i: int) -> void:
+	_offence(i)
 	if npc_arms_ok(i) == 0:
 		say_if_seen(sim.pos[i], "%s flails with no good arm." % name_of(i))
 		return
@@ -3949,10 +4039,13 @@ func _stance_mult() -> float:
 
 func _ai() -> void:
 	var any_hunter := false
+	_law_tick()
 	var list: Array = Array(sim.near_list)
 	for i in list:
 		if sim.alive[i] == 0:
 			continue
+		if law_busy.get(i, -9) == turn:
+			continue                              # an officer dealing with an offender this turn
 		var st := astate[i]
 		var d := cheb(sim.pos[i], pc)
 		if cool[i] > 0:
@@ -4037,9 +4130,15 @@ func _notice(i: int, d: int) -> void:
 			postc[i] = c if st == UNAWARE else postc[i]
 		if meter[i] >= 100 and fac[i] == NAP and not hostile(i):
 			if st != HUNTING:
-				meter[i] = 60
-				astate[i] = SUSPICIOUS
-				say_if_seen(c, "%s: \"Weapons down, citizen!\"" % name_of(i))
+				if _self_defence() or turn - int(law_warned.get(i, -99)) < 60:
+					astate[i] = RETURNING              # no warning to someone who is being attacked, and one warning a minute is enough
+					timer[i] = 40
+					meter[i] = 0
+				else:
+					law_warned[i] = turn
+					meter[i] = 60
+					astate[i] = SUSPICIOUS
+					say_if_seen(c, "%s: \"Weapons down, citizen!\"" % name_of(i))
 		elif meter[i] >= 100:
 			if st != HUNTING:
 				astate[i] = HUNTING
@@ -4110,6 +4209,7 @@ func _hunt_act(i: int, d: int, sees: bool) -> void:
 			npc_stamina_spend(i, GP.STAM_AIM)
 			say_if_seen(c, "%s raises a %s and takes aim at you." % [name_of(i), String(ng["name"])])
 			return
+		_offence(i)
 		apn[i] = mini(apn[i] + AP_BASE - GP.AP_FIRE, AP_BASE + npc_ap_rate(i) - 1)     # a shot costs only 50 of the 100 points
 		npc_stamina_spend(i, GP.STAM_FIRE)
 		var nat: int = _roll_2d10()

@@ -89,7 +89,7 @@ func run() -> Array:
 	for dy in range(-6, 7):
 		for dx in range(-6, 7):
 			var c: int = g.sim.pos[hot] + dy * g.size + dx
-			if c >= 0 and c < g.size * g.size and g.city.tiles[c] <= 1 and g.sim.at[c] == -1 and maxi(absi(dx), absi(dy)) >= 3 and g.sim._sees(c, g.sim.pos[hot], 12):
+			if c >= 0 and c < g.size * g.size and g.city.tiles[c] <= 1 and g.sim.at[c] == -1 and maxi(absi(dx), absi(dy)) >= 3 and g.sim._sees(c, g.sim.pos[hot], 12) and g.sim._sees(g.sim.pos[hot], c, 12):
 				spot = c
 				break
 		if spot >= 0:

@@ -65,7 +65,9 @@ const EXTRA_BASE := [
 	["door_closed", "t_door_closed", 1, 0], ["window_broken", "t_window_broken", 1, 0],
 	["station_clock", "f_trl_station_clock", 0, 0],
 ]
-static var EXTRA: Array = EXTRA_BASE + FG.NEW
+## street props that stand in the way and give cover (the rest of the street furniture is drawn over the ground by view.gd and does not block)
+const PROPS := [["street_tree", "f_trl_tree_street", 0, 1], ["street_bench", "f_trl_bench", 0, 1], ["bench_broken", "f_trl_bench_broken", 0, 1]]
+static var EXTRA: Array = EXTRA_BASE + FG.NEW + PROPS
 const EXTRA0 := 33
 static var TID: Dictionary = _tids()
 static var TILE_SPRITE: Dictionary = _tile_sprites()
@@ -222,6 +224,158 @@ func _make_wealth(seed_v: int) -> void:
 	var hi: float = sample[int(sample.size() * 0.70)]
 	for i in size * size:
 		wealth[i] = 0 if vals[i] < lo else (2 if vals[i] >= hi else 1)
+	_wvals = vals
+	_wlo = lo
+	_whi = hi
+
+var _wvals: PackedFloat32Array = PackedFloat32Array()
+var _wlo: float = 0.0
+var _whi: float = 0.0
+
+## Trees and benches on the pavement are tiles: they cannot be walked through and they give cover.  A hash of the cell picks them (the same city every time), by district:
+## street trees along the kerb (rich and mid-town), benches along the building fronts (broken ones in the slums) and in the mid-town parks.  Never beside a door, stairs, a ladder
+## or another prop, and never where the pavement is a single tile between road and wall, so nothing is shut in and no way is blocked.
+func _stamp_street_props() -> void:
+	var tid_tree: int = TID["street_tree"]
+	var tid_bench: int = TID["street_bench"]
+	var tid_broken: int = TID["bench_broken"]
+	var bad := {DOOR: true, 22: true, 8: true, 9: true, 19: true, 21: true, TID["door_closed"]: true}
+	for y in range(2, size - 2):
+		for x in range(2, size - 2):
+			var i := y * size + x
+			var t: int = tiles[i]
+			if t != GROUND and t != PARK:
+				continue
+			var road := false
+			var wall := false
+			for d in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]:
+				var nt: int = tiles[i + d.y * size + d.x]
+				road = road or nt == ROAD
+				wall = wall or nt == WALL or nt == GLASS
+			var h: int = ((i * 2654435761) >> 7) & 0xffffff
+			var w: int = wealth_at(i)
+			var pick := -1
+			if t == GROUND and road and not wall:
+				if w == 2 and h % 9 == 0:
+					pick = tid_tree
+				elif w == 1 and h % 7 != 0 and h % 17 == 0:
+					pick = tid_tree
+			elif t == GROUND and wall and not road:
+				if w == 2 and h % 11 != 0 and h % 19 == 0:
+					pick = tid_bench
+				elif w == 1 and h % 23 == 0:
+					pick = tid_bench
+				elif w == 0 and h % 29 == 0:
+					pick = tid_broken
+			elif t == PARK and w == 1 and h % 37 == 0:
+				pick = tid_bench
+			if pick < 0:
+				continue
+			var clear := true
+			var open_n := 0
+			for dy in range(-1, 2):
+				for dx in range(-1, 2):
+					var nt2: int = tiles[i + dy * size + dx]
+					if bad.has(nt2) or nt2 >= EXTRA0:
+						clear = false
+					if (dx != 0 or dy != 0) and WALK[nt2] == 1:
+						open_n += 1
+			# never in a narrow way: walls (or water, rock) on both sides along either axis would shut it
+			if WALK[tiles[i - 1]] == 0 and WALK[tiles[i + 1]] == 0:
+				clear = false
+			if WALK[tiles[i - size]] == 0 and WALK[tiles[i + size]] == 0:
+				clear = false
+			if not clear or open_n < 6:
+				continue
+			under[i] = t
+			tiles[i] = pick
+
+## Districts change only at natural breaks.  Once the city is built, every block (the ground between streets, water and the edge of town: its buildings, alleys, sidewalks and parks)
+## gets one wealth class, from the average of the smooth noise over the block, and every street cell takes the class of the nearest block.  So a building never has two districts
+## in it, and the class changes only across a street, at an intersection, or at the river.  (Works at half resolution: the streets are four tiles wide or more.)
+func _block_wealth() -> void:
+	if _wvals.size() != size * size:
+		return
+	var n2: int = size / 2
+	var mask: PackedByteArray = plan.get("mask", PackedByteArray())
+	var label := PackedInt32Array()
+	label.resize(n2 * n2)
+	label.fill(-1)
+	var brk := PackedByteArray()                       # 1 = street, water or outside the city
+	brk.resize(n2 * n2)
+	for y in n2:
+		for x in n2:
+			var br := 0
+			for k in 4:
+				var i: int = (y * 2 + (k >> 1)) * size + x * 2 + (k & 1)
+				var t: int = tiles[i]
+				if t == ROAD or t == WATER or t == SAND or (not mask.is_empty() and mask[i] == 0):
+					br = 1
+					break
+			brk[y * n2 + x] = br
+	var cls := PackedByteArray()                        # per label
+	var nl := 0
+	var stack := PackedInt32Array()
+	for start in n2 * n2:
+		if brk[start] == 1 or label[start] >= 0:
+			continue
+		var sum := 0.0
+		var cnt := 0
+		stack.clear()
+		stack.append(start)
+		label[start] = nl
+		while not stack.is_empty():
+			var c: int = stack[stack.size() - 1]
+			stack.resize(stack.size() - 1)
+			var cx: int = c % n2
+			var cy: int = c / n2
+			sum += _wvals[(cy * 2) * size + cx * 2]
+			cnt += 1
+			if cx > 0 and brk[c - 1] == 0 and label[c - 1] < 0:
+				label[c - 1] = nl
+				stack.append(c - 1)
+			if cx < n2 - 1 and brk[c + 1] == 0 and label[c + 1] < 0:
+				label[c + 1] = nl
+				stack.append(c + 1)
+			if cy > 0 and brk[c - n2] == 0 and label[c - n2] < 0:
+				label[c - n2] = nl
+				stack.append(c - n2)
+			if cy < n2 - 1 and brk[c + n2] == 0 and label[c + n2] < 0:
+				label[c + n2] = nl
+				stack.append(c + n2)
+		var mean: float = sum / float(maxi(1, cnt))
+		cls.append(0 if mean < _wlo else (2 if mean >= _whi else 1))
+		nl += 1
+	# streets and water: the class of the nearest block (a sweep outwards from the blocks)
+	var w2 := PackedByteArray()
+	w2.resize(n2 * n2)
+	var done := PackedByteArray()
+	done.resize(n2 * n2)
+	var front := PackedInt32Array()
+	for c in n2 * n2:
+		if label[c] >= 0:
+			w2[c] = cls[label[c]]
+			done[c] = 1
+			front.append(c)
+	while not front.is_empty():
+		var nxt := PackedInt32Array()
+		for c in front:
+			var cx: int = c % n2
+			var cy: int = c / n2
+			for d in [[-1, 0], [1, 0], [0, -1], [0, 1]]:
+				var ax: int = cx + d[0]
+				var ay: int = cy + d[1]
+				if ax < 0 or ay < 0 or ax >= n2 or ay >= n2:
+					continue
+				var a: int = ay * n2 + ax
+				if done[a] == 0:
+					done[a] = 1
+					w2[a] = w2[c]
+					nxt.append(a)
+		front = nxt
+	for y in size:
+		for x in size:
+			wealth[y * size + x] = w2[mini(y >> 1, n2 - 1) * n2 + mini(x >> 1, n2 - 1)]
 
 
 func walkable(t: int) -> bool:
@@ -317,6 +471,8 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 		_organic_roads(seed)
 		_organic_city(seed)
 		_paint_boulevards()
+		_block_wealth()
+		_stamp_street_props()
 		return
 	# blocks between the lines.  Where the towers stand: the middle of the city has mega-towers that fill 2-3 blocks each way (4 to 9 blocks in
 	# all); the ring around it has buildings 1-2 blocks wide (1 to 4 blocks); beyond that the suburbs.
@@ -426,6 +582,8 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 	if planned:
 		_infill()
 		_paint_boulevards()
+	_block_wealth()
+	_stamp_street_props()
 
 ## Parking lots and charging stations.  A lot is paved like a road and marked with bays (a bay is 4 x 6: a car is 3 wide by 5 long and has room to spare): a row of bays, an aisle six wide
 ## and a row facing it, 18 deep, as wide as ten bays at most.  It takes the middle of a whole block (about one block in five that is big enough and not at the very centre).

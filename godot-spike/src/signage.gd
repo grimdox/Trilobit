@@ -22,7 +22,7 @@ const TYPE_SYM := {
 	"restaurant": ["fork", COL_FOOD, "Restaurant"], "noodle_stall": ["bowl", COL_FOOD, "Noodle stall"], "cafe": ["cup", Color(0.85, 0.65, 0.4), "Cafe"],
 	"bar": ["glass", Color(1.0, 0.45, 0.45), "Bar"], "shady_bar": ["glass", Color(0.8, 0.3, 0.5), "Dive bar"], "nightclub": ["note", Color(0.85, 0.4, 1.0), "Nightclub, karaoke"],
 	"karaoke": ["note", Color(0.85, 0.4, 1.0), "Nightclub, karaoke"], "bakery": ["bread", Color(1.0, 0.8, 0.45), "Bakery"],
-	"convenience": ["cart", COL_SHOP, "Convenience store, grocery"], "grocery": ["cart", COL_SHOP, "Convenience store, grocery"], "liquor_store": ["bottle", Color(0.75, 0.55, 0.3), "Liquor store"],
+	"convenience": ["cart", COL_SHOP, "Convenience, grocery"], "grocery": ["cart", COL_SHOP, "Convenience, grocery"], "liquor_store": ["bottle", Color(0.75, 0.55, 0.3), "Liquor store"],
 	"clothing": ["hanger", Color(1.0, 0.6, 0.85), "Clothing"], "electronics": ["bolt", Color(0.4, 0.9, 1.0), "Electronics"], "office_supply": ["book", Color(0.7, 0.85, 1.0), "Office supply, bookshop"],
 	"bookshop": ["book", Color(0.7, 0.85, 1.0), "Office supply, bookshop"], "martial_shop": ["fist", Color(1.0, 0.5, 0.35), "Martial arts, dojo"], "dojo": ["fist", Color(1.0, 0.5, 0.35), "Martial arts, dojo"],
 	"pawn_shop": ["coin", Color(0.9, 0.8, 0.35), "Pawn shop, bank"], "bank": ["coin", Color(0.9, 0.8, 0.35), "Pawn shop, bank"], "gun_dealer": ["gun", Color(1.0, 0.3, 0.3), "Gun dealer"],
@@ -33,7 +33,7 @@ const TYPE_SYM := {
 	"post_depot": ["crate", Color(0.8, 0.7, 0.5), "Post depot, warehouse"], "warehouse": ["crate", Color(0.8, 0.7, 0.5), "Post depot, warehouse"],
 	"hotel": ["bed", Color(0.6, 0.7, 1.0), "Hotel"], "gym": ["dumbbell", Color(1.0, 0.65, 0.3), "Gym"], "salon": ["scissors", Color(1.0, 0.6, 0.9), "Salon"], "laundromat": ["drop", Color(0.5, 0.85, 1.0), "Laundromat"],
 	"arcade": ["pad", Color(0.6, 1.0, 0.5), "Arcade"], "church": ["church", Color(0.9, 0.85, 1.0), "Church"], "shrine": ["torii", Color(1.0, 0.4, 0.3), "Shrine"],
-	"workshop": ["gear", COL_INDUSTRY, "Workshop, machine shop, scrap"], "machine_shop": ["gear", COL_INDUSTRY, "Workshop, machine shop, scrap"], "scrap_yard": ["gear", COL_INDUSTRY, "Workshop, machine shop, scrap"],
+	"workshop": ["gear", COL_INDUSTRY, "Workshop, scrap yard"], "machine_shop": ["gear", COL_INDUSTRY, "Workshop, scrap yard"], "scrap_yard": ["gear", COL_INDUSTRY, "Workshop, scrap yard"],
 }
 const OTHER_SYM := {"house": ["house", COL_HOME, "House"], "tower": ["tower", COL_TOWER, "Tower"], "terminal": ["terminal", COL_TERMINAL, "Mission terminal"]}
 
@@ -95,12 +95,20 @@ static func sym_of(type: String) -> Array:
 static func legend() -> Array:
 	var seen := {}
 	var out: Array = []
-	for t in ["restaurant", "noodle_stall", "cafe", "bakery", "bar", "shady_bar", "nightclub", "convenience", "liquor_store", "clothing", "electronics", "office_supply", "martial_shop", "pawn_shop", "gun_dealer", "hardware",
-			"pharmacy", "car_dealer", "clinic", "implant_shop", "implant_body", "cyberdoc", "police", "labor_center", "post_depot", "hotel", "gym", "salon", "laundromat", "arcade", "church", "shrine", "workshop"]:
+	for t in ["restaurant", "noodle_stall", "cafe", "bakery", "bar", "shady_bar", "nightclub",                      # eating and drinking
+			"convenience", "liquor_store", "clothing", "electronics", "office_supply", "martial_shop", "pawn_shop", "gun_dealer", "hardware", "car_dealer",     # shops
+			"pharmacy", "clinic", "implant_shop", "implant_body", "cyberdoc",                                         # health and chrome
+			"police", "labor_center", "post_depot", "church", "shrine",                                               # civic
+			"hotel", "gym", "salon", "laundromat", "arcade", "workshop"]:                                             # services and trades
 		var e: Array = TYPE_SYM[t]
 		if not seen.has(e[2]):
 			seen[e[2]] = true
 			out.append(e)
+	for t2 in TYPE_SYM:                                                                                             # (anything a new type adds that is not listed above still gets a row)
+		var e2: Array = TYPE_SYM[t2]
+		if not seen.has(e2[2]):
+			seen[e2[2]] = true
+			out.append(e2)
 	out.append(OTHER_SYM["house"])
 	out.append(OTHER_SYM["tower"])
 	out.append(OTHER_SYM["terminal"])
@@ -160,8 +168,18 @@ static func _sign(kind: String, type: String, name: String, rect: Array, door: V
 	var sy: Array = sym_of(type if kind == "biz" else kind)
 	var h: int = absi(hash(name))
 	var design: int = h % 12
-	return {"kind": kind, "type": type, "name": name, "cell": oc.y * size + oc.x, "side": int(o["side"]), "shape": SHAPES[design % 4], "pal": (design / 4) % 3, "glyph": sy[0], "col": sy[1], "cat": cat_of(type),
-		"flip": (h / 12) % 2 == 1, "door": door.y * size + door.x, "mid": ((rect[1] + rect[3]) / 2) * size + (rect[0] + rect[2]) / 2}
+	var side: int = int(o["side"])
+	var run_a: int                                                     # wall tiles beside the door: towards lower x / y, and towards higher
+	var run_b: int
+	if side < 2:
+		run_a = door.x - rect[0] - 1
+		run_b = rect[2] - 1 - door.x
+	else:
+		run_a = door.y - rect[1] - 1
+		run_b = rect[3] - 1 - door.y
+	var flip: bool = run_a > run_b or (run_a == run_b and (h / 12) % 2 == 1)
+	return {"kind": kind, "type": type, "name": name, "cell": oc.y * size + oc.x, "side": side, "shape": SHAPES[design % 4], "pal": (design / 4) % 3, "glyph": sy[0], "col": sy[1], "cat": cat_of(type),
+		"run": maxi(run_a, run_b), "flip": flip, "door": door.y * size + door.x, "mid": ((rect[1] + rect[3]) / 2) * size + (rect[0] + rect[2]) / 2}
 
 ## give every building a unique name and a sign.  Businesses (and the venues they were built from) keep their curated name when it is free; houses are named for a family and a number,
 ## towers for a company and a kind.  Deterministic in the city's seed, so a loaded game shows the same names.
@@ -209,82 +227,79 @@ static func make(c, seed_v: int) -> Array:
 	return out
 
 # ---------------------------------------------------------------- the sign, drawn
-## how wide a sign is in tiles (for a name at the given font size)
-static func sign_width(font: Font, name: String, fsize: int, tile: float, kind: String) -> float:
+## how wide a sign wants to be, in pixels (the name plus the pictogram), at most `run` tiles of wall
+static func sign_width(font: Font, name: String, fsize: int, tile: float, kind: String, run: int) -> float:
 	var w: float = font.get_string_size(name, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x
-	var extra: float = fsize * 1.7 + 10.0
-	return minf(w + extra, tile * (7.0 if kind == "biz" else (5.0 if kind == "tower" else 4.2)))
+	var extra: float = fsize * 1.9 + 12.0
+	var cap: float = tile * (7.0 if kind == "biz" else (5.0 if kind == "tower" else 4.2))
+	return minf(minf(w + extra, cap), maxf(tile * 0.9, float(run) * tile - 8.0))
 
-## draw one sign.  `cell_pos` is the top-left corner of the street cell outside the door; the board hugs the wall beside the door (flip decides which side), turned to the wall.
+## text colour for a given backing: dark on light, light on dark, so a sign is readable whatever its palette
+static func ink_for(back: Color) -> Color:
+	return Color(0.07, 0.06, 0.05) if back.get_luminance() > 0.42 else Color(1.0, 0.97, 0.88)
+
+## draw one sign ON THE WALL beside the door.  `cell_pos` is the top-left corner of the street cell outside the door; the board is centred on the wall tiles next to the door (on the side
+## with the longer run of wall, `flip`), as long as the run allows.  On the north and south walls the text is upright; on the west and east walls it runs up the wall.
 static func draw_sign(ci: CanvasItem, font: Font, s: Dictionary, cell_pos: Vector2, tile: float, vis: bool) -> void:
 	var kind: String = String(s["kind"])
-	var fsize: int = int(clampf(tile * 0.28, 12.0, 22.0)) if kind == "biz" else int(clampf(tile * 0.22, 10.0, 16.0))
-	var bw: float = sign_width(font, String(s["name"]), fsize, tile, kind)
-	var bh: float = tile * (0.68 if kind == "biz" else 0.5)
-	var pals: Array = PALS[String(s["cat"])]
-	var pal: Array = pals[int(s["pal"])]
+	var run: int = int(s.get("run", 3))
+	if run < 1:
+		return
+	var fsize: int = int(clampf(tile * 0.27, 12.0, 22.0)) if kind == "biz" else int(clampf(tile * 0.22, 10.0, 16.0))
+	var txt: String = String(s["name"])
+	var bw: float = sign_width(font, txt, fsize, tile, kind, run)
+	var bh: float = minf(tile * (0.74 if kind == "biz" else 0.56), tile - 4.0)
+	var pal: Array = (PALS[String(s["cat"])] as Array)[int(s["pal"])]
 	var bg: Color = pal[0]
-	var fg: Color = pal[1]
 	var edge: Color = pal[2]
 	if kind == "tower":
 		bg = Color(0.1, 0.12, 0.18)
-		fg = Color(0.85, 0.92, 1.0)
 		edge = COL_TOWER
-	var dim: float = 1.0 if vis else 0.55
+	var dim: float = 1.0 if vis else 0.6
 	var side: int = int(s["side"])
 	var sgn: float = -1.0 if bool(s["flip"]) else 1.0
-	# the board's own frame: x along the wall, y out from the wall.  Origin at the middle of the board's edge against the wall.
 	var centre: Vector2 = cell_pos + Vector2(tile, tile) * 0.5
-	var wall_dir: Vector2 = Vector2(0, 1) if side == 0 else (Vector2(0, -1) if side == 1 else (Vector2(1, 0) if side == 2 else Vector2(-1, 0)))     # from the street cell towards the wall
+	var wall_dir: Vector2 = Vector2(0, 1) if side == 0 else (Vector2(0, -1) if side == 1 else (Vector2(1, 0) if side == 2 else Vector2(-1, 0)))     # street cell -> wall
 	var along: Vector2 = Vector2(1, 0) if side < 2 else Vector2(0, 1)
-	var origin: Vector2 = centre + wall_dir * (tile * 0.5 - 1.0) + along * sgn * (tile * 0.5 + bw * 0.5 + 2.0)
-	var rot: float = 0.0
-	match side:
-		0: rot = 0.0
-		1: rot = PI
-		2: rot = -PI * 0.5
-		_: rot = PI * 0.5
-	# 0 N: the board sits above the street cell (wall is below it): its far side from the wall is up... keep text upright for N and S, turned for W and E
-	var upright: bool = side < 2
-	ci.draw_set_transform(origin, 0.0 if upright else (-PI * 0.5 if side == 2 else PI * 0.5), Vector2.ONE)
-	var r := Rect2(-bw * 0.5, -bh if side != 1 else 0.0, bw, bh)
-	if not upright:
-		r = Rect2(-bw * 0.5, -bh, bw, bh)
+	var origin: Vector2 = centre + wall_dir * tile + along * sgn * (tile * 0.5 + 3.0 + bw * 0.5)
+	ci.draw_set_transform(origin, 0.0 if side < 2 else (-PI * 0.5 if side == 2 else PI * 0.5), Vector2.ONE)
+	var r := Rect2(-bw * 0.5, -bh * 0.5, bw, bh)
+	var fill: Color = bg
 	var shape: String = String(s["shape"])
 	match shape:
 		"board":
 			ci.draw_rect(r.grow(1.5), edge * Color(1, 1, 1, dim))
-			ci.draw_rect(r, bg * Color(1, 1, 1, 0.96 * dim))
+			ci.draw_rect(r, bg * Color(1, 1, 1, dim))
 		"neon":
-			ci.draw_rect(r.grow(3.0), Color(edge.r, edge.g, edge.b, 0.16 * dim))
-			ci.draw_rect(r, Color(0.03, 0.03, 0.05, 0.96 * dim))
+			fill = Color(0.03, 0.03, 0.05)
+			ci.draw_rect(r.grow(3.0), Color(edge.r, edge.g, edge.b, 0.2 * dim))
+			ci.draw_rect(r, fill * Color(1, 1, 1, dim))
 			ci.draw_rect(r, Color(edge.r, edge.g, edge.b, dim), false, 2.0)
-			fg = edge.lerp(Color.WHITE, 0.35)
 		"banner":
-			var nt: float = bh * 0.3
-			var pts := PackedVector2Array([r.position, Vector2(r.end.x, r.position.y), Vector2(r.end.x - nt, r.position.y + bh * 0.5), Vector2(r.end.x, r.end.y), Vector2(r.position.x, r.end.y), Vector2(r.position.x + nt, r.position.y + bh * 0.5)])
-			ci.draw_colored_polygon(pts, edge.lerp(bg, 0.25) * Color(1, 1, 1, 0.97 * dim))
-			fg = bg.lerp(Color.BLACK, 0.4) if bg.get_luminance() > 0.4 else Color(1, 1, 1)
-			if edge.get_luminance() > 0.55:
-				fg = Color(0.1, 0.07, 0.05)
+			fill = edge.lerp(bg, 0.25)
+			var nt: float = bh * 0.28
+			var pts := PackedVector2Array([r.position, Vector2(r.end.x, r.position.y), Vector2(r.end.x - nt, 0.0), Vector2(r.end.x, r.end.y), Vector2(r.position.x, r.end.y), Vector2(r.position.x + nt, 0.0)])
+			ci.draw_colored_polygon(pts, fill * Color(1, 1, 1, dim))
 		_:
+			fill = Color(0.82, 0.74, 0.54)
 			ci.draw_rect(r.grow(1.0), Color(0.15, 0.13, 0.1, dim))
-			ci.draw_rect(r, Color(0.78, 0.7, 0.5, 0.97 * dim).lerp(bg, 0.15))
-			fg = Color(0.15, 0.1, 0.05)
+			ci.draw_rect(r, fill * Color(1, 1, 1, dim))
 			for sx in [r.position.x + 3.0, r.end.x - 3.0]:
 				ci.draw_circle(Vector2(sx, r.position.y + 3.0), 1.1, Color(0.3, 0.25, 0.15))
 				ci.draw_circle(Vector2(sx, r.end.y - 3.0), 1.1, Color(0.3, 0.25, 0.15))
-	var gr: float = bh * 0.34
-	draw_glyph(ci, String(s["glyph"]), Vector2(r.position.x + bh * 0.5, r.position.y + bh * 0.5), gr, (s["col"] as Color) * Color(1, 1, 1, dim) if shape != "banner" and shape != "plaque" else fg)
-	var tx: float = r.position.x + bh * 0.95
+	var ink: Color = ink_for(fill)
+	var halo: Color = Color(0, 0, 0, 0.85) if ink.get_luminance() > 0.5 else Color(1, 1, 1, 0.6)
+	draw_glyph(ci, String(s["glyph"]), Vector2(r.position.x + bh * 0.52, 0.0), bh * 0.34, ink * Color(1, 1, 1, dim))
+	var tx: float = r.position.x + bh * 1.0
 	var avail: float = r.end.x - tx - 4.0
-	var txt: String = String(s["name"])
 	var fs: int = fsize
-	while fs > 7 and font.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > avail:
+	while fs > 8 and font.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > avail:
 		fs -= 1
 	while txt.length() > 2 and font.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > avail:
 		txt = txt.substr(0, txt.length() - 1)
-	ci.draw_string(font, Vector2(tx, r.position.y + bh * 0.5 + fs * 0.36), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, fg * Color(1, 1, 1, dim))
+	var tp := Vector2(tx, fs * 0.36)
+	ci.draw_string_outline(font, tp, txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, 2, halo * Color(1, 1, 1, dim))
+	ci.draw_string(font, tp, txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, ink * Color(1, 1, 1, dim))
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 # ---------------------------------------------------------------- pictograms
