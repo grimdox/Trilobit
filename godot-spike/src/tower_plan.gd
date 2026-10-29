@@ -505,7 +505,46 @@ static func ground(c, all: PackedByteArray, fr: Fr, lay: Dictionary, use: String
 		if rec2 != null:
 			res["biz"].append(rec2)
 	_lobby_fittings(all, c, fr, lay, door_f, use, can_front, hall_hi, hall_f0, hall_f1)
+	var d2: Vector2i = _second_door(all, fr, door_f, marble)
+	if d2.x >= 0:
+		res["door2"] = d2
 	return res
+
+## every tower has two ways out: a second street door, on the back wall if the lobby reaches it, else a side wall, else the front well away from the first.  The door goes where the lobby
+## floor is bare marble inside it and there is walkable ground outside it (access.gd cuts the way to a road when that ground is not yet connected).  (-1, -1) when there is no place.
+static func _second_door(all: PackedByteArray, fr: Fr, door_f: int, marble: int) -> Vector2i:
+	var size: int = fr.size
+	var F: int = fr.F
+	var D: int = fr.D
+	var tries: Array = []                                       # [f, n, inside f, inside n, outside f, outside n]
+	for k in range(0, F / 2):
+		for f in [F / 2 + k, F / 2 - k - 1]:
+			if f >= 2 and f <= F - 3:
+				tries.append([f, D - 1, f, D - 2, f, D])
+	for n in range(2, D - 2):
+		tries.append([0, n, 1, n, -1, n])
+		tries.append([F - 1, n, F - 2, n, F, n])
+	for f in range(2, F - 2):
+		if absi(f - door_f) >= 3:
+			tries.append([f, 0, f, 1, f, -1])
+	for t in tries:
+		var wall_c: Vector2i = fr.xy(int(t[0]), int(t[1]))
+		var in_c: Vector2i = fr.xy(int(t[2]), int(t[3]))
+		var out_c: Vector2i = fr.xy(int(t[4]), int(t[5]))
+		if out_c.x < 1 or out_c.y < 1 or out_c.x >= size - 1 or out_c.y >= size - 1:
+			continue
+		var wi: int = wall_c.y * size + wall_c.x
+		if all[wi] != CG.WALL and all[wi] != CG.GLASS:
+			continue
+		var it: int = all[in_c.y * size + in_c.x]
+		if it != marble and not (it >= CG.EXTRA0 and CG.WALK[it] == 1):
+			continue
+		var ot: int = all[out_c.y * size + out_c.x]
+		if CG.WALK[ot] != 1 or ot >= CG.EXTRA0:
+			continue
+		all[wi] = CG.DOOR
+		return wall_c
+	return Vector2i(-1, -1)
 
 ## the shop's rectangle is `depth` rows from n_start and `span` wide along the front; the shop sits flush on the street (front) or against the
 ## corridor band (back) and faces the street's way.  `hall_hi` says which side of the front the hall is on.

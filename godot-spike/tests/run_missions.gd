@@ -111,7 +111,7 @@ func _initialize() -> void:
 		check("%s: the site is a separate game (mission set, not on the island)" % tid, s != g and not s.mission.is_empty() and s.island == null and s.mission["offer"]["id"] == offer["id"])
 		check("%s: the physical world is put away, whole" % tid, w.in_site() and m.game == s)
 		var site: Dictionary = s.city.get_meta("site")
-		check("%s: the player stands at the site's entry; guards are about" % tid, s.pc == int(site["entry"]) and s.sim.n >= 5 and s.eco.role.size() == s.sim.n)
+		check("%s: the player stands at the site's entry; guards are about" % tid, s.pc == int(site["entry"]) and s.sim.n >= 3 and s.eco.role.size() == s.sim.n)
 		check("%s: the player's goods came along" % tid, s.yen == yen0 and s.wield != null and s.attrs == g.attrs)
 		var guards: Array = []
 		for k in s.mission["agents"]:

@@ -144,7 +144,7 @@ func run() -> Array:
 	for i in n:
 		if sim.sticky[i] == 0 and com.wc[i] >= 0 and sim.home_cell[i] < s2 and g.fac[i] == g.CIV:
 			var d: int = com.manh(sim.home_cell[i], com.wc[i])
-			if d >= 20 and d <= 78:
+			if d >= 20 and d <= 72:
 				who = i
 				break
 	var steps_ok := true

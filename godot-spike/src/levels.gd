@@ -11,6 +11,7 @@ extends RefCounted
 const AIR_ABOVE := 3                    # levels of open air over the tallest tower's roof
 const CG = preload("res://src/citygen.gd")
 const TP = preload("res://src/tower_plan.gd")
+const ACC = preload("res://src/access.gd")
 
 static func build(c, seed: int) -> void:
 	var rng := RandomNumberGenerator.new()
@@ -85,6 +86,7 @@ static func build(c, seed: int) -> void:
 		under_all[i] = c.under[i]
 	c.under = under_all
 	c.under_up = PackedByteArray()
+	c.access = ACC.ensure(c, all)                          # every door leads out to a road (see access.gd)
 	_bridges(c, all, rng)
 	_underground(c, all, links, rng)
 
@@ -232,6 +234,19 @@ static func _tower(c, all: PackedByteArray, links: Dictionary, t: Dictionary, rn
 	# the lobby (with a shop on the street where there is room); the lifts and the stairs are in the corridor above it
 	var rng_state: int = c.rng.state                                 # the shops use the city's own random stream: leave it as it was for what comes after
 	var g: Dictionary = TP.ground(c, all, fr, lay, "office" if use == "office" else "apartment", rng)
+	if g.is_empty():                                               # no walkable ground outside the street wall: try the other three walls before giving up
+		for sd in 4:
+			if sd == side:
+				continue
+			var fr2 := TP.Fr.new(x0, y0, x1, y1, sd, size)
+			var lay2: Dictionary = TP.layout(fr2.F, fr2.D)
+			g = TP.ground(c, all, fr2, lay2, "office" if use == "office" else "apartment", rng)
+			if not g.is_empty():
+				fr = fr2
+				lay = lay2
+				side = sd
+				t["side"] = sd
+				break
 	c.rng.state = rng_state
 	if g.is_empty():
 		return                                                     # nowhere to put a street door: leave it a plain building
@@ -271,7 +286,7 @@ static func _tower(c, all: PackedByteArray, links: Dictionary, t: Dictionary, rn
 	all[s_cell] = CG.STAIRS
 	all[e_cell] = CG.ELEVATOR
 	c.tower_info.append({"x0": x0, "y0": y0, "x1": x1, "y1": y1, "h": h, "stairs": s_cell, "elev": e_cell, "use": use, "side": side,
-		"no": tower_no, "door": t["door"], "gym_z": int(t["gym_z"]), "split": int(t["split"]), "units": units, "shops": g["biz"].size()})
+		"no": tower_no, "door": t["door"], "door2": g.get("door2", Vector2i(-1, -1)), "gym_z": int(t["gym_z"]), "split": int(t["split"]), "units": units, "shops": g["biz"].size()})
 
 ## the markers a floor leaves: homes in flats (and a record of each flat for later), places to work in offices and the gym
 static func _floor_markers(c, res: Dictionary, base: int, z: int, kind: String, tower_no: int) -> void:

@@ -177,6 +177,7 @@ var apartments: Array = []             # every flat in every tower: {cell, tower
 var under_up: PackedByteArray = PackedByteArray()   # while the towers are built: the floor under every cell of every level
 var businesses: Array = []             # every business built (see business.gd): {type, ver, tag, tier, name, cat, x0..y1, door, side, role, jobs, staff: cells, keeper}
 var signs: Array = []                  # the signs out front of every building (see signage.gd), made once the zone is built
+var access: Dictionary = {}              # what access.gd found and fixed: {doors, carved, moved, dead, dropped}
 var bldgs: Array = []                  # every plain building (houses, mid-rises, towers): {x0, y0, x1, y1, kind, door, side, filled}: what _building made, for the census and the signs
 var venues: Array = []                 # {kind, style, tier, x0, y0, x1, y1, door, keeper: cell, name}: shops, clinics, churches, shrines
 var venue_plan: Array = []             # kinds still to place while the suburbs are laid out
@@ -231,6 +232,80 @@ func _make_wealth(seed_v: int) -> void:
 var _wvals: PackedFloat32Array = PackedFloat32Array()
 var _wlo: float = 0.0
 var _whi: float = 0.0
+
+## Every parking lot gets a driveway: a four-wide strip of road from the middle of its nearest side out to the nearest street (not through a building).  A lot that is already
+## touching a street is left as it is.  (Several offsets along each side are tried, the shortest clear run wins; the cut goes through pavement, grass and scenery only.)
+func _connect_lots() -> void:
+	for lot in lots:
+		var x0: int = lot["x0"]
+		var y0: int = lot["y0"]
+		var x1: int = lot["x1"]
+		var y1: int = lot["y1"]
+		var touching := false
+		for x in range(x0, x1 + 1):
+			if (y0 > 0 and _road_outside(x, y0 - 1)) or (y1 < size - 1 and _road_outside(x, y1 + 1)):
+				touching = true
+		for y in range(y0, y1 + 1):
+			if (x0 > 0 and _road_outside(x0 - 1, y)) or (x1 < size - 1 and _road_outside(x1 + 1, y)):
+				touching = true
+		if touching:
+			lot["exit"] = true
+			continue
+		var best: Array = []
+		for side in 4:
+			var horiz: bool = side < 2                                      # sides 0 and 1 face up and down: the run is vertical
+			var span: int = (x1 - x0) if horiz else (y1 - y0)
+			for off0 in [span / 2, span / 2 + 5, span / 2 - 5, span / 4, 3 * span / 4, 4, span - 4]:
+				var off: int = clampi(int(off0), 2, span - 3)
+				var run: Array = _drive_run(lot, side, off)
+				if not run.is_empty() and (best.is_empty() or run.size() < best.size()):
+					best = run
+		if not best.is_empty():
+			for ci in best:
+				tiles[ci] = ROAD
+				marks[ci] = 0
+				under[ci] = ROAD
+			lot["exit"] = true
+		else:
+			lot["exit"] = false
+
+func _road_outside(x: int, y: int) -> bool:
+	if tiles[y * size + x] != ROAD:
+		return false
+	for lot in lots:
+		if x >= int(lot["x0"]) and x <= int(lot["x1"]) and y >= int(lot["y0"]) and y <= int(lot["y1"]):
+			return false
+	return true
+
+## the cells of a 4-wide driveway from a lot's side `side` (0 up, 1 down, 2 left, 3 right) at offset `off` along it to the first street cell, or [] when a building is in the way
+func _drive_run(lot: Dictionary, side: int, off: int) -> Array:
+	var x0: int = lot["x0"]
+	var y0: int = lot["y0"]
+	var x1: int = lot["x1"]
+	var y1: int = lot["y1"]
+	var d := Vector2i(0, -1) if side == 0 else (Vector2i(0, 1) if side == 1 else (Vector2i(-1, 0) if side == 2 else Vector2i(1, 0)))
+	var p := Vector2i(x0 + off, y0 - 1) if side == 0 else (Vector2i(x0 + off, y1 + 1) if side == 1 else (Vector2i(x0 - 1, y0 + off) if side == 2 else Vector2i(x1 + 1, y0 + off)))
+	var cells: Array = []
+	for k in 40:
+		var cx: int = p.x + d.x * k
+		var cy: int = p.y + d.y * k
+		if cx < 3 or cy < 3 or cx >= size - 4 or cy >= size - 4:
+			return []
+		var t: int = tiles[cy * size + cx]
+		if t == ROAD and _road_outside(cx, cy):
+			return cells
+		if t != GROUND and t != PARK and t != TREE and t != FIELD and t != SAND and t != ROCKS and t != BALLAST:
+			return []
+		# four wide across the run (two each side of the middle): none of it may be a wall or water
+		for w in range(-1, 3):
+			var wx: int = cx + (w if d.y != 0 else 0)
+			var wy: int = cy + (w if d.x != 0 else 0)
+			var wt: int = tiles[wy * size + wx]
+			if wt != GROUND and wt != PARK and wt != TREE and wt != FIELD and wt != SAND and wt != ROCKS and wt != BALLAST and not (wt == ROAD and not (wx >= x0 and wx <= x1 and wy >= y0 and wy <= y1)):
+				return []
+			if wt != ROAD:
+				cells.append(wy * size + wx)
+	return []
 
 ## Trees and benches on the pavement are tiles: they cannot be walked through and they give cover.  A hash of the cell picks them (the same city every time), by district:
 ## street trees along the kerb (rich and mid-town), benches along the building fronts (broken ones in the slums) and in the mid-town parks.  Never beside a door, stairs, a ladder
@@ -408,6 +483,7 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 	towers = []
 	venues = []
 	businesses = []
+	labor_downtown = 0
 	houses = []
 	bldgs = []
 	apartments = []
@@ -472,6 +548,7 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 		_organic_city(seed)
 		_paint_boulevards()
 		_block_wealth()
+		_connect_lots()
 		_stamp_street_props()
 		return
 	# blocks between the lines.  Where the towers stand: the middle of the city has mega-towers that fill 2-3 blocks each way (4 to 9 blocks in
@@ -583,6 +660,7 @@ func generate(seed: int, _harbor_dir: Vector2 = Vector2.ZERO, sz: int = 512) -> 
 		_infill()
 		_paint_boulevards()
 	_block_wealth()
+	_connect_lots()
 	_stamp_street_props()
 
 ## Parking lots and charging stations.  A lot is paved like a road and marked with bays (a bay is 4 x 6: a car is 3 wide by 5 long and has room to spare): a row of bays, an aisle six wide
@@ -594,7 +672,7 @@ func _lot_block(i: int, j: int, r: Rect2i, d: float) -> bool:
 	if d < 0.12 or r.size.x < 30 or r.size.y < 24:
 		return false
 	var roll: int = (hash([size, i, j, "lot"]) & 0x7fffffff) % 100
-	if roll >= 18:
+	if roll >= 34:
 		return false
 	var n: int = mini(10, (r.size.x - 4) / 4)
 	var ww: int = n * 4 + 2
@@ -1125,7 +1203,7 @@ func _organic_city(seed_v: int) -> void:
 								freeb[yy * size + xx] = 0
 						nstat["ind"] += 1
 						continue
-			if dd >= 0.12 and czone != "ind" and housing[y * size + x] == 0 and w >= 22 and h >= 22 and (hash([size, x / 8, y / 8, "lot"]) & 0x7fffffff) % 100 < 55:
+			if dd >= 0.12 and czone != "ind" and housing[y * size + x] == 0 and w >= 22 and h >= 22 and (hash([size, x / 8, y / 8, "lot"]) & 0x7fffffff) % 100 < 85:
 				var nbay: int = mini(10, (w - 4) / 4)
 				var ww: int = nbay * 4 + 2
 				var roll: int = (hash([size, x / 8, y / 8, "lk"]) & 0x7fffffff) % 100
@@ -1516,6 +1594,9 @@ func _leaf_business(x0: int, y0: int, x1: int, y1: int) -> bool:
 		return false
 	var side: int = _street_side(x0, y0, x1, y1)
 	_pick_wealth = _plot_wealth(x0, y0, x1, y1)
+	if forced == "" and cur_zone != "ind" and _pick_wealth == 2 and labor_downtown < LABOR_DOWNTOWN and not BZ.fitting_side("labor_center", w, h, side).is_empty() and (hash([x0, y0, size, "lcd"]) & 0x7fffffff) % 100 < 25:
+		labor_downtown += 1
+		return _stamp_business("labor_center", x0, y0, x1, y1, side) != null     # (a few labor centers downtown too: the towers' people need work as much as the slums)
 	if forced == "" and cur_zone != "ind" and _pick_wealth <= 1 and int(biz_count.get("labor_center", 0)) < LABOR_MIN and not BZ.fitting_side("labor_center", w, h, side).is_empty() and rng.randf() < 0.3:
 		return _stamp_business("labor_center", x0, y0, x1, y1, side) != null     # (the quota of labor centers: taken by plots in the middle and lower districts that have room)
 	if forced == "" and cur_zone != "ind" and int(biz_count.get("cyberdoc", 0)) < _cyberdoc_min() and not BZ.fitting_side("cyberdoc", w, h, side).is_empty() and rng.randf() < 0.25:
@@ -1544,6 +1625,8 @@ const CYBERDOC_MIN := 12                   # cyberdoc offices the island city (1
 
 func _cyberdoc_min() -> int:
 	return clampi(int(float(CYBERDOC_MIN) * float(size) * float(size) / (1536.0 * 1536.0)), 3, CYBERDOC_MIN)
+const LABOR_DOWNTOWN := 4                   # labor centers placed in the rich downtown districts (a few)
+var labor_downtown: int = 0
 const LABOR_MIN := 25                      # labor centers every city has at least (the middle and lower districts)
 
 func _pick_business(w: int, h: int, side: int, zones_only: String = "") -> String:

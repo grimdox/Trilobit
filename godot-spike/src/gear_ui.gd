@@ -566,7 +566,10 @@ func draw(c: CanvasItem, W: float, H: float, t: float, dt: float) -> void:
 	_sync_rows()
 	if cur.begins_with("s:") and cur_part() != "":
 		cur_part_for_rows = cur_part()
-	_figure(c)
+	if tab == "implants":
+		_figure_android(c)                       # the implants tab keeps the android: a machine to wire, where the equipment tab shows a mannequin to dress
+	else:
+		_figure(c)
 	_leaders(c, tab == "implants")
 	var inv = game.inv
 	var on_imp: bool = tab == "implants"
@@ -902,6 +905,75 @@ func _figure(c: CanvasItem) -> void:
 ## the rounded caps of the shoulders over the join of arm and torso
 func _both_shoulder(c: CanvasItem) -> void:
 	_solid_both(c, [Vector2(40, 122), Vector2(52, 122), Vector2(61, 130), Vector2(64, 142), Vector2(55, 148), Vector2(46, 142), Vector2(42, 132)])
+
+## The generic figure, an android in the manner of the Vitruvian Man (one pair of arms and legs, arms down): grey shaded plates joined by dark
+## ball joints, a glowing core, with the circle of the canon and the eighths of the height behind.  Only blue, pink, yellow and grey.
+func _figure_android(c: CanvasItem) -> void:
+	var line := Color(0.3, 0.9, 1.0, 0.07)
+	var faint := Color(0.3, 0.9, 1.0, 0.16)
+	var fine := Color(0.75, 0.9, 1.0, 0.5)
+	var navel: Vector2 = _fp(0, 200)
+	c.draw_arc(navel, 150.0, 0, TAU, 128, Color(0.3, 0.9, 1.0, 0.22), 1.5, true)
+	c.draw_arc(navel, 145.0, 0, TAU, 128, Color(1.0, 0.25, 0.65, 0.12), 1.0, true)
+	for k in range(0, 9):
+		var yy: float = 62.0 + 332.0 * float(k) / 8.0
+		c.draw_line(_fp(-112, yy), _fp(112, yy), line, 1.0)
+		c.draw_line(_fp(-112, yy), _fp(-104, yy), faint, 1.0)
+		c.draw_line(_fp(112, yy), _fp(104, yy), faint, 1.0)
+	c.draw_line(_fp(0, 52), _fp(0, 404), Color(0.3, 0.9, 1.0, 0.12), 1.0)
+	# legs, then arms (behind the torso)
+	_both(c, [Vector2(11, 252), Vector2(31, 256), Vector2(31, 270), Vector2(28, 292), Vector2(24, 314), Vector2(10, 314), Vector2(8, 292), Vector2(7, 270)])           # thighs
+	_both(c, [Vector2(10, 326), Vector2(24, 326), Vector2(25, 342), Vector2(22, 362), Vector2(18, 378), Vector2(11, 378), Vector2(9, 362), Vector2(9, 342)])            # shins
+	_both(c, [Vector2(10, 314), Vector2(24, 314), Vector2(25, 322), Vector2(17, 331), Vector2(9, 322)])                                                                   # knee plates
+	_both(c, [Vector2(8, 384), Vector2(21, 384), Vector2(24, 391), Vector2(23, 395), Vector2(5, 395), Vector2(5, 390)])                                                  # feet
+	_pair(c, [Vector2(29, 262), Vector2(27, 290), Vector2(24, 310)], PINK, 1.1)
+	_pair(c, [Vector2(23, 334), Vector2(21, 358)], PINK, 1.1)
+	_both(c, [Vector2(50, 146), Vector2(63, 146), Vector2(66, 160), Vector2(65, 176), Vector2(63, 187), Vector2(53, 187), Vector2(50, 172), Vector2(48, 158)])        # upper arms
+	_both(c, [Vector2(52, 200), Vector2(65, 200), Vector2(68, 214), Vector2(69, 234), Vector2(67, 250), Vector2(58, 250), Vector2(56, 234), Vector2(53, 214)])        # forearms
+	_both(c, [Vector2(57, 258), Vector2(67, 258), Vector2(70, 268), Vector2(71, 280), Vector2(68, 288), Vector2(63, 291), Vector2(58, 288), Vector2(56, 278), Vector2(55, 268)])   # hands
+	_both(c, [Vector2(55, 262), Vector2(52, 268), Vector2(52, 277), Vector2(55, 279)])                                                                                     # thumbs
+	_pair(c, [Vector2(60, 277), Vector2(60, 288)], fine, 1.0)
+	_pair(c, [Vector2(64, 277), Vector2(64, 289)], fine, 1.0)
+	_pair(c, [Vector2(65, 150), Vector2(65, 182)], PINK, 1.1)
+	_pair(c, [Vector2(67, 206), Vector2(68, 246)], PINK, 1.1)
+	# the pelvis, waist, chest, neck and head
+	_sym(c, [Vector2(0, 203), Vector2(16, 203), Vector2(26, 209), Vector2(30, 221), Vector2(28, 236), Vector2(21, 246), Vector2(11, 252), Vector2(0, 254)])
+	_pair(c, [Vector2(1, 214), Vector2(16, 215), Vector2(29, 213)], PINK, 1.2)
+	_pair(c, [Vector2(8, 218), Vector2(12, 232), Vector2(8, 246)], fine, 1.0)
+	_sym(c, [Vector2(0, 187), Vector2(19, 187), Vector2(18, 196), Vector2(17, 205), Vector2(0, 205)], JOINT_DARK, Color(0.1, 0.13, 0.22, 0.97), Color(0.3, 0.9, 1.0, 0.5))
+	for ry in [191.0, 195.0, 199.0, 203.0]:
+		c.draw_line(_fp(-17, ry), _fp(17, ry), Color(0.75, 0.9, 1.0, 0.3), 1.0)
+	_sym(c, [Vector2(0, 118), Vector2(20, 118), Vector2(38, 121), Vector2(49, 127), Vector2(51, 136), Vector2(47, 152), Vector2(41, 170), Vector2(33, 184), Vector2(20, 189), Vector2(0, 190)])
+	_pair(c, [Vector2(10, 120), Vector2(28, 126), Vector2(47, 130)], PINK, 1.2)
+	_pair(c, [Vector2(3, 138), Vector2(20, 145), Vector2(40, 140)], fine, 1.1)
+	_pair(c, [Vector2(3, 168), Vector2(20, 173), Vector2(36, 166)], fine, 1.1)
+	c.draw_line(_fp(0, 122), _fp(0, 186), fine, 1.1)
+	if tab == "implants":                           # the spine, vertebra by vertebra, down the middle of the torso
+		var on_spine: bool = cur == "s:back"
+		for vy in range(112, 256, 9):
+			var vr := Rect2(_fp(-3.5, float(vy)), Vector2(7.0, 5.0))
+			c.draw_rect(vr, Color(1.0, 0.8, 0.25, 0.9) if on_spine else Color(0.75, 0.9, 1.0, 0.55))
+	var core: Vector2 = _fp(0, 150)
+	c.draw_circle(core, 11.0, Color(1.0, 0.25, 0.65, 0.16))
+	c.draw_circle(core, 7.0, Color(1.0, 0.25, 0.65, 0.3))
+	c.draw_circle(core, 4.4, Color(1.0, 0.5, 0.8, 0.95))
+	c.draw_arc(core, 7.0, 0, TAU, 20, Color(0.3, 0.9, 1.0, 0.85), 1.2, true)
+	_sym(c, [Vector2(0, 104), Vector2(6, 105), Vector2(6.5, 112), Vector2(8, 120), Vector2(0, 120)], JOINT_DARK, Color(0.1, 0.13, 0.22, 0.97), Color(0.3, 0.9, 1.0, 0.5))
+	_sym(c, [Vector2(0, 62), Vector2(12, 64), Vector2(17, 74), Vector2(18, 86), Vector2(14, 98), Vector2(7, 105), Vector2(0, 107)])
+	_sym(c, [Vector2(0, 77), Vector2(12, 77), Vector2(14, 81), Vector2(12, 86), Vector2(0, 86)], Color(0.1, 0.45, 0.6, 0.85), Color(0.3, 0.9, 1.0, 0.8), Color(0.3, 0.9, 1.0, 0.95))     # the visor
+	_pair(c, [Vector2(2, 94), Vector2(7, 95)], fine, 1.0)
+	_pair(c, [Vector2(10, 66), Vector2(13, 72)], fine, 1.0)
+	for sg in [1.0, -1.0]:
+		c.draw_circle(_fp(18.5 * sg, 88), 3.4, Color(0.55, 0.62, 0.74, 0.9))
+		c.draw_arc(_fp(18.5 * sg, 88), 3.4, 0, TAU, 14, EDGE, 1.1, true)
+	# shoulder caps and the joints, over everything
+	_both(c, [Vector2(42, 122), Vector2(55, 121), Vector2(63, 127), Vector2(64, 135), Vector2(55, 139), Vector2(46, 135)])
+	_joint(c, 56, 141, 7.5)
+	_joint(c, 58.5, 194, 6.0)
+	_joint(c, 62, 254, 4.2)
+	_joint(c, 21, 253, 8.0)
+	_joint(c, 17, 321, 6.5)
+	_joint(c, 14.5, 381, 4.2)
 
 ## dotted lines from the slot tiles to the body part each stands for
 func _leaders(c: CanvasItem, on_imp: bool) -> void:
