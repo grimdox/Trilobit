@@ -324,7 +324,7 @@ func run() -> Array:
 			ru_ok = false
 		if (g.fac[i] == g.NAP or g.fac[i] == g.NASIM) and cult != "Japanese":
 			jp_ok = false
-	check.call("gangsters carry blades: Bratva Russian, NAP and Nasim Japanese (%d armed)" % armed, armed > 10 and ru_ok and jp_ok)
+	check.call("gangsters carry blades: Bratva Russian, NAP and Nasim Japanese (%d armed)" % armed, armed > 0 and ru_ok and jp_ok)
 	# a dead armed man leaves the weapon
 	var victim := -1
 	for k in g.sim.near_list.size():

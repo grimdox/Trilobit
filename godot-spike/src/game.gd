@@ -2926,7 +2926,7 @@ func _melee_damage(i: int, dmg: int, ms: Dictionary, crit: bool = false, loc: St
 		say("Your %s glances off %s's armor." % [String(ms.get("verb", "blow")), name_of(i)])
 		_alert(i)
 		return
-	var ngrit: int = npc_lvl(i, "grit")
+	var ngrit: int = SK.grit_cut(npc_lvl(i, "grit"))
 	_math("%s: armor %d (the weapon pierces %d) takes %d, Grit %d takes %d: %d goes through" % [name_of(i), npc_armor(i), pen, cut, ngrit, mini(ngrit, maxi(0, dmg - cut)), maxi(0, dmg - cut - ngrit)])
 	dmg = maxi(0, dmg - cut - ngrit)
 	if dmg <= 0:
@@ -3638,7 +3638,7 @@ func act_fire(any: bool = false) -> bool:
 					dmg = base
 				else:
 					var arm_eff: int = maxi(0, npc_armor(victim) - int(st.get("pen", 0)))
-					dmg = maxi(0, base - arm_eff - npc_lvl(victim, "grit"))
+					dmg = maxi(0, base - arm_eff - SK.grit_cut(npc_lvl(victim, "grit")))
 					_math("%s: armor %d (the round pierces %d) takes %d, Grit %d: %d goes through" % [name_of(victim), npc_armor(victim), int(st.get("pen", 0)), arm_eff, npc_lvl(victim, "grit"), dmg])
 					if dmg == 0:
 						say("The round pings off %s's armor." % name_of(victim))
