@@ -22,6 +22,7 @@ const SK = preload("res://src/skills.gd")
 const CR = preload("res://src/creation.gd")
 const CLK = preload("res://src/clock.gd")
 const MS = preload("res://src/missions.gd")
+const ENM = preload("res://src/enemies.gd")
 const PW = preload("res://src/power.gd")
 const NANO = preload("res://src/nanohacks.gd")
 const SITE = preload("res://src/mission_site.gd")
@@ -456,19 +457,15 @@ func _people() -> void:
 	for i in n:
 		var f: int = rolled[i]
 		fac[i] = f
-		hpmax[i] = [25, 40, 45, 30, 35][f]
+		hpmax[i] = 25
 		hpn[i] = hpmax[i]
 		yenn[i] = rng.randi_range(5, 90) if f == CIV else rng.randi_range(40, 260)
 		if f == CIV:
 			yenn[i] = int(yenn[i] * [0.5, 1.0, 2.4][city.wealth_at(int(sim.home_cell[i]))])
 		fem[i] = 1 if rng.randf() < 0.5 else 0
 		nname[i] = FIRST[rng.randi() % FIRST.size()]
-		if f == BRATVA:
-			gunc[i] = 1 if rng.randf() < 0.45 else 0
-		elif f == NAP:
-			gunc[i] = 1 if rng.randf() < 0.8 else 2
-		elif f == NASIM:
-			gunc[i] = 1 if rng.randf() < 0.2 else 0
+		if f != CIV:
+			set_enemy(i)
 
 ## the gangs live in houses, not in the flats of the towers: a gang member whose home is up a tower swaps homes with an ordinary person who has a house
 func _factions_out_of_flats(rolled: PackedByteArray) -> void:
@@ -507,7 +504,7 @@ func _port_people() -> void:
 		elif band == 1:
 			f = BRATVA if rng.randf() < 0.7 else GANG
 		fac[i] = f
-		hpmax[i] = [25, 40, 45, 30, 35][f]
+		hpmax[i] = 25
 		hpn[i] = hpmax[i]
 		if f == CIV:
 			yenn[i] = rng.randi_range(5, 60)
@@ -518,8 +515,7 @@ func _port_people() -> void:
 					sim.place(i, wc)
 					break
 			continue
-		yenn[i] = rng.randi_range(40, 260)
-		gunc[i] = 1 if rng.randf() < 0.4 else 0
+		set_enemy(i)
 		var lo: int = island.PORT.y - 118 if band == -1 else island.PORT.y + 58
 		var hi: int = island.PORT.y - 58 if band == -1 else island.PORT.y + 108
 		for _t in 80:
@@ -1021,7 +1017,7 @@ func _law_act(j: int, o: int, d: int) -> void:
 
 ## armor on a person for the law's shots: the general figure of their faction (see npc_armor, the torso value)
 func npc_armor_for(i: int) -> int:
-	return 1 if fac[i] == BRATVA else (0 if fac[i] == GANG else 2)
+	return npc_armor(i)
 
 ## unaffiliated people (citizens, shopkeepers, ...) you have shot at, hit or robbed in view: they now count as marked, with a red arrow
 var provoked: Dictionary = {}
@@ -1060,10 +1056,29 @@ func base_lvl(id: String) -> int:
 
 ## an NPC's effective skill (attributes and skills come from faction and person index; see skills.gd)
 func npc_lvl(i: int, id: String) -> int:
-	var b: int = 0
-	if not mlvl.is_empty() and id in ["ranged", "melee", "unarmed", "dodge", "grit"]:
-		b = int(mlvl.get(i, 0)) / 2                      # a mission hostile of character level L fights as if L/2 better trained
-	return SK.npc_level(fac[i], seed_value, i, id) + b
+	if fac[i] != CIV:
+		return ENM.skill(fac[i], enemy_level(i), id)          # enemies: the roster (enemies.gd), never above their level
+	return SK.npc_level(fac[i], seed_value, i, id)
+
+## an armed person's level 1-10 (0 for civilians): a mission site names it, the street rolls it from the faction (the NAP on the street average 5)
+func enemy_level(i: int) -> int:
+	if fac[i] == CIV:
+		return 0
+	if mlvl.has(i):
+		return ENM.clampl(int(mlvl[i]))
+	return ENM.street_level(fac[i], seed_value, i)
+
+## set an armed person's health, gun and purse from the roster (call after fac[i] and any mission level are set)
+func set_enemy(i: int) -> void:
+	if fac[i] == CIV:
+		return
+	var l: int = enemy_level(i)
+	hpmax[i] = ENM.hpmax(l)
+	hpn[i] = hpmax[i]
+	gunc[i] = ENM.gun_class(fac[i], l, seed_value, i)
+	var yr: Array = ENM.yen_range(fac[i], l)
+	yenn[i] = rng.randi_range(int(yr[0]), int(yr[1]))
+	limbn[i * 6] = -1
 
 func npc_attr_set(i: int) -> Dictionary:
 	return SK.npc_attrs(fac[i], seed_value, i)
@@ -2448,13 +2463,9 @@ func npc_wound_text(i: int) -> String:
 	return ", ".join(bits)
 
 func npc_armor(i: int) -> int:
-	match fac[i]:
-		BRATVA: return 1
-		GANG: return 1
-		NAP: return 3
-		CORP: return 3
-		NASIM: return 2
-	return 0
+	if fac[i] == CIV:
+		return 0
+	return ENM.armor(fac[i], enemy_level(i))
 
 func npc_melee_dodge(i: int) -> int:
 	return SK.melee_dodge(npc_lvl(i, "dodge"))
@@ -3188,13 +3199,25 @@ func kill(i: int) -> void:
 	var carried: int = yenn[i]
 	if carried > 0:
 		_put(c, _new_item("trl_yen", carried))
+	var lv: int = enemy_level(i)
 	if gunc[i] > 0 and rng.randf() < 0.6:
 		var tag: String = ["", "pistol", "smg", "rifle"][gunc[i]]
 		var arr: Array = gun_ids[tag]
 		var dropped = _new_item(arr[rng.randi() % arr.size()])
 		_part_load(dropped)
 		_put(c, dropped)
-		if rng.randf() < 0.1:
+	if fac[i] != CIV:                                                 # the roster's drops (enemies.gd): ammunition, a medkit, a vest, a mod
+		var spare: int = 25 + 5 * lv
+		if lv >= 2 and gunc[i] > 0 and rng.randi() % 100 < spare:
+			_put(c, _new_item(ENM.ammo_id(gunc[i], lv, rng.randi()), rng.randi_range(10, 30)))
+		if lv >= 4 and rng.randi() % 100 < mini(60, 10 + 4 * lv):
+			_put(c, _new_item("trl_medkit"))
+		elif lv <= 3 and rng.randi() % 100 < 30:
+			_put(c, _new_item("trl_good_bandage_roll"))
+		var vid: String = ENM.vest_id(fac[i], lv)
+		if vid != "" and db.defs.has(vid) and rng.randi() % 100 < 20 + 2 * lv:
+			_put(c, _new_item(vid))
+		if rng.randi() % 100 < 5 + 3 * lv:
 			_put(c, _new_item(_random_mod()))
 	var mw: String = npc_melee_id(i)
 	if mw != "" and rng.randf() < 0.5:
@@ -4933,7 +4956,7 @@ func act_nano_use(hid: String, target: int = -1) -> bool:
 
 ## 10 damage to a random implanted body part of the target; people with no implants take nothing
 func _shock(i: int, dmg: int) -> void:
-	var rig: Array = IMP.NPC_RIGS.get(fac[i], [])
+	var rig: Array = ENM.rolled_implants(fac[i], enemy_level(i), seed_value, i, IMP.ALL) if fac[i] != CIV else []
 	if rig.is_empty():
 		say("The jolt crackles over %s and finds nothing to bite: they are not wired." % name_of(i))
 		_alert(i)
@@ -5785,11 +5808,14 @@ func _mission_people() -> void:
 		var f: int = int(a["fac"])
 		var lv: int = int(a.get("lv", 0))
 		fac[k] = f
-		mlvl[k] = lv
-		hpmax[k] = [25, 40, 45, 30, 35, 45][f] + (6 if a["role"] == "target" else 0) + 3 * lv
-		hpn[k] = hpmax[k]
-		gunc[k] = 0 if f == CIV else (1 + (1 if lv >= 4 else 0) + (1 if lv >= 7 else 0) if (a["role"] != "target" or risk >= 2) else 0)
-		yenn[k] = 0 if f == CIV else rng.randi_range(30, 160)
+		mlvl[k] = maxi(1, lv)
+		if f == CIV:
+			hpmax[k] = 40
+			hpn[k] = 40
+			gunc[k] = 0
+			yenn[k] = 0
+		else:
+			set_enemy(k)
 		if a["name"] != "":
 			nname[k] = a["name"]
 		var cell: int = int(a["cell"])

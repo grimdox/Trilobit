@@ -56,10 +56,7 @@ func setup(game) -> void:
 		used += 1
 		var bratva := k % 3 != 2
 		g.fac[i] = g.BRATVA if bratva else g.NASIM
-		g.hpmax[i] = 45 if bratva else 30
-		g.hpn[i] = g.hpmax[i]
-		g.gunc[i] = 1 if bratva and k % 2 == 0 else (2 if bratva else 0)
-		g.yenn[i] = rng.randi_range(40, 220)
+		g.set_enemy(i)
 		_station(i, lairs[k], NONE, "")
 	# the keepers of every shop, clinic, church and shrine
 	for vi in g.city.venues.size():
