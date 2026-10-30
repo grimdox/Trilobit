@@ -327,30 +327,89 @@ func open_screen(kind: String) -> void:
 			screen.tm = tm
 	_scroll_fix()
 
-## bumping a mission terminal: its five offers for today (the same for the same terminal and day)
+## bumping a mission terminal: its board (kept per terminal: free first batch, free each new day, ¥100 on demand, free when all five are done)
 func open_terminal(cell: int) -> void:
-	var sd: int = world.seed_value if world != null else game.seed_value
-	tm = {"cell": cell, "offers": MS.offers(sd, cell, game.sim.tick / CLK.DAY), "sel": 0, "msg": ""}
+	var b: Dictionary = game.board_open(cell)
+	tm = {"cell": cell, "sel": 0, "msg": "", "foc": 0, "sw_sel": 0}
+	_tm_sync()
 	game.terminal_hit = -1
 	open_screen("terminal")
 	sfx.play("select")
 
+## the terminal's view of the board it stands at (call again after anything changes it)
+func _tm_sync() -> void:
+	var b: Dictionary = game.board_open(int(tm["cell"]))
+	tm["offers"] = b["offers"]
+	tm["sw"] = b["sw"]
+	tm["used"] = b["used"]
+	tm["gen"] = int(b["gen"])
+	tm["day"] = int(b["day"])
+	tm["sel"] = clampi(int(tm.get("sel", 0)), 0, maxi(0, b["offers"].size() - 1))
+
+func _tm_set_switch(si: int, v: int) -> void:
+	var b: Dictionary = game.board_open(int(tm["cell"]))
+	if int(b["sw"][si]) == v:
+		return
+	b["sw"][si] = v
+	tm["sw_sel"] = si
+	_tm_sync()
+	tm["msg"] = "%s: %s.  Applies to the next batch (R, ¥%d)." % [String(MS.SWITCHES[si]["name"]).capitalize(), MS.switch_label(si, v), MS.NEW_BATCH_COST]
+	sfx.play("blip")
+
+func _tm_regen() -> void:
+	if game.board_regen(int(tm["cell"])):
+		tm["sel"] = 0
+		_tm_sync()
+		tm["msg"] = "A new batch is posted.  ¥%d paid." % MS.NEW_BATCH_COST
+	else:
+		tm["msg"] = "A new batch costs ¥%d, and you have ¥%d." % [MS.NEW_BATCH_COST, game.yen]
+		sfx.play("blip")
+
+func _tm_accept() -> void:
+	var o: Dictionary = tm["offers"][int(tm["sel"])]
+	if not game.portal.is_empty():
+		tm["msg"] = "A portal is already open.  Finish that contract, or press C to scrap it."
+		sfx.play("blip")
+	elif game.portal_open(o, int(tm["cell"])):
+		resume_play()
+	else:
+		tm["msg"] = "That contract is already done." if game.done_contracts.has(String(o["id"])) else "No room for a portal beside this terminal."
+		sfx.play("blip")
+
 func _terminal_key(k: int) -> void:
 	var n: int = tm["offers"].size()
+	var foc: int = int(tm.get("foc", 0))
 	if k == KEY_ESCAPE or k == KEY_E:
 		resume_play()
+	elif k == KEY_TAB:
+		tm["foc"] = 1 - foc
+		sfx.play("blip")
 	elif k == KEY_UP or k == KEY_K or settings.action_for(k) == "north":
-		tm["sel"] = (int(tm["sel"]) + n - 1) % n
+		if foc == 0:
+			tm["sel"] = (int(tm["sel"]) + n - 1) % n
+		else:
+			tm["sw_sel"] = (int(tm["sw_sel"]) + 3) % 4
 		tm["msg"] = ""
 		sfx.play("blip")
 	elif k == KEY_DOWN or k == KEY_J or settings.action_for(k) == "south":
-		tm["sel"] = (int(tm["sel"]) + 1) % n
+		if foc == 0:
+			tm["sel"] = (int(tm["sel"]) + 1) % n
+		else:
+			tm["sw_sel"] = (int(tm["sw_sel"]) + 1) % 4
 		tm["msg"] = ""
 		sfx.play("blip")
+	elif k == KEY_LEFT or k == KEY_RIGHT or k == KEY_H or k == KEY_L or settings.action_for(k) == "west" or settings.action_for(k) == "east":
+		var right: bool = k == KEY_RIGHT or k == KEY_L or settings.action_for(k) == "east"
+		var si: int = int(tm["sw_sel"])
+		var cur: int = int(tm["sw"][si])
+		_tm_set_switch(si, clampi(cur + (1 if right else -1), 0, 2))
 	elif k >= KEY_1 and k < KEY_1 + n:
 		tm["sel"] = k - KEY_1
+		tm["foc"] = 0
 		tm["msg"] = ""
 		sfx.play("blip")
+	elif k == KEY_R:
+		_tm_regen()
 	elif k == KEY_C:
 		if game.portal.is_empty():
 			tm["msg"] = "No portal is open."
@@ -360,14 +419,37 @@ func _terminal_key(k: int) -> void:
 			tm["msg"] = "Contract scrapped.  The portal is closed."
 			sfx.play("blip")
 	elif k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
-		if not game.portal.is_empty():
-			tm["msg"] = "A portal is already open.  Finish that contract, or press C to scrap it."
+		_tm_accept()
+
+func _term_mouse(ev: InputEvent) -> void:
+	if ev is InputEventMouseMotion:
+		var h: Dictionary = screen.tm_hit(ev.position / UI_S)
+		if h.get("kind", "") == "row" and int(h["i"]) != int(tm["sel"]):
+			tm["sel"] = int(h["i"])
+			tm["foc"] = 0
 			sfx.play("blip")
-		elif game.portal_open(tm["offers"][int(tm["sel"])], int(tm["cell"])):
+	elif ev is InputEventMouseButton and ev.pressed:
+		if ev.button_index == MOUSE_BUTTON_RIGHT:
 			resume_play()
-		else:
-			tm["msg"] = "That contract is already done." if game.done_contracts.has(String(tm["offers"][int(tm["sel"])]["id"])) else "No room for a portal beside this terminal."
-			sfx.play("blip")
+			return
+		if ev.button_index != MOUSE_BUTTON_LEFT:
+			return
+		var h: Dictionary = screen.tm_hit(ev.position / UI_S)
+		match String(h.get("kind", "")):
+			"row":
+				tm["sel"] = int(h["i"])
+				tm["foc"] = 0
+				if ev.double_click:
+					_tm_accept()
+			"switch":
+				tm["foc"] = 1
+				tm["sw_sel"] = int(h["i"])
+				if int(h["v"]) >= 0:
+					_tm_set_switch(int(h["i"]), int(h["v"]))
+			"regen":
+				_tm_regen()
+			"accept":
+				_tm_accept()
 
 ## the player stepped into an open portal, or out through a site's exit: hand over to the world, which swaps the game
 func _mission_transfer() -> void:
@@ -1221,6 +1303,9 @@ func _unhandled_input(ev: InputEvent) -> void:
 		return
 	if mode == "elevator":
 		_elev_mouse(ev)
+		return
+	if mode == "terminal":
+		_term_mouse(ev)
 		return
 	if not (mode in MOUSE_MODES):
 		return

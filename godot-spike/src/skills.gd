@@ -243,13 +243,14 @@ static func crit_chance(grit_lvl: int) -> int:
 	return clampi(6 - grit_lvl, 1, 6)
 
 # ---------------------------------------------------------------- people other than the player
-## faction ids as in game.gd: 0 CIV, 1 BRATVA, 2 NAP, 3 NASIM, 4 GANG
+## faction ids as in game.gd: 0 CIV, 1 BRATVA, 2 NAP, 3 NASIM, 4 GANG, 5 CORP
 const NPC_ATTRS := [
 	[10, 10, 10, 10, 10],     # civilians
 	[12, 10, 12, 9, 12],      # Bratva: big, tough, not bookish
 	[11, 12, 11, 11, 12],     # NAP: trained, watchful
 	[10, 12, 13, 13, 10],     # Nasim: quick, sharp
 	[11, 10, 12, 9, 11],      # unaffiliated criminals
+	[11, 11, 12, 11, 12],     # corporate security: drilled, well kitted
 ]
 const NPC_SKILLS := [
 	{},
@@ -257,6 +258,7 @@ const NPC_SKILLS := [
 	{"unarmed": 2, "melee": 3, "ranged": 4, "dodge": 2, "grit": 3, "etiquette": 3, "analysis": 2, "networking": 2, "research": 1},
 	{"unarmed": 3, "melee": 3, "ranged": 3, "dodge": 7, "grit": 2, "deception": 2, "streetwise": 2},
 	{"unarmed": 3, "melee": 2, "ranged": 1, "dodge": 0, "grit": 2, "streetwise": 3},
+	{"unarmed": 2, "melee": 2, "ranged": 3, "dodge": 1, "grit": 3, "analysis": 2, "etiquette": 1},
 ]
 
 static func _mix(seed_value: int, person: int, salt: int) -> int:

@@ -129,6 +129,7 @@ func leave_mission(forced: String = "") -> Dictionary:
 		og.yen += int(res["reward"])
 		og.done_contracts[String(g.mission["offer"]["id"])] = true
 		og.sfx("pick")
+		og.board_after_pay(int(g.mission["offer"].get("term", -1)))
 	og.say(String(res["text"]))
 	og.last_pc = og.pc
 	og.sim.retier(og.pc)

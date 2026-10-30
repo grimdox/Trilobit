@@ -879,7 +879,6 @@ func _cc_doll(c: Vector2, k: float, look: Dictionary) -> void:
 
 # ---------------------------------------------------------------------------------------------- the mission terminal
 const MS = preload("res://src/missions.gd")
-const TM_ROW := 98.0
 
 ## ---- the elevator pad: a grid of buttons, as many as the shaft has floors
 const EV_BTN := Vector2(76, 58)
@@ -961,61 +960,227 @@ func _elevator(W: float, H: float) -> void:
 		_txt(String(rows[q][2]), Vector2(panel.position.x + half + 4.0, ry), 14, kc)
 		_txt(String(rows[q][3]), Vector2(panel.position.x + half + 4.0 + 76.0, ry), 14, ac)
 
+const TM_RISK_COL := [Color(0.45, 1.0, 0.6), Color(1.0, 0.85, 0.3), Color(1.0, 0.38, 0.38)]
+const TM_TYPE_COL := [Color(1.0, 0.4, 0.4), Color(0.4, 1.0, 0.7), Color(1.0, 0.8, 0.25), Color(0.5, 0.8, 1.0), Color(1.0, 0.55, 0.2)]
+const TM_TRACK := [790.0, 900.0, 1010.0]
+const GOLD := Color(1.0, 0.8, 0.25)
+const DIM := Color(0.55, 0.7, 0.85)
+
+func tm_row_rect(k: int) -> Rect2:
+	return Rect2(52, 124 + k * 100.0, 416, 92)
+
+func tm_sw_y(si: int) -> float:
+	return 490.0 + si * 36.0
+
+func tm_regen_rect() -> Rect2:
+	return Rect2(1000, 430, 220, 32)
+
+func tm_accept_rect() -> Rect2:
+	return Rect2(1078, 262, 142, 50)
+
+## what the pointer is over on the terminal: {kind: row|switch|regen|accept, i, v}
+func tm_hit(p: Vector2) -> Dictionary:
+	for k in 5:
+		if tm_row_rect(k).has_point(p):
+			return {"kind": "row", "i": k}
+	if tm_regen_rect().has_point(p):
+		return {"kind": "regen"}
+	if tm_accept_rect().has_point(p):
+		return {"kind": "accept"}
+	for si in 4:
+		var y: float = tm_sw_y(si)
+		if p.y >= y - 22 and p.y <= y + 12 and p.x >= 510 and p.x <= 1230:
+			var best: int = -1
+			for v in 3:
+				if absf(p.x - float(TM_TRACK[v])) <= 52.0:
+					best = v
+			if p.x < 738.0 and p.x > 640.0:
+				best = 0
+			if p.x > 1062.0 and p.x < 1160.0:
+				best = 2
+			return {"kind": "switch", "i": si, "v": best}
+	return {}
+
+func _chip(text: String, x: float, y: float, col: Color, fsize: int = 11) -> float:
+	var w: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x + 12.0
+	draw_rect(Rect2(x, y, w, 17), col * Color(1, 1, 1, 0.18))
+	draw_rect(Rect2(x, y, w, 17), col * Color(1, 1, 1, 0.8), false, 1.0)
+	draw_string(font, Vector2(x + 6, y + 13), text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize, col)
+	return w + 5.0
+
+## corner ticks round a rect: the look of a terminal frame
+func _ticks(r: Rect2, col: Color, n: float = 10.0) -> void:
+	for c in [r.position, Vector2(r.end.x, r.position.y), Vector2(r.position.x, r.end.y), r.end]:
+		var sx: float = 1.0 if c.x <= r.position.x else -1.0
+		var sy: float = 1.0 if c.y <= r.position.y else -1.0
+		draw_line(c, c + Vector2(n * sx, 0), col, 2.0)
+		draw_line(c, c + Vector2(0, n * sy), col, 2.0)
+
+func _tm_panel(r: Rect2, title: String) -> void:
+	draw_rect(r, Color(0.035, 0.05, 0.09, 0.94))
+	draw_rect(Rect2(r.position.x, r.position.y, r.size.x, 26), Color(0.07, 0.16, 0.24, 0.95))
+	draw_polygon(PackedVector2Array([r.position + Vector2(0, 26), r.position + Vector2(r.size.x, 26), r.position + Vector2(r.size.x, 40), r.position + Vector2(0, 40)]),
+		PackedColorArray([Color(0.07, 0.16, 0.24, 0.9), Color(0.07, 0.16, 0.24, 0.9), Color(0.07, 0.16, 0.24, 0.0), Color(0.07, 0.16, 0.24, 0.0)]))
+	draw_rect(r, Color(0.2, 0.55, 0.7, 0.9), false, 1.0)
+	draw_rect(Rect2(r.position.x, r.position.y, 56, 3), MAGENTA)
+	_ticks(r, CYAN)
+	_txt(title, Vector2(r.position.x + 14, r.position.y + 18), 13, Color(0.6, 0.85, 0.95))
+	var yy: float = r.position.y + 28.0
+	while yy < r.end.y - 2:
+		draw_line(Vector2(r.position.x + 1, yy), Vector2(r.end.x - 1, yy), Color(0.4, 0.8, 1.0, 0.025), 1.0)
+		yy += 4.0
+
 func _terminal(W: float, H: float) -> void:
-	draw_rect(Rect2(0, 0, W, H), Color(0.0, 0.0, 0.0, 0.55))
+	draw_rect(Rect2(0, 0, W, H), Color(0.01, 0.015, 0.03, 0.82))
+	for gx in range(0, int(W), 40):
+		draw_line(Vector2(gx, 0), Vector2(gx, H), Color(0.2, 0.5, 0.7, 0.05), 1.0)
+	for gy in range(0, int(H), 40):
+		draw_line(Vector2(0, gy), Vector2(W, gy), Color(0.2, 0.5, 0.7, 0.05), 1.0)
 	var offers: Array = tm.get("offers", [])
 	var sel: int = int(tm.get("sel", 0))
-	var left := Rect2(40, 50, 520, 580)
-	var right := Rect2(580, 50, 660, 580)
-	_panel(left)
-	_panel(right)
-	_txt("MISSION TERMINAL", Vector2(60, 84), 24, CYAN)
-	_txt("Five contracts are posted today", Vector2(60, 106), 14, Color(0.6, 0.75, 0.9))
+	var sw: Array = tm.get("sw", [1, 1, 1, 1])
+	var used: Array = tm.get("used", sw)
+	var foc: int = int(tm.get("foc", 0))
+	var swsel: int = int(tm.get("sw_sel", 0))
 	var portal_open: bool = game != null and not game.portal.is_empty()
+	var yen: int = game.yen if game != null else 0
+	# ---- header
+	draw_rect(Rect2(40, 20, 1200, 50), Color(0.05, 0.09, 0.15, 0.96))
+	draw_rect(Rect2(40, 20, 1200, 50), Color(0.2, 0.55, 0.7, 0.9), false, 1.0)
+	draw_rect(Rect2(40, 20, 6, 50), MAGENTA)
+	_ticks(Rect2(40, 20, 1200, 50), CYAN)
+	_txt("MISSION TERMINAL", Vector2(62, 54), 26, CYAN)
+	_txt("CONTRACT BOARD  //  BATCH %d  //  DAY %d" % [int(tm.get("gen", 0)) + 1, int(tm.get("day", 0)) + 1], Vector2(330, 52), 14, DIM)
+	_rtxt("¥%d" % yen, 1222, 54, 24, GOLD)
+	_rtxt("WALLET", 1222 - font.get_string_size("¥%d" % yen, HORIZONTAL_ALIGNMENT_LEFT, -1, 24).x - 14, 52, 12, DIM)
+	# ---- the five contracts
+	var left := Rect2(40, 84, 440, 566)
+	_tm_panel(left, "OPEN CONTRACTS")
+	var n_done := 0
 	for k in offers.size():
 		var o: Dictionary = offers[k]
-		var r := Rect2(54, 122 + k * TM_ROW, 492, TM_ROW - 8)
+		var r: Rect2 = tm_row_rect(k)
 		var on: bool = k == sel
-		draw_rect(r, Color(0.12, 0.2, 0.3, 0.95) if on else Color(0.06, 0.09, 0.14, 0.9))
-		draw_rect(r, MAGENTA if on else Color(0.2, 0.4, 0.5), false, 1.5 if on else 1.0)
-		var tcol: Color = [Color(1.0, 0.4, 0.4), Color(0.4, 1.0, 0.7), Color(1.0, 0.8, 0.25), Color(0.5, 0.8, 1.0), Color(1.0, 0.55, 0.2)][k % 5]
-		draw_rect(Rect2(r.position.x + 10, r.position.y + 12, 64, 24), tcol * Color(1, 1, 1, 0.25))
-		draw_rect(Rect2(r.position.x + 10, r.position.y + 12, 64, 24), tcol, false, 1.0)
-		_txt(String(o["tag"]), Vector2(r.position.x + 10, r.position.y + 30), 15, tcol, HORIZONTAL_ALIGNMENT_CENTER, 64.0)
-		_txt("%d" % (k + 1), Vector2(r.position.x + 12, r.position.y + 62), 14, Color(0.5, 0.65, 0.8))
-		_txt(String(o["name"]).to_upper(), Vector2(r.position.x + 90, r.position.y + 28), 18, Color.WHITE)
-		_fit(String(o["title"]), Vector2(r.position.x + 90, r.position.y + 52), 15, Color(0.8, 0.9, 1.0), 300.0)
 		var is_done: bool = game != null and game.done_contracts.has(String(o["id"]))
-		_rtxt("DONE" if is_done else "¥%d" % int(o["reward"]), r.end.x - 14, r.position.y + 28, 20, Color(0.5, 0.6, 0.65) if is_done else Color(1.0, 0.8, 0.25))
-		_rtxt("risk: " + MS.risk_text(int(o["risk"])), r.end.x - 14, r.position.y + 52, 14, [Color(0.5, 1.0, 0.6), Color(1.0, 0.85, 0.3), Color(1.0, 0.4, 0.4)][clampi(int(o["risk"]), 1, 3) - 1])
-		_fit(String(o["site"]) if o["type"] in ["assassination", "rescue"] else String(o["client"]), Vector2(r.position.x + 90, r.position.y + 72), 13, Color(0.55, 0.7, 0.85), 390.0)
+		n_done += 1 if is_done else 0
+		var tcol: Color = TM_TYPE_COL[k % 5]
+		var rk: int = clampi(int(o["risk"]), 1, 3)
+		var rcol: Color = TM_RISK_COL[rk - 1]
+		draw_rect(r, Color(0.1, 0.2, 0.3, 0.97) if on else Color(0.05, 0.08, 0.13, 0.9))
+		draw_rect(Rect2(r.position.x, r.position.y, 4, r.size.y), tcol if not is_done else Color(0.3, 0.35, 0.4))
+		draw_rect(r, MAGENTA if (on and foc == 0) else (CYAN if on else Color(0.18, 0.36, 0.46)), false, 2.0 if on else 1.0)
+		if on:
+			_ticks(r.grow(2), MAGENTA if foc == 0 else CYAN, 8.0)
+		var dim: float = 0.45 if is_done else 1.0
+		draw_rect(Rect2(r.position.x + 12, r.position.y + 10, 60, 22), tcol * Color(1, 1, 1, 0.22 * dim))
+		draw_rect(Rect2(r.position.x + 12, r.position.y + 10, 60, 22), tcol * Color(1, 1, 1, dim), false, 1.0)
+		_txt(String(o["tag"]), Vector2(r.position.x + 12, r.position.y + 27), 15, tcol * Color(1, 1, 1, dim), HORIZONTAL_ALIGNMENT_CENTER, 60.0)
+		_txt("%d" % (k + 1), Vector2(r.position.x + 38, r.position.y + 52), 16, DIM)
+		_txt(String(o["name"]).to_upper(), Vector2(r.position.x + 84, r.position.y + 28), 18, Color(1, 1, 1, dim))
+		_fit(String(o["title"]), Vector2(r.position.x + 84, r.position.y + 49), 14, Color(0.8, 0.9, 1.0, dim), 318.0)
+		if is_done:
+			_rtxt("DONE", r.end.x - 14, r.position.y + 29, 20, Color(0.5, 0.65, 0.7))
+			draw_line(Vector2(r.position.x + 84, r.position.y + 24), Vector2(r.position.x + 84 + font.get_string_size(String(o["name"]).to_upper(), HORIZONTAL_ALIGNMENT_LEFT, -1, 18).x, r.position.y + 24), Color(0.5, 0.65, 0.7, 0.7), 1.5)
+		else:
+			_rtxt("¥%d" % int(o["reward"]), r.end.x - 14, r.position.y + 29, 22, GOLD)
+		_rtxt("%s  %d hostiles" % [MS.risk_text(rk).to_upper(), int(o.get("hostiles", 0))], r.end.x - 14, r.position.y + 77, 13, rcol * Color(1, 1, 1, dim))
+		var cx: float = r.position.x + 84
+		var cy: float = r.position.y + 64
+		cx += _chip(MS.layout_short(o), cx, cy, Color(0.5, 0.8, 1.0) * Color(1, 1, 1, dim))
+		cx += _chip(MS.opposition_short(o), cx, cy, Color(1.0, 0.6, 0.4) * Color(1, 1, 1, dim))
+		cx += _chip(MS.length_short(o), cx, cy, Color(0.7, 0.9, 0.5) * Color(1, 1, 1, dim))
+	_txt("%d of %d complete" % [n_done, offers.size()], Vector2(left.position.x + 14, left.end.y - 10), 12, DIM)
+	_rtxt("all five complete = a free new batch", left.end.x - 14, left.end.y - 10, 12, Color(0.45, 0.6, 0.7))
 	if offers.is_empty():
 		return
+	# ---- the chosen contract
 	var o: Dictionary = offers[sel]
 	var t: Dictionary = MS.type_of(o["type"])
+	var right := Rect2(500, 84, 740, 332)
+	_tm_panel(right, "CONTRACT DETAILS")
 	var x: float = right.position.x + 22
 	var w: float = right.size.x - 44
-	_txt(String(o["name"]).to_upper(), Vector2(x, 86), 26, Color.WHITE)
-	_rtxt("¥%d on completion" % int(o["reward"]), right.end.x - 22, 86, 22, Color(1.0, 0.8, 0.25))
-	_txt(String(o["title"]), Vector2(x, 116), 18, CYAN)
-	draw_multiline_string(font, Vector2(x, 150), String(t["line"]), HORIZONTAL_ALIGNMENT_LEFT, w, 17, 2, Color(0.9, 0.95, 1.0))
-	draw_multiline_string(font, Vector2(x, 206), String(o["brief"]), HORIZONTAL_ALIGNMENT_LEFT, w, 15, 6, Color(0.7, 0.82, 0.92))
-	_txt("RISK", Vector2(x, 340), 14, Color(0.55, 0.7, 0.85))
-	for p in 3:
-		var filled: bool = p < int(o["risk"])
-		draw_rect(Rect2(x + 52 + p * 26, 326, 20, 14), [Color(1.0, 0.4, 0.4) if filled else Color(0.15, 0.2, 0.28)][0])
-	_txt("HELPS", Vector2(x, 372), 14, Color(0.55, 0.7, 0.85))
+	var rk2: int = clampi(int(o["risk"]), 1, 3)
+	_txt(String(o["name"]).to_upper(), Vector2(x, 140), 28, Color.WHITE)
+	_rtxt("¥%d" % int(o["reward"]), right.end.x - 22, 140, 32, GOLD)
+	_rtxt("ON COMPLETION  -  %d hostiles" % int(o.get("hostiles", 0)), right.end.x - 22, 160, 12, DIM)
+	_fit(String(o["title"]), Vector2(x, 164), 18, CYAN, 420.0)
+	draw_multiline_string(font, Vector2(x, 192), String(o["brief"]), HORIZONTAL_ALIGNMENT_LEFT, w, 14, 3, Color(0.75, 0.86, 0.95))
+	var tiles: Array = [["HOSTILES", "%d" % int(o.get("hostiles", 0)), Color(1.0, 0.5, 0.45)],
+		["ENEMY LEVEL", ("%d" % int(o["lv"][0])) if int(o["lv"][0]) == int(o["lv"][1]) else ("%d-%d" % [int(o["lv"][0]), int(o["lv"][1])]), TM_RISK_COL[rk2 - 1]],
+		["ROOMS", "%d" % int(o.get("rooms", 10)), Color(0.5, 0.8, 1.0)], ["RISK", MS.risk_text(rk2).to_upper(), TM_RISK_COL[rk2 - 1]]]
+	for q in tiles.size():
+		var tr := Rect2(x + q * 140.0, 262, 130, 50)
+		draw_rect(tr, Color(0.06, 0.1, 0.16, 0.95))
+		draw_rect(tr, Color(0.2, 0.4, 0.5), false, 1.0)
+		draw_rect(Rect2(tr.position.x, tr.position.y, 3, tr.size.y), tiles[q][2])
+		_txt(String(tiles[q][0]), Vector2(tr.position.x + 12, tr.position.y + 16), 11, DIM)
+		_fit(String(tiles[q][1]), Vector2(tr.position.x + 12, tr.position.y + 42), 22, tiles[q][2], 108.0)
+	var ar: Rect2 = tm_accept_rect()
+	var can: bool = not portal_open and not (game != null and game.done_contracts.has(String(o["id"])))
+	draw_rect(ar, Color(0.45, 0.1, 0.3, 0.95) if can else Color(0.12, 0.14, 0.18, 0.95))
+	draw_rect(ar, MAGENTA if can else Color(0.3, 0.35, 0.4), false, 2.0)
+	_ticks(ar, MAGENTA if can else Color(0.3, 0.35, 0.4), 7.0)
+	_txt("ACCEPT", Vector2(ar.position.x, ar.position.y + 24), 18, Color.WHITE if can else DIM, HORIZONTAL_ALIGNMENT_CENTER, ar.size.x)
+	_txt("[Enter]", Vector2(ar.position.x, ar.position.y + 42), 12, Color(1, 0.75, 0.9) if can else DIM, HORIZONTAL_ALIGNMENT_CENTER, ar.size.x)
+	_txt("WAYS IN", Vector2(x, 336), 12, DIM)
+	var ways: Array = MS.WAYS.get(String(o["type"]), [])
+	for q in ways.size():
+		_fit("-  " + String(ways[q]), Vector2(x + 62, 336 + q * 18), 13, Color(0.85, 0.92, 1.0), w - 62)
 	var bits: Array = []
 	for sid in t["skills"]:
 		var sd: Dictionary = SK.skill(sid)
 		var mine: int = game.lvl(sid) if game != null else 0
 		bits.append("%s %d%s" % [sd["name"], mine, "" if sd["live"] else " (not in play yet)"])
-	_txt(", ".join(bits), Vector2(x + 62, 372), 15, Color(0.5, 1.0, 0.7))
-	draw_multiline_string(font, Vector2(x, 412), "Accepting opens a portal on the street beside this terminal.  Stepping through it enters the site.  The site is its own place, and leaving it closes the portal for good: pay only on a met objective.", HORIZONTAL_ALIGNMENT_LEFT, w, 14, 4, Color(0.6, 0.75, 0.9))
-	if portal_open:
-		draw_rect(Rect2(x, 482, w, 60), Color(0.35, 0.1, 0.2, 0.6))
-		draw_multiline_string(font, Vector2(x + 12, 506), "A portal is already open for: %s.  Finish that contract, or scrap it with C." % String(game.portal["offer"]["title"]), HORIZONTAL_ALIGNMENT_LEFT, w - 24, 15, 2, Color(1.0, 0.6, 0.7))
+	_txt("HELPS", Vector2(x, 396), 12, DIM)
+	_fit(", ".join(bits), Vector2(x + 62, 396), 13, Color(0.5, 1.0, 0.7), w - 62)
+	# ---- the switches
+	var bot := Rect2(500, 424, 740, 226)
+	_tm_panel(bot, "BOARD SETTINGS  -  APPLY TO THE NEXT BATCH")
+	var rr: Rect2 = tm_regen_rect()
+	var afford: bool = yen >= MS.NEW_BATCH_COST
+	draw_rect(rr, Color(0.07, 0.25, 0.3, 0.97) if afford else Color(0.14, 0.1, 0.12, 0.97))
+	draw_rect(rr, CYAN if afford else Color(0.5, 0.3, 0.3), false, 1.5)
+	_ticks(rr, CYAN if afford else Color(0.5, 0.3, 0.3), 6.0)
+	_txt("NEW BATCH  ¥%d  [R]" % MS.NEW_BATCH_COST, Vector2(rr.position.x, rr.position.y + 22), 15, Color.WHITE if afford else Color(0.8, 0.5, 0.5), HORIZONTAL_ALIGNMENT_CENTER, rr.size.x)
+	if sw != used:
+		_txt("settings changed: the posted contracts keep their old terms", Vector2(520, 462), 13, Color(1.0, 0.8, 0.3))
+	else:
+		_txt("the posted contracts were made with these settings", Vector2(520, 462), 13, Color(0.45, 0.6, 0.7))
+	for si in 4:
+		var sd2: Dictionary = MS.SWITCHES[si]
+		var y: float = tm_sw_y(si)
+		var v: int = int(sw[si])
+		var rowr := Rect2(512, y - 22, 716, 33)
+		var is_sel: bool = foc == 1 and si == swsel
+		if is_sel or si == swsel:
+			draw_rect(rowr, Color(0.1, 0.2, 0.3, 0.8) if is_sel else Color(0.08, 0.13, 0.2, 0.6))
+			if is_sel:
+				draw_rect(rowr, MAGENTA, false, 1.5)
+		_txt(String(sd2["name"]), Vector2(526, y), 15, CYAN if is_sel else Color(0.45, 0.8, 0.9))
+		_rtxt(String(sd2["a"]), 760, y, 17, Color.WHITE if v == 0 else Color(0.5, 0.62, 0.72))
+		_txt(String(sd2["b"]), Vector2(1040, y), 17, Color.WHITE if v == 2 else Color(0.5, 0.62, 0.72))
+		draw_line(Vector2(TM_TRACK[0], y - 6), Vector2(TM_TRACK[2], y - 6), Color(0.25, 0.5, 0.6), 3.0)
+		draw_line(Vector2(TM_TRACK[0], y - 6), Vector2(TM_TRACK[v], y - 6), MAGENTA, 3.0)
+		for q in 3:
+			var cxn: float = TM_TRACK[q]
+			if q == v:
+				for gl in 4:
+					draw_circle(Vector2(cxn, y - 6), 15.0 - gl * 2.5, Color(1.0, 0.25, 0.65, 0.08 + 0.05 * gl))
+				draw_circle(Vector2(cxn, y - 6), 8.0, MAGENTA)
+				draw_circle(Vector2(cxn, y - 6), 3.5, Color.WHITE)
+			else:
+				draw_circle(Vector2(cxn, y - 6), 6.0, Color(0.06, 0.1, 0.16))
+				draw_arc(Vector2(cxn, y - 6), 6.0, 0.0, TAU, 16, Color(0.4, 0.65, 0.75), 1.5)
+		_txt("NEUTRAL", Vector2(TM_TRACK[1] - 40, y + 8), 10, Color(1.0, 0.8, 0.9) if v == 1 else Color(0.4, 0.55, 0.65), HORIZONTAL_ALIGNMENT_CENTER, 80.0)
+	var shown: Dictionary = MS.SWITCHES[swsel]
+	var hv: int = int(sw[swsel])
+	_fit(String(shown["hint_a"] if hv == 0 else (shown["hint_b"] if hv == 2 else shown["hint_n"])), Vector2(526, 638), 13, Color(0.8, 0.9, 1.0), 690.0)
+	# ---- the foot
 	var msg: String = String(tm.get("msg", ""))
-	if msg != "":
-		_txt(msg, Vector2(x, 570), 16, Color(1.0, 0.8, 0.25))
-	_txt("Up / Down or 1-5 chooses  -  Enter accepts  -  C scraps an open contract  -  Esc leaves", Vector2(60, 664), 15, Color(0.6, 0.75, 0.9))
+	if portal_open:
+		draw_rect(Rect2(40, 656, 1200, 22), Color(0.35, 0.1, 0.2, 0.7))
+		_fit("A portal is open for: %s.  Finish that contract, or scrap it with C." % String(game.portal["offer"]["title"]), Vector2(52, 672), 14, Color(1.0, 0.6, 0.7), 1170.0)
+	elif msg != "":
+		_fit(msg, Vector2(52, 672), 15, GOLD, 1170.0)
+	_txt("Up/Down or 1-5: contract    Tab: switch focus    Left/Right: change setting    R: new batch (¥%d)    Enter: accept    C: scrap    Esc: leave" % MS.NEW_BATCH_COST, Vector2(40, 702), 13, DIM)

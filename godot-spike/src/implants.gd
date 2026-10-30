@@ -20,7 +20,7 @@ const TIER_NAME := {1: "Basic", 2: "Improved", 3: "Quality", 4: "Military", 5: "
 const REPAIR_FRACTION := 0.25            # repairing an implant worn to nothing costs this fraction of its price
 ## what wired people carry (game.gd faction numbers: BRATVA 1, NAP 2): ids from the catalogue.  power.gd NPC_DRAW is the sum of their draw.  Civilians and the gang are unwired;
 ## Nasim refuse implants (design), so they hold nothing here.
-const NPC_RIGS := {1: ["x105", "x108", "x116", "x122"], 2: ["x205", "x208", "x214", "x216", "x222"]}
+const NPC_RIGS := {1: ["x105", "x108", "x116", "x122"], 2: ["x205", "x208", "x214", "x216", "x222"], 5: ["x205", "x208", "x214", "x216", "x222"]}
 static var ALL: Array = _build()
 static var _by_id: Dictionary = {}
 

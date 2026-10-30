@@ -26,7 +26,7 @@ const HOUR_TURNS := 600                                     # clock.gd: one hour
 ## (Bratva wear four Basic implants: 4 x 0.5 kJ/h; NAP officers five Improved ones: 5 x 1 kJ/h; see implants.gd NPC_RIGS.)
 ## Each wired person last charged some time in the past 72 hours (a fixed point from the seed and their index), so how much is left in them is a fraction of a full charge
 ## that runs down with the clock.  game.gd freezes the figure the moment they die, or are first drained, and keeps it from then on.
-const NPC_DRAW := [0.0, 2.0, 5.0, 0.0, 0.0]
+const NPC_DRAW := [0.0, 2.0, 5.0, 0.0, 0.0, 5.0]
 ## Vehicles (electric: `charge` is a percentage of the pack).  A bank at a lot or station sells the same power at the same district rate and power tax, with no quality
 ## fee or implant tax: a pack holds CAR_PACK_KJ (200 kJ, so a car runs about a day's worth of a Bratva rig's draw), a full charge from empty about ¥220 in the middle district.
 const CAR_PACK_KJ := 200.0

@@ -51,7 +51,8 @@ const BRATVA := 1
 const NAP := 2
 const NASIM := 3
 const GANG := 4            # unaffiliated criminals (the harbor's north end)
-const FAC_NAMES := ["resident", "Bratva thug", "NAP officer", "Nasim runner", "unaffiliated criminal"]
+const CORP := 5            # corporate security (mission sites only): armed, wired, on the company's side
+const FAC_NAMES := ["resident", "Bratva thug", "NAP officer", "Nasim runner", "unaffiliated criminal", "corporate security guard"]
 const FIRST := ["Hanako", "Ryo", "Mika", "Daichi", "Yuna", "Kenji", "Aiko", "Sora", "Natsu", "Taro", "Rin", "Haru", "Emi", "Jiro", "Saki", "Koji", "Ayumi", "Shin", "Noa", "Leo", "Mei", "Ivan", "Dasha", "Pavel", "Lena", "Misha", "Zhenya", "Tamsin"]
 const SIZE_DIRS := [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]]
 const DIR4 := [[0, -1], [1, 0], [0, 1], [-1, 0]]
@@ -108,6 +109,8 @@ var elev_hit: int = -1                         # an elevator the player just ste
 var clock_hit: int = -1                        # a station clock the player just used (the front end shows its readout and clears this)
 var charger_hit: int = -1                      # a charging post the player just used (the front end opens its menu and clears this)
 var energy: PackedInt32Array                   # kJ left in each person: -1 until it is first needed (then power.gd works it out from the clock); frozen when they die or are drained
+var boards: Dictionary = {}                    # each mission terminal's board, by cell: {day, gen, sw (switches now), used (switches that made the offers), offers}
+var mlvl: Dictionary = {}                      # mission sites: a hostile's character level (agent index -> level); it adds to their combat skills
 var done_contracts: Dictionary = {}           # ids of the contracts the player has completed and been paid for: a posted contract pays once
 var portal: Dictionary = {}                    # {cell, was (the tile it replaced), under, offer}
 var terminal_hit: int = -1                     # a mission terminal the player just used (the front end opens its screen and clears this)
@@ -839,6 +842,8 @@ func _start_player() -> void:
 				bd = d
 				best = i
 	pc = best if mission.is_empty() else int(city.get_meta("site")["entry"])
+	if not mission.is_empty():
+		facing = _site_facing()
 	if street_start:
 		pass
 	elif mission.is_empty() and not city.apartments.is_empty() and (island == null or zone == island.CITY_ZONE):
@@ -927,7 +932,7 @@ func in_bounds(x: int, y: int) -> bool:
 
 func hostile(i: int) -> bool:
 	match fac[i]:
-		BRATVA, GANG: return true
+		BRATVA, GANG, CORP: return true
 		NAP: return false                 # officers act only on what they see you do: a warning first, then they hunt
 		_: return false
 
@@ -1055,7 +1060,10 @@ func base_lvl(id: String) -> int:
 
 ## an NPC's effective skill (attributes and skills come from faction and person index; see skills.gd)
 func npc_lvl(i: int, id: String) -> int:
-	return SK.npc_level(fac[i], seed_value, i, id)
+	var b: int = 0
+	if not mlvl.is_empty() and id in ["ranged", "melee", "unarmed", "dodge", "grit"]:
+		b = int(mlvl.get(i, 0)) / 2                      # a mission hostile of character level L fights as if L/2 better trained
+	return SK.npc_level(fac[i], seed_value, i, id) + b
 
 func npc_attr_set(i: int) -> Dictionary:
 	return SK.npc_attrs(fac[i], seed_value, i)
@@ -2444,6 +2452,7 @@ func npc_armor(i: int) -> int:
 		BRATVA: return 1
 		GANG: return 1
 		NAP: return 3
+		CORP: return 3
 		NASIM: return 2
 	return 0
 
@@ -2801,7 +2810,7 @@ func npc_melee_stats(i: int) -> Dictionary:
 	return db.defs[id]["melee"]
 
 func _melee_pools() -> void:
-	melee_pool = {BRATVA: [], NAP: [], NASIM: [], GANG: []}
+	melee_pool = {BRATVA: [], NAP: [], NASIM: [], GANG: [], CORP: []}
 	var ids: Array = []
 	for k in db.defs:
 		if "melee" in db.defs[k].get("tags", []) and not (k.ends_with("_f") or k.ends_with("_m")):
@@ -2815,6 +2824,7 @@ func _melee_pools() -> void:
 			melee_pool[GANG].append(k)
 		elif name in ["wakizashi", "tanto", "katana", "tonfa", "bo", "jitte"]:
 			melee_pool[NAP].append(k)
+			melee_pool[CORP].append(k)
 		elif name in ["kama", "nunchaku", "sai", "kunai", "jo", "tessen"]:
 			melee_pool[NASIM].append(k)
 	melee_all = ids
@@ -3690,6 +3700,7 @@ func _scatter_cell(c: int) -> int:
 
 ## a blast: everyone within `radius` on the same level takes damage that falls off with distance, you included
 func _explode(c: int, radius: int, dmg: int) -> void:
+	MS.on_blast(self, c, radius)
 	say_if_seen(c, "BOOM.")
 	sfx("boom")
 	if c < s2:
@@ -4065,7 +4076,7 @@ func _ai() -> void:
 			sim.ctl[i] = 1
 			continue
 		# who is worth watching: armed or hostile factions, or anyone already worked up
-		var capable := fac[i] == BRATVA or fac[i] == GANG or fac[i] == NAP or (fac[i] == NASIM and noticed_you[i] == 1)
+		var capable := fac[i] == BRATVA or fac[i] == GANG or fac[i] == NAP or fac[i] == CORP or (fac[i] == NASIM and noticed_you[i] == 1)
 		if st == UNAWARE and (not capable or d > 24 or not hostile(i)):
 			continue
 		if st == UNAWARE or st == SUSPICIOUS or st == SEARCHING or st == RETURNING:
@@ -5446,7 +5457,7 @@ func outside_tile(x: int, y: int) -> int:
 
 ## everything about the player that travels between zones
 func player_dict() -> Dictionary:
-	return {"done": done_contracts.duplicate(), "power": power, "power_state": power_state, "yen": yen, "implants": implants.duplicate(), "nanos": nanos.duplicate(), "nano_fx": nano_fx.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
+	return {"done": done_contracts.duplicate(), "boards": boards.duplicate(true), "power": power, "power_state": power_state, "yen": yen, "implants": implants.duplicate(), "nanos": nanos.duplicate(), "nano_fx": nano_fx.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
 		"name": player_name, "attrs": attrs.duplicate(), "app": app.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "lvl": pc_level, "pts": attr_points, "inv": inv.to_dict(),
 		"stamina": stamina, "stam_v": 2, "ap": ap, "stance": stance, "run_mode": run_mode, "turn": turn, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "barter": barter.to_dict(), "flying": flying,
 		"body": body.to_dict(), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
@@ -5539,6 +5550,7 @@ func _legacy_item(x: Dictionary, loose: Array, gear: Array, is_hand: bool = fals
 
 func apply_player(d: Dictionary) -> void:
 	done_contracts = d.get("done", {})
+	boards = d.get("boards", {})
 	power = float(d.get("power", -1.0))
 	power_state = int(d.get("power_state", 0))
 	yen = int(d["yen"])
@@ -5591,7 +5603,7 @@ func save_dict() -> Dictionary:
 	var vlist := []
 	for v in vehicles:
 		vlist.append(vs.to_dict(v))
-	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "corpses": corpses, "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "nanos": nanos, "nano_fx": nano_fx, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "lvl": pc_level, "pts": attr_points, "in_vehicle": in_vehicle,
+	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "corpses": corpses, "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "nanos": nanos, "nano_fx": nano_fx, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "lvl": pc_level, "pts": attr_points, "boards": boards, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
 			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "barter": barter.to_dict(), "inv": inv.to_dict(),
 			"items_at": it_at, "open_doors": open_doors.keys(), "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
@@ -5617,6 +5629,7 @@ func load_dict(d: Dictionary) -> void:
 	for dc in d.get("open_doors", []):
 		_set_door(int(dc), false, false)
 	done_contracts = d.get("done", {})
+	boards = d.get("boards", {})
 	power = float(d.get("power", -1.0))
 	power_state = int(d.get("power_state", 0))
 	yen = int(d["yen"])
@@ -5766,13 +5779,16 @@ func _mission_people() -> void:
 	var site: Dictionary = city.get_meta("site")
 	var agents: Dictionary = {}
 	var risk: int = int(mission["offer"]["risk"])
+	mlvl = {}
 	for k in site["agents"].size():
 		var a: Dictionary = site["agents"][k]
 		var f: int = int(a["fac"])
+		var lv: int = int(a.get("lv", 0))
 		fac[k] = f
-		hpmax[k] = [25, 40, 45, 30, 35][f] + (6 if a["role"] == "target" else 0)
+		mlvl[k] = lv
+		hpmax[k] = [25, 40, 45, 30, 35, 45][f] + (6 if a["role"] == "target" else 0) + 3 * lv
 		hpn[k] = hpmax[k]
-		gunc[k] = 0 if f == CIV else (1 if (a["role"] != "target" or risk >= 2) else 0)
+		gunc[k] = 0 if f == CIV else (1 + (1 if lv >= 4 else 0) + (1 if lv >= 7 else 0) if (a["role"] != "target" or risk >= 2) else 0)
 		yenn[k] = 0 if f == CIV else rng.randi_range(30, 160)
 		if a["name"] != "":
 			nname[k] = a["name"]
@@ -5785,6 +5801,31 @@ func _mission_people() -> void:
 		sim.sticky[k] = 1
 		agents[str(k)] = a["role"]
 	mission["agents"] = agents
+
+## which way you face as you step into a site: towards the middle of the building (outside it), or towards the middle of the room you start in (inside)
+func _site_facing() -> Vector2i:
+	var site: Dictionary = city.get_meta("site")
+	var rooms: Array = site["rooms"]
+	var tx := 0.0
+	var ty := 0.0
+	if site["inside"]:
+		var r: Array = rooms[int(site["start_room"])]
+		tx = r[0] + r[2] / 2.0
+		ty = r[1] + r[3] / 2.0
+	else:
+		for r in rooms:
+			tx += r[0] + r[2] / 2.0
+			ty += r[1] + r[3] / 2.0
+		tx /= rooms.size()
+		ty /= rooms.size()
+	var e: int = int(site["entry"])
+	var dx: float = tx - float(e % size)
+	var dy: float = ty - float(e / size)
+	var sx: int = 0 if absf(dx) < absf(dy) * 0.4 else int(signf(dx))
+	var sy: int = 0 if absf(dy) < absf(dx) * 0.4 else int(signf(dy))
+	if sx == 0 and sy == 0:
+		sy = 1
+	return Vector2i(sx, sy)
 
 ## after the economy has handed out its roles: nobody on a site is a vendor or a fixer, and the hostage can be talked to
 func _mission_roles() -> void:
@@ -5810,6 +5851,44 @@ func _restore_mission_state(saved: Dictionary) -> void:
 		var h: int = MS.agent_with_role(self, "hostage")
 		if h >= 0:
 			sim.sticky[h] = 0
+
+## ---- a terminal's board (missions.gd): kept per terminal, refreshed free once a day, regenerated for MS.NEW_BATCH_COST, regenerated free when all five are done
+func _board_make(term: int, day: int, gen: int, sw: Array) -> Dictionary:
+	var sd: int = world.seed_value if world != null else seed_value
+	return {"day": day, "gen": gen, "sw": sw.duplicate(), "used": sw.duplicate(), "offers": MS.offers(sd, term, day, gen, sw, pc_level)}
+
+## the board at a terminal today: the first visit posts a free batch on Neutral; a new game day posts another, free, with the switches as the player left them
+func board_open(term: int) -> Dictionary:
+	var day: int = sim.tick / CLK.DAY
+	var b: Dictionary = boards.get(str(term), {})
+	if b.is_empty():
+		b = _board_make(term, day, 0, MS.NEUTRAL)
+	elif int(b["day"]) != day:
+		b = _board_make(term, day, int(b["gen"]) + 1, b["sw"])
+	boards[str(term)] = b
+	return b
+
+## the player pays for a new batch on the switches as they now stand; false (and nothing changes) if they cannot afford it
+func board_regen(term: int) -> bool:
+	var b: Dictionary = board_open(term)
+	if yen < MS.NEW_BATCH_COST:
+		return false
+	yen -= MS.NEW_BATCH_COST
+	boards[str(term)] = _board_make(term, sim.tick / CLK.DAY, int(b["gen"]) + 1, b["sw"])
+	sfx("select")
+	return true
+
+## after a contract is paid: if every one of the five on that terminal's board is done, the board regenerates itself at no cost
+func board_after_pay(term: int) -> bool:
+	var b: Dictionary = boards.get(str(term), {})
+	if b.is_empty():
+		return false
+	for o in b["offers"]:
+		if not done_contracts.has(String(o["id"])):
+			return false
+	boards[str(term)] = _board_make(term, sim.tick / CLK.DAY, int(b["gen"]) + 1, b["sw"])
+	say("All five contracts are done.  The terminal posts a fresh batch, free.")
+	return true
 
 ## open a portal on the cell beside a terminal for an accepted offer; false if there is no room
 func portal_open(offer: Dictionary, term_cell: int) -> bool:

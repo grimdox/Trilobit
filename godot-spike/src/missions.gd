@@ -27,6 +27,15 @@ const TYPES := [
 		"how": "Work on the core (walk into it) until the charge is set.  Setting it trips the alarm and starts a fuse: leave before it burns down."},
 ]
 
+## ways in, as the board lists them (the game supports each: they are not flavour)
+const WAYS := {
+	"assassination": ["Shoot the target from cover before the guards close.", "Slip through the side rooms and strike in melee.", "Blow the target up: any explosion that reaches them counts."],
+	"rescue": ["Cut the hostage loose and walk them out quietly.", "Clear the rooms first, then free them.", "Use another way out if the building has one."],
+	"repair": ["Engineering gets it running fastest; Manual works half as well.", "Every attempt is noisy: clear the guards before you start.", "Fewer rooms and quieter routes mean fewer interruptions."],
+	"recover": ["The case can be in any room: search quietly.", "Carry it out the way you came, or by any other exit.", "Unaffiliated crews drift; organised ones keep their posts."],
+	"sabotage": ["Work the core (Engineering or Manual), then run for the exit.", "Or skip the work: a grenade or any blast that reaches the core wrecks it at once.", "Either way the alarm rings, and the guards come."],
+}
+
 const CLIENTS := ["an anonymous broker", "a nervous middle manager", "a fixer who owes someone", "a voice with no name", "a collector with a grudge", "a rival's former partner"]
 const SITES := ["the Hollow Tannery", "Cold Store Nine", "the Salt Warehouse", "the Drowned Archive", "Relay Yard Four", "the Cinder Clinic", "the Night Foundry", "Pier Lock Seven"]
 const FIRST_NAMES := ["Tanaka", "Volkov", "Reyes", "Mori", "Okafor", "Sato", "Brandt", "Ilyin", "Park", "Nakamura", "Costa", "Hale"]
@@ -54,27 +63,145 @@ static func need_for(type_id: String, risk: int) -> int:
 		"sabotage": return 2 + risk
 	return 0
 
-## the five offers a terminal shows: always one of each type, in TYPES order, the same for the same world, terminal and day
-static func offers(world_seed: int, term_cell: int, day: int) -> Array:
+# ---------------------------------------------------------------------------------------------- the board and its switches
+## The four switches on a terminal's board.  Each has a Value A, a Value B and a Neutral between them (0, 1, 2).  Neutral picks, per contract, at random from
+## A, B or the neutral mix defined below.  The settings apply to the NEXT batch of contracts: a batch already posted never changes.
+const SWITCHES := [
+	{"id": "layout", "name": "LAYOUT", "a": "Open", "b": "Closed", "mix": "Mixed",
+		"hint_a": "Large rooms and many doorways.  You start outside the building.",
+		"hint_b": "Small rooms with one or two doors each.  You start inside, with only an exit portal.",
+		"hint_n": "A mix of large and small rooms, a mix of door counts."},
+	{"id": "faction", "name": "OPPOSITION", "a": "Affiliated", "b": "Unaffiliated", "mix": "Mixed",
+		"hint_a": "Everyone on site belongs to one organisation, named in the contract.",
+		"hint_b": "Freelance gang members, no colours, no one to answer to.",
+		"hint_n": "One organisation supplies a quarter to a half of them; the rest are hired gang muscle."},
+	{"id": "length", "name": "LENGTH", "a": "Long", "b": "Short", "mix": "Standard",
+		"hint_a": "About 30 rooms (three times the standard).  More opposition, more pay.",
+		"hint_b": "About 5 rooms (half the standard).  Less opposition, less pay.",
+		"hint_n": "About 10 rooms."},
+	{"id": "risk", "name": "RISK", "a": "Low", "b": "High", "mix": "Moderate",
+		"hint_a": "Opposition one or two levels below yours.",
+		"hint_b": "More of them, at your level or one above.",
+		"hint_n": "Opposition at your level or one below.  Every board keeps one Low and one Moderate contract."},
+]
+const NEUTRAL := [1, 1, 1, 1]
+const ROOMS := {"long": 30, "mid": 10, "short": 5}
+const NEW_BATCH_COST := 100
+const AFFIL := [1, 3, 5, 2]            # the organisations an Affiliated board can name: Bratva, Nasim, corporate security, the NAP (Neutral never uses the NAP)
+const AFFIL_NAMES := {0: "unaffiliated gang members", 1: "Bratva", 2: "the NAP", 3: "Nasim", 4: "unaffiliated gang members", 5: "corporate security"}
+
+static func switch_label(si: int, v: int) -> String:
+	var d: Dictionary = SWITCHES[si]
+	return d["a"] if v == 0 else (d["b"] if v == 2 else "Neutral")
+
+static func pick3(rng: RandomNumberGenerator, v: int) -> int:
+	return v if v != 1 else [0, 2, 1][rng.randi() % 3]          # 0 = Value A, 2 = Value B, 1 = the neutral mix
+
+## hostile NPCs in a site: it grows with the rooms, and the risk raises or lowers it.  The layout never changes it.
+static func hostile_count(rooms: int, risk: int) -> int:
+	return maxi(3, int(round((2.0 + 0.5 * float(rooms)) * [0.8, 1.0, 1.3][clampi(risk, 1, 3) - 1])))
+
+## the character levels of a site's hostiles: Low one or two below the player, Moderate at the player's level or one below, High at it or one above
+static func level_range(plvl: int, risk: int) -> Array:
+	var d: Array = [[-2, -1], [-1, 0], [0, 1]][clampi(risk, 1, 3) - 1]
+	return [clampi(plvl + int(d[0]), 0, 10), clampi(plvl + int(d[1]), 0, 10)]
+
+## pay: a share of the type's base plus a sum for each hostile that would be there, dearer per head as the risk rises
+static func reward_for(type_id: String, hostiles: int, risk: int) -> int:
+	var raw: float = float(type_of(type_id)["base"]) * 0.55 + float(hostiles) * float(26 + 12 * clampi(risk, 1, 3))
+	return int(round(raw / 5.0)) * 5
+
+## a fresh board for a terminal: five contracts, one of each type.  The same arguments give the same board.  `sw` holds the four switch positions (0 A, 1 Neutral,
+## 2 B); `plvl` is the player's character level (the hostiles are levelled from it).  Every board has one Low and one Moderate contract.
+static func offers(world_seed: int, term_cell: int, day: int, gen: int = 0, sw: Array = NEUTRAL, plvl: int = 0) -> Array:
 	var out: Array = []
+	var brng := RandomNumberGenerator.new()
+	brng.seed = hash([world_seed, term_cell, day, gen, "board"])
+	var slots: Array = [0, 1, 2, 3, 4]
+	for k in range(4, 0, -1):
+		var j: int = brng.randi() % (k + 1)
+		var tmp = slots[k]
+		slots[k] = slots[j]
+		slots[j] = tmp
+	var low_slot: int = slots[0]
+	var mod_slot: int = slots[1]
 	for ti in TYPES.size():
 		var t: Dictionary = TYPES[ti]
 		var rng := RandomNumberGenerator.new()
-		rng.seed = hash([world_seed, term_cell, day, ti, "mission"])
-		var risk: int = rng.randi_range(1, 3)
+		rng.seed = hash([world_seed, term_cell, day, gen, ti, "mission"])
+		var risk: int
+		if ti == low_slot:
+			risk = 1
+		elif ti == mod_slot:
+			risk = 2
+		else:
+			risk = 1 if int(sw[3]) == 0 else (3 if int(sw[3]) == 2 else rng.randi_range(1, 3))
 		var site: String = SITES[rng.randi() % SITES.size()]
 		var client: String = CLIENTS[rng.randi() % CLIENTS.size()]
 		var target := ""
 		if t["id"] == "assassination" or t["id"] == "rescue":
 			target = "%s %s" % [["Hana", "Dmitri", "Luis", "Mei", "Joon", "Ade", "Sven", "Rin"][rng.randi() % 8], FIRST_NAMES[rng.randi() % FIRST_NAMES.size()]]
-		var reward: int = int(t["base"]) + risk * 90 + rng.randi_range(0, 60)
+		# the neutral switches resolve now, per contract
+		var lay: String = ["open", "mix", "closed"][pick3(rng, int(sw[0]))]
+		var fct: String = ["affiliated", "mix", "unaffiliated"][pick3(rng, int(sw[1]))]
+		var len_k: String = ["long", "mid", "short"][pick3(rng, int(sw[2]))]
+		var rooms: int = int(ROOMS[len_k])
+		var hostiles: int = hostile_count(rooms, risk)
+		var aff := 0
+		var share := 0.0
+		match fct:
+			"affiliated":
+				aff = AFFIL[rng.randi() % AFFIL.size()]
+				share = 1.0
+			"mix":
+				aff = AFFIL[rng.randi() % 3]                        # never the NAP
+				share = 0.25 + 0.25 * rng.randf()
 		var sd: int = rng.randi()
-		var o := {"id": "%s-%08x" % [t["id"], sd], "type": t["id"], "name": t["name"], "tag": t["tag"], "risk": risk, "reward": reward, "site": site, "client": client,
-			"target": target, "seed": sd}
+		var o := {"id": "%s-%08x" % [t["id"], sd], "type": t["id"], "name": t["name"], "tag": t["tag"], "risk": risk, "site": site, "client": client,
+			"target": target, "seed": sd, "term": term_cell, "gen": gen, "layout": lay, "faction": fct, "length": len_k, "rooms": rooms, "hostiles": hostiles,
+			"aff": aff, "share": share, "lv": level_range(plvl, risk)}
+		o["reward"] = reward_for(String(t["id"]), hostiles, risk)
 		o["title"] = title_of(o)
 		o["brief"] = brief_of(o)
 		out.append(o)
 	return out
+
+## who stands against you, as a phrase
+static func opposition_text(o: Dictionary) -> String:
+	match String(o.get("faction", "unaffiliated")):
+		"affiliated":
+			return AFFIL_NAMES[int(o["aff"])]
+		"mix":
+			return "%s, with hired gang muscle" % AFFIL_NAMES[int(o["aff"])]
+	return "unaffiliated gang members"
+
+static func opposition_short(o: Dictionary) -> String:
+	var nm: String = {1: "BRATVA", 2: "NAP", 3: "NASIM", 5: "CORP SEC"}.get(int(o.get("aff", 0)), "GANG")
+	match String(o.get("faction", "unaffiliated")):
+		"affiliated": return nm
+		"mix": return nm + " + GANG"
+	return "GANG"
+
+static func layout_short(o: Dictionary) -> String:
+	return {"open": "OPEN", "closed": "CLOSED", "mix": "MIXED"}.get(String(o.get("layout", "mix")), "MIXED")
+
+static func length_short(o: Dictionary) -> String:
+	return {"long": "LONG", "mid": "STD", "short": "SHORT"}.get(String(o.get("length", "mid")), "STD")
+
+static func layout_text(o: Dictionary) -> String:
+	return {"open": "Open plan", "closed": "Closed rooms", "mix": "Mixed rooms"}.get(String(o.get("layout", "mix")), "Mixed rooms")
+
+static func length_text(o: Dictionary) -> String:
+	return {"long": "Long", "mid": "Standard", "short": "Short"}.get(String(o.get("length", "mid")), "Standard")
+
+## an offer with every board field present (a contract from before the board settings gets the standard room count and the old guard count)
+static func normalize(o: Dictionary) -> Dictionary:
+	var d: Dictionary = o.duplicate()
+	var defaults := {"layout": "mix", "faction": "mix", "length": "mid", "rooms": 10, "hostiles": guard_count(int(o.get("risk", 1))), "aff": 0, "share": 0.0, "lv": [0, 0], "term": -1, "gen": 0}
+	for k in defaults:
+		if not d.has(k):
+			d[k] = defaults[k]
+	return d
 
 static func title_of(o: Dictionary) -> String:
 	match o["type"]:
@@ -88,12 +215,15 @@ static func title_of(o: Dictionary) -> String:
 static func brief_of(o: Dictionary) -> String:
 	var t: Dictionary = type_of(o["type"])
 	var where: String = "" if o["type"] in ["repair", "recover", "sabotage"] else "  Site: %s." % o["site"]
-	return "Posted by %s.%s  %s" % [o["client"], where, t["how"]]
+	var opp: String = ""
+	if o.has("hostiles"):
+		opp = "  Opposition: %s (%d hostiles, level %d-%d)." % [opposition_text(o), int(o["hostiles"]), int(o["lv"][0]), int(o["lv"][1])]
+	return "Posted by %s.%s%s  %s" % [o["client"], where, opp, t["how"]]
 
 static func risk_text(risk: int) -> String:
 	return ["", "Low", "Moderate", "High"][clampi(risk, 1, 3)]
 
-## the guards on a site by risk, and how well they are armed
+## the hostiles on a site that has no board settings (an old save): by risk
 static func guard_count(risk: int) -> int:
 	return 3 + risk * 2
 
@@ -124,11 +254,29 @@ static func status_text(g) -> String:
 		"recover":
 			s += "  -  %s" % ("case in hand; leave" if has_case(g) else "case not found")
 		"sabotage":
-			if m["planted"]:
+			if m["planted"] and int(m["fuse"]) == 0:
+				s += "  -  core destroyed; leave"
+			elif m["planted"]:
 				s += "  -  CHARGE SET, %d turns to the blast" % maxi(0, int(m["fuse"]))
 			else:
 				s += "  -  core %d/%d" % [m["progress"], m["need"]]
 	return s
+
+## an explosion on a site: one that reaches a sabotage core wrecks it at once, with no work and no fuse
+static func on_blast(g, c: int, radius: int) -> void:
+	if g.mission.is_empty():
+		return
+	var m: Dictionary = g.mission
+	if m["offer"]["type"] != "sabotage" or m["planted"]:
+		return
+	var obj: int = int(g.city.get_meta("site")["objective"])
+	if g.cheb(c, obj) > radius:
+		return
+	m["planted"] = true
+	m["progress"] = int(m["need"])
+	m["fuse"] = 0
+	g.say("The blast tears the core apart.  The sabotage is done.  Get out.")
+	_alarm(g)
 
 static func has_case(g) -> bool:
 	return g.eco._find("trl_datacase") != null

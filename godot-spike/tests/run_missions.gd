@@ -26,6 +26,35 @@ func stand_beside(g, cell: int) -> Vector2i:
 			return Vector2i(-d.x, -d.y)
 	return Vector2i.ZERO
 
+## a walkable cell about `steps` of walking from `from` (or the furthest there is)
+func _far_cell(g, from: int, steps: int) -> int:
+	var dist := {from: 0}
+	var q: Array = [from]
+	var qi := 0
+	var best: int = from
+	while qi < q.size():
+		var cur: int = q[qi]
+		qi += 1
+		if int(dist[cur]) >= steps:
+			return cur
+		for d in [1, -1, g.size, -g.size]:
+			var nx: int = cur + d
+			if nx < 0 or nx >= g.s2 or dist.has(nx) or g.sim.walk[nx] == 0 or g.sim.at[nx] != -1 or g.thing_at.g(nx) != -1:
+				continue
+			if (cur % g.size == 0 and d == -1) or (cur % g.size == g.size - 1 and d == 1):
+				continue
+			dist[nx] = int(dist[cur]) + 1
+			q.append(nx)
+			best = nx
+	return best
+
+func _click(p: Vector2) -> InputEventMouseButton:
+	var e := InputEventMouseButton.new()
+	e.button_index = MOUSE_BUTTON_LEFT
+	e.pressed = true
+	e.position = p
+	return e
+
 func _initialize() -> void:
 	var r = preload("res://tests/test_missions.gd").new().run()
 	for l in r[2]:
@@ -82,8 +111,65 @@ func _initialize() -> void:
 	check("C with no portal open says so", String(m.tm["msg"]).contains("No portal"))
 	m.screen_key(KEY_ESCAPE)
 	check("Esc closes the screen and returns to play", m.mode == "play" and not m.screen.visible)
+	# ---- the board: free first batch, switches, paid new batch, free daily batch, free batch when all five are done
+	var yenb: int = g.yen
+	m.open_terminal(term)
+	var board0: Dictionary = g.boards[str(term)]
+	check("the first batch is free and on Neutral", g.yen == yenb and board0["sw"] == [1, 1, 1, 1] and board0["gen"] == 0 and m.tm["offers"] == board0["offers"])
+	check("the board is kept: reopening the terminal shows the same contracts", (func(): m.screen_key(KEY_ESCAPE); m.open_terminal(term); return m.tm["offers"] == board0["offers"]).call())
+	m.screen_key(KEY_TAB)
+	check("Tab moves the focus to the switches", m.tm["foc"] == 1)
+	m.screen_key(KEY_LEFT)
+	check("Left moves the chosen switch to Value A (Open) and says it applies to the next batch", m.tm["sw"][0] == 0 and String(m.tm["msg"]).contains("next batch") and m.tm["offers"] == board0["offers"])
+	m.screen_key(KEY_RIGHT)
+	m.screen_key(KEY_RIGHT)
+	check("Right twice goes through Neutral to Value B (Closed), and it stops there", m.tm["sw"][0] == 2)
+	m.screen_key(KEY_RIGHT)
+	check("it cannot go beyond Value B", m.tm["sw"][0] == 2)
+	m.screen_key(KEY_DOWN)
+	m.screen_key(KEY_LEFT)
+	check("Down chooses the next switch (Opposition): Left sets it to Affiliated", m.tm["sw_sel"] == 1 and m.tm["sw"][1] == 0)
+	m.screen_key(KEY_DOWN)
+	m.screen_key(KEY_RIGHT)
+	m.screen_key(KEY_RIGHT)
+	check("the Length switch goes to Short", m.tm["sw_sel"] == 2 and m.tm["sw"][2] == 2)
+	var hit: Dictionary = m.screen.tm_hit(Vector2(790, m.screen.tm_sw_y(3) - 6))
+	check("the pointer finds a notch on the switch track (Risk, Value A)", hit.get("kind", "") == "switch" and hit["i"] == 3 and hit["v"] == 0)
+	m._term_mouse(_click(Vector2(790, m.screen.tm_sw_y(3) - 6) * 1.5))
+	check("clicking the notch sets it", m.tm["sw"][3] == 0)
+	g.yen = 50
+	m.screen_key(KEY_R)
+	check("a new batch needs ¥100: with ¥50 nothing changes", g.yen == 50 and g.boards[str(term)]["gen"] == 0 and String(m.tm["msg"]).contains("¥100"))
+	g.yen = 500
+	m.screen_key(KEY_R)
+	var board1: Dictionary = g.boards[str(term)]
+	check("R pays ¥100 and posts a new batch with the new settings", g.yen == 400 and board1["gen"] == 1 and board1["offers"] != board0["offers"] and m.tm["offers"] == board1["offers"] and board1["used"] == [2, 0, 2, 0])
+	check("the new batch obeys them: closed, affiliated, short (5 rooms), Low risk", board1["offers"].all(func(o): return o["faction"] == "affiliated" and o["length"] == "short" and o["rooms"] == 5 and o["layout"] == "closed") and board1["offers"].filter(func(o): return o["risk"] == 1).size() == 4)
+	m.screen_key(KEY_ESCAPE)
+	g.sim.tick += 14400
+	m.open_terminal(term)
+	var board2: Dictionary = g.boards[str(term)]
+	check("a new game day posts a free batch on the settings you left", g.yen == 400 and board2["gen"] == 2 and board2["sw"] == [2, 0, 2, 0] and board2["offers"] != board1["offers"])
+	m.screen_key(KEY_ESCAPE)
+	var paid_before: int = g.yen
+	for o in board2["offers"]:
+		g.done_contracts[String(o["id"])] = true
+	check("all five done: the board regenerates itself, free", g.board_after_pay(term) and g.yen == paid_before and g.boards[str(term)]["gen"] == 3 and g.boards[str(term)]["offers"] != board2["offers"])
+	check("four done is not enough", (func(): var bb: Dictionary = g.boards[str(term)]; g.done_contracts[String(bb["offers"][0]["id"])] = true; return not g.board_after_pay(term)).call())
+	var sdump: Dictionary = JSON.parse_string(JSON.stringify(g.save_dict()))
+	var gg = preload("res://src/game.gd").new(0)
+	gg.world = w
+	gg.island = w.island
+	gg.load_dict(sdump)
+	var lb: Dictionary = gg.boards.get(str(term), {})
+	check("the board survives a save and load (batch, settings, contracts)", not lb.is_empty() and int(lb["gen"]) == 3 and (lb["sw"] as Array).map(func(v): return int(v)) == [2, 0, 2, 0] and int(lb["offers"][0]["rooms"]) == 5 and lb["offers"][0]["id"] == g.boards[str(term)]["offers"][0]["id"])
+	gg.dispose()
+	g.done_contracts.clear()
+	g.boards.clear()
+	g.sim.tick -= 14400
 	# accept each of the five types in turn, play it through
 	var types := ["assassination", "rescue", "repair", "recover", "sabotage"]
+	var last_offer: Dictionary = {}
 	for ti in 5:
 		var tid: String = types[ti]
 		g = w.game
@@ -92,6 +178,7 @@ func _initialize() -> void:
 		m.open_terminal(term)
 		m.screen_key(KEY_1 + ti)
 		var offer: Dictionary = m.tm["offers"][ti]
+		last_offer = offer
 		m.screen_key(KEY_ENTER)
 		check("%s: Enter accepts, closes the screen, opens a portal beside the terminal" % tid, m.mode == "play" and not g.portal.is_empty() and g.portal["offer"]["id"] == offer["id"] and g.cheb(int(g.portal["cell"]), term) == 1)
 		check("%s: the portal is a walkable tile on the street" % tid, g.city.tiles[int(g.portal["cell"])] == CG.TID["portal"] and g.sim.walk[int(g.portal["cell"])] == 1)
@@ -211,7 +298,8 @@ func _initialize() -> void:
 		check("%s: the log says how it ended" % tid, ended.contains("Contract complete"))
 	# failure and abandonment pay nothing; the blast
 	g = w.game
-	check("a paid contract cannot be taken again the same day", not g.portal_open(MS.offers(w.seed_value, term, g.sim.tick / 14400)[4], term))
+	check("finishing all five contracts on a board posted a fresh batch by itself, free", g.boards[str(term)]["gen"] == 1 and g.boards[str(term)]["offers"][0]["id"] != types[0] and not g.done_contracts.has(String(g.boards[str(term)]["offers"][0]["id"])))
+	check("a paid contract cannot be taken again", not g.portal_open(last_offer, term))
 	g.done_contracts.clear()                # (the tests below reuse the same postings)
 	var yen1: int = g.yen
 	dv = stand_beside(g, term)
@@ -236,7 +324,11 @@ func _initialize() -> void:
 		s2.act_interact_with({"kind": "device", "cell": int(site2["objective"])})
 		tr += 1
 	# the blast hurts by distance: walk out to the far end of the hall first (the exit side), well beyond the bomb's reach
-	s2.pc = int(site2["entry"])
+	var far_c: int = int(site2["entry"])
+	for ce in s2.city.tiles.size() / 3:
+		if s2.sim.walk[ce] == 1 and s2.sim.at[ce] == -1 and s2.cheb(ce, int(site2["objective"])) > s2.cheb(far_c, int(site2["objective"])):
+			far_c = ce
+	s2.pc = far_c
 	s2.sim.retier(s2.pc)
 	var hp0: int = s2.body.total()
 	for _k in 60:
@@ -305,8 +397,13 @@ func _initialize() -> void:
 	w2.load_dict(wd)
 	check("a world saved inside a site loads back inside it, with the street stored behind it", not w2.game.mission.is_empty() and w2.in_site())
 	var s4 = w2.game
-	s4.pc = int(s4.city.get_meta("site")["exit"]) - 64
-	s4.act_move(0, 1)
+	var ex4: int = int(s4.city.get_meta("site")["exit"])
+	for dd in [Vector2i(0, -1), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(1, 0)]:
+		var nc: int = ex4 + dd.y * s4.size + dd.x
+		if s4.sim.walk[nc] == 1 and s4.sim.at[nc] == -1 and s4.thing_at.g(nc) == -1:
+			s4.pc = nc
+			s4.act_move(-dd.x, -dd.y)
+			break
 	check("and leaving after the reload returns to the street and closes the portal", s4.mission_leave_request == "exit")
 	var res: Dictionary = w2.leave_mission("")
 	check("(the abandoned site pays nothing; the portal is closed in the restored street)", res["outcome"] == "abandoned" and w2.game.portal.is_empty() and w2.game.mission.is_empty())
@@ -314,17 +411,21 @@ func _initialize() -> void:
 	var stuck := 0
 	var freed_n := 0
 	for k in 40:
-		var ro: Dictionary = MS.offers(1000 + k * 7, 4000 + k * 13, k % 9)[1]
+		var ro: Dictionary = MS.offers(1000 + k * 7, 4000 + k * 13, k % 9, 0, MS.NEUTRAL, k % 6)[1]
 		var rs = preload("res://src/game.gd").new(int(ro["seed"]))
 		rs.setup(0, null, Vector2i(-1, -1), MS.new_state(ro))
 		var rh: int = MS.agent_with_role(rs, "hostage")
+		for gk in rs.mission["agents"]:                 # (a guard standing in a one-cell doorway would block the hostage and the player alike: this tests the following, not the fight)
+			if rs.mission["agents"][gk] != "hostage":
+				rs.sim.remove_agent(int(gk))
+				rs.sim.alive[int(gk)] = 0
 		if rh >= 0:
 			rs.pc = rs.sim.pos[rh] + 1 if rs.sim.walk[rs.sim.pos[rh] + 1] == 1 and rs.sim.at[rs.sim.pos[rh] + 1] == -1 else rs.sim.pos[rh] - 1
 			rs.eco.choose(rs.eco.menu_for(rh), 0)
 			if rs.mission["freed"]:
 				freed_n += 1
-				rs.pc = int(rs.city.get_meta("site")["entry"]) - 64 * 4
-				for _k in 90:
+				rs.pc = _far_cell(rs, rs.sim.pos[rh], 28)
+				for _k in 140:
 					rs.end_turn()
 				if rs.cheb(rs.sim.pos[rh], rs.pc) > 2:
 					stuck += 1
