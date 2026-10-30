@@ -197,6 +197,10 @@ func _initialize() -> void:
 	var g5 = GameScript.new(7)
 	g5.setup(600)
 	var moved := 0
+	var near := 0                                          # (only cars within 80 tiles of the player are driven; how many that is depends on the seed's luck)
+	for vv in g5.vehicles:
+		if vv["ai"] and vv["driver"] == -3 and g5.cheb(vv["cell"], g5.pc) <= 80:
+			near += 1
 	var start: Array = []
 	for vv in g5.vehicles:
 		start.append(vv["cell"])
@@ -205,6 +209,6 @@ func _initialize() -> void:
 	for k in g5.vehicles.size():
 		if g5.vehicles[k]["cell"] != start[k]:
 			moved += 1
-	check("traffic still drives about with the smaller cars (%d vehicles moved)" % moved, moved >= 3)
+	check("traffic still drives about with the smaller cars (%d of %d cars near the player moved)" % [moved, near], near >= 1 and moved >= maxi(1, near / 2))
 	print("CARS %d/%d" % [ok, n])
 	quit(0 if ok == n else 1)

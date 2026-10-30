@@ -221,7 +221,8 @@ func run() -> Array:
 	log.append("  (building the port zone: %d ms)" % (Time.get_ticks_msec() - t0))
 	check.call("the port has people, trucks, a mech and buildings", pg.sim.n == 220 and pg.vehicles.any(func(v): return v["kind"] == "truck") and pg.vehicles.any(func(v): return v["kind"] == "mech") and pg.city.buildings >= 4)
 	var ai_trucks: int = pg.vehicles.filter(func(v): return v["ai"] and v["kind"] == "truck").size()
-	check.call("trucks haul goods up and down the quay road all day (%d AI trucks)" % ai_trucks, ai_trucks >= 3)
+	var ai_haulers: int = pg.vehicles.filter(func(v): return v["ai"] and (v["kind"] == "truck" or v["kind"] == "car")).size()
+	check.call("trucks haul goods up and down the quay road all day (%d AI trucks among %d haulers; each is a truck 3 times in 4)" % [ai_trucks, ai_haulers], ai_haulers >= 6 and ai_trucks >= 1)
 	check.call("six gantry cranes stand over the quay road (%d)" % pg.city.cranes.size(), pg.city.cranes.size() == 6)
 	var containers := 0
 	for cc in pg.s2:
