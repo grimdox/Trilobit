@@ -21,6 +21,7 @@ func _initialize() -> void:
 	check("TEST--- opens the scenario list", m.mode == "test" and m.screen.kind == "test")
 	var ids: Array = m.screen.items.map(func(i): return i["id"])
 	check("it lists Large City (3072) first, and Back", ids[0] == "scn:large_city" and ids.has("back") and String(m.screen.items[0]["label"]).contains("3072"))
+	check("and a Large City (2560) beneath it", ids[1] == "scn:city_2560" and String(m.screen.items[1]["label"]).contains("2560"))
 	m.back_from_screen()
 	check("Esc / Back returns to the title", m.mode == "title" and m.screen.kind == "title")
 	# the size plumbing, on a small city so the test is quick

@@ -143,6 +143,8 @@ func begin_scenario(id: String) -> void:
 	match id:
 		"large_city":
 			size = 3072
+		"city_2560":
+			size = 2560
 	open_screen("loading")
 	screen.subtitle = "Generating a %d x %d city (this takes a few minutes)..." % [size, size]
 	await get_tree().process_frame
@@ -328,7 +330,7 @@ func open_screen(kind: String) -> void:
 			screen_back = "title"
 			screen.title = "TEST---"
 			screen.subtitle = "Scenarios for trying out specific pieces.  Not part of the finished game."
-			screen.items = [{"label": "Large City  (3072 x 3072)", "id": "scn:large_city"}, {"label": "Back", "id": "back"}]
+			screen.items = [{"label": "Large City  (3072 x 3072)", "id": "scn:large_city"}, {"label": "Large City  (2560 x 2560)", "id": "scn:city_2560"}, {"label": "Back", "id": "back"}]
 		"options":
 			screen.title = "OPTIONS"
 			_fill_options()
