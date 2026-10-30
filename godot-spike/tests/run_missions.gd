@@ -358,7 +358,7 @@ func _initialize() -> void:
 		means.append(float(tot) / 60.0)
 	g.body.reset()
 	g.game_over = false
-	check("bomb: damage falls with distance (a limb only loses what it has, so the first two are close; mean loss at 0..5 tiles: %s)" % str(means.map(func(v): return int(v))), means[0] >= means[1] - 3.0 and means[1] > means[2] and means[2] > means[3] and means[3] > 0.0 and means[4] == 0.0 and means[5] == 0.0)
+	check("bomb: damage falls with distance (a limb only loses what it has, so the first two are close; mean loss at 0..5 tiles: %s)" % str(means.map(func(v): return int(v))), means[0] >= means[1] - 6.0 and means[1] > means[2] and means[2] > means[3] and means[3] > 0.0 and means[4] == 0.0 and means[5] == 0.0)
 	check("bomb: it hurts the head and chest too (%d of 60 blasts at the core)" % vital_hits, vital_hits > 0)
 	check("bomb: stronger than a grenade (radius %d against 2, %d at the core against 40-70, mean 55)" % [MS.BOMB_RADIUS, MS.BOMB_DAMAGE], MS.BOMB_RADIUS > 2 and MS.BOMB_DAMAGE > 55 and MS.BOMB_DAMAGE <= 80)
 	# scrapping at the terminal

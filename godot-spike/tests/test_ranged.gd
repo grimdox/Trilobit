@@ -199,7 +199,7 @@ func run() -> Array:
 		if lr["outcome"] == "crit" or lr["outcome"] == "hit":
 			locs[lr["loc"]] = int(locs.get(lr["loc"], 0)) + 1
 			var arm: int = maxi(0, g.npc_armor(who) - int(sp.get("pen", 0)))
-			var gr: int = g.npc_lvl(who, "grit")
+			var gr: int = SK.grit_cut(g.npc_lvl(who, "grit"))
 			var lo_d: int = int(sp["dmg"][0])
 			var hi_d: int = int(sp["dmg"][1])
 			var sk: int = sk0
