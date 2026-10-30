@@ -3607,9 +3607,9 @@ func act_fire(any: bool = false) -> bool:
 		var loc: String = body.pick_melee(rng)
 		var rpen_shown: int = GP.range_penalty(st, vd, rr)
 		var cov_shown: int = cover_vs(pc, sim.pos[victim], false)
-		_math("Shot %d at %s, %d tiles: dice %d + bonus %d (%s) - range %d (the gun's natural range rolled %d, off by %d) = %d%s.  Hits at %d, critical at 19+ or %d.  %s" % [s + 1, name_of(victim), vd, nat, bonus,
+		_math("Shot %d at %s, %d tiles: dice %d + bonus %d (%s) - range %d (adjacent -2; rifles -1 at 2-3 tiles; past the gun's maximum, a point a tile) = %d%s.  Hits at %d, critical at 19+ or %d.  %s" % [s + 1, name_of(victim), vd, nat, bonus,
 			_terms([["Ranged", skill], ["gun", GP.acc_points(st)], ["implants and state", _ranged_extra(vd)], ["aim", aim_turns], ["moving", -2 if moved else 0], ["crouching", 1 if crouch else 0], ["prone", 1 if stance == CRAWL else 0]]),
-			rpen_shown, rr, absi(vd - rr), nat + bonus - rpen_shown, (", then cover hides %d%% = %d" % [cov_shown, total]) if cov_shown > 0 else "", SK.HIT_AT, 20 + npc_lvl(victim, "grit"), _outcome_word(out)])
+			rpen_shown, nat + bonus - rpen_shown, (", then cover hides %d%% = %d" % [cov_shown, total]) if cov_shown > 0 else "", SK.HIT_AT, 20 + npc_lvl(victim, "grit"), _outcome_word(out)])
 		last_roll = {"who": "you", "target": victim, "nat": nat, "total": total, "outcome": out, "loc": loc, "dmg": 0, "range_roll": rr, "aim": aim_turns}
 		_spend_aim_on_bullet(st)
 		var landed := false
@@ -4250,16 +4250,17 @@ func _hunt_act(i: int, d: int, sees: bool) -> void:
 		var rr: int = rng.randi_range(int(ng["range"][0]), int(ng["range"][1]))
 		var skill: int = npc_lvl(i, "ranged")
 		var bonus: int = skill + int(aimn[i]) + [-3, -2, 0, -1][stance] - (3 if in_vehicle >= 0 else 0) - (3 if npc_arms_ok(i) < 2 else 0) - (1 if npc_head_hurt(i) else 0)
-		var total: int = GP.shot_total(nat, bonus, absi(d - rr), cover_vs(c, pc, crouch))
+		var rpen: int = GP.npc_range_penalty(g, d)
+		var total: int = GP.shot_total(nat, bonus, rpen, cover_vs(c, pc, crouch))
 		var out: String = SK.melee_outcome(nat, total, lvl("grit"))
 		var pshield: Dictionary = shield_vs(c, pc)
 		if (out == "hit" or out == "crit") and rng.randi() % 100 < int(pshield["pct"]):
 			out = "miss"
 			say_if_seen(c, "%s's shot is stopped by the %s." % [name_of(i), String(pshield["what"])])
 		var ncov: int = cover_vs(c, pc, crouch)
-		_math("%s fires at you from %d tiles: dice %d + bonus %d (%s) - range %d (their gun's natural range rolled %d, off by %d) = %d%s.  Hits at %d, critical at 19+ or %d.  %s" % [name_of(i), d, nat, bonus,
+		_math("%s fires at you from %d tiles: dice %d + bonus %d (%s) - range %d (adjacent -2; rifles -1 at 2-3 tiles; past the gun's maximum, a point a tile) = %d%s.  Hits at %d, critical at 19+ or %d.  %s" % [name_of(i), d, nat, bonus,
 			_terms([["Ranged", skill], ["aim", int(aimn[i])], ["stance", [-3, -2, 0, -1][stance]], ["you in a vehicle", -3 if in_vehicle >= 0 else 0], ["one arm", -3 if npc_arms_ok(i) < 2 else 0], ["head wound", -1 if npc_head_hurt(i) else 0]]),
-			absi(d - rr), rr, absi(d - rr), nat + bonus - absi(d - rr), (", then your cover hides %d%% = %d" % [ncov, total]) if ncov > 0 else "", SK.HIT_AT, 20 + lvl("grit"), _outcome_word(out)])
+			rpen, nat + bonus - rpen, (", then your cover hides %d%% = %d" % [ncov, total]) if ncov > 0 else "", SK.HIT_AT, 20 + lvl("grit"), _outcome_word(out)])
 		last_roll = {"who": name_of(i), "target": -1, "nat": nat, "total": total, "outcome": out, "loc": "", "dmg": 0, "range_roll": rr, "aim": int(aimn[i])}
 		aimn[i] = maxi(0, int(aimn[i]) - 1)
 		_noise(c, int(ng["noise"]))

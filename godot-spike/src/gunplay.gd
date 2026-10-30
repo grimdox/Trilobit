@@ -149,16 +149,34 @@ static func bonus_points(s: Dictionary, aim: int, moved: bool, crouch: bool, ski
 static func aim_at_shot(s: Dictionary, aim: int, shot_index: int) -> int:
 	return maxi(int(s["max_aim"]) - AIM_FLOOR_DROP, aim - int(floor(float(s["aim_loss"]) * float(shot_index) + 0.0001)))
 
-## points lost for being off the natural range: |d - r| scaled by the gun's range-penalty factor (a choked shotgun spreads less), plus the
-## close-range penalty of long optics
-static func range_penalty(s: Dictionary, d: int, r: int) -> int:
+## points lost for range.  Every gun loses 2 point-blank (an adjacent target).  Pistols, revolvers, SMGs and shotguns have no penalty from 2 tiles out to their
+## maximum (range_hi); rifles, sniper rifles, machine guns, launchers and lasers lose a flat 1 at 2-3 tiles and nothing from 4 to their maximum.
+## Past the maximum the loss is the tiles past it x the gun's range factor
+## (a choked shotgun spreads less).  The natural-range roll r no longer matters.  Long optics still add their close-range penalty under 4 tiles.
+static func range_penalty(s: Dictionary, d: int, _r: int = 0) -> int:
 	var f: float = float(s["rangepen"])
 	if int(s["pellets"]) > 1:
 		f *= float(s["spread"])
-	var p: float = float(absi(d - r)) * f
+	var p: float = _range_points(String(s.get("cls", "")), d, int(s["range_lo"]), int(s["range_hi"]), f)
 	if d < 4:
 		p += float(s["close_pen"]) / 5.0
 	return int(round(p))
+
+static func _range_points(cls: String, d: int, lo: int, hi: int, f: float) -> float:
+	var p := 0.0
+	if d <= 1:
+		p += 2.0
+	if cls in ["rifle", "sniper", "mg", "heavy_mg", "launcher", "laser"]:
+		if d == 2 or d == 3:
+			p += 1.0
+	if d > hi:
+		p += float(d - hi) * f
+	return p
+
+## the same rule for an enemy's gun (1 pistol, 2 SMG, 3 rifle; see NPC_GUN)
+static func npc_range_penalty(gunc: int, d: int) -> int:
+	var ng: Dictionary = NPC_GUN[gunc]
+	return int(round(_range_points("rifle" if gunc == 3 else "pistol", d, int(ng["range"][0]), int(ng["range"][1]), 1.0)))
 
 ## the shot's total after the cover factor (cover is the percent of the target hidden: 20 -> total x 0.8)
 static func shot_total(nat: int, bonus: int, rpen: int, cover: int) -> int:

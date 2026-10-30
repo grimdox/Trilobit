@@ -48,7 +48,7 @@ func run() -> Array:
 	var far1: int = GP.hit_chance(sc, 40, 0, false, false, 2, 0)
 	var close1: int = GP.hit_chance(sc, 24, 0, false, false, 2, 0)
 	check.call("a scope raises hit chance far out (%d -> %d at 40 tiles)" % [far0, far1], far1 > far0 + 8)
-	check.call("a scope moves the band out: the long shot is the better one (%d at 24 tiles, %d at 40)" % [close1, far1], far1 > close1)
+	check.call("a scope extends the maximum range: the long shot loses nothing against the near one (%d at 24 tiles, %d at 40)" % [close1, far1], far1 >= close1 and far1 > far0)
 	check.call("a scope extends the natural range (%d-%d -> %d-%d) and the max aim (%d -> %d)" % [base["range_lo"], base["range_hi"], sc["range_lo"], sc["range_hi"], base["max_aim"], sc["max_aim"]],
 		sc["range_hi"] > base["range_hi"] + 10 and sc["max_aim"] == base["max_aim"] + 2)
 	var a0: int = GP.hit_chance(base, 36, 0, false, false, 2, 0)
