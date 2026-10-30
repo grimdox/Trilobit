@@ -19,8 +19,8 @@ const LOG_LINES := 10        # messages shown in the panel along the bottom
 const UI_S := 1.5          # the interface is laid out for 1280x720 and drawn at 1.5x on the 1920x1080 canvas
 const TILESETS := ["Trilobit64"]      # Trilobit's own 64px art (tools/content/gen_tiles64.py); more sets can be added here
 const SLOTS := 3
-const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "equipment", "implants", "skills", "map", "create", "terminal", "barter", "elevator"]
-const MOUSE_MODES := ["title", "pause", "options", "visuals", "keys", "saves", "loads", "create"]
+const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "equipment", "implants", "skills", "map", "create", "terminal", "barter", "elevator", "test"]
+const MOUSE_MODES := ["title", "pause", "options", "visuals", "keys", "saves", "loads", "create", "test"]
 const TAB_MODES := ["equipment", "implants", "skills", "map"]       # the paused character screens, one tab each (< and > step through them)
 
 var tm: Dictionary = {}                # the open mission terminal: {cell, offers, sel, msg}
@@ -135,6 +135,26 @@ func begin_new(seed: int, profile: Dictionary = {}) -> void:
 	if not profile.is_empty():
 		CR.apply(world.game, profile)          # the attributes and look chosen on the creation screen
 	start_play(world.game)
+
+## the TEST--- scenarios: a stand-alone game (no island) with a generic, randomised character.  Large City: a city 3072 tiles a side, twice the island city's
+## width and length (and so four times the area); it takes minutes to build and several GB of memory.
+func begin_scenario(id: String) -> void:
+	var size := 512
+	match id:
+		"large_city":
+			size = 3072
+	open_screen("loading")
+	screen.subtitle = "Generating a %d x %d city (this takes a few minutes)..." % [size, size]
+	await get_tree().process_frame
+	await get_tree().process_frame
+	world = null
+	var g = GameScript.new(int(Time.get_unix_time_from_system()) % 100000)
+	g.test_size = size
+	g.setup(WorldScript.CITY_PEOPLE)
+	var r := RandomNumberGenerator.new()
+	r.randomize()
+	CR.apply(g, CR.randomized(r, CR.new_profile()))
+	start_play(g)
 
 func begin_load(slot: int) -> void:
 	var d := read_slot(slot)
@@ -290,7 +310,7 @@ func open_screen(kind: String) -> void:
 		"title":
 			screen_back = "title"
 			screen.overlay = false
-			screen.items = [{"label": "New Game", "id": "new"}, {"label": "Load Game", "id": "load"}, {"label": "Options", "id": "options"}, {"label": "Exit", "id": "exit"}]
+			screen.items = [{"label": "New Game", "id": "new"}, {"label": "Load Game", "id": "load"}, {"label": "Options", "id": "options"}, {"label": "TEST---", "id": "test"}, {"label": "Exit", "id": "exit"}]
 			screen.footer = "Up / Down  -  Enter"
 		"loading":
 			screen.overlay = false
@@ -304,6 +324,11 @@ func open_screen(kind: String) -> void:
 			screen.title = "PAUSED"
 			screen.items = [{"label": "Resume", "id": "resume"}, {"label": "Save Game", "id": "save"}, {"label": "Load Game", "id": "load"}, {"label": "Character & Map", "id": "character"},
 				{"label": "Options", "id": "options"}, {"label": "Quit to Title", "id": "title"}, {"label": "Exit to Desktop", "id": "exit"}]
+		"test":
+			screen_back = "title"
+			screen.title = "TEST---"
+			screen.subtitle = "Scenarios for trying out specific pieces.  Not part of the finished game."
+			screen.items = [{"label": "Large City  (3072 x 3072)", "id": "scn:large_city"}, {"label": "Back", "id": "back"}]
 		"options":
 			screen.title = "OPTIONS"
 			_fill_options()
@@ -532,7 +557,7 @@ func back_from_screen() -> void:
 				open_screen("options")
 			else:
 				open_screen("title")
-		"create":
+		"create", "test":
 			open_screen("title")
 		"equipment", "implants", "skills", "map":
 			gear.close()
@@ -568,8 +593,12 @@ func activate(id: String) -> void:
 		elif mode == "loads":
 			begin_load(n)
 		return
+	if id.begins_with("scn:"):
+		begin_scenario(id.substr(4))
+		return
 	match id:
 		"new": open_creation()
+		"test": open_screen("test")
 		"load":
 			screen_back = "pause" if mode == "pause" else "title"
 			open_screen("loads")

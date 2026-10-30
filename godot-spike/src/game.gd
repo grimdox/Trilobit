@@ -65,6 +65,8 @@ var sim
 var db
 var fov
 var size: int
+## test scenarios (the TEST--- menu): the side of a stand-alone city, 0 for the usual 512; set before setup() and saved so a load rebuilds the same map
+var test_size: int = 0
 var s2: int = 0                      # cells per level
 static var street_start: bool = OS.get_environment("TRL_STREET") != ""   # tests: begin on a road instead of in a flat
 var rows: int = 0                    # rows of the stacked map
@@ -261,7 +263,7 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1), ms
 		island = null
 		zone = Vector2i(-1, -1)
 		city = CG.new()
-		city.generate(seed_value, Vector2(1, 0.2))
+		city.generate(seed_value, Vector2(1, 0.2), test_size if test_size > 0 else 512)
 		city.signs = preload("res://src/signage.gd").make(city, seed_value)
 		LV.build(city, seed_value)
 	size = city.size
@@ -5627,7 +5629,7 @@ func save_dict() -> Dictionary:
 	var vlist := []
 	for v in vehicles:
 		vlist.append(vs.to_dict(v))
-	return {"seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "corpses": corpses, "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "nanos": nanos, "nano_fx": nano_fx, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "lvl": pc_level, "pts": attr_points, "boards": boards, "in_vehicle": in_vehicle,
+	return {"test_size": test_size, "seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "corpses": corpses, "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "nanos": nanos, "nano_fx": nano_fx, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "lvl": pc_level, "pts": attr_points, "boards": boards, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
 			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "barter": barter.to_dict(), "inv": inv.to_dict(),
 			"items_at": it_at, "open_doors": open_doors.keys(), "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
@@ -5637,6 +5639,7 @@ func save_dict() -> Dictionary:
 
 func load_dict(d: Dictionary) -> void:
 	seed_value = int(d["seed"])
+	test_size = int(d.get("test_size", 0))
 	var isl_seed: int = int(d.get("island", -1))
 	var saved_mission: Dictionary = d.get("mission", {})
 	if not saved_mission.is_empty():
