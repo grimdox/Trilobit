@@ -3620,8 +3620,9 @@ func act_aim(any: bool = false) -> bool:
 	if st.is_empty():
 		say("You have no gun wielded.")
 		return false
-	var t := current_target(any)
-	if t < 0:
+	var on_light: bool = shoot_cell >= 0 and light != null and light.bulb_at(shoot_cell) and sees_cell(shoot_cell)
+	var t: int = -1 if on_light else current_target(any)
+	if t < 0 and not on_light:
 		say("Nothing to aim at.")
 		return false
 	if not can_use_weapon(wield):
@@ -3636,6 +3637,11 @@ func act_aim(any: bool = false) -> bool:
 		aim_frac = maxf(0.0, aim_frac - 1.0)
 	if aim_turns >= mx:
 		aim_frac = 0.0
+	if on_light:
+		stamina = maxi(0, stamina - GP.STAM_AIM)
+		say("You steady the %s on the light (aim %d/%d): %d%% to hit." % [wield.def["name"], aim_turns, mx, clampi(90 - 4 * cheb(shoot_cell, pc) + 4 * aim_turns, 20, 97)])
+		end_turn()
+		return true
 	aim_target = t
 	stamina = maxi(0, stamina - GP.STAM_AIM)
 	say("You steady the %s on %s (aim %d/%d, %.2f a turn): %d%% to hit." % [wield.def["name"], name_of(t), aim_turns, mx, aim_rate(), hit_chance_on(t)])

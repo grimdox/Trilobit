@@ -176,6 +176,12 @@ func _initialize() -> void:
 		ng.act_wield(gun)
 		gun.loaded = 12
 		check("a bulb can be picked by hand", ng.act_manual_target(bulb) and ng.shoot_cell == bulb)
+		var ap0: int = ng.aim_turns
+		ng.shoot_cell = bulb
+		var aimed_ok: bool = ng.act_aim()
+		for _k in 4:
+			ng.act_aim()
+		check("aiming works on a hand-picked light (aim %d)" % ng.aim_turns, aimed_ok and ng.aim_turns > ap0 and ng.shoot_cell == bulb)
 		var broke := false
 		for k in 12:
 			ng.shoot_cell = bulb

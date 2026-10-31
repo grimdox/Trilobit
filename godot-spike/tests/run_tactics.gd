@@ -125,5 +125,15 @@ func _initialize() -> void:
 	var dm2: int = g.cheb(g.sim.pos[who], g.pc)
 	g._hunt_act(who, dm2, true)
 	check("but inside two tiles he closes in anyway (%d -> %d)" % [dm2, g.cheb(g.sim.pos[who], g.pc)], g.cheb(g.sim.pos[who], g.pc) <= dm2)
+	# ---- manual targeting then aiming at someone who is not hostile
+	put.call(spot + 5)
+	g.astate[who] = g.UNAWARE
+	g.fac[who] = g.CIV
+	g.aim_target = -1
+	g.fov.compute(g.pc % g.size, g.pc / g.size, 18)
+	var picked: bool = g.act_manual_target(g.sim.pos[who])
+	var a0: int = g.aim_turns
+	var aimed: bool = g.act_aim()
+	check("a hand-picked non-hostile target can be aimed at (picked %s, aimed %s)" % [str(picked), str(aimed)], picked and aimed and g.aim_target == who)
 	print("TACTICS %d/%d" % [ok, n])
 	quit(0 if ok == n else 1)
