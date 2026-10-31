@@ -167,3 +167,28 @@ Why: the city was flat.  Verticality is also the cheapest big win for the NPC si
 **Enemy roster** (2026-10-30; `src/enemies.gd`, `tools/export_enemies.py` -> `data/enemy_roster.xlsx`, `tests/run_enemies.gd`): five armed factions (Bratva, NAP, Nasim, gangs, corporate security) at levels 1-10, ten titles each.  Health is 80% of a PC's at that level (PC 164 hp, rising to 644 with a whole body of QL4 implants: 8 parts x 60 durability), so 131 at level 1 and 515 at level 10.  Level 1 carries no gun, level 2 a mix, level 3 and up all armed (pistols, then SMGs, then rifles).  No skill is above the enemy's level; from level 2 exactly one combat skill sits at the level.  Street levels: NAP 4-6 (mean 5), Bratva 2-5, Nasim 4-7, gangs 1-4, corporate 3-6; mission hostiles take the contract's level range.  Drops, yen and implant count/quality range rise with level.  NPC Grit now cuts damage by level/4, as the player's does (it was the full level).  Old street NPC stats are gone.  Known: `cars` and `island` traffic checks fail on this machine even before these changes (checked at the commit before the mission work).
 
 **TEST--- title button** (2026-10-30; `main.gd` `begin_scenario`, `Game.test_size`, `tests/run_scenarios.gd`): the title screen has a TEST--- button (between Options and Exit) that lists scenarios for trying out specific pieces; it is not meant for the finished game.  First scenario: Large City, a stand-alone city 3072 tiles a side (twice the island city's 1536 each way) with a randomised generic character and the usual 2,000 people.  `Game.test_size` is saved so a load rebuilds the same map.  City size and memory (stand-alone city, 2,000 people, on an 8 GB test machine): 1536 -> 1.7 GB peak, 30 s to build, 10.5 ms a turn; the island's city zone at 2048 -> 3.2 GB, 61 s; at 2560 -> 4.9 GB, 90 s; a stand-alone 3072 was killed for memory at about 6 GB sampled (expect 7+ GB needed).  The island's terrain code (`island.gd` `mark`) has fixed-size arrays that fail when the city zone is set to 3072, so growing the real island city needs that reworked as well as the seams (highway, harbour, rail, caldera) re-laid.  Tools: `tests/bench_standalone.gd`.
+
+## Temp Agency (0.28)
+
+**What is built.** A `temp_agency` business (civic, 3 tiles wide, rich and middle-income plots only; a quota of 12 per city, `TEMP_MIN`).  It has two mission terminals like a Labor Center,
+but its board (`TJ.offers`, `src/temp_jobs.gd`) posts the five temp jobs instead of the fighting contracts: Fix the Copy Machine, Last-Minute Budget Proposal, Warehouse Stock Count,
+Client Presentation Prep, Fix the Packing Line.  Every job uses 1-2 social and 1-2 labour skills, has no hostiles, and takes you to a generic high-rise floor through the same portal
+machinery as the Labor Center.  `SITE.build` dresses the floor by collar: white collar = grey carpet/tile with desks, cubicles, copiers, meeting rooms, servers; blue collar = concrete/rubber with
+pallet racks, conveyors, workbenches, crates and containers.  Each job has three work stations (glowing device tiles); walking into one is a skill check (2d10 + best skill + half the other vs. the
+station's DC, +-1 per job).  All three done and you leave through the exit portal for the pay; every slip costs 10% (floor: half).  `TJ.MINIGAME` slots (the `mini` field of each station) are where
+the minigames below plug in.
+
+**The minigames (design only, not built yet).**  Each returns a 0-1 score that shifts the station's roll: a perfect run is an automatic success, a failed run is the plain skill roll at -2.
+The skills still matter: they set the time limit, the number of hints, and how forgiving the board is.
+
+1. *Slide builder* (`slide_builder`; Artisan + Etiquette).  A blank 16:9 slide and a tray of parts (title, three bullets, chart, logo, image).  Drag them into the layout the client's brief asks for
+   (given as a thumbnail); score = overlap with the target layout, minus penalties for overlap and off-grid parts.  Artisan adds snap-to-grid and alignment guides.
+2. *Warehouse sort* (`warehouse_sort`; Manual).  A sokoban board: coloured crates, matching coloured bays, a forklift (the player) that pushes one crate at a time.  Score = crates home / moves used against
+   a par.  Manual raises the move allowance and adds one undo per level.
+3. *Research match* (`research_match`; Research).  Five documents side by side, each with one highlighted key phrase repeated in different words; match the phrases across all five and line them up
+   (draw a line through each matching group).  Score = matched groups minus wrong links; Research reveals one candidate per level.
+4. *Fraud audit* (`fraud_audit`; Research + Deception/Streetwise, not used by the first five jobs).  A tax report of 12-20 line items with a small set of planted irregularities (round numbers, duplicate
+   invoices, totals that do not sum, a vendor that does not exist).  Flag the fraudulent lines before the timer ends; score = true flags minus false flags.  Deception lets you spot what a forger would do.
+
+Build order I would suggest: warehouse sort first (a pure grid game, reuses the movement code), then research match, slide builder, fraud audit.  Each one is a self-contained screen scene
+(`screen == "minigame"`) with `start(difficulty, skill_levels)` and a `score` signal, so the check in `TJ.use_station` only has to swap `nat` for the result.

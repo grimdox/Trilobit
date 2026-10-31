@@ -10,6 +10,7 @@ extends RefCounted
 ## the risk, never the layout) stand in random rooms, away from the start.  The exit portal is on the open ground outside (open) or on the floor of the start room.
 ## build() returns a CG whose meta "site" holds {entry, exit, objective, rooms, doors, agents:[{role, cell, fac, name, lv}], case, start_room, inside}.
 const CG = preload("res://src/citygen.gd")
+const TJ = preload("res://src/temp_jobs.gd")
 const MS = preload("res://src/missions.gd")
 
 ## cell area per room (walls included), the smallest room (walls included)
@@ -299,6 +300,8 @@ static func build(offer: Dictionary):
 	site["objective"] = obj
 	site["obj_room"] = (inner[obj_room] as Rect2i).position.x
 	site["obj_room_idx"] = obj_room
+	if TJ.is_temp(o):
+		_dress_temp(c, o, rng, inner, used, S, site, far_rooms, start_room, inside)
 	var t: String = o["type"]
 	var risk: int = int(o["risk"])
 	var hostiles: int = int(o["hostiles"])
@@ -514,7 +517,7 @@ static func _clear8(c, cell: int, S: int, used: Dictionary) -> bool:
 		for dx in range(-1, 2):
 			var q: int = cell + dy * S + dx
 			var tt: int = c.tiles[q]
-			if tt != CG.TID["floor_steel"] and tt != CG.TID["floor_clean"]:
+			if not CG.is_floor(tt):
 				return false
 			if used.has(q):
 				return false
@@ -552,3 +555,70 @@ static func _near(rng: RandomNumberGenerator, cell: int, used: Dictionary, r: in
 		if c2 != cell and not used.has(c2) and (tt == CG.TID["floor_steel"] or tt == CG.TID["floor_clean"]):
 			return c2
 	return -1
+
+
+## A Temp Agency job's floor: white collar (carpet, desks, cubicles, copiers) or blue collar (concrete, racks, pallets, conveyors); no hostiles, a few coworkers,
+## and one work station (a mission_device tile) in each of the job's rooms, one per task.
+static func _dress_temp(c, o: Dictionary, rng: RandomNumberGenerator, inner: Array, used: Dictionary, S: int, site: Dictionary, far_rooms: Array, start_room: int, inside: bool) -> void:
+	var j: Dictionary = TJ.job_of(o)
+	var style: Dictionary = TJ.floor_style(String(o["collar"]))
+	var kinds: Array = (style["rooms"] as Dictionary).keys()
+	var floors: Array = style["floors"]
+	var room_kind: Array = []
+	var prop_at := {}
+	c.movables = []
+	# the stations: one in each of the job's rooms (the furthest rooms first), never in the start room
+	var rooms_for: Array = far_rooms.duplicate()
+	var stations: Array = []
+	var nst: int = (j["stations"] as Array).size()
+	for k in nst:
+		var placed := false
+		for tries in rooms_for.size():
+			var ri: int = rooms_for[(k + tries * 1) % rooms_for.size()] if tries == 0 else rooms_for[rng.randi() % rooms_for.size()]
+			var oc: int = _pick_clear(rng, inner[ri], used, c, S)
+			if oc >= 0:
+				used[oc] = true
+				c.tiles[oc] = CG.TID["mission_device"]
+				c.under[oc] = CG.TID[floors[0]]
+				stations.append([oc, k])
+				placed = true
+				break
+		if not placed:
+			push_error("temp site: no room for station %d" % k)
+	site["stations"] = stations
+	site["objective"] = int(stations[0][0]) if not stations.is_empty() else int(site["objective"])
+	site["collar"] = o["collar"]
+	site["room_kind"] = room_kind
+	for i in inner.size():
+		var ir: Rect2i = inner[i]
+		var fl: int = CG.TID[floors[rng.randi() % floors.size()]]
+		for y in range(ir.position.y, ir.end.y):
+			for x in range(ir.position.x, ir.end.x):
+				if c.tiles[y * S + x] != CG.TID["portal"] and c.tiles[y * S + x] != CG.TID["mission_device"]:
+					c.tiles[y * S + x] = fl
+		var kind: String = kinds[i % kinds.size()]
+		room_kind.append(kind)
+		var list: Array = (style["rooms"] as Dictionary)[kind]
+		var want_p: int = ir.get_area() / 20
+		for _k in want_p * 10:
+			if want_p <= 0:
+				break
+			var cell: int = rng.randi_range(ir.position.y + 1, maxi(ir.position.y + 1, ir.end.y - 2)) * S + rng.randi_range(ir.position.x + 1, maxi(ir.position.x + 1, ir.end.x - 2))
+			if used.has(cell) or not _clear8(c, cell, S, used) or _near_used(prop_at, cell, 1, S):
+				continue
+			prop_at[cell] = true
+			c.tiles[cell] = CG.TID[list[rng.randi() % list.size()]]
+			want_p -= 1
+	for cell in prop_at:
+		used[cell] = true
+	# coworkers: harmless civilians standing about on free floor
+	var agents: Array = site["agents"]
+	var ncw: int = clampi(inner.size() / 2, 2, 6)
+	for k in ncw:
+		var ri2: int = rng.randi() % inner.size()
+		if inside and ri2 == start_room:
+			continue
+		var cc: int = _pick_free(rng, inner[ri2], used, S)
+		if cc >= 0:
+			used[cc] = true
+			agents.append({"role": "coworker", "cell": cc, "fac": 0, "name": "", "lv": 0})

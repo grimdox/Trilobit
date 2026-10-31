@@ -29,7 +29,7 @@ const TYPE_SYM := {
 	"hardware": ["wrench", Color(0.95, 0.75, 0.3), "Hardware, garage"], "auto_garage": ["wrench", Color(0.95, 0.75, 0.3), "Hardware, garage"], "pharmacy": ["cross", Color(0.4, 1.0, 0.6), "Pharmacy"],
 	"clinic": ["cross", Color(1.0, 1.0, 1.0), "Doctor's office"], "car_dealer": ["car", Color(0.5, 0.75, 1.0), "Car dealer"],
 	"implant_shop": ["chip", COL_IMPLANT, "Implant store"], "implant_body": ["chip", Color(1.0, 0.55, 0.3), "Implant store (body)"], "cyberdoc": ["chip", Color(0.3, 1.0, 1.0), "Cyberdoc Office"],
-	"police": ["shield", Color(0.4, 0.55, 1.0), "Police, government"], "gov_office": ["shield", Color(0.4, 0.55, 1.0), "Police, government"], "labor_center": ["people", COL_CIVIC, "Labor Center"],
+	"police": ["shield", Color(0.4, 0.55, 1.0), "Police, government"], "gov_office": ["shield", Color(0.4, 0.55, 1.0), "Police, government"], "labor_center": ["people", COL_CIVIC, "Labor Center"], "temp_agency": ["people", Color(0.55, 0.85, 1.0), "Temp Agency"],
 	"post_depot": ["crate", Color(0.8, 0.7, 0.5), "Post depot, warehouse"], "warehouse": ["crate", Color(0.8, 0.7, 0.5), "Post depot, warehouse"],
 	"hotel": ["bed", Color(0.6, 0.7, 1.0), "Hotel"], "gym": ["dumbbell", Color(1.0, 0.65, 0.3), "Gym"], "salon": ["scissors", Color(1.0, 0.6, 0.9), "Salon"], "laundromat": ["drop", Color(0.5, 0.85, 1.0), "Laundromat"],
 	"arcade": ["pad", Color(0.6, 1.0, 0.5), "Arcade"], "church": ["church", Color(0.9, 0.85, 1.0), "Church"], "shrine": ["torii", Color(1.0, 0.4, 0.3), "Shrine"],
@@ -68,7 +68,7 @@ const NOUNS := {
 	"car_dealer": ["Motors", "Autos", "Cars", "Wheels", "Drive"], "auto_garage": ["Garage", "Auto", "Mechanics", "Repairs", "Service"], "clinic": ["Clinic", "Medical", "Doctors", "Health", "Practice"],
 	"implant_shop": ["Implants", "Augments", "Cybernetics", "Chromeworks", "Neuro"], "implant_body": ["Limbworks", "Chrome", "Augments", "Frames", "Prosthetics"], "cyberdoc": ["Cyberdoc", "Augment Clinic", "Chrome Doc", "Implant Office", "Surgery"],
 	"bank": ["Bank", "Savings", "Trust", "Credit", "Finance"], "police": ["Precinct", "Police", "Station", "Constabulary"], "gov_office": ["Office", "Registry", "Bureau", "Civic Hall", "Records"],
-	"labor_center": ["Labor Center", "Job Hall", "Work Hall", "Hiring Center", "Labor Exchange"], "post_depot": ["Post", "Courier Depot", "Parcel Depot", "Mail", "Freight Desk"],
+	"labor_center": ["Labor Center", "Job Hall", "Work Hall", "Hiring Center", "Labor Exchange"], "temp_agency": ["Temp Agency", "Staffing", "Personnel", "Temps", "Workforce"], "post_depot": ["Post", "Courier Depot", "Parcel Depot", "Mail", "Freight Desk"],
 	"hotel": ["Hotel", "Inn", "Suites", "Lodge", "Capsule Hotel"], "gym": ["Gym", "Fitness", "Iron", "Training", "Athletics"], "dojo": ["Dojo", "Budokan", "Academy", "School", "Hall"],
 	"salon": ["Salon", "Cuts", "Hair", "Beauty", "Studio"], "laundromat": ["Laundromat", "Wash", "Suds", "Laundry", "Clean"], "arcade": ["Arcade", "Pachinko", "Games", "Play", "Parlour"],
 	"church": ["Church", "Chapel", "Cathedral", "Parish"], "shrine": ["Shrine", "Jinja", "Temple", "Sanctuary"], "warehouse": ["Warehouse", "Storage", "Depot", "Logistics", "Freight"],
@@ -84,7 +84,7 @@ static func cat_of(type: String) -> String:
 		"restaurant", "noodle_stall", "cafe", "bar", "shady_bar", "nightclub", "bakery", "karaoke": return "food"
 		"convenience", "liquor_store", "clothing", "electronics", "office_supply", "martial_shop", "pawn_shop", "gun_dealer", "hardware", "pharmacy", "bookshop", "car_dealer", "grocery": return "retail"
 		"auto_garage", "warehouse", "workshop", "machine_shop", "scrap_yard": return "industry"
-		"labor_center", "church", "shrine": return "civic"
+		"labor_center", "temp_agency", "church", "shrine": return "civic"
 		"house": return "home"
 		_: return "service"
 
@@ -98,7 +98,7 @@ static func legend() -> Array:
 	for t in ["restaurant", "noodle_stall", "cafe", "bakery", "bar", "shady_bar", "nightclub",                      # eating and drinking
 			"convenience", "liquor_store", "clothing", "electronics", "office_supply", "martial_shop", "pawn_shop", "gun_dealer", "hardware", "car_dealer",     # shops
 			"pharmacy", "clinic", "implant_shop", "implant_body", "cyberdoc",                                         # health and chrome
-			"police", "labor_center", "post_depot", "church", "shrine",                                               # civic
+			"police", "labor_center", "temp_agency", "post_depot", "church", "shrine",                                               # civic
 			"hotel", "gym", "salon", "laundromat", "arcade", "workshop"]:                                             # services and trades
 		var e: Array = TYPE_SYM[t]
 		if not seen.has(e[2]):

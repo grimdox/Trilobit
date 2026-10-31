@@ -24,6 +24,7 @@ const CLK = preload("res://src/clock.gd")
 const WX = preload("res://src/weather.gd")
 const LM = preload("res://src/lightmap.gd")
 const MS = preload("res://src/missions.gd")
+const TJ = preload("res://src/temp_jobs.gd")
 const ENM = preload("res://src/enemies.gd")
 const PW = preload("res://src/power.gd")
 const NANO = preload("res://src/nanohacks.gd")
@@ -1742,7 +1743,7 @@ func act_interact_with(it: Dictionary) -> bool:
 			return true
 		"device":
 			facing = Vector2i(signi(c % size - pc % size), signi((c / size) % size - (pc / size) % size))
-			return MS.use_device(self)
+			return MS.use_device(self, c)
 	return false
 
 ## open a shut door; close an open one if nothing stands in it; a locked door is picked.  Takes a turn.
@@ -5905,6 +5906,9 @@ func _restore_mission_state(saved: Dictionary) -> void:
 		mission[k] = int(saved.get(k, mission.get(k, 0)))
 	for k in ["done", "planted", "freed"]:
 		mission[k] = bool(saved.get(k, false))
+	if saved.has("st_done"):
+		mission["st_done"] = saved["st_done"]
+		mission["fails"] = int(saved.get("fails", 0))
 	if mission["freed"]:
 		var h: int = MS.agent_with_role(self, "hostage")
 		if h >= 0:
@@ -5913,7 +5917,17 @@ func _restore_mission_state(saved: Dictionary) -> void:
 ## ---- a terminal's board (missions.gd): kept per terminal, refreshed free once a day, regenerated for MS.NEW_BATCH_COST, regenerated free when all five are done
 func _board_make(term: int, day: int, gen: int, sw: Array) -> Dictionary:
 	var sd: int = world.seed_value if world != null else seed_value
-	return {"day": day, "gen": gen, "sw": sw.duplicate(), "used": sw.duplicate(), "offers": MS.offers(sd, term, day, gen, sw, pc_level)}
+	var offers: Array = TJ.offers(sd, term, day, gen) if is_temp_terminal(term) else MS.offers(sd, term, day, gen, sw, pc_level)
+	return {"day": day, "gen": gen, "sw": sw.duplicate(), "used": sw.duplicate(), "offers": offers}
+
+## true if the mission terminal on a cell stands in a Temp Agency (its board posts the five temp jobs)
+func is_temp_terminal(term: int) -> bool:
+	var tx: int = term % size
+	var ty: int = (term / size) % size
+	for b in city.businesses:
+		if String(b.get("type", "")) == "temp_agency" and tx >= int(b["x0"]) and tx <= int(b["x1"]) and ty >= int(b["y0"]) and ty <= int(b["y1"]):
+			return true
+	return false
 
 ## the board at a terminal today: the first visit posts a free batch on Neutral; a new game day posts another, free, with the switches as the player left them
 func board_open(term: int) -> Dictionary:

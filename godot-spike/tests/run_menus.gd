@@ -25,7 +25,7 @@ func _initialize() -> void:
 	await process_frame
 	check("the game starts on the title screen", m.mode == "title" and m.screen.visible)
 	var ids = m.screen.items.map(func(i): return i["label"])
-	check("title offers New Game, Load Game, Options, Exit", ids == ["New Game", "Load Game", "Options", "Exit"])
+	check("title offers New Game, Load Game, Options, TEST---, Exit", ids == ["New Game", "Load Game", "Options", "TEST---", "Exit"])
 	# options
 	key(m, KEY_DOWN); key(m, KEY_DOWN)
 	key(m, KEY_ENTER)

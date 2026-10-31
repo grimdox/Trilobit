@@ -879,6 +879,7 @@ func _cc_doll(c: Vector2, k: float, look: Dictionary) -> void:
 
 # ---------------------------------------------------------------------------------------------- the mission terminal
 const MS = preload("res://src/missions.gd")
+const TJ = preload("res://src/temp_jobs.gd")
 
 ## ---- the elevator pad: a grid of buttons, as many as the shaft has floors
 const EV_BTN := Vector2(76, 58)
@@ -1083,18 +1084,26 @@ func _terminal(W: float, H: float) -> void:
 			draw_line(Vector2(r.position.x + 84, r.position.y + 24), Vector2(r.position.x + 84 + font.get_string_size(String(o["name"]).to_upper(), HORIZONTAL_ALIGNMENT_LEFT, -1, 18).x, r.position.y + 24), Color(0.5, 0.65, 0.7, 0.7), 1.5)
 		else:
 			_rtxt("¥%d" % int(o["reward"]), r.end.x - 14, r.position.y + 29, 22, GOLD)
-		_rtxt("%s  %d hostiles" % [MS.risk_text(rk).to_upper(), int(o.get("hostiles", 0))], r.end.x - 14, r.position.y + 77, 13, rcol * Color(1, 1, 1, dim))
 		var cx: float = r.position.x + 84
 		var cy: float = r.position.y + 64
-		cx += _chip(MS.layout_short(o), cx, cy, Color(0.5, 0.8, 1.0) * Color(1, 1, 1, dim))
-		cx += _chip(MS.opposition_short(o), cx, cy, Color(1.0, 0.6, 0.4) * Color(1, 1, 1, dim))
-		cx += _chip(MS.length_short(o), cx, cy, Color(0.7, 0.9, 0.5) * Color(1, 1, 1, dim))
+		if String(o.get("kind", "")) == "temp":
+			_rtxt("%s COLLAR" % String(o["collar"]).to_upper(), r.end.x - 14, r.position.y + 77, 13, Color(0.6, 0.85, 1.0, dim))
+			cx += _chip("%d TASKS" % TJ.job_of(o)["stations"].size(), cx, cy, Color(0.5, 0.8, 1.0) * Color(1, 1, 1, dim))
+			cx += _chip("NO FIGHTING", cx, cy, Color(0.7, 0.9, 0.5) * Color(1, 1, 1, dim))
+		else:
+			_rtxt("%s  %d hostiles" % [MS.risk_text(rk).to_upper(), int(o.get("hostiles", 0))], r.end.x - 14, r.position.y + 77, 13, rcol * Color(1, 1, 1, dim))
+			cx += _chip(MS.layout_short(o), cx, cy, Color(0.5, 0.8, 1.0) * Color(1, 1, 1, dim))
+			cx += _chip(MS.opposition_short(o), cx, cy, Color(1.0, 0.6, 0.4) * Color(1, 1, 1, dim))
+			cx += _chip(MS.length_short(o), cx, cy, Color(0.7, 0.9, 0.5) * Color(1, 1, 1, dim))
 	_txt("%d of %d complete" % [n_done, offers.size()], Vector2(left.position.x + 14, left.end.y - 10), 12, DIM)
 	_rtxt("all five complete = a free new batch", left.end.x - 14, left.end.y - 10, 12, Color(0.45, 0.6, 0.7))
 	if offers.is_empty():
 		return
 	# ---- the chosen contract
 	var o: Dictionary = offers[sel]
+	if String(o.get("kind", "")) == "temp":
+		_terminal_temp(o, offers, yen, portal_open)
+		return
 	var t: Dictionary = MS.type_of(o["type"])
 	var right := Rect2(500, 84, 740, 332)
 	_tm_panel(right, "CONTRACT DETAILS")
@@ -1184,3 +1193,55 @@ func _terminal(W: float, H: float) -> void:
 	elif msg != "":
 		_fit(msg, Vector2(52, 672), 15, GOLD, 1170.0)
 	_txt("Up/Down or 1-5: contract    Tab: switch focus    Left/Right: change setting    R: new batch (¥%d)    Enter: accept    C: scrap    Esc: leave" % MS.NEW_BATCH_COST, Vector2(40, 702), 13, DIM)
+
+
+## the detail and settings panels of a Temp Agency's board: the job, its tasks and the skills they use (no switches, no hostiles)
+func _terminal_temp(o: Dictionary, _offers: Array, yen: int, portal_open: bool) -> void:
+	var j: Dictionary = TJ.job_of(o)
+	var right := Rect2(500, 84, 740, 332)
+	_tm_panel(right, "JOB DETAILS")
+	var x: float = right.position.x + 22
+	var w: float = right.size.x - 44
+	_txt(String(o["name"]).to_upper(), Vector2(x, 140), 28, Color.WHITE)
+	_rtxt("¥%d" % int(o["reward"]), right.end.x - 22, 140, 32, GOLD)
+	_rtxt("LESS 10% A SLIP", right.end.x - 22, 160, 12, DIM)
+	_fit(String(o["title"]), Vector2(x, 164), 18, CYAN, 420.0)
+	draw_multiline_string(font, Vector2(x, 192), String(o["brief"]), HORIZONTAL_ALIGNMENT_LEFT, w, 14, 3, Color(0.75, 0.86, 0.95))
+	var tiles: Array = [["COLLAR", String(o["collar"]).to_upper(), Color(0.6, 0.85, 1.0)], ["TASKS", "%d" % j["stations"].size(), Color(0.5, 0.8, 1.0)],
+		["SOCIAL", TJ.skill_names(o["social"]), Color(1.0, 0.8, 0.4)], ["LABOUR", TJ.skill_names(o["labour"]), Color(0.5, 1.0, 0.7)]]
+	for q in tiles.size():
+		var tr := Rect2(x + q * 140.0, 262, 130, 50)
+		draw_rect(tr, Color(0.06, 0.1, 0.16, 0.95))
+		draw_rect(tr, Color(0.2, 0.4, 0.5), false, 1.0)
+		draw_rect(Rect2(tr.position.x, tr.position.y, 3, tr.size.y), tiles[q][2])
+		_txt(String(tiles[q][0]), Vector2(tr.position.x + 12, tr.position.y + 16), 11, DIM)
+		_fit(String(tiles[q][1]), Vector2(tr.position.x + 12, tr.position.y + 42), 15, tiles[q][2], 108.0)
+	var ar: Rect2 = tm_accept_rect()
+	var can: bool = not portal_open and not (game != null and game.done_contracts.has(String(o["id"])))
+	draw_rect(ar, Color(0.45, 0.1, 0.3, 0.95) if can else Color(0.12, 0.14, 0.18, 0.95))
+	draw_rect(ar, MAGENTA if can else Color(0.3, 0.35, 0.4), false, 2.0)
+	_ticks(ar, MAGENTA if can else Color(0.3, 0.35, 0.4), 7.0)
+	_txt("ACCEPT", Vector2(ar.position.x, ar.position.y + 24), 18, Color.WHITE if can else DIM, HORIZONTAL_ALIGNMENT_CENTER, ar.size.x)
+	_txt("[Enter]", Vector2(ar.position.x, ar.position.y + 42), 12, Color(1, 0.75, 0.9) if can else DIM, HORIZONTAL_ALIGNMENT_CENTER, ar.size.x)
+	_txt("TASKS", Vector2(x, 336), 12, DIM)
+	for q in j["stations"].size():
+		var st: Dictionary = j["stations"][q]
+		_fit("-  %s  (%s)" % [st["label"], TJ.skill_names(st["skills"])], Vector2(x + 62, 336 + q * 18), 13, Color(0.85, 0.92, 1.0), w - 62)
+	var bits: Array = []
+	for sid in (o["social"] as Array) + (o["labour"] as Array):
+		bits.append("%s %d" % [SK.skill(String(sid))["name"], game.lvl(String(sid)) if game != null else 0])
+	_txt("YOURS", Vector2(x, 396), 12, DIM)
+	_fit(", ".join(bits), Vector2(x + 62, 396), 13, Color(0.5, 1.0, 0.7), w - 62)
+	var bot := Rect2(500, 424, 740, 226)
+	_tm_panel(bot, "THE WORK")
+	var lines := ["Take the job and a portal opens beside this terminal.  Step through to the company's floor.",
+		"Find each work station (the glowing machine tiles) and walk into it.  Every task is a skill check; a slip costs you time and 10% of the pay.",
+		"Finish every task, then leave by the exit portal and the agency credits your pay.  Nobody on the floor will fight you.",
+		"(Minigames for the slides, the warehouse, the research and the tax audit are planned: see PLAN.md.)"]
+	for q in lines.size():
+		draw_multiline_string(font, Vector2(520, 466 + q * 42), lines[q], HORIZONTAL_ALIGNMENT_LEFT, 700.0, 14, 2, Color(0.75, 0.86, 0.95))
+	var rr: Rect2 = tm_regen_rect()
+	var afford: bool = yen >= MS.NEW_BATCH_COST
+	draw_rect(rr, Color(0.07, 0.25, 0.3, 0.97) if afford else Color(0.14, 0.1, 0.12, 0.97))
+	draw_rect(rr, CYAN if afford else Color(0.5, 0.3, 0.3), false, 1.5)
+	_txt("NEW BATCH  ¥%d  [R]" % MS.NEW_BATCH_COST, Vector2(rr.position.x, rr.position.y + 22), 15, Color.WHITE if afford else Color(0.8, 0.5, 0.5), HORIZONTAL_ALIGNMENT_CENTER, rr.size.x)

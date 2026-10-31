@@ -5,6 +5,7 @@ extends RefCounted
 ##   site (mission_site.gd) that exists apart from the physical world.  Leaving the site, through its exit portal, closes the portal for good,
 ##   whether the mission was won, failed or dropped.  A mission pays out on return, in yen, and only if its objective was met.
 ## This file is the pure part: the offer tables, the offers a terminal shows on a given day, and the rules that run a mission (all take the Game).
+const TJ = preload("res://src/temp_jobs.gd")
 const SK = preload("res://src/skills.gd")
 const CG = preload("res://src/citygen.gd")
 
@@ -243,6 +244,8 @@ static func status_text(g) -> String:
 		return ""
 	var m: Dictionary = g.mission
 	var o: Dictionary = m["offer"]
+	if TJ.is_temp(o):
+		return TJ.status_text(g)
 	var s: String = "Mission: %s" % o["title"]
 	match o["type"]:
 		"assassination":
@@ -287,11 +290,13 @@ static func work_chance(g, risk: int) -> int:
 	return clampi(48 + 7 * sk - 8 * risk, 20, 92)
 
 ## walk into the site's machine: one attempt at the repair or the charge.  Returns true if a turn was spent.
-static func use_device(g) -> bool:
+static func use_device(g, cell: int = -1) -> bool:
 	var m: Dictionary = g.mission
 	if m.is_empty():
 		return false
 	var o: Dictionary = m["offer"]
+	if TJ.is_temp(o):
+		return TJ.use_station(g, cell)
 	if o["type"] != "repair" and o["type"] != "sabotage":
 		g.say("A machine of the site's.  It is not part of your job.")
 		return false
@@ -436,6 +441,8 @@ static func _follow(g, h: int) -> void:
 static func outcome(g, forced: String = "") -> Dictionary:
 	var m: Dictionary = g.mission
 	var o: Dictionary = m["offer"]
+	if TJ.is_temp(o):
+		return TJ.outcome(g, forced)
 	var ok := false
 	var why := ""
 	match o["type"]:
