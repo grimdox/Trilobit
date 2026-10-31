@@ -245,7 +245,7 @@ func _menu(W: float, H: float) -> void:
 	_txt(footer, Vector2(x0 + 28, y0 + bh - 14), 15, Color(0.6, 0.7, 0.8))
 
 # ---------------------------------------------------------------- the tab bar (equipment, implants, skills, map)
-const TAB_KINDS := ["equipment", "implants", "skills", "map"]
+const TAB_KINDS := ["equipment", "skills", "implants", "map"]
 const TAB_NAMES := {"equipment": "EQUIPMENT", "implants": "IMPLANTS", "skills": "SKILLS", "map": "MAP"}
 const TAB_H := 44.0
 var tab_keys: Dictionary = {}              # tab kind -> the key that opens it, for the label

@@ -135,5 +135,23 @@ func _initialize() -> void:
 	var a0: int = g.aim_turns
 	var aimed: bool = g.act_aim()
 	check("a hand-picked non-hostile target can be aimed at (picked %s, aimed %s)" % [str(picked), str(aimed)], picked and aimed and g.aim_target == who)
+	# ---- peeking: look from the next tile without going there, then come back
+	put.call(spot + 5)
+	g.sim.at[g.sim.pos[who]] = -1
+	g.sim.pos[who] = spot + 200 * 0 + g.size * 20          # out of the way
+	g.sim.at[g.sim.pos[who]] = who
+	g.facing = Vector2i(1, 0)
+	var pc0: int = g.pc
+	var turn_p: int = g.turn
+	var ap_p: int = g.ap
+	var okp: bool = g.act_peek(0, 1)
+	check("a peek leans one tile out and leaves you where you stand (pc %s, eye %s)" % [str(g.pc == pc0), str(g.eye_cell() == pc0 + g.size)], okp and g.pc == pc0 and g.eye_cell() == pc0 + g.size and g.facing == Vector2i(0, 1))
+	check("it costs half a turn (ap %d -> %d)" % [ap_p, g.ap], ap_p - g.ap == 50 or g.turn > turn_p)
+	g.end_peek()
+	check("ending the peek puts you back on your tile, facing as before", g.eye_cell() == pc0 and g.facing == Vector2i(1, 0))
+	g.sim.at[g.sim.pos[who]] = -1
+	g.sim.pos[who] = pc0 + g.size
+	g.sim.at[pc0 + g.size] = who
+	check("you can't peek into someone", not g.act_peek(0, 1))
 	print("TACTICS %d/%d" % [ok, n])
 	quit(0 if ok == n else 1)

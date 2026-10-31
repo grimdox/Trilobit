@@ -61,7 +61,7 @@ func run() -> Array:
 			mod_ok = mod_ok and bo.any(func(o): return o["risk"] == 2)
 	check("every board, whatever the settings, has one Low and one Moderate contract", low_ok and mod_ok)
 	var all_a: Array = MS.offers(3, 50, 0, 0, [0, 0, 0, 0], 4)
-	check("Value A on every switch: open, affiliated, long (30 rooms); Risk Low makes four Low and a Moderate", all_a.all(func(o): return o["layout"] == "open" and o["faction"] == "affiliated" and o["rooms"] == 30 and o["length"] == "long") and all_a.filter(func(o): return o["risk"] == 1).size() == 4)
+	check("Value A on every switch: open, affiliated, long (20 rooms); Risk Low makes four Low and a Moderate", all_a.all(func(o): return o["layout"] == "open" and o["faction"] == "affiliated" and o["rooms"] == 20 and o["length"] == "long") and all_a.filter(func(o): return o["risk"] == 1).size() == 4)
 	var all_b: Array = MS.offers(3, 50, 0, 0, [2, 2, 2, 2], 4)
 	check("Value B on every switch: closed, unaffiliated, short (5 rooms); Risk High makes three High, a Low and a Moderate", all_b.all(func(o): return o["layout"] == "closed" and o["faction"] == "unaffiliated" and o["rooms"] == 5 and o["length"] == "short" and o["aff"] == 0) and all_b.filter(func(o): return o["risk"] == 3).size() == 3)
 	var seen_l := {}
@@ -76,7 +76,7 @@ func run() -> Array:
 			seen_l[o["layout"]] = true
 			seen_f[o["faction"]] = true
 			seen_n[o["length"]] = true
-			rooms_ok = rooms_ok and o["rooms"] in [30, 10, 5]
+			rooms_ok = rooms_ok and o["rooms"] in [20, 10, 5]
 			if o["faction"] == "mix":
 				share_ok = share_ok and o["share"] >= 0.25 and o["share"] <= 0.5 and o["aff"] in [1, 3, 5]
 			nap_neutral = nap_neutral or (o["faction"] == "mix" and o["aff"] == 2)
@@ -93,7 +93,7 @@ func run() -> Array:
 		for rk in [1, 2, 3]:
 			lay_same = lay_same and MS.hostile_count(rm, rk) >= 3
 	check("hostiles follow rooms and risk (and nothing else)", hc_ok and lay_same and MS.hostile_count(30, 2) > MS.hostile_count(10, 2) and MS.hostile_count(10, 2) > MS.hostile_count(5, 2) and MS.hostile_count(10, 3) > MS.hostile_count(10, 2) and MS.hostile_count(10, 2) > MS.hostile_count(10, 1))
-	check("the neutral site holds 10 rooms and about 7 hostiles at moderate risk", MS.ROOMS["mid"] == 10 and MS.hostile_count(10, 2) == 7 and MS.ROOMS["long"] == 30 and MS.ROOMS["short"] == 5)
+	check("the neutral site holds 10 rooms and about 7 hostiles at moderate risk", MS.ROOMS["mid"] == 10 and MS.hostile_count(10, 2) == 7 and MS.ROOMS["long"] == 20 and MS.ROOMS["short"] == 5)
 	check("levels: Low is 1-2 below the player, Moderate at or one below, High at or one above (clamped 0-10)", MS.level_range(5, 1) == [3, 4] and MS.level_range(5, 2) == [4, 5] and MS.level_range(5, 3) == [5, 6] and MS.level_range(0, 1) == [0, 0] and MS.level_range(10, 3) == [10, 10])
 	check("pay rises with the hostile count and with the risk, for every type", MS.TYPES.all(func(t): return MS.reward_for(t["id"], 20, 2) > MS.reward_for(t["id"], 10, 2) and MS.reward_for(t["id"], 10, 2) > MS.reward_for(t["id"], 5, 2) and MS.reward_for(t["id"], 10, 3) > MS.reward_for(t["id"], 10, 2)))
 	var lg: Array = MS.offers(4, 5, 5, 0, [0, 1, 0, 1], 3)
@@ -103,7 +103,7 @@ func run() -> Array:
 	for k in 5:
 		lsum += int(lg[k]["reward"])
 		ssum += int(sh[k]["reward"])
-	check("a Long board pays more than a Short one", lsum > ssum * 2)
+	check("a Long board pays more than a Short one", lsum > ssum * 1.5)
 	check("a board's offers carry the terminal and batch they came from", offs.all(func(o): return o["term"] == 4242 and o["gen"] == 0))
 	# ---- sites: every layout at every length, every type
 	var all_ok := true

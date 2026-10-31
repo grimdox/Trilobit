@@ -143,11 +143,11 @@ func run() -> Array:
 	check.call("a bottle holds a stack of water and is one tile", b2.fill == 500 and not b2.stackable())
 	# settings
 	var st = SettingsScript.new()
-	check.call("P equipment, I implants, O skills, M map", st.action_for(KEY_P) == "inventory" and st.action_for(KEY_I) == "implants" and st.action_for(KEY_O) == "skills" and st.action_for(KEY_M) == "map")
+	check.call("I equipment, O skills, P implants, M map", st.action_for(KEY_I) == "inventory" and st.action_for(KEY_P) == "implants" and st.action_for(KEY_O) == "skills" and st.action_for(KEY_M) == "map")
 	check.call("shove has no rebindable key but Shift+O is shown", (st.binds["shove"] as Array).is_empty() and st.key_text("shove") == "Shift+O")
 	var old := SettingsScript.new()
 	old.from_dict({"keys_v": 2, "binds": {"inventory": [KEY_I], "implants": [KEY_F3], "skills": [KEY_F7], "shove": [KEY_O]}})
-	check.call("an old settings file moves to the new keys", old.action_for(KEY_I) == "implants" and old.action_for(KEY_O) == "skills" and old.action_for(KEY_P) == "inventory" and old.action_for(KEY_F3) == "")
+	check.call("an old settings file moves to the new keys", old.action_for(KEY_I) == "inventory" and old.action_for(KEY_O) == "skills" and old.action_for(KEY_P) == "implants" and old.action_for(KEY_F3) == "")
 	# the equipment tab's logic
 	inv = INV.new()
 	g.inv = inv

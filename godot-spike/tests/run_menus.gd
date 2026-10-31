@@ -96,8 +96,6 @@ func _initialize() -> void:
 	m.open_screen("equipment")
 	check("the equipment tab opens", m.mode == "equipment" and m.screen.kind == "equipment")
 	key(m, KEY_PERIOD)
-	check("> steps to the implants tab", m.mode == "implants")
-	key(m, KEY_PERIOD)
 	check("> steps to the skills tab", m.mode == "skills" and m.screen.sk_sel == 0)
 	key(m, KEY_RIGHT)
 	check("Right moves along the attributes", m.screen.sk_sel == 1)
@@ -113,6 +111,8 @@ func _initialize() -> void:
 	check("the mouse highlights a line", m.screen.sk_sel == 12)
 	await process_frame
 	key(m, KEY_PERIOD)
+	check("> steps to the implants tab", m.mode == "implants")
+	key(m, KEY_PERIOD)
 	check("> steps to the map tab", m.mode == "map")
 	check("the map tab opens on the local map", m.screen.map_local and m.screen.local_tex != null)
 	key(m, KEY_TAB)
@@ -125,7 +125,7 @@ func _initialize() -> void:
 	key(m, KEY_ESCAPE)
 	check("Esc leaves the tabs back to the pause menu", m.mode == "pause")
 	m.resume_play()
-	for pair in [[KEY_P, "equipment"], [KEY_I, "implants"], [KEY_O, "skills"], [KEY_M, "map"]]:
+	for pair in [[KEY_I, "equipment"], [KEY_P, "implants"], [KEY_O, "skills"], [KEY_M, "map"]]:
 		var kev := InputEventKey.new()
 		kev.keycode = pair[0]
 		kev.pressed = true

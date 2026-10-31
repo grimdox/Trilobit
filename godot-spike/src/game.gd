@@ -2193,14 +2193,54 @@ func dispose() -> void:
 
 ## the field of view's light test: true if the player can make out the tile in this light
 func _light_hides_not(c: int) -> bool:
-	return light == null or light.sees(pc, c)
+	return light == null or light.sees(eye_cell(), c)
 
 ## true if someone on tile `c` can make out the player in this light (an NPC does not spot a player standing in the dark unless it is close)
 func light_sees_player(c: int) -> bool:
 	return light == null or light.sees(c, pc)
 
+var peek_off := Vector2i.ZERO                   # a peek: you lean one tile this way to look, without moving; it ends with your next action
+
+## the tile you look from: where you stand, or the tile you lean out to
+func eye_cell() -> int:
+	return pc + peek_off.y * size + peek_off.x
+
 func _compute_fov() -> void:
-	fov.compute(pc % size, pc / size, sight_radius(), vision_arc(), facing.x, facing.y)
+	var e: int = eye_cell()
+	fov.compute(e % size, e / size, sight_radius(), vision_arc(), facing.x, facing.y)
+
+## lean out one tile (dx, dy) to look round a corner or through a door: half a turn, and nobody sees you any differently
+func act_peek(dx: int, dy: int) -> bool:
+	if in_vehicle >= 0 or flying:
+		say("You can't lean out from here.")
+		return false
+	var nx: int = pc % size + dx
+	var ny: int = (pc % s2) / size + dy
+	if (dx == 0 and dy == 0) or not in_bounds(nx, ny):
+		return false
+	var nc: int = (pc / s2) * s2 + ny * size + nx
+	if fov.opaque[nc] == 1 or city.tiles[nc] == CG.WALL:
+		say("There is no gap to lean past.")
+		return false
+	if sim.at[nc] != -1 or veh_at.g(nc) != -1 or thing_at.g(nc) != -1 or crit_at.g(nc) != -1:
+		say("Someone or something is in the way: you can't peek into it.")
+		return false
+	end_turn(AP_BASE / 2)
+	peek_face = facing
+	facing = Vector2i(dx, dy)
+	peek_off = Vector2i(dx, dy)
+	_compute_fov()
+	say("You lean out and look (you stay where you are; nobody sees you any better).")
+	return true
+
+var peek_face := Vector2i(0, 1)
+
+## the peek ends: you are back on your own tile, facing the way you were
+func end_peek() -> void:
+	if peek_off != Vector2i.ZERO:
+		peek_off = Vector2i.ZERO
+		facing = peek_face
+		_compute_fov()
 
 ## turn the view one step (+1 clockwise, -1 anticlockwise) of the eight directions; takes no time
 func turn_step(dir: int) -> void:
@@ -3479,7 +3519,7 @@ func _target_ok(j: int, any: bool, st: Dictionary) -> bool:
 		return false
 	if not any and not (hostile(j) or astate[j] == HUNTING) and not (manual_target and j == aim_target):
 		return false
-	return cheb(sim.pos[j], pc) <= int(st["range_hi"]) + 8 and sim._sees(pc, sim.pos[j], 40)
+	return true                      # anyone you can see can be targeted, whatever the angle or the distance (the odds fall with range)
 
 ## visible targets, nearest first
 func target_list(any: bool = false) -> Array:
@@ -4114,6 +4154,9 @@ func stamina_regen() -> int:
 ## You spend `cost` action points (a move, a strike, any ordinary action: 100).  If that leaves you unable to afford another, turns go by
 ## (each earns ap_rate()) until you can.  At full strength that is one turn per action; tired or hungry it is more; a fast body sometimes gets a free one.
 func end_turn(cost: int = AP_BASE) -> void:
+	if peek_off != Vector2i.ZERO:
+		peek_off = Vector2i.ZERO
+		facing = peek_face
 	ap -= cost
 	while ap < AP_BASE and not game_over:
 		_tick()

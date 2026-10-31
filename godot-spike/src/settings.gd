@@ -31,15 +31,16 @@ const ACTIONS := [
 	["movement", "Movement select: crawl, crouch, walk or run", [KEY_C]],
 	["strike", "Strike (then direction)", [KEY_W]],
 	["shove", "Shove (then direction)", []],
+	["peek", "Peek: lean out a tile to look round a corner (then direction, half a turn)", [KEY_K]],
 	["turn", "Turn to look (then direction, no time)", [KEY_SEMICOLON, KEY_KP_SUBTRACT]],
 	["swap", "Swap weapon", [KEY_BACKSLASH]],
 	["jump", "Jump (then direction)", [KEY_Q]],
 	["vehicle", "Enter / leave vehicle", [KEY_E]],
 	["useitem", "Use an item (food, medical) or swap gear", [KEY_U]],
 	["drop", "Drop (opens the inventory)", [KEY_D]],
-	["inventory", "Equipment & inventory screen", [KEY_P]],
-	["implants", "Implants screen", [KEY_I]],
+	["inventory", "Equipment & inventory screen", [KEY_I]],
 	["skills", "Attributes & skills screen", [KEY_O]],
+	["implants", "Implants screen", [KEY_P]],
 	["map", "Island map", [KEY_M]],
 	["look", "Look (move the cursor, Esc ends)", [KEY_L]],
 	["consume", "Consume food or drink", [KEY_F8, KEY_APOSTROPHE]],
@@ -138,7 +139,7 @@ func to_dict() -> Dictionary:
 ## version 2: Z is the ammo key and X interacts (they were X and P), C is the movement prompt (crouch and crawl keys are gone)
 ## version 3: the screens are tabs: P equipment & inventory, I implants, O attributes & skills, M map; shove is Shift+O (fixed)
 ## version 4: the turn-to-look key gains the keypad minus on older saves, and D opens the inventory to drop
-const KEYS_VERSION := 4
+const KEYS_VERSION := 5
 
 func from_dict(d: Dictionary) -> void:
 	var b: Dictionary = d.get("binds", {}).duplicate()
@@ -148,6 +149,9 @@ func from_dict(d: Dictionary) -> void:
 	if int(d.get("keys_v", 1)) < 3:
 		for moved3 in ["inventory", "implants", "skills", "shove"]:
 			b.erase(moved3)
+	if int(d.get("keys_v", 1)) < 5:
+		for moved5 in ["inventory", "implants", "skills", "north", "south", "west", "nw", "sw", "ne"]:
+			b.erase(moved5)                   # the character screens moved to I, O, P and the vi keys went
 	if int(d.get("keys_v", 1)) < 4:
 		b.erase("turn")                           # so the keypad minus joins the turn key on saves that only had ;
 	for a in b:

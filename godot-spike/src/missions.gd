@@ -77,7 +77,7 @@ const SWITCHES := [
 		"hint_b": "Freelance gang members, no colours, no one to answer to.",
 		"hint_n": "One organisation supplies a quarter to a half of them; the rest are hired gang muscle."},
 	{"id": "length", "name": "LENGTH", "a": "Long", "b": "Short", "mix": "Standard",
-		"hint_a": "About 30 rooms (three times the standard).  More opposition, more pay.",
+		"hint_a": "About 20 rooms (twice the standard).  More opposition, more pay.",
 		"hint_b": "About 5 rooms (half the standard).  Less opposition, less pay.",
 		"hint_n": "About 10 rooms."},
 	{"id": "risk", "name": "RISK", "a": "Low", "b": "High", "mix": "Moderate",
@@ -86,7 +86,7 @@ const SWITCHES := [
 		"hint_n": "Opposition at your level or one below.  Every board keeps one Low and one Moderate contract."},
 ]
 const NEUTRAL := [1, 1, 1, 1]
-const ROOMS := {"long": 30, "mid": 10, "short": 5}
+const ROOMS := {"long": 20, "mid": 10, "short": 5}
 const NEW_BATCH_COST := 100
 const AFFIL := [1, 3, 5, 2]            # the organisations an Affiliated board can name: Bratva, Nasim, corporate security, the NAP (Neutral never uses the NAP)
 const AFFIL_NAMES := {0: "unaffiliated gang members", 1: "Bratva", 2: "the NAP", 3: "Nasim", 4: "unaffiliated gang members", 5: "corporate security"}

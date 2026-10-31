@@ -372,6 +372,41 @@ static func build(offer: Dictionary):
 		used[gc2] = true
 		agents.append({"role": "guard", "cell": gc2, "fac": int(facs[guard_idx % facs.size()]), "name": "", "lv": rng.randi_range(int(lv[0]), int(lv[1]))})
 		guard_idx += 1
+	# ---- columns: a few of the bigger rooms get one or two pillars that block sight completely.  They are placed last, from their own random stream
+	# (so nothing else in the site moves), only on a floor cell whose eight neighbours are bare floor and clear of every prop, agent and objective, so none can seal a way through.
+	var crng := RandomNumberGenerator.new()
+	crng.seed = hash([int(o["seed"]), "columns"])
+	var special := {obj: true, entry: true, exit_cell: true}
+	if site.has("case"):
+		special[int(site["case"])] = true
+	for ag in agents:
+		special[int(ag["cell"])] = true
+	for mv in c.movables:
+		special[int(mv[0])] = true
+	for ri in n:
+		var cr: Rect2i = inner[ri]
+		if cr.size.x < 6 or cr.size.y < 6 or crng.randi() % 100 >= 60:
+			continue
+		var want_cols: int = 1 + (crng.randi() % 2)
+		for _try in 40:
+			if want_cols <= 0:
+				break
+			var cx: int = crng.randi_range(cr.position.x + 2, cr.end.x - 3)
+			var cy: int = crng.randi_range(cr.position.y + 2, cr.end.y - 3)
+			var good := true
+			for dy in range(-1, 2):
+				for dx in range(-1, 2):
+					var q: int = (cy + dy) * S + cx + dx
+					var qt: int = c.tiles[q]
+					if special.has(q) or used.has(q) or not CG.is_floor(qt):
+						good = false
+			if good:
+				c.tiles[cy * S + cx] = CG.WALL
+				want_cols -= 1
+				for dy2 in range(-1, 2):
+					for dx2 in range(-1, 2):
+						special[(cy + dy2) * S + cx + dx2] = true
+	site["columns"] = true
 	# ---- markers the NPC simulation needs (it builds its flow fields from them): the first cell of three rooms
 	var mk := PackedInt32Array()
 	for i in mini(3, n):

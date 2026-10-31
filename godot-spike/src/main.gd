@@ -21,7 +21,7 @@ const TILESETS := ["Trilobit64"]      # Trilobit's own 64px art (tools/content/g
 const SLOTS := 3
 const SCREEN_MODES := ["title", "loading", "pause", "options", "visuals", "keys", "saves", "loads", "equipment", "implants", "skills", "map", "create", "terminal", "barter", "elevator", "test"]
 const MOUSE_MODES := ["title", "pause", "options", "visuals", "keys", "saves", "loads", "create", "test"]
-const TAB_MODES := ["equipment", "implants", "skills", "map"]       # the paused character screens, one tab each (< and > step through them)
+const TAB_MODES := ["equipment", "skills", "implants", "map"]       # the paused character screens, one tab each (< and > step through them)
 
 var tm: Dictionary = {}                # the open mission terminal: {cell, offers, sel, msg}
 var game
@@ -893,7 +893,7 @@ func open_tab(kind: String, from: String = "") -> void:
 	screen.game = game
 	screen.gear = gear
 	var keys := {}
-	for pair in [["equipment", "inventory"], ["implants", "implants"], ["skills", "skills"], ["map", "map"]]:
+	for pair in [["equipment", "inventory"], ["skills", "skills"], ["implants", "implants"], ["map", "map"]]:
 		var ks: Array = settings.binds.get(pair[1], [])
 		keys[pair[0]] = OS.get_keycode_string(ks[0]) if not ks.is_empty() else ""
 	screen.tab_keys = keys
@@ -1892,6 +1892,9 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		return
 	if game == null:
 		return
+	if mode != "peek" and game.peek_off != Vector2i.ZERO and k != KEY_SHIFT and k != KEY_CTRL and k != KEY_ALT:
+		game.end_peek()                     # any key ends a peek: you are back on your own tile, looking the way you did
+		view.queue_redraw()
 	if mode == "pick":
 		if k == KEY_ESCAPE:
 			mode = "play"
@@ -1919,7 +1922,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 					game.act_mod_install(v)
 		refresh()
 		return
-	if mode == "jump" or mode == "strike" or mode == "shove" or mode == "turn":
+	if mode == "jump" or mode == "strike" or mode == "shove" or mode == "turn" or mode == "peek":
 		var was: String = mode
 		mode = "play"
 		var jd := dir_of(k)
@@ -1931,6 +1934,8 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				game.act_shove(jd.x, jd.y)
 			elif was == "turn":
 				game.turn_to(jd.x, jd.y)
+			elif was == "peek":
+				game.act_peek(jd.x, jd.y)
 			else:
 				game.act_strike(jd.x, jd.y)
 		refresh()
@@ -2127,6 +2132,9 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		"inventory":
 			open_tab("equipment", "play")
 			return
+		"peek":
+			mode = "peek"
+			g.say("Peek which way?  (direction key, Esc cancels)")
 		"useitem":
 			open_tab("equipment", "play")
 			gear.use_mode = true
