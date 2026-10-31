@@ -415,12 +415,6 @@ func _stock(i: int = 0) -> Array:
 		out.append(["trl_backpack", "backpack", 120])
 		out.append(["trl_fanny", "fanny pack", 25])
 		out.append(["trl_holster_belt", "holster belt", 90])
-	if i % 2 == 0:
-		out.append(["trl_vest", "ballistic vest", 500])
-		out.append(["trl_helmet", "ballistic helmet", 350])
-	else:
-		out.append(["trl_bracers", "composite arm guards", 300])
-		out.append(["trl_greaves", "shin guards", 300])
 	for n in (2 if kind != 1 else 0):
 		var a: String = ammo_ids[(i * 5 + n * 7) % ammo_ids.size()]
 		out.append([a, g.db.defs[a]["name"], int(g.db.defs[a]["price"]) * 3 / 2])

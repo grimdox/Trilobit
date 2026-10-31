@@ -52,6 +52,7 @@ var mouse := Vector2(-100, -100)
 var use_mouse := false                   # true once the mouse moved last (the item follows it), false for the keyboard (it follows the highlight)
 var msg: String = ""
 var msg_t: float = 0.0
+var use_mode := false                    # opened by the use key: choosing an item uses it (food, medical) or puts it on / takes it off
 var drop_mode := false                   # opened by the drop key: choosing an item drops it
 var row_focus := false                   # implants tab: the keys move over the part's list
 var _rows: Array = []                    # the implant rows of the highlighted spot, rebuilt each draw / key
@@ -64,6 +65,7 @@ func open(g, tileset, which: String) -> void:
 		give_back()
 	set_tab(which)
 	drop_mode = false
+	use_mode = false
 	msg = ""
 
 func set_tab(which: String) -> void:
@@ -265,7 +267,9 @@ func press() -> void:
 			say("Move an item here to drop it.")
 		return
 	if held == null:
-		if drop_mode:
+		if use_mode:
+			auto()
+		elif drop_mode:
 			drop_at(cur)
 		else:
 			pick_up(cur)
@@ -314,6 +318,10 @@ func auto() -> void:
 		if it2.has_tag("medical"):
 			if game.act_use_medical(it2):
 				say("Used the %s." % it2.def["name"])
+			return
+		if it2.has_tag("food"):
+			if game.act_eat(it2):
+				say("Ate the %s." % it2.def["name"])
 			return
 		if not INV.is_equipment(it2):
 			say("The %s is not equipment." % it2.def["name"])
@@ -665,6 +673,8 @@ func draw(c: CanvasItem, W: float, H: float, t: float, dt: float) -> void:
 			hint = "Holding the %s  -  Enter or click on a nanohack slot loads it  -  Esc puts it back" % held.def["name"]
 	elif held != null:
 		hint = "Holding the %s  -  Enter or click puts it down, on DROP drops it  -  Esc puts it back" % held.def["name"]
+	elif use_mode:
+		hint = "USE: Enter or click an item to eat or apply it, or to put on / take off a piece of gear  -  Esc closes"
 	elif drop_mode:
 		hint = "DROP: Enter or click an item to drop it onto the floor  -  Esc closes"
 	else:

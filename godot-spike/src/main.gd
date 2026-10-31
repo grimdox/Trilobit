@@ -68,6 +68,7 @@ var save_prefix: String = "user://trilobit_save_"
 var settings_path: String = "user://trilobit_settings.json"
 
 func _ready() -> void:
+	RenderingServer.set_default_clear_color(Color(0.035, 0.035, 0.04))      # tiles you have not seen: charcoal black, nothing like a road
 	settings = SettingsScript.new()
 	settings.path = settings_path
 	settings.load_file()
@@ -2125,6 +2126,10 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 			return
 		"inventory":
 			open_tab("equipment", "play")
+			return
+		"useitem":
+			open_tab("equipment", "play")
+			gear.use_mode = true
 			return
 		"implants":
 			open_tab("implants", "play")

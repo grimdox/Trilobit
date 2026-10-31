@@ -394,12 +394,91 @@ func level(c: int) -> int:
 	if not enabled:
 		return LT.LIT
 	_sync(g.sim.tick)
-	return int(_info(c)[0])
+	var l: int = int(_info(c)[0])
+	if l < LT.LIT:
+		l = maxi(l, _head_level(c))
+	return l
 
 ## the colour of the light on a tile
 func colour(c: int) -> Color:
 	_sync(g.sim.tick)
-	return _info(c)[1]
+	var inf: Array = _info(c)
+	if int(inf[0]) < LT.LIT and _head_level(c) > int(inf[0]):
+		return HEAD_COL
+	return inf[1]
+
+# ---------------------------------------------------------------- headlights
+## A car or truck with someone driving it throws light from each front corner: a long triangle eight tiles ahead, widening to about five tiles across, bright for
+## the first five tiles and dim beyond.  Cars move, so this is worked out on top of the cached ground light, once a tick.
+const HEAD_LEN := 8.0
+const HEAD_LIT := 5.0
+const HEAD_HALF := 2.5                  # half the width of the beam at its far end
+const HEAD_COL := Color(1.0, 0.97, 0.85)
+var _hl_tick := -1
+var _hl: Array = []                     # [x, y, fx, fy, z base] per headlight
+
+func _headlights() -> Array:
+	if g.sim.tick == _hl_tick:
+		return _hl
+	_hl_tick = g.sim.tick
+	_hl = []
+	if ambient() == LT.LIT:
+		return _hl
+	for v in g.vehicles:
+		var kind: String = String(v.get("kind", ""))
+		if kind != "car" and kind != "truck":
+			continue
+		var drv: int = int(v.get("driver", -1))
+		if bool(v.get("wreck", false)) or (drv != -2 and drv != -3):
+			continue
+		var anchor: int = int(v["cell"])
+		if anchor >= g.s2 or _cheb(anchor, g.pc) > 40:
+			continue
+		var fvi: Vector2i = g.vs.fwd(kind, int(v["dir"]))
+		var fv := Vector2(fvi.x, fvi.y).normalized()
+		var pv := Vector2(-fv.y, fv.x)
+		var ax: int = _x(anchor)
+		var ay: int = _y(anchor)
+		var best := -1000.0
+		var cells: Array = []
+		for cc in g.vs.cells(v):
+			var rel := Vector2(_x(cc) - ax, _y(cc) - ay)
+			cells.append([cc, rel.dot(fv), rel.dot(pv)])
+			best = maxf(best, rel.dot(fv))
+		var lo: Array = []
+		var hi: Array = []
+		for e in cells:
+			if float(e[1]) >= best - 0.6:
+				if lo.is_empty() or float(e[2]) < float(lo[2]):
+					lo = e
+				if hi.is_empty() or float(e[2]) > float(hi[2]):
+					hi = e
+		for e in [lo, hi]:
+			if not e.is_empty():
+				_hl.append([_x(int(e[0])), _y(int(e[0])), fv.x, fv.y])
+	return _hl
+
+func _head_level(c: int) -> int:
+	if c >= g.s2 or g.vehicles.is_empty():
+		return LT.DARK
+	var best: int = LT.DARK
+	var x: int = _x(c)
+	var y: int = _y(c)
+	for L in _headlights():
+		var rx: float = float(x) - float(L[0])
+		var ry: float = float(y) - float(L[1])
+		var t: float = rx * float(L[2]) + ry * float(L[3])
+		if t < 0.0 or t > HEAD_LEN:
+			continue
+		var side: float = absf(-rx * float(L[3]) + ry * float(L[2]))
+		if side > 0.5 + t * (HEAD_HALF - 0.5) / HEAD_LEN:
+			continue
+		if t > 1.5 and not _clear(c, int(L[1]) * g.size + int(L[0])):
+			continue
+		best = maxi(best, LT.LIT if t <= HEAD_LIT else LT.DIM)
+		if best == LT.LIT:
+			break
+	return best
 
 func _cheb(a: int, b: int) -> int:
 	return maxi(absi(_x(a) - _x(b)), absi(_y(a) - _y(b)))

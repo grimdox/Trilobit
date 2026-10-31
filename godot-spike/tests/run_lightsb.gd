@@ -185,5 +185,41 @@ func _initialize() -> void:
 				broke = true
 				break
 		check("a shot breaks the bulb and the light goes out", broke and ng.dead_lights.has(bulb))
+	# ---- headlights: eight tiles ahead of a driven car, nothing behind
+	g.sim.tick = tk(23, 30)
+	lm.invalidate()
+	var vk := -1
+	var found_cell := -1
+	for c in range(g.size * 200, g.size * (g.size - 200), 3):
+		if g.city.tiles[c] == CG.ROAD and g.city.tiles[c + 12] == CG.ROAD and g.city.tiles[c - 12] == CG.ROAD:
+			vk = g.vs.spawn("car", c, 2, Color.RED, true)
+			if vk >= 0:
+				found_cell = c
+				break
+	check("a car could be placed on a road", vk >= 0)
+	if vk >= 0:
+		var v: Dictionary = g.vehicles[vk]
+		var cells: PackedInt32Array = g.vs.cells(v)
+		var maxx := -1
+		var ymid := 0
+		for cc in cells:
+			if cc % g.size > maxx:
+				maxx = cc % g.size
+		var rowy: int = (found_cell / g.size)
+		var ahead3: int = rowy * g.size + maxx + 3
+		var ahead7: int = rowy * g.size + maxx + 7
+		var ahead10: int = rowy * g.size + maxx + 11
+		var behind: int = rowy * g.size + (maxx - 6)
+		lm.invalidate()
+		g.sim.tick += 1
+		g.pc = found_cell + 30
+		var l3: int = lm.level(ahead3)
+		var l7: int = lm.level(ahead7)
+		var l11: int = lm.level(ahead10)
+		var lb: int = lm.level(behind)
+		check("a driven car lights the road ahead: lit at 3 (%d), dim at 7 (%d), nothing past 8 (%d)" % [l3, l7, l11], l3 == LT.LIT and l7 >= LT.DIM and l11 <= LT.DIM and l7 <= LT.LIT)
+		g.vehicles[vk]["driver"] = -1
+		g.sim.tick += 1
+		check("a parked car has its lights off", lm.level(ahead3) < LT.LIT or lm.level(ahead3) == lm._info(ahead3)[0])
 	print("LIGHTSB %d/%d" % [ok, n])
 	quit(0 if ok == n else 1)

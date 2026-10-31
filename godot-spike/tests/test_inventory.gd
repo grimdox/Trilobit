@@ -39,7 +39,7 @@ func run() -> Array:
 	var coat = g._new_item("trl_coat")
 	inv.stow(coat)
 	check.call("a coat is Chest, +4 tiles", INV.slot_options(coat) == ["chest"] and inv.auto_equip(coat) and inv.capacity() == 31)
-	var vest = g._new_item("trl_vest")
+	var vest = g._new_item("trl_armor_chest_4")
 	inv.stow(vest)
 	check.call("a vest takes the Chest from the coat (they exclude each other) and the coat goes to the pack", inv.auto_equip(vest) and inv.equip["chest"] == vest and inv.capacity() == 27 and inv.find(coat)["t"] == "grid")
 	var fanny = g._new_item("trl_fanny")
@@ -155,7 +155,7 @@ func run() -> Array:
 	var gear = GearScript.new()
 	gear.open(g, null, "equipment")
 	var gun = g._new_item("trl_gun_zp9")
-	var vest2 = g._new_item("trl_vest")
+	var vest2 = g._new_item("trl_armor_chest_4")
 	inv.stow(gun)
 	inv.stow(vest2)
 	gear.cur = "g:base:0"
@@ -190,13 +190,13 @@ func run() -> Array:
 	gear.cur = "d:drop"
 	gear.press()
 	check.call("moving the held item onto DROP puts it on the floor", gear.held == null and inv.find(gun).is_empty() and g.items_at.has(g.pc) and g.items_at[g.pc].size() == floor0 + 1)
-	var vest_b = g._new_item("trl_vest")
+	var vest_b = g._new_item("trl_armor_chest_4")
 	inv.stow(vest_b)
 	var idx: int = inv.find(vest_b)["i"]
 	var r2: Rect2 = gear.grid_rect(gear.group_layout()[0][1], gear.group_layout()[0][2], idx)
 	gear.click(r2.get_center(), false, true)
 	check.call("alt-click drops the item under the mouse", inv.find(vest_b).is_empty() and g.items_at[g.pc].size() == floor0 + 2)
-	var vest3 = g._new_item("trl_vest")
+	var vest3 = g._new_item("trl_armor_chest_4")
 	inv.stow(vest3)
 	inv.auto_equip(vest3)
 	gear.cur = "s:chest"

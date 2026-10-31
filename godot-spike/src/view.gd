@@ -1238,7 +1238,16 @@ func _draw_hud() -> void:
 		_txt(x0 + 124, by + 8, names[l], 11, C_DIM)
 		if av > 0:
 			_txt(x0 + 124, by + 8, "armor %d" % av, 11, Color(0.5, 0.78, 1.0), 118, HORIZONTAL_ALIGNMENT_RIGHT)
-		_meter(x0 + 124, by + 11, 118, 13, f, _limb_color(f), "OFF" if not B.ok(l) else "", ("%d+%d/%d+%d" % [int(B.hp[l]), int(B.imp[l]), int(B.mx[l]), int(B.imx[l])]) if int(B.imx[l]) > 0 else "%d/%d" % [int(B.hp[l]), int(B.mx[l])])
+		if int(B.imx[l]) > 0:
+			# an implanted limb has two pools: bio (red to green) on the left, the implant's (blue) on the right
+			var fb: float = float(B.hp[l]) / float(maxi(1, int(B.mx[l])))
+			var fi: float = float(B.imp[l]) / float(maxi(1, int(B.imx[l])))
+			_meter(x0 + 124, by + 11, 57, 13, fb, _limb_color(fb), "", "%d/%d" % [int(B.hp[l]), int(B.mx[l])])
+			_meter(x0 + 185, by + 11, 57, 13, fi, Color(0.25, 0.6, 0.95) if fi > 0.0 else Color(0.25, 0.25, 0.28), "", "%d/%d" % [int(B.imp[l]), int(B.imx[l])])
+			if not B.ok(l):
+				_txt(x0 + 124, by + 8, "OFF", 11, Color(1.0, 0.4, 0.4), 118, HORIZONTAL_ALIGNMENT_CENTER)
+		else:
+			_meter(x0 + 124, by + 11, 118, 13, f, _limb_color(f), "OFF" if not B.ok(l) else "", "%d/%d" % [int(B.hp[l]), int(B.mx[l])])
 		k += 1
 	# the meters
 	var my: float = fy + 190.0

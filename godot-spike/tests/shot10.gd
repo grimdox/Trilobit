@@ -10,8 +10,8 @@ func _initialize() -> void:
 	for i in 100:
 		await process_frame
 	var g = m.game
-	g.act_wear(g._new_item("trl_vest"))
-	g.act_wear(g._new_item("trl_helmet"))
+	g.act_wear(g._new_item("trl_armor_chest_4"))
+	g.act_wear(g._new_item("trl_armor_head_3"))
 	g.implants["dermal"] = true
 	g.player_hurt(9, "Test", "phys", "chest")
 	g.player_hurt(30, "Test", "phys", "l_arm")

@@ -5198,114 +5198,6 @@
   }
  },
  {
-  "id": "trl_helmet",
-  "name": "ballistic helmet",
-  "desc": "Armor 3 on the head.",
-  "weight_g": 1200,
-  "volume_ml": 3000,
-  "length_mm": 300,
-  "price": 350,
-  "tags": [
-   "armor",
-   "worn"
-  ],
-  "armor": {
-   "slot": "head",
-   "phys": 3,
-   "dur": 40
-  }
- },
- {
-  "id": "trl_visor",
-  "name": "riot visor helmet",
-  "desc": "Armor 5 on the head.",
-  "weight_g": 1900,
-  "volume_ml": 4000,
-  "length_mm": 320,
-  "price": 800,
-  "tags": [
-   "armor",
-   "worn"
-  ],
-  "armor": {
-   "slot": "head",
-   "phys": 5,
-   "dur": 60
-  }
- },
- {
-  "id": "trl_vest",
-  "name": "ballistic vest",
-  "desc": "Armor 4 on the chest.",
-  "weight_g": 3200,
-  "volume_ml": 5000,
-  "length_mm": 500,
-  "price": 500,
-  "tags": [
-   "armor",
-   "worn"
-  ],
-  "armor": {
-   "slot": "chest",
-   "phys": 4,
-   "dur": 60
-  }
- },
- {
-  "id": "trl_vest_heavy",
-  "name": "plate carrier",
-  "desc": "Armor 7 on the chest.",
-  "weight_g": 6800,
-  "volume_ml": 8000,
-  "length_mm": 520,
-  "price": 1400,
-  "tags": [
-   "armor",
-   "worn"
-  ],
-  "armor": {
-   "slot": "chest",
-   "phys": 7,
-   "dur": 90
-  }
- },
- {
-  "id": "trl_bracers",
-  "name": "composite arm guards",
-  "desc": "Armor 2 on both arms.",
-  "weight_g": 1100,
-  "volume_ml": 2000,
-  "length_mm": 350,
-  "price": 300,
-  "tags": [
-   "armor",
-   "worn"
-  ],
-  "armor": {
-   "slot": "arms",
-   "phys": 2,
-   "dur": 40
-  }
- },
- {
-  "id": "trl_greaves",
-  "name": "shin guards",
-  "desc": "Armor 2 on both legs.",
-  "weight_g": 1500,
-  "volume_ml": 2500,
-  "length_mm": 400,
-  "price": 300,
-  "tags": [
-   "armor",
-   "worn"
-  ],
-  "armor": {
-   "slot": "legs",
-   "phys": 2,
-   "dur": 40
-  }
- },
- {
   "id": "trl_pouch",
   "name": "belt pouch",
   "desc": "A pouch on the belt: 4 more inventory tiles.",
@@ -5688,24 +5580,6 @@
   }
  },
  {
-  "id": "trl_jacket",
-  "name": "riot jacket",
-  "desc": "Armor 2 on the chest.",
-  "weight_g": 1800,
-  "volume_ml": 3500,
-  "length_mm": 600,
-  "price": 220,
-  "tags": [
-   "armor",
-   "worn"
-  ],
-  "armor": {
-   "slot": "chest",
-   "phys": 2,
-   "dur": 36
-  }
- },
- {
   "id": "trl_vest_corp",
   "name": "corporate liner vest",
   "desc": "Armor 3 on the chest.  Slim enough to wear under a suit.",
@@ -5721,60 +5595,6 @@
    "slot": "chest",
    "phys": 3,
    "dur": 55
-  }
- },
- {
-  "id": "trl_bracers_heavy",
-  "name": "reinforced arm armor",
-  "desc": "Armor 4 on both arms.",
-  "weight_g": 2400,
-  "volume_ml": 3000,
-  "length_mm": 380,
-  "price": 700,
-  "tags": [
-   "armor",
-   "worn"
-  ],
-  "armor": {
-   "slot": "arms",
-   "phys": 4,
-   "dur": 60
-  }
- },
- {
-  "id": "trl_greaves_heavy",
-  "name": "reinforced leg armor",
-  "desc": "Armor 4 on both legs.",
-  "weight_g": 3000,
-  "volume_ml": 4000,
-  "length_mm": 450,
-  "price": 700,
-  "tags": [
-   "armor",
-   "worn"
-  ],
-  "armor": {
-   "slot": "legs",
-   "phys": 4,
-   "dur": 60
-  }
- },
- {
-  "id": "trl_kneepads",
-  "name": "knee pads",
-  "desc": "Armor 1 on both legs.",
-  "weight_g": 400,
-  "volume_ml": 800,
-  "length_mm": 200,
-  "price": 70,
-  "tags": [
-   "armor",
-   "worn"
-  ],
-  "armor": {
-   "slot": "legs",
-   "phys": 1,
-   "dur": 20
   }
  },
  {

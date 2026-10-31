@@ -10,7 +10,7 @@ func _initialize() -> void:
 	for i in 100:
 		await process_frame
 	var g = m.game
-	for id in ["trl_helmet", "trl_vest_heavy", "trl_bracers", "trl_greaves"]:
+	for id in ["trl_armor_head_3", "trl_armor_chest_5", "trl_armor_arms_2", "trl_armor_legs_2"]:
 		g.act_wear(g._new_item(id))
 	g.implants["optics"] = true
 	g.implants["reflex"] = true
