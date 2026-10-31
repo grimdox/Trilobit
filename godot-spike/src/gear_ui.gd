@@ -311,6 +311,10 @@ func auto() -> void:
 		else:
 			say(inv.last_err)
 	else:
+		if it2.has_tag("medical"):
+			if game.act_use_medical(it2):
+				say("Used the %s." % it2.def["name"])
+			return
 		if not INV.is_equipment(it2):
 			say("The %s is not equipment." % it2.def["name"])
 		elif inv.auto_equip(it2):
@@ -664,7 +668,7 @@ func draw(c: CanvasItem, W: float, H: float, t: float, dt: float) -> void:
 	elif drop_mode:
 		hint = "DROP: Enter or click an item to drop it onto the floor  -  Esc closes"
 	else:
-		hint = "Arrows / numpad / mouse move  -  Enter or click picks up  -  Ctrl or right-click equips / takes off  -  Alt-click drops  -  Esc closes"
+		hint = "Arrows / numpad / mouse move  -  Enter or click picks up  -  Ctrl, U or right-click uses (bandages, gels), equips or takes off  -  Alt-click drops  -  Esc closes"
 	_txt(c, hint, Vector2(40, H - 12.0), 14, Color(0.6, 0.72, 0.85))
 
 ## the Trilobit's nanohack slots on a motherboard: green board, copper traces, a socket for each chip

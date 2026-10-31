@@ -1164,8 +1164,8 @@ func _tab_key(k: int) -> void:
 	if dv != Vector2i.ZERO:
 		if gear.move(dv):
 			sfx.play("blip")
-	elif k == KEY_CTRL:
-		gear.auto()
+	elif k == KEY_CTRL or (k == KEY_U and gear.tab != "implants"):
+		gear.auto()                              # Ctrl or U: use / equip / take off
 	elif k == KEY_ENTER or k == KEY_KP_ENTER or k == KEY_SPACE:
 		if Input.is_key_pressed(KEY_CTRL):
 			gear.auto()
@@ -1717,7 +1717,7 @@ func show_consume() -> void:
 func open_consume() -> void:
 	consume_list = game.consumables()
 	if consume_list.is_empty():
-		game.say("You have nothing to eat or drink, and nothing edible within one tile.")
+		game.say("You have nothing to eat, drink or use for healing, and nothing within one tile.")
 		return
 	mode = "consume"
 	show_consume()

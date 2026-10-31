@@ -2817,11 +2817,16 @@ func _add_consumable(out: Array, it, parent, cell: int, where: String) -> void:
 		out.append({"item": it, "parent": parent, "cell": cell, "kind": "drink" if it.def.get("food", {}).get("drink", false) else "food", "where": where})
 	elif it.def.has("bottle") and it.fill > 0:
 		out.append({"item": it, "parent": parent, "cell": cell, "kind": "water", "where": where})
+	elif it.has_tag("medical"):
+		out.append({"item": it, "parent": parent, "cell": cell, "kind": "medical", "where": where})
 
 func consumable_label(e: Dictionary) -> String:
 	var it = e["item"]
 	var f: Dictionary = it.def.get("food", {})
 	match e["kind"]:
+		"medical":
+			var hl: int = int(it.def.get("heal", 0))
+			return "%s%s  (%s)" % [it.def["name"], " x%d" % it.count if it.count > 1 else "", ("closes %d points of bio health" % hl) if hl > 0 else "mends your worst limb and closes wounds"]
 		"water":
 			return "water bottle, %d mL  (%s of thirst)" % [it.fill, CLK.span_text(ml_turns(it.fill))]
 		"drink":
@@ -2844,6 +2849,8 @@ func _take_one(e: Dictionary) -> void:
 
 func act_consume(e: Dictionary) -> bool:
 	var it = e["item"]
+	if e["kind"] == "medical":
+		return act_use_medical(it)
 	if e["kind"] == "water":
 		var room: int = int(ceil(float(THIRST_AFTER - drink_left()) / TURNS_PER_ML))
 		if room < 25:

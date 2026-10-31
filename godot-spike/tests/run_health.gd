@@ -41,6 +41,20 @@ func _initialize() -> void:
 	for id in ["trl_heal_bandage", "trl_heal_gel", "trl_heal_stim", "trl_heal_suture"]:
 		items_ok = items_ok and g.db.defs.has(id) and int(g.db.defs[id]["heal"]) > 0
 	check("four healing items exist", items_ok)
+	# using a bandage through the consume list (the F8 menu) and the inventory's right-click
+	var bg = g._new_item("trl_heal_bandage", 2)
+	g.inv.stow(bg)
+	g._sync_pools()
+	g._limb_hit("chest", 20)
+	var listed := false
+	var entry := {}
+	for e in g.consumables():
+		if e["item"] == bg:
+			listed = true
+			entry = e
+	var hb: int = int(g.body.hp["chest"])
+	var used: bool = listed and g.act_consume(entry)
+	check("a bandage is in the consume list and heals 8 bio health (%d -> %d), leaving one" % [hb, int(g.body.hp["chest"])], used and int(g.body.hp["chest"]) == hb + 8 and bg.count == 1)
 	# the nano
 	g = GameScript.new(3)
 	g.setup(300)
