@@ -76,6 +76,10 @@ func indoor(c: int) -> bool:
 func _wall(c: int) -> bool:
 	return opaque(c) or g.city.tiles[c] == 2
 
+## true if the tile is open air: not under a roof and not a wall (a shut door counts as a wall): the only tiles rain falls on
+func open_air(c: int) -> bool:
+	return not indoor(c) and not _wall(c)
+
 func theme(c: int) -> String:
 	if g.island != null and g.zone != g.island.CITY_ZONE:
 		return "industry" if g.zone == g.island.PORT_ZONE else "rural"

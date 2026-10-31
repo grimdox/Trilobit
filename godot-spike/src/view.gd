@@ -950,8 +950,7 @@ func _draw_lighting(ox: int, oy: int, base: int, T: int) -> void:
 			if game.fov.visible[c] != 1:
 				continue
 			var i: int = sy * cols + sx
-			var t: int = game.city.tiles[c]
-			if not lm.indoor(c) and t != 2 and t != 10:
+			if lm.open_air(c):
 				out[i] = 1
 			if not lighting_on:
 				continue

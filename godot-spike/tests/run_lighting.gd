@@ -185,6 +185,44 @@ func _initialize() -> void:
 						lit_seen += 1
 		check("in the dark the field of view shows dark tiles to two tiles only, and the lit tile beyond (%d, %d lit)" % [max_dark, lit_seen], max_dark <= 2 and lit_seen >= 1)
 		lm.forced.clear()
+	# ---- rain: an animated overlay, only on open air
+	var FXS = preload("res://src/weather_fx.gd")
+	var rect := Rect2(100, 100, 60, 60)
+	var in_rect := true
+	var any_clip := false
+	for k in 400:
+		var a := Vector2(70.0 + float(k * 37 % 120), 60.0 + float(k * 53 % 130))
+		var b: Vector2 = a + Vector2(-20.0 + float(k % 9), 15.0 + float(k % 23))
+		var cl: PackedVector2Array = FXS.clip(a, b, rect)
+		if cl.size() == 2:
+			any_clip = true
+			for pt in cl:
+				in_rect = in_rect and pt.x >= rect.position.x - 0.01 and pt.x <= rect.end.x + 0.01 and pt.y >= rect.position.y - 0.01 and pt.y <= rect.end.y + 0.01
+	check("a raindrop is clipped to its own tile, so none crosses onto a neighbour", in_rect and any_clip and FXS.clip(Vector2(0, 0), Vector2(10, 10), rect).is_empty())
+	var fxn = FXS.new()
+	fxn.rain = 0.6
+	var t_before: float = fxn.t
+	fxn._process(0.5)
+	check("the rain layer animates: its clock advances every frame it rains (%.2f -> %.2f)" % [t_before, fxn.t], fxn.t > t_before)
+	var air_ok := true
+	var air_bad := 0
+	var air_seen := 0
+	var cnt_walls := 0
+	var cnt_floor := 0
+	for c in range(size * 100, size * (size - 100), 29):
+		var tt: int = g.city.tiles[c]
+		if tt == CG.WALL or tt == CG.FLOOR or tt == CG.DOOR:
+			if lm.open_air(c):
+				air_bad += 1
+			if tt == CG.WALL:
+				cnt_walls += 1
+			else:
+				cnt_floor += 1
+		elif tt == CG.ROAD or tt == CG.GROUND:
+			air_seen += 1
+			if not lm.open_air(c):
+				air_ok = false
+	check("rain falls only on open air: no wall, floor or doorway counts (%d walls and %d floor tiles checked), every road and ground tile does (%d)" % [cnt_walls, cnt_floor, air_seen], air_bad == 0 and air_ok and cnt_walls > 20 and cnt_floor > 20)
 	# ---- the rules can be turned off (the other tests)
 	lm.enabled = false
 	check("with the rules off everything is lit and seen", lm.level(open_far) == LT.LIT and lm.sees(open_far, open_far + 20))
