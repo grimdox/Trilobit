@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Write a LibreOffice spreadsheet (.ods) of every gun and bullet value for review.  usage: export_weapons_ods.py [out.ods]  (run from godot-spike/, after export_items.py)"""
+"""Write a LibreOffice spreadsheet (.ods) of every gun, bullet and armor value for review (tabs: Guns, Bullets, Armor).  usage: export_weapons_ods.py [out.ods]  (run from godot-spike/, after export_items.py)"""
 import json, re, sys
 from odf.opendocument import OpenDocumentSpreadsheet
 from odf.table import Table, TableRow, TableCell
 from odf.text import P
 from odf.style import Style, TextProperties
 
-out = sys.argv[1] if len(sys.argv) > 1 else "Trilobit_ranged_weapons.ods"
+out = sys.argv[1] if len(sys.argv) > 1 else "Trilobit Weapons & Armor List.ods"
 src = open("src/gunplay.gd").read()
 KIND = {}
 for m in re.finditer(r'"(\w+)": \{"pen": (\d+), "label": "([^"]+)"([^}]*)\}', src):
@@ -45,5 +45,27 @@ for a in A:
     am = a["ammo"]; pen, label, pel, blast = KIND[am["kind"]]
     row2(["%s %s" % (am["cal"], label), am["cal"], label, am["dmg"][0], am["dmg"][1], am["eff_range"], pen, blast, pel, am["rounds"], "%.2f kg" % (a["weight_g"] / 1000), a["price"], a["id"]])
 doc.spreadsheet.addElement(t2)
+
+# ---- Armor: one piece per slot per +1..+5 base armor.  Not in the game yet: the prices follow the implant economy (implant_catalogue.xlsx, Example Implants).
+# price = round( implant reference price for that armor value x slot factor / divisor , to 10 yen )
+IMPLANT_REF = {1: 5400, 2: 11000, 3: 24000, 4: 46000, 5: 92000}   # what an implant giving that much armor costs (grade 1 arm/leg part, grade 1-2 dermal and chest parts, grade 3 and 4 dermal)
+DIVISOR = {1: 5.0, 2: 6.0, 3: 7.0, 4: 8.5, 5: 10.0}                # armor is 1/5 of an implant's price at +1, 1/10 at +5
+SLOT_F = {"head": 0.75, "chest": 1.0, "arms": 0.5, "legs": 0.5}    # an implant for the head costs about 3/4 of a chest one; an arm or leg part about half
+DUR = {1: 20, 2: 35, 3: 50, 4: 65, 5: 80}
+GRADE = {1: "Street", 2: "Patrol", 3: "Tactical", 4: "Military", 5: "Prototype"}
+PART = {"head": ("Helm", [400, 800, 1200, 1600, 2000]), "chest": ("Vest", [1500, 2400, 3400, 4500, 5800]),
+        "arms": ("Arm Guards", [500, 800, 1200, 1600, 2000]), "legs": ("Leg Guards", [600, 1000, 1400, 1900, 2400])}
+COVER = {"head": "head", "chest": "chest", "arms": "both arms", "legs": "both legs"}
+t3, row3 = sheet("Armor")
+row3(["Armor: each worn piece takes a flat amount off every hit that lands on its body part (Phys = base armor, +1 to +5), and wears down as it soaks damage (Durability); a broken piece gives nothing.  Arm and leg pieces cover both limbs.  Pieces are listed for design review and are not in the game yet.  Price = Implant reference x Slot factor / Divisor, rounded to 10 yen: implant references come from the implant economy (an implant giving that armor), the divisor runs from 5 at +1 to 10 at +5 so armor costs 1/5 to 1/10 of the implant."], "b")
+row3([])
+row3(["Name", "Slot", "Covers", "Base Armor (Phys)", "Durability", "Weight", "Price (yen)", "Implant reference (yen)", "Slot factor", "Divisor", "Implant equivalent (yen)", "Code Name"], "b")
+for slot in ("head", "chest", "arms", "legs"):
+    word, kg = PART[slot]
+    for n in range(1, 6):
+        ref = IMPLANT_REF[n]
+        price = int(round(ref * SLOT_F[slot] / DIVISOR[n] / 10.0)) * 10
+        row3(["%s %s" % (GRADE[n], word), slot, COVER[slot], n, DUR[n], "%.2f kg" % (kg[n - 1] / 1000), price, ref, SLOT_F[slot], DIVISOR[n], int(round(ref * SLOT_F[slot])), "trl_armor_%s_%d" % (slot, n)])
+doc.spreadsheet.addElement(t3)
 doc.save(out)
 print("wrote", out)
