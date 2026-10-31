@@ -124,6 +124,12 @@ func _initialize() -> void:
 			break
 	check("a temp agency spawns on a generated map", city != null)
 	if city != null:
+		var nag := 0
+		for b in city.city.businesses:
+			if b["type"] == "temp_agency":
+				nag += 1
+		print("  temp agencies in the city: %d" % nag)
+		check("a city has at least 20 temp agencies", nag >= 20)
 		var term := -1
 		for b in city.city.businesses:
 			if b["type"] != "temp_agency":

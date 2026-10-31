@@ -1629,7 +1629,7 @@ func _cyberdoc_min() -> int:
 	return clampi(int(float(CYBERDOC_MIN) * float(size) * float(size) / (1536.0 * 1536.0)), 3, CYBERDOC_MIN)
 const LABOR_DOWNTOWN := 4                   # labor centers placed in the rich downtown districts (a few)
 var labor_downtown: int = 0
-const TEMP_MIN := 12                       # temp agencies every city has at least (the middle and rich districts)
+const TEMP_MIN := 20                       # temp agencies every city has at least (the middle and rich districts)
 const LABOR_MIN := 25                      # labor centers every city has at least (the middle and lower districts)
 
 func _pick_business(w: int, h: int, side: int, zones_only: String = "") -> String:
