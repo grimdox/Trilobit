@@ -19,6 +19,7 @@ KINDN = {"fmj": "ball", "ap": "armor-piercing", "hp": "hollow-point", "shot": "b
 BULLETS = {"9mm": (9, 13, 12), ".357": (14, 22, 10), "5.56": (16, 24, 18), "12ga": (20, 34, 6), ".338": (30, 48, 30), "7.62": (12, 18, 16), "12.7": (16, 23, 20),
            "40mm": (40, 70, 14), "cell": (14, 23, 15)}
 KIND_DMG = {"fmj": 1.0, "ap": 0.9, "hp": 1.25, "shot": 1.0, "slug": 1.0, "he": 1.0, "cell": 1.0}
+BULLET_DMG_X = 2      # every bullet hits twice as hard as the base table (guns should feel deadly)
 KIND_ER = {("12ga", "slug"): 12}      # a slug carries much farther than buckshot
 for cal, kinds, rounds, price in AMMO:
     for k in kinds:
@@ -26,7 +27,7 @@ for cal, kinds, rounds, price in AMMO:
         m = KIND_DMG[k]
         items.append({"id": "trl_ammo_%s_%s" % (cal.replace(".", ""), k), "name": "%s %s box" % (cal, KINDN[k]), "weight_g": rounds * 10, "volume_ml": rounds * 6, "length_mm": 80,
                       "price": price * (2 if k == "ap" else 1), "tags": ["ammo"],
-                      "ammo": {"cal": cal, "kind": k, "rounds": rounds, "dmg": [max(1, round(lo * m)), max(1, round(hi * m))], "eff_range": KIND_ER.get((cal, k), er)}})
+                      "ammo": {"cal": cal, "kind": k, "rounds": rounds, "dmg": [max(1, round(lo * m * BULLET_DMG_X)), max(1, round(hi * m * BULLET_DMG_X))], "eff_range": KIND_ER.get((cal, k), er)}})
 # gun mods.  effects: acc (flat, percentage points; 5 points = 1 on the 2d10 roll), max_aim (more aim points can be banked), aim_speed (change to the aim points gained per aiming turn; optics are slower to settle but allow range precision through rangepen_pct), hip (bonus when not aiming), range_pct, rangepen_pct (less accuracy lost per tile),
 # close_pen (penalty inside 4 tiles), recoil_pct (less aim lost per bullet), noise_cap (shots are heard no further than this), dmg_pct, mag_pct, jam (percentage points), reload (turns), spread_pct
 MODS = [
@@ -113,6 +114,8 @@ items += [
      "pocket": {"slot": "belt", "tiles": 4, "allow": []}},
     {"id": "trl_fanny", "name": "fanny pack", "desc": "A small pack worn on the belt: 3 more inventory tiles.", "weight_g": 150, "volume_ml": 300, "length_mm": 200, "price": 25, "tags": ["pocket"],
      "pocket": {"slot": "belt", "tiles": 3, "allow": []}},
+    {"id": "trl_holster_belt", "name": "holster belt", "desc": "A belt with quick-draw holsters: 3 more inventory tiles, and a weapon drawn from them swaps with the one in your hand at no cost in time.", "weight_g": 300, "volume_ml": 400, "length_mm": 300, "price": 90, "tags": ["pocket"],
+     "pocket": {"slot": "belt", "tiles": 3, "allow": []}, "holster": True},
     {"id": "trl_water_bottle", "name": "water bottle", "desc": "Holds up to 500 mL of water.  Drink from it to ease thirst.", "weight_g": 80, "volume_ml": 600, "length_mm": 230, "price": 5, "tags": ["bottle"], "bottle": {"ml": 500}},
     {"id": "trl_yen", "name": "yen notes", "weight_g": 1, "volume_ml": 1, "length_mm": 0, "price": 1, "tags": ["money"]},
     {"id": "trl_ammo", "name": "ammo box", "weight_g": 120, "volume_ml": 70, "length_mm": 60, "price": 20, "tags": ["ammo"], "ammo": {"cal": "9mm", "kind": "fmj", "rounds": 12}},

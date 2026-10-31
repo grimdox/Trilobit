@@ -43,10 +43,12 @@ func frac(limb: String) -> float:
 	return float(total_of(limb)) / float(maxi(1, max_of(limb)))
 
 ## set a limb's implant pools (game.gd, from the fitted implants) and rescale the bio maximum: halved with any implant, whole without.  Bio keeps its fraction.
+var test_mult := 1                         # tests: a big body that survives anything
+
 func set_pools(limb: String, now: int, top: int) -> void:
 	imp[limb] = now
 	imx[limb] = top
-	var want: int = BASE[limb] / 2 if top > 0 else int(BASE[limb])
+	var want: int = (BASE[limb] / 2 if top > 0 else int(BASE[limb])) * test_mult
 	if int(mx[limb]) != want:
 		var f: float = float(hp[limb]) / float(maxi(1, int(mx[limb])))
 		mx[limb] = want

@@ -1801,6 +1801,8 @@ func nano_key(k: int) -> void:
 		refresh()
 
 ## the look cursor, as a cell on the player's level; the view re-centres on it
+var look_aim := false                    # the look cursor is picking a target
+
 func look_cell() -> int:
 	var g = game
 	var base: int = (g.pc / g.s2) * g.s2
@@ -1821,10 +1823,14 @@ func look_refresh() -> void:
 	view.look_on = true
 	view.look_off = look_off
 	var d: String = game.describe_at(look_cell())
-	logbox.text = "[b]LOOK[/b]  %s\n[color=#8899aa]Move the cursor (Shift: 5 tiles).  Enter logs this.  L or Esc ends.  You see %d tiles.[/color]" % [d, game.sight_radius()]
+	if look_aim:
+		logbox.text = "[b]MANUAL TARGET[/b]  %s\n[color=#8899aa]Move the cursor (Shift: 5 tiles).  Enter targets what is under it - a person, or a light to shoot out.  Esc cancels.[/color]" % d
+	else:
+		logbox.text = "[b]LOOK[/b]  %s\n[color=#8899aa]Move the cursor (Shift: 5 tiles).  Enter logs this.  L or Esc ends.  You see %d tiles.[/color]" % [d, game.sight_radius()]
 	view.queue_redraw()
 
 func look_end() -> void:
+	look_aim = false
 	look_off = Vector2i.ZERO
 	view.look_on = false
 	view.look_off = Vector2i.ZERO
@@ -2004,10 +2010,16 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		return
 	if mode == "look":
 		var act_l: String = settings.action_for(k)
-		if k == KEY_ESCAPE or act_l == "look":
+		if k == KEY_ESCAPE or (act_l == "look" and not look_aim) or (look_aim and act_l == "mtarget"):
 			look_end()
 			return
 		if k == KEY_ENTER or k == KEY_KP_ENTER:
+			if look_aim:
+				var lc: int = look_cell()
+				look_end()
+				game.act_manual_target(lc)
+				refresh()
+				return
 			game.say("You look: " + game.describe_at(look_cell()))
 			look_refresh()
 			return
@@ -2128,6 +2140,17 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 			open_screen("keys")
 			return
 		"look":
+			look_aim = false
+			mode = "look"
+			look_off = Vector2i.ZERO
+			look_refresh()
+			return
+		"mtarget":
+			if game.gun_stats().is_empty():
+				game.say("You have no gun wielded.")
+				refresh()
+				return
+			look_aim = true
 			mode = "look"
 			look_off = Vector2i.ZERO
 			look_refresh()

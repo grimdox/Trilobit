@@ -127,11 +127,10 @@ func _initialize() -> void:
 			break
 	g.vehicles[vk]["spd"] = 2
 	var legs0: int = int(g.body.hp["l_leg"])
-	g.body.hp["l_leg"] = 200
-	g.body.mx["l_leg"] = 200
+	var leg_before: int = g.body.total_of("l_leg")
 	g.log.clear()
 	vs.run_down(vk, "player", -1, g.pc)
-	check("a car hitting you at 30 km/h costs 7 in each leg and says so", int(g.body.hp["l_leg"]) == 200 - 7 and g.log.any(func(l): return String(l).contains("30 km/h")))
+	check("a car hitting you at 30 km/h costs 7 in each leg and says so", leg_before - g.body.total_of("l_leg") == 7 and g.log.any(func(l): return String(l).contains("30 km/h")))
 	# old saves: ground vehicles saved with four headings are doubled
 	var oldrec: Dictionary = vs.to_dict(g.vehicles[vk])
 	oldrec.erase("d8")

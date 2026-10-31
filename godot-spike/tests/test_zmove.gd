@@ -37,9 +37,10 @@ func run() -> Array:
 		log.append(("  PASS " if cond else "  FAIL ") + name)
 	var g = GameScript.new(31)
 	g.setup(1200)
+	g.body.test_mult = 5000
+	g._sync_pools()
 	for l_ in g.BODY.LIMBS:
-		g.body.hp[l_] = 100000
-		g.body.mx[l_] = 100000
+		g.body.hp[l_] = g.body.mx[l_]
 	var tall: Dictionary = {}
 	for t in g.city.tower_info:
 		if tall.is_empty() or int(t["h"]) > int(tall["h"]):

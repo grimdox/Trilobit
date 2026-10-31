@@ -43,10 +43,10 @@ func _initialize() -> void:
 	await process_frame
 	var g = w.game
 	# ---- the data and the start state
-	check("five hacks: Plating, Reflex, Shock, Strike, Skill: Research", NANO.ALL.size() == 5 and ["plating", "reflex", "shock", "strike", "research"].all(func(i): return not NANO.get_def(i).is_empty()))
+	check("six hacks: Plating, Reflex, Shock, Strike, Skill: Research, Mend", NANO.ALL.size() == 6 and ["plating", "reflex", "shock", "strike", "research", "mend"].all(func(i): return not NANO.get_def(i).is_empty()))
 	check("each hack has a chip item that takes its own tile", NANO.ALL.all(func(h): var it = g._new_item(NANO.chip_item(h["id"])); return it != null and not it.stackable()))
 	check("a new character starts with the Gutterline Trilobit fitted (2 slots) and no hack installed", g.implants == {"x101": true} and g.nano_slots() == 2 and g.nano_installed().is_empty())
-	check("and carries one chip of each of the five hacks", chips_in_pack(g) == 5)
+	check("and carries one chip of each of the six hacks", chips_in_pack(g) == 6)
 	check("the five chips are one of each", NANO.ALL.all(func(h): return g.inv.grid_items().any(func(it): return it.def.get("nano", "") == h["id"])))
 	check("the Trilobit is powered from the start", g.nano_ok() and g.power_left() > 0.0)
 	# ---- the slot limit
@@ -54,7 +54,7 @@ func _initialize() -> void:
 	for it in g.inv.grid_items():
 		if it.def.has("nano"):
 			pack[it.def["nano"]] = it
-	check("install Plating", g.act_nano_install(pack["plating"]) and g.nano_has("plating") and chips_in_pack(g) == 4)
+	check("install Plating", g.act_nano_install(pack["plating"]) and g.nano_has("plating") and chips_in_pack(g) == 5)
 	check("install Reflex: the two slots are full", g.act_nano_install(pack["reflex"]) and g.nano_installed().size() == 2)
 	var before: int = chips_in_pack(g)
 	check("a third hack is refused: no free slot, the chip stays in the pack", not g.act_nano_install(pack["strike"]) and g.nano_installed().size() == 2 and chips_in_pack(g) == before)

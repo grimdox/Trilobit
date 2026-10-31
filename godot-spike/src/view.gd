@@ -444,6 +444,8 @@ func _decor(c: int, t: int, wx: int, wy: int, base: int) -> String:
 	var size: int = game.size
 	if t == 0:
 		var road := false
+		var roadh := false
+		var roadv := false
 		var wall := false
 		for d in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]:
 			var x: int = wx + d.x
@@ -452,9 +454,23 @@ func _decor(c: int, t: int, wx: int, wy: int, base: int) -> String:
 				continue
 			var nt: int = game.city.tiles[base + y * size + x]
 			road = road or nt == 1
+			if nt == 1:
+				roadh = roadh or d.x == 0
+				roadv = roadv or d.x != 0
 			wall = wall or nt == 2 or nt == 10
 		if road and not wall:
-			return _decor_pick(DECOR_KERB.get(th, []), h, th)
+			# street lamps stand on a ten-tile lattice (see LightMap.kerb_lamp); the other kerb furniture is scattered by hash
+			var lampish := false
+			if game.light != null:
+				lampish = game.light.kerb_lamp(wx, wy, roadh, roadv)
+			var rest: Array = []
+			for e in DECOR_KERB.get(th, []):
+				if String(e[1]) != "f_trl_streetlight":
+					rest.append(e)
+			var pick: String = _decor_pick(rest, h, th)
+			if lampish and pick != "f_trl_streetlight_broken":
+				return "f_trl_streetlight"
+			return pick
 		if wall and not road:
 			return _decor_pick(DECOR_FRONT.get(th, []), h, th)
 		return ""
@@ -965,6 +981,21 @@ func _draw_lighting(ox: int, oy: int, base: int, T: int) -> void:
 					# a lamp's colour on the ground it lights: stronger where it is lit, fainter where it is dim; strongest for the saturated colours of neon
 					var sat: float = maxf(gc.r, maxf(gc.g, gc.b)) - minf(gc.r, minf(gc.g, gc.b))
 					draw_rect(r2, Color(gc.r, gc.g, gc.b, (0.10 + 0.22 * sat) * (1.0 if lvl == LT.LIT else 0.7)))
+	# the lights of a mission site: a glowing wall bulb (which a shot can break) or a ceiling lamp
+	for L in lm.site_lights():
+		var lc: int = int(L[0])
+		if lc / game.s2 != base / game.s2 or game.fov.visible[lc] != 1:
+			continue
+		var lx: int = lc % size - ox
+		var ly: int = (lc / size) % size - oy
+		if lx < 0 or ly < 0 or lx >= cols or ly >= rows:
+			continue
+		var mid := Vector2((float(lx) + 0.5) * T, (float(ly) + 0.5) * T)
+		if String(L[1]) == "bulb":
+			draw_circle(mid, T * 0.30, Color(1.0, 0.95, 0.6, 0.35))
+			draw_circle(mid, T * 0.15, Color(1.0, 0.98, 0.8, 0.95))
+		else:
+			draw_rect(Rect2(mid - Vector2(T * 0.22, T * 0.22), Vector2(T * 0.44, T * 0.44)), Color(1.0, 0.97, 0.85, 0.55))
 	fx.cols = cols
 	fx.rows = rows
 	fx.tile = float(T)

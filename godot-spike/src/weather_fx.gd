@@ -42,27 +42,40 @@ static func clip(a: Vector2, b: Vector2, r: Rect2) -> PackedVector2Array:
 
 func _draw() -> void:
 	if rain > 0.0 and outdoor.size() == cols * rows:
-		var segs := PackedVector2Array()
-		var per: int = 1 if rain < 0.55 else 2
-		var len_: float = tile * (0.32 + 0.3 * rain)
-		var speed: float = 1.6 + 1.4 * rain
+		var far := PackedVector2Array()                 # thin, faint, slow drops (the distance)
+		var near := PackedVector2Array()                # longer, brighter, faster drops (close to the eye)
+		var wet: float = 0.07 * rain
+		var lw: float = maxf(1.0, tile / 36.0)
 		for i in outdoor.size():
 			if outdoor[i] == 0:
 				continue
 			var x0: float = float(i % cols) * tile
 			var y0: float = float(i / cols) * tile
-			for k in per:
+			var box := Rect2(x0, y0, tile, tile)
+			draw_rect(box, Color(0.08, 0.13, 0.24, wet))               # wet ground, a little darker
+			for k in 3:
 				var h: int = (i * 73856093 + k * 19349663) & 0xffff
-				if float(h % 100) / 100.0 > rain + 0.25:
+				if float(h % 100) / 100.0 > rain * 0.9 + 0.2:
 					continue
+				var is_near: bool = k == 2 or (k == 1 and rain > 0.7)
+				var speed: float = (1.1 + 0.9 * rain) * (1.55 if is_near else 1.0)
+				var ln: float = tile * (0.16 + 0.16 * rain) * (1.7 if is_near else 1.0)
 				var ph: float = fmod(t * speed + float(h) / 65535.0, 1.0)
 				var sx: float = x0 + float((h >> 3) % 100) / 100.0 * tile
 				var sy: float = y0 + ph * tile * 1.3 - tile * 0.3
-				var cl: PackedVector2Array = clip(Vector2(sx, sy), Vector2(sx - wind * len_, sy + len_), Rect2(x0, y0, tile, tile))     # (a streak never leaves its tile: none falls on a wall or indoors)
+				var cl: PackedVector2Array = clip(Vector2(sx, sy), Vector2(sx - wind * ln, sy + ln), box)       # (a streak never leaves its tile: none falls on a wall or indoors)
 				if cl.size() == 2:
-					segs.append(cl[0])
-					segs.append(cl[1])
-		if segs.size() > 0:
-			draw_multiline(segs, Color(0.72, 0.82, 1.0, 0.42), maxf(1.0, tile / 30.0))
+					var dst: PackedVector2Array = near if is_near else far
+					dst.append(cl[0])
+					dst.append(cl[1])
+				if is_near and ph > 0.86:                                # the drop lands: a small ripple that spreads and fades
+					var u: float = (ph - 0.86) / 0.14
+					var cx: float = clampf(sx - wind * ln, x0 + 2.0, x0 + tile - 2.0)
+					var cy: float = y0 + tile * (0.5 + 0.4 * float((h >> 5) % 100) / 100.0)
+					draw_arc(Vector2(cx, cy), 1.0 + u * tile * 0.12, 0.0, TAU, 10, Color(0.85, 0.93, 1.0, 0.38 * (1.0 - u)), 1.0)
+		if far.size() > 0:
+			draw_multiline(far, Color(0.62, 0.74, 0.95, 0.2), lw)
+		if near.size() > 0:
+			draw_multiline(near, Color(0.84, 0.92, 1.0, 0.46), lw * 1.2)
 	if flash > 0.0:
 		draw_rect(Rect2(-200, -200, cols * tile + 400, rows * tile + 400), Color(0.9, 0.93, 1.0, 0.55 * flash))

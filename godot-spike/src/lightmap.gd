@@ -16,7 +16,12 @@ const FIXTURE_LIT := 2.5
 const FIXTURE_DIM := 3.7
 const STREET_LIT := 3.0
 const STREET_DIM := 6.0
+const NEON_LIT := 2.0                   # a neon sign lights the ground two tiles around it and dimly out to four
+const NEON_DIM := 4.0
+const WINDOW_LIT := 1.0                 # light spilling out of a lit window at night
+const WINDOW_DIM := 2.5
 const KERB_LAMP := {"rich": 9, "mid": 7, "slum": 13, "industry": 8, "rural": 19}      # the district's street lamps: one kerb tile in this many (see View's kerb furniture)
+const LAMP_SPACING := 10                                                              # street lamps stand every ten tiles along a road's kerb (both directions) and go out at 8am
 const KERB_BROKEN := {"slum": 9}                                                      # ... where every ninth is a broken lamp that gives nothing
 
 var g                                   # the Game
@@ -61,8 +66,94 @@ func _z(c: int) -> int:
 func opaque(c: int) -> bool:
 	return g.fov.opaque[c] == 1
 
+# ---------------------------------------------------------------- mission sites
+## A mission site has no street: each room is its own, with a ceiling light, a few wall bulbs, or no light at all.  Overhead lights are fixed;
+## wall bulbs are small and can be shot out (Game.dead_lights).  The lights are worked out from the site's rooms, the same every time.
+const BULB_LIT := 1.5
+const BULB_DIM := 2.8
+const DARK_ROOM_PCT := 30
+var _site_city = null
+var _site_in := {}                      # cell -> true: inside a room or its walls
+var _site_lights: Array = []            # [cell, kind ("ceil" or "bulb"), lit radius, dim radius, Color]
+
+func in_site() -> bool:
+	return g.city != null and g.city.has_meta("site")
+
+func _site_build() -> void:
+	if _site_city == g.city:
+		return
+	_site_city = g.city
+	g.dead_lights.clear()
+	_site_in.clear()
+	_site_lights.clear()
+	var st: Dictionary = g.city.get_meta("site")
+	var size: int = g.size
+	var ri := 0
+	for r in st["rooms"]:
+		var rx: int = int(r[0])
+		var ry: int = int(r[1])
+		var rw: int = int(r[2])
+		var rh: int = int(r[3])
+		for y in range(ry - 1, ry + rh + 1):
+			for x in range(rx - 1, rx + rw + 1):
+				if x >= 0 and y >= 0 and x < size and y < size:
+					_site_in[y * size + x] = true
+		var h: int = absi(hash([rx, ry, rw, rh, "room"]))
+		var start: bool = ri == int(st.get("start_room", -1))
+		ri += 1
+		if not start and h % 100 < DARK_ROOM_PCT:
+			continue                                   # an unlit room: sneak through it
+		var col: Color = _fixture_colour(ry * size + rx)
+		var any := false
+		if rw >= 4 and rh >= 4 and (start or (h / 100) % 100 < 55):
+			_site_lights.append([(ry + rh / 2) * size + rx + rw / 2, "ceil", FIXTURE_LIT, FIXTURE_DIM, col])
+			any = true
+		var nb: int = 1 + (h / 10000) % 3
+		var spots: Array = [[rx + rw / 3, ry - 1], [rx + (2 * rw) / 3, ry + rh], [rx - 1, ry + rh / 2], [rx + rw, ry + rh / 3]]
+		for k in nb:
+			var sp: Array = spots[((h / 1000000) + k) % 4]
+			var bc: int = int(sp[1]) * size + int(sp[0])
+			if int(sp[0]) < 0 or int(sp[1]) < 0 or int(sp[0]) >= size or int(sp[1]) >= size:
+				continue
+			if g.city.tiles[bc] == g.CG.WALL:
+				_site_lights.append([bc, "bulb", BULB_LIT, BULB_DIM, col])
+				any = true
+		if not any:                                    # a lit room always has some light
+			_site_lights.append([(ry + rh / 2) * size + rx + rw / 2, "ceil", FIXTURE_LIT, FIXTURE_DIM, col])
+
+## the lights of the site: [cell, kind] for the ones still burning
+func site_lights() -> Array:
+	var out: Array = []
+	if not in_site():
+		return out
+	_site_build()
+	for L in _site_lights:
+		if not g.dead_lights.has(int(L[0])):
+			out.append([int(L[0]), String(L[1])])
+	return out
+
+## true if a wall bulb burns on this cell
+func bulb_at(c: int) -> bool:
+	if not in_site():
+		return false
+	_site_build()
+	if g.dead_lights.has(c):
+		return false
+	for L in _site_lights:
+		if int(L[0]) == c and String(L[1]) == "bulb":
+			return true
+	return false
+
+## shoot a bulb out
+func break_bulb(c: int) -> void:
+	g.dead_lights[c] = true
+	invalidate()
+
 ## true if the tile is under a roof as far as the light goes
 func indoor(c: int) -> bool:
+	if c < g.s2 and in_site():
+		_site_build()
+		return _site_in.has(c)
 	var t: int = g.city.tiles[c]
 	if c >= g.s2:
 		return not (t == 11 or t == 7 or t == 0 or t == 6 or t == 20)
@@ -87,6 +178,10 @@ func theme(c: int) -> String:
 		return "industry"
 	return WEALTH_THEME[clampi(g.city.wealth_at(c % g.s2), 0, 2)]
 
+## true if a kerb tile carries a street lamp: one in every LAMP_SPACING along the road
+static func kerb_lamp(x: int, y: int, roadh: bool, roadv: bool) -> bool:
+	return (roadh and x % LAMP_SPACING == 0) or (roadv and y % LAMP_SPACING == 0)
+
 ## the street lamps (and the other lights outdoors) of one 16 x 16 block of the ground level
 func _block(bx: int, by: int) -> Array:
 	var key: int = by * 4096 + bx
@@ -99,7 +194,8 @@ func _block(bx: int, by: int) -> Array:
 			var c: int = y * size + x
 			if g.city.tiles[c] != 0:
 				continue
-			var road := false
+			var roadh := false                               # a road to the north or south: this kerb runs east-west
+			var roadv := false
 			var wall := false
 			for d in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]:
 				var nx: int = x + d.x
@@ -107,16 +203,20 @@ func _block(bx: int, by: int) -> Array:
 				if nx < 0 or ny < 0 or nx >= size or ny >= size:
 					continue
 				var nt: int = g.city.tiles[ny * size + nx]
-				road = road or nt == 1
+				if nt == 1:
+					if d.x == 0:
+						roadh = true
+					else:
+						roadv = true
 				wall = wall or nt == 2 or nt == 10
-			if not road or wall:
+			if not (roadh or roadv) or wall:
 				continue
 			var th: String = theme(c)
 			var h: int = ((c * 2654435761) >> 7) & 0xffffff
 			if KERB_BROKEN.has(th) and h % int(KERB_BROKEN[th]) == 0:
 				continue
-			if h % int(KERB_LAMP.get(th, 9)) == 0:
-				out.append([x, y, STREET_LIT, STREET_DIM, LT.STREET])
+			if kerb_lamp(x, y, roadh, roadv):
+				out.append([x, y, STREET_LIT, STREET_DIM, LT.STREET, true])
 	if not _signs_built:
 		_signs_built = true
 		for sg in g.city.signs:
@@ -130,7 +230,15 @@ func _block(bx: int, by: int) -> Array:
 	for sg in _signs_by_block.get(key, []):
 		var neon: bool = String(sg["shape"]) == "neon"
 		var pal: Array = (SG.PALS[String(sg["cat"])] as Array)[int(sg["pal"])]
-		out.append([_x(int(sg["cell"])), _y(int(sg["cell"])), 2.2 if neon else 0.0, 4.6 if neon else 2.6, pal[2]])
+		out.append([_x(int(sg["cell"])), _y(int(sg["cell"])), NEON_LIT if neon else 0.0, NEON_DIM if neon else 2.6, pal[2], false])
+	# lit windows throw a little light into the street after dark: one pane in three, most of them lit
+	for y in range(by * BLOCK, mini(size, (by + 1) * BLOCK)):
+		for x in range(bx * BLOCK, mini(size, (bx + 1) * BLOCK)):
+			if (x + y) % 3 != 0 or g.city.tiles[y * size + x] != 10:
+				continue
+			if ((y * size + x) * 2654435761 >> 5) % 10 < 3:
+				continue
+			out.append([x, y, WINDOW_LIT, WINDOW_DIM, LT.WARM_WHITE, true])
 	_blocks[key] = out
 	return out
 
@@ -182,7 +290,27 @@ func _open(c: int) -> Array:
 	var y: int = _y(c)
 	var size: int = g.size
 	var base: int = (c / g.s2) * g.s2
-	if ind:
+	if ind and in_site():
+		for L in _site_lights:
+			if g.dead_lights.has(int(L[0])):
+				continue
+			var lc: int = int(L[0])
+			if lc / g.s2 != c / g.s2:
+				continue
+			var ldx: float = float(_x(lc) - x)
+			var ldy: float = float(_y(lc) - y)
+			var ld: float = sqrt(ldx * ldx + ldy * ldy)
+			if ld > float(L[3]):
+				continue
+			if ld > 1.0 and not _clear(c, lc):
+				continue
+			var lgot: int = LT.LIT if ld <= float(L[2]) else LT.DIM
+			var lscore: float = float(lgot) * 10.0 - ld
+			if lscore > best:
+				best = lscore
+				lvl = maxi(lvl, lgot)
+				col = L[4]
+	elif ind:
 		var r: int = ((x + 3 * y) % FIXTURE_MOD + FIXTURE_MOD) % FIXTURE_MOD
 		for dy in range(-3, 4):
 			for dx in range(-3, 4):
@@ -207,6 +335,7 @@ func _open(c: int) -> Array:
 					lvl = maxi(lvl, got)
 					col = _fixture_colour(fc)
 	if base == 0:
+		var daylight: bool = ambient() == LT.LIT       # street lamps and window light are off from 8am
 		var bx: int = x / BLOCK
 		var by: int = y / BLOCK
 		for oy in range(-1, 2):
@@ -214,6 +343,8 @@ func _open(c: int) -> Array:
 				if bx + ox < 0 or by + oy < 0:
 					continue
 				for L in _block(bx + ox, by + oy):
+					if bool(L[5]) and daylight:
+						continue
 					var dx2: float = float(int(L[0]) - x)
 					var dy2: float = float(int(L[1]) - y)
 					var d2: float = sqrt(dx2 * dx2 + dy2 * dy2)

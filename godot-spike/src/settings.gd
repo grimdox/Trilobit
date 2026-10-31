@@ -23,6 +23,7 @@ const ACTIONS := [
 	["firemode", "Fire mode", [KEY_V]],
 	["ammo", "Next ammo kind", [KEY_Z]],
 	["target", "Cycle target", [KEY_TAB]],
+	["mtarget", "Manual target (pick anyone or a light with the cursor)", [KEY_SLASH]],
 	["interact", "Interact: doors, terminals, chargers, tables", [KEY_X]],
 	["viewtarget", "Switch the view to the target and back", [KEY_QUOTELEFT]],
 	["steal", "Pickpocket", [KEY_S]],

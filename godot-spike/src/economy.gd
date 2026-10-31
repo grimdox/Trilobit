@@ -414,6 +414,7 @@ func _stock(i: int = 0) -> Array:
 	if kind != 1:
 		out.append(["trl_backpack", "backpack", 120])
 		out.append(["trl_fanny", "fanny pack", 25])
+		out.append(["trl_holster_belt", "holster belt", 90])
 	if i % 2 == 0:
 		out.append(["trl_vest", "ballistic vest", 500])
 		out.append(["trl_helmet", "ballistic helmet", 350])

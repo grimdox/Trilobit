@@ -1,267 +1,387 @@
 {
 "doll:backpack": [
-320,
-324,
+448,
+360,
 32,
 36
 ],
 "doll:balaclava": [
-480,
-288,
+96,
+360,
 32,
 36
 ],
 "doll:bracers": [
-160,
-324,
+288,
+360,
 32,
 36
 ],
 "doll:bracers_heavy": [
-192,
-324,
-32,
-36
-],
-"doll:chef": [
-416,
-324,
-32,
-36
-],
-"doll:coat": [
-128,
-324,
-32,
-36
-],
-"doll:courier": [
-160,
-360,
-32,
-36
-],
-"doll:greaves": [
-224,
-324,
-32,
-36
-],
-"doll:greaves_heavy": [
-256,
-324,
-32,
-36
-],
-"doll:helm_tac": [
-448,
-288,
-32,
-36
-],
-"doll:helmet_ball": [
-384,
-288,
-32,
-36
-],
-"doll:holster": [
-352,
-324,
-32,
-36
-],
-"doll:imp_cortex": [
-256,
-360,
-32,
-36
-],
-"doll:imp_dermal": [
-384,
-360,
-32,
-36
-],
-"doll:imp_grip": [
-32,
-396,
-32,
-36
-],
-"doll:imp_heart": [
-0,
-396,
-32,
-36
-],
-"doll:imp_jets": [
-288,
-360,
-32,
-36
-],
-"doll:imp_legs": [
-448,
-360,
-32,
-36
-],
-"doll:imp_mantis": [
-416,
-360,
-32,
-36
-],
-"doll:imp_optics": [
-192,
-360,
-32,
-36
-],
-"doll:imp_reflex": [
 320,
 360,
 32,
 36
 ],
-"doll:imp_smartlink": [
-480,
+"doll:chef": [
+32,
+396,
+32,
+36
+],
+"doll:coat": [
+256,
 360,
 32,
 36
 ],
-"doll:imp_synapse": [
+"doll:courier": [
+288,
+396,
+32,
+36
+],
+"doll:greaves": [
 352,
 360,
 32,
 36
 ],
+"doll:greaves_heavy": [
+384,
+360,
+32,
+36
+],
+"doll:helm_tac": [
+64,
+360,
+32,
+36
+],
+"doll:helmet_ball": [
+0,
+360,
+32,
+36
+],
+"doll:holster": [
+480,
+360,
+32,
+36
+],
+"doll:imp_cortex": [
+384,
+396,
+32,
+36
+],
+"doll:imp_dermal": [
+0,
+432,
+32,
+36
+],
+"doll:imp_grip": [
+160,
+432,
+32,
+36
+],
+"doll:imp_heart": [
+128,
+432,
+32,
+36
+],
+"doll:imp_jets": [
+416,
+396,
+32,
+36
+],
+"doll:imp_legs": [
+64,
+432,
+32,
+36
+],
+"doll:imp_mantis": [
+32,
+432,
+32,
+36
+],
+"doll:imp_optics": [
+320,
+396,
+32,
+36
+],
+"doll:imp_reflex": [
+448,
+396,
+32,
+36
+],
+"doll:imp_smartlink": [
+96,
+432,
+32,
+36
+],
+"doll:imp_synapse": [
+480,
+396,
+32,
+36
+],
 "doll:imp_thermal": [
+352,
+396,
+32,
+36
+],
+"doll:jacket": [
 224,
 360,
 32,
 36
 ],
-"doll:jacket": [
-96,
-324,
-32,
-36
-],
 "doll:jacket_0": [
-64,
-396,
+192,
+432,
 32,
 36
 ],
 "doll:jacket_1": [
+224,
+432,
+32,
+36
+],
+"doll:jacket_2": [
+256,
+432,
+32,
+36
+],
+"doll:jacket_3": [
+288,
+432,
+32,
+36
+],
+"doll:jacket_4": [
+320,
+432,
+32,
+36
+],
+"doll:jacket_5": [
+352,
+432,
+32,
+36
+],
+"doll:kannushi": [
 96,
 396,
 32,
 36
 ],
-"doll:jacket_2": [
-128,
+"doll:kneepads": [
+416,
+360,
+32,
+36
+],
+"doll:labcoat": [
+0,
 396,
 32,
 36
 ],
-"doll:jacket_3": [
-160,
-396,
-32,
-36
-],
-"doll:jacket_4": [
+"doll:nap": [
 192,
 396,
 32,
 36
 ],
-"doll:jacket_5": [
+"doll:nasim": [
 224,
 396,
 32,
 36
 ],
-"doll:kannushi": [
-480,
-324,
-32,
-36
-],
-"doll:kneepads": [
-288,
-324,
-32,
-36
-],
-"doll:labcoat": [
-384,
-324,
-32,
-36
-],
-"doll:nap": [
-64,
-360,
-32,
-36
-],
-"doll:nasim": [
-96,
-360,
-32,
-36
-],
 "doll:overalls": [
+256,
+396,
+32,
+36
+],
+"doll:priest": [
+64,
+396,
+32,
+36
+],
+"doll:suit": [
+128,
+396,
+32,
+36
+],
+"doll:thug": [
+160,
+396,
+32,
+36
+],
+"doll:vest": [
 128,
 360,
 32,
 36
 ],
-"doll:priest": [
-448,
-324,
-32,
-36
-],
-"doll:suit": [
-0,
-360,
-32,
-36
-],
-"doll:thug": [
-32,
-360,
-32,
-36
-],
-"doll:vest": [
-0,
-324,
-32,
-36
-],
 "doll:vest_corp": [
-64,
-324,
+192,
+360,
 32,
 36
 ],
 "doll:vest_heavy": [
-32,
-324,
+160,
+360,
 32,
 36
 ],
 "doll:visor": [
+32,
+360,
+32,
+36
+],
+"icon:trl_armor_arms_1": [
+192,
+324,
+32,
+32
+],
+"icon:trl_armor_arms_2": [
+224,
+324,
+32,
+32
+],
+"icon:trl_armor_arms_3": [
+256,
+324,
+32,
+32
+],
+"icon:trl_armor_arms_4": [
+288,
+324,
+32,
+32
+],
+"icon:trl_armor_arms_5": [
+320,
+324,
+32,
+32
+],
+"icon:trl_armor_chest_1": [
+32,
+324,
+32,
+32
+],
+"icon:trl_armor_chest_2": [
+64,
+324,
+32,
+32
+],
+"icon:trl_armor_chest_3": [
+96,
+324,
+32,
+32
+],
+"icon:trl_armor_chest_4": [
+128,
+324,
+32,
+32
+],
+"icon:trl_armor_chest_5": [
+160,
+324,
+32,
+32
+],
+"icon:trl_armor_head_1": [
+384,
+288,
+32,
+32
+],
+"icon:trl_armor_head_2": [
 416,
 288,
 32,
-36
+32
+],
+"icon:trl_armor_head_3": [
+448,
+288,
+32,
+32
+],
+"icon:trl_armor_head_4": [
+480,
+288,
+32,
+32
+],
+"icon:trl_armor_head_5": [
+0,
+324,
+32,
+32
+],
+"icon:trl_armor_legs_1": [
+352,
+324,
+32,
+32
+],
+"icon:trl_armor_legs_2": [
+384,
+324,
+32,
+32
+],
+"icon:trl_armor_legs_3": [
+416,
+324,
+32,
+32
+],
+"icon:trl_armor_legs_4": [
+448,
+324,
+32,
+32
+],
+"icon:trl_armor_legs_5": [
+480,
+324,
+32,
+32
 ],
 "icon:trl_backpack": [
 416,

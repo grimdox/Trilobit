@@ -93,6 +93,9 @@ var want_kind: Dictionary = {}                 # caliber -> kind the next reload
 var aim_turns: int = 0                         # banked aim points (negative after a long burst, never below max aim - 5)
 var aim_dbt: float = 0.0                       # fractional aim loss carried between bullets
 var aim_target: int = -1
+var manual_target := false                     # the target was picked by hand (even someone who has not turned hostile)
+var shoot_cell: int = -1                       # a thing picked by hand to shoot at that is not a person: a light bulb
+var dead_lights := {}                          # mission site: cell of a shot-out wall bulb -> true
 var moved: bool = false
 var last_pc: int = -1
 var tracers: Array = []                        # [from_cell, to_cell, hit] for the view; cleared on the next key
@@ -1250,6 +1253,9 @@ func act_wield(it) -> bool:
 		return false
 	var before: Dictionary = inv.find(it)
 	var old = wield
+	# a weapon drawn from a holster belt comes out instantly, and the old one goes into its place; anything else takes a full turn
+	var quick: bool = not before.is_empty() and String(before.get("t", "")) == "grid" and String(before.get("g", "")) == "belt" and inv.equip.has("belt") and inv.equip["belt"].def.has("holster")
+	var slot_i: int = int(before.get("i", -1))
 	if not before.is_empty():
 		inv.remove(it)
 	if old != null:
@@ -1263,11 +1269,18 @@ func act_wield(it) -> bool:
 		say(inv.last_err)
 		return false
 	if old != null:
-		if not inv.stow(old):
+		var placed := false
+		if quick and slot_i >= 0 and (inv.grid["belt"] as Array)[slot_i] == null:
+			(inv.grid["belt"] as Array)[slot_i] = old
+			placed = true
+		if not placed and not inv.stow(old):
 			_put(pc, old)
 			say("You drop the %s." % item_label(old))
 			old = null
 	prev_wield = old
+	if quick:
+		say("You draw the %s from the holster." % item_label(it))
+		return true
 	say("You wield the %s." % item_label(it))
 	end_turn()
 	return true
@@ -1578,7 +1591,7 @@ func describe_at(c: int) -> String:
 	bits.append(LOOK.terrain_name(t))
 	if seen:
 		if sim.at[c] >= 0:
-			bits.append(name_of(sim.at[c]) + ((" (" + ["unaware", "suspicious", "searching", "hunting you"][int(astate[sim.at[c]])] + ")") if hostile(sim.at[c]) else "") + ((" - " + npc_wound_text(sim.at[c])) if npc_wound_text(sim.at[c]) != "" else ""))
+			bits.append(name_of(sim.at[c]) + ((" (" + ["unaware", "suspicious", "searching", "hunting you"][int(astate[sim.at[c]])] + ")") if hostile(sim.at[c]) else "") + ((" - " + npc_wound_text(sim.at[c])) if npc_wound_text(sim.at[c]) != "" else "") + " [" + npc_look_text(sim.at[c]) + "]")
 		if c == pc:
 			bits.append("you")
 		if veh_at.g(c) >= 0:
@@ -1594,6 +1607,8 @@ func describe_at(c: int) -> String:
 			bits.append("on the ground: " + ", ".join(names))
 	else:
 		bits.append("(remembered, out of sight)")
+	if seen and light != null:
+		bits.append(["dark", "dim", "lit"][clampi(light.level(c), 0, 2)])
 	var d: int = cheb(c, pc)
 	return "%s, %d tile%s away." % [", ".join(bits), d, "" if d == 1 else "s"]
 
@@ -2068,6 +2083,8 @@ func cover_vs(from: int, to: int, crouched: bool = false) -> int:
 	var sy: int = signi(from / size - ty)
 	if sx == 0 and sy == 0:
 		return 0
+	if cheb(from, to) <= 1:
+		return 0                          # a shooter at arm's length gets round whatever the target stands behind
 	var best := 0
 	for off in [[sx, sy], [sx, 0], [0, sy]]:
 		if off[0] == 0 and off[1] == 0:
@@ -2101,7 +2118,7 @@ func shield_vs(from: int, to: int) -> Dictionary:
 	var sx: int = signi(from % size - tx)
 	var sy: int = signi(from / size - ty)
 	var best := {"pct": 0, "what": ""}
-	if sx == 0 and sy == 0:
+	if sx == 0 and sy == 0 or cheb(from, to) <= 1:
 		return best
 	for off in [[sx, sy], [sx, 0], [0, sy]]:
 		if off[0] == 0 and off[1] == 0:
@@ -2545,6 +2562,19 @@ func npc_wound_text(i: int) -> String:
 		elif hp_l * 2 < npc_limb_max(i, l):
 			bits.append("%s hurt" % BODY.NAME[l])
 	return ", ".join(bits)
+
+## what looking at a person shows of their wounds: the damage each body part has taken, and a guess (to the nearest quarter) at how much head and chest they have left
+func npc_look_text(i: int) -> String:
+	var hurt: Array = []
+	for l in BODY.LIMBS:
+		var lost: int = npc_limb_max(i, l) - npc_limb_hp(i, l)
+		if lost > 0:
+			hurt.append("%s -%d" % [BODY.NAME[l], lost])
+	var est: Array = []
+	for l in ["head", "chest"]:
+		var mx: int = maxi(1, npc_limb_max(i, l))
+		est.append("%s ~%d%%" % [BODY.NAME[l], int(round(4.0 * float(npc_limb_hp(i, l)) / float(mx))) * 25])
+	return "damage: %s; left: %s" % [", ".join(hurt) if not hurt.is_empty() else "none", ", ".join(est)]
 
 func npc_armor(i: int) -> int:
 	if fac[i] == CIV:
@@ -3440,7 +3470,7 @@ func gun_stats() -> Dictionary:
 func _target_ok(j: int, any: bool, st: Dictionary) -> bool:
 	if j < 0 or j >= sim.n or sim.alive[j] == 0 or sim.near[j] == 0 or not sees_cell(sim.pos[j]):
 		return false
-	if not any and not (hostile(j) or astate[j] == HUNTING):
+	if not any and not (hostile(j) or astate[j] == HUNTING) and not (manual_target and j == aim_target):
 		return false
 	return cheb(sim.pos[j], pc) <= int(st["range_hi"]) + 8 and sim._sees(pc, sim.pos[j], 40)
 
@@ -3469,6 +3499,7 @@ func current_target(any: bool = false) -> int:
 	if aim_target >= 0 and _target_ok(aim_target, any, st):
 		return aim_target
 	aim_target = -1
+	manual_target = false
 	return nearest_target(any)
 
 func hit_chance_on(t: int, shot_index: int = 0) -> int:
@@ -3494,7 +3525,7 @@ func _ranged_extra(d: int) -> int:
 ## percent to hit on the target for the shot_index'th bullet (the 2d10 model, averaged over the gun's natural-range roll), cover included
 func _shot_chance(st: Dictionary, t: int, aimed: int, shot_index: int) -> int:
 	var d: int = cheb(sim.pos[t], pc)
-	var base: int = GP.hit_chance(st, d, aimed, moved, crouch, lvl("ranged"), 0, shot_index, stance == CRAWL, _ranged_extra(d), cover_vs(pc, sim.pos[t], false))
+	var base: int = GP.hit_chance(st, d, aimed, false, crouch, lvl("ranged"), 0, shot_index, stance == CRAWL, _ranged_extra(d), cover_vs(pc, sim.pos[t], false))
 	return int(round(float(base) * float(100 - int(shield_vs(pc, sim.pos[t])["pct"])) / 100.0))
 
 ## one-line description of the wielded gun and what it is aimed at
@@ -3512,7 +3543,58 @@ func gun_line() -> String:
 	s += "  range %d-%d  aim %d/%d" % [st["range_lo"], st["range_hi"], aim_turns, st["max_aim"]]
 	return s
 
+## pick a target by hand with the cursor: anyone you can see (whether or not they are hostile), or a wall bulb in a mission site
+func act_manual_target(c: int) -> bool:
+	if gun_stats().is_empty():
+		say("You have no gun wielded.")
+		return false
+	if c < 0 or c >= size * rows or not sees_cell(c):
+		say("You can't see that.")
+		return false
+	var j: int = sim.at[c]
+	if j >= 0 and sim.alive[j] == 1:
+		aim_target = j
+		manual_target = true
+		shoot_cell = -1
+		aim_turns = 0
+		say("Target set by hand: %s, %d tiles, %d%% to hit." % [name_of(j), cheb(c, pc), hit_chance_on(j)])
+		return true
+	if light != null and light.bulb_at(c):
+		shoot_cell = c
+		aim_target = -1
+		manual_target = false
+		say("Target set by hand: the light, %d tiles away.  [f] shoots it out." % cheb(c, pc))
+		return true
+	say("Nothing there to target.")
+	return false
+
+## a shot at a wall bulb: one round, a chance to hit that falls with distance
+func _fire_at_bulb(st: Dictionary) -> bool:
+	var c: int = shoot_cell
+	shoot_cell = -1
+	if light == null or not light.bulb_at(c) or not sees_cell(c):
+		say("The light is gone or out of sight.")
+		return false
+	var d: int = cheb(c, pc)
+	var chance: int = clampi(90 - 4 * d + 4 * aim_turns, 20, 97)
+	wield.loaded -= 1
+	stamina = maxi(0, stamina - GP.STAM_FIRE)
+	sfx("shot" if int(st["noise"]) < 14 else "shot_big")
+	var hit: bool = rng.randi() % 100 < chance
+	tracers.append([pc, c, hit])
+	if hit:
+		light.break_bulb(c)
+		say("You shoot out the light.  The glass rains down and the dark closes in.")
+	else:
+		say("Your shot cracks the wall beside the light (%d%% to hit)." % chance)
+	_spend_aim_on_bullet(st)
+	_noise(pc, int(st["noise"]))
+	end_turn(GP.AP_FIRE)
+	return true
+
 func act_cycle_target(any: bool = false) -> bool:
+	shoot_cell = -1
+	manual_target = false
 	var l: Array = target_list(any)
 	if gun_stats().is_empty():
 		say("You have no gun wielded.")
@@ -3658,9 +3740,11 @@ func act_fire(any: bool = false) -> bool:
 		return false
 	if not can_use_weapon(wield):
 		return false
+	if shoot_cell >= 0:
+		return _fire_at_bulb(st)
 	var t := current_target(any)
 	if t < 0:
-		say("No hostile target in sight.  (Shift+F fires at anyone.)")
+		say("No hostile target in sight.  (Shift+F fires at anyone; / picks a target by hand.)")
 		return false
 	aim_target = t
 	var shots: int = mini(GP.mode_shots(wield), wield.loaded)
@@ -3688,7 +3772,7 @@ func act_fire(any: bool = false) -> bool:
 		var vd: int = d if victim == t else cheb(sim.pos[victim], pc)
 		var nat: int = _roll_2d10()
 		var rr: int = rng.randi_range(int(st["range_lo"]), int(st["range_hi"]))
-		var bonus: int = GP.bonus_points(st, aim_turns, moved, crouch, skill, 0, stance == CRAWL, _ranged_extra(vd))
+		var bonus: int = GP.bonus_points(st, aim_turns, false, crouch, skill, 0, stance == CRAWL, _ranged_extra(vd))
 		var total: int = GP.shot_total(nat, bonus, GP.range_penalty(st, vd, rr), cover_vs(pc, sim.pos[victim], false))
 		var out: String = SK.melee_outcome(nat, total, npc_lvl(victim, "grit"))
 		var shield: Dictionary = shield_vs(pc, sim.pos[victim])
@@ -3699,7 +3783,7 @@ func act_fire(any: bool = false) -> bool:
 		var rpen_shown: int = GP.range_penalty(st, vd, rr)
 		var cov_shown: int = cover_vs(pc, sim.pos[victim], false)
 		_math("Shot %d at %s, %d tiles: dice %d + bonus %d (%s) - range %d (adjacent -2; rifles -1 at 2-3 tiles; past the gun's maximum, a point a tile) = %d%s.  Hits at %d, critical at 19+ or %d.  %s" % [s + 1, name_of(victim), vd, nat, bonus,
-			_terms([["Ranged", skill], ["gun", GP.acc_points(st)], ["implants and state", _ranged_extra(vd)], ["aim", aim_turns], ["moving", -2 if moved else 0], ["crouching", 1 if crouch else 0], ["prone", 1 if stance == CRAWL else 0]]),
+			_terms([["Ranged", skill], ["gun", GP.acc_points(st)], ["implants and state", _ranged_extra(vd)], ["aim", aim_turns], ["crouching", 1 if crouch else 0], ["prone", 1 if stance == CRAWL else 0]]),
 			rpen_shown, nat + bonus - rpen_shown, (", then cover hides %d%% = %d" % [cov_shown, total]) if cov_shown > 0 else "", SK.HIT_AT, 20 + npc_lvl(victim, "grit"), _outcome_word(out)])
 		last_roll = {"who": "you", "target": victim, "nat": nat, "total": total, "outcome": out, "loc": loc, "dmg": 0, "range_roll": rr, "aim": aim_turns}
 		_spend_aim_on_bullet(st)
@@ -3777,9 +3861,6 @@ func act_fire(any: bool = false) -> bool:
 		skill_up("ranged", 2 + d / 5)
 	if dmg_by.is_empty() and st["blast"] == 0:
 		_alert(t)
-	if rng.randf() * 100.0 < float(st["jam"]) * float(shots) * maxf(0.5, 1.0 - 0.04 * float(lvl("engineering"))) and wield.loaded > 0:
-		wield.jammed = true
-		say("The %s jams." % wield.def["name"])
 	end_turn(GP.AP_FIRE)
 	return true
 

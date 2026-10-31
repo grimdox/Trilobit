@@ -647,6 +647,14 @@ def misc(t, n):
         t.slab(B(22, 10, 41, 18, 3) & ~B(25, 13, 38, 18), 'rubber', 13, bevel=0.4)
         t.mark(B(8, 30, 55, 31), -2)
         t.slab(D(48, 40, 2.5), 'chrome', 13, profile='cyl')
+    elif n == 'trl_holster_belt':
+        t.slab(B(6, 26, 57, 36, 2), 'leather_d' if False else 'rubber', 8, bevel=0.8)
+        t.slab(B(26, 24, 37, 38, 2), 'chrome', 10, bevel=0.5)
+        t.slab(B(10, 34, 22, 52, 3), 'dark_steel', 11, bevel=0.5)
+        t.slab(B(42, 34, 54, 52, 3), 'dark_steel', 11, bevel=0.5)
+    elif n.startswith('trl_heal_'):
+        box(t, 'paint_w', 14, 20, 49, 45, 9, 3)
+        t.paint(B(29, 24, 34, 41) | B(21, 30, 42, 35), 'red_cross')
     elif n == 'trl_credstick':
         m = Tile.poly_mask([(10, 44), (14, 38), (50, 20), (54, 24), (50, 34), (14, 50)])
         t.slab(m, 'card_k', 5, bevel=1)
