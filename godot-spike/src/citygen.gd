@@ -1599,7 +1599,7 @@ func _leaf_business(x0: int, y0: int, x1: int, y1: int) -> bool:
 		return _stamp_business("labor_center", x0, y0, x1, y1, side) != null     # (a few labor centers downtown too: the towers' people need work as much as the slums)
 	if forced == "" and cur_zone != "ind" and _pick_wealth <= 1 and int(biz_count.get("labor_center", 0)) < LABOR_MIN and not BZ.fitting_side("labor_center", w, h, side).is_empty() and rng.randf() < 0.3:
 		return _stamp_business("labor_center", x0, y0, x1, y1, side) != null     # (the quota of labor centers: taken by plots in the middle and lower districts that have room)
-	if forced == "" and cur_zone != "ind" and _pick_wealth >= 1 and int(biz_count.get("temp_agency", 0)) < TEMP_MIN and not BZ.fitting_side("temp_agency", w, h, side).is_empty() and rng.randf() < 0.3:
+	if forced == "" and cur_zone != "ind" and _pick_wealth >= 1 and int(biz_count.get("temp_agency", 0)) < _temp_quota() and not BZ.fitting_side("temp_agency", w, h, side).is_empty() and rng.randf() < 0.3:
 		return _stamp_business("temp_agency", x0, y0, x1, y1, side) != null      # (the quota of temp agencies: plots in the middle and rich districts that have room)
 	if forced == "" and cur_zone != "ind" and int(biz_count.get("cyberdoc", 0)) < _cyberdoc_min() and not BZ.fitting_side("cyberdoc", w, h, side).is_empty() and rng.randf() < 0.25:
 		return _stamp_business("cyberdoc", x0, y0, x1, y1, side) != null         # (the quota of cyberdoc offices: any district that has a plot with room)
@@ -1630,6 +1630,9 @@ func _cyberdoc_min() -> int:
 const LABOR_DOWNTOWN := 4                   # labor centers placed in the rich downtown districts (a few)
 var labor_downtown: int = 0
 const TEMP_MIN := 20                       # temp agencies every city has at least (the middle and rich districts)
+## the temp-agency quota scales down on a map smaller than the 1536 island city (so a small test map is not all agencies), and stays at TEMP_MIN above it
+func _temp_quota() -> int:
+	return mini(TEMP_MIN, maxi(1, int(round(float(TEMP_MIN) * float(size) * float(size) / (1536.0 * 1536.0)))))
 const LABOR_MIN := 25                      # labor centers every city has at least (the middle and lower districts)
 
 func _pick_business(w: int, h: int, side: int, zones_only: String = "") -> String:
@@ -1659,7 +1662,7 @@ func _pick_business(w: int, h: int, side: int, zones_only: String = "") -> Strin
 		wt *= 5.0 if have == 0 else (2.0 if have < 3 else 1.0)
 		if id == "cyberdoc" and have < _cyberdoc_min():
 			wt *= 14.0                                     # (picked far more often until the city has CYBERDOC_MIN of them)
-		if id == "temp_agency" and have < TEMP_MIN:
+		if id == "temp_agency" and have < _temp_quota():
 			wt *= 14.0                                     # (every city has at least TEMP_MIN temp agencies)
 		if id == "labor_center" and have < LABOR_MIN:
 			wt *= 14.0                                     # (every city has at least LABOR_MIN labor centers: they are picked far more often until it does)

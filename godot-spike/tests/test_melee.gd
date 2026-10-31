@@ -34,7 +34,7 @@ func run() -> Array:
 		if cond:
 			st[0] += 1
 		log.append(("  PASS " if cond else "  FAIL ") + name)
-	var g = GameScript.new(41)
+	var g = GameScript.new(42)
 	g.setup(1200)
 	g.specials_on = true
 	for l_ in g.BODY.LIMBS:

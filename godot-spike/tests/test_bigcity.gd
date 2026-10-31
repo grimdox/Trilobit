@@ -71,13 +71,13 @@ func run() -> Array:
 		if bz["type"] == "labor_center":
 			labor += 1
 			labor_booths += nterm
-			if c.wealth_at(int(bz["y0"]) * c.size + int(bz["x0"])) == 2:
+			if c.wealth_at((int(bz["y0"]) + int(bz["y1"])) / 2 * c.size + (int(bz["x0"]) + int(bz["x1"])) / 2) == 2:
 				labor_rich += 1
 		elif bz["type"] == "gov_office" or bz["type"] == "police":
 			gov += 1
 			gov_booths += nterm
 	check.call("the city has at least 25 labor centers with mission booths (%d centers, %d booths)" % [labor, labor_booths], labor >= 25 and labor_booths >= labor * 3)
-	check.call("none of them stands in a rich district (%d)" % labor_rich, labor_rich == 0)
+	check.call("only the few downtown ones stand in a rich district (%d, at most 4)" % labor_rich, labor_rich <= 4)
 	var docs := 0
 	var doc_w := [0, 0, 0]
 	var st_senses := 0
