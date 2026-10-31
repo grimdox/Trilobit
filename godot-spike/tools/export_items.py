@@ -234,6 +234,22 @@ import goods_list
 for gid, nm, cat, who, text, wg, vol, pr in goods_list.GOODS:
     items.append({"id": "trl_good_" + gid, "name": nm, "desc": text, "weight_g": wg, "volume_ml": vol, "length_mm": 0, "price": pr, "tags": ["good", cat]})
 
+# ---- tiered armor: one piece per slot at +1..+5 base armor (see the Armor tab of the Weapons & Armor List).  price = implant reference x slot factor / divisor
+_REF = {1: 5400, 2: 11000, 3: 24000, 4: 46000, 5: 92000}
+_DIV = {1: 5.0, 2: 6.0, 3: 7.0, 4: 8.5, 5: 10.0}
+_FAC = {"head": 0.75, "chest": 1.0, "arms": 0.5, "legs": 0.5}
+_DUR = {1: 20, 2: 35, 3: 50, 4: 65, 5: 80}
+_GRADE = {1: "Street", 2: "Patrol", 3: "Kevlar", 4: "Plasteel", 5: "Nanofab"}
+_PART = {"head": ("Helm", [400, 800, 1200, 1600, 2000], 3000, 300), "chest": ("Vest", [1500, 2400, 3400, 4500, 5800], 5000, 500),
+         "arms": ("Arm Guards", [500, 800, 1200, 1600, 2000], 2500, 450), "legs": ("Leg Guards", [600, 1000, 1400, 1900, 2400], 2800, 600)}
+_COVER = {"head": "the head", "chest": "the chest", "arms": "both arms", "legs": "both legs"}
+for _slot in ("head", "chest", "arms", "legs"):
+    _word, _kg, _vol, _len = _PART[_slot]
+    for _n in range(1, 6):
+        items.append({"id": "trl_armor_%s_%d" % (_slot, _n), "name": "%s %s" % (_GRADE[_n], _word.lower()), "desc": "Armor %d on %s." % (_n, _COVER[_slot]),
+                      "weight_g": _kg[_n - 1], "volume_ml": _vol, "length_mm": _len, "price": int(round(_REF[_n] * _FAC[_slot] / _DIV[_n] / 10.0)) * 10,
+                      "tags": ["armor", "worn"], "armor": {"slot": _slot, "phys": _n, "dur": _DUR[_n]}})
+
 # ---- every weapon is held in one hand or two (a pistol, revolver, SMG or reach-1 melee weapon: one; everything else: both)
 for it in items:
     if "gun" in it:

@@ -434,6 +434,15 @@ func _stock(i: int = 0) -> Array:
 			var forged: bool = n % 2 == 1 or kind == 1 and n >= 3
 			var id: String = w + ("_f" if forged else "")
 			out.append([id, g.db.defs[id]["name"], int(g.db.defs[id]["price"]) * 3 / 2])
+	# tiered armor (Street +1 to Nanofab +5): the better the district, the better the pieces on offer
+	var vt: Dictionary = venue_of.get(i, {})
+	var top: int = [2, 4, 5][clampi(int(vt.get("tier", 0)), 0, 2)]
+	for n in 3:
+		var slot: String = ["chest", "head", "arms", "legs"][(i + n) % 4]
+		var tier: int = clampi(top - ((i / 4 + n * 2) % 3), 1, top)
+		var aid: String = "trl_armor_%s_%d" % [slot, tier]
+		if g.db.defs.has(aid) and not out.any(func(x): return x[0] == aid):
+			out.append([aid, g.db.defs[aid]["name"], int(g.db.defs[aid]["price"])])
 	out.append(["trl_kit_repair", "field repair kit", 110])
 	return out
 

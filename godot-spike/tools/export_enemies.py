@@ -9,6 +9,9 @@ tmp = "/tmp/roster.json"
 subprocess.run(["godot", "--headless", "--path", root, "-s", "tests/export_enemies.gd", "--", tmp], check=True, capture_output=True)
 rows = json.load(open(tmp))
 ITEM = {"trl_medkit": "Medkit", "trl_good_bandage_roll": "Bandage roll", "trl_vest": "Light vest", "trl_vest_heavy": "Heavy vest", "trl_vest_corp": "Corporate vest"}
+for _s in ("head", "chest", "arms", "legs"):
+    for _n, _g in enumerate(("Street", "Patrol", "Kevlar", "Plasteel", "Nanofab"), 1):
+        ITEM["trl_armor_%s_%d" % (_s, _n)] = "%s %s (+%d)" % (_g, _s, _n)
 SK = ["ranged", "melee", "unarmed", "dodge", "grit"]
 wb = Workbook()
 ws = wb.active

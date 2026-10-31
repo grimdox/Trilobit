@@ -176,6 +176,22 @@ def icon_trl_holster(c, r):
     c.rect(12, 6, 18, 7, hx('8a8a92'))
     c.rect(4, 4, 8, 5, hx('2a2018')); c.rect(4, 5, 5, 27, hx('2a2018'))          # belt loop
 
+# ---- tiered armor icons: the matching base icon with a row of tier pips (one per armor point) along the bottom edge in the tier's colour
+TIER_COL = {1: '8a8a92', 2: '5a9ae0', 3: 'e0c850', 4: 'e8eef4', 5: '50e8ff'}
+_BASE = {'head': {1: 'icon_trl_balaclava', 2: 'icon_trl_helmet', 3: 'icon_trl_helmet', 4: 'icon_trl_helm_tac', 5: 'icon_trl_visor'},
+         'chest': {1: 'icon_trl_jacket', 2: 'icon_trl_vest', 3: 'icon_trl_vest_corp', 4: 'icon_trl_vest_heavy', 5: 'icon_trl_vest_heavy'},
+         'arms': {1: 'icon_trl_bracers', 2: 'icon_trl_bracers', 3: 'icon_trl_bracers', 4: 'icon_trl_bracers_heavy', 5: 'icon_trl_bracers_heavy'},
+         'legs': {1: 'icon_trl_greaves', 2: 'icon_trl_greaves', 3: 'icon_trl_greaves', 4: 'icon_trl_greaves_heavy', 5: 'icon_trl_greaves_heavy'}}
+def _make_tier_icon(slot, n):
+    def f(c, r):
+        globals()[_BASE[slot][n]](c, r)
+        for k in range(n):
+            c.rect(9 + k * 3, 29, 10 + k * 3, 30, hx(TIER_COL[n]))
+    return f
+for _slot in _BASE:
+    for _n in range(1, 6):
+        globals()['icon_trl_armor_%s_%d' % (_slot, _n)] = _make_tier_icon(_slot, _n)
+
 ARMOR_ICONS = {k[5:]: v for k, v in globals().items() if k.startswith('icon_trl_')}
 
 # ------------------------------------------------------------------ doll layers (32 x 36)

@@ -8,7 +8,11 @@ const PART_LAYER := {"head": "imp_cortex", "eyes": "imp_optics", "spine": "imp_r
 const ARMOR_LAYER := {"trl_helmet": "helmet_ball", "trl_visor": "visor", "trl_helm_tac": "helm_tac", "trl_balaclava": "balaclava",
 	"trl_vest": "vest", "trl_vest_heavy": "vest_heavy", "trl_vest_corp": "vest_corp", "trl_jacket": "jacket", "trl_coat": "coat",
 	"trl_bracers": "bracers", "trl_bracers_heavy": "bracers_heavy", "trl_greaves": "greaves", "trl_greaves_heavy": "greaves_heavy", "trl_kneepads": "kneepads",
-	"trl_backpack": "backpack", "trl_holster": "holster"}
+	"trl_backpack": "backpack", "trl_holster": "holster",
+	"trl_armor_head_1": "balaclava", "trl_armor_head_2": "helmet_ball", "trl_armor_head_3": "helmet_ball", "trl_armor_head_4": "helm_tac", "trl_armor_head_5": "visor",
+	"trl_armor_chest_1": "jacket", "trl_armor_chest_2": "vest", "trl_armor_chest_3": "vest_corp", "trl_armor_chest_4": "vest_heavy", "trl_armor_chest_5": "vest_heavy",
+	"trl_armor_arms_1": "bracers", "trl_armor_arms_2": "bracers", "trl_armor_arms_3": "bracers", "trl_armor_arms_4": "bracers_heavy", "trl_armor_arms_5": "bracers_heavy",
+	"trl_armor_legs_1": "greaves", "trl_armor_legs_2": "greaves", "trl_armor_legs_3": "greaves", "trl_armor_legs_4": "greaves_heavy", "trl_armor_legs_5": "greaves_heavy"}
 const MELEE_THUG := ["trl_mel_kastet", "trl_mel_finka", "trl_mel_topor", "trl_mel_tonfa", "trl_mel_lopata", "trl_mel_chekan", "trl_mel_kistien", "trl_mel_kinzhal"]
 const ORDER := ["backpack", "holster"]
 const SKINS := [Color(0.96, 0.8, 0.68), Color(0.88, 0.69, 0.53), Color(0.74, 0.54, 0.38), Color(0.55, 0.38, 0.27), Color(0.38, 0.26, 0.19),

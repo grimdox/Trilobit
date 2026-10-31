@@ -3245,8 +3245,8 @@ func kill(i: int) -> void:
 			_put(c, _new_item("trl_medkit"))
 		elif lv <= 3 and rng.randi() % 100 < 30:
 			_put(c, _new_item("trl_good_bandage_roll"))
-		var vid: String = ENM.vest_id(fac[i], lv)
-		if vid != "" and db.defs.has(vid) and rng.randi() % 100 < 20 + 2 * lv:
+		var vid: String = ENM.drop_piece(lv, rng.randi())
+		if db.defs.has(vid) and rng.randi() % 100 < 20 + 2 * lv:
 			_put(c, _new_item(vid))
 		if rng.randi() % 100 < 5 + 3 * lv:
 			_put(c, _new_item(_random_mod()))

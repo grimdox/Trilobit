@@ -107,29 +107,29 @@ static func implant_range(fac: int, level: int) -> Array:
 		return [0, 0, 0, 0]
 	return [mn, mx, maxi(1, qlo), maxi(1, qhi)]
 
-## flat armour on the torso: implant plating (the middle count and QL spread over the body: n/8 x (1.5 + QL)) plus a vest for the NAP and corporate security
+## the armour tier an enemy wears: levels 1-2 wear +1 armour (Street), 3-4 +2 (Patrol), 5-6 +3 (Kevlar), 7-8 +4 (Plasteel), 9-10 +5 (Nanofab)
+static func armor_tier(level: int) -> int:
+	return (clampl(level) + 1) / 2
+
+## flat armour on the torso: implant plating (the middle count and QL spread over the body: n/8 x (1.5 + QL)) plus the chest piece of the tier they wear
 static func armor(fac: int, level: int) -> int:
 	var r: Array = implant_range(fac, level)
 	var plating: float = 0.0
 	if int(r[1]) > 0:
 		plating = (float(r[0] + r[1]) * 0.5 / float(IMPLANT_PARTS)) * (1.5 + float(r[2] + r[3]) * 0.5)
-	var vest := 0
-	if fac == FAC_NAP or fac == FAC_CORP:
-		vest = 0 if level < 3 else (2 if level < 8 else 4)
-	elif fac == FAC_BRATVA and level >= 5:
-		vest = 1
-	elif fac == FAC_GANG and level >= 6:
-		vest = 1
-	return int(round(plating)) + vest
+	return int(round(plating)) + armor_tier(level)
 
-static func vest_id(fac: int, level: int) -> String:
-	if fac == FAC_CORP and level >= 3:
-		return "trl_vest_corp"
-	if level >= 8 and (fac == FAC_NAP or fac == FAC_CORP):
-		return "trl_vest_heavy"
-	if (fac == FAC_NAP and level >= 3) or (fac == FAC_BRATVA and level >= 5) or (fac == FAC_GANG and level >= 6):
-		return "trl_vest"
-	return ""
+## the armour piece of a slot ("head", "chest", "arms", "legs") at a tier
+static func piece_id(slot: String, tier: int) -> String:
+	return "trl_armor_%s_%d" % [slot, clampi(tier, 1, 5)]
+
+## the chest piece they wear (the one the roster lists)
+static func vest_id(_fac: int, level: int) -> String:
+	return piece_id("chest", armor_tier(level))
+
+## a piece of their tier for a drop: the slot comes from the roll
+static func drop_piece(level: int, roll: int) -> String:
+	return piece_id(["chest", "head", "arms", "legs"][roll % 4], armor_tier(level))
 
 ## the gun class this person carries (0 none ... 3 rifle): deterministic from the world seed and their index
 static func gun_class(fac: int, level: int, seed_value: int, person: int) -> int:
@@ -159,9 +159,7 @@ static func drops(fac: int, level: int) -> Array:
 		d.append(["trl_medkit", mini(60, 10 + 4 * l)])
 	if l <= 3:
 		d.append(["trl_good_bandage_roll", 30])
-	var v: String = vest_id(fac, l)
-	if v != "":
-		d.append([v, 20 + 2 * l])
+	d.append(["a piece of %s armour (+%d)" % [["", "Street", "Patrol", "Kevlar", "Plasteel", "Nanofab"][armor_tier(l)], armor_tier(l)], 20 + 2 * l])
 	d.append(["a gun mod", 5 + 3 * l])
 	if fac == FAC_NAP:
 		d.append(["NAP badge (not yet an item)", 0])

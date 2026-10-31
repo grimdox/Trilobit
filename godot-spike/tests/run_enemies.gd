@@ -80,7 +80,20 @@ func _initialize() -> void:
 	var rr: Array = ENM.implant_range(ENM.FAC_NAP, 10)
 	var rolled: Array = ENM.rolled_implants(ENM.FAC_NAP, 10, 5, 12, IMP.ALL)
 	check("a level 10 NAP officer rolls a full body of implants (8), deterministic", rr[1] == 8 and rolled.size() == 8 and rolled == ENM.rolled_implants(ENM.FAC_NAP, 10, 5, 12, IMP.ALL))
-	check("drops grow with level (medkit from level 4, vests for the armoured, mods at every level)", ENM.drops(ENM.FAC_NAP, 6).any(func(d): return d[0] == "trl_medkit") and not ENM.drops(ENM.FAC_NAP, 2).any(func(d): return d[0] == "trl_medkit") and ENM.vest_id(ENM.FAC_CORP, 5) == "trl_vest_corp" and ENM.vest_id(ENM.FAC_NAP, 9) == "trl_vest_heavy")
+	var tier_ok := true
+	for lv in range(1, 11):
+		tier_ok = tier_ok and ENM.armor_tier(lv) == (lv + 1) / 2 and ENM.vest_id(ENM.FAC_BRATVA, lv) == "trl_armor_chest_%d" % ((lv + 1) / 2)
+	check("enemies wear armour by level: 1-2 Street (+1), 3-4 Patrol, 5-6 Kevlar, 7-8 Plasteel, 9-10 Nanofab (+5)", tier_ok and ENM.armor_tier(1) == 1 and ENM.armor_tier(2) == 1 and ENM.armor_tier(10) == 5)
+	var items_ok := true
+	var db: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/items.json"))
+	var found := 0
+	for it in db:
+		if String(it["id"]).begins_with("trl_armor_"):
+			found += 1
+			var parts: PackedStringArray = String(it["id"]).split("_")
+			items_ok = items_ok and int(it["armor"]["phys"]) == int(parts[3]) and String(it["armor"]["slot"]) == parts[2] and int(it["price"]) > 0
+	check("twenty armour items: head, chest, arms, legs at +1 to +5, priced", found == 20 and items_ok)
+	check("drops grow with level (medkit from level 4, vests for the armoured, mods at every level)", ENM.drops(ENM.FAC_NAP, 6).any(func(d): return d[0] == "trl_medkit") and not ENM.drops(ENM.FAC_NAP, 2).any(func(d): return d[0] == "trl_medkit") and ENM.vest_id(ENM.FAC_CORP, 5) == "trl_armor_chest_3" and ENM.vest_id(ENM.FAC_NAP, 9) == "trl_armor_chest_5")
 	# ---- the live street
 	var w = WorldScript.new()
 	w.start(21, 300)

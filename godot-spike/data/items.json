@@ -9250,5 +9250,365 @@
    "good",
    "office"
   ]
+ },
+ {
+  "id": "trl_armor_head_1",
+  "name": "Street helm",
+  "desc": "Armor 1 on the head.",
+  "weight_g": 400,
+  "volume_ml": 3000,
+  "length_mm": 300,
+  "price": 810,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "head",
+   "phys": 1,
+   "dur": 20
+  }
+ },
+ {
+  "id": "trl_armor_head_2",
+  "name": "Patrol helm",
+  "desc": "Armor 2 on the head.",
+  "weight_g": 800,
+  "volume_ml": 3000,
+  "length_mm": 300,
+  "price": 1380,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "head",
+   "phys": 2,
+   "dur": 35
+  }
+ },
+ {
+  "id": "trl_armor_head_3",
+  "name": "Kevlar helm",
+  "desc": "Armor 3 on the head.",
+  "weight_g": 1200,
+  "volume_ml": 3000,
+  "length_mm": 300,
+  "price": 2570,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "head",
+   "phys": 3,
+   "dur": 50
+  }
+ },
+ {
+  "id": "trl_armor_head_4",
+  "name": "Plasteel helm",
+  "desc": "Armor 4 on the head.",
+  "weight_g": 1600,
+  "volume_ml": 3000,
+  "length_mm": 300,
+  "price": 4060,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "head",
+   "phys": 4,
+   "dur": 65
+  }
+ },
+ {
+  "id": "trl_armor_head_5",
+  "name": "Nanofab helm",
+  "desc": "Armor 5 on the head.",
+  "weight_g": 2000,
+  "volume_ml": 3000,
+  "length_mm": 300,
+  "price": 6900,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "head",
+   "phys": 5,
+   "dur": 80
+  }
+ },
+ {
+  "id": "trl_armor_chest_1",
+  "name": "Street vest",
+  "desc": "Armor 1 on the chest.",
+  "weight_g": 1500,
+  "volume_ml": 5000,
+  "length_mm": 500,
+  "price": 1080,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "chest",
+   "phys": 1,
+   "dur": 20
+  }
+ },
+ {
+  "id": "trl_armor_chest_2",
+  "name": "Patrol vest",
+  "desc": "Armor 2 on the chest.",
+  "weight_g": 2400,
+  "volume_ml": 5000,
+  "length_mm": 500,
+  "price": 1830,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "chest",
+   "phys": 2,
+   "dur": 35
+  }
+ },
+ {
+  "id": "trl_armor_chest_3",
+  "name": "Kevlar vest",
+  "desc": "Armor 3 on the chest.",
+  "weight_g": 3400,
+  "volume_ml": 5000,
+  "length_mm": 500,
+  "price": 3430,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "chest",
+   "phys": 3,
+   "dur": 50
+  }
+ },
+ {
+  "id": "trl_armor_chest_4",
+  "name": "Plasteel vest",
+  "desc": "Armor 4 on the chest.",
+  "weight_g": 4500,
+  "volume_ml": 5000,
+  "length_mm": 500,
+  "price": 5410,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "chest",
+   "phys": 4,
+   "dur": 65
+  }
+ },
+ {
+  "id": "trl_armor_chest_5",
+  "name": "Nanofab vest",
+  "desc": "Armor 5 on the chest.",
+  "weight_g": 5800,
+  "volume_ml": 5000,
+  "length_mm": 500,
+  "price": 9200,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "chest",
+   "phys": 5,
+   "dur": 80
+  }
+ },
+ {
+  "id": "trl_armor_arms_1",
+  "name": "Street arm guards",
+  "desc": "Armor 1 on both arms.",
+  "weight_g": 500,
+  "volume_ml": 2500,
+  "length_mm": 450,
+  "price": 540,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "arms",
+   "phys": 1,
+   "dur": 20
+  }
+ },
+ {
+  "id": "trl_armor_arms_2",
+  "name": "Patrol arm guards",
+  "desc": "Armor 2 on both arms.",
+  "weight_g": 800,
+  "volume_ml": 2500,
+  "length_mm": 450,
+  "price": 920,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "arms",
+   "phys": 2,
+   "dur": 35
+  }
+ },
+ {
+  "id": "trl_armor_arms_3",
+  "name": "Kevlar arm guards",
+  "desc": "Armor 3 on both arms.",
+  "weight_g": 1200,
+  "volume_ml": 2500,
+  "length_mm": 450,
+  "price": 1710,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "arms",
+   "phys": 3,
+   "dur": 50
+  }
+ },
+ {
+  "id": "trl_armor_arms_4",
+  "name": "Plasteel arm guards",
+  "desc": "Armor 4 on both arms.",
+  "weight_g": 1600,
+  "volume_ml": 2500,
+  "length_mm": 450,
+  "price": 2710,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "arms",
+   "phys": 4,
+   "dur": 65
+  }
+ },
+ {
+  "id": "trl_armor_arms_5",
+  "name": "Nanofab arm guards",
+  "desc": "Armor 5 on both arms.",
+  "weight_g": 2000,
+  "volume_ml": 2500,
+  "length_mm": 450,
+  "price": 4600,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "arms",
+   "phys": 5,
+   "dur": 80
+  }
+ },
+ {
+  "id": "trl_armor_legs_1",
+  "name": "Street leg guards",
+  "desc": "Armor 1 on both legs.",
+  "weight_g": 600,
+  "volume_ml": 2800,
+  "length_mm": 600,
+  "price": 540,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "legs",
+   "phys": 1,
+   "dur": 20
+  }
+ },
+ {
+  "id": "trl_armor_legs_2",
+  "name": "Patrol leg guards",
+  "desc": "Armor 2 on both legs.",
+  "weight_g": 1000,
+  "volume_ml": 2800,
+  "length_mm": 600,
+  "price": 920,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "legs",
+   "phys": 2,
+   "dur": 35
+  }
+ },
+ {
+  "id": "trl_armor_legs_3",
+  "name": "Kevlar leg guards",
+  "desc": "Armor 3 on both legs.",
+  "weight_g": 1400,
+  "volume_ml": 2800,
+  "length_mm": 600,
+  "price": 1710,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "legs",
+   "phys": 3,
+   "dur": 50
+  }
+ },
+ {
+  "id": "trl_armor_legs_4",
+  "name": "Plasteel leg guards",
+  "desc": "Armor 4 on both legs.",
+  "weight_g": 1900,
+  "volume_ml": 2800,
+  "length_mm": 600,
+  "price": 2710,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "legs",
+   "phys": 4,
+   "dur": 65
+  }
+ },
+ {
+  "id": "trl_armor_legs_5",
+  "name": "Nanofab leg guards",
+  "desc": "Armor 5 on both legs.",
+  "weight_g": 2400,
+  "volume_ml": 2800,
+  "length_mm": 600,
+  "price": 4600,
+  "tags": [
+   "armor",
+   "worn"
+  ],
+  "armor": {
+   "slot": "legs",
+   "phys": 5,
+   "dur": 80
+  }
  }
 ]
