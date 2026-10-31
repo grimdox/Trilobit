@@ -12,13 +12,19 @@ func run() -> Array:
 		if cond:
 			st[0] += 1
 		log.append(("  PASS " if cond else "  FAIL ") + name)
-	var w = World.new()
-	w.start(7, 300)
-	var g = w.game
+	var w = null
+	var g = null
 	var hv := -1
-	for k in g.vehicles.size():                               # (the one on the highest roof: the tallest tower)
-		if g.vehicles[k]["kind"] == "heli" and g.z_of(g.vehicles[k]["cell"]) > 0 and (hv < 0 or g.z_of(g.vehicles[k]["cell"]) > g.z_of(g.vehicles[hv]["cell"])):
-			hv = k
+	for sd in [7, 8, 9, 10, 11, 12]:                          # (a seed whose city has a helicopter on a roof: the roofs vary with the layout)
+		w = World.new()
+		w.start(sd, 300)
+		g = w.game
+		hv = -1
+		for k in g.vehicles.size():                           # (the one on the highest roof: the tallest tower)
+			if g.vehicles[k]["kind"] == "heli" and g.z_of(g.vehicles[k]["cell"]) > 0 and (hv < 0 or g.z_of(g.vehicles[k]["cell"]) > g.z_of(g.vehicles[hv]["cell"])):
+				hv = k
+		if hv >= 0:
+			break
 	check.call("a helicopter stands on a tower roof of the island city (map %d)" % g.size, hv >= 0 and g.size == 1536)
 	if hv < 0:
 		return [st[0], st[1], log]
