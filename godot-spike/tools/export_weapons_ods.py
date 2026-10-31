@@ -52,7 +52,7 @@ IMPLANT_REF = {1: 5400, 2: 11000, 3: 24000, 4: 46000, 5: 92000}   # what an impl
 DIVISOR = {1: 5.0, 2: 6.0, 3: 7.0, 4: 8.5, 5: 10.0}                # armor is 1/5 of an implant's price at +1, 1/10 at +5
 SLOT_F = {"head": 0.75, "chest": 1.0, "arms": 0.5, "legs": 0.5}    # an implant for the head costs about 3/4 of a chest one; an arm or leg part about half
 DUR = {1: 20, 2: 35, 3: 50, 4: 65, 5: 80}
-GRADE = {1: "Street", 2: "Patrol", 3: "Tactical", 4: "Military", 5: "Prototype"}
+GRADE = {1: "Street", 2: "Patrol", 3: "Kevlar", 4: "Plasteel", 5: "Nanofab"}
 PART = {"head": ("Helm", [400, 800, 1200, 1600, 2000]), "chest": ("Vest", [1500, 2400, 3400, 4500, 5800]),
         "arms": ("Arm Guards", [500, 800, 1200, 1600, 2000]), "legs": ("Leg Guards", [600, 1000, 1400, 1900, 2400])}
 COVER = {"head": "head", "chest": "chest", "arms": "both arms", "legs": "both legs"}
