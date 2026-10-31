@@ -106,6 +106,7 @@ func run() -> Array:
 	g.hpmax[who] = 100
 	g.crits = true
 	var tile0: int = g.city.tiles[found]
+	g.inv.equip.erase("rhand")                 # (no gun in your hand, so he comes for you)
 	for t in 8:
 		g.end_turn()
 	check.call("a hunter with no gun smashes the window and comes through (state %d)" % g.astate[who], g.city.tiles[found] == CG.TID["window_broken"] and tile0 == CG.GLASS)

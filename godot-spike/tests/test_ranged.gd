@@ -149,6 +149,7 @@ func run() -> Array:
 	put.call(spot + 5)
 	t0 = g.turn
 	pis.loaded = 14
+	g.gunc[who] = 1                       # (a gunman stands and shoots back; a melee man would keep out of your sights)
 	for _i in 10:
 		g.act_fire(true)
 	check.call("ten shots take about five turns (%d), not ten: a shot is half a turn" % (g.turn - t0), g.turn - t0 >= 5 and g.turn - t0 <= 7)

@@ -4406,10 +4406,88 @@ func _hunt(i: int, d: int) -> void:
 		apn[i] -= AP_BASE
 		_hunt_act(i, cheb(sim.pos[i], pc), sees)
 
+## free cells next to person i that they could step into
+func _open_steps(i: int) -> Array:
+	var c: int = sim.pos[i]
+	var out: Array = []
+	for dd in DIR8:
+		var nx: int = c % size + int(dd[0])
+		var ny: int = c / size + int(dd[1])
+		if not in_bounds(nx, ny):
+			continue
+		var nc: int = ny * size + nx
+		if z_of(nc) != z_of(c) or sim.walk[nc] == 0 or sim.at[nc] != -1 or nc == pc or veh_at.g(nc) != -1:
+			continue
+		out.append(nc)
+	return out
+
+## true if the player has a loaded gun in hand and person i is what it points at (the chosen target, or the nearest in sight)
+func _player_gun_on(i: int) -> bool:
+	var st: Dictionary = gun_stats()
+	if st.is_empty() or wield == null or wield.loaded <= 0:
+		return false
+	if aim_target >= 0:
+		return aim_target == i and _target_ok(i, true, st)
+	return _target_ok(i, false, st) and nearest_target() == i
+
+## Basic tactics.  A gunman keeps to his gun's range band and looks for cover: too close and he backs off, in range but in the open he steps to a nearby cell that is
+## in range, has a clear shot and some cover.  Someone without a gun closes in, unless your gun is on them: then he keeps away from you (out of your line of sight
+## if he can) until he is within two tiles.  True if the action was spent on a step.
+func _tactics(i: int, d: int, sees: bool) -> bool:
+	var c: int = sim.pos[i]
+	var g: int = gunc[i]
+	var steps: Array = _open_steps(i)
+	if steps.is_empty():
+		return false
+	var pick := -1
+	if g > 0 and npc_arms_ok(i) > 0:
+		if not sees:
+			return false
+		var ng: Dictionary = GP.NPC_GUN[g]
+		var lo: int = int(ng["range"][0])
+		var hi: int = int(ng["range"][1])
+		if d < lo:
+			var bs := -1000.0
+			for n in steps:
+				var dn: int = cheb(n, pc)
+				if dn <= d:
+					continue
+				var sc: float = float(dn) * 10.0 + float(cover_vs(pc, n, false)) * 0.2
+				if sc > bs:
+					bs = sc
+					pick = n
+		elif d <= hi + 3 and int(aimn[i]) == 0 and cover_vs(pc, c, false) == 0:
+			var bc := 0
+			for n in steps:
+				var dn2: int = cheb(n, pc)
+				if dn2 < lo or dn2 > hi + 3:
+					continue
+				var cv: int = cover_vs(pc, n, false)
+				if cv > bc and _line_clear(n, pc):
+					bc = cv
+					pick = n
+	elif _player_gun_on(i) and d > 2:
+		var bs2 := -1000.0
+		for n in steps:
+			var dn3: int = cheb(n, pc)
+			if dn3 < d:
+				continue
+			var sc2: float = float(dn3) * 10.0 + (12.0 if not _line_clear(n, pc) else 0.0) + float(cover_vs(pc, n, false)) * 0.2
+			if sc2 > bs2:
+				bs2 = sc2
+				pick = n
+	if pick < 0:
+		return false
+	_move_agent(i, pick)
+	apn[i] -= AP_BASE * (2 - npc_legs_ok(i))
+	return true
+
 ## one action by a hunter: shoot, strike or close in
 func _hunt_act(i: int, d: int, sees: bool) -> void:
 	var c: int = sim.pos[i]
 	var g := gunc[i]
+	if _tactics(i, d, sees):
+		return
 	if g > 0 and sees and d >= 2 and d <= int(GP.NPC_GUN[g]["range"][1]) + 3 and npc_arms_ok(i) > 0:
 		var ng: Dictionary = GP.NPC_GUN[g]
 		if int(aimn[i]) < int(ng["want"]):          # the tell: a gunman spends a whole action raising the gun before the first shot
