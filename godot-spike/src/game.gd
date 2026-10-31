@@ -21,6 +21,8 @@ const BODY = preload("res://src/body.gd")
 const SK = preload("res://src/skills.gd")
 const CR = preload("res://src/creation.gd")
 const CLK = preload("res://src/clock.gd")
+const WX = preload("res://src/weather.gd")
+const LM = preload("res://src/lightmap.gd")
 const MS = preload("res://src/missions.gd")
 const ENM = preload("res://src/enemies.gd")
 const PW = preload("res://src/power.gd")
@@ -65,9 +67,12 @@ var sim
 var db
 var fov
 var size: int
+var light                      # the LightMap: dark, dim or lit for every tile, and what that lets you see
 ## test scenarios (the TEST--- menu): the side of a stand-alone city, 0 for the usual 512; set before setup() and saved so a load rebuilds the same map
 var test_size: int = 0
 var s2: int = 0                      # cells per level
+## tests: TRL_NOLIGHT=1 turns off the rules of sight by light (the lighting tests turn them on), so the older tests need not care what hour it is
+static var light_rules: bool = OS.get_environment("TRL_NOLIGHT") == ""
 static var street_start: bool = OS.get_environment("TRL_STREET") != ""   # tests: begin on a road instead of in a flat
 var rows: int = 0                    # rows of the stacked map
 var total: int = 0                   # cells in all levels
@@ -282,6 +287,9 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1), ms
 	last_drank = sim.tick
 	fov = FOV.new()
 	fov.setup(size, sim.opaque)
+	light = LM.new(self)
+	light.enabled = light_rules
+	fov.light_filter = _light_hides_not
 	pf = PackedInt32Array(); pf.resize(total); pf.fill(FF.UNREACHED)
 	veh_at = SPARSE.new(total)
 	things = []
@@ -1039,6 +1047,13 @@ func name_of(i: int) -> String:
 	if eco != null and eco.role[i] != 0:
 		return "%s (%s)" % [nname[i], eco.label(i)]
 	return "%s the %s" % [nname[i], FAC_NAMES[fac[i]]]
+
+## the seed the weather follows: the island's, so every zone agrees on the sky
+func weather_seed() -> int:
+	return island.seed_value if island != null else seed_value
+
+func weather_now() -> Dictionary:
+	return WX.at(weather_seed(), sim.tick)
 
 func time_text() -> String:
 	return CLK.text(sim.tick)
@@ -1829,6 +1844,8 @@ func break_window(c: int) -> void:
 	_witness(c, 9, -1)
 
 func _set_door(c: int, closed: bool, refresh: bool = true) -> void:
+	if light != null:
+		light.invalidate()
 	var t: int = CG.TID["door_closed"] if closed else CG.DOOR
 	city.tiles[c] = t
 	sim.tiles[c] = t
@@ -2122,8 +2139,19 @@ func dispose() -> void:
 	eco = null
 	barter = null
 	vs = null
+	if fov != null:
+		fov.light_filter = Callable()
 	fov = null
+	light = null
 	world = null
+
+## the field of view's light test: true if the player can make out the tile in this light
+func _light_hides_not(c: int) -> bool:
+	return light == null or light.sees(pc, c)
+
+## true if someone on tile `c` can make out the player in this light (an NPC does not spot a player standing in the dark unless it is close)
+func light_sees_player(c: int) -> bool:
+	return light == null or light.sees(c, pc)
 
 func _compute_fov() -> void:
 	fov.compute(pc % size, pc / size, sight_radius(), vision_arc(), facing.x, facing.y)
@@ -4150,7 +4178,7 @@ func _ai() -> void:
 func _notice(i: int, d: int) -> void:
 	var c: int = sim.pos[i]
 	var st := astate[i]
-	var los: bool = d <= 16 and fov.around[c] == 1 and sim._sees(c, pc, 16)
+	var los: bool = d <= 16 and fov.around[c] == 1 and sim._sees(c, pc, 16) and light_sees_player(c)
 	var cf: float = cone_factor(i, pc, st != UNAWARE) if los else 0.0
 	var sees: bool = cf > 0.0
 	var heard: bool = step_noise > 0 and d <= step_noise and z_of(c) == z_of(pc)
@@ -4212,7 +4240,7 @@ func _notice(i: int, d: int) -> void:
 
 func _hunt(i: int, d: int) -> void:
 	var c: int = sim.pos[i]
-	var sees: bool = d <= 18 and fov.around[c] == 1 and sim._sees(c, pc, 20)
+	var sees: bool = d <= 18 and fov.around[c] == 1 and sim._sees(c, pc, 20) and light_sees_player(c)
 	if hpn[i] * 4 < hpmax[i]:
 		if rng.randf() < 0.6:
 			_flee(i, 30)

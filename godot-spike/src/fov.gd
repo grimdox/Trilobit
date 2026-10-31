@@ -14,6 +14,8 @@ var arc_on: bool = false
 var arc_cos: float = 0.0       # cosine of half the arc: 0 for 180 degrees
 var face_dx: float = 0.0
 var face_dy: float = -1.0
+## optional: called with a cell, false if the light hides it (a dark tile far away, say): it is then neither seen nor remembered, though it still blocks or passes sight as before
+var light_filter: Callable = Callable()
 var _cx: int = 0
 var _cy: int = 0
 
@@ -57,6 +59,8 @@ func _mark(x: int, y: int) -> void:
 		var dy: float = y - _cy
 		if (dx * face_dx + dy * face_dy) / sqrt(dx * dx + dy * dy) < arc_cos - 0.0001:
 			return
+	if light_filter.is_valid() and not light_filter.call(c):
+		return
 	if visible[c] == 0:
 		visible[c] = 1
 		explored[c] = 1

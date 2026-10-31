@@ -61,6 +61,8 @@ var volume: float = 0.7
 var tileset: int = 0
 ## false: arrows move forward/back and turn, the numpad steps without turning.  true: every move key turns you the way you go (the old scheme)
 var view_follows_move := false
+var lighting := true                    # day and night light on the map
+var weather_fx := true                  # rain, fog and storms drawn on the map
 var zoom := 1                          # 0 close (10 tiles either side), 1 middle (15), 2 far (20)
 var window_mode: int = 0                # index into WINDOW_MODES
 var resolution: Vector2i = Vector2i(1920, 1080)
@@ -129,7 +131,7 @@ func rebind(action: String, keycode: int) -> void:
 	binds[action] = [keycode]
 
 func to_dict() -> Dictionary:
-	return {"keys_v": KEYS_VERSION, "binds": binds, "sound": sound_on, "volume": volume, "tileset": tileset, "view_follows_move": view_follows_move, "zoom": zoom, "window_mode": window_mode, "resolution": [resolution.x, resolution.y]}
+	return {"keys_v": KEYS_VERSION, "binds": binds, "sound": sound_on, "volume": volume, "tileset": tileset, "view_follows_move": view_follows_move, "zoom": zoom, "lighting": lighting, "weather_fx": weather_fx, "window_mode": window_mode, "resolution": [resolution.x, resolution.y]}
 
 ## version 2: Z is the ammo key and X interacts (they were X and P), C is the movement prompt (crouch and crawl keys are gone)
 ## version 3: the screens are tabs: P equipment & inventory, I implants, O attributes & skills, M map; shove is Shift+O (fixed)
@@ -161,6 +163,8 @@ func from_dict(d: Dictionary) -> void:
 	tileset = int(d.get("tileset", 0))
 	view_follows_move = bool(d.get("view_follows_move", false))
 	zoom = clampi(int(d.get("zoom", 1)), 0, 2)
+	lighting = bool(d.get("lighting", true))
+	weather_fx = bool(d.get("weather_fx", true))
 	window_mode = clampi(int(d.get("window_mode", 2 if bool(d.get("fullscreen", false)) else 0)), 0, WINDOW_MODES.size() - 1)
 	var r = d.get("resolution", [1920, 1080])
 	if r is Array and r.size() == 2:

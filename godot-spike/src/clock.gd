@@ -56,3 +56,62 @@ static func span_text(turns: int) -> String:
 	if turns >= MIN:
 		return "%dm" % (turns / MIN)
 	return "%ds" % (turns * TURN_SEC)
+
+# ---------------------------------------------------------------- the sun
+## Daylight begins with the half hour of sunrise at 07:30 (07:30 to 08:00) and ends with the half hour of sunset at 18:00 (18:00 to 18:30); the open air is
+## lit from 08:00 to 18:00, dim in the two half hours, and dark from 18:30 to 07:30.
+const SUNRISE_FROM := 7 * HOUR + 30 * MIN
+const DAY_FROM := 8 * HOUR
+const DAY_UNTIL := 18 * HOUR
+const SUNSET_TO := 18 * HOUR + 30 * MIN
+
+## the three light levels the game knows
+const DARK := 0
+const DIM := 1
+const LIT := 2
+
+## the light level of the open air: LIT in the day, DIM in the half hours of sunrise and sunset, DARK at night
+static func ambient_level(tick: int) -> int:
+	var t: int = tick % DAY
+	if t >= DAY_FROM and t < DAY_UNTIL:
+		return LIT
+	if (t >= SUNRISE_FROM and t < DAY_FROM) or (t >= DAY_UNTIL and t < SUNSET_TO):
+		return DIM
+	return DARK
+
+## turns into the day (0 to DAY - 1)
+static func in_day(tick: int) -> int:
+	return tick % DAY
+
+## how much of the sun there is: 0 at night, 1 in full daylight, a smooth ramp over the 30 minutes of sunrise and of sunset
+static func daylight(tick: int) -> float:
+	var t: int = in_day(tick)
+	if t >= DAY_FROM and t < DAY_UNTIL:
+		return 1.0
+	var f := 0.0
+	if t >= SUNRISE_FROM and t < DAY_FROM:
+		f = float(t - SUNRISE_FROM) / float(DAY_FROM - SUNRISE_FROM)
+	elif t >= DAY_UNTIL and t < SUNSET_TO:
+		f = 1.0 - float(t - DAY_UNTIL) / float(SUNSET_TO - DAY_UNTIL)
+	return f * f * (3.0 - 2.0 * f)
+
+## 0 in full day or night, rising to 1 half way through a sunrise or sunset: the warm colour of the low sun
+static func twilight(tick: int) -> float:
+	var t: int = in_day(tick)
+	var f := -1.0
+	if t >= SUNRISE_FROM and t < DAY_FROM:
+		f = float(t - SUNRISE_FROM) / float(DAY_FROM - SUNRISE_FROM)
+	elif t >= DAY_UNTIL and t < SUNSET_TO:
+		f = float(t - DAY_UNTIL) / float(SUNSET_TO - DAY_UNTIL)
+	return 0.0 if f < 0.0 else sin(f * PI)
+
+## "Night", "Sunrise", "Day" or "Sunset"
+static func phase(tick: int) -> String:
+	var t: int = in_day(tick)
+	if t >= DAY_FROM and t < DAY_UNTIL:
+		return "Day"
+	if t >= SUNRISE_FROM and t < DAY_FROM:
+		return "Sunrise"
+	if t >= DAY_UNTIL and t < SUNSET_TO:
+		return "Sunset"
+	return "Night"

@@ -158,6 +158,13 @@ func begin_scenario(id: String) -> void:
 	CR.apply(g, CR.randomized(r, CR.new_profile()))
 	start_play(g)
 
+## hand the view the lighting and weather switches from the options
+func _view_flags() -> void:
+	if view != null and is_instance_valid(view):
+		view.lighting_on = settings.lighting
+		view.weather_on = settings.weather_fx
+		view.queue_redraw()
+
 func begin_load(slot: int) -> void:
 	var d := read_slot(slot)
 	if d.is_empty():
@@ -188,6 +195,8 @@ func start_play(g) -> void:
 	view = ViewScript.new()
 	view.game = game
 	view.tileset = tileset
+	view.lighting_on = settings.lighting
+	view.weather_on = settings.weather_fx
 	view.set_zoom(settings.zoom)
 	add_child(view)
 	play_nodes.append(view)
@@ -518,6 +527,8 @@ func _fill_visuals() -> void:
 	screen.items = [
 		{"label": "Display mode", "value": settings.WINDOW_MODES[settings.window_mode], "id": "wmode"},
 		{"label": "Window size", "value": settings.resolution_text() + ("" if settings.window_mode == 0 else "  (used when windowed)"), "id": "res"},
+		{"label": "Day / night light", "value": "on" if settings.lighting else "off", "id": "lighting"},
+		{"label": "Weather effects", "value": "on" if settings.weather_fx else "off", "id": "weatherfx"},
 		{"label": "Back", "id": "back"}]
 	screen.footer = "Left / Right changes a value  -  Alt+Enter or F11 toggles fullscreen  -  Esc goes back"
 
@@ -614,6 +625,16 @@ func activate(id: String) -> void:
 			settings.view_follows_move = not settings.view_follows_move
 			settings.save()
 			_fill_options()
+		"lighting":
+			settings.lighting = not settings.lighting
+			settings.save()
+			_view_flags()
+			_fill_visuals()
+		"weatherfx":
+			settings.weather_fx = not settings.weather_fx
+			settings.save()
+			_view_flags()
+			_fill_visuals()
 		"keys": open_screen("keys")
 		"visuals": open_screen("visuals")
 		"wmode":
@@ -1254,8 +1275,8 @@ func screen_key(k: int) -> void:
 				sfx.play("shot")
 			elif id == "sound":
 				activate("sound")
-			elif id == "vfm":
-				activate("vfm")
+			elif id == "vfm" or id == "lighting" or id == "weatherfx":
+				activate(id)
 			elif id == "tileset":
 				_cycle_tileset(step)
 			elif id == "wmode":

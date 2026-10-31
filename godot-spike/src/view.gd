@@ -6,6 +6,9 @@ const PD = preload("res://src/paperdoll.gd")
 const DS = preload("res://src/dollspec.gd")
 const FG = preload("res://src/figure.gd")
 const CLK = preload("res://src/clock.gd")
+const LT = preload("res://src/lighting.gd")
+const WX = preload("res://src/weather.gd")
+const FXS = preload("res://src/weather_fx.gd")
 const DIMG = preload("res://addons/trilobit_doll/doll_image.gd")      # the layered dolls (doll-workshop), composed per look
 const ADAPT = preload("res://addons/trilobit_doll/trilobit_adapter.gd")
 const DOLLS_WORLD := "res://gfx/dolls32"     # the 32 px world set: drawn at TILE / 32, it is made for this size
@@ -15,6 +18,9 @@ var dimg = null               # DollImage for DOLLS_WORLD (loaded on first use)
 var _dspec := {}              # game spec -> doll spec
 var game
 var tileset
+var lighting_on := true           # the options: day and night light, weather effects
+var weather_on := true
+var fx = null                     # the animated rain and lightning layer (a child node)
 var TILE := 61            # screen pixels per cell: sprites are drawn at 64x64 and scaled to this, whatever the tileset's own size
 var S := 61.0 / 32.0      # TILE / 32: scale for hand-placed pixel offsets
 ## zoom steps: tiles you see either side of you, and the tile size that fills the 1920-wide canvas
@@ -868,6 +874,7 @@ func _draw() -> void:
 	else:
 		_draw_doll(DS.for_player(game), centre, game.facing, Color(1, 1, 1, 0.9))
 	_draw_cranes(ox, oy, base)
+	_draw_lighting(ox, oy, base, T)
 	# the job target, if it is on this level
 	if not game.eco.job.is_empty() and int(game.eco.job["cell"]) / s2 == base / s2:
 		var jc: int = game.eco.job["cell"]
@@ -898,6 +905,72 @@ func _draw() -> void:
 	draw_set_transform(-shift, 0.0, Vector2.ONE)       # the message bar below the map hides anything drawn past it
 	draw_rect(Rect2(0, MAP_H, 1920, 400), Color.BLACK)
 	_draw_hud()
+
+## ---------------------------------------------------------------- day, night, light and weather
+## true if a tile is under a roof (a floor, a doorway, furniture), as far as the light goes; `inside` says whether the player is in a building, which lights the walls too
+func _is_indoor(t: int, c: int, base: int, inside: bool) -> bool:
+	if base > 0:
+		return t != 11 and t != 7 and t != 0 and t != 6 and t != 20            # the upper levels of a tower: everything but the open roof
+	if t == 3 or t == 4 or t == 8 or t == 9 or t == 18 or t == 22:
+		return true
+	if t >= CG.EXTRA0:
+		var u: int = game.city.under[c] if c < game.city.under.size() else 3
+		return u == 3 or u >= CG.EXTRA0
+	if t == 2 or t == 10:
+		return inside
+	return false
+
+func _neon_light_colour(sg: Dictionary) -> Color:
+	var pal: Array = (SG.PALS[String(sg["cat"])] as Array)[int(sg["pal"])]
+	return pal[2]
+
+## darken the map by its light (every tile is dark, dim or lit: see LightMap), tint it with the colour of the light that falls on it, and collect the open
+## ground for the rain
+func _draw_lighting(ox: int, oy: int, base: int, T: int) -> void:
+	if fx == null:
+		fx = FXS.new()
+		fx.z_index = 50
+		add_child(fx)
+	var size: int = game.size
+	var tick: int = game.sim.tick
+	var w: Dictionary = game.weather_now()
+	var rain: float = float(w["rain"]) if weather_on else 0.0
+	var n: int = cols * rows
+	var out := PackedByteArray()
+	out.resize(n)
+	var tc: Color = LT.tint(tick)
+	var lm = game.light
+	for sy in rows:
+		for sx in cols:
+			var wx: int = ox + sx
+			var wy: int = oy + sy
+			if wx < 0 or wy < 0 or wx >= size or wy >= size:
+				continue
+			var c: int = base + wy * size + wx
+			if game.fov.visible[c] != 1:
+				continue
+			var i: int = sy * cols + sx
+			var t: int = game.city.tiles[c]
+			if not lm.indoor(c) and t != 2 and t != 10:
+				out[i] = 1
+			if not lighting_on:
+				continue
+			var lvl: int = lm.level(c)
+			var r2 := Rect2(float(sx) * T, float(sy) * T, T, T)
+			var a: float = LT.shade(lvl)
+			if a > 0.01:
+				draw_rect(r2, Color(tc.r, tc.g, tc.b, a))
+			if lvl >= LT.DIM:
+				var gc: Color = lm.colour(c)
+				if gc != LT.DAYLIGHT:
+					# a lamp's colour on the ground it lights: stronger where it is lit, fainter where it is dim; strongest for the saturated colours of neon
+					var sat: float = maxf(gc.r, maxf(gc.g, gc.b)) - minf(gc.r, minf(gc.g, gc.b))
+					draw_rect(r2, Color(gc.r, gc.g, gc.b, (0.10 + 0.22 * sat) * (1.0 if lvl == LT.LIT else 0.7)))
+	fx.cols = cols
+	fx.rows = rows
+	fx.tile = float(T)
+	fx.rain = rain
+	fx.outdoor = out
 
 ## facing-arrow colours by attitude towards the player: friendly green, neutral blue, hostile red
 const ATT_COL := [Color(0.3, 1.0, 0.4, 0.95), Color(0.35, 0.6, 1.0, 0.95), Color(1.0, 0.25, 0.25, 0.95)]
