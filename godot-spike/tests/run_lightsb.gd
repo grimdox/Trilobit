@@ -1,6 +1,6 @@
 extends SceneTree
 ## Lamps, neon, window light, looking, mission-site lights, cover and moving rules, manual targeting, the holster belt.
-## Run: TRL_STREET=1 godot --headless --path . -s tests/run_lights2.gd   (the light rules must be on: do not set TRL_NOLIGHT)
+## Run: TRL_STREET=1 godot --headless --path . -s tests/run_lightsb.gd   (the light rules must be on: do not set TRL_NOLIGHT)
 const GameScript = preload("res://src/game.gd")
 const CLK = preload("res://src/clock.gd")
 const LT = preload("res://src/lighting.gd")
@@ -185,5 +185,5 @@ func _initialize() -> void:
 				broke = true
 				break
 		check("a shot breaks the bulb and the light goes out", broke and ng.dead_lights.has(bulb))
-	print("LIGHTS2 %d/%d" % [ok, n])
+	print("LIGHTSB %d/%d" % [ok, n])
 	quit(0 if ok == n else 1)
