@@ -245,6 +245,37 @@ for _slot in ("head", "chest", "arms", "legs"):
                       "weight_g": _kg[_n - 1], "volume_ml": _vol, "length_mm": _len, "price": int(round(_REF[_n] * _FAC[_slot] / _DIV[_n] / 10.0)) * 10,
                       "tags": ["armor", "worn"], "armor": {"slot": _slot, "phys": _n, "dur": _DUR[_n]}})
 
+# ---- clothes: worn in the same places as armor (so a suit is a choice against a vest), with little or no armor.  "social" is the +1 skills they give while worn
+# (id, name, slot, armor, durability, social skills, price, weight g, description)
+CLOTHES = [
+    ("tee", "graphic tee", "chest", 0, 8, [], 15, 150, "A soft band tee with a faded print.  Just looks cool."),
+    ("oxford", "oxford shirt", "chest", 0, 8, ["etiquette"], 45, 250, "A crisp white shirt.  Clerks, managers and clients take you more seriously."),
+    ("hoodie", "street hoodie", "chest", 1, 14, ["streetwise"], 60, 600, "A heavy hooded top in district colours.  You look like you belong on the block."),
+    ("leather_jacket", "leather jacket", "chest", 1, 22, ["streetwise"], 180, 1400, "Worn leather that has seen a few fights.  Armor 1."),
+    ("blazer", "blazer", "chest", 0, 10, ["etiquette"], 140, 700, "A cut that says 'I have a meeting'."),
+    ("kimono", "silk kimono", "chest", 0, 10, ["etiquette", "deception"], 260, 900, "Hand-dyed silk.  People remember you, and rarely what you said."),
+    ("suit_jacket", "tailored suit jacket", "chest", 1, 20, ["etiquette", "negotiation"], 480, 1000, "Armor 1.  Tailored to the shoulder; sat across a table, you read as someone worth bargaining with."),
+    ("armored_suit", "armored business suit", "chest", 2, 36, ["etiquette", "negotiation"], 950, 1800, "Armor 2.  Woven ballistic fibre under Italian cloth.  Boardroom or back alley."),
+    ("jeans", "jeans", "legs", 0, 10, [], 30, 600, "Plain blue denim.  Just looks cool."),
+    ("cargo", "cargo trousers", "legs", 1, 18, [], 60, 700, "Armor 1.  Reinforced knees and a lot of pockets, none of them useful."),
+    ("slacks", "pressed slacks", "legs", 0, 10, ["etiquette"], 70, 450, "Sharp creases.  The kind of trousers an office expects."),
+    ("tailored_trousers", "tailored trousers", "legs", 1, 22, ["negotiation"], 320, 600, "Armor 1.  Fine wool over a thin liner."),
+    ("cap", "baseball cap", "head", 0, 6, [], 15, 80, "A faded team cap.  Just looks cool."),
+    ("fedora", "felt fedora", "head", 0, 8, ["deception"], 85, 200, "Brim low.  Faces under it are harder to read."),
+    ("beret", "wool beret", "head", 0, 6, ["etiquette"], 50, 120, "Understated and a little artistic."),
+    ("shades", "aviator shades", "optic", 0, 6, ["streetwise"], 95, 60, "Mirrored lenses.  Nobody is sure where you are looking."),
+    ("glasses", "designer glasses", "optic", 0, 6, ["etiquette"], 120, 50, "Thin frames that signal taste and a good salary."),
+    ("leather_gloves", "leather gloves", "arms", 1, 16, [], 55, 200, "Armor 1 on both arms.  Warm, and they hide bruised knuckles."),
+    ("dress_gloves", "dress gloves", "arms", 0, 8, ["etiquette"], 60, 100, "Thin kid leather.  Correct at any formal handshake."),
+]
+for _id, _name, _slot, _ar, _dur, _soc, _price, _wt, _desc in CLOTHES:
+    _d = _desc + ("  +1 " + ", +1 ".join(x.capitalize() for x in _soc) + " while worn." if _soc else "")
+    _it = {"id": "trl_cl_" + _id, "name": _name, "desc": _d, "weight_g": _wt, "volume_ml": _wt * 3, "length_mm": 300, "price": _price,
+           "tags": ["armor", "worn", "clothing"], "armor": {"slot": _slot, "phys": _ar, "dur": _dur}}
+    if _soc:
+        _it["social"] = {x: 1 for x in _soc}
+    items.append(_it)
+
 # ---- every weapon is held in one hand or two (a pistol, revolver, SMG or reach-1 melee weapon: one; everything else: both)
 for it in items:
     if "gun" in it:

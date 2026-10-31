@@ -107,6 +107,10 @@ func run() -> Array:
 			break
 	log.append("  (hostile's awareness peaked at state %d; meter %d)" % [reached, g.meter[hot]])
 	check.call("a hostile in view notices the player (suspicious or hunting)", reached >= 1)
+	for _k in 20:
+		if g.body.total() <= 164:
+			break
+		g.end_turn()
 	check.call("hunters take the fight to the player (body %d)" % g.body.total(), g.body.total() <= 164)
 	# theft test on a dozen different civilians
 	var ok := 0

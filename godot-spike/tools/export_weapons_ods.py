@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write a LibreOffice spreadsheet (.ods) of every gun, bullet and armor value for review (tabs: Guns, Bullets, Armor).  usage: export_weapons_ods.py [out.ods]  (run from godot-spike/, after export_items.py)"""
+"""Write a LibreOffice spreadsheet (.ods) of every gun, bullet and armor value for review (tabs: Guns, Bullets, Armor and worn gear).  usage: export_weapons_ods.py [out.ods]  (run from godot-spike/, after export_items.py)"""
 import json, re, sys
 from odf.opendocument import OpenDocumentSpreadsheet
 from odf.table import Table, TableRow, TableCell
@@ -57,15 +57,24 @@ PART = {"head": ("Helm", [400, 800, 1200, 1600, 2000]), "chest": ("Vest", [1500,
         "arms": ("Arm Guards", [500, 800, 1200, 1600, 2000]), "legs": ("Leg Guards", [600, 1000, 1400, 1900, 2400])}
 COVER = {"head": "head", "chest": "chest", "arms": "both arms", "legs": "both legs"}
 t3, row3 = sheet("Armor")
-row3(["Armor: each worn piece takes a flat amount off every hit that lands on its body part (Phys = base armor, +1 to +5), and wears down as it soaks damage (Durability); a broken piece gives nothing.  Arm and leg pieces cover both limbs.  Pieces are listed for design review and are not in the game yet.  Price = Implant reference x Slot factor / Divisor, rounded to 10 yen: implant references come from the implant economy (an implant giving that armor), the divisor runs from 5 at +1 to 10 at +5 so armor costs 1/5 to 1/10 of the implant."], "b")
+row3(["Armor and worn gear: each worn piece takes a flat amount off every hit that lands on its body part (Phys = base armor), and wears down as it soaks damage (Durability); a broken piece gives nothing.  Arm and leg pieces cover both limbs.  Combat armor runs +1 to +5 (Street to Nanofab): price = Implant reference x Slot factor / Divisor, rounded to 10 yen (1/5 of an implant at +1, 1/10 at +5).  Clothes sit in the same slots, so a suit is a choice against a vest: they carry little or no armor, and give +1 to the listed social skills while worn (not in a pack).  Pocket gear adds inventory tiles."], "b")
 row3([])
-row3(["Name", "Slot", "Covers", "Base Armor (Phys)", "Durability", "Weight", "Price (yen)", "Implant reference (yen)", "Slot factor", "Divisor", "Implant equivalent (yen)", "Code Name"], "b")
+row3(["Name", "Type", "Slot", "Covers", "Base Armor (Phys)", "Durability", "Skills added (+1 each)", "Pockets added (tiles)", "Weight", "Price (yen)", "Notes", "Implant reference (yen)", "Slot factor", "Divisor", "Code Name"], "b")
 for slot in ("head", "chest", "arms", "legs"):
     word, kg = PART[slot]
     for n in range(1, 6):
         ref = IMPLANT_REF[n]
         price = int(round(ref * SLOT_F[slot] / DIVISOR[n] / 10.0)) * 10
-        row3(["%s %s" % (GRADE[n], word), slot, COVER[slot], n, DUR[n], "%.2f kg" % (kg[n - 1] / 1000), price, ref, SLOT_F[slot], DIVISOR[n], int(round(ref * SLOT_F[slot])), "trl_armor_%s_%d" % (slot, n)])
+        row3(["%s %s" % (GRADE[n], word), "Combat armor", slot, COVER[slot], n, DUR[n], "", 0, "%.2f kg" % (kg[n - 1] / 1000), price, "Implant equivalent %d yen" % int(round(ref * SLOT_F[slot])), ref, SLOT_F[slot], DIVISOR[n], "trl_armor_%s_%d" % (slot, n)])
+SLOTNAME = {"optic": "eyes"}
+for it in sorted([i for i in items if i["id"].startswith("trl_cl_")], key=lambda x: (x["armor"]["slot"], x["price"])):
+    ar = it["armor"]; sk = ", ".join(k.capitalize() for k in it.get("social", {}))
+    row3([it["name"], "Clothing", SLOTNAME.get(ar["slot"], ar["slot"]), COVER.get(ar["slot"], SLOTNAME.get(ar["slot"], ar["slot"])), ar["phys"], ar["dur"], sk or "none (style only)", 0, "%.2f kg" % (it["weight_g"] / 1000), it["price"], it["desc"], "", "", "", it["id"]])
+for it in items:
+    if "pocket" in it and it["id"] not in ("trl_ammo",):
+        pk = it["pocket"]; ar = it.get("armor")
+        note = it["desc"] + ("  Quick-draw: a weapon taken from it swaps in no time." if it.get("holster") else "")
+        row3([it["name"], "Pocket gear", pk["slot"], pk["slot"], ar["phys"] if ar else 0, ar["dur"] if ar else "", "", pk["tiles"], "%.2f kg" % (it["weight_g"] / 1000), it["price"], note, "", "", "", it["id"]])
 doc.spreadsheet.addElement(t3)
 doc.save(out)
 print("wrote", out)

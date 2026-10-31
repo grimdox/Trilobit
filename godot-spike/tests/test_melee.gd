@@ -346,16 +346,15 @@ func run() -> Array:
 						drops += 1
 		log.append("   (drops this try: %d)" % drops)
 	# ---- shops and loot
+	g.eco.shop_kind[3] = "martial_shop"
 	var shop_ok := false
-	for i in range(0, 6):
-		var s: Array = g.eco._stock(i)
-		if i % 3 == 1:
-			var n := 0
-			for e in s:
-				if "melee" in g.db.defs[e[0]].get("tags", []):
-					n += 1
-			shop_ok = n >= 5
-	check.call("a bladesmith's stall has six blades", shop_ok)
+	var s: Array = g.eco._stock(3)
+	var nb := 0
+	for e in s:
+		if "melee" in g.db.defs[e[0]].get("tags", []):
+			nb += 1
+	shop_ok = nb >= 6 and nb == s.size()
+	check.call("a blade store sells blades and nothing else (%d of %d)" % [nb, s.size()], shop_ok)
 	var loot_melee := 0
 	for c in g.items_at:
 		for it in g.items_at[c]:

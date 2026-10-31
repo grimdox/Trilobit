@@ -29,7 +29,7 @@ import render as R         # noqa: E402
 
 COLS = 32
 CACHE_VERSION = 1
-SOURCES = ['canvas.py', 'render.py', 'color.py', 'terrain.py', 'walls.py', 'furniture.py', 'props.py', 'items.py', 'furniture2.py', 'goods.py', 'rock.py', 'underground.py']
+SOURCES = ['canvas.py', 'render.py', 'color.py', 'terrain.py', 'walls.py', 'furniture.py', 'props.py', 'items.py', 'gear_icons.py', 'furniture2.py', 'goods.py', 'rock.py', 'underground.py']
 
 
 def _src_key():

@@ -24,6 +24,8 @@ const DAY := CLK.DAY
 var g
 var role: PackedByteArray
 var venue_of: Dictionary = {}          # agent -> the venue record they keep
+var shop_kind: Dictionary = {}          # agent -> the business type of the shop they keep (clothing, armor_shop, gun_dealer ...); a street vendor has none
+var shop_tier: Dictionary = {}          # agent -> 0 poor / 1 middle / 2 rich: how good the shop is
 var look: Dictionary = {}              # agent -> paper-doll layers for a fixed outfit (doctors, cooks, priests, ripperdocs)
 var job: Dictionary = {}
 var jobs_done: int = 0
@@ -386,7 +388,7 @@ func menu_for(i: int) -> Dictionary:
 ## the price a seller asks you: Negotiation takes 1.5% a level off, and Streetwise (low-district stalls) or Etiquette (upscale shops) another 2% a level; never more than 30% off
 func haggle(i: int, price: int) -> int:
 	var v: Dictionary = venue_of.get(i, {})
-	var upscale: bool = not v.is_empty() and int(v.get("tier", 0)) >= 1 and g.z_of(g.sim.pos[i]) >= 0
+	var upscale: bool = (int(v.get("tier", 0)) >= 1 or int(shop_tier.get(i, 0)) >= 1) and g.z_of(g.sim.pos[i]) >= 0
 	var social: int = g.lvl("etiquette") if upscale else g.lvl("streetwise")
 	var off: float = minf(0.30, 0.015 * float(g.lvl("negotiation")) + 0.02 * float(social))
 	return maxi(1, int(round(float(price) * (1.0 - off))))
@@ -396,48 +398,90 @@ func _buy_opt(i: int, e: Array, nm: String = "") -> Dictionary:
 	var label: String = ("Buy %s" % e[1]) if nm == "" else nm
 	return {"label": "%s  ¥%d" % [label, ee[2]], "op": "buy", "arg": ee}
 
+## what a shop keeper sells, by the kind of shop: clothes stores clothes, armor shops armor, grocers food and bandages, the gun store guns and bullets,
+## the blade store melee weapons, the nanohack store the chips; a street vendor (no shop) keeps the mixed stall below
+func _shop_stock(i: int, kind: String) -> Array:
+	var tier: int = clampi(int(shop_tier.get(i, 0)), 0, 2)
+	var out: Array = []
+	match kind:
+		"clothing":
+			var cap: int = [90, 300, 100000][tier]
+			var ids: Array = []
+			for k in g.db.defs:
+				if String(k).begins_with("trl_cl_") and int(g.db.defs[k]["price"]) <= cap:
+					ids.append(k)
+			ids.sort()
+			for k in ids:
+				out.append([k, g.db.defs[k]["name"], int(g.db.defs[k]["price"])])
+		"armor_shop":
+			var top: int = [2, 4, 5][tier]
+			for slot in ["head", "chest", "arms", "legs"]:
+				for n in range(1, top + 1):
+					var aid: String = "trl_armor_%s_%d" % [slot, n]
+					if g.db.defs.has(aid):
+						out.append([aid, g.db.defs[aid]["name"], int(g.db.defs[aid]["price"])])
+			out.append(["trl_holster_belt", "holster belt", 90])
+		"gun_dealer":
+			var guns: Array = []
+			var ammo: Array = []
+			for k in g.db.defs:
+				var tg: Array = g.db.defs[k].get("tags", [])
+				if "gun" in tg and String(k).begins_with("trl_gun_"):
+					guns.append(k)
+				elif "ammo" in tg:
+					ammo.append(k)
+			guns.sort()
+			ammo.sort()
+			for n in 6:
+				var gid: String = guns[(i * 7 + n * 11) % guns.size()]
+				if not out.any(func(x): return x[0] == gid):
+					out.append([gid, g.db.defs[gid]["name"], int(g.db.defs[gid]["price"])])
+			for n in 6:
+				var a: String = ammo[(i * 5 + n * 3) % ammo.size()]
+				if not out.any(func(x): return x[0] == a):
+					out.append([a, g.db.defs[a]["name"], int(g.db.defs[a]["price"]) * 3 / 2])
+		"martial_shop":
+			var melee_ids: Array = g.melee_all
+			for n in 8:
+				var w: String = melee_ids[(i * 5 + n * 3) % melee_ids.size()]
+				var id: String = w + ("_f" if n % 2 == 1 else "")
+				if g.db.defs.has(id) and not out.any(func(x): return x[0] == id):
+					out.append([id, g.db.defs[id]["name"], int(g.db.defs[id]["price"]) * 3 / 2])
+		"nano_shop":
+			var chips: Array = []
+			for k in g.db.defs:
+				if String(k).begins_with("trl_nano_"):
+					chips.append(k)
+			chips.sort()
+			for k in chips:
+				out.append([k, g.db.defs[k]["name"], int(g.db.defs[k]["price"])])
+		"pharmacy":
+			out.append(["trl_heal_bandage", "bandage", 12])
+			out.append(["trl_heal_gel", "antiseptic gel", 25])
+			out.append(["trl_heal_stim", "recovery stim", 55])
+			out.append(["trl_heal_suture", "suture kit", 90])
+			out.append(["trl_medkit", "trauma patch", 40])
+		"hardware", "electronics", "office_supply":
+			out.append(["trl_backpack", "backpack", 120])
+			out.append(["trl_fanny", "fanny pack", 25])
+			out.append(["trl_kit_repair", "field repair kit", 110])
+			if kind == "hardware":
+				out.append(["trl_holster_belt", "holster belt", 90])
+	return out
+
 func _stock(i: int = 0) -> Array:
-	var out: Array = [["trl_ration", "cyber ration bar", 12], ["trl_water_bottle", "bottled water", 8], ["trl_ammo", "9mm ball box (12 rounds)", 22]]
-	var ammo_ids: Array = []
-	var mod_ids: Array = []
-	for k in g.db.defs:
-		var tags: Array = g.db.defs[k].get("tags", [])
-		if "ammo" in tags and k != "trl_ammo":
-			ammo_ids.append(k)
-		elif "mod" in tags:
-			mod_ids.append(k)
-	ammo_ids.sort()
-	mod_ids.sort()
-	var melee_ids: Array = g.melee_all
-	# three kinds of stall: guns and mods, blades, a bit of everything
-	var kind: int = i % 3
-	if kind != 1:
-		out.append(["trl_backpack", "backpack", 120])
-		out.append(["trl_fanny", "fanny pack", 25])
+	var sk: String = String(shop_kind.get(i, ""))
+	if sk != "":
+		var sp: Array = _shop_stock(i, sk)
+		if not sp.is_empty():
+			return sp
+	# a street vendor with no shop sells odds and ends: food, water, carrying gear and field medicine.  Clothes, armor, guns, blades and
+	# nanohacks come from their own shops.
+	var out: Array = [["trl_ration", "cyber ration bar", 12], ["trl_water_bottle", "bottled water", 8]]
+	out.append(["trl_backpack", "backpack", 120])
+	out.append(["trl_fanny", "fanny pack", 25])
+	if i % 2 == 0:
 		out.append(["trl_holster_belt", "holster belt", 90])
-	for n in (2 if kind != 1 else 0):
-		var a: String = ammo_ids[(i * 5 + n * 7) % ammo_ids.size()]
-		out.append([a, g.db.defs[a]["name"], int(g.db.defs[a]["price"]) * 3 / 2])
-	if kind == 0:
-		for n in 3:
-			var m: String = mod_ids[(i * 3 + n * 5) % mod_ids.size()]
-			out.append([m, g.db.defs[m]["name"], int(g.db.defs[m]["price"]) * 3 / 2])
-	else:
-		var count: int = 6 if kind == 1 else 3
-		for n in count:
-			var w: String = melee_ids[(i * 5 + n * 3) % melee_ids.size()]
-			var forged: bool = n % 2 == 1 or kind == 1 and n >= 3
-			var id: String = w + ("_f" if forged else "")
-			out.append([id, g.db.defs[id]["name"], int(g.db.defs[id]["price"]) * 3 / 2])
-	# tiered armor (Street +1 to Nanofab +5): the better the district, the better the pieces on offer
-	var vt: Dictionary = venue_of.get(i, {})
-	var top: int = [2, 4, 5][clampi(int(vt.get("tier", 0)), 0, 2)]
-	for n in 3:
-		var slot: String = ["chest", "head", "arms", "legs"][(i + n) % 4]
-		var tier: int = clampi(top - ((i / 4 + n * 2) % 3), 1, top)
-		var aid: String = "trl_armor_%s_%d" % [slot, tier]
-		if g.db.defs.has(aid) and not out.any(func(x): return x[0] == aid):
-			out.append([aid, g.db.defs[aid]["name"], int(g.db.defs[aid]["price"])])
 	out.append(["trl_heal_bandage", "bandage", 12])
 	out.append(["trl_heal_gel", "antiseptic gel", 25])
 	if i % 2 == 0:
@@ -449,7 +493,7 @@ func _stock(i: int = 0) -> Array:
 
 func _grocery_stock(i: int) -> Array:
 	var ids := ["black_bread", "tushonka", "herring", "natto", "mochi", "apple", "orange", "banana", "milk", "protein", "glucose", "hydrogel", "chocolate", "cheese", "onigiri", "cup_ramen"]
-	var out: Array = [["trl_water_bottle", "bottled water", 8], ["trl_ration", "cyber ration bar", 12]]
+	var out: Array = [["trl_water_bottle", "bottled water", 8], ["trl_ration", "cyber ration bar", 12], ["trl_heal_bandage", "bandage", 12]]
 	for k in 9:
 		var fid: String = ids[(i * 3 + k * 5) % ids.size()]
 		var d: Dictionary = g.db.defs["trl_food_" + fid]
@@ -657,7 +701,7 @@ func _haggle_xp(m: Dictionary, spent: int) -> void:
 	if i < 0:
 		return
 	var v: Dictionary = venue_of.get(i, {})
-	var upscale: bool = not v.is_empty() and int(v.get("tier", 0)) >= 1 and g.z_of(g.sim.pos[i]) >= 0
+	var upscale: bool = (int(v.get("tier", 0)) >= 1 or int(shop_tier.get(i, 0)) >= 1) and g.z_of(g.sim.pos[i]) >= 0
 	g.skill_up("negotiation", 1 + spent / 120)
 	g.skill_up("etiquette" if upscale else "streetwise", 1 + spent / 150)
 

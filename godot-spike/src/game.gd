@@ -355,10 +355,10 @@ func _assign_jobs() -> void:
 			continue
 		var st: Array = b["staff"]
 		for k in st.size():
-			jobs.append([int(st[k]), k == 0 and b["role"] == "vendor" and int(b["keeper"]) == int(st[k])])
+			jobs.append([int(st[k]), k == 0 and b["role"] == "vendor" and int(b["keeper"]) == int(st[k]), String(b["type"]), int(b["tier"])])
 			staffed[int(st[k])] = true
 	for c in city.works_t:
-		jobs.append([int(c), false])
+		jobs.append([int(c), false, "", 0])
 		staffed[int(c)] = true
 	var filled := 0
 	for jb in jobs:
@@ -386,6 +386,10 @@ func _assign_jobs() -> void:
 		com.assign(who, cell)
 		if jb[1]:
 			eco.role[who] = eco.VENDOR
+			eco.shop_tier[who] = int(jb[3])
+			eco.shop_kind[who] = String(jb[2])             # what the shop sells (a clothes store sells clothes and nothing else)
+			if String(jb[2]) in ["grocery", "convenience"]:
+				eco.role[who] = eco.GROCER
 			eco.look[who] = ["backpack", "courier"]
 		filled += 1
 	# everyone else: an old workplace marker (the nearest of a dozen), or the street for the gangs
@@ -977,6 +981,8 @@ func _law_tick() -> void:
 	if offenders.is_empty():
 		return
 	for k in sim.near_list.size():
+		if k >= sim.near_list.size():
+			break
 		var j: int = sim.near_list[k]
 		if sim.alive[j] == 0 or fac[j] != NAP or stun[j] > 0 or astate[j] == FLEEING or astate[j] == SURRENDERED or astate[j] == HUNTING:
 			continue
@@ -1069,8 +1075,19 @@ func sees_cell(c: int) -> bool:
 ## the effective level of one of your skills: base level plus the bonus from its governing attributes
 func lvl(id: String) -> int:
 	if implants.is_empty():
-		return SK.level(attrs, skills, id)
-	return maxi(0, SK.level(attrs, skills, id) + IMP.skill_bonus(implants, id, _imp_active) + nano_bonus(id))
+		return maxi(0, SK.level(attrs, skills, id) + clothes_bonus(id))
+	return maxi(0, SK.level(attrs, skills, id) + IMP.skill_bonus(implants, id, _imp_active) + nano_bonus(id) + clothes_bonus(id))
+
+## the skill points the clothes you wear give (item def "social": {skill: n}); what you carry in a pack does not count
+func clothes_bonus(id: String) -> int:
+	if inv == null:
+		return 0
+	var t := 0
+	for it in inv.equipped_items():
+		var sd = it.def.get("social")
+		if sd is Dictionary and (sd as Dictionary).has(id):
+			t += int((sd as Dictionary)[id])
+	return t
 
 ## a skill level without the implants (what fitting an implant asks for)
 func base_lvl(id: String) -> int:
@@ -4477,14 +4494,12 @@ func _open_steps(i: int) -> Array:
 		out.append(nc)
 	return out
 
-## true if the player has a loaded gun in hand and person i is what it points at (the chosen target, or the nearest in sight)
+## true if the player has a loaded gun in hand and person i is the target it is on (picked with Tab, aim, a shot or the manual cursor)
 func _player_gun_on(i: int) -> bool:
 	var st: Dictionary = gun_stats()
 	if st.is_empty() or wield == null or wield.loaded <= 0:
 		return false
-	if aim_target >= 0:
-		return aim_target == i and _target_ok(i, true, st)
-	return _target_ok(i, false, st) and nearest_target() == i
+	return aim_target == i and _target_ok(i, true, st)         # you have picked him (Tab, aim, a shot or the manual cursor): not merely the nearest in sight
 
 ## Basic tactics.  A gunman keeps to his gun's range band and looks for cover: too close and he backs off, in range but in the open he steps to a nearby cell that is
 ## in range, has a clear shot and some cover.  Someone without a gun closes in, unless your gun is on them: then he keeps away from you (out of your line of sight

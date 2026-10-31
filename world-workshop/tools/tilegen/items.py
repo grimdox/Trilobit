@@ -684,6 +684,26 @@ def icon(item):
         engine(t, n[8:])
     elif n.startswith('trl_faith_'):
         faith(t, n[10:])
+    elif n.startswith('trl_armor_'):
+        import gear_icons
+        _, _, slot, tier = n.split('_')
+        gear_icons.tier_armor(t, slot, int(tier))
+    elif n.startswith('trl_cl_'):
+        import gear_icons
+        gear_icons.clothes(t, n[7:])
+    elif n.startswith('trl_imp_x'):
+        import gear_icons
+        num = int(n[9:])
+        gear_icons.implant(t, num // 100, num % 100 - 1)
+    elif n.startswith('trl_nano_'):
+        import gear_icons
+        gear_icons.nano(t, n[9:])
+    elif n == 'trl_fanny':
+        import gear_icons
+        gear_icons.fanny(t)
+    elif n.startswith('trl_heal_'):
+        import gear_icons
+        gear_icons.heal(t, n[9:])
     elif n[4:] in ('helmet', 'helm_tac', 'visor', 'vest', 'vest_heavy', 'vest_corp', 'jacket', 'bracers', 'bracers_heavy',
                    'greaves', 'greaves_heavy', 'kneepads', 'balaclava'):
         armour(t, n[4:])

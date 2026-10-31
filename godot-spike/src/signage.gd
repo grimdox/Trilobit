@@ -25,7 +25,7 @@ const TYPE_SYM := {
 	"convenience": ["cart", COL_SHOP, "Convenience, grocery"], "grocery": ["cart", COL_SHOP, "Convenience, grocery"], "liquor_store": ["bottle", Color(0.75, 0.55, 0.3), "Liquor store"],
 	"clothing": ["hanger", Color(1.0, 0.6, 0.85), "Clothing"], "electronics": ["bolt", Color(0.4, 0.9, 1.0), "Electronics"], "office_supply": ["book", Color(0.7, 0.85, 1.0), "Office supply, bookshop"],
 	"bookshop": ["book", Color(0.7, 0.85, 1.0), "Office supply, bookshop"], "martial_shop": ["fist", Color(1.0, 0.5, 0.35), "Martial arts, dojo"], "dojo": ["fist", Color(1.0, 0.5, 0.35), "Martial arts, dojo"],
-	"pawn_shop": ["coin", Color(0.9, 0.8, 0.35), "Pawn shop, bank"], "bank": ["coin", Color(0.9, 0.8, 0.35), "Pawn shop, bank"], "gun_dealer": ["gun", Color(1.0, 0.3, 0.3), "Gun dealer"],
+	"pawn_shop": ["coin", Color(0.9, 0.8, 0.35), "Pawn shop, bank"], "bank": ["coin", Color(0.9, 0.8, 0.35), "Pawn shop, bank"], "gun_dealer": ["gun", Color(1.0, 0.3, 0.3), "Gun store"], "armor_shop": ["shield", Color(0.6, 0.8, 1.0), "Armor shop"], "nano_shop": ["bolt", Color(0.5, 1.0, 0.8), "Nanohack store"],
 	"hardware": ["wrench", Color(0.95, 0.75, 0.3), "Hardware, garage"], "auto_garage": ["wrench", Color(0.95, 0.75, 0.3), "Hardware, garage"], "pharmacy": ["cross", Color(0.4, 1.0, 0.6), "Pharmacy"],
 	"clinic": ["cross", Color(1.0, 1.0, 1.0), "Doctor's office"], "car_dealer": ["car", Color(0.5, 0.75, 1.0), "Car dealer"],
 	"implant_shop": ["chip", COL_IMPLANT, "Implant store"], "implant_body": ["chip", Color(1.0, 0.55, 0.3), "Implant store (body)"], "cyberdoc": ["chip", Color(0.3, 1.0, 1.0), "Cyberdoc Office"],
@@ -64,7 +64,7 @@ const NOUNS := {
 	"convenience": ["Mart", "Corner", "Pantry", "Stop", "Basket", "Express"], "grocery": ["Grocer", "Market", "Foods", "Provisions", "Greens", "Pantry"], "liquor_store": ["Spirits", "Bottles", "Cellar", "Wine & Sake", "Liquors"],
 	"clothing": ["Threads", "Wear", "Fashion", "Tailors", "Outfitters", "Style"], "electronics": ["Electronics", "Circuits", "Gadgets", "Parts", "Screens", "Wire"], "office_supply": ["Stationers", "Supply", "Office", "Paper", "Desk Co"],
 	"bookshop": ["Books", "Pages", "Reads", "Bookshop", "Library", "Folio"], "martial_shop": ["Budo", "Dojo Supply", "Gear", "Blades & Belts", "Pro Shop"], "pawn_shop": ["Pawn", "Loans", "Exchange", "Wares", "Trading"],
-	"gun_dealer": ["Arms", "Parts", "Ordnance", "Tools", "Counter"], "hardware": ["Hardware", "Tools", "Builders", "Fixings", "Supply"], "pharmacy": ["Pharmacy", "Chemists", "Remedies", "Apothecary", "Drugs"],
+	"gun_dealer": ["Arms", "Parts", "Ordnance", "Tools", "Counter"], "armor_shop": ["Armor", "Plate", "Guard", "Bulwark", "Kevlar"], "nano_shop": ["Nanos", "Chips", "Swarm", "Hacks", "Dust"], "hardware": ["Hardware", "Tools", "Builders", "Fixings", "Supply"], "pharmacy": ["Pharmacy", "Chemists", "Remedies", "Apothecary", "Drugs"],
 	"car_dealer": ["Motors", "Autos", "Cars", "Wheels", "Drive"], "auto_garage": ["Garage", "Auto", "Mechanics", "Repairs", "Service"], "clinic": ["Clinic", "Medical", "Doctors", "Health", "Practice"],
 	"implant_shop": ["Implants", "Augments", "Cybernetics", "Chromeworks", "Neuro"], "implant_body": ["Limbworks", "Chrome", "Augments", "Frames", "Prosthetics"], "cyberdoc": ["Cyberdoc", "Augment Clinic", "Chrome Doc", "Implant Office", "Surgery"],
 	"bank": ["Bank", "Savings", "Trust", "Credit", "Finance"], "police": ["Precinct", "Police", "Station", "Constabulary"], "gov_office": ["Office", "Registry", "Bureau", "Civic Hall", "Records"],
@@ -82,7 +82,7 @@ const TOWER_KINDS := ["Tower", "Plaza", "Centre", "Heights", "Building", "Court"
 static func cat_of(type: String) -> String:
 	match type:
 		"restaurant", "noodle_stall", "cafe", "bar", "shady_bar", "nightclub", "bakery", "karaoke": return "food"
-		"convenience", "liquor_store", "clothing", "electronics", "office_supply", "martial_shop", "pawn_shop", "gun_dealer", "hardware", "pharmacy", "bookshop", "car_dealer", "grocery": return "retail"
+		"convenience", "liquor_store", "clothing", "electronics", "office_supply", "martial_shop", "pawn_shop", "gun_dealer", "armor_shop", "nano_shop", "hardware", "pharmacy", "bookshop", "car_dealer", "grocery": return "retail"
 		"auto_garage", "warehouse", "workshop", "machine_shop", "scrap_yard": return "industry"
 		"labor_center", "temp_agency", "church", "shrine": return "civic"
 		"house": return "home"
@@ -96,7 +96,7 @@ static func legend() -> Array:
 	var seen := {}
 	var out: Array = []
 	for t in ["restaurant", "noodle_stall", "cafe", "bakery", "bar", "shady_bar", "nightclub",                      # eating and drinking
-			"convenience", "liquor_store", "clothing", "electronics", "office_supply", "martial_shop", "pawn_shop", "gun_dealer", "hardware", "car_dealer",     # shops
+			"convenience", "liquor_store", "clothing", "electronics", "office_supply", "martial_shop", "pawn_shop", "gun_dealer", "armor_shop", "nano_shop", "hardware", "car_dealer",     # shops
 			"pharmacy", "clinic", "implant_shop", "implant_body", "cyberdoc",                                         # health and chrome
 			"police", "labor_center", "temp_agency", "post_depot", "church", "shrine",                                               # civic
 			"hotel", "gym", "salon", "laundromat", "arcade", "workshop"]:                                             # services and trades

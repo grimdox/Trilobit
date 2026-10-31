@@ -9464,5 +9464,411 @@
    "phys": 5,
    "dur": 80
   }
+ },
+ {
+  "id": "trl_cl_tee",
+  "name": "graphic tee",
+  "desc": "A soft band tee with a faded print.  Just looks cool.",
+  "weight_g": 150,
+  "volume_ml": 450,
+  "length_mm": 300,
+  "price": 15,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "chest",
+   "phys": 0,
+   "dur": 8
+  }
+ },
+ {
+  "id": "trl_cl_oxford",
+  "name": "oxford shirt",
+  "desc": "A crisp white shirt.  Clerks, managers and clients take you more seriously.  +1 Etiquette while worn.",
+  "weight_g": 250,
+  "volume_ml": 750,
+  "length_mm": 300,
+  "price": 45,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "chest",
+   "phys": 0,
+   "dur": 8
+  },
+  "social": {
+   "etiquette": 1
+  }
+ },
+ {
+  "id": "trl_cl_hoodie",
+  "name": "street hoodie",
+  "desc": "A heavy hooded top in district colours.  You look like you belong on the block.  +1 Streetwise while worn.",
+  "weight_g": 600,
+  "volume_ml": 1800,
+  "length_mm": 300,
+  "price": 60,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "chest",
+   "phys": 1,
+   "dur": 14
+  },
+  "social": {
+   "streetwise": 1
+  }
+ },
+ {
+  "id": "trl_cl_leather_jacket",
+  "name": "leather jacket",
+  "desc": "Worn leather that has seen a few fights.  Armor 1.  +1 Streetwise while worn.",
+  "weight_g": 1400,
+  "volume_ml": 4200,
+  "length_mm": 300,
+  "price": 180,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "chest",
+   "phys": 1,
+   "dur": 22
+  },
+  "social": {
+   "streetwise": 1
+  }
+ },
+ {
+  "id": "trl_cl_blazer",
+  "name": "blazer",
+  "desc": "A cut that says 'I have a meeting'.  +1 Etiquette while worn.",
+  "weight_g": 700,
+  "volume_ml": 2100,
+  "length_mm": 300,
+  "price": 140,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "chest",
+   "phys": 0,
+   "dur": 10
+  },
+  "social": {
+   "etiquette": 1
+  }
+ },
+ {
+  "id": "trl_cl_kimono",
+  "name": "silk kimono",
+  "desc": "Hand-dyed silk.  People remember you, and rarely what you said.  +1 Etiquette, +1 Deception while worn.",
+  "weight_g": 900,
+  "volume_ml": 2700,
+  "length_mm": 300,
+  "price": 260,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "chest",
+   "phys": 0,
+   "dur": 10
+  },
+  "social": {
+   "etiquette": 1,
+   "deception": 1
+  }
+ },
+ {
+  "id": "trl_cl_suit_jacket",
+  "name": "tailored suit jacket",
+  "desc": "Armor 1.  Tailored to the shoulder; sat across a table, you read as someone worth bargaining with.  +1 Etiquette, +1 Negotiation while worn.",
+  "weight_g": 1000,
+  "volume_ml": 3000,
+  "length_mm": 300,
+  "price": 480,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "chest",
+   "phys": 1,
+   "dur": 20
+  },
+  "social": {
+   "etiquette": 1,
+   "negotiation": 1
+  }
+ },
+ {
+  "id": "trl_cl_armored_suit",
+  "name": "armored business suit",
+  "desc": "Armor 2.  Woven ballistic fibre under Italian cloth.  Boardroom or back alley.  +1 Etiquette, +1 Negotiation while worn.",
+  "weight_g": 1800,
+  "volume_ml": 5400,
+  "length_mm": 300,
+  "price": 950,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "chest",
+   "phys": 2,
+   "dur": 36
+  },
+  "social": {
+   "etiquette": 1,
+   "negotiation": 1
+  }
+ },
+ {
+  "id": "trl_cl_jeans",
+  "name": "jeans",
+  "desc": "Plain blue denim.  Just looks cool.",
+  "weight_g": 600,
+  "volume_ml": 1800,
+  "length_mm": 300,
+  "price": 30,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "legs",
+   "phys": 0,
+   "dur": 10
+  }
+ },
+ {
+  "id": "trl_cl_cargo",
+  "name": "cargo trousers",
+  "desc": "Armor 1.  Reinforced knees and a lot of pockets, none of them useful.",
+  "weight_g": 700,
+  "volume_ml": 2100,
+  "length_mm": 300,
+  "price": 60,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "legs",
+   "phys": 1,
+   "dur": 18
+  }
+ },
+ {
+  "id": "trl_cl_slacks",
+  "name": "pressed slacks",
+  "desc": "Sharp creases.  The kind of trousers an office expects.  +1 Etiquette while worn.",
+  "weight_g": 450,
+  "volume_ml": 1350,
+  "length_mm": 300,
+  "price": 70,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "legs",
+   "phys": 0,
+   "dur": 10
+  },
+  "social": {
+   "etiquette": 1
+  }
+ },
+ {
+  "id": "trl_cl_tailored_trousers",
+  "name": "tailored trousers",
+  "desc": "Armor 1.  Fine wool over a thin liner.  +1 Negotiation while worn.",
+  "weight_g": 600,
+  "volume_ml": 1800,
+  "length_mm": 300,
+  "price": 320,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "legs",
+   "phys": 1,
+   "dur": 22
+  },
+  "social": {
+   "negotiation": 1
+  }
+ },
+ {
+  "id": "trl_cl_cap",
+  "name": "baseball cap",
+  "desc": "A faded team cap.  Just looks cool.",
+  "weight_g": 80,
+  "volume_ml": 240,
+  "length_mm": 300,
+  "price": 15,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "head",
+   "phys": 0,
+   "dur": 6
+  }
+ },
+ {
+  "id": "trl_cl_fedora",
+  "name": "felt fedora",
+  "desc": "Brim low.  Faces under it are harder to read.  +1 Deception while worn.",
+  "weight_g": 200,
+  "volume_ml": 600,
+  "length_mm": 300,
+  "price": 85,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "head",
+   "phys": 0,
+   "dur": 8
+  },
+  "social": {
+   "deception": 1
+  }
+ },
+ {
+  "id": "trl_cl_beret",
+  "name": "wool beret",
+  "desc": "Understated and a little artistic.  +1 Etiquette while worn.",
+  "weight_g": 120,
+  "volume_ml": 360,
+  "length_mm": 300,
+  "price": 50,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "head",
+   "phys": 0,
+   "dur": 6
+  },
+  "social": {
+   "etiquette": 1
+  }
+ },
+ {
+  "id": "trl_cl_shades",
+  "name": "aviator shades",
+  "desc": "Mirrored lenses.  Nobody is sure where you are looking.  +1 Streetwise while worn.",
+  "weight_g": 60,
+  "volume_ml": 180,
+  "length_mm": 300,
+  "price": 95,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "optic",
+   "phys": 0,
+   "dur": 6
+  },
+  "social": {
+   "streetwise": 1
+  }
+ },
+ {
+  "id": "trl_cl_glasses",
+  "name": "designer glasses",
+  "desc": "Thin frames that signal taste and a good salary.  +1 Etiquette while worn.",
+  "weight_g": 50,
+  "volume_ml": 150,
+  "length_mm": 300,
+  "price": 120,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "optic",
+   "phys": 0,
+   "dur": 6
+  },
+  "social": {
+   "etiquette": 1
+  }
+ },
+ {
+  "id": "trl_cl_leather_gloves",
+  "name": "leather gloves",
+  "desc": "Armor 1 on both arms.  Warm, and they hide bruised knuckles.",
+  "weight_g": 200,
+  "volume_ml": 600,
+  "length_mm": 300,
+  "price": 55,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "arms",
+   "phys": 1,
+   "dur": 16
+  }
+ },
+ {
+  "id": "trl_cl_dress_gloves",
+  "name": "dress gloves",
+  "desc": "Thin kid leather.  Correct at any formal handshake.  +1 Etiquette while worn.",
+  "weight_g": 100,
+  "volume_ml": 300,
+  "length_mm": 300,
+  "price": 60,
+  "tags": [
+   "armor",
+   "worn",
+   "clothing"
+  ],
+  "armor": {
+   "slot": "arms",
+   "phys": 0,
+   "dur": 8
+  },
+  "social": {
+   "etiquette": 1
+  }
  }
 ]
