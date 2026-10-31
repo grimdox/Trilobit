@@ -224,7 +224,35 @@ static func make(c, seed_v: int) -> Array:
 			nm2 = "For Rent"
 		b["name"] = nm2
 		out.append(_sign("tower" if k == "core" else "house", "tower" if k == "core" else "house", nm2, [b["x0"], b["y0"], b["x1"], b["y1"]], b["door"], c.size))
+	for sg in out:
+		_clip_run(c, sg)
 	return out
+
+## a sign hangs on plain wall only: it stops at a window, another door or the end of the wall, so it never covers a door or a window.  With no plain wall beside the door there is no sign.
+static func _clip_run(c, sg: Dictionary) -> void:
+	var size: int = c.size
+	var door: int = int(sg["door"])
+	var dx: int = door % size
+	var dy: int = door / size
+	var side: int = int(sg["side"])
+	var along := Vector2i(1, 0) if side < 2 else Vector2i(0, 1)
+	var lim: int = int(sg["run"])
+	var ra := 0
+	var rb := 0
+	for k in range(1, lim + 1):
+		var x: int = dx - along.x * k
+		var y: int = dy - along.y * k
+		if x < 0 or y < 0 or x >= size or y >= size or c.tiles[y * size + x] != 2:
+			break
+		ra += 1
+	for k in range(1, lim + 1):
+		var x2: int = dx + along.x * k
+		var y2: int = dy + along.y * k
+		if x2 < 0 or y2 < 0 or x2 >= size or y2 >= size or c.tiles[y2 * size + x2] != 2:
+			break
+		rb += 1
+	sg["flip"] = ra > rb or (ra == rb and bool(sg["flip"]))
+	sg["run"] = maxi(ra, rb)
 
 # ---------------------------------------------------------------- the sign, drawn
 ## how wide a sign wants to be, in pixels (the name plus the pictogram), at most `run` tiles of wall

@@ -252,6 +252,7 @@ var tab_keys: Dictionary = {}              # tab kind -> the key that opens it, 
 var bt = null                              # BarterUI (barter_ui.gd): the merchant screen
 var gear = null                            # GearUI (gear_ui.gd): the equipment and implants tabs
 var map_pan: Vector2i = Vector2i.ZERO         # how far the local map is scrolled (tiles) from centred on you
+var map_lpx: float = 4.0                # pixels per tile of the local map as last drawn (for click-and-drag panning)
 var map_local: bool = true                # the map tab shows the local map instead of the island
 var local_tex: ImageTexture = null
 var local_info: Dictionary = {}            # {origin: Vector2i of the PC in the window, radius, level, labels: [{dx, dy, text}]}
@@ -388,6 +389,7 @@ func _local_map(W: float, H: float) -> void:
 	var ox := 40.0
 	var oy: float = TAB_H + 40.0
 	var lpx: int = maxi(3, int((H - oy - 40.0) / float(n)))
+	map_lpx = float(lpx)
 	var side: float = float(n * lpx)
 	if local_tex == null:
 		_txt("Nothing charted here.", Vector2(ox, oy + 30.0), 18, Color.WHITE)
@@ -445,7 +447,9 @@ func _local_map(W: float, H: float) -> void:
 	var lvl: int = int(local_info.get("level", 0))
 	if String(local_info.get("labor", "")) != "":
 		_txt(String(local_info["labor"]), Vector2(kx, H - 44.0), 17, SG.COL_CIVIC)
-	_txt("You are at (%d, %d)%s.   Arrows or the wheel scroll the map (Shift: faster, Home: back to you), Tab switches to the island map, Esc closes." % [int(local_info.get("gx", 0)), int(local_info.get("gy", 0)), "" if lvl == 0 else ", level %d" % lvl], Vector2(24, H - 14.0), 15, Color(0.8, 0.9, 1.0))
+	if String(local_info.get("temp", "")) != "":
+		_txt(String(local_info["temp"]), Vector2(kx, H - 66.0), 17, SG.COL_CIVIC)
+	_txt("You are at (%d, %d)%s.   Arrows or click-and-drag scroll the map (Shift: faster, Home: back to you), Tab switches to the island map, Esc closes." % [int(local_info.get("gx", 0)), int(local_info.get("gy", 0)), "" if lvl == 0 else ", level %d" % lvl], Vector2(24, H - 14.0), 15, Color(0.8, 0.9, 1.0))
 
 ## colours of the local map: [name, colour]
 const LOCAL_KEY := [["Wall", Color(1.0, 0.25, 0.65)], ["Window", Color(0.55, 0.9, 1.0)], ["Door", Color(1.0, 0.8, 0.25)], ["Road", Color(0.1, 0.14, 0.32)],
@@ -1087,9 +1091,9 @@ func _terminal(W: float, H: float) -> void:
 		var cx: float = r.position.x + 84
 		var cy: float = r.position.y + 64
 		if String(o.get("kind", "")) == "temp":
-			_rtxt("%s COLLAR" % String(o["collar"]).to_upper(), r.end.x - 14, r.position.y + 77, 13, Color(0.6, 0.85, 1.0, dim))
+			_rtxt("NO FIGHTING", r.end.x - 14, r.position.y + 77, 13, Color(0.6, 0.85, 1.0, dim))
 			cx += _chip("%d TASKS" % TJ.job_of(o)["stations"].size(), cx, cy, Color(0.5, 0.8, 1.0) * Color(1, 1, 1, dim))
-			cx += _chip("NO FIGHTING", cx, cy, Color(0.7, 0.9, 0.5) * Color(1, 1, 1, dim))
+			cx += _chip("%s" % ", ".join((o["social"] as Array).map(func(i): return String(SK.skill(String(i))["name"]))), cx, cy, Color(1.0, 0.8, 0.4) * Color(1, 1, 1, dim))
 		else:
 			_rtxt("%s  %d hostiles" % [MS.risk_text(rk).to_upper(), int(o.get("hostiles", 0))], r.end.x - 14, r.position.y + 77, 13, rcol * Color(1, 1, 1, dim))
 			cx += _chip(MS.layout_short(o), cx, cy, Color(0.5, 0.8, 1.0) * Color(1, 1, 1, dim))
@@ -1207,7 +1211,7 @@ func _terminal_temp(o: Dictionary, _offers: Array, yen: int, portal_open: bool) 
 	_rtxt("LESS 10% A SLIP", right.end.x - 22, 160, 12, DIM)
 	_fit(String(o["title"]), Vector2(x, 164), 18, CYAN, 420.0)
 	draw_multiline_string(font, Vector2(x, 192), String(o["brief"]), HORIZONTAL_ALIGNMENT_LEFT, w, 14, 3, Color(0.75, 0.86, 0.95))
-	var tiles: Array = [["COLLAR", String(o["collar"]).to_upper(), Color(0.6, 0.85, 1.0)], ["TASKS", "%d" % j["stations"].size(), Color(0.5, 0.8, 1.0)],
+	var tiles: Array = [["REWARD", "¥%d" % int(o["reward"]), Color(0.95, 0.8, 0.25)], ["TASKS", "%d" % j["stations"].size(), Color(0.5, 0.8, 1.0)],
 		["SOCIAL", TJ.skill_names(o["social"]), Color(1.0, 0.8, 0.4)], ["LABOUR", TJ.skill_names(o["labour"]), Color(0.5, 1.0, 0.7)]]
 	for q in tiles.size():
 		var tr := Rect2(x + q * 140.0, 262, 130, 50)

@@ -117,7 +117,7 @@ static func offers(world_seed: int, term_cell: int, day: int, gen: int = 0) -> A
 			"length": "short", "rooms": int(j["rooms"]), "hostiles": 0, "aff": 0, "share": 0.0, "lv": [0, 0], "collar": j["collar"], "dc_adj": dc_adj, "reward": pay,
 			"social": sp[0], "labour": sp[1]}
 		o["title"] = "%s (%s)" % [j["name"], company]
-		o["brief"] = "Posted by %s.  %s  %s  Social: %s.  Labour: %s.  A %s-collar job." % [o["client"], j["line"], j["how"], skill_names(sp[0]), skill_names(sp[1]), j["collar"]]
+		o["brief"] = "Posted by %s.  %s  %s  Social: %s.  Labour: %s." % [o["client"], j["line"], j["how"], skill_names(sp[0]), skill_names(sp[1])]
 		out.append(o)
 	return out
 

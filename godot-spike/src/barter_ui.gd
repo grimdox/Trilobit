@@ -175,11 +175,12 @@ func move(dir: Vector2i) -> bool:
 			if e["key"] == cur:
 				continue
 			var d: Vector2 = (e["rect"] as Rect2).get_center() - c
-			var along: float = d.x * dir.x + d.y * dir.y
+			var diag: bool = dir.x != 0 and dir.y != 0
+			var along: float = (d.x * dir.x + d.y * dir.y) * (0.7071 if diag else 1.0)
 			if along < 6.0:
 				continue
-			var across: float = absf(d.y) if dir.x != 0 else absf(d.x)
-			if pass_i == 0 and across > 24.0:
+			var across: float = absf(d.x * dir.y - d.y * dir.x) * 0.7071 if diag else (absf(d.y) if dir.x != 0 else absf(d.x))
+			if pass_i == 0 and across > (60.0 if diag else 24.0):
 				continue
 			var score: float = along + 3.0 * across
 			if score < bs:

@@ -833,7 +833,15 @@ func _barter_key(k: int) -> void:
 		"south": dv = Vector2i(0, 1)
 		"west": dv = Vector2i(-1, 0)
 		"east": dv = Vector2i(1, 0)
+		"nw": dv = Vector2i(-1, -1)
+		"ne": dv = Vector2i(1, -1)
+		"sw": dv = Vector2i(-1, 1)
+		"se": dv = Vector2i(1, 1)
 	match k:
+		KEY_KP_7: dv = Vector2i(-1, -1)
+		KEY_KP_9: dv = Vector2i(1, -1)
+		KEY_KP_1: dv = Vector2i(-1, 1)
+		KEY_KP_3: dv = Vector2i(1, 1)
 		KEY_UP: dv = Vector2i(0, -1)
 		KEY_DOWN: dv = Vector2i(0, 1)
 		KEY_LEFT: dv = Vector2i(-1, 0)
@@ -1035,6 +1043,9 @@ func _make_local_map() -> void:
 
 ## the Labor Centers are public knowledge: the map says where the nearest one is, seen or not
 func nearest_labor_text() -> String:
+	return nearest_business_text("labor_center", "Labor Center")
+
+func nearest_business_text(btype: String, label: String) -> String:
 	var g = game
 	if g == null or g.city == null or g.city.businesses.is_empty():
 		return ""
@@ -1043,19 +1054,19 @@ func nearest_labor_text() -> String:
 	var best: Dictionary = {}
 	var bd := 1 << 30
 	for b in g.city.businesses:
-		if b["type"] != "labor_center":
+		if b["type"] != btype:
 			continue
 		var d: int = absi(int(b["door"].x) - px) + absi(int(b["door"].y) - py)
 		if d < bd:
 			bd = d
 			best = b
 	if best.is_empty():
-		return "No Labor Center in this district."
+		return "No %s in this district." % label
 	var dx: int = int(best["door"].x) - px
 	var dy: int = int(best["door"].y) - py
 	var ew: String = "" if dx == 0 else "%d %s" % [absi(dx), "east" if dx > 0 else "west"]
 	var ns: String = "" if dy == 0 else "%d %s" % [absi(dy), "south" if dy > 0 else "north"]
-	return "Nearest Labor Center: %s (%s)." % [", ".join([ew, ns].filter(func(t): return t != "")), String(best.get("name", "Labor Center"))]
+	return "Nearest %s: %s (%s)." % [label, ", ".join([ew, ns].filter(func(t): return t != "")), String(best.get("name", label))]
 
 ## names of buildings to print above their middle tile on the local map: [{dx, dy, text}] relative to the player.  None are named yet.
 func local_labels() -> Array:
@@ -1176,7 +1187,20 @@ func _after_gear() -> void:
 	if game != null:
 		view.queue_redraw()
 
+var map_drag: bool = false
+var map_drag_acc: Vector2 = Vector2.ZERO
+
 func _tab_mouse(ev: InputEvent) -> void:
+	if ev is InputEventMouseButton and ev.button_index == MOUSE_BUTTON_LEFT and not ev.pressed:
+		map_drag = false
+	if ev is InputEventMouseMotion and map_drag and mode == "map" and screen.map_local:
+		map_drag_acc -= ev.relative / UI_S / maxf(1.0, screen.map_lpx)         # the map follows the cursor
+		var step := Vector2i(int(map_drag_acc.x), int(map_drag_acc.y))
+		if step != Vector2i.ZERO:
+			map_drag_acc -= Vector2(step)
+			var lim: int = LOCAL_R - LOCAL_VIEW_R
+			screen.map_pan = Vector2i(clampi(screen.map_pan.x + step.x, -lim, lim), clampi(screen.map_pan.y + step.y, -lim, lim))
+		return
 	if ev is InputEventMouseMotion:
 		var p: Vector2 = ev.position / UI_S
 		if mode == "skills":
@@ -1192,9 +1216,12 @@ func _tab_mouse(ev: InputEvent) -> void:
 		return
 	var pos: Vector2 = ev.position / UI_S
 	if mode == "map" and screen.map_local and (ev.button_index == MOUSE_BUTTON_WHEEL_UP or ev.button_index == MOUSE_BUTTON_WHEEL_DOWN):
-		_pan_local(Vector2i(0, -10 if ev.button_index == MOUSE_BUTTON_WHEEL_UP else 10))
-		return
+		return                                                  # (the wheel no longer scrolls the local map: click and drag)
 	if ev.button_index == MOUSE_BUTTON_LEFT:
+		if mode == "map" and screen.map_local and screen.tab_at(pos) == -9 and screen.map_button_at(pos) < 0:
+			map_drag = true
+			map_drag_acc = Vector2.ZERO
+			return
 		var ti: int = screen.tab_at(pos)
 		if ti >= 0:
 			if screen.TAB_KINDS[ti] != mode:
