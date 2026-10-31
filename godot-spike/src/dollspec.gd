@@ -5,9 +5,7 @@ extends RefCounted
 const PART_LAYER := {"head": "imp_cortex", "eyes": "imp_optics", "spine": "imp_reflex", "chest": "imp_heart", "dermal": "imp_dermal", "arms": "imp_mantis",
 	"hands": "imp_smartlink", "legs": "imp_legs"}
 # draw order: back pack, outfit, body armor, limb armor, head, implants
-const ARMOR_LAYER := {"trl_helmet": "helmet_ball", "trl_visor": "visor", "trl_helm_tac": "helm_tac", "trl_balaclava": "balaclava",
-	"trl_vest": "vest", "trl_vest_heavy": "vest_heavy", "trl_vest_corp": "vest_corp", "trl_jacket": "jacket", "trl_coat": "coat",
-	"trl_bracers": "bracers", "trl_bracers_heavy": "bracers_heavy", "trl_greaves": "greaves", "trl_greaves_heavy": "greaves_heavy", "trl_kneepads": "kneepads",
+const ARMOR_LAYER := {"trl_coat": "coat",
 	"trl_backpack": "backpack", "trl_holster": "holster",
 	"trl_armor_head_1": "balaclava", "trl_armor_head_2": "helmet_ball", "trl_armor_head_3": "helmet_ball", "trl_armor_head_4": "helm_tac", "trl_armor_head_5": "visor",
 	"trl_armor_chest_1": "jacket", "trl_armor_chest_2": "vest", "trl_armor_chest_3": "vest_corp", "trl_armor_chest_4": "vest_heavy", "trl_armor_chest_5": "vest_heavy",

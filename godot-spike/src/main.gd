@@ -421,21 +421,21 @@ func _terminal_key(k: int) -> void:
 	elif k == KEY_TAB:
 		tm["foc"] = 1 - foc
 		sfx.play("blip")
-	elif k == KEY_UP or k == KEY_K or settings.action_for(k) == "north":
+	elif k == KEY_UP or settings.action_for(k) == "north":
 		if foc == 0:
 			tm["sel"] = (int(tm["sel"]) + n - 1) % n
 		else:
 			tm["sw_sel"] = (int(tm["sw_sel"]) + 3) % 4
 		tm["msg"] = ""
 		sfx.play("blip")
-	elif k == KEY_DOWN or k == KEY_J or settings.action_for(k) == "south":
+	elif k == KEY_DOWN or settings.action_for(k) == "south":
 		if foc == 0:
 			tm["sel"] = (int(tm["sel"]) + 1) % n
 		else:
 			tm["sw_sel"] = (int(tm["sw_sel"]) + 1) % 4
 		tm["msg"] = ""
 		sfx.play("blip")
-	elif k == KEY_LEFT or k == KEY_RIGHT or k == KEY_H or k == KEY_L or settings.action_for(k) == "west" or settings.action_for(k) == "east":
+	elif k == KEY_LEFT or k == KEY_RIGHT or k == KEY_L or settings.action_for(k) == "west" or settings.action_for(k) == "east":
 		var right: bool = k == KEY_RIGHT or k == KEY_L or settings.action_for(k) == "east"
 		var si: int = int(tm["sw_sel"])
 		var cur: int = int(tm["sw"][si])
@@ -773,11 +773,11 @@ func _cc_key(k: int) -> void:
 		return
 	if k == KEY_ESCAPE:
 		back_from_screen()
-	elif k == KEY_UP or k == KEY_K or act == "north":
+	elif k == KEY_UP or act == "north":
 		cc_sel = (cc_sel + n - 1) % n
 		screen.prompt = ""
 		sfx.play("blip")
-	elif k == KEY_DOWN or k == KEY_J or act == "south":
+	elif k == KEY_DOWN or act == "south":
 		cc_sel = (cc_sel + 1) % n
 		screen.prompt = ""
 		sfx.play("blip")
@@ -787,7 +787,7 @@ func _cc_key(k: int) -> void:
 		var na: int = SK.ATTRS.size()
 		cc_sel = nl if cc_sel < nl else (nl + na if cc_sel < nl + na else 0)
 		sfx.play("blip")
-	elif k == KEY_LEFT or k == KEY_H or act == "west" or k == KEY_MINUS or k == KEY_KP_SUBTRACT:
+	elif k == KEY_LEFT or act == "west" or k == KEY_MINUS or k == KEY_KP_SUBTRACT:
 		cc_step(-1)
 	elif k == KEY_RIGHT or k == KEY_L or act == "east" or k == KEY_EQUAL or k == KEY_KP_ADD:
 		cc_step(1)
@@ -1286,14 +1286,14 @@ func screen_key(k: int) -> void:
 		KEY_ESCAPE:
 			if mode != "title":
 				back_from_screen()
-		KEY_UP, KEY_K:
+		KEY_UP:
 			screen.sel = (screen.sel + screen.items.size() - 1) % screen.items.size()
 			sfx.play("blip")
-		KEY_DOWN, KEY_J:
+		KEY_DOWN:
 			screen.sel = (screen.sel + 1) % screen.items.size()
 			sfx.play("blip")
-		KEY_LEFT, KEY_RIGHT, KEY_H, KEY_L:
-			var step: int = -1 if (k == KEY_LEFT or k == KEY_H) else 1
+		KEY_LEFT, KEY_RIGHT:
+			var step: int = -1 if (k == KEY_LEFT) else 1
 			var id: String = screen.items[screen.sel].get("id", "")
 			if id == "volume":
 				settings.volume = clampf(settings.volume + 0.1 * step, 0.0, 1.0)
@@ -1965,9 +1965,9 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		elif k >= KEY_1 and k < KEY_1 + MOVE_ROWS.size():
 			choose_move(k - KEY_1)
 			return
-		elif k == KEY_UP or k == KEY_K:
+		elif k == KEY_UP:
 			menu_sel = (menu_sel + MOVE_ROWS.size() - 1) % MOVE_ROWS.size()
-		elif k == KEY_DOWN or k == KEY_J:
+		elif k == KEY_DOWN:
 			menu_sel = (menu_sel + 1) % MOVE_ROWS.size()
 		elif k == KEY_ENTER or k == KEY_KP_ENTER:
 			choose_move(menu_sel)
@@ -1983,9 +1983,9 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		elif k >= KEY_1 and k < KEY_1 + rows_n:
 			choose_wait(k - KEY_1)
 			return
-		elif k == KEY_UP or k == KEY_K:
+		elif k == KEY_UP:
 			menu_sel = (menu_sel + rows_n - 1) % rows_n
-		elif k == KEY_DOWN or k == KEY_J:
+		elif k == KEY_DOWN:
 			menu_sel = (menu_sel + 1) % rows_n
 		elif k == KEY_ENTER or k == KEY_KP_ENTER:
 			choose_wait(menu_sel)

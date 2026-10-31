@@ -3,13 +3,13 @@ extends RefCounted
 
 ## action id -> [label, default keycodes]
 const ACTIONS := [
-	["north", "Move north", [KEY_UP, KEY_KP_8, KEY_K]],
-	["south", "Move south", [KEY_DOWN, KEY_KP_2, KEY_J]],
-	["west", "Move west", [KEY_LEFT, KEY_KP_4, KEY_H]],
+	["north", "Move north", [KEY_UP, KEY_KP_8]],
+	["south", "Move south", [KEY_DOWN, KEY_KP_2]],
+	["west", "Move west", [KEY_LEFT, KEY_KP_4]],
 	["east", "Move east", [KEY_RIGHT, KEY_KP_6]],
-	["nw", "Move north-west", [KEY_KP_7, KEY_Y]],
+	["nw", "Move north-west", [KEY_KP_7]],
 	["ne", "Move north-east", [KEY_KP_9]],
-	["sw", "Move south-west", [KEY_KP_1, KEY_B]],
+	["sw", "Move south-west", [KEY_KP_1]],
 	["se", "Move south-east", [KEY_KP_3]],
 	["wait", "Wait one turn / brake", [KEY_PERIOD, KEY_KP_5, KEY_SPACE]],
 	["waitmenu", "Wait for a chosen time", [KEY_ENTER, KEY_KP_ENTER]],

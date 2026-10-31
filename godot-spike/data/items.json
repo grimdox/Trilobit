@@ -5544,60 +5544,6 @@
   }
  },
  {
-  "id": "trl_balaclava",
-  "name": "balaclava",
-  "desc": "Armor 1 on the head.  Hides your face.",
-  "weight_g": 150,
-  "volume_ml": 300,
-  "length_mm": 250,
-  "price": 60,
-  "tags": [
-   "armor",
-   "worn"
-  ],
-  "armor": {
-   "slot": "head",
-   "phys": 1,
-   "dur": 12
-  }
- },
- {
-  "id": "trl_helm_tac",
-  "name": "tactical helmet",
-  "desc": "Armor 4 on the head, with a night-vision mount.",
-  "weight_g": 1500,
-  "volume_ml": 3200,
-  "length_mm": 310,
-  "price": 650,
-  "tags": [
-   "armor",
-   "worn"
-  ],
-  "armor": {
-   "slot": "head",
-   "phys": 4,
-   "dur": 50
-  }
- },
- {
-  "id": "trl_vest_corp",
-  "name": "corporate liner vest",
-  "desc": "Armor 3 on the chest.  Slim enough to wear under a suit.",
-  "weight_g": 2200,
-  "volume_ml": 3500,
-  "length_mm": 500,
-  "price": 900,
-  "tags": [
-   "armor",
-   "worn"
-  ],
-  "armor": {
-   "slot": "chest",
-   "phys": 3,
-   "dur": 55
-  }
- },
- {
   "id": "trl_food_cup_ramen",
   "name": "cup ramen",
   "desc": "Cup ramen.  420 kcal.  Heals 4, restores 6 stamina.",
