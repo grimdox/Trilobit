@@ -5434,6 +5434,58 @@
   ]
  },
  {
+  "id": "trl_heal_bandage",
+  "name": "bandage",
+  "weight_g": 60,
+  "volume_ml": 80,
+  "length_mm": 100,
+  "price": 12,
+  "tags": [
+   "medical"
+  ],
+  "heal": 8,
+  "desc": "A clean dressing: closes 8 points of bio health, spread over your wounds."
+ },
+ {
+  "id": "trl_heal_gel",
+  "name": "antiseptic gel",
+  "weight_g": 90,
+  "volume_ml": 100,
+  "length_mm": 110,
+  "price": 25,
+  "tags": [
+   "medical"
+  ],
+  "heal": 15,
+  "desc": "Cleans and seals: closes 15 points of bio health."
+ },
+ {
+  "id": "trl_heal_stim",
+  "name": "recovery stim",
+  "weight_g": 40,
+  "volume_ml": 30,
+  "length_mm": 90,
+  "price": 55,
+  "tags": [
+   "medical"
+  ],
+  "heal": 25,
+  "desc": "A cell-boost injector: closes 25 points of bio health."
+ },
+ {
+  "id": "trl_heal_suture",
+  "name": "suture kit",
+  "weight_g": 200,
+  "volume_ml": 250,
+  "length_mm": 150,
+  "price": 90,
+  "tags": [
+   "medical"
+  ],
+  "heal": 40,
+  "desc": "Needle, thread and anaesthetic: closes 40 points of bio health.  It does nothing for implants: those need a repair machine."
+ },
+ {
   "id": "trl_medkit",
   "name": "trauma patch",
   "weight_g": 120,
@@ -7788,6 +7840,24 @@
    "#ff5a4a",
    "#ff9a3a",
    "#d02a2a"
+  ]
+ },
+ {
+  "id": "trl_nano_mend",
+  "name": "Mend (test) nanohack",
+  "desc": "A test healing nano: closes 10 points of bio health.  Costs 10 kJ.  A chip for a Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "mend",
+  "nano_cols": [
+   "#6dff6d",
+   "#2ad04a",
+   "#c8ffc8"
   ]
  },
  {

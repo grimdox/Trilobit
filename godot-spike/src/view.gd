@@ -1207,14 +1207,14 @@ func _draw_hud() -> void:
 		_txt(x0 + 124, by + 8, names[l], 11, C_DIM)
 		if av > 0:
 			_txt(x0 + 124, by + 8, "armor %d" % av, 11, Color(0.5, 0.78, 1.0), 118, HORIZONTAL_ALIGNMENT_RIGHT)
-		_meter(x0 + 124, by + 11, 118, 13, f, _limb_color(f), "OFF" if not B.ok(l) else "", "%d/%d" % [int(B.hp[l]), int(B.mx[l])])
+		_meter(x0 + 124, by + 11, 118, 13, f, _limb_color(f), "OFF" if not B.ok(l) else "", ("%d+%d/%d+%d" % [int(B.hp[l]), int(B.imp[l]), int(B.mx[l]), int(B.imx[l])]) if int(B.imx[l]) > 0 else "%d/%d" % [int(B.hp[l]), int(B.mx[l])])
 		k += 1
 	# the meters
 	var my: float = fy + 190.0
 	var pcap: float = game.power_cap()
 	if pcap > 0.0:
 		var pf: float = game.power_left() / pcap
-		_meter(xi, my, wi, 16, pf, Color(0.95, 0.8, 0.2) if pf > 0.25 else Color(0.95, 0.35, 0.25), "POWER", "%d kJ  %dh" % [int(game.power_left()), int(game.power_hours())])
+		_meter(xi, my, wi, 16, pf, Color(0.95, 0.8, 0.2) if pf > 0.25 else Color(0.95, 0.35, 0.25), "POWER", "%.2f kJ  %dh" % [game.power_left(), int(game.power_hours())])
 	else:
 		_meter(xi, my, wi, 16, 1.0, Color(0.45, 0.6, 0.5), "HUMAN", "no implants")
 	var ars: Dictionary = game.armor_status()

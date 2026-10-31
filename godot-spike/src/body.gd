@@ -1,6 +1,7 @@
 extends RefCounted
-## The player's body: six limbs, each with its own health.  A limb at 0 is disabled (its implants stop working, and it hurts what you can do).
-## The head or the chest at 0 is death: there is no overall health pool, only these limbs (and the implants fitted in them, which take what a broken limb cannot).
+## The player's body: six limbs, each with two pools: BIO health (hp / mx: regenerates with rest, food and healing items) and IMPLANT health (imp / imx: the summed durability
+## of the implants fitted in that limb's group; only a repair service restores it).  A limb with any implant has its bio maximum halved.  Bio takes a hit first, then the implants.
+## A limb is disabled when bio + implant is 0; the head or the chest at 0 in total is death.
 const LIMBS := ["head", "chest", "l_arm", "r_arm", "l_leg", "r_leg"]
 const NAME := {"head": "head", "chest": "chest", "l_arm": "left arm", "r_arm": "right arm", "l_leg": "left leg", "r_leg": "right leg"}
 const BASE := {"head": 20, "chest": 40, "l_arm": 24, "r_arm": 24, "l_leg": 28, "r_leg": 28}
@@ -11,8 +12,10 @@ const MELEE_WEIGHT := {"head": 10, "chest": 30, "l_arm": 15, "r_arm": 15, "l_leg
 const GROUP := {"head": "head", "chest": "chest", "l_arm": "arms", "r_arm": "arms", "l_leg": "legs", "r_leg": "legs"}
 const PART_GROUP := {"head": "head", "eyes": "head", "spine": "chest", "chest": "chest", "dermal": "chest", "arms": "arms", "hands": "arms", "legs": "legs"}
 
-var hp: Dictionary = {}
-var mx: Dictionary = {}
+var hp: Dictionary = {}                # bio health now
+var mx: Dictionary = {}                # bio health maximum (halved when the limb carries an implant)
+var imp: Dictionary = {}               # implant health now (the fitted implants' durability left)
+var imx: Dictionary = {}               # implant health maximum
 
 func _init() -> void:
 	reset()
@@ -20,12 +23,38 @@ func _init() -> void:
 func reset() -> void:
 	mx = BASE.duplicate()
 	hp = BASE.duplicate()
+	imp = {}
+	imx = {}
+	for l in LIMBS:
+		imp[l] = 0
+		imx[l] = 0
+
+## bio + implant health of a limb now and at most
+func total_of(limb: String) -> int:
+	return int(hp[limb]) + int(imp.get(limb, 0))
+
+func max_of(limb: String) -> int:
+	return int(mx[limb]) + int(imx.get(limb, 0))
 
 func ok(limb: String) -> bool:
-	return int(hp[limb]) > 0
+	return total_of(limb) > 0
 
 func frac(limb: String) -> float:
-	return float(hp[limb]) / float(mx[limb])
+	return float(total_of(limb)) / float(maxi(1, max_of(limb)))
+
+## set a limb's implant pools (game.gd, from the fitted implants) and rescale the bio maximum: halved with any implant, whole without.  Bio keeps its fraction.
+func set_pools(limb: String, now: int, top: int) -> void:
+	imp[limb] = now
+	imx[limb] = top
+	var want: int = BASE[limb] / 2 if top > 0 else int(BASE[limb])
+	if int(mx[limb]) != want:
+		var f: float = float(hp[limb]) / float(maxi(1, int(mx[limb])))
+		mx[limb] = want
+		hp[limb] = clampi(int(round(f * float(want))), 0 if int(hp[limb]) == 0 else 1, want)
+
+## bio left of a limb is 0 and so is its implant health
+func hurt_bio(limb: String) -> bool:
+	return int(hp[limb]) < int(mx[limb])
 
 ## every limb of the group works (the group "all" is always true)
 func group_ok(group: String) -> bool:
@@ -43,7 +72,7 @@ func legs_ok() -> int:
 	return (1 if ok("l_leg") else 0) + (1 if ok("r_leg") else 0)
 
 func vital_dead() -> bool:
-	return not ok("head") or not ok("chest")
+	return total_of("head") <= 0 or total_of("chest") <= 0
 
 func group_of_part(part: String) -> String:
 	return PART_GROUP.get(part, "chest")
@@ -69,7 +98,7 @@ func pick_melee(rng: RandomNumberGenerator) -> String:
 			return l
 	return "chest"
 
-## returns {"broke": the limb just reached 0, "dead": a vital limb is gone}
+## takes the hit on bio health only (the caller passes what is left over to the implants, then calls vital_dead).  Returns {"broke": bio reached 0, "dead": vital_dead()}
 func damage(limb: String, amount: int) -> Dictionary:
 	var before: int = hp[limb]
 	hp[limb] = maxi(0, before - maxi(0, amount))
@@ -97,7 +126,7 @@ func worst() -> String:
 func total() -> int:
 	var s := 0
 	for l in LIMBS:
-		s += int(hp[l])
+		s += total_of(l)
 	return s
 
 func to_dict() -> Dictionary:

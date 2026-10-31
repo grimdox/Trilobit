@@ -867,6 +867,7 @@ func _start_player() -> void:
 	inv.stow(_new_item("trl_ration", 2))
 	inv.stow(new_bottle(500))
 	implants = {"x101": true}                      # a Gutterline Trilobit comes fitted
+	_sync_pools()
 	nanos = []
 	nano_fx = {}
 	for h in NANO.ALL:
@@ -1471,6 +1472,26 @@ func wait_for(turns: int) -> bool:
 	say("You wait %s." % CLK.span_text(turns))
 	return true
 
+var sleeping: bool = false                     # a sleep under way (a wait that heals bio health)
+const SLEEP_FROM := 20                         # you can only sleep from 8pm
+const SLEEP_TO := 6                            # ... until 6am
+const SLEEP_HEAL_EVERY := 12                   # one point of bio health back every this many turns asleep (a full night heals a whole body)
+
+func can_sleep() -> bool:
+	var h: int = CLK.hour_of(sim.tick)
+	return h >= SLEEP_FROM or h < SLEEP_TO
+
+## sleep until `hour` (6am): only from 8pm on; it heals bio health as the turns pass.  Implants do not heal by sleeping.
+func sleep_until(hour: int = SLEEP_TO) -> bool:
+	if not can_sleep():
+		say("You are not tired.  You can only sleep from 8pm.")
+		return false
+	if not wait_until(hour):
+		return false
+	sleeping = true
+	say("You lie down to sleep.")
+	return true
+
 func wait_until(hour: int) -> bool:
 	var n: int = CLK.turns_until(sim.tick, hour)
 	if not wait_for(n):
@@ -1485,6 +1506,7 @@ func wait_cancel(why: String = "You stop waiting.") -> void:
 	if wait_left > 0:
 		var done: int = wait_total - wait_left
 		wait_left = 0
+		sleeping = false
 		wait_why = "stopped"
 		say("%s  (%s passed)" % [why, CLK.span_text(done)])
 
@@ -1504,6 +1526,8 @@ func wait_step(max_turns: int) -> int:
 		wait_left -= 1
 		_tick()
 		spent += 1
+		if sleeping and turn % SLEEP_HEAL_EVERY == 0:
+			heal_body(1)
 		wait_hp = mini(wait_hp, body.total())
 		var why := ""
 		if body.total() < hp0 or body.total() < wait_hp:
@@ -1519,7 +1543,11 @@ func wait_step(max_turns: int) -> int:
 			break
 	if wait_left == 0 and spent > 0 and wait_total > 0 and wait_why == "":
 		wait_why = "done"
-		say("You finish waiting.  It is %s." % time_text())
+		if sleeping:
+			sleeping = false
+			say("You wake.  It is %s." % time_text())
+		else:
+			say("You finish waiting.  It is %s." % time_text())
 		wait_total = 0
 	return spent
 
@@ -2302,11 +2330,36 @@ func _raw_hurt(n: int, limb: String = "") -> void:
 	var l: String = limb if limb != "" else body.pick(rng)
 	_limb_hit(l, n)
 
+## recompute every limb's implant pools from the fitted implants and their durability left (bio maximum halves on a limb that carries one)
+func _sync_pools() -> void:
+	var now := {}
+	var top := {}
+	for l in BODY.LIMBS:
+		now[l] = 0
+		top[l] = 0
+	for id in implants:
+		if not implants[id]:
+			continue
+		var d: Dictionary = IMP.get_def(String(id))
+		if d.is_empty():
+			continue
+		var grp: String = body.group_of_part(String(d["part"]))
+		for l in BODY.LIMBS:
+			if BODY.GROUP[l] == grp:
+				now[l] += int(imp_dur.get(id, IMP.dur(d)))
+				top[l] += IMP.dur(d)
+	for l in BODY.LIMBS:
+		body.set_pools(l, int(now[l]), int(top[l]))
+
 func _limb_hit(l: String, n: int) -> void:
+	_sync_pools()
 	var avail: int = int(body.hp[l])
-	var r: Dictionary = body.damage(l, n)
+	var had: int = body.total_of(l)
+	body.damage(l, n)
 	if n > avail:
 		_implants_take(l, n - avail)
+	_sync_pools()
+	var r: Dictionary = {"broke": had > 0 and body.total_of(l) == 0, "dead": body.vital_dead()}
 	if r["broke"]:
 		if l == "head" or l == "chest":
 			say("Your %s is destroyed." % limb_name(l))
@@ -2610,6 +2663,13 @@ func parry_chance(nm: Dictionary) -> int:
 
 ## trauma patch: 25 health and the worst limb mended a little (a disabled limb comes back)
 func act_use_medical(it) -> bool:
+	if int(it.def.get("heal", 0)) > 0:
+		var amt: int = int(it.def["heal"])
+		_consume_one(it)
+		var got: int = heal_body(amt)
+		say("You use the %s: %d points of bio health come back." % [it.def["name"], got])
+		end_turn()
+		return true
 	_consume_one(it)
 	var l: String = body.worst()
 	body.heal(l, maxi(8, int(body.mx[l]) / 3))
@@ -3998,6 +4058,8 @@ func _tick() -> void:
 	if drunk_left > 0:
 		drunk_left -= 1
 	_needs_tick()
+	if turn % 30 == 0:
+		_sync_pools()
 	if turn % (40 * CLK.MIN) == 0:
 		for l in BODY.LIMBS:                      # hurt limbs knit slowly; a disabled one needs a ripperdoc or a trauma patch
 			if body.ok(l) and int(body.hp[l]) < int(body.mx[l]):
@@ -4774,6 +4836,7 @@ func act_install_implant(it) -> bool:
 		return false
 	implants[id] = true
 	power_install(id)
+	_sync_pools()
 	say("You fit the %s." % it.def["name"])
 	if power_cap() <= 0.0:
 		say("Nothing in you stores power yet: fit a chest battery or a Trilobit, or the implants stay off.")
@@ -4794,6 +4857,7 @@ func act_remove_implant(id: String) -> bool:
 		return false
 	implants.erase(id)
 	power_uninstall(id)
+	_sync_pools()
 	nano_trim()
 	inv.stow(item)
 	say("You take out the %s." % item.def["name"])
@@ -4977,6 +5041,12 @@ func act_nano_use(hid: String, target: int = -1) -> bool:
 			say("Shock needs a target in sight.")
 			return false
 	power = power_left() - NANO.USE_KJ
+	if hid == "mend":
+		var got: int = heal_body(int(d["heal"]))
+		say("The mend nano knits you: +%d bio health." % got)
+		sfx("blip")
+		end_turn()
+		return true
 	if String(d["kind"]) == "active":
 		nano_fx[hid] = int(d["turns"])
 		say("%s runs for 10 minutes." % d["name"])
@@ -5610,6 +5680,7 @@ func apply_player(d: Dictionary) -> void:
 	power_state = int(d.get("power_state", 0))
 	yen = int(d["yen"])
 	implants = d["implants"]
+	_sync_pools()
 	nanos = d.get("nanos", [])
 	nano_fx = d.get("nano_fx", {})
 	fuel = int(d["fuel"])
@@ -5701,6 +5772,7 @@ func load_dict(d: Dictionary) -> void:
 		stamina = clampi(int(round(float(stamina) * STAM_LEGACY)), 0, STAMINA_MAX)
 	ap = int(d.get("ap", 2 * AP_BASE - 1))
 	implants = d.get("implants", {})
+	_sync_pools()
 	nanos = d.get("nanos", [])
 	nano_fx = d.get("nano_fx", {})
 	fuel = int(d.get("fuel", FUEL_MAX))
@@ -6248,6 +6320,7 @@ func heal_body(n: int) -> int:
 
 ## the head or the chest at 0 ends the run
 func _die_check() -> void:
+	_sync_pools()
 	if body.vital_dead() and not game_over:
 		game_over = true
 		say("You are dead.  Press [n] for a new life.")

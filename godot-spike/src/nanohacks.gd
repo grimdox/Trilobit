@@ -19,6 +19,8 @@ const ALL := [
 		"text": "Overloads a target in sight: 10 damage to a random implanted body part.  Unwired people take nothing.", "cols": ["#ff3ec8", "#c23cff", "#ffd0f4"]},
 	{"id": "strike", "name": "Strike", "kind": "active", "skills": {"unarmed": 1, "melee": 1}, "turns": ACTIVE_TURNS, "draw": ACTIVE_DRAW,
 		"text": "Primes the muscles: +1 Unarmed and +1 Melee for 10 minutes.", "cols": ["#ff5a4a", "#ff9a3a", "#d02a2a"]},
+	{"id": "mend", "name": "Mend (test)", "kind": "instant", "heal": 10,
+		"text": "A test healing nano: closes 10 points of bio health.  Costs 10 kJ.", "cols": ["#6dff6d", "#2ad04a", "#c8ffc8"]},
 	{"id": "research", "name": "Skill: Research", "kind": "passive", "skills": {"research": 1},
 		"text": "A standing lookup routine: +1 Research while installed.  No upkeep.", "cols": ["#6dff9a", "#2ad08a", "#c8ffd8"]},
 ]

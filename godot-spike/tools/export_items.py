@@ -120,6 +120,10 @@ items += [
     {"id": "trl_ration", "name": "cyber ration bar", "weight_g": 90, "volume_ml": 80, "length_mm": 150, "price": 15, "tags": ["food"], "food": {"hp": 3, "stam": 6, "drink": False, "alcohol": False, "kcal": 500}},
     {"id": "trl_parcel", "name": "sealed parcel", "weight_g": 600, "volume_ml": 1500, "length_mm": 250, "price": 0, "tags": ["job"]},
     {"id": "trl_datacase", "name": "encrypted data case", "weight_g": 1800, "volume_ml": 6000, "length_mm": 420, "price": 400, "tags": ["job"]},
+    {"id": "trl_heal_bandage", "name": "bandage", "weight_g": 60, "volume_ml": 80, "length_mm": 100, "price": 12, "tags": ["medical"], "heal": 8, "desc": "A clean dressing: closes 8 points of bio health, spread over your wounds."},
+    {"id": "trl_heal_gel", "name": "antiseptic gel", "weight_g": 90, "volume_ml": 100, "length_mm": 110, "price": 25, "tags": ["medical"], "heal": 15, "desc": "Cleans and seals: closes 15 points of bio health."},
+    {"id": "trl_heal_stim", "name": "recovery stim", "weight_g": 40, "volume_ml": 30, "length_mm": 90, "price": 55, "tags": ["medical"], "heal": 25, "desc": "A cell-boost injector: closes 25 points of bio health."},
+    {"id": "trl_heal_suture", "name": "suture kit", "weight_g": 200, "volume_ml": 250, "length_mm": 150, "price": 90, "tags": ["medical"], "heal": 40, "desc": "Needle, thread and anaesthetic: closes 40 points of bio health.  It does nothing for implants: those need a repair machine."},
     {"id": "trl_medkit", "name": "trauma patch", "weight_g": 120, "volume_ml": 100, "length_mm": 120, "price": 40, "tags": ["medical"], "desc": "Heals 25 and mends your worst limb a little."},
     {"id": "trl_kit_repair", "name": "field repair kit", "desc": "Patch plates, hoses and wiring.  Restores 25 points to one vehicle part.", "weight_g": 1500, "volume_ml": 3000, "length_mm": 350, "price": 90, "tags": ["tool"], "repair": 25},
 ]
@@ -224,6 +228,7 @@ NANOS = [("plating", "Plating", "Hardens the skin-weave: +1 armor on every body 
          ("reflex", "Reflex", "Overclocks the nerves: +1 Dodge for 10 minutes.", ["#ffe14a", "#ffb02a", "#fff3a0"]),
          ("shock", "Shock", "Overloads a target in sight: 10 damage to a random implanted body part.", ["#ff3ec8", "#c23cff", "#ffd0f4"]),
          ("strike", "Strike", "Primes the muscles: +1 Unarmed and +1 Melee for 10 minutes.", ["#ff5a4a", "#ff9a3a", "#d02a2a"]),
+         ("mend", "Mend (test)", "A test healing nano: closes 10 points of bio health.  Costs 10 kJ.", ["#6dff6d", "#2ad04a", "#c8ffc8"]),
          ("research", "Skill: Research", "A standing lookup routine: +1 Research while installed.", ["#6dff9a", "#2ad08a", "#c8ffd8"])]
 for nid, nm, text, cols in NANOS:
     items.append({"id": "trl_nano_" + nid, "name": nm + " nanohack", "desc": text + "  A chip for a Trilobit slot; fit it on the Implants screen.", "weight_g": 0, "volume_ml": 0,

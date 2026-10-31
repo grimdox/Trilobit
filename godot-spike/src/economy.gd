@@ -443,6 +443,12 @@ func _stock(i: int = 0) -> Array:
 		var aid: String = "trl_armor_%s_%d" % [slot, tier]
 		if g.db.defs.has(aid) and not out.any(func(x): return x[0] == aid):
 			out.append([aid, g.db.defs[aid]["name"], int(g.db.defs[aid]["price"])])
+	out.append(["trl_heal_bandage", "bandage", 12])
+	out.append(["trl_heal_gel", "antiseptic gel", 25])
+	if i % 2 == 0:
+		out.append(["trl_heal_stim", "recovery stim", 55])
+	else:
+		out.append(["trl_heal_suture", "suture kit", 90])
 	out.append(["trl_kit_repair", "field repair kit", 110])
 	return out
 

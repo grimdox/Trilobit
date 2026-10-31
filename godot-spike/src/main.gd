@@ -1405,7 +1405,7 @@ func _process(_delta: float) -> void:
 		return
 	refresh()
 	var done: int = game.wait_total - game.wait_left
-	logbox.text = "Waiting...  %d%%   (%s of %s)   it is %s     [Esc stops]" % [100 * done / maxi(1, game.wait_total), CLK.span_text(done), CLK.span_text(game.wait_total), game.time_text()]
+	logbox.text = "Waiting...  %d%%   (%s of %s)   it is %s     [any key stops]" % [100 * done / maxi(1, game.wait_total), CLK.span_text(done), CLK.span_text(game.wait_total), game.time_text()]
 
 func refresh() -> void:
 	if world != null and world.game == game and world.poll():
@@ -1640,14 +1640,14 @@ func choose_move(i: int) -> void:
 
 func show_wait() -> void:
 	var g = game
-	var t := "[b]Wait[/b]   (1-8 or Up / Down and Enter chooses, Esc leaves)   it is %s\n\n" % CLK.text(g.sim.tick)
+	var t := "[b]Wait[/b]   (1-9 or Up / Down and Enter chooses, Esc leaves)   it is %s\n\n" % CLK.text(g.sim.tick)
 	var rows: Array = wait_rows()
 	for i in rows.size():
 		var line := "%d) %s" % [i + 1, rows[i]["label"]]
 		if rows[i].has("hour"):
 			line += "   [color=#8899aa](%s)[/color]" % CLK.span_text(rows[i]["turns"])
 		t += ("[color=#4de6ff]> %s[/color]\n" % line) if i == menu_sel else ("  %s\n" % line)
-	t += "\nWaiting stops early if you are hurt, get hungry or thirsty, or a hostile you can see is on to you.  Esc stops a wait under way."
+	t += "\nWaiting stops early if you are hurt, get hungry or thirsty, or a hostile you can see is on to you.  Any key stops a wait under way."
 	panel.text = t
 	panel.visible = true
 
@@ -1657,6 +1657,7 @@ func wait_rows() -> Array:
 		rows.append({"label": w[0], "turns": w[1]})
 	for w in CLK.WAIT_UNTIL:
 		rows.append({"label": w[0], "turns": CLK.turns_until(game.sim.tick, w[1]), "hour": w[1]})
+	rows.append({"label": "Sleep until 6am (from 8pm; heals bio health)", "turns": CLK.turns_until(game.sim.tick, 6), "hour": 6, "sleep": true})
 	return rows
 
 func choose_wait(i: int) -> void:
@@ -1664,6 +1665,10 @@ func choose_wait(i: int) -> void:
 	if i < 0 or i >= rows.size():
 		return
 	panel.visible = false
+	if rows[i].get("sleep", false):
+		mode = "waiting" if game.sleep_until(int(rows[i]["hour"])) else "play"
+		refresh()
+		return
 	if game.wait_for(rows[i]["turns"]):
 		if rows[i].has("hour"):
 			game.say("(until %02d:00)" % rows[i]["hour"])
@@ -1914,7 +1919,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		refresh()
 		return
 	if mode == "waiting":
-		if k == KEY_ESCAPE or k == KEY_SPACE or k == KEY_ENTER:
+		if true:                                       # any key stops a wait
 			game.wait_cancel("You stop waiting.")
 			mode = "play"
 			refresh()
