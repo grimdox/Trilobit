@@ -648,7 +648,7 @@ static func _dress_temp(c, o: Dictionary, rng: RandomNumberGenerator, inner: Arr
 		used[cell] = true
 	# coworkers: harmless civilians standing about on free floor
 	var agents: Array = site["agents"]
-	var ncw: int = clampi(inner.size() / 2, 2, 6)
+	var ncw: int = int(o.get("mates", clampi(inner.size() / 2, 2, 6)))
 	for k in ncw:
 		var ri2: int = rng.randi() % inner.size()
 		if inside and ri2 == start_room:

@@ -18,7 +18,7 @@ func run() -> Array:
 	check.call("five attributes: Strength, Perception, Agility, Cognition, Endurance", SK.ATTRS.map(func(a): return a["name"]) == ["Strength", "Perception", "Agility", "Cognition", "Endurance"])
 	check.call("sixteen skills in groups of 5, 3, 4 and 4", SK.SKILLS.size() == 16 and SK.skills_in("Combat").size() == 5 and SK.skills_in("Hacking").size() == 3 and SK.skills_in("Labour").size() == 4 and SK.skills_in("Social").size() == 4)
 	var gov := {"unarmed": "str agi", "melee": "str agi", "ranged": "per cog", "dodge": "per agi", "grit": "str end", "networking": "cog", "analysis": "per", "implementation": "cog",
-		"manual": "str end", "engineering": "per cog", "artisan": "per agi", "research": "cog end", "streetwise": "per", "etiquette": "per", "deception": "cog", "negotiation": "end"}
+		"manual": "str end", "engineering": "per cog", "artisan": "per agi", "research": "cog end", "streetwise": "per", "etiquette": "per", "diplomacy": "cog", "negotiation": "end"}
 	var gov_ok := true
 	for k in gov:
 		if " ".join(SK.skill(k)["attrs"]) != gov[k]:

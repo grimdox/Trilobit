@@ -14,7 +14,7 @@ const TYPES := [
 	{"id": "assassination", "name": "Assassination", "tag": "KILL", "skills": ["ranged", "melee", "dodge"], "base": 420,
 		"line": "Go in and kill one named person.",
 		"how": "The target stands in the back of the site with bodyguards.  Kill them and walk out.  Nobody else has to die, but they will try."},
-	{"id": "rescue", "name": "Rescue", "tag": "SAVE", "skills": ["streetwise", "deception", "melee"], "base": 380,
+	{"id": "rescue", "name": "Rescue", "tag": "SAVE", "skills": ["streetwise", "diplomacy", "melee"], "base": 380,
 		"line": "Secure a hostage and bring them to the exit.",
 		"how": "The hostage is bound in the back of the site.  Talk to them to cut them loose, then they follow you.  They must reach the exit portal alive."},
 	{"id": "repair", "name": "Repair", "tag": "FIX", "skills": ["engineering", "manual"], "base": 330,
@@ -360,6 +360,9 @@ static func step(g) -> void:
 		return
 	var m: Dictionary = g.mission
 	var o: Dictionary = m["offer"]
+	if TJ.is_temp(o):
+		TJ.step(g)
+		return
 	match o["type"]:
 		"assassination":
 			var t: int = agent_with_role(g, "target")

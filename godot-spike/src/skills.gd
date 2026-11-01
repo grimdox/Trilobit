@@ -75,8 +75,8 @@ const SKILLS := [
 	{"id": "etiquette", "name": "Etiquette", "group": "Social", "attrs": ["per"], "live": true,
 		"desc": "The understanding of eloquence and circumstance, used to communicate effectively with the upper class.",
 		"note": "Better prices from upscale shops and tower stalls (2% a level).", "disc": []},
-	{"id": "deception", "name": "Deception", "group": "Social", "attrs": ["cog"], "live": true,
-		"desc": "The ability to lie to humans, both verbally and visually.",
+	{"id": "diplomacy", "name": "Diplomacy", "group": "Social", "attrs": ["cog"], "live": true,
+		"desc": "Persuasion and the careful use of the truth: interviews, introductions and talking people round.  Also covers lying and misdirection.",
 		"note": "Pickpocketing: +7% a level.", "disc": []},
 	{"id": "negotiation", "name": "Negotiation", "group": "Social", "attrs": ["end"], "live": true,
 		"desc": "Haggling, bartering and debating.  Higher skills can improve many social and financial rewards.",
@@ -254,9 +254,9 @@ const NPC_ATTRS := [
 ]
 const NPC_SKILLS := [
 	{},
-	{"unarmed": 3, "melee": 3, "ranged": 2, "dodge": 1, "grit": 3, "streetwise": 4, "negotiation": 2, "deception": 1},
+	{"unarmed": 3, "melee": 3, "ranged": 2, "dodge": 1, "grit": 3, "streetwise": 4, "negotiation": 2, "diplomacy": 1},
 	{"unarmed": 2, "melee": 3, "ranged": 4, "dodge": 2, "grit": 3, "etiquette": 3, "analysis": 2, "networking": 2, "research": 1},
-	{"unarmed": 3, "melee": 3, "ranged": 3, "dodge": 7, "grit": 2, "deception": 2, "streetwise": 2},
+	{"unarmed": 3, "melee": 3, "ranged": 3, "dodge": 7, "grit": 2, "diplomacy": 2, "streetwise": 2},
 	{"unarmed": 3, "melee": 2, "ranged": 1, "dodge": 0, "grit": 2, "streetwise": 3},
 	{"unarmed": 2, "melee": 2, "ranged": 3, "dodge": 1, "grit": 3, "analysis": 2, "etiquette": 1},
 ]

@@ -35,7 +35,7 @@ const FAC_LABEL := {1: "Bratva", 2: "NAP", 3: "Nasim", 4: "Gang (unaffiliated)",
 const PROFILE := {
 	1: ["melee", "grit", ["unarmed", "ranged", "streetwise", "negotiation"]],
 	2: ["ranged", "grit", ["melee", "etiquette", "analysis", "networking", "dodge"]],
-	3: ["melee", "dodge", ["deception", "streetwise", "ranged", "unarmed"]],
+	3: ["melee", "dodge", ["diplomacy", "streetwise", "ranged", "unarmed"]],
 	4: ["unarmed", "melee", ["grit", "streetwise", "ranged", "dodge"]],
 	5: ["ranged", "grit", ["melee", "analysis", "etiquette", "dodge", "engineering"]],
 }

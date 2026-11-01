@@ -9575,7 +9575,7 @@
  {
   "id": "trl_cl_kimono",
   "name": "silk kimono",
-  "desc": "Hand-dyed silk.  People remember you, and rarely what you said.  +1 Etiquette, +1 Deception while worn.",
+  "desc": "Hand-dyed silk.  People remember you, and rarely what you said.  +1 Etiquette, +1 Diplomacy while worn.",
   "weight_g": 900,
   "volume_ml": 2700,
   "length_mm": 300,
@@ -9592,7 +9592,7 @@
   },
   "social": {
    "etiquette": 1,
-   "deception": 1
+   "diplomacy": 1
   }
  },
  {
@@ -9745,7 +9745,7 @@
  {
   "id": "trl_cl_fedora",
   "name": "felt fedora",
-  "desc": "Brim low.  Faces under it are harder to read.  +1 Deception while worn.",
+  "desc": "Brim low.  Faces under it are harder to read.  +1 Diplomacy while worn.",
   "weight_g": 200,
   "volume_ml": 600,
   "length_mm": 300,
@@ -9761,7 +9761,7 @@
    "dur": 8
   },
   "social": {
-   "deception": 1
+   "diplomacy": 1
   }
  },
  {

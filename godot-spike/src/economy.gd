@@ -16,6 +16,7 @@ const GROCER := 5        # grocery keepers: food and water to carry
 const DOCTOR := 6        # clinic doctors: treat wounds
 const PRIEST := 7        # church: candles, confession, a blessing
 const MIKO := 8          # shrine keeper: charms and offerings
+const JOBMATE := 10      # a co-worker on a Temp Agency job floor: interview, ask for help
 const HOSTAGE := 9       # a bound hostage on a mission site (missions.gd): talk to cut them loose
 const VN = preload("res://src/venues.gd")
 const CLK = preload("res://src/clock.gd")
@@ -178,6 +179,7 @@ func label(i: int) -> String:
 		PRIEST: return "priest"
 		MIKO: return "shrine keeper"
 		HOSTAGE: return "hostage"
+		JOBMATE: return "co-worker"
 	return ""
 
 # ------------------------------------------------------------------ the clocks
@@ -287,6 +289,8 @@ func _make_retrieval() -> Dictionary:
 func menu_for(i: int) -> Dictionary:
 	var who: String = g.nname[i]
 	var r: int = int(role[i])
+	if r == JOBMATE:
+		return g.TJ.talk_menu(g, i)
 	var m := {"title": g.name_of(i), "text": [], "options": [], "who": i}
 	match r:
 		VENDOR:
@@ -583,6 +587,27 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 			var ea: Array = o["arg"]
 			g.recharge_vehicle(int(ea[0]), int(ea[1]), int(ea[2]))
 			return ev_menu(int(ea[0]))
+		"tj_task":
+			var ta: Array = o["arg"]
+			var tres: Dictionary = g.TJ.do_task(g, int(ta[0]), int(ta[1]))
+			if bool(g.mission.get("timeup", false)):
+				return {}
+			return g.TJ.station_menu(g, int(ta[0]), String(tres["text"]))
+		"tj_station":
+			return g.TJ.station_menu(g, int(o["arg"]))
+		"tj_helpmenu":
+			return g.TJ.helpers_menu(g, int(o["arg"]))
+		"tj_timemenu":
+			var tma: Array = o["arg"]
+			return g.TJ.time_menu(g, int(tma[0]), String(tma[1]))
+		"tj_talkback":
+			return g.TJ.talk_menu(g, int(o["arg"]))
+		"tj_talk":
+			var tka: Array = o["arg"]
+			var tr2: Dictionary = g.TJ.do_talk(g, int(tka[0]), String(tka[1]), int(tka[2]), int(tka[3]))
+			if bool(g.mission.get("timeup", false)):
+				return {}
+			return g.TJ.talk_menu(g, int(tka[0]), String(tr2["note"]))
 		"mission_free":
 			g.MS.free_hostage(g)
 			return {}

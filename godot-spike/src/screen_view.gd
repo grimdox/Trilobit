@@ -1081,7 +1081,7 @@ func _terminal(W: float, H: float) -> void:
 		draw_rect(Rect2(r.position.x + 12, r.position.y + 10, 60, 22), tcol * Color(1, 1, 1, dim), false, 1.0)
 		_txt(String(o["tag"]), Vector2(r.position.x + 12, r.position.y + 27), 15, tcol * Color(1, 1, 1, dim), HORIZONTAL_ALIGNMENT_CENTER, 60.0)
 		_txt("%d" % (k + 1), Vector2(r.position.x + 38, r.position.y + 52), 16, DIM)
-		_txt(String(o["name"]).to_upper(), Vector2(r.position.x + 84, r.position.y + 28), 18, Color(1, 1, 1, dim))
+		_fit(String(o["name"]).to_upper(), Vector2(r.position.x + 84, r.position.y + 28), 18, Color(1, 1, 1, dim), 330.0)
 		_fit(String(o["title"]), Vector2(r.position.x + 84, r.position.y + 49), 14, Color(0.8, 0.9, 1.0, dim), 318.0)
 		if is_done:
 			_rtxt("DONE", r.end.x - 14, r.position.y + 29, 20, Color(0.5, 0.65, 0.7))
@@ -1091,9 +1091,11 @@ func _terminal(W: float, H: float) -> void:
 		var cx: float = r.position.x + 84
 		var cy: float = r.position.y + 64
 		if String(o.get("kind", "")) == "temp":
-			_rtxt("NO FIGHTING", r.end.x - 14, r.position.y + 77, 13, Color(0.6, 0.85, 1.0, dim))
+			if String(o.get("flavor", "normal")) == "urgent":
+				_rtxt("%s LIMIT" % TJ.span_words(int(o["limit_min"])).to_upper(), r.end.x - 14, r.position.y + 77, 13, Color(1.0, 0.5, 0.4, dim))
+			cx += _chip(String(TJ.FLAVOR_NAMES.get(String(o.get("flavor", "normal")), "Normal")).to_upper(), cx, cy, {"urgent": Color(1.0, 0.5, 0.4), "detailed": Color(0.5, 0.9, 1.0)}.get(String(o.get("flavor", "normal")), Color(0.7, 0.8, 0.9)) * Color(1, 1, 1, dim))
 			cx += _chip("%d TASKS" % TJ.job_of(o)["stations"].size(), cx, cy, Color(0.5, 0.8, 1.0) * Color(1, 1, 1, dim))
-			cx += _chip("%s" % ", ".join((o["social"] as Array).map(func(i): return String(SK.skill(String(i))["name"]))), cx, cy, Color(1.0, 0.8, 0.4) * Color(1, 1, 1, dim))
+			cx += _chip("%s" % (", ".join((o["social"] as Array).map(func(i): return String(SK.skill(String(i))["name"])))).left(22), cx, cy, Color(1.0, 0.8, 0.4) * Color(1, 1, 1, dim))
 		else:
 			_rtxt("%s  %d hostiles" % [MS.risk_text(rk).to_upper(), int(o.get("hostiles", 0))], r.end.x - 14, r.position.y + 77, 13, rcol * Color(1, 1, 1, dim))
 			cx += _chip(MS.layout_short(o), cx, cy, Color(0.5, 0.8, 1.0) * Color(1, 1, 1, dim))
@@ -1147,6 +1149,10 @@ func _terminal(W: float, H: float) -> void:
 		bits.append("%s %d%s" % [sd["name"], mine, "" if sd["live"] else " (not in play yet)"])
 	_txt("HELPS", Vector2(x, 396), 12, DIM)
 	_fit(", ".join(bits), Vector2(x + 62, 396), 13, Color(0.5, 1.0, 0.7), w - 62)
+	_tm_bottom(MS.SWITCHES, sw, used, foc, swsel, yen, portal_open)
+
+## the lower half of a terminal: the board's sliders, the new-batch button and the foot (the Labor Center and the Temp Agency have their own sets)
+func _tm_bottom(list: Array, sw: Array, used: Array, foc: int, swsel: int, yen: int, portal_open: bool) -> void:
 	# ---- the switches
 	var bot := Rect2(500, 424, 740, 226)
 	_tm_panel(bot, "BOARD SETTINGS  -  APPLY TO THE NEXT BATCH")
@@ -1161,7 +1167,7 @@ func _terminal(W: float, H: float) -> void:
 	else:
 		_txt("the posted contracts were made with these settings", Vector2(520, 462), 13, Color(0.45, 0.6, 0.7))
 	for si in 4:
-		var sd2: Dictionary = MS.SWITCHES[si]
+		var sd2: Dictionary = list[si]
 		var y: float = tm_sw_y(si)
 		var v: int = int(sw[si])
 		var rowr := Rect2(512, y - 22, 716, 33)
@@ -1186,7 +1192,7 @@ func _terminal(W: float, H: float) -> void:
 				draw_circle(Vector2(cxn, y - 6), 6.0, Color(0.06, 0.1, 0.16))
 				draw_arc(Vector2(cxn, y - 6), 6.0, 0.0, TAU, 16, Color(0.4, 0.65, 0.75), 1.5)
 		_txt("NEUTRAL", Vector2(TM_TRACK[1] - 40, y + 8), 10, Color(1.0, 0.8, 0.9) if v == 1 else Color(0.4, 0.55, 0.65), HORIZONTAL_ALIGNMENT_CENTER, 80.0)
-	var shown: Dictionary = MS.SWITCHES[swsel]
+	var shown: Dictionary = list[swsel]
 	var hv: int = int(sw[swsel])
 	_fit(String(shown["hint_a"] if hv == 0 else (shown["hint_b"] if hv == 2 else shown["hint_n"])), Vector2(526, 638), 13, Color(0.8, 0.9, 1.0), 690.0)
 	# ---- the foot
@@ -1208,10 +1214,12 @@ func _terminal_temp(o: Dictionary, _offers: Array, yen: int, portal_open: bool) 
 	var w: float = right.size.x - 44
 	_txt(String(o["name"]).to_upper(), Vector2(x, 140), 28, Color.WHITE)
 	_rtxt("¥%d" % int(o["reward"]), right.end.x - 22, 140, 32, GOLD)
-	_rtxt("LESS 10% A SLIP", right.end.x - 22, 160, 12, DIM)
+	_rtxt(String(TJ.FLAVOR_NAMES.get(String(o.get("flavor", "normal")), "Normal")).to_upper(), right.end.x - 22, 160, 13, {"urgent": Color(1.0, 0.5, 0.4), "detailed": Color(0.5, 0.9, 1.0)}.get(String(o.get("flavor", "normal")), DIM))
 	_fit(String(o["title"]), Vector2(x, 164), 18, CYAN, 420.0)
 	draw_multiline_string(font, Vector2(x, 192), String(o["brief"]), HORIZONTAL_ALIGNMENT_LEFT, w, 14, 3, Color(0.75, 0.86, 0.95))
-	var tiles: Array = [["REWARD", "¥%d" % int(o["reward"]), Color(0.95, 0.8, 0.25)], ["TASKS", "%d" % j["stations"].size(), Color(0.5, 0.8, 1.0)],
+	var fl: String = String(o.get("flavor", "normal"))
+	var t3: Array = ["TIME LIMIT", TJ.span_words(int(o["limit_min"])), Color(1.0, 0.5, 0.4)] if fl == "urgent" else (["QUALITY", "+10% a point", Color(0.5, 0.9, 1.0)] if fl == "detailed" else ["TIME LIMIT", "none", Color(0.5, 0.65, 0.75)])
+	var tiles: Array = [["REWARD", "¥%d" % int(o["reward"]), Color(0.95, 0.8, 0.25)], t3,
 		["SOCIAL", TJ.skill_names(o["social"]), Color(1.0, 0.8, 0.4)], ["LABOUR", TJ.skill_names(o["labour"]), Color(0.5, 1.0, 0.7)]]
 	for q in tiles.size():
 		var tr := Rect2(x + q * 140.0, 262, 130, 50)
@@ -1219,7 +1227,7 @@ func _terminal_temp(o: Dictionary, _offers: Array, yen: int, portal_open: bool) 
 		draw_rect(tr, Color(0.2, 0.4, 0.5), false, 1.0)
 		draw_rect(Rect2(tr.position.x, tr.position.y, 3, tr.size.y), tiles[q][2])
 		_txt(String(tiles[q][0]), Vector2(tr.position.x + 12, tr.position.y + 16), 11, DIM)
-		_fit(String(tiles[q][1]), Vector2(tr.position.x + 12, tr.position.y + 42), 15, tiles[q][2], 108.0)
+		_fit(String(tiles[q][1]), Vector2(tr.position.x + 12, tr.position.y + 42), 15, tiles[q][2], 108.0) if q < 2 else draw_multiline_string(font, Vector2(tr.position.x + 12, tr.position.y + 34), String(tiles[q][1]), HORIZONTAL_ALIGNMENT_LEFT, 112.0, 12, 2, tiles[q][2])
 	var ar: Rect2 = tm_accept_rect()
 	var can: bool = not portal_open and not (game != null and game.done_contracts.has(String(o["id"])))
 	draw_rect(ar, Color(0.45, 0.1, 0.3, 0.95) if can else Color(0.12, 0.14, 0.18, 0.95))
@@ -1236,16 +1244,4 @@ func _terminal_temp(o: Dictionary, _offers: Array, yen: int, portal_open: bool) 
 		bits.append("%s %d" % [SK.skill(String(sid))["name"], game.lvl(String(sid)) if game != null else 0])
 	_txt("YOURS", Vector2(x, 396), 12, DIM)
 	_fit(", ".join(bits), Vector2(x + 62, 396), 13, Color(0.5, 1.0, 0.7), w - 62)
-	var bot := Rect2(500, 424, 740, 226)
-	_tm_panel(bot, "THE WORK")
-	var lines := ["Take the job and a portal opens beside this terminal.  Step through to the company's floor.",
-		"Find each work station (the glowing machine tiles) and walk into it.  Every task is a skill check; a slip costs you time and 10% of the pay.",
-		"Finish every task, then leave by the exit portal and the agency credits your pay.  Nobody on the floor will fight you.",
-		"(Minigames for the slides, the warehouse, the research and the tax audit are planned: see PLAN.md.)"]
-	for q in lines.size():
-		draw_multiline_string(font, Vector2(520, 466 + q * 42), lines[q], HORIZONTAL_ALIGNMENT_LEFT, 700.0, 14, 2, Color(0.75, 0.86, 0.95))
-	var rr: Rect2 = tm_regen_rect()
-	var afford: bool = yen >= MS.NEW_BATCH_COST
-	draw_rect(rr, Color(0.07, 0.25, 0.3, 0.97) if afford else Color(0.14, 0.1, 0.12, 0.97))
-	draw_rect(rr, CYAN if afford else Color(0.5, 0.3, 0.3), false, 1.5)
-	_txt("NEW BATCH  ¥%d  [R]" % MS.NEW_BATCH_COST, Vector2(rr.position.x, rr.position.y + 22), 15, Color.WHITE if afford else Color(0.8, 0.5, 0.5), HORIZONTAL_ALIGNMENT_CENTER, rr.size.x)
+	_tm_bottom(TJ.SWITCHES, tm.get("sw", [1, 1, 1, 1]), tm.get("used", tm.get("sw", [1, 1, 1, 1])), int(tm.get("foc", 0)), int(tm.get("sw_sel", 0)), yen, portal_open)

@@ -187,8 +187,8 @@ The skills still matter: they set the time limit, the number of hints, and how f
    a par.  Manual raises the move allowance and adds one undo per level.
 3. *Research match* (`research_match`; Research).  Five documents side by side, each with one highlighted key phrase repeated in different words; match the phrases across all five and line them up
    (draw a line through each matching group).  Score = matched groups minus wrong links; Research reveals one candidate per level.
-4. *Fraud audit* (`fraud_audit`; Research + Deception/Streetwise, not used by the first five jobs).  A tax report of 12-20 line items with a small set of planted irregularities (round numbers, duplicate
-   invoices, totals that do not sum, a vendor that does not exist).  Flag the fraudulent lines before the timer ends; score = true flags minus false flags.  Deception lets you spot what a forger would do.
+4. *Fraud audit* (`fraud_audit`; Research + Diplomacy/Streetwise, not used by the first five jobs).  A tax report of 12-20 line items with a small set of planted irregularities (round numbers, duplicate
+   invoices, totals that do not sum, a vendor that does not exist).  Flag the fraudulent lines before the timer ends; score = true flags minus false flags.  Diplomacy lets you spot what a forger would do.
 
 Build order I would suggest: warehouse sort first (a pure grid game, reuses the movement code), then research match, slide builder, fraud audit.  Each one is a self-contained screen scene
 (`screen == "minigame"`) with `start(difficulty, skill_levels)` and a `score` signal, so the check in `TJ.use_station` only has to swap `nat` for the result.

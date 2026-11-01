@@ -12,6 +12,7 @@ const IMP = preload("res://src/implants.gd")
 const SK = preload("res://src/skills.gd")
 const CR = preload("res://src/creation.gd")
 const CLK = preload("res://src/clock.gd")
+const TJ = preload("res://src/temp_jobs.gd")
 const MS = preload("res://src/missions.gd")
 const BarterUIScript = preload("res://src/barter_ui.gd")
 const GearScript = preload("res://src/gear_ui.gd")
@@ -390,7 +391,10 @@ func _tm_set_switch(si: int, v: int) -> void:
 	b["sw"][si] = v
 	tm["sw_sel"] = si
 	_tm_sync()
-	tm["msg"] = "%s: %s.  Applies to the next batch (R, ¥%d)." % [String(MS.SWITCHES[si]["name"]).capitalize(), MS.switch_label(si, v), MS.NEW_BATCH_COST]
+	var is_temp: bool = not b["offers"].is_empty() and String(b["offers"][0].get("kind", "")) == "temp"
+	var list: Array = TJ.SWITCHES if is_temp else MS.SWITCHES
+	var lab: String = TJ.switch_label(si, v) if is_temp else MS.switch_label(si, v)
+	tm["msg"] = "%s: %s.  Applies to the next batch (R, ¥%d)." % [String(list[si]["name"]).capitalize(), lab, MS.NEW_BATCH_COST]
 	sfx.play("blip")
 
 func _tm_regen() -> void:
@@ -497,7 +501,7 @@ func _mission_transfer() -> void:
 	if entering:
 		if not world.enter_mission():
 			return
-	elif world.leave_mission("blast" if forced == "blast" else "").is_empty():
+	elif world.leave_mission(forced if forced in ["blast", "timeup"] else "").is_empty():
 		return
 	game = world.game
 	view.game = game
@@ -2205,6 +2209,10 @@ func _after_act() -> void:
 		clock_cell = game.clock_hit
 		game.clock_hit = -1
 		mode = "clock"
+	elif mode == "play" and game.station_hit >= 0:
+		menu = game.TJ.station_menu(game, game.station_hit)
+		game.station_hit = -1
+		mode = "talk"
 	elif mode == "play" and game.charger_hit >= 0:
 		menu = game.eco.charger_menu(game.charger_hit)
 		game.charger_hit = -1

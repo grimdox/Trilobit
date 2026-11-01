@@ -119,6 +119,7 @@ var power: float = -1.0
 var power_state: int = 0                       # 0 fine, 1 low (a quarter), 2 critical (a tenth), 3 dark: so each warning is said once
 var elev_hit: int = -1                         # an elevator the player just stepped into the call of: the front end shows the floor list (see elevator_floors)
 var clock_hit: int = -1                        # a station clock the player just used (the front end shows its readout and clears this)
+var station_hit: int = -1                      # a Temp Agency work station the player just walked into (the front end opens its menu)
 var charger_hit: int = -1                      # a charging post the player just used (the front end opens its menu and clears this)
 var energy: PackedInt32Array                   # kJ left in each person: -1 until it is first needed (then power.gd works it out from the clock); frozen when they die or are drained
 var boards: Dictionary = {}                    # each mission terminal's board, by cell: {day, gen, sw (switches now), used (switches that made the offers), offers}
@@ -3484,7 +3485,7 @@ func act_steal() -> bool:
 		say("There is no one next to you to rob.")
 		return false
 	var aware := astate[target] != UNAWARE and astate[target] != RETURNING
-	var chance: int = 46 + lvl("deception") * 7 + (12 if crouch else 0)
+	var chance: int = 46 + lvl("diplomacy") * 7 + (12 if crouch else 0)
 	if aware:
 		chance -= 40
 	if astate[target] == SURRENDERED:
@@ -3497,13 +3498,13 @@ func act_steal() -> bool:
 		yenn[target] = 0
 		yen += take
 		say("You lift ¥%d from %s without a sound." % [take, name_of(target)])
-		skill_up("deception", 4 if not aware else 6)
+		skill_up("diplomacy", 4 if not aware else 6)
 		if fac[target] == NAP:
 			_witness(sim.pos[target], 8, target)
 		end_turn()
 		return true
 	say("%s catches your hand!" % name_of(target))
-	skill_up("deception", 3)
+	skill_up("diplomacy", 3)
 	_alert(target)
 	end_turn()
 	return false
@@ -5835,6 +5836,12 @@ func _load_skills(d: Dictionary) -> void:
 	for k in d.get("attrs", {}):
 		if attrs.has(k):
 			attrs[k] = int(d["attrs"][k])
+	d = d.duplicate()
+	for key in ["skills", "xp"]:
+		if d.has(key) and (d[key] as Dictionary).has("deception"):       # Deception became Diplomacy
+			d[key] = (d[key] as Dictionary).duplicate()
+			d[key]["diplomacy"] = d[key]["deception"]
+			d[key].erase("deception")
 	for k in d.get("skills", {}):
 		if skills.has(k):
 			skills[k] = int(d["skills"][k])
@@ -6200,6 +6207,11 @@ func _site_facing() -> Vector2i:
 func _mission_roles() -> void:
 	for i in sim.n:
 		eco.role[i] = EC.NONE
+	if TJ.is_temp(mission["offer"]):
+		TJ.begin(self)
+		for k in mission.get("agents", {}):
+			if mission["agents"][k] == "coworker":
+				eco.role[int(k)] = EC.JOBMATE
 	var h: int = MS.agent_with_role(self, "hostage")
 	if h >= 0:
 		eco.role[h] = EC.HOSTAGE
@@ -6219,6 +6231,9 @@ func _restore_mission_state(saved: Dictionary) -> void:
 	if saved.has("st_done"):
 		mission["st_done"] = saved["st_done"]
 		mission["fails"] = int(saved.get("fails", 0))
+	for k2 in ["deadline", "mates", "best", "helped", "timeup"]:
+		if saved.has(k2):
+			mission[k2] = saved[k2]
 	if mission["freed"]:
 		var h: int = MS.agent_with_role(self, "hostage")
 		if h >= 0:
@@ -6227,7 +6242,7 @@ func _restore_mission_state(saved: Dictionary) -> void:
 ## ---- a terminal's board (missions.gd): kept per terminal, refreshed free once a day, regenerated for MS.NEW_BATCH_COST, regenerated free when all five are done
 func _board_make(term: int, day: int, gen: int, sw: Array) -> Dictionary:
 	var sd: int = world.seed_value if world != null else seed_value
-	var offers: Array = TJ.offers(sd, term, day, gen) if is_temp_terminal(term) else MS.offers(sd, term, day, gen, sw, pc_level)
+	var offers: Array = TJ.offers(sd, term, day, gen, sw) if is_temp_terminal(term) else MS.offers(sd, term, day, gen, sw, pc_level)
 	return {"day": day, "gen": gen, "sw": sw.duplicate(), "used": sw.duplicate(), "offers": offers}
 
 ## true if the mission terminal on a cell stands in a Temp Agency (its board posts the five temp jobs)
