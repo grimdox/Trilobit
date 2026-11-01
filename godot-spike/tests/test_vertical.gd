@@ -231,13 +231,7 @@ func run() -> Array:
 	g.sim.retier(g.pc)
 	g.end_turn()
 	check.call("delivering the parcel pays and clears the job", g.yen > y0 and g.eco.job.is_empty() and g.eco.jobs_done == 1)
-	g.eco.choose(g.eco.menu_for(fixer), 1)
-	check.call("a retrieval job places a data case", g.eco.job.get("kind", "") == "retrieval" and g.items_at.has(int(g.eco.job["cell"])))
-	var y1: int = g.yen
-	g.pc = g.eco.job["cell"]
-	g.sim.retier(g.pc)
-	g.act_pickup()
-	check.call("recovering the case pays", g.yen > y1 and g.eco.job.is_empty())
+	check.call("a fixer no longer offers retrievals", g.eco.menu_for(fixer)["options"].size() <= 2 and not g.eco.menu_for(fixer)["options"].any(func(o): return String(o["label"]).begins_with("Retrieval")))
 	# --- save / load
 	g.pc = g.eco.job.get("cell", S) if false else S
 	var head1: int = g.transit.head

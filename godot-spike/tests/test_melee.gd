@@ -68,8 +68,8 @@ func run() -> Array:
 			grades_ok = false
 	check.call("forged and masterwork grades are better than plain", grades_ok)
 	var kat: Dictionary = g.db.defs["trl_mel_katana"]["melee"]
-	check.call("they differ: katana hits harder than a tanto, a tanto stabs in the back harder, reach 2 for yari/naginata/bo/kusarigama",
-		kat["dmg"][1] > g.db.defs["trl_mel_tanto"]["melee"]["dmg"][1] and g.db.defs["trl_mel_tanto"]["melee"]["sneak"] > kat.get("sneak", 4)
+	check.call("they differ: katana hits harder than a tanto, reach 2 for yari/naginata/bo/kusarigama",
+		kat["dmg"][1] > g.db.defs["trl_mel_tanto"]["melee"]["dmg"][1]
 		and g.db.defs["trl_mel_yari"]["melee"]["reach"] == 2 and g.db.defs["trl_mel_naginata"]["melee"]["reach"] == 2 and g.db.defs["trl_mel_bo"]["melee"]["reach"] == 2 and g.db.defs["trl_mel_kusarigama"]["melee"]["reach"] == 2)
 
 	# ---- wielding and swapping
@@ -156,11 +156,11 @@ func run() -> Array:
 		if g.bleed[who] > 0:
 			break
 	var hb: int = g.hpn[who]
-	check.call("blades make people bleed", g.bleed[who] > 0)
+	check.call("blades no longer make people bleed", g.bleed[who] == 0)
 	g.wield = null
 	for _t in 3:
 		g.end_turn()
-	check.call("and the bleeding costs hit points over the next turns (%d -> %d)" % [hb, g.hpn[who]], g.hpn[who] <= hb - 2)
+	check.call("so nothing drains over the next turns (%d -> %d)" % [hb, g.hpn[who]], g.hpn[who] >= hb - 2)
 	# stun
 	g.wield = g._new_item("trl_mel_bo")
 	var stunned := 0
@@ -169,7 +169,7 @@ func run() -> Array:
 		g.melee(who)
 		if g.stun[who] > 0:
 			stunned += 1
-	check.call("a bo staff stuns sometimes (%d of 80)" % stunned, stunned >= 8 and stunned <= 45)
+	check.call("a bo staff no longer stuns (%d of 80)" % stunned, stunned == 0)
 	# stunned people do nothing
 	put.call(spot + 1)
 	g.stun[who] = 3
@@ -190,7 +190,7 @@ func run() -> Array:
 		if g.gunc[who] == 0:
 			disarmed = true
 			break
-	check.call("a jitte knocks guns out of hands (and drops the gun)", disarmed and g.items_at.has(spot + 1))
+	check.call("a jitte no longer knocks guns out of hands", not disarmed)
 	g.gunc[who] = 0
 
 	# ---- reach
@@ -247,7 +247,7 @@ func run() -> Array:
 		for _t in 6:
 			put.call(spot + 1)
 			g.melee(who)
-		check.call("a naginata's sweep hits the second enemy too (%d damage)" % (oh - g.hpn[other]), g.hpn[other] < oh)
+		check.call("a naginata no longer sweeps a second enemy (%d damage)" % (oh - g.hpn[other]), g.hpn[other] >= oh)
 	g.body.reset()      # the hunter above hit back; start the timing runs healthy
 	g.body.mend_to(1.0)
 	g.game_over = false

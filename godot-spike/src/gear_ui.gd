@@ -1162,11 +1162,9 @@ func _melee_lines(c: CanvasItem, it, x: float, y: float, maxw: float) -> float:
 	y = _kv(c, y, "Reach", "%d tile%s" % [int(m["reach"]), "" if int(m["reach"]) == 1 else "s"], x, maxw)
 	y = _kv(c, y, "Accuracy", "%+d" % int(m.get("acc", 0)), x, maxw)
 	var bits: Array = []
-	for k in ["fast", "parry", "stun", "sneak", "trip"]:
+	for k in ["fast"]:
 		if m.has(k):
 			bits.append("%s %s" % [k, str(m[k])])
-	if m.get("bleed", false):
-		bits.append("bleeds")
 	if m.get("slow", false):
 		bits.append("slow")
 	if not bits.is_empty():

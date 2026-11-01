@@ -1,7 +1,7 @@
 extends RefCounted
 ## The pressure systems and the people who deal with them.
 ##   (no debt: loans and debts arrive with the banking update)
-##   jobs:     fixers hand out couriers (carry a parcel to a flat or office, anywhere in the city, floors up) and retrievals
+##   jobs:     fixers hand out couriers (carry a parcel to a flat or office, anywhere in the city, floors up); retrievals (a data case from a roof or the sewers) were removed
 ##             (a data case left on a roof or down in the sewers); both pay by credstick on completion
 ##   vendors:  sell food, water, ammunition, a trauma patch and carrying gear
 ##   ripperdocs: two, one in the sewers (cheap, risky to reach) and one in a tower clinic (dear, safe); sticky, they never move
@@ -265,25 +265,6 @@ func _make_courier() -> Dictionary:
 	return {"kind": "courier", "cell": cell, "z": z, "where": "floor %d of %s" % [z, name],
 			"reward": 60 + 14 * z + dist / 4, "deadline": g.turn + int(dist * 1.5) + z * 6 + 90}
 
-func _make_retrieval() -> Dictionary:
-	var city = g.city
-	var spots: Array = []
-	for t in city.tower_info:
-		var roof: int = int(t["h"]) * g.s2 + ((int(t["y0"]) + int(t["y1"])) / 2 + 3) * g.size + (int(t["x0"]) + int(t["x1"])) / 2 + 3
-		if city.walkable(city.tiles[roof]) and int(t["h"]) >= 14:
-			spots.append(roof)
-	for c in city.lairs:
-		spots.append(c)
-	if spots.is_empty():
-		return {}
-	var cell: int = spots[g.rng.randi() % spots.size()]
-	var z: int = g.z_of(cell)
-	var where: String = ("a roof %d floors up" % z) if z > 0 else "the sewers"
-	g._put(cell, g._new_item("trl_datacase"))
-	var dist: int = absi(g.lx(cell) - g.lx(g.pc)) + absi(g.ly(cell) - g.ly(g.pc))
-	return {"kind": "retrieval", "cell": cell, "z": z, "where": "recover a data case from %s near (%d,%d)" % [where, g.lx(cell), g.ly(cell)],
-			"reward": 180 + 8 * absi(z) + dist / 3, "deadline": g.turn + int(dist * 2.0) + 240}
-
 # ------------------------------------------------------------------ talking
 ## the menu for talking to agent i: {title, text: [lines], options: [{label, op, arg}]}
 func menu_for(i: int) -> Dictionary:
@@ -378,7 +359,6 @@ func menu_for(i: int) -> Dictionary:
 			if job.is_empty():
 				m["text"] = ["\"I have work, if you can climb.\""]
 				m["options"].append({"label": "Courier run (a parcel to a flat or office)", "op": "job", "arg": "courier"})
-				m["options"].append({"label": "Retrieval (a data case from a roof or the sewers)", "op": "job", "arg": "retrieval"})
 			else:
 				m["text"] = ["\"Finish what you took first.\""]
 		_:
@@ -705,7 +685,7 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 			m["options"] = [{"label": "Leave", "op": "close", "arg": null}]
 			return m
 		"job":
-			var j: Dictionary = _make_courier() if o["arg"] == "courier" else _make_retrieval()
+			var j: Dictionary = _make_courier()
 			if j.is_empty():
 				g.say("The fixer shrugs.  Nothing today.")
 				return m

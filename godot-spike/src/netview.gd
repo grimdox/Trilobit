@@ -4,6 +4,7 @@ extends RefCounted
 ## Networked things a red dot in a green ring.  Neon blue, yellow and pink: Ghost in the Shell's data-ocean by way of Anarchy Online's grid.
 const CG = preload("res://src/citygen.gd")
 const NW = preload("res://src/network.gd")
+const TF = preload("res://src/termframe.gd")
 
 const BG_TOP := Color(0.006, 0.012, 0.045)
 const BG_BOT := Color(0.020, 0.012, 0.075)
@@ -26,19 +27,34 @@ static func _a(c: Color, a: float) -> Color:
 ## ---------------------------------------------------------------------------------------------------------------- the whole picture
 static func draw(v, g, ox: int, oy: int, T: int, S: float, vc: int) -> void:
 	var t: float = float(Time.get_ticks_msec()) / 1000.0
-	var W: float = float(v.cols * T)
-	var H: float = float(v.rows * T)
+	var W: float = 1542.0                                  # the part of the view the HUD leaves visible (the view itself is shifted by v.shift)
+	var H: float = 837.0
+	var home: Vector2 = -v.position
 	var size: int = g.size
 	var base: int = (vc / g.s2) * g.s2
 	var snap: Dictionary = g.net_snap
 	var R: int = int(snap["radius"])
 	var pcx: int = g.lx(snap["center"])
 	var pcy: int = g.ly(snap["center"])
+	# the monitor: dimmed game, margins of traces and rain, bezel; the scan map is drawn small inside its glass
+	var sx: float = W / 1280.0
+	var sy: float = H / 720.0
+	v.draw_set_transform(home, 0.0, Vector2(sx, sy))
+	TF.paint(v, "net")
+	var glass: Rect2 = TF.SCREEN
+	var k: float = minf(glass.size.x * sx / W, glass.size.y * sy / H)
+	var org: Vector2 = home + Vector2(glass.position.x * sx + (glass.size.x * sx - W * k) * 0.5, glass.position.y * sy + (glass.size.y * sy - H * k) * 0.5)
+	var flat := Transform2D(0.0, Vector2(k, k), 0.0, org)                       # the glass (its own corner is the origin)
+	var mapt := Transform2D(0.0, Vector2(k, k), 0.0, org + v.position * k)     # the map's cells, which the view has shifted to put the player in the middle
+	v.draw_set_transform_matrix(flat)
 	_background(v, W, H)
 	_rain(v, W, H, T, S, t)
+	v.draw_set_transform_matrix(mapt)
 	_cells(v, g, ox, oy, T, S, base, pcx, pcy, R, t)
 	_frames(v, g, ox, oy, T, S, pcx, pcy, R, t)
+	v.draw_set_transform_matrix(flat)
 	_scanlines(v, W, H, S, t)
+	v.draw_set_transform_matrix(mapt)
 	for p in snap["pings"]:
 		var c: int = NW.ping_cell(g, p)
 		if c < 0 or c / g.s2 != base / g.s2:
@@ -50,8 +66,10 @@ static func draw(v, g, ox: int, oy: int, T: int, S: float, vc: int) -> void:
 		var c2: int = NW.ping_cell(g, p)
 		if c2 >= 0 and c2 / g.s2 == base / g.s2 and NW.is_scanned(g, String(p["key"])):
 			_label(v, p, Vector2((g.lx(c2) - ox + 0.5) * T, (g.ly(c2) - oy + 0.5) * T), T, S)
+	v.draw_set_transform_matrix(flat)
 	_vignette(v, W, H)
 	_title(v, g, S, t)
+	v.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 ## ---------------------------------------------------------------------------------------------------------------- the void and the rain
 static func _background(v, W: float, H: float) -> void:

@@ -37,7 +37,7 @@ func _initialize() -> void:
 		for cm in d["cams"]:
 			cams += 1
 			var t: int = g.city.tiles[int(cm["cell"])]
-			if t != CG.TID["camera_fixed"] and t != CG.TID["camera_mobile"]:
+			if not CG.is_camera(t):
 				good = false
 			if g.sim.walk[int(cm["cell"])] != 1:
 				good = false

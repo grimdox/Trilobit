@@ -112,30 +112,6 @@ func run() -> Array:
 			break
 		g.end_turn()
 	check.call("hunters take the fight to the player (body %d)" % g.body.total(), g.body.total() <= 164)
-	# theft test on a dozen different civilians
-	var ok := 0
-	var tries := 0
-	var y0: int = g.yen
-	var snap: PackedInt32Array = g.sim.near_list.duplicate()
-	for k in snap.size():
-		var j: int = snap[k]
-		if g.sim.near[j] == 0 or g.fac[j] != 0 or g.sim.alive[j] == 0 or tries >= 12:
-			continue
-		var nb := -1
-		for d in g.SIZE_DIRS:
-			var c: int = g.sim.pos[j] + d[1] * g.size + d[0]
-			if g.sim.walk[c] == 1 and g.sim.at[c] == -1 and g.veh_at.g(c) == -1:
-				nb = c
-				break
-		if nb < 0:
-			continue
-		g.pc = nb
-		g.yenn[j] = 100
-		g.astate[j] = 0
-		tries += 1
-		if g.act_steal():
-			ok += 1
-	check.call("pickpocketing succeeds some of the time (%d of %d) and moves yen" % [ok, tries], tries >= 3 and ok >= 1 and ok < tries + 1 and g.yen > y0)
 	# shooting
 	g.wield = g._new_item("trl_gun_sp45")
 	var GunPlayCheck = preload("res://src/gunplay.gd")

@@ -33,6 +33,11 @@ var zoom_btn: Button
 var logbox: RichTextLabel
 var log_bg: ColorRect
 var panel: RichTextLabel
+const TermFrame = preload("res://src/termframe.gd")
+var term: Control
+var pbg_plain: StyleBox
+var pbg_clear: StyleBox
+var term_on: bool = false                     # the panel is currently dressed as a monitor screen
 var mode: String = "title"           # title, play, garage, inventory, talk, mods, jump, strike, shove, turn, look, waitmenu, movemenu, waiting, consume, pause, options, visuals, keys, saves, loads, implants, skills, map, loading
 var menu_sel: int = 0                 # the highlighted line of the wait menu
 var consume_list: Array = []          # what the consume menu offers (see Game.consumables)
@@ -233,6 +238,9 @@ func start_play(g) -> void:
 	bg.size = Vector2(1280, 162)
 	bg.z_index = -1
 	layer.add_child(bg)
+	term = TermFrame.new()                       # the monitor behind the Control Board and network menus
+	term.size = Vector2(1280, 720)
+	layer.add_child(term)
 	panel = RichTextLabel.new()
 	panel.position = Vector2(200, 60)
 	panel.size = Vector2(880, 520)
@@ -244,6 +252,8 @@ func start_play(g) -> void:
 	pbg.set_border_width_all(2)
 	pbg.border_color = Color(0.3, 0.9, 1)
 	panel.add_theme_stylebox_override("normal", pbg)
+	pbg_plain = pbg
+	pbg_clear = StyleBoxEmpty.new()
 	layer.add_child(panel)
 	# none of the play layer's controls may swallow a mouse click: the menus and the creation screen are drawn over it and read clicks themselves
 	# (a dead character's BEGIN and BACK buttons sat under the message bar and did nothing)
@@ -1044,13 +1054,31 @@ func _make_local_map() -> void:
 					img.set_pixel(dx + LOCAL_R, dy + LOCAL_R, col)
 	screen.local_tex = ImageTexture.create_from_image(img)
 	var gp: Vector2i = g.global_pos() if g != null and g.island != null else Vector2i(g.lx(g.pc), g.ly(g.pc))
-	screen.local_info = {"n": LOCAL_VIEW_R * 2 + 1, "full": n, "level": g.z_of(g.pc) if g != null else 0, "gx": gp.x, "gy": gp.y, "labels": local_labels(), "labor": nearest_labor_text()}
+	screen.local_info = {"n": LOCAL_VIEW_R * 2 + 1, "full": n, "level": g.z_of(g.pc) if g != null else 0, "gx": gp.x, "gy": gp.y, "labels": local_labels(), "near": nearest_picked_text()}
 
-## the Labor Centers are public knowledge: the map says where the nearest one is, seen or not
-func nearest_labor_text() -> String:
-	return nearest_business_text("labor_center", "Labor Center")
+## the building list picks a kind (a row of the legend); the line under the key says where the nearest one is, seen or not
+func nearest_picked_text() -> String:
+	var SG = preload("res://src/signage.gd")
+	var lg: Array = SG.legend()
+	if lg.is_empty():
+		return ""
+	if screen.legend_sel < 0 or screen.legend_sel >= lg.size():
+		screen.legend_sel = 0
+		for i in lg.size():
+			if String(lg[i][2]) == "Labor Center":
+				screen.legend_sel = i
+	var row: Array = lg[screen.legend_sel]
+	return nearest_business_text(row[3], String(row[2]))
 
-func nearest_business_text(btype: String, label: String) -> String:
+func map_select(i: int) -> void:
+	var n: int = preload("res://src/signage.gd").legend().size()
+	if n == 0:
+		return
+	screen.legend_sel = posmod(i, n)
+	screen.local_info["near"] = nearest_picked_text()
+	sfx.play("blip")
+
+func nearest_business_text(btypes: Array, label: String) -> String:
 	var g = game
 	if g == null or g.city == null or g.city.businesses.is_empty():
 		return ""
@@ -1059,7 +1087,7 @@ func nearest_business_text(btype: String, label: String) -> String:
 	var best: Dictionary = {}
 	var bd := 1 << 30
 	for b in g.city.businesses:
-		if b["type"] != btype:
+		if not (String(b["type"]) in btypes):
 			continue
 		var d: int = absi(int(b["door"].x) - px) + absi(int(b["door"].y) - py)
 		if d < bd:
@@ -1071,7 +1099,7 @@ func nearest_business_text(btype: String, label: String) -> String:
 	var dy: int = int(best["door"].y) - py
 	var ew: String = "" if dx == 0 else "%d %s" % [absi(dx), "east" if dx > 0 else "west"]
 	var ns: String = "" if dy == 0 else "%d %s" % [absi(dy), "south" if dy > 0 else "north"]
-	return "Nearest %s: %s (%s)." % [label, ", ".join([ew, ns].filter(func(t): return t != "")), String(best.get("name", label))]
+	return "Nearest %s is %s tiles away (%s)." % [label, ", ".join([ew, ns].filter(func(t): return t != "")), String(best.get("name", label))]
 
 ## names of buildings to print above their middle tile on the local map: [{dx, dy, text}] relative to the player.  None are named yet.
 func local_labels() -> Array:
@@ -1151,7 +1179,11 @@ func _tab_key(k: int) -> void:
 			sfx.play("blip")
 		elif screen.map_local:
 			var pd: Vector2i = dir_of(k)
-			if k == KEY_HOME or k == KEY_5 or k == KEY_KP_5:
+			if k == KEY_PAGEUP or k == KEY_BRACKETLEFT:
+				map_select(screen.legend_sel - 1)
+			elif k == KEY_PAGEDOWN or k == KEY_BRACKETRIGHT:
+				map_select(screen.legend_sel + 1)
+			elif k == KEY_HOME or k == KEY_5 or k == KEY_KP_5:
 				screen.map_pan = Vector2i.ZERO
 				sfx.play("blip")
 			elif k == KEY_UP:
@@ -1223,6 +1255,9 @@ func _tab_mouse(ev: InputEvent) -> void:
 	if mode == "map" and screen.map_local and (ev.button_index == MOUSE_BUTTON_WHEEL_UP or ev.button_index == MOUSE_BUTTON_WHEEL_DOWN):
 		return                                                  # (the wheel no longer scrolls the local map: click and drag)
 	if ev.button_index == MOUSE_BUTTON_LEFT:
+		if mode == "map" and screen.map_local and screen.legend_at(pos) >= 0:
+			map_select(screen.legend_at(pos))
+			return
 		if mode == "map" and screen.map_local and screen.tab_at(pos) == -9 and screen.map_button_at(pos) < 0:
 			map_drag = true
 			map_drag_acc = Vector2.ZERO
@@ -1425,7 +1460,34 @@ func _unhandled_input(ev: InputEvent) -> void:
 			sfx.play("blip")
 
 ## a wait under way: spend turns for a few milliseconds a frame so the screen stays alive and Esc can stop it
+## the Control Board and the network menus sit in a monitor: the panel is moved onto the glass and made see-through, the green or neon text goes on it
+func _sync_term() -> void:
+	if term == null or panel == null:
+		return
+	var want := ""
+	if panel.visible and mode == "talk" and menu is Dictionary and (menu.has("bd") or menu.has("nw")):
+		want = "board" if menu.has("bd") else ("popup" if not game.net_snap.is_empty() else "net")
+	term.style = want
+	if want == "":
+		if term_on:
+			term_on = false
+			panel.position = Vector2(200, 60)
+			panel.size = Vector2(880, 520)
+			panel.add_theme_stylebox_override("normal", pbg_plain)
+			panel.add_theme_color_override("default_color", Color.WHITE)
+		return
+	term_on = true
+	panel.add_theme_stylebox_override("normal", pbg_clear)
+	if want == "popup":
+		panel.position = Vector2(322, 172)
+		panel.size = Vector2(636, 376)
+	else:
+		panel.position = TermFrame.TEXT.position
+		panel.size = TermFrame.TEXT.size
+	panel.add_theme_color_override("default_color", Color(0.55, 1.0, 0.7) if want == "board" else Color(0.55, 0.95, 1.0))
+
 func _process(_delta: float) -> void:
+	_sync_term()
 	if game != null and not game.net_snap.is_empty() and view != null:
 		view.queue_redraw()                           # the network overlay is animated
 	if mode != "waiting" or game == null:
@@ -1746,7 +1808,7 @@ func show_nano() -> void:
 	var g = game
 	var t := ""
 	if nano_pending != "":
-		t = "[b]%s[/b]   choose a target in sight  (a-z chooses, Esc goes back)\n\n" % g.NANO.get_def(nano_pending)["name"]
+		t = "[b]%s[/b]   choose a networked target  (a-z chooses, Esc goes back)\n\n" % g.NANO.get_def(nano_pending)["name"]
 		for k in nano_pick.size():
 			var j: int = nano_pick[k]
 			t += "%s) %s   [color=#8899aa]%d tiles[/color]\n" % [char(97 + k) if k < 26 else "?", g.name_of(j), g.cheb(g.sim.pos[j], g.pc)]
@@ -1794,13 +1856,22 @@ func nano_key(k: int) -> void:
 			panel.visible = false
 			nano_pending = ""
 			nano_pick = []
-			game.act_nano_use(hid, tg)
+			game.act_nano_use(hid, tg, true)
 			refresh()
 		return
 	if ci >= 0 and ci < nano_list.size():
 		var e: Dictionary = nano_list[ci]
 		if e["id"] == "shock":
-			game.say("Shock runs through the network: Scan the Network (%s), then Network to the target." % "B")
+			var nets: Array = game.NW.linked_humans(game)
+			if nets.is_empty():
+				game.say("No Networked Targets Available.")
+			elif nets.size() == 1:
+				game.act_nano_use("shock", int(nets[0]), true)
+			else:
+				nano_pending = "shock"
+				nano_pick = nets
+				show_nano()
+				return
 			mode = "play"
 			panel.visible = false
 			refresh()
@@ -2200,7 +2271,6 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 				pick_list = near
 				mode = "pick"
 		"viewtarget": toggle_target_view()
-		"steal": g.act_steal()
 		"movement":
 			mode = "movemenu"
 			menu_sel = 3 if g.run_mode else g.stance

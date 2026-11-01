@@ -77,7 +77,7 @@ const SKILLS := [
 		"note": "Better prices from upscale shops and tower stalls (2% a level).", "disc": []},
 	{"id": "diplomacy", "name": "Diplomacy", "group": "Social", "attrs": ["cog"], "live": true,
 		"desc": "Persuasion and the careful use of the truth: interviews, introductions and talking people round.  Also covers lying and misdirection.",
-		"note": "Pickpocketing: +7% a level.", "disc": []},
+		"note": "Used for interviews and for talking people round on a Temp Agency job.", "disc": []},
 	{"id": "negotiation", "name": "Negotiation", "group": "Social", "attrs": ["end"], "live": true,
 		"desc": "Haggling, bartering and debating.  Higher skills can improve many social and financial rewards.",
 		"note": "1.5% off every purchase per level, and 2% more yen from jobs.", "disc": []},

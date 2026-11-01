@@ -26,7 +26,6 @@ const ACTIONS := [
 	["mtarget", "Manual target (pick anyone or a light with the cursor)", [KEY_SLASH]],
 	["interact", "Interact: doors, terminals, chargers, tables", [KEY_X]],
 	["viewtarget", "Switch the view to the target and back", [KEY_QUOTELEFT]],
-	["steal", "Pickpocket", [KEY_S]],
 	["siphon", "Draw power from a downed person", [KEY_MINUS]],
 	["movement", "Movement select: crawl, crouch, walk or run", [KEY_C]],
 	["strike", "Strike (then direction)", [KEY_W]],

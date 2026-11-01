@@ -73,6 +73,15 @@ static func is_linked(g, p: Dictionary) -> bool:
 		return false
 	return true
 
+## the people the player is networked to right now, nearest first (for the offensive nanohacks)
+static func linked_humans(g) -> Array:
+	var out: Array = []
+	for p in g.net_snap.get("pings", []):
+		if String(p["kind"]) == "human" and is_linked(g, p) and g.sim.alive[int(p["npc"])] == 1:
+			out.append(int(p["npc"]))
+	out.sort_custom(func(a, b): return g.cheb(g.sim.pos[a], g.pc) < g.cheb(g.sim.pos[b], g.pc))
+	return out
+
 static func ping_cell(g, p: Dictionary) -> int:
 	if String(p["kind"]) == "human":
 		var i: int = int(p["npc"])

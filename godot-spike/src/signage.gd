@@ -92,26 +92,25 @@ static func sym_of(type: String) -> Array:
 	return TYPE_SYM.get(type, OTHER_SYM.get(type, ["house", Color(0.8, 0.8, 0.8), type]))
 
 ## the distinct pictograms on the local map's key: [[glyph, colour, text]] in a fixed order
+## the Local Map's list of buildings: only the kinds that sell something (goods, food, drink, treatment, chrome, or jobs).  Each row is [glyph, colour, label, [business types]]
+## (types that share a label share a row), and a row can be chosen on the map to find the nearest building of its types.
+const LISTED := ["restaurant", "noodle_stall", "cafe", "bakery", "bar", "shady_bar",                                           # eating and drinking
+		"convenience", "grocery", "liquor_store", "clothing", "electronics", "office_supply", "bookshop", "martial_shop", "dojo", "pawn_shop", "bank", "gun_dealer", "armor_shop", "nano_shop", "hardware", "auto_garage", "car_dealer",     # shops
+		"pharmacy", "clinic", "implant_shop", "implant_body", "cyberdoc",                                                      # health and chrome
+		"labor_center", "temp_agency"]                                                                                          # jobs
+
 static func legend() -> Array:
-	var seen := {}
 	var out: Array = []
-	for t in ["restaurant", "noodle_stall", "cafe", "bakery", "bar", "shady_bar", "nightclub",                      # eating and drinking
-			"convenience", "liquor_store", "clothing", "electronics", "office_supply", "martial_shop", "pawn_shop", "gun_dealer", "armor_shop", "nano_shop", "hardware", "car_dealer",     # shops
-			"pharmacy", "clinic", "implant_shop", "implant_body", "cyberdoc",                                         # health and chrome
-			"police", "labor_center", "temp_agency", "post_depot", "church", "shrine",                                               # civic
-			"hotel", "gym", "salon", "laundromat", "arcade", "workshop"]:                                             # services and trades
+	var by_label := {}
+	for t in LISTED:
+		if not TYPE_SYM.has(t):
+			continue
 		var e: Array = TYPE_SYM[t]
-		if not seen.has(e[2]):
-			seen[e[2]] = true
-			out.append(e)
-	for t2 in TYPE_SYM:                                                                                             # (anything a new type adds that is not listed above still gets a row)
-		var e2: Array = TYPE_SYM[t2]
-		if not seen.has(e2[2]):
-			seen[e2[2]] = true
-			out.append(e2)
-	out.append(OTHER_SYM["house"])
-	out.append(OTHER_SYM["tower"])
-	out.append(OTHER_SYM["terminal"])
+		if by_label.has(e[2]):
+			(out[by_label[e[2]]][3] as Array).append(t)
+		else:
+			by_label[e[2]] = out.size()
+			out.append([e[0], e[1], e[2], [t]])
 	return out
 
 static func _pick_name(rng: RandomNumberGenerator, type: String, curated: String, used: Dictionary) -> String:
@@ -228,7 +227,10 @@ static func make(c, seed_v: int) -> Array:
 		_clip_run(c, sg)
 	return out
 
-## a sign hangs on plain wall only: it stops at a window, another door or the end of the wall, so it never covers a door or a window.  With no plain wall beside the door there is no sign.
+## a sign hangs on the wall beside its door and may cover windows, but it stops at another door or the end of the wall, so it never covers a door.  With no wall beside the door there is no sign.
+static func _signable(c, t: int) -> bool:
+	return t == 2 or t == 10 or t == c.TID["window_broken"]
+
 static func _clip_run(c, sg: Dictionary) -> void:
 	var size: int = c.size
 	var door: int = int(sg["door"])
@@ -242,13 +244,13 @@ static func _clip_run(c, sg: Dictionary) -> void:
 	for k in range(1, lim + 1):
 		var x: int = dx - along.x * k
 		var y: int = dy - along.y * k
-		if x < 0 or y < 0 or x >= size or y >= size or c.tiles[y * size + x] != 2:
+		if x < 0 or y < 0 or x >= size or y >= size or not _signable(c, c.tiles[y * size + x]):
 			break
 		ra += 1
 	for k in range(1, lim + 1):
 		var x2: int = dx + along.x * k
 		var y2: int = dy + along.y * k
-		if x2 < 0 or y2 < 0 or x2 >= size or y2 >= size or c.tiles[y2 * size + x2] != 2:
+		if x2 < 0 or y2 < 0 or x2 >= size or y2 >= size or not _signable(c, c.tiles[y2 * size + x2]):
 			break
 		rb += 1
 	sg["flip"] = ra > rb or (ra == rb and bool(sg["flip"]))

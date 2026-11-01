@@ -833,23 +833,49 @@ def control_board(theme, rng):
     return finish(t, theme, rng)
 
 
-def camera_fixed(theme, rng):
-    t = piece()
-    body(t, 22, 14, 41, 26, 6, 'body2', 'dark_steel', r=2)
-    body(t, 25, 26, 38, 52, 9, 'body2', 'steel', r=3)
-    t.emit(Tile.disk_mask(32, 46, 4), 'neon_red')
-    t.slab(Tile.disk_mask(32, 46, 6) & ~Tile.disk_mask(32, 46, 4), 'chrome', 11, profile='cyl')
-    return finish(t, theme, rng)
+def _turn_tile(t, side):
+    """a piece drawn against the NORTH wall, turned so its back is on the given side (n, e, s, w)"""
+    k = {'n': 0, 'e': -1, 's': 2, 'w': 1}[side]
+    if k == 0:
+        return t
+    for name in ('h', 'm', 'obj', 'd', 'glow', 'shadow', 'solid', 'noline', 'norim'):
+        setattr(t, name, np.ascontiguousarray(np.rot90(getattr(t, name), k)))
+    return t
 
 
-def camera_mobile(theme, rng):
+def _bolts(t, pts):
+    for x, y in pts:
+        t.slab(Tile.disk_mask(x, y, 1.8), 'chrome', 7, profile='cyl')
+
+
+def camera_fixed(theme, rng, side='n'):
+    """a box camera bolted to the wall: a plate on the wall, a short arm, then the housing with its sun visor, lens facing the room"""
     t = piece()
-    t.slab(Tile.disk_mask(32, 32, 20), 'dark_steel', 6, profile='dome')
-    t.slab(Tile.disk_mask(32, 32, 13), 'body2', 12, profile='dome')
-    t.emit(Tile.disk_mask(32, 22, 4), 'neon_red')
-    t.slab(Tile.disk_mask(32, 22, 6) & ~Tile.disk_mask(32, 22, 4), 'chrome', 13, profile='cyl')
-    t.mark(Tile.disk_mask(32, 32, 20) & ~Tile.disk_mask(32, 32, 18), 1)
-    return finish(t, theme, rng)
+    t.slab(Tile.box_mask(14, 0, 49, 6, 1.5), 'dark_steel', 5, bevel=1)             # wall plate
+    _bolts(t, ((19, 3), (44, 3)))
+    body(t, 28, 6, 35, 17, 8, 'body2', 'dark_steel', r=2)                           # arm
+    body(t, 21, 16, 42, 48, 11, 'body2', 'steel', r=3)                              # housing
+    t.slab(Tile.box_mask(19, 16, 44, 26, 2), 'dark_steel', 14, bevel=1)             # sun visor over the top
+    t.mark(Tile.box_mask(23, 29, 40, 29), 1)
+    t.mark(Tile.box_mask(23, 33, 40, 33), 1)
+    t.emit(Tile.disk_mask(32, 44, 3.2), 'neon_red')                                  # lens, with its status light
+    t.slab(Tile.disk_mask(32, 44, 5.5) & ~Tile.disk_mask(32, 44, 3.2), 'chrome', 13, profile='cyl')
+    return finish(_turn_tile(t, side), theme, rng)
+
+
+def camera_mobile(theme, rng, side='n'):
+    """a half-dome camera bolted to the wall: the dome is cut by the wall line"""
+    t = piece()
+    t.slab(Tile.box_mask(6, 0, 57, 4, 1.5), 'dark_steel', 5, bevel=1)               # wall plate
+    _bolts(t, ((10, 2), (53, 2)))
+    half = Tile.disk_mask(32, 2, 24, 26) & (YY >= 3)
+    t.slab(half, 'dark_steel', 8, profile='dome')                                    # outer shell
+    inner = Tile.disk_mask(32, 2, 15, 17) & (YY >= 3)
+    t.slab(inner, 'body2', 15, profile='dome')                                       # the turret
+    t.mark(half & ~Tile.disk_mask(32, 2, 22.5, 24.5), 1)
+    t.emit(Tile.disk_mask(32, 14, 3.4), 'neon_red')                                  # lens, with its status light
+    t.slab(Tile.disk_mask(32, 14, 5.8) & ~Tile.disk_mask(32, 14, 3.4), 'chrome', 16, profile='cyl')
+    return finish(_turn_tile(t, side), theme, rng)
 
 
 def portal(theme, rng):
@@ -939,6 +965,8 @@ BUILDERS = {
     'f_trl_neon_pink': lambda th, r: neon_sign(th, r, 'neon_pink'), 'f_trl_crane_leg': crane_leg, 'f_trl_crane_beam': crane_beam,
     'f_trl_crane_trolley': crane_trolley, 'f_trl_bollard': bollard, 'f_trl_terminal': terminal,
     'f_trl_control_board': control_board, 'f_trl_camera_fixed': camera_fixed, 'f_trl_camera_mobile': camera_mobile,
+    'f_trl_camera_fixed_e': lambda th, r: camera_fixed(th, r, 'e'), 'f_trl_camera_fixed_s': lambda th, r: camera_fixed(th, r, 's'), 'f_trl_camera_fixed_w': lambda th, r: camera_fixed(th, r, 'w'),
+    'f_trl_camera_mobile_e': lambda th, r: camera_mobile(th, r, 'e'), 'f_trl_camera_mobile_s': lambda th, r: camera_mobile(th, r, 's'), 'f_trl_camera_mobile_w': lambda th, r: camera_mobile(th, r, 'w'),
     'f_trl_portal': portal, 'f_trl_device': device, 'f_trl_charger': charger, 'f_trl_gunsmith_table': gunsmith_table,
     'f_trl_ev_nw': lambda th, r: ev_charger(th, r, 'nw'), 'f_trl_ev_ne': lambda th, r: ev_charger(th, r, 'ne'),
     'f_trl_ev_sw': lambda th, r: ev_charger(th, r, 'sw'), 'f_trl_ev_se': lambda th, r: ev_charger(th, r, 'se'),

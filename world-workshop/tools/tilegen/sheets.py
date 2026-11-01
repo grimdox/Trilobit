@@ -100,7 +100,7 @@ def block(spr, th, seed):
             g[y][x] = 'grass'
     furn = [k for k, (f, n, kind) in CA.CATALOG.items() if k.startswith('f_trl_') and kind == 'object' and k not in
             ('f_trl_crane_beam', 'f_trl_crane_trolley', 'f_trl_crane_leg', 'f_trl_ev_nw', 'f_trl_ev_ne', 'f_trl_ev_sw', 'f_trl_ev_se',
-             'f_trl_container', 'f_trl_spill_chem', 'f_trl_spill_oil', 'f_trl_puddle', 'f_trl_portal', 'f_trl_device', 'f_trl_control_board', 'f_trl_camera_fixed', 'f_trl_camera_mobile')]
+             'f_trl_container', 'f_trl_spill_chem', 'f_trl_spill_oil', 'f_trl_puddle', 'f_trl_portal', 'f_trl_device', 'f_trl_control_board', 'f_trl_camera_fixed', 'f_trl_camera_mobile') + tuple('f_trl_camera_%s_%s' % (k, d) for k in ('fixed', 'mobile') for d in 'esw')]
     img = Image.new('RGBA', (W * 64, H * 64), BG)
 
     def isw(x, y):

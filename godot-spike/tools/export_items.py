@@ -87,13 +87,14 @@ MELEE = [
     ("topor", "topor axe", RU, "axe", [12, 20], 1, 1600, 700, 100, {"bleed": True, "knock": 0.3, "verb": "chop"}),
     ("kastet", "kastet knuckles", RU, "blunt", [4, 8], 1, 250, 100, 40, {"fast": 0.45, "stun": 0.15, "verb": "punch"}),
 ]
+SHELVED = ("parry", "stun", "trip", "bleed", "knock", "disarm", "sweep", "brace", "sneak")
 GRADES = [("", "", 1.0, 0, 1.0, 0), ("_f", "forged ", 1.2, 4, 3.5, 0), ("_m", "masterwork ", 1.45, 8, 9.0, 5)]
 for mid, name, culture, klass, dmg, reach, wt, ln, price, extra in MELEE:
     for suf, pre, dm, acc, pm, parry_bonus in GRADES:
         m = {"dmg": [max(1, round(dmg[0] * dm)), max(1, round(dmg[1] * dm))], "reach": reach, "acc": acc}
         m.update(extra)
-        if "parry" in m or parry_bonus:
-            m["parry"] = m.get("parry", 0) + parry_bonus
+        for gone in SHELVED:                       # weapon effects are removed for now: weapons keep damage, reach, accuracy, speed and the verb
+            m.pop(gone, None)
         items.append({"id": "trl_mel_" + mid + suf, "name": pre + name, "desc": "A %s weapon (%s)." % (culture, klass), "weight_g": wt, "volume_ml": max(60, wt // 3),
                       "length_mm": ln, "price": int(price * pm), "tags": ["melee", klass, culture.lower()], "melee": m, "culture": culture})
 # containers: the pocket model

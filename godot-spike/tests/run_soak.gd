@@ -26,7 +26,7 @@ func _init() -> void:
 				7: g.act_vertical(-1)
 				8: g.act_pickup()
 				9: g.act_fire(true)
-				10: g.act_steal()
+				10: g.end_turn()
 				11:
 					var w: int = g.talk_target()
 					if w >= 0:

@@ -580,7 +580,7 @@ static func _face_for(c, cell: int, size: int, s2: int, rng: RandomNumberGenerat
 			if x < 0 or y < 0 or x >= size or y >= size:
 				break
 			var t: int = c.tiles[(cell / s2) * s2 + y * size + x]
-			if not (CG.is_floor(t) or t == CG.DOOR or t == CG.TID["camera_fixed"] or t == CG.TID["camera_mobile"]):
+			if not (CG.is_floor(t) or t == CG.DOOR or CG.is_camera(t)):
 				break
 			run += 1
 		var score: int = run * 4 + rng.randi_range(0, 3)
@@ -597,7 +597,12 @@ static func _put(c, cell: int, tile_name: String, size: int, s2: int, extra_tile
 static func _cam_entry(c, cell: int, size: int, s2: int, rng: RandomNumberGenerator, num: int, label: String) -> Dictionary:
 	var mobile: bool = rng.randi() % 2 == 0
 	var face: int = _face_for(c, cell, size, s2, rng)
-	_put(c, cell, "camera_mobile" if mobile else "camera_fixed", size, s2)
+	var side := "_s"                                   # drawn flush against the wall at its back: north (the plain tile), east, south or west
+	for sd in [["", -size], ["_e", 1], ["_s", size], ["_w", -1]]:
+		if c.tiles[cell + int(sd[1])] == CG.WALL:
+			side = String(sd[0])
+			break
+	_put(c, cell, ("camera_mobile" if mobile else "camera_fixed") + side, size, s2)
 	return {"cell": cell, "mobile": mobile, "face": face, "name": "Camera %02d - %s" % [num, label]}
 
 ## the board level a district rates: poor 1-2, middle 2-3, rich 4-5

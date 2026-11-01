@@ -67,8 +67,17 @@ const EXTRA_BASE := [
 ]
 ## street props that stand in the way and give cover (the rest of the street furniture is drawn over the ground by view.gd and does not block)
 const PROPS := [["street_tree", "f_trl_tree_street", 0, 1], ["street_bench", "f_trl_bench", 0, 1], ["bench_broken", "f_trl_bench_broken", 0, 1],
-	["control_board", "f_trl_control_board", 0, 0], ["camera_fixed", "f_trl_camera_fixed", 1, 0], ["camera_mobile", "f_trl_camera_mobile", 1, 0]]
+	["control_board", "f_trl_control_board", 0, 0], ["camera_fixed", "f_trl_camera_fixed", 1, 0], ["camera_mobile", "f_trl_camera_mobile", 1, 0],
+	["camera_fixed_e", "f_trl_camera_fixed_e", 1, 0], ["camera_fixed_s", "f_trl_camera_fixed_s", 1, 0], ["camera_fixed_w", "f_trl_camera_fixed_w", 1, 0],
+	["camera_mobile_e", "f_trl_camera_mobile_e", 1, 0], ["camera_mobile_s", "f_trl_camera_mobile_s", 1, 0], ["camera_mobile_w", "f_trl_camera_mobile_w", 1, 0]]
 static var EXTRA: Array = EXTRA_BASE + FG.NEW + PROPS
+## the camera tiles: drawn against the wall on the north (no suffix), east, south or west side of their cell
+static func is_camera(t: int) -> bool:
+	for n in ["camera_fixed", "camera_mobile"]:
+		for suf in ["", "_e", "_s", "_w"]:
+			if TID[n + suf] == t:
+				return true
+	return false
 const EXTRA0 := 33
 static var TID: Dictionary = _tids()
 static var TILE_SPRITE: Dictionary = _tile_sprites()

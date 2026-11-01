@@ -253,6 +253,13 @@ var bt = null                              # BarterUI (barter_ui.gd): the mercha
 var gear = null                            # GearUI (gear_ui.gd): the equipment and implants tabs
 var map_pan: Vector2i = Vector2i.ZERO         # how far the local map is scrolled (tiles) from centred on you
 var map_lpx: float = 4.0                # pixels per tile of the local map as last drawn (for click-and-drag panning)
+var legend_sel: int = -1                  # the picked row of the building list on the local map (-1: none yet)
+var legend_rects: Array = []              # where the rows were last drawn (for clicks)
+func legend_at(p: Vector2) -> int:
+	for i in legend_rects.size():
+		if (legend_rects[i] as Rect2).has_point(p):
+			return i
+	return -1
 var map_local: bool = true                # the map tab shows the local map instead of the island
 var local_tex: ImageTexture = null
 var local_info: Dictionary = {}            # {origin: Vector2i of the PC in the window, radius, level, labels: [{dx, dy, text}]}
@@ -438,17 +445,23 @@ func _local_map(W: float, H: float) -> void:
 	ky2 += 18.0
 	var lg: Array = SG.legend()
 	var per_col: int = (lg.size() + 2) / 3                              # three columns, filled down: the order of the list reads down each column
+	legend_rects = []
 	for gi in lg.size():
 		var e: Array = lg[gi]
 		var cx3: float = kx + (gi / per_col) * 206.0
 		var cy3: float = ky2 + (gi % per_col) * 30.0
+		var row := Rect2(cx3 - 4.0, cy3 - 14.0, 200.0, 28.0)
+		legend_rects.append(row)
+		var picked: bool = gi == legend_sel
+		if picked:
+			draw_rect(row, Color(0.2, 0.9, 1.0, 0.16))
+			draw_rect(row, Color(0.3, 0.95, 1.0, 0.9), false, 1.5)
 		SG.draw_glyph(self, String(e[0]), Vector2(cx3 + 8.0, cy3), 7.0, e[1])
-		_txt(String(e[2]), Vector2(cx3 + 24.0, cy3 + 6.0), 15, Color(0.85, 0.92, 1.0))
+		_txt(String(e[2]), Vector2(cx3 + 24.0, cy3 + 6.0), 15, Color.WHITE if picked else Color(0.85, 0.92, 1.0))
 	var lvl: int = int(local_info.get("level", 0))
-	if String(local_info.get("labor", "")) != "":
-		_txt(String(local_info["labor"]), Vector2(kx, H - 44.0), 17, SG.COL_CIVIC)
-	if String(local_info.get("temp", "")) != "":
-		_txt(String(local_info["temp"]), Vector2(kx, H - 66.0), 17, SG.COL_CIVIC)
+	if String(local_info.get("near", "")) != "":
+		_txt(String(local_info["near"]), Vector2(kx, H - 44.0), 17, SG.COL_CIVIC)
+		_txt("Click a building in the list (or PageUp / PageDown) to find the nearest of its kind.", Vector2(kx, H - 68.0), 14, Color(0.6, 0.75, 0.9))
 	_txt("You are at (%d, %d)%s.   Arrows or click-and-drag scroll the map (Shift: faster, Home: back to you), Tab switches to the island map, Esc closes." % [int(local_info.get("gx", 0)), int(local_info.get("gy", 0)), "" if lvl == 0 else ", level %d" % lvl], Vector2(24, H - 14.0), 15, Color(0.8, 0.9, 1.0))
 
 ## colours of the local map: [name, colour]

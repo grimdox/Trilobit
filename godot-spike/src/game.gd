@@ -3002,7 +3002,7 @@ func melee_stats() -> Dictionary:
 	if wield != null and usable and wield.def.has("gun"):
 		return {"dmg": [2, 4], "reach": 1, "acc": -5, "verb": "club"}
 	if wield == null and has_implant("mantis"):
-		return {"dmg": [8, 13], "reach": 1, "acc": 6, "verb": "slash", "fast": 0.3, "bleed": true, "mantis": true}
+		return {"dmg": [8, 13], "reach": 1, "acc": 6, "verb": "slash", "fast": 0.3, "mantis": true}
 	return {"dmg": [3, 6], "reach": 1, "acc": 0, "verb": "hit"}
 
 func melee_line() -> String:
@@ -3010,9 +3010,6 @@ func melee_line() -> String:
 	var bits: Array = ["dmg %d-%d" % [m["dmg"][0], m["dmg"][1]]]
 	if int(m["reach"]) > 1:
 		bits.append("reach %d" % m["reach"])
-	for k in (["parry", "stun", "sneak"] if specials_on else []):
-		if m.has(k):
-			bits.append("%s %s" % [k, str(m[k])])
 	if m.get("slow", false):
 		bits.append("slow")
 	return ", ".join(bits)
@@ -3492,43 +3489,6 @@ func _alarm(i: int) -> void:
 	if told > 0 and sees_cell(sim.pos[i]):
 		say("%s shouts an alarm!" % name_of(i))
 
-func act_steal() -> bool:
-	var target := -1
-	for d in SIZE_DIRS:
-		var nx: int = pc % size + d[0]
-		var ny: int = pc / size + d[1]
-		if in_bounds(nx, ny) and sim.at[ny * size + nx] >= 0:
-			target = sim.at[ny * size + nx]
-			break
-	if target < 0:
-		say("There is no one next to you to rob.")
-		return false
-	var aware := astate[target] != UNAWARE and astate[target] != RETURNING
-	var chance: int = 46 + lvl("diplomacy") * 7 + (12 if crouch else 0)
-	if aware:
-		chance -= 40
-	if astate[target] == SURRENDERED:
-		chance = 100
-	if yenn[target] == 0:
-		say("%s has nothing worth taking." % name_of(target))
-		return false
-	if rng.randi() % 100 < chance:
-		var take: int = yenn[target]
-		yenn[target] = 0
-		yen += take
-		say("You lift ¥%d from %s without a sound." % [take, name_of(target)])
-		skill_up("diplomacy", 4 if not aware else 6)
-		if fac[target] == NAP:
-			_witness(sim.pos[target], 8, target)
-		end_turn()
-		return true
-	say("%s catches your hand!" % name_of(target))
-	skill_up("diplomacy", 3)
-	_alert(target)
-	end_turn()
-	return false
-
-# ---------------------------------------------------------------- guns
 func pool_key(cal: String, kind: String) -> String:
 	return cal + "|" + kind
 

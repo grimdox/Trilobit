@@ -156,7 +156,7 @@ func run() -> Array:
 		g.melee(who)
 		if g.sim.pos[who] == open + 2:
 			knocked += 1
-	check.call("an ono's blows sometimes throw people back (%d of 80)" % knocked, knocked >= 12 and knocked <= 60)
+	check.call("an ono's blows no longer throw people back (%d of 80)" % knocked, knocked == 0)
 	# and off a roof
 	g.pc = edge - 1
 	g.sim.retier(g.pc)
@@ -169,7 +169,7 @@ func run() -> Array:
 		if g.sim.alive[who] == 0 or g.z_of(g.sim.pos[who]) < H:
 			off = true
 			break
-	check.call("a heavy blow at the railing can send them over", off)
+	check.call("a heavy blow at the railing no longer sends them over", not off)
 
 	# the per-unit hook: a flyer hovers instead of falling
 	g.wield = null
