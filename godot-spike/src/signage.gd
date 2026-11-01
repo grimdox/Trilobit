@@ -260,7 +260,7 @@ static func sign_width(font: Font, name: String, fsize: int, tile: float, kind: 
 	var w: float = font.get_string_size(name, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x
 	var extra: float = fsize * 1.9 + 12.0
 	var cap: float = tile * (7.0 if kind == "biz" else (5.0 if kind == "tower" else 4.2))
-	return minf(minf(w + extra, cap), maxf(tile * 0.9, float(run) * tile - 8.0))
+	return minf(minf(w + extra, cap), maxf(tile * 0.9, float(run) * tile - 8.0 - tile * 0.14))
 
 ## text colour for a given backing: dark on light, light on dark, so a sign is readable whatever its palette
 static func ink_for(back: Color) -> Color:
@@ -289,7 +289,7 @@ static func draw_sign(ci: CanvasItem, font: Font, s: Dictionary, cell_pos: Vecto
 	var centre: Vector2 = cell_pos + Vector2(tile, tile) * 0.5
 	var wall_dir: Vector2 = Vector2(0, 1) if side == 0 else (Vector2(0, -1) if side == 1 else (Vector2(1, 0) if side == 2 else Vector2(-1, 0)))     # street cell -> wall
 	var along: Vector2 = Vector2(1, 0) if side < 2 else Vector2(0, 1)
-	var origin: Vector2 = centre + wall_dir * tile + along * sgn * (tile * 0.5 + 3.0 + bw * 0.5)
+	var origin: Vector2 = centre + wall_dir * tile + along * sgn * (tile * 0.5 + tile * 0.14 + 3.0 + bw * 0.5)
 	origin = origin.round()                                            # whole pixels, so every glyph of the name lands on the same baseline
 	ci.draw_set_transform(origin, 0.0 if side < 2 else (-PI * 0.5 if side == 2 else PI * 0.5), Vector2.ONE)
 	var r := Rect2(-bw * 0.5, -bh * 0.5, bw, bh)

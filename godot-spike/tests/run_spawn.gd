@@ -42,10 +42,10 @@ func _initialize() -> void:
 				var side: int = int(sg["side"])
 				var d: int = -1 if bool(sg["flip"]) else 1
 				var step: int = d * (1 if side < 2 else g.size)
-				var a0: float = tile * 0.5 + 3.0
+				var a0: float = tile * 0.5 + tile * 0.14 + 3.0
 				for k in range(1, run + 3):
-					if tile * (k + 0.5) > a0 and tile * (k - 0.5) < a0 + bw and g.city.tiles[int(sg["door"]) + step * k] != 2:
+					if tile * (k + 0.5) > a0 and tile * (k - 0.5) < a0 + bw and not (g.city.tiles[int(sg["door"]) + step * k] in [2, 10]):
 						bad += 1
-			check("no sign covers a window or door (%d signs)" % g.city.signs.size(), bad == 0)
+			check("no sign covers a door (windows are fine) (%d signs)" % g.city.signs.size(), bad == 0)
 	print("SPAWN %d/%d" % [ok, n])
 	quit(0 if ok == n else 1)

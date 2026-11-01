@@ -282,8 +282,6 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1), ms
 	_shut_doors()
 	if mission.is_empty():
 		_add_windows()
-		for sgn in city.signs:                           # the windows are cut after the signs are planned: a sign stops at a window as it does at a door
-			preload("res://src/signage.gd")._clip_run(city, sgn)
 	sim = SIM.new()
 	sim.perception_standin = false
 	sim.setup(city, n_people, seed_value ^ 0x5eed)
