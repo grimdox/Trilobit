@@ -18,9 +18,11 @@ METAL, POLY, SYNTH = 14, 15, 16                        # chrome, graphite polyme
 GLOW, GLOW2 = 17, 18                                   # implant light (cyan family), secondary (amber family)
 UNDER = 19                                             # underwear
 LENS = 20                                              # optics glass
+WHEAD, WTRIM = 21, 22                                  # worn clothes: hats / hat bands, eyewear frames, prints and trims
 NAMES = {NONE: 'none', INK: 'ink', SKIN: 'skin', LIP: 'lip', HAIR: 'hair', SCLERA: 'sclera', IRIS: 'iris', DARK: 'dark',
          CLOTH1: 'cloth1', CLOTH2: 'cloth2', CLOTH3: 'cloth3', CLOTH4: 'cloth4', LEATHER: 'leather', LEATHER2: 'leather2',
-         METAL: 'metal', POLY: 'poly', SYNTH: 'synth', GLOW: 'glow', GLOW2: 'glow2', UNDER: 'under', LENS: 'lens'}
+         METAL: 'metal', POLY: 'poly', SYNTH: 'synth', GLOW: 'glow', GLOW2: 'glow2', UNDER: 'under', LENS: 'lens',
+         WHEAD: 'whead', WTRIM: 'wtrim'}
 ROWS = 32
 SHADES = 8
 
@@ -31,6 +33,7 @@ LIGHT = {
     CLOTH3: dict(gloss=0.0, rim=0.8, ao=1.0), CLOTH4: dict(gloss=0.15, rim=0.8, ao=1.0), LEATHER: dict(gloss=0.45, rim=0.9, ao=1.0),
     LEATHER2: dict(gloss=0.4, rim=0.9, ao=1.0), METAL: dict(gloss=1.0, rim=1.0, ao=0.8), POLY: dict(gloss=0.6, rim=1.0, ao=0.9),
     SYNTH: dict(gloss=0.7, rim=1.0, ao=0.9), UNDER: dict(gloss=0.0, rim=0.6, ao=1.0), LENS: dict(gloss=1.0, rim=0.0, ao=0.0),
+    WHEAD: dict(gloss=0.1, rim=0.9, ao=1.0), WTRIM: dict(gloss=0.6, rim=0.9, ao=0.9),
 }
 
 
@@ -150,6 +153,10 @@ CLOTH_PRESETS = {     # restrained city colours: olive drab, gunmetal, slate, in
     'black': '#24262c', 'gunmetal': '#3c4450', 'slate': '#56606a', 'ink navy': '#27304a', 'olive': '#4f5638', 'drab': '#6a6448',
     'oxblood': '#5a2830', 'bone': '#b9b2a0', 'teal': '#2f5a5e', 'rust': '#7a4a2e', 'khaki': '#8a7e5e', 'white': '#c8cdd2',
     'police blue': '#2c3e5e', 'red coat': '#7a2a2a',
+    # worn clothes: denim, leathers, silks and street colours, still restrained; a few loud ones for prints and trims
+    'denim': '#2e3d5a', 'acid denim': '#566a88', 'brown leather': '#47302a', 'charcoal': '#2a2c33', 'pinstripe': '#384052',
+    'cream': '#c4baa0', 'camel': '#8a6a46', 'crimson silk': '#6a1e2e', 'indigo silk': '#25285a', 'hazard': '#b08a2a',
+    'magenta': '#9a2e78', 'acid green': '#6e8a2a', 'cyan print': '#2e8a9a', 'gold': '#9a7c3e', 'silver': '#8e98a4',
 }
 METAL_PRESETS = {'chrome': '#8e98a4', 'gunmetal': '#5a626e', 'brass': '#9a7c3e', 'black chrome': '#3a3e46'}
 GLOW_PRESETS = {'cyan': '#3fd8f0', 'teal': '#36e0b4', 'amber': '#ffb54a', 'violet': '#a77cff', 'white': '#dff4ff'}
@@ -177,6 +184,8 @@ def default_palette():
     pal[GLOW2] = glow_ramp(GLOW_PRESETS['amber'])
     pal[UNDER] = ramp('#3a3d46', contrast=0.9)
     pal[LENS] = ['#08121a', '#0d2230', '#123448', '#1a4a62', '#2a6a86', '#5ab0cc', '#7fe3ee', '#ffffff']
+    pal[WHEAD] = ramp(CLOTH_PRESETS['charcoal'])
+    pal[WTRIM] = ramp(CLOTH_PRESETS['gold'], contrast=1.2, spec='#ffffff')
     return pal
 
 
@@ -189,7 +198,7 @@ def set_skin(pal, mid, contrast=1.0):
 # the canonical spec -> palette mapping (the runtime's DollPalette is a line-by-line port; tests compare them) ----------
 DEFAULT_COLOURS = {'skin': 'tan', 'hair': 'black', 'eyes': 'brown', 'cloth1': 'gunmetal', 'cloth2': 'olive', 'cloth3': 'black', 'cloth4': 'teal',
                    'leather': '#2e2a2a', 'leather2': '#3a302a', 'metal': 'chrome', 'poly': '#3a3f48', 'synth': 'pearl', 'glow': 'cyan',
-                   'glow2': 'amber', 'under': '#3a3d46'}
+                   'glow2': 'amber', 'under': '#3a3d46', 'whead': 'charcoal', 'wtrim': 'gold'}
 
 
 def _pick(name, table):
@@ -218,4 +227,6 @@ def palette_for(colours):
     pal[GLOW] = glow_ramp(_pick(c['glow'], GLOW_PRESETS))
     pal[GLOW2] = glow_ramp(_pick(c['glow2'], GLOW_PRESETS))
     pal[UNDER] = ramp(_pick(c['under'], CLOTH_PRESETS), contrast=0.9)
+    pal[WHEAD] = ramp(_pick(c['whead'], CLOTH_PRESETS))
+    pal[WTRIM] = ramp(_pick(c['wtrim'], CLOTH_PRESETS), contrast=1.2, spec='#ffffff')
     return pal

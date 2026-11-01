@@ -35,7 +35,11 @@ const CATEGORY := {"under": "under", "bodysuit": "base", "tank": "base", "tee": 
 	"vest": "armor:torso", "vest_heavy": "armor:torso", "vest_corp": "armor:torso", "riot": "armor:torso", "bracers": "armor:arms",
 	"bracers_heavy": "armor:arms", "greaves": "armor:legs", "greaves_heavy": "armor:legs", "kneepads": "armor:legs",
 	"harness": "straps", "sling": "straps", "holster": "straps", "backpack": "straps",
-	"gloves": "hands", "helmet_ball": "head", "helm_tac": "head", "visor": "head", "balaclava": "head", "facemask": "head", "hood_up": "head"}
+	"gloves": "hands", "helmet_ball": "head", "helm_tac": "head", "visor": "head", "balaclava": "head", "facemask": "head", "hood_up": "head",
+	# the clothes the game's shops sell
+	"tee_print": "base", "oxford": "base", "jeans": "legs", "trousers": "legs", "hoodie_street": "outer", "leather_jacket": "outer",
+	"blazer": "outer", "suit_armored": "outer", "kimono": "outer", "tie": "straps", "cap": "head", "fedora": "head", "beret": "head",
+	"shades": "eyes", "glasses": "eyes", "gloves_thin": "hands"}
 # a bodysuit already covers the legs
 const COVERS_LEGS := ["bodysuit", "overalls"]
 
@@ -51,8 +55,9 @@ const ARCH := {
 		"items": ["trl_gun_vk74", "trl_gun_ha5", "trl_gun_sp45", "trl_gun_zp9", "trl_gun_hx9", "trl_gun_sa14"], "item_p": 0.8,
 		"metal": ["chrome", "gunmetal", "black chrome"], "glow": ["cyan", "teal", "amber"]},
 	"netrunner": {"bodies": {"m_s": 3, "f_s": 3, "f_m": 2, "m_m": 1},
-		"wear": [[1.0, ["tank", "tee", "turtleneck"]], [1.0, ["leggings", "cargo", "shorts"]], [1.0, ["sneakers", "boots"]],
-			[0.6, ["hoodie", "bomber", "poncho"]], [0.25, ["backpack", "sling"]], [0.15, ["facemask"]]],
+		"wear": [[1.0, ["tank", "tee", "turtleneck", "tee_print"]], [1.0, ["leggings", "cargo", "shorts", "jeans"]], [1.0, ["sneakers", "boots"]],
+			[0.6, ["hoodie", "bomber", "poncho", "hoodie_street", "leather_jacket"]], [0.25, ["backpack", "sling"]], [0.15, ["facemask", "cap"]],
+			[0.3, ["shades", "glasses"]]],
 		"implants": [1, 3, ["cortex", "neural_plate", "antenna", "spine", "optic_r", "optic_l", "smartlink", "jaw"]],
 		"cloth": ["black", "gunmetal", "slate", "ink navy", "teal", "bone"], "accent": ["teal", "drab", "bone", "rust"],
 		"hair": ["undercut", "mohawk", "pixie", "shag", "bob", "buzz", "topknot", "long"], "dyed": 0.55,
@@ -75,23 +80,26 @@ const ARCH := {
 		"items": ["trl_kit_repair", "trl_medkit", "trl_gun_se9"], "item_p": 0.3,
 		"metal": ["chrome", "black chrome"], "glow": ["cyan", "white", "violet"]},
 	"corporate": {"bodies": {"m_m": 3, "f_m": 3, "m_s": 2, "f_s": 2, "f_l": 1, "m_l": 1},
-		"wear": [[1.0, ["shirt", "turtleneck"]], [1.0, ["slacks", "skirt"]], [1.0, ["boots", "sneakers"]], [0.8, ["suit_jacket", "trench", "labcoat"]]],
+		"wear": [[1.0, ["shirt", "turtleneck", "oxford"]], [1.0, ["slacks", "skirt", "trousers"]], [1.0, ["boots", "sneakers"]],
+			[0.8, ["suit_jacket", "trench", "labcoat", "blazer", "suit_armored", "kimono"]], [0.35, ["tie"]], [0.3, ["glasses", "shades"]],
+			[0.12, ["fedora"]], [0.15, ["gloves_thin"]]],
 		"implants": [0, 2, ["cortex", "optic_r", "neural_plate", "smartlink"]],
 		"cloth": ["gunmetal", "slate", "ink navy", "black", "white", "bone", "khaki"], "accent": ["slate", "teal", "bone"],
 		"hair": ["slick", "bob", "bun", "crop", "ponytail", "pixie"], "dyed": 0.08,
 		"items": ["trl_gun_fp7", "trl_medkit"], "item_p": 0.2,
 		"metal": ["chrome", "brass"], "glow": ["white", "cyan"]},
 	"street": {"bodies": {"m_m": 3, "m_s": 2, "f_m": 2, "f_s": 2, "m_l": 2, "f_l": 1}, "hostile": true,
-		"wear": [[1.0, ["tee", "tank", "shirt"]], [1.0, ["cargo", "slacks", "shorts", "leggings"]], [1.0, ["boots", "sneakers"]],
-			[0.75, ["bomber", "hoodie", "trench"]], [0.25, ["vest", "bracers"]], [0.2, ["balaclava", "facemask"]], [0.2, ["holster", "harness"]]],
+		"wear": [[1.0, ["tee", "tank", "shirt", "tee_print"]], [1.0, ["cargo", "slacks", "shorts", "leggings", "jeans"]], [1.0, ["boots", "sneakers"]],
+			[0.75, ["bomber", "hoodie", "trench", "leather_jacket", "hoodie_street"]], [0.25, ["shades"]], [0.15, ["cap", "beret"]], [0.25, ["vest", "bracers"]], [0.2, ["balaclava", "facemask"]], [0.2, ["holster", "harness"]]],
 		"implants": [0, 2, ["mantis", "cyberarm_r", "jaw", "optic_r", "knee_actuator", "antenna"]],
 		"cloth": ["black", "red coat", "oxblood", "drab", "olive", "rust", "gunmetal"], "accent": ["black", "bone", "rust"],
 		"hair": ["undercut", "mohawk", "buzz", "shag", "crop", "ponytail", "braid", "slick"], "dyed": 0.3,
 		"items": ["trl_mel_finka", "trl_mel_kastet", "trl_mel_topor", "trl_mel_kinzhal", "trl_gun_vr38", "trl_gun_zp19", "trl_mel_tonfa"],
 		"item_p": 0.75, "metal": ["chrome", "gunmetal", "brass"], "glow": ["amber", "cyan", "violet"]},
 	"resident": {"bodies": {"m_m": 3, "f_m": 3, "m_s": 2, "f_s": 2, "m_l": 1, "f_l": 1},
-		"wear": [[1.0, ["tee", "shirt", "turtleneck", "tank"]], [1.0, ["slacks", "cargo", "shorts", "skirt", "leggings"]],
-			[1.0, ["sneakers", "boots"]], [0.6, ["bomber", "hoodie", "trench", "apron", "overalls", "labcoat"]], [0.15, ["backpack"]]],
+		"wear": [[1.0, ["tee", "shirt", "turtleneck", "tank", "tee_print", "oxford"]], [1.0, ["slacks", "cargo", "shorts", "skirt", "leggings", "jeans", "trousers"]],
+			[1.0, ["sneakers", "boots"]], [0.6, ["bomber", "hoodie", "trench", "apron", "overalls", "labcoat", "hoodie_street", "blazer", "kimono", "leather_jacket"]],
+			[0.15, ["backpack"]], [0.2, ["cap", "beret", "fedora"]], [0.2, ["glasses", "shades"]]],
 		"implants": [0, 1, ["optic_r", "cortex", "smartlink", "cyberarm_r", "cyberleg_r"]],
 		"cloth": ["slate", "olive", "gunmetal", "ink navy", "drab", "teal", "bone", "khaki", "rust", "oxblood", "white"],
 		"accent": ["bone", "teal", "slate", "drab"],
@@ -169,6 +177,8 @@ func generate(seed_value: int, archetype := ""):
 	c["cloth4"] = acc[rng.randi_range(0, acc.size() - 1)]
 	c["leather"] = ["black", "#2e2a2a", "#3a302a", "gunmetal"][rng.randi_range(0, 3)]
 	c["leather2"] = ["black", "#3a302a", "#2e2a2a"][rng.randi_range(0, 2)]
+	c["whead"] = fam[rng.randi_range(0, fam.size() - 1)]
+	c["wtrim"] = ["gold", "silver", "black", "gunmetal"][rng.randi_range(0, 3)]
 	var metals: Array = A["metal"]
 	c["metal"] = metals[rng.randi_range(0, metals.size() - 1)]
 	var glows: Array = A["glow"]

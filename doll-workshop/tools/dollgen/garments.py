@@ -18,6 +18,12 @@ Part types and their options (all lengths in sprite pixels at LOD 64):
   hood     mat, t, up (bool)
   helmet   mat, t, visor (material or None), brim (bool)
   mask     mat, cover: lower|full
+  print    mat, shape: ring|bars|slash, t (on the chest of a shirt)       a graphic or logo, never letters
+  tie      mat, w                                                        a necktie down the shirt front
+  cap      mat, t, brim (material)                                       a peaked cap
+  hat      mat, t, brim_w, band (material)                               a brimmed felt hat
+  beret    mat, t, tilt                                                  a soft beret tipped to one side
+  glasses  frame (material), lens (material), style: aviator|rect         eyewear
 Layers: torso, legs, boots, skirt, collar, belt, plates, pockets, straps on the body; sleeves and arm plates on the
 near / far arm; gloves on the hands.  `level` orders garments inside each layer group (0 underwear ... 6 harness).
 """
@@ -31,7 +37,7 @@ from anatomy import _bone_axes, SIDE, arm_layer
 
 MAT = {'cloth1': M.CLOTH1, 'cloth2': M.CLOTH2, 'cloth3': M.CLOTH3, 'cloth4': M.CLOTH4, 'leather': M.LEATHER, 'leather2': M.LEATHER2,
        'metal': M.METAL, 'poly': M.POLY, 'synth': M.SYNTH, 'under': M.UNDER, 'glow': M.GLOW, 'glow2': M.GLOW2, 'dark': M.DARK,
-       'lens': M.LENS}
+       'lens': M.LENS, 'whead': M.WHEAD, 'wtrim': M.WTRIM}
 
 
 class F:
@@ -227,6 +233,11 @@ def part_legs(sc, f, gname, o):
             _limb_cut(sc, gs, K, A, 0.12)
         else:
             _limb_cut(sc, gs, K, A, 0.93)
+            if o.get('cuff'):
+                # a turned-up hem: a band a little proud of the leg just above the cut
+                gc = sc.group('%s_cuff_%s' % (gname, s), 0.0)
+                r = b['cf'][1] + t + lo * 1.1 + 0.4
+                sc.cone(K + (A - K) * 0.8, K + (A - K) * 0.92, r, r, gc, MAT[o['cuff']], 'body', 'cuff')
     _hem_top = {'waist': b['waist'] - 0.2, 'hip': b['pelvis'] + 1.2}[o.get('top', 'waist')]
     sc.plane(f.PP(0, _hem_top, 0), f.Rh @ v(0, 1, 0), g, op=INTERSECT, k=0.3)
     return g
@@ -408,6 +419,10 @@ def part_pocket(sc, f, gname, o):
     mat = MAT[o.get('mat', 'cloth3')]
     at = o['at']
     g = sc.group(gname + '_' + at, 0.3)
+    if at == 'belly':
+        ab = b['abd']
+        sc.box(f.CP(0, b['waist'] - 0.6, ab[2] + 0.9 + o.get('t', 0.65)), (ab[0] * 0.62, 1.7, 0.55), f.chest_axes(), 0.5, g, mat, 'body', 'pouch')
+        return
     if at.startswith('thigh'):
         s = at[-1]
         sg = SIDE[s]
@@ -490,9 +505,133 @@ def part_mask(sc, f, gname, o):
         sc.box(f.HP(0, 0.45, rz * 0.9), (rx * 0.78, 0.85, 1.6), ha, 0.4, g, mat, 'body', 'eyeslot', op=SUBTRACT, k=0.2)
 
 
+def _front_z(f, y_rel_chest, t):
+    """how far forward the shirt front is at a height on the chest (above it the bust if any)"""
+    b = f.b
+    z = b['rib'][2] + t + 0.35
+    if b.fem:
+        z += 1.5 * b['bust'] * max(0.0, 1.0 - abs(y_rel_chest) / 3.5)
+    return z
+
+
+def part_print(sc, f, gname, o):
+    """a graphic on the chest: shapes and colour only"""
+    b = f.b
+    mat = MAT[o.get('mat', 'cloth4')]
+    t = o.get('t', 0.3)
+    g = sc.group(gname, 0.0)
+    ca = f.chest_axes()
+    y = b['chest'] - 0.6
+    z = _front_z(f, -0.6, t) + 0.05
+    shape = o.get('shape', 'ring')
+    if shape == 'ring':
+        sc.ellipsoid(f.CP(0, y, z), (2.3, 2.3, 0.35), ca, g, mat, 'body', 'print')
+        sc.ellipsoid(f.CP(0, y, z), (1.3, 1.3, 0.6), ca, g, mat, 'body', 'hole', op=SUBTRACT, k=0.1)
+        sc.box(f.CP(0, y, z), (2.8, 0.32, 0.36), ca, 0.1, g, mat, 'body', 'bar')
+    elif shape == 'bars':
+        for i, dy in enumerate((1.2, 0.0, -1.2)):
+            sc.box(f.CP(-0.3 + i * 0.3, y + dy, z), (2.4 - i * 0.5, 0.36, 0.36), ca, 0.1, g, mat, 'body', 'bar%d' % i)
+    else:
+        sc.box(f.CP(0, y, z), (0.45, 2.6, 0.36), np.stack([f.Rs @ norm(v(1, 0.6, 0)), f.Rs @ norm(v(-0.6, 1, 0)), f.Rs @ v(0, 0, 1)]),
+               0.1, g, mat, 'body', 'slash')
+        sc.ellipsoid(f.CP(1.3, y + 1.3, z), (0.7, 0.7, 0.35), ca, g, mat, 'body', 'dot')
+
+
+def part_tie(sc, f, gname, o):
+    b = f.b
+    mat = MAT[o.get('mat', 'cloth4')]
+    w = o.get('w', 0.62)
+    g = sc.group(gname, 0.0)
+    ca = f.chest_axes()
+    top = b['neck'] - 1.5
+    knot = f.CP(0, top, _front_z(f, top - b['chest'], 0.3) - 0.25)
+    sc.ellipsoid(knot, (0.75, 0.62, 0.55), ca, g, mat, 'body', 'knot')
+    yb = b['waist'] + 0.6
+    tip = f.CP(0, yb, b['abd'][2] + 0.75)
+    mid = f.CP(0, b['chest'] - 0.8, _front_z(f, -0.8, 0.3) + 0.05)
+    sc.cone(knot, mid, w * 0.7, w, g, mat, 'body', 'blade', k=0.3)
+    sc.cone(mid, tip, w, w * 1.15, g, mat, 'body', 'blade2', k=0.3)
+
+
+def part_cap(sc, f, gname, o):
+    b = f.b
+    mat = MAT[o.get('mat', 'whead')]
+    t = o.get('t', 0.5)
+    rx, ry, rz = b['head_r']
+    g = sc.group(gname, 0.0)
+    ha = f.head_axes()
+    sc.ellipsoid(f.HP(0, 0.9, -0.3), (rx + t, ry * 0.9 + t, rz + t), ha, g, mat, 'body', 'crown')
+    sc.plane(f.HP(0, 1.5, 0), f.Rhd @ v(0, -1, 0.18), g, op=INTERSECT, k=0.3)
+    gb = sc.group(gname + '_brim', 0.0)
+    bm = MAT[o.get('brim', o.get('mat', 'whead'))]
+    sc.ellipsoid(f.HP(0, 2.1, rz + 0.6), (rx * 0.85, 0.36, 2.6), ha, gb, bm, 'body', 'brim', k=0.2)
+    sc.plane(f.HP(0, 0, rz * 0.45), f.Rhd @ v(0, 0, -1), gb, op=INTERSECT, k=0.2)
+    sc.ellipsoid(f.HP(0, ry * 0.9 + t + 0.3, -0.3), (0.45, 0.3, 0.45), ha, g, mat, 'body', 'button')
+
+
+def part_hat(sc, f, gname, o):
+    """a brimmed felt hat sitting on the brow: the crown above the forehead, the brim a thin disc round it"""
+    b = f.b
+    mat = MAT[o.get('mat', 'whead')]
+    t = o.get('t', 0.55)
+    rx, ry, rz = b['head_r']
+    g = sc.group(gname, 0.0)
+    ha = f.head_axes()
+    rim = ry * 0.62 + 0.4
+    sc.ellipsoid(f.HP(0, rim + 1.4, -0.4), (rx + t, 2.4, rz + t - 0.2), ha, g, mat, 'body', 'crown')
+    sc.plane(f.HP(0, rim, 0), f.Rhd @ v(0, -1, 0), g, op=INTERSECT, k=0.2)
+    sc.ellipsoid(f.HP(0, rim + 3.7, -0.4), (rx * 0.3, 0.9, rz * 0.55), ha, g, mat, 'body', 'crease', op=SUBTRACT, k=0.5)
+    bw = o.get('brim_w', 1.8)
+    gb = sc.group(gname + '_brim', 0.0)
+    sc.ellipsoid(f.HP(0, rim, -0.2), (rx + t + bw, 0.32, rz + t + bw), ha, gb, mat, 'body', 'brim', k=0.2)
+    if o.get('band'):
+        gn = sc.group(gname + '_band', 0.0)
+        # a flat ring just proud of the crown where it meets the brim
+        q = math.sqrt(1 - (1.0 / 2.4) ** 2)
+        sc.ellipsoid(f.HP(0, rim + 0.45, -0.4), ((rx + t) * q + 0.15, 0.33, (rz + t - 0.2) * q + 0.15), ha, gn, MAT[o['band']], 'body', 'band')
+
+
+def part_beret(sc, f, gname, o):
+    b = f.b
+    mat = MAT[o.get('mat', 'whead')]
+    t = o.get('t', 0.5)
+    rx, ry, rz = b['head_r']
+    g = sc.group(gname, 0.0)
+    ha = f.head_axes()
+    tilt = o.get('tilt', 0.9)
+    sc.ellipsoid(f.HP(tilt, ry * 0.72 + 0.3, -0.4), (rx + 1.5, 1.35, rz + 1.1), ha, g, mat, 'body', 'beret')
+    sc.ellipsoid(f.HP(0, 0.9, -0.4), (rx + t, ry * 0.9 + t, rz + t), ha, g, mat, 'body', 'band', k=0.8)
+    sc.plane(f.HP(0, 1.6, 0), f.Rhd @ v(0, -1, 0.1), g, op=INTERSECT, k=0.3)
+    sc.ellipsoid(f.HP(tilt * 0.6, ry * 0.72 + 1.6, -0.4), (0.4, 0.45, 0.4), ha, g, mat, 'body', 'stalk')
+
+
+def part_glasses(sc, f, gname, o):
+    from anatomy import head_points
+    hp = head_points(f.sk)
+    ha = f.head_axes()
+    fm = MAT[o.get('frame', 'wtrim')]
+    lm = MAT[o.get('lens', 'lens')]
+    style = o.get('style', 'rect')
+    g = sc.group(gname, 0.0)
+    gl = sc.group(gname + '_lens', 0.0)
+    for s in ('r', 'l'):
+        c = hp['eye_' + s] + f.Rhd @ v(0, -0.15 if style == 'aviator' else 0.0, 0.55)
+        if style == 'aviator':
+            sc.ellipsoid(c + f.Rhd @ v(0, -0.2, 0), (1.25, 1.15, 0.2), ha, gl, lm, 'body', 'lens')
+            sc.torus(c + f.Rhd @ v(0, -0.2, 0), 1.25, 0.3, np.stack([ha[0], ha[2], ha[1]]), g, fm, 'body', 'rim')
+        else:
+            sc.box(c, (1.15, 0.72, 0.18), ha, 0.3, gl, lm, 'body', 'lens')
+            sc.box(c, (1.35, 0.92, 0.2), ha, 0.35, g, fm, 'body', 'rim')
+            sc.box(c, (1.15, 0.72, 0.6), ha, 0.3, g, fm, 'body', 'cut', op=SUBTRACT, k=0.05)
+        sc.cone(c + f.Rhd @ v(1.25 if s == 'r' else -1.25, 0.3, -0.1), hp['ear_' + s] + f.Rhd @ v(0, 0.75, 0.3), 0.3, 0.3, g, fm, 'body', 'arm',
+                k=0.1)
+    sc.cone(hp['eye_r'] + f.Rhd @ v(-1.0, 0.25, 0.6), hp['eye_l'] + f.Rhd @ v(1.0, 0.25, 0.6), 0.3, 0.3, g, fm, 'body', 'bridge', k=0.1)
+
+
 BUILDERS = {'torso': part_torso, 'sleeves': part_sleeves, 'legs': part_legs, 'boots': part_boots, 'gloves': part_gloves,
             'skirt': part_skirt, 'collar': part_collar, 'belt': part_belt, 'plate': part_plate, 'pocket': part_pocket, 'strap': part_strap,
-            'hood': part_hood, 'helmet': part_helmet, 'mask': part_mask}
+            'hood': part_hood, 'helmet': part_helmet, 'mask': part_mask, 'print': part_print, 'tie': part_tie, 'cap': part_cap,
+            'hat': part_hat, 'beret': part_beret, 'glasses': part_glasses}
 NEEDS_POSE = {'sleeves', 'gloves', 'plate'}
 
 

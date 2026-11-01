@@ -41,6 +41,14 @@ static func spec_from_game(layers: Array, look: Dictionary, weapon := "", size :
 					s.garments.append(g)
 			for slot in outfits[id]["colours"]:
 				s.colours[slot] = outfits[id]["colours"][slot]
+		elif man.get("clothes", {}).has(id):
+			# the clothes the shops sell: their garments, in their own colours
+			var cl: Dictionary = man["clothes"][id]
+			for g in cl["garments"]:
+				if not (g in s.garments):
+					s.garments.append(g)
+			for slot in cl["colours"]:
+				s.colours[slot] = cl["colours"][slot]
 		elif worn.has(id):
 			if not (worn[id] in s.garments):
 				s.garments.append(worn[id])

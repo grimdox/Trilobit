@@ -56,7 +56,7 @@ g('trench', 'Trench coat', 4, [dict(type='torso', mat='cloth2', t=0.75, top='v',
                                dict(type='skirt', mat='cloth2', t=0.6, len='knee', flare=2.2, open=True, gap=1.8),
                                dict(type='collar', mat='cloth2', h=2.6, t=0.6, open=True),
                                dict(type='belt', mat='cloth2', y='waist', w=1.2)], tags=('outer',))
-g('suit_jacket', 'Suit jacket', 4, [dict(type='torso', mat='cloth2', t=0.6, top='v', bottom='hip', open=1.4, loose=0.2),
+g('suit_jacket', 'Suit jacket', 4, [dict(type='torso', mat='cloth2', t=0.6, top='v', bottom='hip', open=2.1, loose=0.2),
                                     dict(type='sleeves', mat='cloth2', t=0.55, len='long', loose=0.2),
                                     dict(type='collar', mat='cloth2', h=1.2, t=0.5, open=True)], tags=('outer',))
 g('hoodie', 'Hoodie', 4, [dict(type='torso', mat='cloth2', t=0.65, top='crew', bottom='hip', loose=0.5),
@@ -114,6 +114,51 @@ g('balaclava', 'Balaclava', 7, [dict(type='mask', mat='cloth1', cover='full')], 
 g('facemask', 'Face mask', 7, [dict(type='mask', mat='cloth4', cover='lower')], tags=('head',))
 
 
+# --------------------------------------------------------------------------------------------- the clothes the game sells
+# (trl_cl_* items: worn in the armour slots).  Their own garments where the shape is new; colours come with each item.
+g('tee_print', 'Graphic tee', 3, [dict(type='torso', mat='cloth1', t=0.3, top='crew', bottom='hip'),
+                                  dict(type='sleeves', mat='cloth1', t=0.3, len='short', cuff='cloth1'),
+                                  dict(type='print', mat='cloth4', shape='ring')], tags=('base',))
+g('oxford', 'Oxford shirt', 3, [dict(type='torso', mat='cloth1', t=0.32, top='v', bottom='hip', seam=True),
+                                dict(type='sleeves', mat='cloth1', t=0.3, len='long', cuff='cloth1'),
+                                dict(type='collar', mat='cloth1', h=1.1, t=0.3, open=True), dict(type='pocket', mat='cloth1', at='chest_l')],
+  tags=('base',))
+g('hoodie_street', 'Street hoodie', 4, [dict(type='torso', mat='cloth2', t=0.7, top='crew', bottom='hip', loose=0.6),
+                                         dict(type='sleeves', mat='cloth2', t=0.65, len='long', cuff='cloth2', loose=0.45),
+                                         dict(type='hood', mat='cloth2', up=False), dict(type='pocket', mat='cloth2', at='belly'),
+                                         dict(type='print', mat='cloth4', shape='bars')], tags=('outer',))
+g('leather_jacket', 'Leather jacket', 4, [dict(type='torso', mat='leather', t=0.7, top='v', bottom='waist', open=2.6, loose=0.25),
+                                           dict(type='sleeves', mat='leather', t=0.62, len='long', cuff='leather', loose=0.2),
+                                           dict(type='collar', mat='leather', h=1.8, t=0.55, open=True),
+                                           dict(type='belt', mat='leather', y='waist', w=1.0, buckle='metal'),
+                                           dict(type='pocket', mat='leather', at='chest_r')], tags=('outer',))
+g('blazer', 'Blazer', 4, [dict(type='torso', mat='cloth2', t=0.55, top='v', bottom='hip', open=2.0, loose=0.15),
+                          dict(type='sleeves', mat='cloth2', t=0.5, len='long', loose=0.15),
+                          dict(type='collar', mat='cloth2', h=1.0, t=0.45, open=True), dict(type='pocket', mat='cloth4', at='chest_l')],
+  tags=('outer',))
+g('tie', 'Necktie', 6, [dict(type='tie', mat='cloth4')], tags=('straps',))
+g('suit_armored', 'Armoured suit jacket', 4, [dict(type='torso', mat='cloth2', t=0.78, top='v', bottom='hip', open=2.0, loose=0.3),
+                                               dict(type='sleeves', mat='cloth2', t=0.68, len='long', loose=0.25),
+                                               dict(type='collar', mat='cloth2', h=1.6, t=0.55, open=True),
+                                               dict(type='plate', mat='cloth2', at='shoulders', t=0.35, size=0.7)], tags=('outer',))
+g('kimono', 'Silk kimono', 4, [dict(type='torso', mat='cloth2', t=0.6, top='v', bottom='hip', loose=0.35),
+                               dict(type='sleeves', mat='cloth2', t=0.7, len='long', loose=1.3),
+                               dict(type='skirt', mat='cloth2', t=0.55, len='calf', flare=1.2, open=True, gap=0.8),
+                               dict(type='collar', mat='cloth4', h=0.8, t=0.35, open=True),
+                               dict(type='belt', mat='cloth4', y='waist', w=2.4)], tags=('outer',))
+g('jeans', 'Jeans', 1, [dict(type='legs', mat='cloth3', t=0.38, len='long', loose=0.1, cuff='cloth3'),
+                        dict(type='belt', mat='leather', y='hip', w=0.9, buckle='metal'),
+                        dict(type='pocket', mat='cloth3', at='thigh_r')], tags=('legs',))
+g('trousers', 'Tailored trousers', 1, [dict(type='legs', mat='cloth3', t=0.32, len='long', loose=0.12),
+                                       dict(type='belt', mat='leather2', y='waist', w=0.8, buckle='wtrim')], tags=('legs',))
+g('cap', 'Baseball cap', 7, [dict(type='cap', mat='whead', t=0.5, brim='whead')], tags=('head',))
+g('fedora', 'Fedora', 7, [dict(type='hat', mat='whead', t=0.55, brim_w=2.6, band='wtrim')], tags=('head',))
+g('beret', 'Beret', 7, [dict(type='beret', mat='whead', t=0.45, tilt=1.0)], tags=('head',))
+g('shades', 'Aviator shades', 7, [dict(type='glasses', frame='wtrim', lens='lens', style='aviator')], tags=('eyes',))
+g('glasses', 'Designer glasses', 7, [dict(type='glasses', frame='wtrim', lens='lens', style='rect')], tags=('eyes',))
+g('gloves_thin', 'Dress gloves', 3, [dict(type='gloves', mat='leather2', t=0.18)], tags=('hands',))
+
+
 def garment_parts(gid, fem):
     spec = G[gid]
     if fem and spec['fem'] is not None:
@@ -163,6 +208,50 @@ o('detective', 'Detective', ['shirt', 'slacks', 'boots', 'trench'], {'cloth1': '
   ('cast',))
 o('enforcer', 'Enforcer', ['tee', 'cargo', 'boots', 'riot', 'kneepads'], {'cloth1': 'black', 'cloth3': 'olive', 'leather': 'black'}, ('cast',))
 o('android', 'Android (bare)', [], {}, ('cast',))
+
+# street looks for residents, made from the clothes the shops sell
+o('street_0', 'Street (hoodie)', ['tee', 'jeans', 'sneakers', 'hoodie_street'],
+  {'cloth1': 'black', 'cloth2': 'charcoal', 'cloth3': 'denim', 'cloth4': 'hazard', 'leather': 'black'}, ('resident',))
+o('street_1', 'Street (leather)', ['tee_print', 'jeans', 'boots', 'leather_jacket'],
+  {'cloth1': 'slate', 'cloth3': 'acid denim', 'cloth4': 'magenta', 'leather': 'brown leather', 'metal': 'chrome'}, ('resident',))
+o('street_2', 'Street (cap)', ['tee_print', 'cargo', 'sneakers', 'cap'],
+  {'cloth1': 'black', 'cloth3': 'olive', 'cloth4': 'cyan print', 'whead': 'oxblood', 'leather': 'black'}, ('resident',))
+o('office_0', 'Office (blazer)', ['oxford', 'trousers', 'boots', 'blazer', 'glasses'],
+  {'cloth1': 'white', 'cloth2': 'ink navy', 'cloth3': 'charcoal', 'cloth4': 'bone', 'leather': 'black', 'leather2': 'black', 'wtrim': 'black'},
+  ('resident',))
+o('office_1', 'Office (suit and tie)', ['oxford', 'trousers', 'boots', 'suit_jacket', 'tie'],
+  {'cloth1': 'cream', 'cloth2': 'pinstripe', 'cloth3': 'pinstripe', 'cloth4': 'crimson silk', 'leather': 'black', 'leather2': 'black',
+   'wtrim': 'silver'}, ('resident',))
+o('silk', 'Silk kimono', ['tee', 'trousers', 'boots', 'kimono'],
+  {'cloth1': 'black', 'cloth2': 'indigo silk', 'cloth3': 'black', 'cloth4': 'gold', 'leather2': 'black', 'wtrim': 'gold'}, ('resident',))
+o('noir', 'Fedora and shades', ['oxford', 'trousers', 'boots', 'suit_armored', 'tie', 'fedora', 'shades'],
+  {'cloth1': 'black', 'cloth2': 'charcoal', 'cloth3': 'charcoal', 'cloth4': 'oxblood', 'whead': 'slate', 'wtrim': 'gold', 'leather': 'black',
+   'leather2': 'black'}, ('resident',))
+
+# the game's clothes (items trl_cl_*): a game layer id cl_<item> -> its garments and the colours they come in.  One slot
+# per kind of garment, so any set of clothes can be worn together: tops cloth1 / cloth2 (+ cloth4 prints and trims), legs
+# cloth3 (+ leather belts), hats whead / wtrim, eyewear wtrim, gloves leather2
+CLOTHES = {
+    'cl_tee': (['tee_print'], {'cloth1': 'black', 'cloth4': 'magenta'}),
+    'cl_oxford': (['oxford'], {'cloth1': 'white'}),
+    'cl_hoodie': (['tee', 'hoodie_street'], {'cloth1': 'black', 'cloth2': 'charcoal', 'cloth4': 'hazard'}),
+    'cl_leather_jacket': (['tee', 'leather_jacket'], {'cloth1': 'slate', 'leather': 'brown leather', 'metal': 'chrome'}),
+    'cl_blazer': (['tee', 'blazer'], {'cloth1': 'black', 'cloth2': 'camel', 'cloth4': 'cream'}),
+    'cl_kimono': (['kimono'], {'cloth2': 'crimson silk', 'cloth4': 'gold'}),
+    'cl_suit_jacket': (['oxford', 'suit_jacket', 'tie'], {'cloth1': 'white', 'cloth2': 'pinstripe', 'cloth4': 'crimson silk'}),
+    'cl_armored_suit': (['oxford', 'suit_armored', 'tie'], {'cloth1': 'slate', 'cloth2': 'charcoal', 'cloth4': 'silver'}),
+    'cl_jeans': (['jeans'], {'cloth3': 'denim', 'leather': 'black'}),
+    'cl_cargo': (['cargo'], {'cloth3': 'olive', 'leather': 'black'}),
+    'cl_slacks': (['slacks'], {'cloth3': 'ink navy', 'leather': 'black'}),
+    'cl_tailored_trousers': (['trousers'], {'cloth3': 'charcoal', 'leather2': 'black', 'wtrim': 'silver'}),
+    'cl_cap': (['cap'], {'whead': 'teal'}),
+    'cl_fedora': (['fedora'], {'whead': 'slate', 'wtrim': 'black'}),
+    'cl_beret': (['beret'], {'whead': 'oxblood'}),
+    'cl_shades': (['shades'], {'wtrim': 'gold'}),
+    'cl_glasses': (['glasses'], {'wtrim': 'black'}),
+    'cl_leather_gloves': (['gloves'], {'leather2': 'black'}),
+    'cl_dress_gloves': (['gloves_thin'], {'leather2': 'cream'}),
+}
 
 # the game's worn items map one to one onto garments
 WORN = {'coat': 'trench', 'vest': 'vest', 'vest_heavy': 'vest_heavy', 'vest_corp': 'vest_corp', 'jacket': 'riot', 'bracers': 'bracers',

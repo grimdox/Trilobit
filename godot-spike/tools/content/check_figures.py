@@ -62,6 +62,7 @@ def main(items_path):
         idx = json.load(open(idx_path))
         spec = open(os.path.join(root, 'src', 'dollspec.gd')).read()
         worn = set(re.findall(r'"trl_[a-z_]+": "([a-z_]+)"', spec.split('const ARMOR_LAYER')[1].split('}')[0]))
+        worn = {k for k in worn if not k.startswith('cl_')}     # shop clothes are drawn only by the layered dolls (run_clothes)
         outfits = {'thug', 'nap', 'nasim', 'suit', 'overalls', 'coat', 'labcoat', 'chef', 'priest', 'kannushi', 'courier'} | {'jacket_%d' % i for i in range(6)}
         miss = sorted(k for k in worn | outfits if k not in idx)
         check(not miss, 'every DollSpec outfit and worn layer has a sprite %s' % miss)

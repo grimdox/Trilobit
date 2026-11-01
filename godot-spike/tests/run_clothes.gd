@@ -1,6 +1,9 @@
 extends SceneTree
 ## Clothes: little armor, +1 to social skills while worn (not in a pack), sold by vendors.  Run: TRL_STREET=1 godot --headless --path . -s tests/run_clothes.gd
 const GameScript = preload("res://src/game.gd")
+const DS = preload("res://src/dollspec.gd")
+const ADAPT = preload("res://addons/trilobit_doll/trilobit_adapter.gd")
+const LIB = preload("res://addons/trilobit_doll/doll_library.gd")
 var ok := 0
 var n := 0
 func check(name: String, cond: bool) -> void:
@@ -57,5 +60,21 @@ func _initialize() -> void:
 	check("a clothing store sells clothes and nothing but (%d lines)" % cs.size(), cs.size() >= 15 and cs.all(func(x): return String(x[0]).begins_with("trl_cl_")))
 	g.eco.shop_tier[3] = 0
 	check("a poor store only sells the cheap pieces", g.eco._stock(3).all(func(x): return int(x[2]) <= 90))
+	# the doll: every piece is drawn on the player, in its own colours
+	var lib = LIB.shared("res://gfx/dolls")
+	var missing: Array = []
+	for k in ids:
+		var layer: String = String(DS.ARMOR_LAYER.get(k, ""))
+		var ok2: bool = layer != "" and lib.man.get("clothes", {}).has(layer)
+		if ok2:
+			for gid in lib.man["clothes"][layer]["garments"]:
+				ok2 = ok2 and lib.man["garments"].has(gid)
+		if not ok2:
+			missing.append(k)
+	check("every piece of clothing has doll garments in the baked set (%s)" % str(missing), missing.is_empty())
+	var pd: Dictionary = DS.for_player(g)
+	var spec = ADAPT.spec_from_game(pd["layers"], pd["look"], "", "m", "res://gfx/dolls")
+	check("the player wearing the armored suit and shades shows them (%s)" % str(spec.garments),
+		"suit_armored" in spec.garments and "tie" in spec.garments and "shades" in spec.garments and spec.colours.get("cloth2", "") == "charcoal")
 	print("CLOTHES %d/%d" % [ok, n])
 	quit(0 if ok == n else 1)

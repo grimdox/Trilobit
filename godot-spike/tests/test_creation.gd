@@ -131,7 +131,7 @@ func run() -> Array:
 	check.call("every creation choice has standing-doll art (body, underwear, arms, hands, hair, eyes, shadow)", every)
 	var lyr_ok := true
 	for l in DS.ARMOR_LAYER.values() + ["thug", "nap", "nasim", "suit", "overalls", "jacket_0", "jacket_5"]:
-		if not fig.has(l):
+		if not fig.has(l) and not String(l).begins_with("cl_"):     # shop clothes: layered dolls only (run_clothes)
 			lyr_ok = false
 	check.call("every worn layer and outfit people wear has a standing sprite", lyr_ok)
 	var vlook: Dictionary = CR.look_of(CR.default_app())

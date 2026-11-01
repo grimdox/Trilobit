@@ -28,6 +28,8 @@ const GLOW := 17
 const GLOW2 := 18
 const UNDER := 19
 const LENS := 20
+const WHEAD := 21
+const WTRIM := 22
 
 const SHADOW_HUE := 290.0 * PI / 180.0
 const LIGHT_HUE := 75.0 * PI / 180.0
@@ -35,7 +37,7 @@ const STEPS := [-0.40, -0.275, -0.145, 0.0, 0.125, 0.23]
 
 const DEFAULT_COLOURS := {"skin": "tan", "hair": "black", "eyes": "brown", "cloth1": "gunmetal", "cloth2": "olive", "cloth3": "black",
 	"cloth4": "teal", "leather": "#2e2a2a", "leather2": "#3a302a", "metal": "chrome", "poly": "#3a3f48", "synth": "pearl", "glow": "cyan",
-	"glow2": "amber", "under": "#3a3d46"}
+	"glow2": "amber", "under": "#3a3d46", "whead": "charcoal", "wtrim": "gold"}
 
 
 static func _s2l(c: float) -> float:
@@ -172,6 +174,8 @@ static func palette_rows(colours: Dictionary, tables: Dictionary) -> Array:
 	pal[GLOW] = glow_ramp(pick(c["glow"], tables["glow"]))
 	pal[GLOW2] = glow_ramp(pick(c["glow2"], tables["glow"]))
 	pal[UNDER] = ramp(pick(c["under"], tables["cloth"]), 0.9)
+	pal[WHEAD] = ramp(pick(c["whead"], tables["cloth"]))
+	pal[WTRIM] = ramp(pick(c["wtrim"], tables["cloth"]), 1.2, 0.32, 0.18, 0.42, 1.0, "#ffffff")
 	return pal
 
 ## the palette as an 8 x 32 texture for the shader (row 0 is transparent: index 0 never draws)

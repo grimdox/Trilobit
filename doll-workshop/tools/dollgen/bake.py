@@ -450,6 +450,7 @@ def main():
                                         {p.get(x) for p in v['parts'] for x in ('cuff', 'sole', 'buckle', 'visor') if p.get(x)})}
                      for k, v in sorted(CA.G.items())},
         'outfits': CA.O, 'worn': CA.WORN,
+        'clothes': {k: {'garments': g, 'colours': c} for k, (g, c) in sorted(CA.CLOTHES.items())},
         'implants': {k: {'name': v['name'], 'slots': v['slots'], 'over': v['over']} for k, v in sorted(IM.IMPLANTS.items())},
         'implant_game': IM.GAME,
         'items': kinds,

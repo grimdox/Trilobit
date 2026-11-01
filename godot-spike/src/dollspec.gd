@@ -10,6 +10,11 @@ const ARMOR_LAYER := {"trl_coat": "coat",
 	"trl_armor_head_1": "balaclava", "trl_armor_head_2": "helmet_ball", "trl_armor_head_3": "helmet_ball", "trl_armor_head_4": "helm_tac", "trl_armor_head_5": "visor",
 	"trl_armor_chest_1": "jacket", "trl_armor_chest_2": "vest", "trl_armor_chest_3": "vest_corp", "trl_armor_chest_4": "vest_heavy", "trl_armor_chest_5": "vest_heavy",
 	"trl_armor_arms_1": "bracers", "trl_armor_arms_2": "bracers", "trl_armor_arms_3": "bracers", "trl_armor_arms_4": "bracers_heavy", "trl_armor_arms_5": "bracers_heavy",
+	"trl_cl_tee": "cl_tee", "trl_cl_oxford": "cl_oxford", "trl_cl_hoodie": "cl_hoodie", "trl_cl_leather_jacket": "cl_leather_jacket",
+	"trl_cl_blazer": "cl_blazer", "trl_cl_kimono": "cl_kimono", "trl_cl_suit_jacket": "cl_suit_jacket", "trl_cl_armored_suit": "cl_armored_suit",
+	"trl_cl_jeans": "cl_jeans", "trl_cl_cargo": "cl_cargo", "trl_cl_slacks": "cl_slacks", "trl_cl_tailored_trousers": "cl_tailored_trousers",
+	"trl_cl_cap": "cl_cap", "trl_cl_fedora": "cl_fedora", "trl_cl_beret": "cl_beret", "trl_cl_shades": "cl_shades", "trl_cl_glasses": "cl_glasses",
+	"trl_cl_leather_gloves": "cl_leather_gloves", "trl_cl_dress_gloves": "cl_dress_gloves",
 	"trl_armor_legs_1": "greaves", "trl_armor_legs_2": "greaves", "trl_armor_legs_3": "greaves", "trl_armor_legs_4": "greaves_heavy", "trl_armor_legs_5": "greaves_heavy"}
 const MELEE_THUG := ["trl_mel_kastet", "trl_mel_finka", "trl_mel_topor", "trl_mel_tonfa", "trl_mel_lopata", "trl_mel_chekan", "trl_mel_kistien", "trl_mel_kinzhal"]
 const ORDER := ["backpack", "holster"]
@@ -138,8 +143,11 @@ static func for_person(g, i: int) -> Dictionary:
 			_:   # residents: a jacket in one of six colours, now and then a backpack, a coat or a hood
 				layers = ["jacket_%d" % (h % 6)]
 				var wl: int = g.city.wealth_at(int(g.sim.home_cell[i]))
+				var hs: int = (h >> 8) % 10
+				if hs < 4:      # the clothes the shops sell, worn as looks: street wear, office wear, silk, a noir hat
+					layers = [["street_0", "street_1", "street_2", "office_0", "street_0", "office_1", "silk", "noir"][(h >> 12) % 8]]
 				if wl == 2 and h % 3 != 0:
-					layers = ["suit"]
+					layers = ["suit"] if hs >= 6 else [["office_0", "office_1", "silk", "noir"][(h >> 12) % 4]]
 				elif wl == 0 and h % 3 == 0:
 					layers = ["overalls"]
 				if h % 9 == 0:
@@ -164,7 +172,7 @@ static func for_person(g, i: int) -> Dictionary:
 
 ## a commuter on a train: a resident's clothes, picked by a hash (see Transit.passenger)
 static func for_commuter(h: int) -> Dictionary:
-	var layers: Array = ["jacket_%d" % (h % 6)]
+	var layers: Array = ["jacket_%d" % (h % 6)] if (h >> 8) % 3 != 0 else [["street_0", "street_1", "street_2", "office_0", "office_1"][(h >> 12) % 5]]
 	if h % 5 == 0:
 		layers = ["suit"]
 	elif h % 7 == 0:
