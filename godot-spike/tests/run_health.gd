@@ -64,7 +64,7 @@ func _initialize() -> void:
 	g.nano_fx = {}
 	var hp_before: int = int(g.body.hp["chest"])
 	var ok_use: bool = g.act_nano_use("mend")
-	check("the test healing nano adds +10 bio health (%s)" % str(ok_use), ok_use and int(g.body.hp["chest"]) == hp_before + 10)
+	check("Mend closes 2 points on a part with no implant (%s)" % str(ok_use), ok_use and int(g.body.hp["chest"]) == hp_before + 2)
 	# sleep
 	g = GameScript.new(3)
 	g.setup(300)

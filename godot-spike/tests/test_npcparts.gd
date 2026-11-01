@@ -108,7 +108,7 @@ func run() -> Array:
 		dmg_taken += 164 - g.body.total()
 	check.call("a one-armed fighter still hits back (%d damage over 60 swings)" % dmg_taken, dmg_taken > 0)
 	g.npc_limb_hit(who, "l_arm", 99)
-	g.body.mend_to(1.0)
+	g.body.reset()
 	var l0: int = g.log.size()
 	for _t in 20:
 		g._npc_melee_attack(who)

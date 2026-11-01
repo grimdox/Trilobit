@@ -33,7 +33,7 @@ func _initialize() -> void:
 	check("the gun store sells guns and bullets only", gs.any(func(x): return String(x[0]).begins_with("trl_gun_")) and gs.any(func(x): return String(x[0]).begins_with("trl_ammo")) and gs.all(func(x): return String(x[0]).begins_with("trl_gun_") or String(x[0]).begins_with("trl_ammo")))
 	g.eco.shop_kind[3] = "nano_shop"
 	var ns: Array = g.eco._stock(3)
-	check("the nanohack store sells all six chips and nothing else", ns.size() == 6 and _all(ns, g, "nanohack"))
+	check("the nanohack store sells every chip and nothing else (%d)" % ns.size(), ns.size() == 28 and _all(ns, g, "nanohack"))
 	g.eco.shop_kind[3] = "pharmacy"
 	check("a pharmacy sells healing items", g.eco._stock(3).all(func(x): return String(x[0]).begins_with("trl_heal_") or x[0] == "trl_medkit"))
 	g.eco.shop_kind.erase(3)
