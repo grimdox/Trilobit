@@ -45,6 +45,7 @@ const ACTIONS := [
 	["look", "Look (move the cursor, Esc ends)", [KEY_L]],
 	["consume", "Consume food or drink", [KEY_F8, KEY_APOSTROPHE]],
 	["nano", "Nanohack menu", [KEY_N]],
+	["netscan", "Scan the Network (cursor: arrows, Tab next ping, Enter selects, Esc ends)", [KEY_B]],
 	["zoom", "Zoom: close, middle or far", [KEY_EQUAL, KEY_KP_ADD]],
 	["fullscreen", "Toggle fullscreen", [KEY_F11]],
 	["keysscreen", "Key bindings screen", [KEY_QUESTION]],

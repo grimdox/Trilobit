@@ -1,6 +1,7 @@
 extends Node2D
 ## Draws the game around the player with the Trilobit tileset: terrain, items, cars, people with awareness marks, a target bracket.
 const SG = preload("res://src/signage.gd")
+const NV = preload("res://src/netview.gd")
 const CG = preload("res://src/citygen.gd")
 const PD = preload("res://src/paperdoll.gd")
 const DS = preload("res://src/dollspec.gd")
@@ -700,8 +701,9 @@ func _draw() -> void:
 	var py: int = game.ly(vc)
 	var cx: int = game.lx(focus_cell) if focus_cell >= 0 else px      # the camera sits on the player, or on the target you switched the view to
 	var cy: int = game.ly(focus_cell) if focus_cell >= 0 else py
-	var ox := cx - cols / 2 + (look_off.x if look_on else 0)
-	var oy := cy - rows / 2 + (look_off.y if look_on else 0)
+	var looking: bool = look_on and game.cam_view.is_empty()
+	var ox := cx - cols / 2 + (look_off.x if looking else 0)
+	var oy := cy - rows / 2 + (look_off.y if looking else 0)
 	var below_mod := Color(0.5, 0.55, 0.75)
 	base_set = tileset if base_set == null or not (tileset in theme_sets.values()) else base_set
 	_load_themes()
@@ -914,7 +916,9 @@ func _draw() -> void:
 		var pa := Vector2((a % size - ox + 0.5) * T, ((a / size) % size - oy + 0.5) * T)
 		var pb := Vector2((b % size - ox + 0.5) * T, ((b / size) % size - oy + 0.5) * T)
 		draw_line(pa, pb, Color(1, 0.95, 0.5) if tr[2] else Color(0.8, 0.8, 0.8, 0.6), 2.0 * S)
-	if look_on:
+	if not game.net_snap.is_empty() and game.cam_view.is_empty():
+		NV.draw(self, game, ox, oy, T, S, vc)
+	elif look_on:
 		var lr := Rect2((px + look_off.x - ox) * T, (py + look_off.y - oy) * T, T, T)
 		draw_rect(lr, Color(0.3, 0.95, 1.0), false, 3.0 * S)
 		draw_rect(lr.grow(4 * S), Color(0.3, 0.95, 1.0, 0.45), false, 1.0 * S)

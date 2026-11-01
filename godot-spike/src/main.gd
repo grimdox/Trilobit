@@ -1426,6 +1426,8 @@ func _unhandled_input(ev: InputEvent) -> void:
 
 ## a wait under way: spend turns for a few milliseconds a frame so the screen stays alive and Esc can stop it
 func _process(_delta: float) -> void:
+	if game != null and not game.net_snap.is_empty() and view != null:
+		view.queue_redraw()                           # the network overlay is animated
 	if mode != "waiting" or game == null:
 		return
 	var t0: int = Time.get_ticks_usec()
@@ -1491,6 +1493,10 @@ func refresh() -> void:
 	logbox.text = "\n".join(lines)
 	status.add_theme_color_override("font_color", Color(1, 0.4, 0.4) if g.body.frac("chest") < 0.34 or g.body.frac("head") < 0.34 else Color.WHITE)
 	_drain_sfx()
+	if mode == "netscan":
+		logbox.text = _netscan_text()
+		view.look_on = true
+		view.look_off = look_off
 	if mode == "talk":
 		show_talk()
 	elif mode == "clock":
@@ -1794,15 +1800,10 @@ func nano_key(k: int) -> void:
 	if ci >= 0 and ci < nano_list.size():
 		var e: Dictionary = nano_list[ci]
 		if e["id"] == "shock":
-			nano_pick = game.nano_targets()
-			if nano_pick.is_empty():
-				game.say("Nobody in sight to shock.")
-				mode = "play"
-				panel.visible = false
-				refresh()
-				return
-			nano_pending = "shock"
-			show_nano()
+			game.say("Shock runs through the network: Scan the Network (%s), then Network to the target." % "B")
+			mode = "play"
+			panel.visible = false
+			refresh()
 			return
 		mode = "play"
 		panel.visible = false
@@ -1837,6 +1838,68 @@ func look_refresh() -> void:
 	else:
 		logbox.text = "[b]LOOK[/b]  %s\n[color=#8899aa]Move the cursor (Shift: 5 tiles).  Enter logs this.  L or Esc ends.  You see %d tiles.[/color]" % [d, game.sight_radius()]
 	view.queue_redraw()
+
+## ---- the network scan: a Look-style cursor over the overlay
+func _netscan_text() -> String:
+	var g = game
+	var c: int = look_cell()
+	var p: Dictionary = g.NW.ping_at(g, c)
+	var what: String = "No signal." if p.is_empty() else g.NW.label(g, p)
+	var st := ""
+	if not p.is_empty():
+		var d: int = g.NW.dist_to(g, p)
+		st = "   (%d tiles%s)" % [d, "" if d <= g.NW.link_radius(g) else ", out of reach"]
+		if g.NW.is_linked(g, p):
+			st += "  NETWORKED"
+		elif g.NW.is_scanned(g, String(p["key"])):
+			st += "  scanned"
+	return "[b]NETWORK[/b]  %s%s\n[color=#8899aa]Cursor: arrows (Shift: 5).  Tab: next ping.  Enter: select.  Esc: close the network.   Scan range %d, reach %d.[/color]" % [what, st, g.NW.scan_radius(g), g.NW.link_radius(g)]
+
+func _netscan_move(d: Vector2i, steps: int) -> void:
+	var g = game
+	var n: Vector2i = look_off + d * steps
+	if maxi(absi(n.x), absi(n.y)) > g.NW.scan_radius(g):
+		n = Vector2i(clampi(n.x, -g.NW.scan_radius(g), g.NW.scan_radius(g)), clampi(n.y, -g.NW.scan_radius(g), g.NW.scan_radius(g)))
+	var x: int = g.lx(g.pc) + n.x
+	var y: int = g.ly(g.pc) + n.y
+	if x < 0 or y < 0 or x >= g.size or y >= g.size:
+		return
+	look_off = n
+	view.look_off = n
+	refresh()
+
+func _netscan_key(ev: InputEventKey, k: int) -> void:
+	var g = game
+	if k == KEY_ESCAPE or settings.action_for(k) == "netscan":
+		g.NW.close(g)
+		look_end()
+		return
+	if k == KEY_TAB:
+		var cells: Array = g.NW.ping_cells(g)
+		if not cells.is_empty():
+			var cur: int = look_cell()
+			var nxt: int = int(cells[0])
+			for ci in cells.size():
+				if int(cells[ci]) == cur:
+					nxt = int(cells[(ci + 1) % cells.size()])
+					break
+			look_off = Vector2i(g.lx(nxt) - g.lx(g.pc), g.ly(nxt) - g.ly(g.pc))
+			view.look_off = look_off
+		refresh()
+		return
+	if k == KEY_ENTER or k == KEY_KP_ENTER:
+		var p: Dictionary = g.NW.ping_at(g, look_cell())
+		if p.is_empty():
+			g.say("Nothing is on the network there.")
+		else:
+			menu = g.NW.ping_menu(g, p)
+			mode = "talk"
+		refresh()
+		return
+	var ld := dir_of(k)
+	if ld != Vector2i.ZERO:
+		_netscan_move(ld, 5 if ev.shift_pressed else 1)
+	return
 
 func look_end() -> void:
 	look_aim = false
@@ -1958,15 +2021,17 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		if k == KEY_ESCAPE:
 			if menu.has("bd") and game.has_meta("cb_open"):
 				(game.get_meta("cb_open") as Dictionary).erase(int(menu["bd"]))
-			mode = "play"
+			mode = "netscan" if not game.net_snap.is_empty() else "play"
 			panel.visible = false
 		elif k >= KEY_1 and k <= KEY_9:
 			if menu.has("bd"):
 				menu = game.BD.choose(game, menu, k - KEY_1)
+			elif menu.has("nw"):
+				menu = game.NW.choose(game, menu, k - KEY_1)
 			else:
 				menu = game.eco.choose(menu, k - KEY_1)
 			if menu.is_empty():
-				mode = "camview" if not game.cam_view.is_empty() else "play"
+				mode = "camview" if not game.cam_view.is_empty() else ("netscan" if not game.net_snap.is_empty() else "play")
 				panel.visible = false
 				if mode == "play" and game.game_over:
 					pass
@@ -1981,8 +2046,11 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 			game.BD.cam_wait(game)
 		elif k == KEY_UP or k == KEY_ESCAPE or k == KEY_KP_8:
 			menu = game.BD.cam_end(game)
-			mode = "talk"
+			mode = "talk" if not menu.is_empty() else ("netscan" if not game.net_snap.is_empty() else "play")
 		refresh()
+		return
+	if mode == "netscan":
+		_netscan_key(ev, k)
 		return
 	if mode == "waiting":
 		if true:                                       # any key stops a wait
@@ -2178,6 +2246,14 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		"keysscreen":
 			screen_back = "play"
 			open_screen("keys")
+			return
+		"netscan":
+			if game.NW.scan(game):
+				mode = "netscan"
+				look_off = Vector2i.ZERO
+				view.look_on = true
+				view.look_off = Vector2i.ZERO
+			refresh()
 			return
 		"look":
 			look_aim = false

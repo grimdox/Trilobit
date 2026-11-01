@@ -54,6 +54,29 @@ static func site_light_off(g, cell: int) -> bool:
 	var d = g.boards.get("cb_dark")
 	return d != null and not d.is_empty() and d.has(light_key_site(cell))
 
+## one ceiling light of a tower, switched on its own (Networking): "x<cell>" forces it off, "o<cell>" forces it on though its floor is off
+static func fixture_off(g, cell: int) -> bool:
+	var d = g.boards.get("cb_dark")
+	if d == null or d.is_empty():
+		return false
+	if d.has("x" + str(cell)):
+		return true
+	return floor_off(g, cell) and not d.has("o" + str(cell))
+
+static func fixture_toggle(g, cell: int) -> bool:
+	var d: Dictionary = dark(g)
+	var kx := "x" + str(cell)
+	var ko := "o" + str(cell)
+	var was_off: bool = d.has(kx) or (floor_off(g, cell) and not d.has(ko))
+	d.erase(kx)
+	d.erase(ko)
+	if was_off:
+		if floor_off(g, cell):
+			d[ko] = true
+	else:
+		d[kx] = true
+	return not was_off
+
 ## the tower floor the cell is on is switched off at its board
 static func floor_off(g, cell: int) -> bool:
 	var d = g.boards.get("cb_dark")
@@ -275,6 +298,20 @@ static func lights_menu(g, cell: int, page: int = 0) -> Dictionary:
 	opts.append({"label": "Back to the control screen", "op": "bd_back", "arg": cell})
 	return _mk(g, cell, "Lights", ["%d lights.  Each switch takes %s." % [ls.size(), min_text(g, T_ACTION)]], opts)
 
+## the single-light keys inside a tower's footprint go when its floors are switched all together
+static func _clear_singles(g, cell: int) -> void:
+	var d: Dictionary = def_at(g, cell)
+	if d.get("kind", "") != "tower":
+		return
+	var dk: Dictionary = dark(g)
+	for k in dk.keys():
+		var ks := String(k)
+		if ks.begins_with("x") or ks.begins_with("o"):
+			var c: int = int(ks.substr(1))
+			var t: Dictionary = g.tower_at(c)
+			if not t.is_empty() and int(t["no"]) == int(d["tower"]):
+				dk.erase(k)
+
 static func _relight(g) -> void:
 	if g.light != null:
 		g.light.invalidate()
@@ -325,6 +362,7 @@ static func choose(g, m: Dictionary, k: int) -> Dictionary:
 		"bd_all":
 			spend(g, T_ACTION)
 			var dk2: Dictionary = dark(g)
+			_clear_singles(g, cell)
 			for L2 in lights_of(g, cell):
 				if bool(o["arg"][1]):
 					dk2.erase(L2["key"])
@@ -373,40 +411,44 @@ static func _try_password(g, cell: int) -> Dictionary:
 		return {}
 	return _password_menu(g, cell)
 
-static func _try_category(g, cell: int, cat: String) -> Dictionary:
+## one device roll against a board (a group of its devices): the time, the roll and what a failure does.  True on success.
+static func device_check(g, cell: int, cat: String) -> bool:
 	var r: Dictionary = rec(g, cell)
-	if not CAT_LIVE.has(cat):
-		g.say("%s are not on the network yet." % CAT_NAME[cat])
-		return _control_menu(g, cell)
 	var left: int = _lock_left(g, cell, cat)
 	if left > 0:
 		g.say("%s are locked out for %d more minutes." % [CAT_NAME[cat], int(ceil(float(left) / float(CLK.MIN)))])
+		return false
+	var lv: int = int(def_at(g, cell).get("lvl", 1))
+	spend(g, T_DEVICE)
+	if g.game_over:
+		return false
+	var dcv: int = dc(g, cell, cat)
+	var res: Array = roll(g, dcv)
+	g._math("%s: 2d10 %d + Analysis %d = %d vs DC %d" % [CAT_NAME[cat], res[1], g.lvl("analysis"), res[2], dcv])
+	g.skill_up("analysis", lv + int((r["dh"] as Dictionary).get(cat, 0)))
+	if bool(res[0]):
+		return true
+	var nat: int = int(res[1])
+	if nat == 2:
+		hurt(g, maxi(0, 10 - g.lvl("grit")) * maxi(0, lv - g.lvl("implementation")))
+		g.say("The %s group throws you out." % CAT_NAME[cat].to_lower())
+	elif nat <= 7:
+		(r["lock"] as Dictionary)[cat] = g.sim.tick + LOCK_TURNS
+		hurt(g, maxi(0, lv - g.lvl("grit") - g.lvl("implementation")))
+		g.say("The %s group locks you out for 10 minutes." % CAT_NAME[cat].to_lower())
+	else:
+		(r["dh"] as Dictionary)[cat] = int((r["dh"] as Dictionary).get(cat, 0)) + 1
+		g.say("The %s group hardens against you (+1 to try again)." % CAT_NAME[cat].to_lower())
+	return false
+
+static func _try_category(g, cell: int, cat: String) -> Dictionary:
+	if not CAT_LIVE.has(cat):
+		g.say("%s are not on the network yet." % CAT_NAME[cat])
 		return _control_menu(g, cell)
 	var op := _unlocked(g, cell)
 	if not op.has(cat):
-		var lv: int = int(def_at(g, cell).get("lvl", 1))
-		spend(g, T_DEVICE)
-		if g.game_over:
-			return {}
-		var dcv: int = dc(g, cell, cat)
-		var res: Array = roll(g, dcv)
-		g._math("%s: 2d10 %d + Analysis %d = %d vs DC %d" % [CAT_NAME[cat], res[1], g.lvl("analysis"), res[2], dcv])
-		g.skill_up("analysis", lv + int((r["dh"] as Dictionary).get(cat, 0)))
-		if not bool(res[0]):
-			var nat: int = int(res[1])
-			if nat == 2:
-				hurt(g, maxi(0, 10 - g.lvl("grit")) * maxi(0, lv - g.lvl("implementation")))
-				g.say("The %s group throws you out." % CAT_NAME[cat].to_lower())
-			elif nat <= 7:
-				(r["lock"] as Dictionary)[cat] = g.sim.tick + LOCK_TURNS
-				hurt(g, maxi(0, lv - g.lvl("grit") - g.lvl("implementation")))
-				g.say("The %s group locks you out for 10 minutes." % CAT_NAME[cat].to_lower())
-			else:
-				(r["dh"] as Dictionary)[cat] = int((r["dh"] as Dictionary).get(cat, 0)) + 1
-				g.say("The %s group hardens against you (+1 to try again)." % CAT_NAME[cat].to_lower())
-			if g.game_over:
-				return {}
-			return _control_menu(g, cell)
+		if not device_check(g, cell, cat):
+			return {} if g.game_over else _control_menu(g, cell)
 		op[cat] = true
 	return cameras_menu(g, cell) if cat == "cameras" else lights_menu(g, cell)
 
@@ -445,6 +487,9 @@ static func _use_camera(g, cell: int, k: int) -> Dictionary:
 ## in a camera: next (+1) or previous (-1)
 static func cam_switch(g, step: int) -> void:
 	var cell: int = int(g.cam_view["board"])
+	if bool(g.cam_view.get("solo", false)):
+		g.say("You are linked to this one camera only.")
+		return
 	var cams: Array = def_at(g, cell).get("cams", [])
 	if cams.size() < 2:
 		g.say("This is the only camera on the board.")
@@ -467,9 +512,31 @@ static func cam_wait(g) -> void:
 
 static func cam_end(g) -> Dictionary:
 	var cell: int = int(g.cam_view["board"])
+	var solo: bool = bool(g.cam_view.get("solo", false))
 	g.cam_view = {}
 	g._compute_fov()
-	return _control_menu(g, cell)
+	return {} if solo else _control_menu(g, cell)
+
+## the board that runs a thing on this cell (a tower's board for anything in the tower, a site's only board), or -1
+static func board_for(g, cell: int) -> int:
+	if g.city.has_meta("site"):
+		return int(g.city.cb_defs.keys()[0]) if not g.city.cb_defs.is_empty() else -1
+	var t: Dictionary = g.tower_at(cell)
+	if t.is_empty():
+		return -1
+	for b in g.city.cb_defs:
+		if int(g.city.cb_defs[b].get("tower", -1)) == int(t["no"]):
+			return int(b)
+	return -1
+
+## [board cell, index] of the camera on a cell
+static func camera_at(g, cell: int) -> Array:
+	for b in g.city.cb_defs:
+		var cams: Array = g.city.cb_defs[b]["cams"]
+		for k in cams.size():
+			if int(cams[k]["cell"]) == cell:
+				return [int(b), k]
+	return []
 
 static func cam_current(g) -> Dictionary:
 	if g.cam_view.is_empty():

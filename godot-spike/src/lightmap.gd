@@ -323,7 +323,7 @@ func _open(c: int) -> Array:
 				var fc: int = base + ny * size + nx
 				if not indoor(fc):
 					continue
-				if g.boards.has("cb_dark") and g.BD.floor_off(g, fc):
+				if g.boards.has("cb_dark") and g.BD.fixture_off(g, fc):
 					continue
 				var d: float = sqrt(float(dx * dx + dy * dy))
 				if d > FIXTURE_DIM:

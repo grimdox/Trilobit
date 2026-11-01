@@ -26,6 +26,7 @@ const LM = preload("res://src/lightmap.gd")
 const MS = preload("res://src/missions.gd")
 const TJ = preload("res://src/temp_jobs.gd")
 const BD = preload("res://src/boards.gd")
+const NW = preload("res://src/network.gd")
 const ENM = preload("res://src/enemies.gd")
 const PW = preload("res://src/power.gd")
 const NANO = preload("res://src/nanohacks.gd")
@@ -128,6 +129,8 @@ var mlvl: Dictionary = {}                      # mission sites: a hostile's char
 var done_contracts: Dictionary = {}           # ids of the contracts the player has completed and been paid for: a posted contract pays once
 var portal: Dictionary = {}                    # {cell, was (the tile it replaced), under, offer}
 var board_hit: int = -1                        # a control board the player just used (the front end opens its menu)
+var net_snap: Dictionary = {}                   # the network scan on screen: {center, radius, pings[]} (empty when there is none)
+var net_links: Dictionary = {}                  # ping key -> link (Networked things; lost when they leave the link range)
 var cam_view: Dictionary = {}                  # while looking through a camera: {board, i}
 var terminal_hit: int = -1                     # a mission terminal the player just used (the front end opens its screen and clears this)
 var ev_hit: int = -1                           # a vehicle charging bank the player just used: its north-west cell (the front end opens the menu and clears this)
@@ -5275,7 +5278,7 @@ func nano_targets() -> Array:
 	return out
 
 ## run a hack.  Costs USE_KJ of the battery and a turn.  `target` is the person for Shock.
-func act_nano_use(hid: String, target: int = -1) -> bool:
+func act_nano_use(hid: String, target: int = -1, via_net: bool = false) -> bool:
 	var d: Dictionary = NANO.get_def(hid)
 	if d.is_empty() or not nano_has(hid):
 		return false
@@ -5292,8 +5295,11 @@ func act_nano_use(hid: String, target: int = -1) -> bool:
 		say("%s is already running." % d["name"])
 		return false
 	if hid == "shock":
-		if target < 0 or not (target in nano_targets()):
-			say("Shock needs a target in sight.")
+		if not via_net:
+			say("Shock runs through the network: Scan the Network, then Network to the target.")
+			return false
+		if target < 0 or target >= sim.n or sim.alive[target] != 1 or not net_links.has("h" + str(target)) or sim.pos[target] / s2 != pc / s2 or cheb(sim.pos[target], pc) > NW.link_radius(self):
+			say("You are not networked to that target.")
 			return false
 	power = power_left() - NANO.USE_KJ
 	if hid == "mend":
@@ -5312,7 +5318,8 @@ func act_nano_use(hid: String, target: int = -1) -> bool:
 	return true
 
 ## 10 damage to a random implanted body part of the target; people with no implants take nothing
-func _shock(i: int, dmg: int) -> void:
+func _shock(i: int, base: int) -> void:
+	var dmg: int = NW.power_damage(self, base, npc_lvl(i, "analysis"))
 	var rig: Array = ENM.rolled_implants(fac[i], enemy_level(i), seed_value, i, IMP.ALL) if fac[i] != CIV else []
 	if rig.is_empty():
 		say("The jolt crackles over %s and finds nothing to bite: they are not wired." % name_of(i))

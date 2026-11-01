@@ -16,7 +16,7 @@ const ALL := [
 	{"id": "reflex", "name": "Reflex", "kind": "active", "skills": {"dodge": 1}, "turns": ACTIVE_TURNS, "draw": ACTIVE_DRAW,
 		"text": "Overclocks the nerves: +1 Dodge for 10 minutes.", "cols": ["#ffe14a", "#ffb02a", "#fff3a0"]},
 	{"id": "shock", "name": "Shock", "kind": "instant", "damage": SHOCK_DAMAGE,
-		"text": "Overloads a target in sight: 10 damage to a random implanted body part.  Unwired people take nothing.", "cols": ["#ff3ec8", "#c23cff", "#ffd0f4"]},
+		"text": "Offensive; runs through the network (B, then Network to a target): 10 damage x (1 + your Implementation/10 - their Analysis/10) to a random implanted body part.  Unwired people take nothing.", "cols": ["#ff3ec8", "#c23cff", "#ffd0f4"]},
 	{"id": "strike", "name": "Strike", "kind": "active", "skills": {"unarmed": 1, "melee": 1}, "turns": ACTIVE_TURNS, "draw": ACTIVE_DRAW,
 		"text": "Primes the muscles: +1 Unarmed and +1 Melee for 10 minutes.", "cols": ["#ff5a4a", "#ff9a3a", "#d02a2a"]},
 	{"id": "mend", "name": "Mend (test)", "kind": "instant", "heal": 10,

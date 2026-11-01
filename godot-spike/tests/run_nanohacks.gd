@@ -30,6 +30,12 @@ func chips_in_pack(g) -> int:
 			c += 1
 	return c
 
+## Shock runs through the network now: link to the target first (within reach)
+func _net_shock(g, i: int) -> bool:
+	g.skills["networking"] = 10
+	g.net_links["h" + str(i)] = {}
+	return g.act_nano_use("shock", i, true)
+
 func _initialize() -> void:
 	var m = MainScript.new()
 	m.save_prefix = "user://test_nano_save_"
@@ -131,7 +137,7 @@ func _initialize() -> void:
 			wired = i
 		elif g.fac[i] == g.CIV and plain < 0:
 			plain = i
-	check("Shock needs a target in sight", not g.act_nano_use("shock") and g.power_left() == 100.0)
+	check("Shock needs a networked target", not g.act_nano_use("shock") and g.power_left() == 100.0)
 	g.sim.player = g.pc
 	var cells: Array = []
 	for d in [1, -1, g.size, -g.size, g.size + 1, -g.size - 1]:
@@ -155,7 +161,7 @@ func _initialize() -> void:
 	var tl: Array = g.nano_targets()
 
 	check("the people beside you are offered as targets", wired in tl and plain in tl)
-	check("Shock on a person with no implants costs the 10 kJ and does nothing", g.act_nano_use("shock", plain) and absi(g.power_left() - 90.0) < 1.0 and g.hpn[plain] == hp_c and BODY.LIMBS.all(func(l): return g.npc_limb_hp(plain, l) == g.npc_limb_max(plain, l)))
+	check("Shock on a person with no implants costs the 10 kJ and does nothing", _net_shock(g, plain) and absi(g.power_left() - 90.0) < 1.0 and g.hpn[plain] == hp_c and BODY.LIMBS.all(func(l): return g.npc_limb_hp(plain, l) == g.npc_limb_max(plain, l)))
 	g.power = 100.0
 	g.hpn[wired] = 100
 	g.hpmax[wired] = 100
@@ -169,7 +175,7 @@ func _initialize() -> void:
 	var full := {}
 	for l in BODY.LIMBS:
 		full[l] = g.npc_limb_hp(wired, l)
-	check("Shock on a wired person does 10 to one limb that carries an implant", g.act_nano_use("shock", wired))
+	check("Shock on a wired person does 10 to one limb that carries an implant", _net_shock(g, wired))
 	for l in BODY.LIMBS:
 		var d: int = int(full[l]) - g.npc_limb_hp(wired, l)
 		if d > 0:
