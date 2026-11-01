@@ -143,6 +143,8 @@ static func ensure(c, all: PackedByteArray) -> Dictionary:
 				walk[door] = 1
 				qq.append(door)
 			_flood_walk(all, walk, qq, size, s2)
+		elif _breach(c, all, carve, walk, outc, door, size, s2):
+			stat["breached"] = int(stat.get("breached", 0)) + 1
 		else:
 			stat["dead"] += 1
 			_seal(c, door, size)
@@ -174,6 +176,59 @@ static func ensure(c, all: PackedByteArray) -> Dictionary:
 				stat["dropped"] += 1
 		c.set(name, keep)
 	return stat
+
+## a tower's door that opens into a yard no street reaches, and no room next door can be punched through to: tunnel from the yard, through the walls of the
+## neighbours, to the nearest cell that can be walked to from a street.  The walls on the way become doors.  Towers only (a packed block's small shops are closed down instead).
+static func _breach(c, all: PackedByteArray, carve: PackedByteArray, walk: PackedByteArray, start: int, door: int, size: int, s2: int) -> bool:
+	var rect := Rect2i()
+	var is_tower := false
+	var dx: int = door % size
+	var dy: int = door / size
+	for t in c.tower_info:
+		if dx >= int(t["x0"]) and dx <= int(t["x1"]) and dy >= int(t["y0"]) and dy <= int(t["y1"]):
+			rect = Rect2i(int(t["x0"]), int(t["y0"]), int(t["x1"]) - int(t["x0"]) + 1, int(t["y1"]) - int(t["y0"]) + 1)
+			is_tower = true
+	if not is_tower:
+		return false
+	var prev := {start: -1}
+	var q: Array = [start]
+	var qi := 0
+	var found := -1
+	while qi < q.size() and q.size() < 40000:
+		var cur: int = q[qi]
+		qi += 1
+		if walk[cur] == 1:
+			found = cur
+			break
+		var x: int = cur % size
+		for nb in [cur - 1 if x > 1 else -1, cur + 1 if x < size - 2 else -1, cur - size if cur >= size * 2 else -1, cur + size if cur < s2 - size * 2 else -1]:
+			if nb < 0 or prev.has(nb):
+				continue
+			if rect.has_point(Vector2i(nb % size, nb / size)):
+				continue                                              # not back through the tower itself
+			var t: int = all[nb]
+			if not (carve[t] == 1 or t == CG.WALL or (CG.WALK[t] == 1 and _indoor(t))):
+				continue
+			prev[nb] = cur
+			q.append(nb)
+	if found < 0:
+		return false
+	var path: Array = []
+	var k: int = found
+	while k != -1:
+		path.append(k)
+		k = prev[k]
+	var seeds := PackedInt32Array()
+	for p in path:
+		if all[p] == CG.WALL:
+			all[p] = CG.DOOR
+		walk[p] = 1
+		seeds.append(p)
+	if door >= 0:
+		walk[door] = 1
+		seeds.append(door)
+	_flood_walk(all, walk, seeds, size, s2)
+	return true
 
 static func _flood_walk(all: PackedByteArray, walk: PackedByteArray, q: PackedInt32Array, size: int, s2: int) -> void:
 	var qi := 0
