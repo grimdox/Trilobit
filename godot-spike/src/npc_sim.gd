@@ -160,6 +160,8 @@ func setup(city, count: int, seed: int) -> void:
 ## One home cell per person.  Houses first (one to four people each, fewer in the rich districts, more in the poor), then the flats of the
 ## towers (one to three), then the old home markers as households of one to three, until everyone has a roof.  Every person gets a cell of
 ## their own inside the dwelling.  Returns an empty array for a map with no houses or flats (a harbour, a mission site).
+var reserved_flat: Dictionary = {}                        # the vacant flat the player starts in
+
 func _dwellings(city, count: int) -> PackedInt32Array:
 	var out := PackedInt32Array()
 	if city.houses.is_empty() and city.apartments.is_empty():
@@ -169,6 +171,9 @@ func _dwellings(city, count: int) -> PackedInt32Array:
 	var fl: Array = city.apartments.duplicate()
 	_shuffle(hs)
 	_shuffle(fl)
+	reserved_flat = {}
+	if not fl.is_empty():
+		reserved_flat = fl.pop_back()                     # one flat stays empty for the player to wake up in
 	var covered := PackedByteArray()                      # ground cells that belong to a house: the old home markers do not put their people in there
 	covered.resize(s2)
 	var skip: Dictionary = {}

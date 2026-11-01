@@ -282,6 +282,8 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1), ms
 	_shut_doors()
 	if mission.is_empty():
 		_add_windows()
+		for sgn in city.signs:                           # the windows are cut after the signs are planned: a sign stops at a window as it does at a door
+			preload("res://src/signage.gd")._clip_run(city, sgn)
 	sim = SIM.new()
 	sim.perception_standin = false
 	sim.setup(city, n_people, seed_value ^ 0x5eed)
@@ -882,13 +884,21 @@ func _start_player() -> void:
 
 ## a free floor cell in a flat chosen at random from every flat in every apartment building (who owns it is for later)
 func _start_flat() -> int:
-	var ap: Array = city.apartments
 	var lived := {}                                  # every cell somebody calls home or stands on: a flat holding one of them is somebody's
 	for i in sim.n:
 		lived[int(sim.home_cell[i])] = true
 		lived[int(sim.pos[i])] = true
-	for _t in mini(ap.size(), 400):
-		var a: Dictionary = ap[rng.randi() % ap.size()]
+	var cands: Array = []
+	if not sim.reserved_flat.is_empty():
+		cands.append(sim.reserved_flat)                  # the flat the people were kept out of
+	var ap: Array = city.apartments.duplicate()
+	for k in range(ap.size() - 1, 0, -1):
+		var j: int = rng.randi() % (k + 1)
+		var tmp = ap[k]
+		ap[k] = ap[j]
+		ap[j] = tmp
+	cands.append_array(ap)
+	for a in cands:
 		var r: Rect2i = a["rect"]
 		var base: int = (int(a["cell"]) / s2) * s2
 		var cells: Array = []
@@ -900,7 +910,7 @@ func _start_flat() -> int:
 					empty = false
 				if sim.walk[c] == 1 and sim.at[c] == -1 and CG.is_floor(city.tiles[c]):
 					cells.append(c)
-		if empty and not cells.is_empty():
+		if (empty or a == sim.reserved_flat) and not cells.is_empty():
 			return cells[rng.randi() % cells.size()]
 	return -1
 

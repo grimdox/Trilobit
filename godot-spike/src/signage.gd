@@ -290,6 +290,7 @@ static func draw_sign(ci: CanvasItem, font: Font, s: Dictionary, cell_pos: Vecto
 	var wall_dir: Vector2 = Vector2(0, 1) if side == 0 else (Vector2(0, -1) if side == 1 else (Vector2(1, 0) if side == 2 else Vector2(-1, 0)))     # street cell -> wall
 	var along: Vector2 = Vector2(1, 0) if side < 2 else Vector2(0, 1)
 	var origin: Vector2 = centre + wall_dir * tile + along * sgn * (tile * 0.5 + 3.0 + bw * 0.5)
+	origin = origin.round()                                            # whole pixels, so every glyph of the name lands on the same baseline
 	ci.draw_set_transform(origin, 0.0 if side < 2 else (-PI * 0.5 if side == 2 else PI * 0.5), Vector2.ONE)
 	var r := Rect2(-bw * 0.5, -bh * 0.5, bw, bh)
 	var fill: Color = bg
@@ -325,7 +326,7 @@ static func draw_sign(ci: CanvasItem, font: Font, s: Dictionary, cell_pos: Vecto
 		fs -= 1
 	while txt.length() > 2 and font.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > avail:
 		txt = txt.substr(0, txt.length() - 1)
-	var tp := Vector2(tx, fs * 0.36)
+	var tp := Vector2(roundf(tx), roundf(fs * 0.36))
 	ci.draw_string_outline(font, tp, txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, 2, halo * Color(1, 1, 1, dim))
 	ci.draw_string(font, tp, txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, ink * Color(1, 1, 1, dim))
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

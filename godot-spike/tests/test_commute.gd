@@ -90,7 +90,7 @@ func run() -> Array:
 			continue
 		var found := false
 		for i in n:
-			if com.wc[i] == int(b["keeper"]) and g.eco.role[i] == g.eco.VENDOR:
+			if com.wc[i] == int(b["keeper"]) and (g.eco.role[i] == g.eco.VENDOR or g.eco.role[i] == g.eco.GROCER):
 				found = true
 				break
 		if found:
@@ -176,7 +176,7 @@ func run() -> Array:
 				continue
 			if sim.pos[who] != last:
 				moves += 1
-				if g.cheb(sim.pos[who], last) > 1 and sim.pos[who] / s2 == last / s2:
+				if g.cheb(sim.pos[who], last) > 1 and sim.pos[who] / s2 == last / s2 and not (sim.pos[who] == com.wc[who] and com.leg[who] == 0 and g.cheb(sim.pos[who], last) <= 3):
 					steps_ok = false
 				last = sim.pos[who]
 			if sim.pos[who] == com.wc[who] and com.leg[who] == 0:
