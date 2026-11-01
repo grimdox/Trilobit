@@ -12,6 +12,7 @@ extends RefCounted
 const CG = preload("res://src/citygen.gd")
 const TJ = preload("res://src/temp_jobs.gd")
 const MS = preload("res://src/missions.gd")
+const BD = preload("res://src/boards.gd")
 
 ## cell area per room (walls included), the smallest room (walls included)
 const LAYOUT := {
@@ -302,6 +303,7 @@ static func build(offer: Dictionary):
 	site["obj_room_idx"] = obj_room
 	if TJ.is_temp(o):
 		_dress_temp(c, o, rng, inner, used, S, site, far_rooms, start_room, inside)
+	BD.place_site(c, rng, inner, used, S, o, TJ.is_temp(o))
 	var t: String = o["type"]
 	var risk: int = int(o["risk"])
 	var hostiles: int = int(o["hostiles"])

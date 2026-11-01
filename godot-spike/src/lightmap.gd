@@ -128,7 +128,7 @@ func site_lights() -> Array:
 		return out
 	_site_build()
 	for L in _site_lights:
-		if not g.dead_lights.has(int(L[0])):
+		if not g.dead_lights.has(int(L[0])) and not g.BD.site_light_off(g, int(L[0])):
 			out.append([int(L[0]), String(L[1])])
 	return out
 
@@ -137,7 +137,7 @@ func bulb_at(c: int) -> bool:
 	if not in_site():
 		return false
 	_site_build()
-	if g.dead_lights.has(c):
+	if g.dead_lights.has(c) or g.BD.site_light_off(g, c):
 		return false
 	for L in _site_lights:
 		if int(L[0]) == c and String(L[1]) == "bulb":
@@ -292,7 +292,7 @@ func _open(c: int) -> Array:
 	var base: int = (c / g.s2) * g.s2
 	if ind and in_site():
 		for L in _site_lights:
-			if g.dead_lights.has(int(L[0])):
+			if g.dead_lights.has(int(L[0])) or g.BD.site_light_off(g, int(L[0])):
 				continue
 			var lc: int = int(L[0])
 			if lc / g.s2 != c / g.s2:
@@ -322,6 +322,8 @@ func _open(c: int) -> Array:
 					continue
 				var fc: int = base + ny * size + nx
 				if not indoor(fc):
+					continue
+				if g.boards.has("cb_dark") and g.BD.floor_off(g, fc):
 					continue
 				var d: float = sqrt(float(dx * dx + dy * dy))
 				if d > FIXTURE_DIM:

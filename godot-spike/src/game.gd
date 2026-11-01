@@ -25,6 +25,7 @@ const WX = preload("res://src/weather.gd")
 const LM = preload("res://src/lightmap.gd")
 const MS = preload("res://src/missions.gd")
 const TJ = preload("res://src/temp_jobs.gd")
+const BD = preload("res://src/boards.gd")
 const ENM = preload("res://src/enemies.gd")
 const PW = preload("res://src/power.gd")
 const NANO = preload("res://src/nanohacks.gd")
@@ -126,6 +127,8 @@ var boards: Dictionary = {}                    # each mission terminal's board, 
 var mlvl: Dictionary = {}                      # mission sites: a hostile's character level (agent index -> level); it adds to their combat skills
 var done_contracts: Dictionary = {}           # ids of the contracts the player has completed and been paid for: a posted contract pays once
 var portal: Dictionary = {}                    # {cell, was (the tile it replaced), under, offer}
+var board_hit: int = -1                        # a control board the player just used (the front end opens its menu)
+var cam_view: Dictionary = {}                  # while looking through a camera: {board, i}
 var terminal_hit: int = -1                     # a mission terminal the player just used (the front end opens its screen and clears this)
 var ev_hit: int = -1                           # a vehicle charging bank the player just used: its north-west cell (the front end opens the menu and clears this)
 var smith_hit: int = -1                        # a gunsmithing table the player just used (the front end opens the gun screen and clears this)
@@ -317,6 +320,8 @@ func setup(n_people: int = 1200, isl = null, zn: Vector2i = Vector2i(-1, -1), ms
 	transit = TR.new()
 	transit.setup(self)
 	_place_station_clocks()
+	if mission.is_empty():
+		BD.place_city(self)
 	_prof("transit", _t0)
 	eco = EC.new()
 	eco.setup(self)
@@ -1698,6 +1703,8 @@ func interactables() -> Array:
 				out.append({"kind": "door", "cell": c, "label": ("Locked door" if t == CG.LOCKED else ("Door (shut)" if t == CG.TID["door_closed"] else "Door (open)"))})
 			elif t == CG.TID["terminal"]:
 				out.append({"kind": "terminal", "cell": c, "label": "Mission terminal"})
+			elif t == CG.TID["control_board"]:
+				out.append({"kind": "board", "cell": c, "label": "Control board"})
 			elif t == CG.TID["station_clock"]:
 				out.append({"kind": "clock", "cell": c, "label": "Station clock"})
 			elif t == CG.TID["charger"]:
@@ -1782,6 +1789,9 @@ func act_interact_with(it: Dictionary) -> bool:
 	match String(it["kind"]):
 		"door":
 			return act_door(c)
+		"board":
+			board_hit = c
+			return true
 		"terminal":
 			terminal_hit = c
 			say("The terminal's screen wakes.")
@@ -2229,10 +2239,16 @@ var peek_off := Vector2i.ZERO                   # a peek: you lean one tile this
 
 ## the tile you look from: where you stand, or the tile you lean out to
 func eye_cell() -> int:
+	if not cam_view.is_empty():
+		return BD.cam_origin(self, int(cam_view["board"]), BD.cam_current(self))
 	return pc + peek_off.y * size + peek_off.x
 
 func _compute_fov() -> void:
 	var e: int = eye_cell()
+	if not cam_view.is_empty():
+		var cd: Vector2i = BD.DIRS[BD.cam_face(self, int(cam_view["board"]), BD.cam_current(self))]
+		fov.compute(e % size, e / size, BD.CAM_RANGE, BD.CAM_ARC, cd.x, cd.y)
+		return
 	fov.compute(e % size, e / size, sight_radius(), vision_arc(), facing.x, facing.y)
 
 ## lean out one tile (dx, dy) to look round a corner or through a door: half a turn, and nobody sees you any differently

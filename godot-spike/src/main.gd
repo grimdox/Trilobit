@@ -1457,6 +1457,10 @@ func refresh() -> void:
 		extra += "  [FLYING fuel %d]" % g.fuel
 	elif g.has_implant("jets") and g.fuel < g.FUEL_MAX:
 		extra += "  [jets %d]" % g.fuel
+	if not g.cam_view.is_empty():
+		var cm: Dictionary = g.BD.cam_current(g)
+		extra += "  [%s%s]" % [cm.get("name", ""), " mobile" if bool(cm.get("mobile", false)) else " fixed"]
+		logbox.text = "CAMERA VIEW   Left/Right (4/6): next/previous camera    Down (5): wait a turn    Up/Esc (8): leave"
 	if view.focus_cell >= 0:
 		var ft: int = g.current_target()
 		if ft < 0:
@@ -1952,13 +1956,32 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		return
 	if mode == "talk":
 		if k == KEY_ESCAPE:
+			if menu.has("bd") and game.has_meta("cb_open"):
+				(game.get_meta("cb_open") as Dictionary).erase(int(menu["bd"]))
 			mode = "play"
 			panel.visible = false
 		elif k >= KEY_1 and k <= KEY_9:
-			menu = game.eco.choose(menu, k - KEY_1)
+			if menu.has("bd"):
+				menu = game.BD.choose(game, menu, k - KEY_1)
+			else:
+				menu = game.eco.choose(menu, k - KEY_1)
 			if menu.is_empty():
-				mode = "play"
+				mode = "camview" if not game.cam_view.is_empty() else "play"
 				panel.visible = false
+				if mode == "play" and game.game_over:
+					pass
+		refresh()
+		return
+	if mode == "camview":
+		if k == KEY_LEFT or k == KEY_KP_4:
+			game.BD.cam_switch(game, 1)
+		elif k == KEY_RIGHT or k == KEY_KP_6:
+			game.BD.cam_switch(game, -1)
+		elif k == KEY_DOWN or k == KEY_KP_5:
+			game.BD.cam_wait(game)
+		elif k == KEY_UP or k == KEY_ESCAPE or k == KEY_KP_8:
+			menu = game.BD.cam_end(game)
+			mode = "talk"
 		refresh()
 		return
 	if mode == "waiting":
@@ -2227,6 +2250,10 @@ func _after_act() -> void:
 	elif mode == "play" and game.terminal_hit >= 0:
 		open_terminal(game.terminal_hit)
 		return
+	elif mode == "play" and game.board_hit >= 0:
+		menu = game.BD.open_menu(game, game.board_hit)
+		game.board_hit = -1
+		mode = "talk"
 	refresh()
 
 func _drain_sfx() -> void:

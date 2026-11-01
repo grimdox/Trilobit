@@ -822,6 +822,36 @@ def terminal(theme, rng):
     return finish(t, theme, rng)
 
 
+def control_board(theme, rng):
+    t = piece()
+    body(t, 12, 10, 51, 53, 14, 'body2', 'dark_steel', r=3)
+    screen(t, 17, 15, 46, 30, 'screen_glow')
+    on(t, Tile.box_mask(17, 35, 46, 48, 1), 'rubber', 1)
+    for i in range(4):
+        for j in range(2):
+            t.emit(Tile.disk_mask(23 + i * 6, 39 + j * 6, 1.6), 'neon_green' if (i + j) % 3 else 'neon_red')
+    return finish(t, theme, rng)
+
+
+def camera_fixed(theme, rng):
+    t = piece()
+    body(t, 22, 14, 41, 26, 6, 'body2', 'dark_steel', r=2)
+    body(t, 25, 26, 38, 52, 9, 'body2', 'steel', r=3)
+    t.emit(Tile.disk_mask(32, 46, 4), 'neon_red')
+    t.slab(Tile.disk_mask(32, 46, 6) & ~Tile.disk_mask(32, 46, 4), 'chrome', 11, profile='cyl')
+    return finish(t, theme, rng)
+
+
+def camera_mobile(theme, rng):
+    t = piece()
+    t.slab(Tile.disk_mask(32, 32, 20), 'dark_steel', 6, profile='dome')
+    t.slab(Tile.disk_mask(32, 32, 13), 'body2', 12, profile='dome')
+    t.emit(Tile.disk_mask(32, 22, 4), 'neon_red')
+    t.slab(Tile.disk_mask(32, 22, 6) & ~Tile.disk_mask(32, 22, 4), 'chrome', 13, profile='cyl')
+    t.mark(Tile.disk_mask(32, 32, 20) & ~Tile.disk_mask(32, 32, 18), 1)
+    return finish(t, theme, rng)
+
+
 def portal(theme, rng):
     t = piece()
     ring = Tile.disk_mask(32, 32, 28) & ~Tile.disk_mask(32, 32, 20)
@@ -908,6 +938,7 @@ BUILDERS = {
     'f_trl_fern': fern, 'f_trl_aquarium': aquarium, 'f_trl_charm_counter': charm_counter, 'f_trl_cabinet_lacquer': cabinet_lacquer,
     'f_trl_neon_pink': lambda th, r: neon_sign(th, r, 'neon_pink'), 'f_trl_crane_leg': crane_leg, 'f_trl_crane_beam': crane_beam,
     'f_trl_crane_trolley': crane_trolley, 'f_trl_bollard': bollard, 'f_trl_terminal': terminal,
+    'f_trl_control_board': control_board, 'f_trl_camera_fixed': camera_fixed, 'f_trl_camera_mobile': camera_mobile,
     'f_trl_portal': portal, 'f_trl_device': device, 'f_trl_charger': charger, 'f_trl_gunsmith_table': gunsmith_table,
     'f_trl_ev_nw': lambda th, r: ev_charger(th, r, 'nw'), 'f_trl_ev_ne': lambda th, r: ev_charger(th, r, 'ne'),
     'f_trl_ev_sw': lambda th, r: ev_charger(th, r, 'sw'), 'f_trl_ev_se': lambda th, r: ev_charger(th, r, 'se'),

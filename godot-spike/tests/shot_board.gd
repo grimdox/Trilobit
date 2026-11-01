@@ -1,11 +1,9 @@
 extends SceneTree
-## screenshots of the mission terminal's board (neutral, a changed setting with a done contract, no money) and a built site of each layout:
-##   xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . -s tests/shot_board.gd -- /tmp/shots/b
 const MainScript = preload("res://src/main.gd")
 const WorldScript = preload("res://src/world.gd")
-const CG = preload("res://src/citygen.gd")
+const BD = preload("res://src/boards.gd")
 func _snap(path: String) -> void:
-	for k in 5:
+	for k in 6:
 		await process_frame
 	await RenderingServer.frame_post_draw
 	root.get_viewport().get_texture().get_image().save_png(path)
@@ -22,34 +20,36 @@ func _initialize() -> void:
 	m.start_play(w.game)
 	await process_frame
 	var g = w.game
-	g.pc_level = 4
-	var term := -1
-	for i in g.s2:
-		if g.city.tiles[i] == CG.TID["terminal"]:
-			term = i
+	var cell: int = int(g.city.cb_defs.keys()[0])
+	var near := -1
+	for d in [1, -1, g.size, -g.size]:
+		if g.sim.walk[cell + d] == 1 and g.sim.at[cell + d] == -1:
+			near = cell + d
 			break
-	m.mode = "play"
-	m.open_terminal(term)
-	await _snap("%s_neutral.png" % out)
-	m.screen_key(KEY_TAB)
-	m.screen_key(KEY_LEFT)
-	m.screen_key(KEY_DOWN)
-	m.screen_key(KEY_RIGHT)
-	m.screen_key(KEY_RIGHT)
-	m.screen_key(KEY_DOWN)
-	m.screen_key(KEY_LEFT)
-	m.screen_key(KEY_UP)
-	m.screen_key(KEY_UP)
-	m.screen_key(KEY_UP)
-	m.screen_key(KEY_RIGHT)
-	m.tm["sel"] = 3
-	g.done_contracts[String(m.tm["offers"][1]["id"])] = true
-	await _snap("%s_changed.png" % out)
-	g.yen = 50
-	m.screen_key(KEY_R)
-	m.tm["sel"] = 0
-	await _snap("%s_poor.png" % out)
-	g.yen = 900
-	m.screen_key(KEY_R)
-	await _snap("%s_regen.png" % out)
+	g.pc = near
+	g.last_pc = near
+	g.sim.retier(near)
+	g._compute_fov()
+	m.refresh()
+	await _snap(out + "_board.png")
+	g.skills["analysis"] = 9
+	BD.rec(g, cell)["conn"] = true
+	BD.rec(g, cell)["acc"] = true
+	m.menu = BD.open_menu(g, cell)
+	m.mode = "talk"
+	m.refresh()
+	await _snap(out + "_menu.png")
+	BD._unlocked(g, cell)["cameras"] = true
+	var cams: Array = g.city.cb_defs[cell]["cams"]
+	g.cam_view = {"board": cell, "i": 0}
+	g._compute_fov()
+	m.menu = {}
+	m.mode = "camview"
+	m.panel.visible = false
+	m.refresh()
+	await _snap(out + "_cam0.png")
+	g.cam_view = {"board": cell, "i": 5}
+	g._compute_fov()
+	m.refresh()
+	await _snap(out + "_cam5.png")
 	quit()

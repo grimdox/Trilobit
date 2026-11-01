@@ -692,9 +692,12 @@ func _draw() -> void:
 	var T := tile()
 	var size: int = game.size
 	var s2: int = game.s2
-	var base: int = (game.pc / s2) * s2
-	var px: int = game.lx(game.pc)
-	var py: int = game.ly(game.pc)
+	var vc: int = game.pc                                  # the cell the screen is centred on (a camera's, while looking through one)
+	if not game.cam_view.is_empty():
+		vc = int(game.BD.cam_current(game)["cell"])
+	var base: int = (vc / s2) * s2
+	var px: int = game.lx(vc)
+	var py: int = game.ly(vc)
 	var cx: int = game.lx(focus_cell) if focus_cell >= 0 else px      # the camera sits on the player, or on the target you switched the view to
 	var cy: int = game.ly(focus_cell) if focus_cell >= 0 else py
 	var ox := cx - cols / 2 + (look_off.x if look_on else 0)

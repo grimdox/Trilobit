@@ -66,7 +66,8 @@ const EXTRA_BASE := [
 	["station_clock", "f_trl_station_clock", 0, 0],
 ]
 ## street props that stand in the way and give cover (the rest of the street furniture is drawn over the ground by view.gd and does not block)
-const PROPS := [["street_tree", "f_trl_tree_street", 0, 1], ["street_bench", "f_trl_bench", 0, 1], ["bench_broken", "f_trl_bench_broken", 0, 1]]
+const PROPS := [["street_tree", "f_trl_tree_street", 0, 1], ["street_bench", "f_trl_bench", 0, 1], ["bench_broken", "f_trl_bench_broken", 0, 1],
+	["control_board", "f_trl_control_board", 0, 0], ["camera_fixed", "f_trl_camera_fixed", 1, 0], ["camera_mobile", "f_trl_camera_mobile", 1, 0]]
 static var EXTRA: Array = EXTRA_BASE + FG.NEW + PROPS
 const EXTRA0 := 33
 static var TID: Dictionary = _tids()
@@ -168,6 +169,7 @@ var shops_t: PackedInt32Array = PackedInt32Array()
 var lairs: PackedInt32Array = PackedInt32Array()     # cells underground where squatters live
 var vaults: Array = []                 # Array of PackedInt32Array: the cells of each locked room (loot goes here)
 var movables: Array = []               # [cell, kind] props the game turns into pushable things (crates, tables, chairs)
+var cb_defs: Dictionary = {}          # control boards: board cell -> {kind, lvl, cams, ...} (boards.gd)
 var tower_info: Array = []             # {x0,y0,x1,y1,h,stairs,elev} per built tower
 var station_doors: PackedInt32Array = PackedInt32Array()   # the street cell of each subway station's stairs
 var subway: Dictionary = {}            # {ring: PackedInt32Array of track cells (level -1), stops: Array of ring indices}
