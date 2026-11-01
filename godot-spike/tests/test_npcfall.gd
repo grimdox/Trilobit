@@ -97,7 +97,7 @@ func run() -> Array:
 		var h0: int = g.hpn[who]
 		g.fall_agent(who, street + 3 * g.s2)
 		var d: int = h0 - g.hpn[who]
-		check.call("a three-floor fall costs 15-18 (%d) and the victim lives, stunned, where the player can see them" % d, d >= 15 and d <= 18 and g.sim.alive[who] == 1 and g.stun[who] > 0 and g.z_of(g.sim.pos[who]) == 0 and g.sim.near[who] == 1)
+		check.call("a three-floor fall costs 15-18 (%d) and the victim lives where the player can see them" % d, d >= 15 and d <= 18 and g.sim.alive[who] == 1 and g.z_of(g.sim.pos[who]) == 0 and g.sim.near[who] == 1)
 		check.call("a hunter who falls is still hunting", g.astate[who] == g.HUNTING)
 	else:
 		check.call("(no air column near the player)", false)
@@ -146,17 +146,6 @@ func run() -> Array:
 	g.city.tiles[open + 2] = CG.GROUND
 	g.sim.walk[open + 2] = 1
 
-	# knockback from heavy weapons
-	var knocked := 0
-	g.wield = g._new_item("trl_mel_ono")
-	for _t in 80:
-		put.call(open + 1, 5000)
-		g.fac[who] = g.BRATVA
-		g.astate[who] = g.HUNTING
-		g.melee(who)
-		if g.sim.pos[who] == open + 2:
-			knocked += 1
-	check.call("an ono's blows no longer throw people back (%d of 80)" % knocked, knocked == 0)
 	# and off a roof
 	g.pc = edge - 1
 	g.sim.retier(g.pc)

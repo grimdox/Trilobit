@@ -31,9 +31,7 @@ const SKILLS := [
 	{"id": "melee", "name": "Melee", "group": "Combat", "attrs": ["str", "agi"], "live": true,
 		"desc": "Combat with close-ranged weapons.  Governs chance to hit, and how hard melee hits are.  At high levels, allows for melee weapon disciplines.",
 		"note": "Blades and other melee weapons: each level adds 1 to your 2d10 hit roll and 1 damage.  Every swing costs 100 action points and 1 stamina per kg of weapon.",
-		"disc": [
-			{"id": "parry", "name": "Parry", "req": 3, "desc": "Turn blows aside with your weapon (+12% parry, +2% per level)."},
-			{"id": "riposte", "name": "Riposte", "req": 6, "desc": "A parried blow can become an instant counter-strike."}]},
+		"disc": []},
 	{"id": "ranged", "name": "Ranged", "group": "Combat", "attrs": ["per", "cog"], "live": true,
 		"desc": "Accuracy and precision with guns.  Governs chance to hit with ranged weapons.  At high levels, allows for ranged weapon disciplines.",
 		"note": "Each level adds 1 to your 2d10 shot roll and 1 damage, and settles your aim a little faster.",

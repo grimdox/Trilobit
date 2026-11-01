@@ -232,19 +232,120 @@ def implant(t, tier, idx):
 
 
 # ------------------------------------------------------------------------------------------------ nano chips, belt pack, healing
-NANO = {'plating': 'neon_cyan', 'reflex': 'neon_amber', 'shock': 'neon_violet', 'strike': 'neon_red', 'mend': 'neon_green', 'research': 'neon_pink'}
+# Nanohack chips are drawn after the Anarchy Online nano crystals: an angled glass vial with a glowing core, a dark collar and a spiked injector base.  The size follows the
+# slots the chip fills; the colour and the pattern in the core say what it does.
+NANO = {
+    'minor_plating': ('neon_cyan', 1, 'bands1'), 'plating': ('neon_blue', 2, 'bands2'), 'major_plating': ('neon_blue', 4, 'bands3'),
+    'reflex': ('neon_yellow', 1, 'chevrons'), 'strike': ('neon_red', 1, 'spike'), 'mend': ('neon_green', 1, 'cross'), 'heal': ('neon_green', 2, 'cross2'),
+    'shock': ('neon_violet', 1, 'zig'), 'impair': ('neon_orange', 2, 'crack'), 'acid': ('neon_lime', 2, 'bubbles'),
+    'underclock': ('neon_teal', 1, 'ticks'), 'chaotic': ('neon_white', 4, 'swirl'),
+}
+SKILL_GROUP = {'unarmed': ('Combat', 1), 'melee': ('Combat', 2), 'ranged': ('Combat', 3), 'dodge': ('Combat', 4), 'grit': ('Combat', 5),
+               'networking': ('Hacking', 1), 'analysis': ('Hacking', 2), 'implementation': ('Hacking', 3),
+               'manual': ('Labour', 1), 'engineering': ('Labour', 2), 'artisan': ('Labour', 3), 'research': ('Labour', 4),
+               'streetwise': ('Social', 1), 'etiquette': ('Social', 2), 'diplomacy': ('Social', 3), 'negotiation': ('Social', 4)}
+GROUP_GLOW = {'Combat': 'neon_red', 'Hacking': 'neon_violet', 'Labour': 'neon_amber', 'Social': 'neon_pink'}
 
 
 def nano(t, k):
-    g = NANO.get(k, 'neon_cyan')
-    t.slab(B(14, 14, 50, 50, 3), 'screen', 11, bevel=1.2)
-    for p in range(6):
-        t.slab(B(8, 18 + p * 6, 14, 20 + p * 6), 'gold', 9, bevel=0)
-        t.slab(B(50, 18 + p * 6, 56, 20 + p * 6), 'gold', 9, bevel=0)
-    t.slab(B(22, 22, 42, 42, 2), 'ink', 13, bevel=0.6)
-    t.emit(L(24, 32, 40, 32, 1.0) | L(32, 24, 32, 40, 1.0), g)
-    t.emit(D(32, 32, 3), g)
-    t.emit(L(16, 16, 22, 16, 0.6) | L(42, 48, 48, 48, 0.6), g)
+    if k in SKILL_GROUP:
+        grp, n = SKILL_GROUP[k]
+        g, slots, motif = GROUP_GLOW[grp], 1, 'level%d' % n
+    else:
+        g, slots, motif = NANO.get(k, ('neon_cyan', 1, 'bands1'))
+    # geometry: the vial lies from its injector base (lower left) to its cap (upper right); wider and longer for wider chips
+    big = {1: 0, 2: 1, 4: 2}[slots]
+    gw, cw = (11.0, 5.4) if big == 0 else ((13.0, 7.0) if big == 1 else (16.0, 9.4))
+    x0, y0, x1, y1 = (24, 40, 43, 21) if big == 0 else ((23, 41, 45, 19) if big == 1 else (22, 42, 47, 17))
+    ux, uy = (x1 - x0), (y1 - y0)
+    ln = (ux * ux + uy * uy) ** 0.5
+    ux, uy = ux / ln, uy / ln
+    px, py = -uy, ux                                           # across the vial
+    # the injector base: a dark collar and three spikes
+    bx, by = x0 - ux * 3, y0 - uy * 3
+    t.slab(L(bx, by, x0 + ux * 3, y0 + uy * 3, gw + 3.0), 'dark_steel', 13, bevel=1.2)
+    for off in (-1, 0, 1):
+        sx, sy = bx - ux * 12 + px * off * (gw * 0.95), by - uy * 12 + py * off * (gw * 0.95)
+        t.slab(Tile.poly_mask([(bx + px * off * gw * 0.5 + px * 2, by + py * off * gw * 0.5 + py * 2), (bx + px * off * gw * 0.5 - px * 2, by + py * off * gw * 0.5 - py * 2), (sx, sy)]), 'ink', 12, bevel=0)
+    t.paint(L(bx, by, bx + ux * 2, by + uy * 2, gw + 2.0), 'rubber')
+    # the glass
+    glass = L(x0, y0, x1, y1, gw)
+    t.slab(glass, 'glass', 15, bevel=2.2)
+    core = L(x0 + ux * 1.5, y0 + uy * 1.5, x1 - ux * 1.5, y1 - uy * 1.5, cw)
+    t.emit(core, g)
+    t.mark(L(x0 + px * (gw * 0.28), y0 + py * (gw * 0.28), x1 + px * (gw * 0.28), y1 + py * (gw * 0.28), 1.4) & glass & ~core, 1)   # a glint on the glass
+    # the pattern in the core
+    midx, midy = (x0 + x1) / 2.0, (y0 + y1) / 2.0
+
+    def at(f, s=0.0):
+        return x0 + ux * ln * f + px * s, y0 + uy * ln * f + py * s
+
+    def bar(f, w=1.0, half=None):
+        a, b = at(f, -(half or cw / 2.0)), at(f, (half or cw / 2.0))
+        return L(a[0], a[1], b[0], b[1], w)
+    if motif.startswith('bands'):
+        nb = int(motif[-1])
+        for i in range(nb):
+            t.paint(bar(0.3 + 0.2 * i, 2.0) & core, 'steel')
+    elif motif == 'chevrons':
+        for f in (0.35, 0.6):
+            a, m_, b = at(f - 0.08, -cw / 2.0), at(f + 0.06, 0.0), at(f - 0.08, cw / 2.0)
+            t.paint((L(a[0], a[1], m_[0], m_[1], 1.5) | L(m_[0], m_[1], b[0], b[1], 1.5)) & core, 'neon_white')
+    elif motif == 'spike':
+        a, b = at(0.3, 0), at(0.8, 0)
+        t.paint(L(a[0], a[1], b[0], b[1], 1.4) & core, 'neon_white')
+    elif motif in ('cross', 'cross2'):
+        c = at(0.52)
+        wd = 1.6 if motif == 'cross' else 2.2
+        a1, a2, b1, b2 = at(0.52, -cw * 0.3), at(0.52, cw * 0.3), at(0.52 - 0.12, 0), at(0.52 + 0.12, 0)
+        t.paint((L(a1[0], a1[1], a2[0], a2[1], wd) | L(b1[0], b1[1], b2[0], b2[1], wd)) & core, 'neon_white')
+    elif motif == 'zig':
+        pts = [at(0.18, 0), at(0.34, cw * 0.32), at(0.5, -cw * 0.32), at(0.66, cw * 0.32), at(0.82, 0)]
+        m_ = np_zero()
+        for i in range(len(pts) - 1):
+            m_ = m_ | L(pts[i][0], pts[i][1], pts[i + 1][0], pts[i + 1][1], 1.3)
+        t.paint(m_ & core, 'neon_white')
+    elif motif == 'crack':
+        pts = [at(0.15, cw * 0.3), at(0.4, -cw * 0.1), at(0.55, cw * 0.2), at(0.85, -cw * 0.3)]
+        m_ = np_zero()
+        for i in range(len(pts) - 1):
+            m_ = m_ | L(pts[i][0], pts[i][1], pts[i + 1][0], pts[i + 1][1], 1.2)
+        t.paint(m_ & core, 'ink')
+    elif motif == 'bubbles':
+        for f, s_, r in ((0.3, -1.2, 1.6), (0.5, 1.5, 2.0), (0.7, -0.8, 1.4), (0.85, 1.0, 1.0)):
+            c = at(f, s_)
+            t.paint(D(c[0], c[1], r) & core, 'neon_white')
+    elif motif == 'ticks':
+        for f in (0.25, 0.4, 0.55, 0.7, 0.85):
+            t.paint(bar(f, 1.0, cw * 0.28) & core, 'ink')
+    elif motif == 'swirl':
+        for i in range(9):
+            f = 0.15 + i * 0.09
+            s_ = (cw * 0.28) * (1 if i % 2 == 0 else -1) * (1 - abs(i - 4) / 6.0)
+            c = at(f, s_)
+            t.paint(D(c[0], c[1], 1.5) & core, 'neon_pink' if i % 2 else 'ink')
+    elif motif.startswith('level'):
+        lv = int(motif[-1])
+        for i in range(lv):                                     # a tick for each place the skill holds in its group
+            t.paint(bar(0.22 + 0.13 * i, 1.0, cw * 0.4) & core, 'ink')
+    # collars and the cap
+    for f in ((0.0, 0.92) if big == 2 else ((0.0,) if big == 1 else ())):
+        a, b = at(f + 0.02, -gw / 2.0), at(f + 0.02, gw / 2.0)
+        t.slab(L(a[0], a[1], b[0], b[1], 2.2) & glass, 'chrome', 17, bevel=0.4)
+    cap0 = (x1 - ux * 1.0, y1 - uy * 1.0)
+    cap1 = (x1 + ux * 5.5, y1 + uy * 5.5)
+    t.slab(L(cap0[0], cap0[1], cap1[0], cap1[1], gw - 1.5), 'dark_steel', 16, bevel=1.0, on=0)
+    t.paint(L(cap0[0], cap0[1], cap1[0], cap1[1], gw - 3.5), 'ink')
+    t.slab(L(cap0[0] + ux * 0.5, cap0[1] + uy * 0.5, cap0[0] + ux * 1.8, cap0[1] + uy * 1.8, gw - 0.5), 'chrome', 17, bevel=0.3)
+    t.emit(D(cap1[0] - ux * 2.0, cap1[1] - uy * 2.0, 1.2), g)                  # a status light in the cap
+    if k in SKILL_GROUP:                                        # passive chips carry a band
+        a, b = at(0.0, -gw / 2.0), at(0.0, gw / 2.0)
+        t.paint(L(a[0] + ux * 4, a[1] + uy * 4, b[0] + ux * 4, b[1] + uy * 4, 1.6) & glass & ~core, 'gold')
+
+
+def np_zero():
+    import numpy as np
+    return np.zeros((64, 64), bool)
 
 
 def fanny(t):

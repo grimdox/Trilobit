@@ -110,6 +110,8 @@ var run_streak: int = 0
 var run_mode: bool = false                     # chosen on the movement prompt: every move is a run (Shift also runs)
 var nanos: Array = []                         # the nanohack in each Trilobit slot ("" for an empty one)
 var nano_fx := {}                             # active hack id -> turns left
+var nano_cd := {}                             # hack id -> turns until it can be used again
+var npc_fx := {}                              # person -> {"impair": {grp, until}, "under": until, "acid": turns left, "chaos": {at, ...}, "gone": [destroyed implants], "dead": [groups lost for good]}
 var implants := {}                             # "legs": leg actuators, "jets": dorsal jump jets
 var fuel: int = 24
 var flying: bool = false
@@ -886,8 +888,10 @@ func _start_player() -> void:
 	_sync_pools()
 	nanos = []
 	nano_fx = {}
-	for h in NANO.ALL:
-		inv.stow(_new_item(NANO.chip_item(String(h["id"]))))
+	nano_cd = {}
+	npc_fx = {}
+	for hid in ["minor_plating", "reflex", "shock", "strike", "mend", "research"]:       # the first six chips (what the starter set was before the new hacks)
+		inv.stow(_new_item(NANO.chip_item(hid)))
 
 ## a free floor cell in a flat chosen at random from every flat in every apartment building (who owns it is for later)
 func _start_flat() -> int:
@@ -2317,7 +2321,7 @@ func _face_toward(i: int, cell: int) -> void:
 ## Damage types: only "phys" for now; armor entries can later carry their own numbers per type ("fire", "acid", "elec", "pierce", "blunt", "slash").
 var body = BODY.new()
 var imp_dur: Dictionary = {}                   # implant id -> armor durability left (absent = as new)
-var melee_arts: Array = []                     # learned melee arts: "parry", "riposte" (see _melee_arts_on_miss); empty until the player learns some
+var melee_arts: Array = []                     # learned melee arts (none exist now)
 var bless_left: int = 0                        # turns of blessing left: a little luck (+6% to hit, +4% to dodge a blade)
 const HUNGER_AFTER := 24 * CLK.HOUR             # turns (a turn is six seconds) without food before you are Hungry: a full stomach is 2,500 kcal = 24 hours
 const THIRST_AFTER := 4 * CLK.HOUR              # ... without a drink before you are Thirsty: 500 mL of water = 4 hours
@@ -2374,8 +2378,8 @@ func armor_pieces(limb: String) -> Array:
 	for d in IMP.ALL:
 		if implants.get(d["id"], false) and power_left() > 0.0 and d.has("armor") and body.ok(limb) and (d["armor_group"] == grp or d["armor_group"] == "all"):
 			out.append({"item": null, "id": d["id"], "name": d["name"], "phys": int(d["armor"]), "left": int(imp_dur.get(d["id"], int(d["dur"]))), "max": int(d["dur"])})
-	if nano_armor() > 0:
-		out.append({"item": null, "id": "", "name": "Plating hack", "phys": nano_armor(), "left": 1 << 20, "max": 1 << 20})
+	if nano_armor_for(limb) > 0:
+		out.append({"item": null, "id": "", "name": "Plating hack", "phys": nano_armor_for(limb), "left": 1 << 20, "max": 1 << 20})
 	return out
 
 ## the flat armor value on a limb against a damage type (broken pieces give nothing)
@@ -2594,7 +2598,7 @@ func npc_limb_hp(i: int, l: String) -> int:
 	return npc_limb_max(i, l) if (limbn[i * 6] == -1) else v
 
 func npc_limb_ok(i: int, l: String) -> bool:
-	return npc_limb_hp(i, l) > 0
+	return npc_limb_hp(i, l) > 0 and not npc_group_out(i, BODY.GROUP[l])
 
 func npc_arms_ok(i: int) -> int:
 	return (1 if npc_limb_ok(i, "l_arm") else 0) + (1 if npc_limb_ok(i, "r_arm") else 0)
@@ -2750,31 +2754,13 @@ func _terms(parts: Array) -> String:
 func _outcome_word(out: String) -> String:
 	return {"cmiss": "FUMBLE", "crit": "CRITICAL HIT", "hit": "HIT", "miss": "MISS"}.get(out, out)
 
-## melee arts are skills the player can learn later (parry, riposte).  The hooks are here and working; nothing grants them yet.
+## melee arts the player can learn later (none exist now: parrying is out)
 func has_art(id: String) -> bool:
 	return id in melee_arts or discipline(id)
 
 func learn_art(id: String) -> void:
 	if not (id in melee_arts):
 		melee_arts.append(id)
-
-## a blow aimed at the player did not land.  how = "dodge" or "parry".  Returns true if the player got a free counter-strike.
-func _melee_arts_on_miss(i: int, how: String) -> bool:
-	if how == "parry" and has_art("riposte") and sim.alive[i] == 1 and cheb(sim.pos[i], pc) <= 1 and rng.randf() < 0.5 + 0.05 * float(lvl("melee")):
-		say("Riposte!  You turn the parry into a strike.")
-		var ms: Dictionary = melee_stats()
-		var dmg: int = rng.randi_range(int(ms["dmg"][0]), int(ms["dmg"][1])) + lvl(melee_skill_id())
-		_melee_damage(i, dmg, ms)
-		return true
-	return false
-
-func parry_chance(nm: Dictionary) -> int:
-	if wield == null or not wield.has_tag("melee") or nm.get("flail", false) or not can_use_weapon(wield, false):
-		return 0
-	var p: int = int(melee_stats().get("parry", 0))
-	if has_art("parry"):
-		p += 12 + 2 * lvl("melee")
-	return p
 
 ## trauma patch: 25 health and the worst limb mended a little (a disabled limb comes back)
 func act_use_medical(it) -> bool:
@@ -3206,17 +3192,8 @@ func _npc_melee_attack(i: int) -> void:
 		if dodge > 0 and total + dodge >= SK.HIT_AT:
 			say("You slip %s's blow." % name_of(i))
 			skill_up("dodge", 2 + npc_lvl(i, "melee") / 2)
-			_melee_arts_on_miss(i, "dodge")
 		else:
 			say("%s swings and misses." % name_of(i))
-		return
-	var parry: int = parry_chance(npc_melee_stats(i))
-	var parry_roll: int = rng.randi() % 100
-	if parry > 0:
-		_math("Your parry: %d%% chance, rolled %d: %s" % [parry, parry_roll, "PARRIED" if parry_roll < parry else "no parry"])
-	if parry_roll < parry:
-		say("You turn %s's blow aside." % name_of(i))
-		_melee_arts_on_miss(i, "parry")
 		return
 	var crit: bool = out == "crit"
 	var wmax: int = int(nm["dmg"][1])
@@ -4462,9 +4439,10 @@ func _hunt(i: int, d: int) -> void:
 		meter[i] = 100
 	# every action (a shot, a swing, a step) costs 100 action points; a fighter earns ap_rate per turn, scaled by their stamina
 	var rate: int = npc_ap_rate(i)
-	apn[i] = mini(apn[i] + rate, AP_BASE + rate - 1)
-	while apn[i] >= AP_BASE and sim.alive[i] == 1 and astate[i] == HUNTING and not game_over:
-		apn[i] -= AP_BASE
+	var act_cost: int = npc_act_cost(i)                     # 100 action points an action, 110 when underclocked
+	apn[i] = mini(apn[i] + rate, act_cost + rate - 1)
+	while apn[i] >= act_cost and sim.alive[i] == 1 and astate[i] == HUNTING and not game_over:
+		apn[i] -= act_cost
 		_hunt_act(i, cheb(sim.pos[i], pc), sees)
 
 ## free cells next to person i that they could step into
@@ -4555,7 +4533,7 @@ func _hunt_act(i: int, d: int, sees: bool) -> void:
 			say_if_seen(c, "%s raises a %s and takes aim at you." % [name_of(i), String(ng["name"])])
 			return
 		_offence(i)
-		apn[i] = mini(apn[i] + AP_BASE - GP.AP_FIRE, AP_BASE + npc_ap_rate(i) - 1)     # a shot costs only 50 of the 100 points
+		apn[i] = mini(apn[i] + AP_BASE - GP.AP_FIRE, npc_act_cost(i) + npc_ap_rate(i) - 1)     # a shot costs only 50 of the 100 points
 		npc_stamina_spend(i, GP.STAM_FIRE)
 		var nat: int = _roll_2d10()
 		var rr: int = rng.randi_range(int(ng["range"][0]), int(ng["range"][1]))
@@ -5091,9 +5069,23 @@ func nano_slots() -> int:
 			n += int(IMP.get_def(String(id)).get("nano", 0))
 	return n
 
-## the hack in slot i ("" if empty or out of range)
+## the hack that STARTS in slot i ("" if empty, out of range, or the slot is only the continuation of a wider chip)
 func nano_at(i: int) -> String:
-	return String(nanos[i]) if i >= 0 and i < nanos.size() else ""
+	var v: String = String(nanos[i]) if i >= 0 and i < nanos.size() else ""
+	return "" if v == "#" else v
+
+## the slot where the chip covering slot i starts (-1 if the slot is empty)
+func nano_head(i: int) -> int:
+	if i < 0 or i >= nanos.size() or String(nanos[i]) == "":
+		return -1
+	while i > 0 and String(nanos[i]) == "#":
+		i -= 1
+	return i
+
+## the hack covering slot i, head or continuation ("" if empty)
+func nano_cover(i: int) -> String:
+	var h: int = nano_head(i)
+	return nano_at(h) if h >= 0 else ""
 
 func nano_installed() -> Array:
 	var out: Array = []
@@ -5101,6 +5093,14 @@ func nano_installed() -> Array:
 		if nano_at(i) != "":
 			out.append(nano_at(i))
 	return out
+
+## slots in use (a wide chip fills several)
+func nano_used() -> int:
+	var n := 0
+	for i in nano_slots():
+		if i < nanos.size() and String(nanos[i]) != "":
+			n += 1
+	return n
 
 func nano_has(id: String) -> bool:
 	return id in nano_installed()
@@ -5113,7 +5113,20 @@ func nano_ok() -> bool:
 			return true
 	return false
 
-## the chip goes into a slot (the first empty one unless `slot` says): false and a message when there is no room
+## the first slot where `w` empty slots in a row start (-1 if none)
+func _nano_run(w: int, from: int = 0) -> int:
+	var n: int = nano_slots()
+	for i in range(from, n - w + 1):
+		var ok := true
+		for k in w:
+			if i + k < nanos.size() and String(nanos[i + k]) != "":
+				ok = false
+				break
+		if ok:
+			return i
+	return -1
+
+## the chip goes into a slot (the first run of empty slots wide enough unless `slot` says): false and a message when there is no room
 func act_nano_install(it, slot: int = -1) -> bool:
 	var hid: String = NANO.of_item(String(it.id()))
 	if hid == "" or NANO.get_def(hid).is_empty():
@@ -5126,54 +5139,114 @@ func act_nano_install(it, slot: int = -1) -> bool:
 	if nano_has(hid):
 		say("%s is already installed." % NANO.get_def(hid)["name"])
 		return false
-	if slot < 0 or slot >= n or nano_at(slot) != "":
-		slot = -1
-		for i in n:
-			if nano_at(i) == "":
-				slot = i
-				break
-	if slot < 0:
-		say("Your Trilobit has no free nanohack slot (%d of %d used)." % [nano_installed().size(), n])
+	var w: int = NANO.width(NANO.get_def(hid))
+	var want := -1
+	if slot >= 0 and slot + w <= n:
+		var free := true
+		for k in w:
+			if slot + k < nanos.size() and String(nanos[slot + k]) != "":
+				free = false
+		if free:
+			want = slot
+	if want < 0:
+		want = _nano_run(w)
+	if want < 0:
+		say("Your Trilobit has no room for %s: it needs %d free slot%s in a row (%d of %d used)." % [NANO.get_def(hid)["name"], w, "" if w == 1 else "s", nano_used(), n])
 		return false
 	if inv.find(it).is_empty() or not inv.remove(it):
 		return false
-	while nanos.size() <= slot:
+	while nanos.size() < want + w:
 		nanos.append("")
-	nanos[slot] = hid
-	say("You load %s into slot %d." % [NANO.get_def(hid)["name"], slot + 1])
+	nanos[want] = hid
+	for k in range(1, w):
+		nanos[want + k] = "#"
+	say("You load %s into slot %d." % [NANO.get_def(hid)["name"], want + 1])
 	sfx("select")
 	return true
 
-## take the hack in slot i out; its chip goes back to your pack
+## take the chip covering `slot` out; it goes back to your pack
 func act_nano_remove(slot: int) -> bool:
-	var hid: String = nano_at(slot)
-	if hid == "":
+	var head: int = nano_head(slot)
+	if head < 0:
 		return false
+	var hid: String = nano_at(head)
 	if inv.free_tiles() < 1:
 		say("No room in your pockets: make a tile free first.")
 		return false
-	nanos[slot] = ""
+	for k in NANO.width(NANO.get_def(hid)):
+		if head + k < nanos.size():
+			nanos[head + k] = ""
 	nano_fx.erase(hid)
+	nano_cd.erase(hid)
 	inv.stow(_new_item(NANO.chip_item(hid)))
 	say("You eject the %s chip." % NANO.get_def(hid)["name"])
 	sfx("select")
 	return true
 
-## after a Trilobit comes out the slots shrink: chips beyond the new count go back to the pack (false if there is no room for them)
+## after a Trilobit comes out the slots shrink: the chips that no longer fit go back to the pack (this counts them)
 func nano_chips_over(new_slots: int) -> int:
 	var n := 0
-	for i in range(new_slots, nanos.size()):
-		if nano_at(i) != "":
+	for i in nanos.size():
+		var hid: String = nano_at(i)
+		if hid != "" and i + NANO.width(NANO.get_def(hid)) > new_slots:
 			n += 1
 	return n
 
 func nano_trim() -> void:
 	var n: int = nano_slots()
-	for i in range(n, nanos.size()):
-		if nano_at(i) != "":
+	for i in range(nanos.size() - 1, -1, -1):
+		var hid: String = nano_at(i)
+		if hid != "" and i + NANO.width(NANO.get_def(hid)) > n:
 			act_nano_remove(i)
 	if nanos.size() > n:
 		nanos.resize(n)
+
+## the TEST--- nanohack scenario's character: a top-tier Trilobit (grade 3, 6 slots), Networking, Analysis and Implementation at 5, and every offensive hack:
+## the ones that fit are installed (Shock, Impair, Acid Feedback, Underclock fill the six slots), the rest wait in the pack as chips
+func nano_test_kit() -> void:
+	implants = {"x303": true}
+	nanos = []
+	nano_fx = {}
+	nano_cd = {}
+	for s in ["networking", "analysis", "implementation"]:
+		skills[s] = 5
+	for e in inventory_list():                                          # the starter chips go: this kit brings its own
+		var it = e["item"]
+		if String(it.id()).begins_with("trl_nano_"):
+			inv.remove(it)
+	_sync_pools()
+	power = power_cap()
+	for hid in ["shock", "impair", "acid", "underclock", "chaotic"]:
+		var chip = _new_item(NANO.chip_item(hid))
+		inv.stow(chip)
+		act_nano_install(chip)
+	say("Nanohack test: a Meridian Cybernetics Trilobit, Networking/Analysis/Implementation 5, every offensive hack (Chaotic Resonance needs 4 free slots: it is in your pack).")
+
+## a loaded game's slots: unknown hacks go, wide chips get their continuation slots back
+func _nano_sanitize() -> void:
+	var out: Array = []
+	var i := 0
+	while i < nanos.size():
+		var v: String = String(nanos[i])
+		var d: Dictionary = NANO.get_def(v)
+		if v == "" or v == "#" or d.is_empty():
+			out.append("")
+			i += 1
+			continue
+		var w: int = NANO.width(d)
+		out.append(v)
+		for k in range(1, w):
+			out.append("#")
+		i += w
+		while out.size() > nanos.size() and out.back() == "#":
+			out.pop_back()
+	nanos = out
+
+func _fx_load(raw: Dictionary) -> Dictionary:
+	var out := {}
+	for k in raw:
+		out[int(k)] = raw[k]
+	return out
 
 func nano_running(id: String) -> bool:
 	return int(nano_fx.get(id, 0)) > 0 and nano_has(id) and nano_ok()
@@ -5191,23 +5264,67 @@ func nano_bonus(id: String) -> int:
 			t += int(d["skills"][id])
 	return t
 
-func nano_armor() -> int:
+## does a body part carry an implant (any fitted implant of its group)?
+func implanted_limb(l: String) -> bool:
+	var grp: String = BODY.GROUP[l]
+	for id in implants:
+		if implants.get(id, false) and BODY.PART_GROUP.get(String(IMP.get_def(String(id)).get("part", "chest")), "chest") == grp:
+			return true
+	return false
+
+func implanted_limb_count() -> int:
+	var n := 0
+	for l in BODY.LIMBS:
+		if implanted_limb(l):
+			n += 1
+	return n
+
+## armor the running plating hacks add on a body part: the body-wide value, and the extra on an implanted part
+func nano_armor_for(l: String) -> int:
 	var t := 0
 	for hid in nano_installed():
 		var d: Dictionary = NANO.get_def(hid)
 		if d.has("armor") and nano_running(hid):
-			t += int(d["armor"])
+			t += int(d["armor"]) + (int(d.get("armor_imp", 0)) if implanted_limb(l) else 0)
 	return t
+
+## kJ one use of a hack takes
+func nano_cost(hid: String) -> float:
+	var d: Dictionary = NANO.get_def(hid)
+	if d.has("cost_part"):
+		return float(d["cost_part"]) * float(BODY.LIMBS.size())
+	if d.has("cost_imp"):
+		return float(d["cost_imp"]) * float(implanted_limb_count())
+	return float(d.get("cost", NANO.USE_KJ))
+
+## kJ/h a running hack draws
+func nano_upkeep(d: Dictionary) -> float:
+	if d.has("draw_part"):
+		return float(d["draw_part"]) * float(BODY.LIMBS.size())
+	return float(d.get("draw", 0.0))
 
 ## extra kJ/h the running hacks draw
 func nano_draw() -> float:
 	var t := 0.0
 	for hid in nano_installed():
 		if nano_running(hid):
-			t += float(NANO.get_def(hid).get("draw", 0.0))
+			t += nano_upkeep(NANO.get_def(hid))
 	return t
 
+## a hack's cooldown in turns: its minutes, 10% shorter for every level of Networking (none left at level 10)
+func nano_cd_turns(d: Dictionary) -> int:
+	var m: float = float(d.get("cooldown", 0))
+	if m <= 0.0:
+		return 0
+	return maxi(0, int(round(m * 10.0 * maxf(0.0, 1.0 - 0.1 * float(lvl("networking"))))))
+
 func _nano_tick() -> void:
+	for hid in nano_cd.keys():
+		nano_cd[hid] = int(nano_cd[hid]) - 1
+		if int(nano_cd[hid]) <= 0:
+			nano_cd.erase(hid)
+	if not npc_fx.is_empty():
+		_npc_fx_tick()
 	if nano_fx.is_empty():
 		return
 	for hid in nano_fx.keys():
@@ -5216,7 +5333,7 @@ func _nano_tick() -> void:
 			nano_fx.erase(hid)
 			say("%s wears off." % NANO.get_def(String(hid))["name"])
 
-## what the N menu lists: [{slot, id, name, kind, left, text}] for every installed hack
+## what the N menu lists: [{slot, id, name, kind, left, cd, cost, text, offensive}] for every installed hack
 func nano_menu() -> Array:
 	var out: Array = []
 	for i in nano_slots():
@@ -5224,7 +5341,7 @@ func nano_menu() -> Array:
 		if hid == "":
 			continue
 		var d: Dictionary = NANO.get_def(hid)
-		out.append({"slot": i, "id": hid, "name": d["name"], "kind": d["kind"], "left": int(nano_fx.get(hid, 0)), "text": d["text"]})
+		out.append({"slot": i, "id": hid, "name": d["name"], "kind": d["kind"], "left": int(nano_fx.get(hid, 0)), "cd": int(nano_cd.get(hid, 0)), "cost": nano_cost(hid), "text": d["text"], "offensive": NANO.is_offensive(d)})
 	return out
 
 ## people in sight that Shock can pick
@@ -5237,7 +5354,109 @@ func nano_targets() -> Array:
 	out.sort_custom(func(a, b): return cheb(sim.pos[a], pc) < cheb(sim.pos[b], pc))
 	return out
 
-## run a hack.  Costs USE_KJ of the battery and a turn.  `target` is the person for Shock.
+# ---- what the offensive hacks leave on a person
+func _fx_of(i: int) -> Dictionary:
+	if not npc_fx.has(i):
+		npc_fx[i] = {}
+	return npc_fx[i]
+
+## the implants this person has now (those the hacks have not destroyed)
+func npc_implants(i: int) -> Array:
+	var rig: Array = ENM.rolled_implants(fac[i], enemy_level(i), seed_value, i, IMP.ALL) if fac[i] != CIV else []
+	if not npc_fx.has(i) or not npc_fx[i].has("gone"):
+		return rig
+	return rig.filter(func(id): return not (id in npc_fx[i]["gone"]))
+
+## is one of their limb groups (arms, legs) out of use: impaired for now, or destroyed for good?
+func npc_group_out(i: int, grp: String) -> bool:
+	if not npc_fx.has(i):
+		return false
+	var f: Dictionary = npc_fx[i]
+	if f.has("impair") and int(f["impair"]["until"]) > turn and String(f["impair"]["grp"]) == grp:
+		return true
+	return f.has("dead") and grp in f["dead"]
+
+func npc_underclocked(i: int) -> bool:
+	return npc_fx.has(i) and int(npc_fx[i].get("under", 0)) > turn
+
+## action points one action costs them: 100, or 110 under Underclock
+func npc_act_cost(i: int) -> int:
+	return AP_BASE + (AP_BASE / 10 if npc_underclocked(i) else 0)
+
+## is this effect already on them? (no hack stacks)
+func npc_has_fx(i: int, hid: String) -> bool:
+	if not npc_fx.has(i):
+		return false
+	var f: Dictionary = npc_fx[i]
+	match hid:
+		"impair": return f.has("impair") and int(f["impair"]["until"]) > turn
+		"underclock": return int(f.get("under", 0)) > turn
+		"acid": return int(f.get("acid", 0)) > 0
+		"chaotic": return f.has("chaos")
+	return false
+
+func _limbs_of_group(grp: String) -> Array:
+	var limbs: Array = []
+	for l in BODY.LIMBS:
+		if BODY.GROUP[l] == grp:
+			limbs.append(l)
+	return limbs
+
+## damage one of their body parts; true if it killed them
+func _hurt_npc_limb(i: int, loc: String, dmg: int) -> bool:
+	if sim.alive[i] != 1:
+		return true
+	if npc_limb_hit(i, loc, dmg):
+		return true
+	hpn[i] -= dmg
+	if hpn[i] <= 0:
+		kill(i)
+		return true
+	return false
+
+func _npc_fx_tick() -> void:
+	for i in npc_fx.keys():
+		if sim.alive[i] != 1:
+			npc_fx.erase(i)
+			continue
+		var f: Dictionary = npc_fx[i]
+		if int(f.get("acid", 0)) > 0:
+			f["acid"] = int(f["acid"]) - 1
+			var rig: Array = npc_implants(i)
+			if not rig.is_empty():
+				var grp: String = BODY.PART_GROUP.get(String(IMP.get_def(String(rig[rng.randi() % rig.size()])).get("part", "chest")), "chest")
+				var limbs: Array = _limbs_of_group(grp)
+				var loc: String = String(limbs[rng.randi() % limbs.size()])
+				var d1: int = NW.power_damage(self, int(NANO.get_def("acid")["dmg_imp"]), npc_lvl(i, "analysis"))
+				var d2: int = NW.power_damage(self, int(NANO.get_def("acid")["dmg_other"]), npc_lvl(i, "analysis"))
+				say_if_seen(sim.pos[i], "Acid eats into %s's %s (%d)." % [name_of(i), BODY.NAME[loc], d1])
+				if _hurt_npc_limb(i, loc, d1):
+					continue
+				var others: Array = BODY.LIMBS.filter(func(l): return l != loc)
+				var loc2: String = String(others[rng.randi() % others.size()])
+				if _hurt_npc_limb(i, loc2, d2):
+					continue
+			if int(f["acid"]) <= 0:
+				f.erase("acid")
+		if f.has("chaos") and int(f["chaos"]["at"]) <= turn:
+			f.erase("chaos")
+			var rig2: Array = npc_implants(i)
+			if not rig2.is_empty():
+				var gone: String = String(rig2[rng.randi() % rig2.size()])
+				if not f.has("gone"):
+					f["gone"] = []
+				f["gone"].append(gone)
+				var gd: Dictionary = IMP.get_def(gone)
+				var gg: String = BODY.PART_GROUP.get(String(gd.get("part", "chest")), "chest")
+				if gg == "arms" or gg == "legs":
+					if not f.has("dead"):
+						f["dead"] = []
+					f["dead"].append(gg)
+				say_if_seen(sim.pos[i], "%s's %s burns out." % [name_of(i), String(gd.get("name", "implant"))])
+		if f.is_empty():
+			npc_fx.erase(i)
+
+## run a hack.  Costs kJ and a turn.  `target` is the person for an offensive hack, which runs only through the network.
 func act_nano_use(hid: String, target: int = -1, via_net: bool = false) -> bool:
 	var d: Dictionary = NANO.get_def(hid)
 	if d.is_empty() or not nano_has(hid):
@@ -5248,56 +5467,96 @@ func act_nano_use(hid: String, target: int = -1, via_net: bool = false) -> bool:
 	if not nano_ok():
 		say("Your Trilobit is off: the hacks cannot run.")
 		return false
-	if power_left() < NANO.USE_KJ:
-		say("Not enough power: %s needs %d kJ and you have %d." % [d["name"], int(NANO.USE_KJ), int(power_left())])
+	if int(nano_cd.get(hid, 0)) > 0:
+		say("%s is cooling down: %s left." % [d["name"], CLK.span_text(int(nano_cd[hid]))])
+		return false
+	var cost: float = nano_cost(hid)
+	if power_left() < cost:
+		say("Not enough power: %s needs %d kJ and you have %d." % [d["name"], int(ceil(cost)), int(power_left())])
 		return false
 	if String(d["kind"]) == "active" and nano_running(hid):
 		say("%s is already running." % d["name"])
 		return false
-	if hid == "shock":
+	if NANO.is_offensive(d):
 		if not via_net:
-			say("Shock runs through the network: Scan the Network, then Network to the target.")
+			say("%s runs through the network: Scan the Network, then Network to the target." % d["name"])
 			return false
 		if target < 0 or target >= sim.n or sim.alive[target] != 1 or not net_links.has("h" + str(target)) or sim.pos[target] / s2 != pc / s2 or cheb(sim.pos[target], pc) > NW.link_radius(self):
 			say("You are not networked to that target.")
 			return false
-	power = power_left() - NANO.USE_KJ
-	if hid == "mend":
-		var got: int = heal_body(int(d["heal"]))
-		say("The mend nano knits you: +%d bio health." % got)
+		if npc_has_fx(target, hid):
+			say("%s is already under %s." % [name_of(target), d["name"]])
+			return false
+	power = power_left() - cost
+	if int(d.get("cooldown", 0)) > 0:
+		nano_cd[hid] = nano_cd_turns(d)
+	if d.has("heal_imp"):
+		var total := 0
+		for l in BODY.LIMBS:
+			if body.ok(l):
+				var before: int = int(body.hp[l])
+				body.heal(l, int(d["heal_imp"]) if implanted_limb(l) else int(d["heal_other"]))
+				total += int(body.hp[l]) - before
+		say("%s closes %d points of bio damage." % [d["name"], total])
 		sfx("blip")
 		end_turn()
 		return true
 	if String(d["kind"]) == "active":
 		nano_fx[hid] = int(d["turns"])
-		say("%s runs for 10 minutes." % d["name"])
+		say("%s runs for %s." % [d["name"], CLK.span_text(int(d["turns"]))])
 	else:
-		_shock(target, int(d["damage"]))
+		match hid:
+			"shock": _shock(target, int(d["damage"]))
+			"impair": _impair(target, d)
+			"underclock":
+				_fx_of(target)["under"] = turn + int(d["turns"])
+				say("%s's clock drags: they act 10%% slower." % name_of(target))
+				_alert(target)
+			"acid":
+				if npc_implants(target).is_empty():
+					say("The acid finds no wiring in %s to eat." % name_of(target))
+				else:
+					_fx_of(target)["acid"] = int(d["turns"])
+					say("Acid feedback floods %s's implants." % name_of(target))
+				_alert(target)
+			"chaotic":
+				if npc_implants(target).is_empty():
+					say("The resonance finds nothing to shake apart in %s." % name_of(target))
+				else:
+					_fx_of(target)["chaos"] = {"at": turn + int(d["turns"])}
+					say("A resonance builds in %s's implants..." % name_of(target))
+				_alert(target)
 	sfx("blip")
 	end_turn()
 	return true
 
+## one random arm or leg implant of theirs stops working for a while; their health is untouched
+func _impair(i: int, d: Dictionary) -> void:
+	var cands: Array = npc_implants(i).filter(func(id): return BODY.PART_GROUP.get(String(IMP.get_def(String(id)).get("part", "chest")), "chest") in ["arms", "legs"])
+	if cands.is_empty():
+		say("%s has no arm or leg implant to impair." % name_of(i))
+		_alert(i)
+		return
+	var id: String = String(cands[rng.randi() % cands.size()])
+	var grp: String = BODY.PART_GROUP.get(String(IMP.get_def(id).get("part", "chest")), "chest")
+	_fx_of(i)["impair"] = {"grp": grp, "until": turn + int(d["turns"])}
+	say("Impair locks up %s's %s: they lose the use of their %s." % [name_of(i), String(IMP.get_def(id).get("name", "implant")), grp])
+	_alert(i)
+
 ## 10 damage to a random implanted body part of the target; people with no implants take nothing
 func _shock(i: int, base: int) -> void:
 	var dmg: int = NW.power_damage(self, base, npc_lvl(i, "analysis"))
-	var rig: Array = ENM.rolled_implants(fac[i], enemy_level(i), seed_value, i, IMP.ALL) if fac[i] != CIV else []
+	var rig: Array = npc_implants(i)
 	if rig.is_empty():
 		say("The jolt crackles over %s and finds nothing to bite: they are not wired." % name_of(i))
 		_alert(i)
 		return
 	var part: String = String(IMP.get_def(String(rig[rng.randi() % rig.size()])).get("part", "chest"))
 	var grp: String = BODY.PART_GROUP.get(part, "chest")
-	var limbs: Array = []
-	for l in BODY.LIMBS:
-		if BODY.GROUP[l] == grp:
-			limbs.append(l)
+	var limbs: Array = _limbs_of_group(grp)
 	var loc: String = String(limbs[rng.randi() % limbs.size()])
 	say("Shock arcs into %s's %s (%d)." % [name_of(i), BODY.NAME[loc], dmg])
-	if npc_limb_hit(i, loc, dmg):
-		return
-	hpn[i] -= dmg
-	if hpn[i] <= 0:
-		kill(i)
+	if _hurt_npc_limb(i, loc, dmg):
 		return
 	_alert(i)
 
@@ -5804,7 +6063,7 @@ func outside_tile(x: int, y: int) -> int:
 
 ## everything about the player that travels between zones
 func player_dict() -> Dictionary:
-	return {"done": done_contracts.duplicate(), "boards": boards.duplicate(true), "power": power, "power_state": power_state, "yen": yen, "implants": implants.duplicate(), "nanos": nanos.duplicate(), "nano_fx": nano_fx.duplicate(), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
+	return {"done": done_contracts.duplicate(), "boards": boards.duplicate(true), "power": power, "power_state": power_state, "yen": yen, "implants": implants.duplicate(), "nanos": nanos.duplicate(), "nano_fx": nano_fx.duplicate(), "nano_cd": nano_cd.duplicate(), "npc_fx": npc_fx.duplicate(true), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
 		"name": player_name, "attrs": attrs.duplicate(), "app": app.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "lvl": pc_level, "pts": attr_points, "inv": inv.to_dict(),
 		"stamina": stamina, "stam_v": 2, "ap": ap, "stance": stance, "run_mode": run_mode, "turn": turn, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "barter": barter.to_dict(), "flying": flying,
 		"body": body.to_dict(), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
@@ -5911,6 +6170,9 @@ func apply_player(d: Dictionary) -> void:
 	_sync_pools()
 	nanos = d.get("nanos", [])
 	nano_fx = d.get("nano_fx", {})
+	nano_cd = d.get("nano_cd", {})
+	npc_fx = _fx_load(d.get("npc_fx", {}))
+	_nano_sanitize()
 	fuel = int(d["fuel"])
 	ammo_pool = d["ammo"]
 	want_kind = d["want_kind"]
@@ -5957,7 +6219,7 @@ func save_dict() -> Dictionary:
 	var vlist := []
 	for v in vehicles:
 		vlist.append(vs.to_dict(v))
-	return {"test_size": test_size, "seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "corpses": corpses, "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "nanos": nanos, "nano_fx": nano_fx, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "lvl": pc_level, "pts": attr_points, "boards": boards, "in_vehicle": in_vehicle,
+	return {"test_size": test_size, "seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "corpses": corpses, "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "nanos": nanos, "nano_fx": nano_fx, "nano_cd": nano_cd, "npc_fx": npc_fx, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "lvl": pc_level, "pts": attr_points, "boards": boards, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
 			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "barter": barter.to_dict(), "inv": inv.to_dict(),
 			"items_at": it_at, "open_doors": open_doors.keys(), "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
@@ -6003,6 +6265,9 @@ func load_dict(d: Dictionary) -> void:
 	_sync_pools()
 	nanos = d.get("nanos", [])
 	nano_fx = d.get("nano_fx", {})
+	nano_cd = d.get("nano_cd", {})
+	npc_fx = _fx_load(d.get("npc_fx", {}))
+	_nano_sanitize()
 	fuel = int(d.get("fuel", FUEL_MAX))
 	flying = bool(d.get("flying", false))
 	followers = []

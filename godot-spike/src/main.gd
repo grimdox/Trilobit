@@ -146,6 +146,9 @@ func begin_new(seed: int, profile: Dictionary = {}) -> void:
 ## the TEST--- scenarios: a stand-alone game (no island) with a generic, randomised character.  Large City: a city 3072 tiles a side, twice the island city's
 ## width and length (and so four times the area); it takes minutes to build and several GB of memory.
 func begin_scenario(id: String) -> void:
+	if id == "nano_test":
+		await _begin_nano_test()
+		return
 	var size := 512
 	match id:
 		"large_city":
@@ -163,6 +166,24 @@ func begin_scenario(id: String) -> void:
 	var r := RandomNumberGenerator.new()
 	r.randomize()
 	CR.apply(g, CR.randomized(r, CR.new_profile()))
+	start_play(g)
+
+## TEST--- Nanohack scenario: a random level 4 mission (nobody in the starting room), a character with a top-tier Trilobit and every offensive hack
+func _begin_nano_test() -> void:
+	open_screen("loading")
+	screen.subtitle = "Building a level 4 mission site..."
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var r := RandomNumberGenerator.new()
+	r.randomize()
+	var offers: Array = MS.offers(r.randi() % 100000, 7, 1)
+	var o: Dictionary = offers[r.randi() % offers.size()].duplicate(true)
+	o["lv"] = [4, 4]
+	world = null
+	var g = GameScript.new(int(o["seed"]))
+	g.setup(0, null, Vector2i(-1, -1), MS.new_state(o))
+	CR.apply(g, CR.randomized(r, CR.new_profile()))
+	g.nano_test_kit()
 	start_play(g)
 
 ## hand the view the lighting and weather switches from the options
@@ -351,7 +372,7 @@ func open_screen(kind: String) -> void:
 			screen_back = "title"
 			screen.title = "TEST---"
 			screen.subtitle = "Scenarios for trying out specific pieces.  Not part of the finished game."
-			screen.items = [{"label": "Large City  (3072 x 3072)", "id": "scn:large_city"}, {"label": "Large City  (2560 x 2560)", "id": "scn:city_2560"}, {"label": "Back", "id": "back"}]
+			screen.items = [{"label": "Large City  (3072 x 3072)", "id": "scn:large_city"}, {"label": "Large City  (2560 x 2560)", "id": "scn:city_2560"}, {"label": "Nanohack Test  (level 4 mission)", "id": "scn:nano_test"}, {"label": "Back", "id": "back"}]
 		"options":
 			screen.title = "OPTIONS"
 			_fill_options()
@@ -1821,10 +1842,10 @@ func show_nano() -> void:
 		panel.text = t
 		panel.visible = true
 		return
-	t = "[b]NANOHACKS[/b]   (a-z runs one, Esc leaves)\nBattery %d kJ   each use costs %d kJ   %d of %d slots used\n\n" % [int(g.power_left()), int(g.NANO.USE_KJ), g.nano_installed().size(), g.nano_slots()]
+	t = "[b]NANOHACKS[/b]   (a-z runs one, Esc leaves)\nBattery %d kJ   %d of %d slots used\n\n" % [int(g.power_left()), g.nano_used(), g.nano_slots()]
 	for k in nano_list.size():
 		var e: Dictionary = nano_list[k]
-		var st: String = "always on" if e["kind"] == "passive" else ("running, %s left" % CLK.span_text(int(e["left"])) if int(e["left"]) > 0 else "ready")
+		var st: String = "always on" if e["kind"] == "passive" else ("running, %s left" % CLK.span_text(int(e["left"])) if int(e["left"]) > 0 else ("cooling down, %s left" % CLK.span_text(int(e["cd"])) if int(e["cd"]) > 0 else "ready, %d kJ" % int(ceil(float(e["cost"])))))
 		t += "%s) %s   [color=#8899aa]%s.  %s[/color]\n" % [char(97 + k) if k < 26 else "?", e["name"], st, e["text"]]
 	if nano_list.is_empty():
 		t += "[color=#8899aa]No nanohacks installed.  Fit chips on the Implants screen.[/color]\n"
@@ -1867,14 +1888,14 @@ func nano_key(k: int) -> void:
 		return
 	if ci >= 0 and ci < nano_list.size():
 		var e: Dictionary = nano_list[ci]
-		if e["id"] == "shock":
+		if bool(e.get("offensive", false)):
 			var nets: Array = game.NW.linked_humans(game)
 			if nets.is_empty():
 				game.say("No Networked Targets Available.")
 			elif nets.size() == 1:
-				game.act_nano_use("shock", int(nets[0]), true)
+				game.act_nano_use(String(e["id"]), int(nets[0]), true)
 			else:
-				nano_pending = "shock"
+				nano_pending = String(e["id"])
 				nano_pick = nets
 				show_nano()
 				return

@@ -315,25 +315,7 @@ func run() -> Array:
 	g.wield = g._new_item("trl_mel_katana")
 	g.wield = g._new_item("trl_mel_kastet")
 	check.call("melee dodge for the player: skill + implants", g.player_dodge_pts() >= 0 and (func(): g.implants["synapse"] = true; var d: int = g.player_dodge_pts(); g.implants = {}; return d > g.player_dodge_pts()).call())
-	# arts: parry and riposte are hooks the player can learn
-	g.skills = SK.default_skills()           # the strikes above taught some Melee; start the arts check from a clean sheet
-	check.call("no melee arts known at the start", g.melee_arts.is_empty() and not g.has_art("parry"))
-	g.wield = g._new_item("trl_mel_katana")
-	var p0: int = g.parry_chance({})
-	g.learn_art("parry")
-	var p1: int = g.parry_chance({})
-	check.call("learning 'parry' raises the parry chance (%d -> %d)" % [p0, p1], p1 > p0)
-	g.learn_art("riposte")
-	put.call(sp + 1, g.CIV)
-	g.pc = sp
-	var counters := 0
-	for _t in 200:
-		put.call(sp + 1, g.CIV)
-		var h: int = g.hpn[who]
-		if g._melee_arts_on_miss(who, "parry") and g.hpn[who] < h:
-			counters += 1
-	check.call("'riposte' turns a parry into a counter-strike (%d of 200)" % counters, counters > 40)
-	check.call("riposte needs a parry, not a dodge", not g._melee_arts_on_miss(who, "dodge"))
+	check.call("parrying is out: no weapon has a parry value and there are no melee arts", g.melee_arts.is_empty() and not g.has_art("parry") and not g.db.defs["trl_mel_katana"]["melee"].has("parry") and not g.db.defs["trl_mel_sai"]["melee"].has("parry"))
 	# ---------------------------------------------------------------- items
 	fresh.call()
 	g.player_hurt(500, "Test", "phys", "r_leg")
@@ -349,9 +331,8 @@ func run() -> Array:
 	g.body.hp["l_arm"] = 7
 	g.imp_dur["dermal"] = 33
 	helmet.cond = 12
-	g.learn_art("parry")
 	var d6: Dictionary = JSON.parse_string(JSON.stringify(g.save_dict()))
 	var g2 = GameScript.new(0)
 	g2.load_dict(d6)
-	check.call("save and load keep limb health, worn armor with its wear, implant plating and arts", g2.body.hp["l_arm"] == 7 and g2.armor_worn.size() == 1 and g2.armor_worn[0].cond == 12 and g2.imp_dur["dermal"] == 33 and g2.has_art("parry"))
+	check.call("save and load keep limb health, worn armor with its wear, implant plating", g2.body.hp["l_arm"] == 7 and g2.armor_worn.size() == 1 and g2.armor_worn[0].cond == 12 and g2.imp_dur["dermal"] == 33)
 	return [st[0], st[1], log]

@@ -7394,13 +7394,31 @@
   "part": "legs"
  },
  {
-  "id": "trl_nano_plating",
-  "name": "Plating nanohack",
-  "desc": "Hardens the skin-weave: +1 armor on every body part for 10 minutes.  A chip for a Trilobit slot; fit it on the Implants screen.",
+  "id": "trl_nano_minor_plating",
+  "name": "Minor Plating nanohack",
+  "desc": "+1 armor on every body part, and +1 more on implanted parts, for 10 minutes.  5 kJ per body part, then 1 kJ/h per body part.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
   "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "minor_plating",
+  "nano_cols": [
+   "#5a9aff",
+   "#a8caff",
+   "#2a5ad0"
+  ]
+ },
+ {
+  "id": "trl_nano_plating",
+  "name": "Plating nanohack",
+  "desc": "+1 armor on every body part, and +3 more on implanted parts, for 10 minutes.  10 kJ per body part, then 2 kJ/h per body part.  A chip for 2 Trilobit slots; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 1200,
   "tags": [
    "nanohack"
   ],
@@ -7412,9 +7430,27 @@
   ]
  },
  {
+  "id": "trl_nano_major_plating",
+  "name": "Major Plating nanohack",
+  "desc": "+2 armor on every body part, and +5 more on implanted parts, for 15 minutes.  15 kJ per body part, then 3 kJ/h per body part.  A chip for 4 Trilobit slots; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 4800,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "major_plating",
+  "nano_cols": [
+   "#2ae8e8",
+   "#b0fff4",
+   "#1a9a9a"
+  ]
+ },
+ {
   "id": "trl_nano_reflex",
   "name": "Reflex nanohack",
-  "desc": "Overclocks the nerves: +1 Dodge for 10 minutes.  A chip for a Trilobit slot; fit it on the Implants screen.",
+  "desc": "Overclocks the nerves: +1 Dodge for 10 minutes.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -7430,27 +7466,9 @@
   ]
  },
  {
-  "id": "trl_nano_shock",
-  "name": "Shock nanohack",
-  "desc": "Overloads a target in sight: 10 damage to a random implanted body part.  A chip for a Trilobit slot; fit it on the Implants screen.",
-  "weight_g": 0,
-  "volume_ml": 0,
-  "length_mm": 0,
-  "price": 400,
-  "tags": [
-   "nanohack"
-  ],
-  "nano": "shock",
-  "nano_cols": [
-   "#ff3ec8",
-   "#c23cff",
-   "#ffd0f4"
-  ]
- },
- {
   "id": "trl_nano_strike",
   "name": "Strike nanohack",
-  "desc": "Primes the muscles: +1 Unarmed and +1 Melee for 10 minutes.  A chip for a Trilobit slot; fit it on the Implants screen.",
+  "desc": "Primes the muscles: +1 Unarmed and +1 Melee for 10 minutes.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -7467,8 +7485,8 @@
  },
  {
   "id": "trl_nano_mend",
-  "name": "Mend (test) nanohack",
-  "desc": "A test healing nano: closes 10 points of bio health.  Costs 10 kJ.  A chip for a Trilobit slot; fit it on the Implants screen.",
+  "name": "Mend nanohack",
+  "desc": "Closes 10 points of bio damage on each implanted body part and 2 on each other part.  5 kJ per implanted part.  Cooldown 1 minute.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -7484,9 +7502,315 @@
   ]
  },
  {
+  "id": "trl_nano_heal",
+  "name": "Heal nanohack",
+  "desc": "Closes 15 points of bio damage on each implanted body part and 10 on each other part.  7 kJ per implanted part.  Cooldown 1 minute.  A chip for 2 Trilobit slots; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 1200,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "heal",
+  "nano_cols": [
+   "#3aff9a",
+   "#a8ffd0",
+   "#10b060"
+  ]
+ },
+ {
+  "id": "trl_nano_shock",
+  "name": "Shock nanohack",
+  "desc": "Offensive; runs through the network (B, then Network to a target): 10 damage x (1 + your Implementation/10 - their Analysis/10) to a random implanted body part.  Unwired people take nothing.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "shock",
+  "nano_cols": [
+   "#ff3ec8",
+   "#c23cff",
+   "#ffd0f4"
+  ]
+ },
+ {
+  "id": "trl_nano_impair",
+  "name": "Impair nanohack",
+  "desc": "Offensive; through the network.  Disables one random arm or leg implant of the target for 5 minutes: they lose the use of those limbs, but their health is untouched.  20 kJ.  Cooldown 5 minutes.  A chip for 2 Trilobit slots; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 1200,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "impair",
+  "nano_cols": [
+   "#ff8a2a",
+   "#ffc07a",
+   "#c04a0a"
+  ]
+ },
+ {
+  "id": "trl_nano_acid",
+  "name": "Acid Feedback nanohack",
+  "desc": "Offensive; through the network.  Every turn (6 seconds) for 5 turns: 2 damage to an implanted body part of the target and 1 to another random body part.  20 kJ.  Cooldown 1 minute.  A chip for 2 Trilobit slots; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 1200,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "acid",
+  "nano_cols": [
+   "#b8ff2a",
+   "#e4ff8a",
+   "#6aa000"
+  ]
+ },
+ {
+  "id": "trl_nano_underclock",
+  "name": "Underclock nanohack",
+  "desc": "Offensive; through the network.  The target acts 10% slower (110 action points per action instead of 100) for 5 minutes.  10 kJ.  Cooldown 1 minute.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "underclock",
+  "nano_cols": [
+   "#4a8aff",
+   "#a0c0ff",
+   "#2a3aa0"
+  ]
+ },
+ {
+  "id": "trl_nano_chaotic",
+  "name": "Chaotic Resonance nanohack",
+  "desc": "Offensive; through the network.  After 30 seconds a random implant of the target is completely destroyed.  40 kJ.  Cooldown 1 minute.  A chip for 4 Trilobit slots; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 4800,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "chaotic",
+  "nano_cols": [
+   "#ffffff",
+   "#e0b0ff",
+   "#ff3ec8"
+  ]
+ },
+ {
+  "id": "trl_nano_unarmed",
+  "name": "Skill: Unarmed nanohack",
+  "desc": "A standing routine: +1 Unarmed while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "unarmed",
+  "nano_cols": [
+   "#ff5a4a",
+   "#ff9a3a",
+   "#d02a2a"
+  ]
+ },
+ {
+  "id": "trl_nano_melee",
+  "name": "Skill: Melee nanohack",
+  "desc": "A standing routine: +1 Melee while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "melee",
+  "nano_cols": [
+   "#ff5a4a",
+   "#ff9a3a",
+   "#d02a2a"
+  ]
+ },
+ {
+  "id": "trl_nano_ranged",
+  "name": "Skill: Ranged nanohack",
+  "desc": "A standing routine: +1 Ranged while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "ranged",
+  "nano_cols": [
+   "#ff5a4a",
+   "#ff9a3a",
+   "#d02a2a"
+  ]
+ },
+ {
+  "id": "trl_nano_dodge",
+  "name": "Skill: Dodge nanohack",
+  "desc": "A standing routine: +1 Dodge while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "dodge",
+  "nano_cols": [
+   "#ff5a4a",
+   "#ff9a3a",
+   "#d02a2a"
+  ]
+ },
+ {
+  "id": "trl_nano_grit",
+  "name": "Skill: Grit nanohack",
+  "desc": "A standing routine: +1 Grit while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "grit",
+  "nano_cols": [
+   "#ff5a4a",
+   "#ff9a3a",
+   "#d02a2a"
+  ]
+ },
+ {
+  "id": "trl_nano_networking",
+  "name": "Skill: Networking nanohack",
+  "desc": "A standing routine: +1 Networking while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "networking",
+  "nano_cols": [
+   "#c23cff",
+   "#e0a0ff",
+   "#7a2ad0"
+  ]
+ },
+ {
+  "id": "trl_nano_analysis",
+  "name": "Skill: Analysis nanohack",
+  "desc": "A standing routine: +1 Analysis while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "analysis",
+  "nano_cols": [
+   "#c23cff",
+   "#e0a0ff",
+   "#7a2ad0"
+  ]
+ },
+ {
+  "id": "trl_nano_implementation",
+  "name": "Skill: Implementation nanohack",
+  "desc": "A standing routine: +1 Implementation while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "implementation",
+  "nano_cols": [
+   "#c23cff",
+   "#e0a0ff",
+   "#7a2ad0"
+  ]
+ },
+ {
+  "id": "trl_nano_manual",
+  "name": "Skill: Manual nanohack",
+  "desc": "A standing routine: +1 Manual while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "manual",
+  "nano_cols": [
+   "#ffc24a",
+   "#ffe08a",
+   "#d08a1a"
+  ]
+ },
+ {
+  "id": "trl_nano_engineering",
+  "name": "Skill: Engineering nanohack",
+  "desc": "A standing routine: +1 Engineering while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "engineering",
+  "nano_cols": [
+   "#ffc24a",
+   "#ffe08a",
+   "#d08a1a"
+  ]
+ },
+ {
+  "id": "trl_nano_artisan",
+  "name": "Skill: Artisan nanohack",
+  "desc": "A standing routine: +1 Artisan while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "artisan",
+  "nano_cols": [
+   "#ffc24a",
+   "#ffe08a",
+   "#d08a1a"
+  ]
+ },
+ {
   "id": "trl_nano_research",
   "name": "Skill: Research nanohack",
-  "desc": "A standing lookup routine: +1 Research while installed.  A chip for a Trilobit slot; fit it on the Implants screen.",
+  "desc": "A standing routine: +1 Research while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
   "weight_g": 0,
   "volume_ml": 0,
   "length_mm": 0,
@@ -7496,9 +7820,81 @@
   ],
   "nano": "research",
   "nano_cols": [
-   "#6dff9a",
-   "#2ad08a",
-   "#c8ffd8"
+   "#ffc24a",
+   "#ffe08a",
+   "#d08a1a"
+  ]
+ },
+ {
+  "id": "trl_nano_streetwise",
+  "name": "Skill: Streetwise nanohack",
+  "desc": "A standing routine: +1 Streetwise while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "streetwise",
+  "nano_cols": [
+   "#ff6ac0",
+   "#ffb0e0",
+   "#d02a8a"
+  ]
+ },
+ {
+  "id": "trl_nano_etiquette",
+  "name": "Skill: Etiquette nanohack",
+  "desc": "A standing routine: +1 Etiquette while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "etiquette",
+  "nano_cols": [
+   "#ff6ac0",
+   "#ffb0e0",
+   "#d02a8a"
+  ]
+ },
+ {
+  "id": "trl_nano_diplomacy",
+  "name": "Skill: Diplomacy nanohack",
+  "desc": "A standing routine: +1 Diplomacy while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "diplomacy",
+  "nano_cols": [
+   "#ff6ac0",
+   "#ffb0e0",
+   "#d02a8a"
+  ]
+ },
+ {
+  "id": "trl_nano_negotiation",
+  "name": "Skill: Negotiation nanohack",
+  "desc": "A standing routine: +1 Negotiation while installed.  No upkeep.  A chip for 1 Trilobit slot; fit it on the Implants screen.",
+  "weight_g": 0,
+  "volume_ml": 0,
+  "length_mm": 0,
+  "price": 400,
+  "tags": [
+   "nanohack"
+  ],
+  "nano": "negotiation",
+  "nano_cols": [
+   "#ff6ac0",
+   "#ffb0e0",
+   "#d02a8a"
   ]
  },
  {

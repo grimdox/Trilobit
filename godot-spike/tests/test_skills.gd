@@ -89,16 +89,14 @@ func run() -> Array:
 	g.skills["ranged"] = 10
 	check.call("Ranged steadies aim (%.2f -> %.2f), with the Steady Aim discipline from level 5" % [ar0, g.aim_rate()], g.aim_rate() > ar0 + 0.8 and g.discipline("steady_aim"))
 	g.skills["ranged"] = 0
-	var disc_ok := not g.has_art("parry")
-	g.skills["melee"] = 3
-	disc_ok = disc_ok and g.has_art("parry") and not g.has_art("riposte")
+	var disc_ok := not g.has_art("parry") and not g.has_art("riposte")
 	g.skills["melee"] = 6
-	disc_ok = disc_ok and g.has_art("riposte")
+	disc_ok = disc_ok and not g.has_art("parry") and not g.has_art("riposte")
 	g.skills["unarmed"] = 5
 	disc_ok = disc_ok and g.discipline("iron_fist") and not g.discipline("pressure_points")
 	g.skills["unarmed"] = 8
 	disc_ok = disc_ok and g.discipline("pressure_points")
-	check.call("disciplines unlock by effective level: Parry 3, Riposte 6, Iron Fist 5, Pressure Points 8", disc_ok)
+	check.call("disciplines unlock by effective level: no Parry or Riposte, Iron Fist 5, Pressure Points 8", disc_ok)
 	g.skills = SK.default_skills()
 	# Grit: damage taken
 	g.armor_worn = []

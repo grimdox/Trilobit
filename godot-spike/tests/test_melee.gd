@@ -148,50 +148,6 @@ func run() -> Array:
 		g.act_move(1, 0)
 	var fast_turns: int = g.turn - tn0
 	check.call("twenty punches take %d turns: 100 action points each, however light the weapon" % fast_turns, fast_turns >= 18 and fast_turns <= 21)
-	# bleed
-	g.wield = g._new_item("trl_mel_katana")
-	put.call(spot + 1)
-	for _t in 10:
-		g.melee(who)
-		if g.bleed[who] > 0:
-			break
-	var hb: int = g.hpn[who]
-	check.call("blades no longer make people bleed", g.bleed[who] == 0)
-	g.wield = null
-	for _t in 3:
-		g.end_turn()
-	check.call("so nothing drains over the next turns (%d -> %d)" % [hb, g.hpn[who]], g.hpn[who] >= hb - 2)
-	# stun
-	g.wield = g._new_item("trl_mel_bo")
-	var stunned := 0
-	for _t in 80:
-		put.call(spot + 1)
-		g.melee(who)
-		if g.stun[who] > 0:
-			stunned += 1
-	check.call("a bo staff no longer stuns (%d of 80)" % stunned, stunned == 0)
-	# stunned people do nothing
-	put.call(spot + 1)
-	g.stun[who] = 3
-	g.cool[who] = 0
-	var p0: int = g.body.total()
-	g.astate[who] = g.HUNTING
-	g.sim.pos[who] = spot + 1
-	g.end_turn()
-	g.end_turn()
-	check.call("a stunned enemy does not fight back", g.body.total() == p0 or g.stun[who] >= 0 and g.body.total() >= p0 - 0)
-	# disarm
-	g.wield = g._new_item("trl_mel_jitte")
-	var disarmed := false
-	for _t in 60:
-		put.call(spot + 1)
-		g.gunc[who] = 1
-		g.melee(who)
-		if g.gunc[who] == 0:
-			disarmed = true
-			break
-	check.call("a jitte no longer knocks guns out of hands", not disarmed)
-	g.gunc[who] = 0
 
 	# ---- reach
 	g.wield = g._new_item("trl_mel_yari")
@@ -285,30 +241,6 @@ func run() -> Array:
 	log.append("   (backstab totals over 30: tanto %d, katana %d)" % [tot_t, tot_k])
 	check.call("a tanto in the back does 35+ a blow despite its small blade", float(tot_t) / 30.0 > 35.0)
 
-	# ---- parry
-	g.wield = g._new_item("trl_mel_sai")
-	var parry_hits := 0
-	var naked_hits := 0
-	g.fac[who] = g.BRATVA
-	for _t in 600:
-		g.body.reset()
-		g.body.mend_to(1.0)
-		put.call(spot + 1)
-		g.pc = spot
-		g.gunc[who] = 0
-		g.mdis[who] = 1                    # no weapon, plain 60% punches
-		g.cool[who] = 0
-		g.wield = g._new_item("trl_mel_sai")
-		var p1: int = g.body.total()
-		g._hunt(who, 1)
-		if g.body.total() < p1:
-			parry_hits += 1
-		g.wield = null
-		var p2: int = g.body.total()
-		g._hunt(who, 1)
-		if g.body.total() < p2:
-			naked_hits += 1
-	check.call("a parrying weapon lowers the chance of being hit (%d vs %d of 600)" % [parry_hits, naked_hits], parry_hits < naked_hits - 20)
 
 	# ---- what people carry
 	var ru_ok := true
@@ -368,5 +300,5 @@ func run() -> Array:
 	var g2 = GameScript.new(41)
 	g2.setup(1200)
 	g2.load_dict(dd)
-	check.call("save and load keep the wielded weapon and disarmed men", g2.wield.id() == "trl_mel_kusarigama_f" and g2.mdis[who] == 1)
+	check.call("save and load keep the wielded weapon", g2.wield.id() == "trl_mel_kusarigama_f")
 	return [st[0], st[1], log]

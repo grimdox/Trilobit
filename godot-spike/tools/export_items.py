@@ -2,6 +2,7 @@
 """Build data/items.json, the Godot game's item definitions, from Trilobit's own content tables.
 Guns come from tools/content/guns.py; ammunition, gun mods, melee weapons, containers, armor, engines, food and charms are defined below.
 Sprites are looked up by item id in gfx/Trilobit64 (drawn by tools/content/gen_tiles64.py).  usage: export_items.py  (run from godot-spike/)"""
+import os
 import json, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "content"))
@@ -214,16 +215,19 @@ for d in gen_implants.catalogue():
     items.append({"id": "trl_imp_" + d["id"], "name": d["name"], "desc": text + "  Fits the %s." % PART_NAME[d["part"]], "weight_g": 0, "volume_ml": 0,
                   "length_mm": 0, "price": d["cost"], "tags": ["implant"], "implant": d["id"], "part": d["part"]})
 
-# ---- nanohack chips (src/nanohacks.gd holds what each does): one chip, one Trilobit slot
-NANOS = [("plating", "Plating", "Hardens the skin-weave: +1 armor on every body part for 10 minutes.", ["#4fd0ff", "#9fe8ff", "#2a7fd0"]),
-         ("reflex", "Reflex", "Overclocks the nerves: +1 Dodge for 10 minutes.", ["#ffe14a", "#ffb02a", "#fff3a0"]),
-         ("shock", "Shock", "Overloads a target in sight: 10 damage to a random implanted body part.", ["#ff3ec8", "#c23cff", "#ffd0f4"]),
-         ("strike", "Strike", "Primes the muscles: +1 Unarmed and +1 Melee for 10 minutes.", ["#ff5a4a", "#ff9a3a", "#d02a2a"]),
-         ("mend", "Mend (test)", "A test healing nano: closes 10 points of bio health.  Costs 10 kJ.", ["#6dff6d", "#2ad04a", "#c8ffc8"]),
-         ("research", "Skill: Research", "A standing lookup routine: +1 Research while installed.", ["#6dff9a", "#2ad08a", "#c8ffd8"])]
-for nid, nm, text, cols in NANOS:
-    items.append({"id": "trl_nano_" + nid, "name": nm + " nanohack", "desc": text + "  A chip for a Trilobit slot; fit it on the Implants screen.", "weight_g": 0, "volume_ml": 0,
-                  "length_mm": 0, "price": 400, "tags": ["nanohack"], "nano": nid, "nano_cols": cols})
+# ---- nanohack chips: src/nanohacks.gd is the table (one chip per entry; it fills `slots` Trilobit slots and costs 400 yen x `mult`)
+import re
+_src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "nanohacks.gd"), encoding="utf-8").read()
+_block = _src[_src.index("const ALL := ["):_src.index("static var _by_id")]
+for ent in re.findall(r"\t\{\"id\".*?\},\n(?=\t\{|\])", _block, re.S):
+    nid = re.search(r'"id": "([^"]+)"', ent).group(1)
+    nm = re.search(r'"name": "([^"]+)"', ent).group(1)
+    text = re.search(r'"text": "((?:[^"\\]|\\.)*)"', ent).group(1)
+    cols = re.search(r'"cols": \[([^\]]*)\]', ent).group(1).replace('"', "").replace(" ", "").split(",")
+    mult = int(re.search(r'"mult": (\d+)', ent).group(1)) if '"mult": ' in ent else 1
+    slots = int(re.search(r'"slots": (\d+)', ent).group(1)) if '"slots": ' in ent else 1
+    items.append({"id": "trl_nano_" + nid, "name": nm + " nanohack", "desc": text + "  A chip for %d Trilobit slot%s; fit it on the Implants screen." % (slots, "" if slots == 1 else "s"),
+                  "weight_g": 0, "volume_ml": 0, "length_mm": 0, "price": 400 * mult, "tags": ["nanohack"], "nano": nid, "nano_cols": cols})
 
 # ---- trade goods of the businesses, flats and offices: no stats, no function (see tools/content/goods_list.py)
 import goods_list

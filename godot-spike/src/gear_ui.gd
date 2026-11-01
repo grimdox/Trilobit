@@ -5,6 +5,7 @@ extends RefCounted
 ##    right-click (or Ctrl) equips a carried piece or takes a worn one off.
 ##  - Implants tab: the same doll, a spot per body part.  A carried implant is fitted by Enter, click, right-click or Ctrl; the spot's list on the
 ##    right fits carried ones and takes fitted ones out.
+const CLK = preload("res://src/clock.gd")
 const INV = preload("res://src/inventory.gd")
 const IMP = preload("res://src/implants.gd")
 const GP = preload("res://src/gunplay.gd")
@@ -448,7 +449,7 @@ func _press_implants() -> void:
 			_nano_put(ni)
 		elif held != null:
 			say("Only nanohack chips fit here.")
-		elif game.nano_at(ni) != "":
+		elif game.nano_cover(ni) != "":
 			game.act_nano_remove(ni)
 		else:
 			say("An empty slot: pick up a nanohack chip from your pack and put it here.")
@@ -703,16 +704,21 @@ func _nano_panel(c: CanvasItem, t: float) -> void:
 		for corner in [sock.position, Vector2(sock.end.x, sock.position.y), Vector2(sock.position.x, sock.end.y), sock.end]:
 			c.draw_circle(corner, 2.0, Color(0.9, 0.78, 0.4))
 		var hid: String = game.nano_at(i)
+		var cover: String = game.nano_cover(i)
 		if hid != "":
 			draw_icon(c, "trl_nano_" + hid, r)
 			c.draw_rect(r, CYAN if game.nano_running(hid) else Color(0.3, 0.8, 0.5), false, 1.5)
+		elif cover != "":                              # the rest of a wide chip
+			c.draw_rect(r, Color(0.08, 0.3, 0.18, 0.85))
+			c.draw_rect(r, CYAN if game.nano_running(cover) else Color(0.3, 0.8, 0.5), false, 1.5)
+			c.draw_line(r.position + Vector2(8, r.size.y * 0.5), r.position + Vector2(r.size.x - 8, r.size.y * 0.5), Color(0.5, 1.0, 0.7, 0.7), 3.0)
 		else:
 			c.draw_rect(r, Color(0.06, 0.22, 0.12, 0.6))
 			c.draw_rect(r, Color(0.2, 0.55, 0.35, 0.6), false, 1.0)
 		if cur == "n:%d" % i:
 			_cursor(c, r, t)
 	_txt(c, "NANOHACKS", Vector2(P.position.x + 12.0, P.position.y + 24.0), 17, Color(0.9, 0.78, 0.4))
-	_txt(c, "%d of %d slots" % [game.nano_installed().size(), game.nano_slots()], Vector2(P.position.x + 12.0, P.position.y + 42.0), 12, Color(0.55, 0.85, 0.65))
+	_txt(c, "%d of %d slots" % [game.nano_used(), game.nano_slots()], Vector2(P.position.x + 12.0, P.position.y + 42.0), 12, Color(0.55, 0.85, 0.65))
 
 func _part_index(part: String) -> int:
 	for i in IMP.PARTS.size():
@@ -1046,7 +1052,7 @@ func _card_panel(c: CanvasItem, t: float) -> void:
 
 func _nano_card(c: CanvasItem, i: int, x: float, maxw: float) -> void:
 	var y0: float = CARD.position.y + 40.0
-	var hid: String = game.nano_at(i)
+	var hid: String = game.nano_cover(i)
 	if hid == "":
 		_txt(c, "NANOHACK SLOT %d" % (i + 1), Vector2(x, y0), 26, Color.WHITE)
 		_txt(c, "Empty.  Pick up a chip from your pack (Enter) and set it here.", Vector2(x, y0 + 28.0), 16, Color(0.6, 0.7, 0.8))
@@ -1060,12 +1066,15 @@ func _nano_card(c: CanvasItem, i: int, x: float, maxw: float) -> void:
 		y += 20.0
 		_txt(c, ln, Vector2(x, y), 16, Color(0.75, 0.86, 0.95))
 	y += 30.0
+	y = _kv(c, y, "Slots", "%d" % game.NANO.width(d), x, maxw)
 	if String(d["kind"]) != "passive":
-		y = _kv(c, y, "Cost", "%d kJ per use" % int(game.NANO.USE_KJ), x, maxw)
-	if d.has("draw"):
-		y = _kv(c, y, "While running", "+%g kJ/h" % float(d["draw"]), x, maxw)
-	if d.has("turns"):
-		y = _kv(c, y, "Lasts", "10 minutes", x, maxw)
+		y = _kv(c, y, "Cost", "%d kJ per use" % int(ceil(game.nano_cost(hid))), x, maxw)
+	if d.has("draw") or d.has("draw_part"):
+		y = _kv(c, y, "While running", "+%g kJ/h" % game.nano_upkeep(d), x, maxw)
+	if d.has("turns") and String(d["kind"]) == "active":
+		y = _kv(c, y, "Lasts", CLK.span_text(int(d["turns"])), x, maxw)
+	if d.has("cooldown"):
+		y = _kv(c, y, "Cooldown", CLK.span_text(game.nano_cd_turns(d)), x, maxw)
 	_txt(c, "Enter or right-click ejects the chip.", Vector2(x, y + 10.0), 14, Color(0.6, 0.72, 0.85))
 
 func _kv(c: CanvasItem, y: float, k: String, v: String, x: float, maxw: float) -> float:

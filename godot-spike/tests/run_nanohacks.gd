@@ -49,24 +49,24 @@ func _initialize() -> void:
 	await process_frame
 	var g = w.game
 	# ---- the data and the start state
-	check("six hacks: Plating, Reflex, Shock, Strike, Skill: Research, Mend", NANO.ALL.size() == 6 and ["plating", "reflex", "shock", "strike", "research", "mend"].all(func(i): return not NANO.get_def(i).is_empty()))
+	check("28 hacks: the plating, heal, buff and offensive hacks and one Skill chip per skill", NANO.ALL.size() == 28 and ["minor_plating", "plating", "major_plating", "reflex", "shock", "strike", "mend", "heal", "impair", "acid", "underclock", "chaotic", "research", "unarmed", "negotiation"].all(func(i): return not NANO.get_def(i).is_empty()))
 	check("each hack has a chip item that takes its own tile", NANO.ALL.all(func(h): var it = g._new_item(NANO.chip_item(h["id"])); return it != null and not it.stackable()))
 	check("a new character starts with the Gutterline Trilobit fitted (2 slots) and no hack installed", g.implants == {"x101": true} and g.nano_slots() == 2 and g.nano_installed().is_empty())
-	check("and carries one chip of each of the six hacks", chips_in_pack(g) == 6)
-	check("the five chips are one of each", NANO.ALL.all(func(h): return g.inv.grid_items().any(func(it): return it.def.get("nano", "") == h["id"])))
+	check("and carries one chip of each of the six starter hacks", chips_in_pack(g) == 6)
+	check("the six chips are one of each", ["minor_plating", "reflex", "shock", "strike", "mend", "research"].all(func(h): return g.inv.grid_items().any(func(it): return it.def.get("nano", "") == h)))
 	check("the Trilobit is powered from the start", g.nano_ok() and g.power_left() > 0.0)
 	# ---- the slot limit
 	var pack := {}
 	for it in g.inv.grid_items():
 		if it.def.has("nano"):
 			pack[it.def["nano"]] = it
-	check("install Plating", g.act_nano_install(pack["plating"]) and g.nano_has("plating") and chips_in_pack(g) == 5)
+	check("install Minor Plating", g.act_nano_install(pack["minor_plating"]) and g.nano_has("minor_plating") and chips_in_pack(g) == 5)
 	check("install Reflex: the two slots are full", g.act_nano_install(pack["reflex"]) and g.nano_installed().size() == 2)
 	var before: int = chips_in_pack(g)
 	check("a third hack is refused: no free slot, the chip stays in the pack", not g.act_nano_install(pack["strike"]) and g.nano_installed().size() == 2 and chips_in_pack(g) == before)
-	check("the same hack cannot be installed twice", not inst(g, "plating"))
+	check("the same hack cannot be installed twice", not inst(g, "minor_plating"))
 	before = chips_in_pack(g)
-	check("taking one out gives its chip back and frees the slot", g.act_nano_remove(0) and not g.nano_has("plating") and chips_in_pack(g) == before + 1)
+	check("taking one out gives its chip back and frees the slot", g.act_nano_remove(0) and not g.nano_has("minor_plating") and chips_in_pack(g) == before + 1)
 	check("then the third fits", g.act_nano_install(pack["strike"]) and g.nano_has("strike"))
 	# ---- no Trilobit, no slots
 	var saved: Dictionary = g.implants.duplicate()
@@ -77,31 +77,32 @@ func _initialize() -> void:
 	g.nanos = []
 	g.nano_fx = {}
 	g.power = 100.0
-	for h in ["plating", "reflex"]:
+	for h in ["minor_plating", "reflex"]:
 		inst(g, h)
 	var dodge0: int = g.lvl("dodge")
 	var arm0: int = g.armor_value("chest")
 	var arm_leg0: int = g.armor_value("l_leg")
 	check("a hack does nothing until it is switched on", g.lvl("dodge") == dodge0 and g.armor_value("chest") == arm0)
-	check("Plating costs 10 kJ and gives +1 armor on every part", g.act_nano_use("plating") and absi(g.power_left() - 90.0) < 1.0 and BODY.LIMBS.all(func(l): return g.armor_value(l) >= 1) and g.armor_value("chest") == arm0 + 1 and g.armor_value("l_leg") == arm_leg0 + 1)
+	var head0: int = g.armor_value("head")
+	check("Minor Plating costs 5 kJ x 6 parts = 30 and gives +1 armor everywhere, +1 more on the implanted head", g.act_nano_use("minor_plating") and absi(g.power_left() - 70.0) < 1.0 and g.armor_value("chest") == arm0 + 1 and g.armor_value("l_leg") == arm_leg0 + 1 and g.armor_value("head") == head0 + 2)
 	check("Reflex costs 10 kJ and gives +1 Dodge", g.act_nano_use("reflex") and g.lvl("dodge") == dodge0 + 1 and g.base_lvl("dodge") == dodge0)
 	check("a running hack cannot be started again", not g.act_nano_use("reflex"))
 	var p0: float = g.power_left()
 	for _i in 600:
 		g.end_turn()
 	var spent: float = p0 - g.power_left()
-	check("while two hacks run for an hour they draw +5 kJ/h each over the rig's own draw (%.1f kJ used)" % spent, absf(spent - (0.5 + 10.0)) < 0.6 or (g.nano_fx.is_empty() and spent > 0.5))
+	check("while two hacks run for an hour they draw +6 (Minor Plating) and +5 (Reflex) kJ/h over the rig's own draw (%.1f kJ used)" % spent, absf(spent - (0.5 + 6.0 + 5.0)) < 0.7 or (g.nano_fx.is_empty() and spent > 0.5))
 	for _i in 80:
 		g.end_turn()
 	check("after 10 minutes (100 turns) they wear off: no Dodge, no armor bonus, no extra draw", g.nano_fx.is_empty() and g.lvl("dodge") == dodge0 and g.armor_value("chest") == arm0 and g.nano_draw() == 0.0)
 	# a fresh timed check
 	g.power = 100.0
-	g.act_nano_use("plating")
+	g.act_nano_use("minor_plating")
 	var pp: float = g.power_left()
 	for _i in 100:
 		g.end_turn()
-	check("the full 100 turns run, then end (%d turns left)" % int(g.nano_fx.get("plating", 0)), not g.nano_fx.has("plating"))
-	check("one 10-minute run of Plating cost about 5 * 1/6 + 0.5/6 kJ on top of the 10 (%.2f)" % (pp - g.power_left()), absf((pp - g.power_left()) - (5.0 + 0.5) / 6.0) < 0.2)
+	check("the full 100 turns run, then end (%d turns left)" % int(g.nano_fx.get("minor_plating", 0)), not g.nano_fx.has("minor_plating"))
+	check("one 10-minute run of Minor Plating drew about 6/6 + 0.5/6 kJ on top of the 30 (%.2f)" % (pp - g.power_left()), absf((pp - g.power_left()) - (6.0 + 0.5) / 6.0) < 0.3)
 	g.power = 100.0
 	g.nanos = []
 	inst(g, "strike")
@@ -116,7 +117,7 @@ func _initialize() -> void:
 	g.nano_fx = {}
 	check("and ends", g.lvl("unarmed") == un0 and g.lvl("melee") == me0)
 	g.power = 5.0
-	check("with less than 10 kJ in the store an active hack will not run", not g.act_nano_use("strike") and g.power_left() == 5.0)
+	check("with less than its cost in the store an active hack will not run", not g.act_nano_use("strike") and g.power_left() == 5.0)
 	g.power = 100.0
 	var old_imp: Dictionary = g.implants.duplicate()
 	g.power = 0.0
@@ -185,7 +186,7 @@ func _initialize() -> void:
 	# ---- trimming slots when the Trilobit comes out
 	g.nanos = []
 	g.implants = {"x101": true}
-	inst(g, "plating")
+	inst(g, "minor_plating")
 	inst(g, "reflex")
 	g.skills["networking"] = 8
 	g.skills["grit"] = 8
@@ -203,7 +204,7 @@ func _initialize() -> void:
 	check("the installed hacks and running timers are saved", d.has("nanos") and d.has("nano_fx") and d["nanos"].size() >= 2)
 	var keep: Array = g.nanos.duplicate()
 	g.nanos = []
-	g.nano_fx = {"plating": 7}
+	g.nano_fx = {"minor_plating": 7}
 	g.apply_player(d)
 	check("and come back on loading", g.nanos == keep and g.nano_fx.size() == (d["nano_fx"] as Dictionary).size())
 	# ---- the Implants screen
@@ -214,7 +215,7 @@ func _initialize() -> void:
 		if it.def.has("nano"):
 			g.inv.remove(it)
 	var cs := []
-	for h in ["plating", "reflex", "shock"]:
+	for h in ["minor_plating", "reflex", "shock"]:
 		var c = chip(g, h)
 		g.inv.stow(c)
 		cs.append(c)
@@ -232,7 +233,7 @@ func _initialize() -> void:
 	check("Enter on a chip in the pack picks it up", ui.held == cs[0])
 	ui.cur = "n:1"
 	ui.press()
-	check("Enter on a slot puts it in that slot", ui.held == null and g.nano_at(1) == "plating" and g.nano_at(0) == "")
+	check("Enter on a slot puts it in that slot", ui.held == null and g.nano_at(1) == "minor_plating" and g.nano_at(0) == "")
 	ui.cur = "n:1"
 	ui.press()
 	check("Enter on a filled slot ejects the chip to the pack", g.nano_at(1) == "" and chips_in_pack(g) == 3)

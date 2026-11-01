@@ -25,14 +25,14 @@ row(["Melee to-hit: hit if 2d10 + Melee skill (Unarmed skill for fists, kicks an
 row(["Melee damage: weapon damage roll (Damage Min-Max) + Melee/Unarmed skill (+2 with the Iron Fist discipline for unarmed).  A critical hit uses the weapon's maximum roll and doubles (maximum + skill).  Then: x Sneak multiplier from behind on someone unaware (default 4), x2 if unaware but facing you; x1.5 with a Brace weapon (reach) meeting a charge.  Then minus (target armor - Armor Pierce, not below 0) and minus the target's Grit.  Armor Pierce = the weapon's value, or 1 if its Damage Max is 14 or more, otherwise 0.  The damage is taken off the limb hit and off overall health; a destroyed head or chest kills."], "b")
 row([])
 row(["Name", "Class", "Culture", "Grade", "Damage Min", "Damage Max", "Reach (tiles)", "Accuracy", "Accuracy Points (Acc/5)", "Weight", "Length (mm)", "Price (yen)", "Stamina per Swing", "Armor Pierce",
-     "Parry %", "Bleeds", "Stun Chance", "Trip Chance", "Entangle Chance", "Disarm Chance", "Knock-back Chance", "Sneak Multiplier", "Sweeps Others", "Brace (reach vs charge)", "Flail (ignores parry)", "Slow (two hands)", "Fast Chance (no longer used: every swing is 100 AP)", "Verb", "Code Name"], "b")
+     "Bleeds", "Stun Chance", "Trip Chance", "Entangle Chance", "Disarm Chance", "Knock-back Chance", "Sneak Multiplier", "Sweeps Others", "Brace (reach vs charge)", "Flail", "Slow (two hands)", "Fast Chance (no longer used: every swing is 100 AP)", "Verb", "Code Name"], "b")
 def pct(v): return "%d%%" % round(float(v) * 100) if v else ""
 for i in sorted(M, key=lambda x: (x["tags"][1], x["name"], x["id"])):
     m = i["melee"]
     grade = "masterwork" if i["id"].endswith("_m") else ("forged" if i["id"].endswith("_f") else "plain")
     pen = m.get("pen", 1 if m["dmg"][1] >= 14 else 0)
     row([i["name"], i["tags"][1], i.get("culture", ""), grade, m["dmg"][0], m["dmg"][1], m["reach"], m.get("acc", 0), round(m.get("acc", 0) / 5.0), "%.2f kg" % (i["weight_g"] / 1000), i["length_mm"], i["price"],
-         max(1, round(i["weight_g"] / 1000.0)), pen, m.get("parry", 0), "yes" if m.get("bleed") else "", pct(m.get("stun")), pct(m.get("trip")), pct(m.get("entangle")), pct(m.get("disarm")),
+         max(1, round(i["weight_g"] / 1000.0)), pen, "yes" if m.get("bleed") else "", pct(m.get("stun")), pct(m.get("trip")), pct(m.get("entangle")), pct(m.get("disarm")),
          pct(m.get("knock")), m.get("sneak", ""), "yes" if m.get("sweep") else "", "yes" if m.get("brace") else "", "yes" if m.get("flail") else "", "yes" if m.get("slow") else "", pct(m.get("fast")), m.get("verb", ""), i["id"]])
 doc.spreadsheet.addElement(t)
 doc.save(out)

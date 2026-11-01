@@ -126,7 +126,7 @@ static func scan(g) -> bool:
 
 static func implant_names(g, i: int) -> Array:
 	var out: Array = []
-	for id in ENM.rolled_implants(g.fac[i], g.enemy_level(i), g.seed_value, i, IMP.ALL):
+	for id in g.npc_implants(i):
 		out.append(String(IMP.get_def(String(id)).get("name", id)))
 	return out
 
@@ -259,9 +259,15 @@ static func linked_menu(g, p: Dictionary) -> Dictionary:
 			var txt := ["Networked.  Offensive nanohacks:"]
 			for hid in g.nano_installed():
 				var nd: Dictionary = NANO.get_def(String(hid))
-				if nd.has("damage"):
-					var mult: float = power_mult(g, int(p["ana"]))
-					opts.append({"label": "%s: %d damage (base %d x %.2f)" % [nd["name"], power_damage(g, int(nd["damage"]), int(p["ana"])), int(nd["damage"]), mult], "op": "nw_hack", "arg": [key, String(hid)]})
+				if NANO.is_offensive(nd):
+					var lab: String
+					if nd.has("damage"):
+						lab = "%s: %d damage (base %d x %.2f)" % [nd["name"], power_damage(g, int(nd["damage"]), int(p["ana"])), int(nd["damage"]), power_mult(g, int(p["ana"]))]
+					else:
+						lab = "%s: %d kJ" % [nd["name"], int(ceil(g.nano_cost(String(hid))))]
+					if int(g.nano_cd.get(String(hid), 0)) > 0:
+						lab += "  (cooling down)"
+					opts.append({"label": lab, "op": "nw_hack", "arg": [key, String(hid)]})
 			if opts.is_empty():
 				txt = ["Networked, but you have no offensive nanohack installed."]
 			opts.append(_back())
