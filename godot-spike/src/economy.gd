@@ -79,9 +79,7 @@ func setup(game) -> void:
 		if r < 0.06:
 			role[i] = VENDOR
 			look[i] = ["backpack", "courier"]
-		elif r < 0.11:
-			role[i] = FIXER
-			look[i] = ["coat", "imp_optics"]
+		# (no fixers for now: the courier runs were removed)
 
 ## a venue's keeper stands at the counter, altar or desk for good, in the right clothes
 ## what the implant seller i offers: a cyberdoc office (or a lone ripperdoc) a handful of Basic and Improved implants, a store its half of the body, by the district's wealth
@@ -495,7 +493,6 @@ func _rumor(i: int, shift: int = 0) -> String:
 	lines.append("\"There's a doc in the sewers.  Cheaper.  If the squatters let you through.\"")
 	lines.append("\"The big towers have glass bridges between them.  Safer than the street.\"")
 	lines.append("\"Locked rooms on the office floors.  Someone's keeping something in there.\"")
-	lines.append("\"Fixers pay well for parcels to the high floors.  Elevators help.\"")
 	return lines[(i * 7 + g.turn / 90 + shift * 3) % lines.size()]
 
 ## run option k of a menu; returns the next menu, or {} to close

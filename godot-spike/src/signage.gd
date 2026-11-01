@@ -97,15 +97,13 @@ static func sym_of(type: String) -> Array:
 const LISTED := ["restaurant", "noodle_stall", "cafe", "bakery", "bar", "shady_bar",                                           # eating and drinking
 		"convenience", "grocery", "liquor_store", "clothing", "electronics", "office_supply", "bookshop", "martial_shop", "dojo", "pawn_shop", "bank", "gun_dealer", "armor_shop", "nano_shop", "hardware", "auto_garage", "car_dealer",     # shops
 		"pharmacy", "clinic", "implant_shop", "implant_body", "cyberdoc",                                                      # health and chrome
-		"labor_center", "temp_agency"]                                                                                          # jobs
+		"labor_center", "temp_agency", "tower"]                                                                                          # jobs
 
 static func legend() -> Array:
 	var out: Array = []
 	var by_label := {}
 	for t in LISTED:
-		if not TYPE_SYM.has(t):
-			continue
-		var e: Array = TYPE_SYM[t]
+		var e: Array = sym_of(t)
 		if by_label.has(e[2]):
 			(out[by_label[e[2]]][3] as Array).append(t)
 		else:

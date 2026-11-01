@@ -93,6 +93,8 @@ func _initialize() -> void:
 	var SGL = preload("res://src/signage.gd")
 	var labels: Array = SGL.legend().map(func(r): return String(r[2]))
 	check("the building list keeps the shops and the job places (%s)" % ", ".join(labels), "Temp Agency" in labels and "Labor Center" in labels and "Pharmacy" in labels and not ("Hotel" in labels) and not ("Gym" in labels))
+	m.map_select(labels.find("Tower"))
+	check("Tower is a list row and finds the nearest tower (%s)" % m.nearest_picked_text(), "Tower" in labels and m.nearest_picked_text().begins_with("Nearest Tower"))
 	m.map_select(labels.find("Temp Agency"))
 	check("picking a kind names the nearest one (%s)" % m.nearest_picked_text(), m.nearest_picked_text().begins_with("Nearest Temp Agency") or m.nearest_picked_text().begins_with("No Temp Agency"))
 	check("no one is networked at the start, so Shock has no target", m.game.NW.linked_humans(m.game).is_empty())

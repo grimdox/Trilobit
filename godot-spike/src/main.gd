@@ -1080,15 +1080,21 @@ func map_select(i: int) -> void:
 
 func nearest_business_text(btypes: Array, label: String) -> String:
 	var g = game
-	if g == null or g.city == null or g.city.businesses.is_empty():
+	if g == null or g.city == null:
 		return ""
 	var px: int = g.lx(g.pc)
 	var py: int = g.ly(g.pc)
 	var best: Dictionary = {}
 	var bd := 1 << 30
+	var pool: Array = []
 	for b in g.city.businesses:
-		if not (String(b["type"]) in btypes):
-			continue
+		if String(b["type"]) in btypes:
+			pool.append(b)
+	if "tower" in btypes:
+		for b in g.city.bldgs:
+			if String(b["kind"]) == "core":
+				pool.append(b)
+	for b in pool:
 		var d: int = absi(int(b["door"].x) - px) + absi(int(b["door"].y) - py)
 		if d < bd:
 			bd = d
