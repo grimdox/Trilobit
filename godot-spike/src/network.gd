@@ -406,8 +406,8 @@ static func _do_hack(g, p: Dictionary, hid: String) -> Dictionary:
 	g.act_nano_use(hid, int(p["npc"]), true)
 	if g.sim.alive[int(p["npc"])] != 1 or g.game_over:
 		g.net_links.erase(String(p["key"]))
-		return {}
-	return ping_menu(g, p)
+	close(g)                                            # done: the screen goes down (the link stays; the N menu uses it)
+	return {}
 
 static func _do_camera(g, p: Dictionary) -> Dictionary:
 	if p.is_empty() or not is_linked(g, p):
@@ -419,6 +419,7 @@ static func _do_camera(g, p: Dictionary) -> Dictionary:
 	BD.spend(g, BD.T_ACTION)
 	if g.game_over:
 		return {}
+	close(g)
 	g.cam_view = {"board": int(ca[0]), "i": int(ca[1]), "solo": true}
 	g._compute_fov()
 	return {}

@@ -114,11 +114,12 @@ func _initialize() -> void:
 		var lm: Dictionary = NW.ping_menu(g, cp)
 		check("then it offers to view through it", lm["options"][0]["op"] == "nw_cam")
 		NW.choose(g, lm, 0)
-		check("a solo camera view starts", not g.cam_view.is_empty() and bool(g.cam_view["solo"]))
+		check("a solo camera view starts, and the network screen goes down for it", not g.cam_view.is_empty() and bool(g.cam_view["solo"]) and g.net_snap.is_empty())
 		var i0: int = int(g.cam_view["i"])
 		BD.cam_switch(g, 1)
 		check("a solo view cannot switch cameras", int(g.cam_view["i"]) == i0)
 		check("ending a solo view just ends it", BD.cam_end(g).is_empty() and g.cam_view.is_empty())
+		NW.build_snapshot(g)
 	if not lp.is_empty():
 		NW.scanned(g)[lp["key"]] = true
 		tries = 0

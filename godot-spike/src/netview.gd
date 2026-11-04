@@ -49,9 +49,8 @@ static func draw(v, g, ox: int, oy: int, T: int, S: float, vc: int) -> void:
 	var gh: float = gl.size.y
 	var flat := Transform2D(0.0, Vector2.ONE, 0.0, gl.position)                   # the glass (its own corner is the origin)
 	var you := Vector2((float(pcx - ox) + 0.5) * float(T), (float(pcy - oy) + 0.5) * float(T))
-	var org: Vector2 = gl.get_center() - you
-	var mapt := Transform2D(0.0, Vector2.ONE, 0.0, org)                            # the map's cells, with you in the middle of the glass
-	_clipr = Rect2(gl.position - org, gl.size)
+	var mapt := Transform2D(0.0, Vector2.ONE, 0.0, Vector2.ZERO)                  # the map's own coordinates are the game's: every tile lies on the tile it is in play
+	_clipr = gl                                                                    # (the view scrolls with the cursor, so the cursor stays in the middle of the glass)
 	v.draw_set_transform_matrix(flat)
 	_background(v, gw, gh)
 	_rain(v, gw, gh, T, S, t)
@@ -68,7 +67,8 @@ static func draw(v, g, ox: int, oy: int, T: int, S: float, vc: int) -> void:
 		var pp := Vector2((g.lx(c) - ox + 0.5) * T, (g.ly(c) - oy + 0.5) * T)
 		if _clipr.grow(-float(T) * 0.5).has_point(pp):
 			_ping(v, g, p, pp, T, S, t)
-	_you(v, you, T, S, t)
+	if _clipr.grow(-float(T) * 0.5).has_point(you):
+		_you(v, you, T, S, t)
 	_cursor(v, g, ox, oy, T, S, pcx, pcy, t)
 	for p in snap["pings"]:
 		var c2: int = NW.ping_cell(g, p)
@@ -334,7 +334,7 @@ static func _cursor(v, g, ox: int, oy: int, T: int, S: float, pcx: int, pcy: int
 	var c := Vector2((float(cx - ox) + 0.5) * f, (float(cy - oy) + 0.5) * f)
 	var on_ping: bool = not NW.ping_at(g, g.pc / g.s2 * g.s2 + cy * g.size + cx).is_empty()
 	var col: Color = YELLOW if on_ping else CYAN
-	if v.look_off != Vector2i.ZERO:
+	if v.look_off != Vector2i.ZERO and _clipr.grow(-f * 0.5).has_point(Vector2((float(pcx - ox) + 0.5) * f, (float(pcy - oy) + 0.5) * f)):
 		v.draw_line(Vector2((float(pcx - ox) + 0.5) * f, (float(pcy - oy) + 0.5) * f), c, _a(col, 0.28), maxf(1.0, S))
 	var r: float = f * (0.58 + 0.05 * sin(t * 6.0))
 	var arm: float = f * 0.22

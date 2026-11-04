@@ -13,8 +13,14 @@ func _initialize() -> void:
 	var g = m.game
 	g.implants["x303"] = true
 	g._sync_pools()
+	m.refresh()
+	for i in 20:
+		await process_frame
+	root.get_texture().get_image().save_png("/tmp/claude-0/shot_play2.png")
 	g.NW.build_snapshot(g)
 	m.mode = "netscan"
+	m.net_looking = true
+	m.look_off = Vector2i(0, 0)
 	m.refresh()
 	for i in 40:
 		await process_frame

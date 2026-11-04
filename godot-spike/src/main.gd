@@ -1582,6 +1582,8 @@ func refresh() -> void:
 	logbox.text = "\n".join(lines)
 	status.add_theme_color_override("font_color", Color(1, 0.4, 0.4) if g.body.frac("chest") < 0.34 or g.body.frac("head") < 0.34 else Color.WHITE)
 	_drain_sfx()
+	if net_looking and mode == "play" and game.net_snap.is_empty():
+		look_end()                                    # the network screen went down by itself (a job done): the view comes back to you
 	if mode == "netscan":
 		logbox.text = _netscan_text()
 		view.look_on = true
@@ -1999,7 +2001,10 @@ func _netscan_key(ev: InputEventKey, k: int) -> void:
 		_netscan_move(ld, 5 if ev.shift_pressed else 1)
 	return
 
+var net_looking := false                 # the network screen is what the look cursor belongs to
+
 func look_end() -> void:
+	net_looking = false
 	look_aim = false
 	look_off = Vector2i.ZERO
 	view.look_on = false
@@ -2347,6 +2352,7 @@ func _unhandled_key_input(ev: InputEvent) -> void:
 		"netscan":
 			if game.NW.scan(game):
 				mode = "netscan"
+				net_looking = true
 				look_off = Vector2i.ZERO
 				view.look_on = true
 				view.look_off = Vector2i.ZERO
