@@ -15,6 +15,8 @@ const YELLOW := Color(1.00, 0.90, 0.30)
 const RED := Color(1.00, 0.14, 0.20)
 const GREEN := Color(0.26, 1.00, 0.52)
 const WHITE := Color(1.0, 1.0, 1.0)
+const SHOW_WALLS := false                               # walls are left off the scan for now (they may come back as a gameplay element)
+static var _clipr := Rect2()                            # the glass, in the map's own coordinates: nothing is drawn outside it
 
 static func _h(a: int, b: int) -> int:
 	var x: int = ((a * 73856093) ^ (b * 19349663) ^ 0x5bd1e995) & 0x7fffffff
@@ -36,38 +38,46 @@ static func draw(v, g, ox: int, oy: int, T: int, S: float, vc: int) -> void:
 	var R: int = int(snap["radius"])
 	var pcx: int = g.lx(snap["center"])
 	var pcy: int = g.ly(snap["center"])
-	# the monitor: dimmed game, margins of traces and rain, bezel; the scan map is drawn small inside its glass
+	# the monitor: dimmed game, margins of traces and rain, bezel.  The map inside the glass is drawn at the gameplay scale (one tile is one tile), centred on you,
+	# and anything that would fall outside the glass is left out.
 	var sx: float = W / 1280.0
 	var sy: float = H / 720.0
 	v.draw_set_transform(home, 0.0, Vector2(sx, sy))
 	TF.paint(v, "net")
-	var glass: Rect2 = TF.SCREEN
-	var k: float = minf(glass.size.x * sx / W, glass.size.y * sy / H)
-	var org: Vector2 = home + Vector2(glass.position.x * sx + (glass.size.x * sx - W * k) * 0.5, glass.position.y * sy + (glass.size.y * sy - H * k) * 0.5)
-	var flat := Transform2D(0.0, Vector2(k, k), 0.0, org)                       # the glass (its own corner is the origin)
-	var mapt := Transform2D(0.0, Vector2(k, k), 0.0, org + v.position * k)     # the map's cells, which the view has shifted to put the player in the middle
+	var gl := Rect2(home + Vector2(TF.SCREEN.position.x * sx, TF.SCREEN.position.y * sy), Vector2(TF.SCREEN.size.x * sx, TF.SCREEN.size.y * sy))
+	var gw: float = gl.size.x
+	var gh: float = gl.size.y
+	var flat := Transform2D(0.0, Vector2.ONE, 0.0, gl.position)                   # the glass (its own corner is the origin)
+	var you := Vector2((float(pcx - ox) + 0.5) * float(T), (float(pcy - oy) + 0.5) * float(T))
+	var org: Vector2 = gl.get_center() - you
+	var mapt := Transform2D(0.0, Vector2.ONE, 0.0, org)                            # the map's cells, with you in the middle of the glass
+	_clipr = Rect2(gl.position - org, gl.size)
 	v.draw_set_transform_matrix(flat)
-	_background(v, W, H)
-	_rain(v, W, H, T, S, t)
+	_background(v, gw, gh)
+	_rain(v, gw, gh, T, S, t)
 	v.draw_set_transform_matrix(mapt)
 	_cells(v, g, ox, oy, T, S, base, pcx, pcy, R, t)
 	_frames(v, g, ox, oy, T, S, pcx, pcy, R, t)
 	v.draw_set_transform_matrix(flat)
-	_scanlines(v, W, H, S, t)
+	_scanlines(v, gw, gh, S, t)
 	v.draw_set_transform_matrix(mapt)
 	for p in snap["pings"]:
 		var c: int = NW.ping_cell(g, p)
 		if c < 0 or c / g.s2 != base / g.s2:
 			continue
-		_ping(v, g, p, Vector2((g.lx(c) - ox + 0.5) * T, (g.ly(c) - oy + 0.5) * T), T, S, t)
-	_you(v, Vector2((pcx - ox + 0.5) * T, (pcy - oy + 0.5) * T), T, S, t)
+		var pp := Vector2((g.lx(c) - ox + 0.5) * T, (g.ly(c) - oy + 0.5) * T)
+		if _clipr.grow(-float(T) * 0.5).has_point(pp):
+			_ping(v, g, p, pp, T, S, t)
+	_you(v, you, T, S, t)
 	_cursor(v, g, ox, oy, T, S, pcx, pcy, t)
 	for p in snap["pings"]:
 		var c2: int = NW.ping_cell(g, p)
 		if c2 >= 0 and c2 / g.s2 == base / g.s2 and NW.is_scanned(g, String(p["key"])):
-			_label(v, p, Vector2((g.lx(c2) - ox + 0.5) * T, (g.ly(c2) - oy + 0.5) * T), T, S)
+			var lp := Vector2((g.lx(c2) - ox + 0.5) * T, (g.ly(c2) - oy + 0.5) * T)
+			if _clipr.grow(-float(T) * 0.5).has_point(lp):
+				_label(v, p, lp, T, S)
 	v.draw_set_transform_matrix(flat)
-	_vignette(v, W, H)
+	_vignette(v, gw, gh)
 	_title(v, g, S, t)
 	v.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
@@ -136,6 +146,8 @@ static func _cells(v, g, ox: int, oy: int, T: int, S: float, base: int, pcx: int
 			var d: int = maxi(absi(x - pcx), absi(y - pcy))
 			if d > R:
 				continue
+			if not _clipr.encloses(Rect2(float(sx * T), float(sy * T), float(T), float(T))):
+				continue
 			var tt: int = _tile_at(g, base, x, y)
 			if tt == CG.AIR or _is_wall(tt):
 				continue
@@ -154,6 +166,8 @@ static func _cells(v, g, ox: int, oy: int, T: int, S: float, base: int, pcx: int
 				var c: Vector2 = r.get_center()
 				v.draw_rect(Rect2(c.x - 1.0, c.y - 1.0, 2.0, 2.0), _a(CYAN, 0.30 * fade + sweep * 0.5))
 	# the walls on top: thick, faint, joined into runs
+	if not SHOW_WALLS:
+		return
 	for sy in v.rows:
 		for sx in v.cols:
 			var x2: int = ox + sx
@@ -185,6 +199,30 @@ static func _cells(v, g, ox: int, oy: int, T: int, S: float, base: int, pcx: int
 						absf(o2.x) + (wd if o2.y != 0.0 else 0.0), absf(o2.y) + (wd if o2.x != 0.0 else 0.0)), cl)
 
 ## ---------------------------------------------------------------------------------------------------------------- range frames
+## an axis-aligned line, cut to the glass
+static func _seg(v, a: Vector2, b: Vector2, col: Color, w: float) -> void:
+	var r: Rect2 = _clipr
+	if absf(a.y - b.y) < 0.01:
+		if a.y < r.position.y or a.y > r.end.y:
+			return
+		var x0: float = clampf(minf(a.x, b.x), r.position.x, r.end.x)
+		var x1: float = clampf(maxf(a.x, b.x), r.position.x, r.end.x)
+		if x1 > x0:
+			v.draw_line(Vector2(x0, a.y), Vector2(x1, a.y), col, w)
+	else:
+		if a.x < r.position.x or a.x > r.end.x:
+			return
+		var y0: float = clampf(minf(a.y, b.y), r.position.y, r.end.y)
+		var y1: float = clampf(maxf(a.y, b.y), r.position.y, r.end.y)
+		if y1 > y0:
+			v.draw_line(Vector2(a.x, y0), Vector2(a.x, y1), col, w)
+
+static func _box(v, r: Rect2, col: Color, w: float) -> void:
+	_seg(v, r.position, Vector2(r.end.x, r.position.y), col, w)
+	_seg(v, Vector2(r.end.x, r.position.y), r.end, col, w)
+	_seg(v, Vector2(r.position.x, r.end.y), r.end, col, w)
+	_seg(v, r.position, Vector2(r.position.x, r.end.y), col, w)
+
 static func _dash_rect(v, r: Rect2, col: Color, w: float, dash: float, phase: float) -> void:
 	var pts: Array = [r.position, Vector2(r.end.x, r.position.y), r.end, Vector2(r.position.x, r.end.y), r.position]
 	for i in 4:
@@ -197,14 +235,14 @@ static func _dash_rect(v, r: Rect2, col: Color, w: float, dash: float, phase: fl
 			var s0: float = maxf(0.0, s)
 			var s1: float = minf(L, s + dash)
 			if s1 > s0:
-				v.draw_line(a + dirv * s0, a + dirv * s1, col, w)
+				_seg(v, a + dirv * s0, a + dirv * s1, col, w)
 			s += dash * 2.0
 
 static func _frames(v, g, ox: int, oy: int, T: int, S: float, pcx: int, pcy: int, R: int, t: float) -> void:
 	var f := float(T)
 	var rs := Rect2(float(pcx - R - ox) * f, float(pcy - R - oy) * f, float(2 * R + 1) * f, float(2 * R + 1) * f)
-	v.draw_rect(rs, _a(CYAN, 0.55), false, maxf(2.0, S * 1.2))
-	v.draw_rect(rs.grow(S * 2.5), _a(CYAN, 0.14), false, maxf(1.0, S))
+	_box(v, rs, _a(CYAN, 0.55), maxf(2.0, S * 1.2))
+	_box(v, rs.grow(S * 2.5), _a(CYAN, 0.14), maxf(1.0, S))
 	var L: int = NW.link_radius(g)
 	var rl := Rect2(float(pcx - L - ox) * f, float(pcy - L - oy) * f, float(2 * L + 1) * f, float(2 * L + 1) * f)
 	_dash_rect(v, rl, _a(PINK, 0.85), maxf(2.0, S * 1.3), f * 0.35, t * f * 1.2)

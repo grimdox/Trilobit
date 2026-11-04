@@ -1066,20 +1066,14 @@ func _nano_card(c: CanvasItem, i: int, x: float, maxw: float) -> void:
 		y += 20.0
 		_txt(c, ln, Vector2(x, y), 16, Color(0.75, 0.86, 0.95))
 	y += 30.0
-	y = _kv(c, y, "Slots", "%d" % game.NANO.width(d), x, maxw)
-	if String(d["kind"]) != "passive":
-		y = _kv(c, y, "Cost", "%d kJ per use" % int(ceil(game.nano_cost(hid))), x, maxw)
-	if d.has("draw") or d.has("draw_part"):
-		y = _kv(c, y, "While running", "+%g kJ/h" % game.nano_upkeep(d), x, maxw)
-	if d.has("turns") and String(d["kind"]) == "active":
-		y = _kv(c, y, "Lasts", CLK.span_text(int(d["turns"])), x, maxw)
-	if d.has("cooldown"):
-		y = _kv(c, y, "Cooldown", CLK.span_text(game.nano_cd_turns(d)), x, maxw)
+	c.draw_line(Vector2(x, y - 12.0), Vector2(x + maxw, y - 12.0), Color(0.3, 0.9, 1.0, 0.3), 1.0)
+	for row in game.NANO.rows(d, game):
+		y = _kv(c, y, String(row[0]), String(row[1]), x, maxw)
 	_txt(c, "Enter or right-click ejects the chip.", Vector2(x, y + 10.0), 14, Color(0.6, 0.72, 0.85))
 
 func _kv(c: CanvasItem, y: float, k: String, v: String, x: float, maxw: float) -> float:
 	_txt(c, k, Vector2(x, y), 16, Color(0.6, 0.72, 0.85))
-	var kw: float = minf(150.0, maxw * 0.4)
+	var kw: float = minf(230.0, maxw * 0.5)
 	_fit_txt(c, v, Vector2(x + kw, y), 17, Color.WHITE, maxw - kw)
 	return y + 23.0
 
@@ -1103,6 +1097,11 @@ func _item_card(c: CanvasItem, it, x: float, y0: float, maxw: float) -> void:
 	y += 12.0
 	if d.has("gun"):
 		y = _gun_lines(c, it, x, y, maxw)
+	elif game.NANO.of_item(it.id()) != "":
+		for row in game.NANO.rows(game.NANO.get_def(game.NANO.of_item(it.id())), game):
+			if String(row[0]) == "Price":
+				continue
+			y = _kv(c, y, String(row[0]), String(row[1]), x, maxw)
 	elif d.has("melee"):
 		y = _melee_lines(c, it, x, y, maxw)
 	if d.has("armor"):

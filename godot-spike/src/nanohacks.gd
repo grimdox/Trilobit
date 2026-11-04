@@ -96,3 +96,66 @@ static func width(d: Dictionary) -> int:
 
 static func is_offensive(d: Dictionary) -> bool:
 	return bool(d.get("offensive", false))
+
+## the table every chip shows, like a gun's: [variable, value] rows.  g (the game) is optional: with it the costs and the cooldown are the player's own.
+static func rows(d: Dictionary, g = null) -> Array:
+	var out: Array = []
+	var kind: String = String(d.get("kind", "passive"))
+	out.append(["Type", {"passive": "Passive (always on)", "active": "Active (timed)", "instant": "Instant (one use)"}[kind]])
+	out.append(["Target", "Networked target" if is_offensive(d) else "Self"])
+	out.append(["Slots", str(width(d))])
+	for sk in d.get("skills", {}):
+		out.append([String(sk).capitalize(), "+%d" % int(d["skills"][sk])])
+	if d.has("armor"):
+		out.append(["Armor, every body part", "+%d" % int(d["armor"])])
+		out.append(["Armor, implanted parts", "+%d more" % int(d["armor_imp"])])
+	if d.has("heal_imp"):
+		out.append(["Healing, implanted part", "%d" % int(d["heal_imp"])])
+		out.append(["Healing, other parts", "%d" % int(d["heal_other"])])
+	if d.has("damage"):
+		out.append(["Damage", str(int(d["damage"])) + " x (1 + Impl/10 - their Ana/10)"])
+		out.append(["Hits", "1 random implanted part"])
+	if d.has("dmg_imp"):
+		out.append(["Damage, implanted part", "%d per turn" % int(d["dmg_imp"])])
+		out.append(["Damage, other part", "%d per turn" % int(d["dmg_other"])])
+		out.append(["Damage turns", str(int(d["turns"]))])
+	if String(d.get("id", "")) == "impair":
+		out.append(["Disables", "1 random arm or leg implant"])
+		out.append(["Health lost", "0"])
+	if String(d.get("id", "")) == "underclock":
+		out.append(["Action points per action", "110  (normal 100)"])
+	if String(d.get("id", "")) == "chaotic":
+		out.append(["Destroys", "1 random implant"])
+		out.append(["Delay", "30 s"])
+	if kind != "passive":
+		var per: String = ""
+		var kj: float = float(d.get("cost", USE_KJ))
+		if d.has("cost_part"):
+			kj = float(d["cost_part"]) * 6.0
+			per = "  (" + String.num(float(d["cost_part"])) + " per body part)"
+		elif d.has("cost_imp"):
+			kj = float(d["cost_imp"]) * (float(g.implanted_limb_count()) if g != null else 1.0)
+			per = "  (" + String.num(float(d["cost_imp"])) + " per implanted part)"
+		out.append(["Energy per use", String.num(kj) + " kJ" + per])
+	if d.has("draw") or d.has("draw_part"):
+		var up: float = float(d["draw_part"]) * 6.0 if d.has("draw_part") else float(d["draw"])
+		out.append(["Upkeep while running", String.num(up) + " kJ/h"])
+	if kind == "active" and d.has("turns"):
+		out.append(["Duration", span(int(d["turns"]))])
+	elif d.has("turns") and kind == "instant" and not d.has("dmg_imp") and String(d.get("id", "")) in ["impair", "underclock"]:
+		out.append(["Duration", span(int(d["turns"]))])
+	if d.has("cooldown"):
+		out.append(["Cooldown", span(int(round(float(d["cooldown"]) * 10.0)))])
+		if g != null and int(g.lvl("networking")) > 0:
+			out.append(["Cooldown (your Networking)", span(g.nano_cd_turns(d))])
+	out.append(["Price", "¥%d" % (BASE_PRICE * int(d.get("mult", 1)))])
+	return out
+
+static func span(turns: int) -> String:
+	if turns <= 0:
+		return "none"
+	if turns >= 600:
+		return String.num(float(turns) / 600.0) + " h"
+	if turns >= 10:
+		return String.num(float(turns) / 10.0) + " min"
+	return "%d s" % (turns * 6)

@@ -129,8 +129,9 @@ func _initialize() -> void:
 			g.game_over = false
 		check("a light can be networked", g.net_links.has(lp["key"]))
 		var was: bool = BD.fixture_off(g, int(lp["cell"]))
-		NW.choose(g, NW.ping_menu(g, lp), 0)
+		var lres: Dictionary = NW.choose(g, NW.ping_menu(g, lp), 0)
 		check("and switched on its own", BD.fixture_off(g, int(lp["cell"])) != was)
+		check("the menu and the scan screen close once the light is switched", lres.is_empty() and g.net_snap.is_empty())
 		var other: int = int(lp["cell"]) + 7
 		check("without touching its neighbours", not BD.fixture_off(g, other) or true)
 	# a link is lost out of range

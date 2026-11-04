@@ -440,4 +440,5 @@ static func _do_light(g, p: Dictionary) -> Dictionary:
 	else:
 		BD.fixture_toggle(g, int(p["cell"]))
 	BD._relight(g)
-	return linked_menu(g, p)
+	close(g)                                            # the job is done: the scan screen goes down with the menu so the game can be seen
+	return {}

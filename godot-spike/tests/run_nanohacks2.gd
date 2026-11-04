@@ -43,12 +43,12 @@ func _initialize() -> void:
 	var g = w.game
 	# ---- the table
 	var ratios := {"minor_plating": [1, 1], "plating": [2, 3], "major_plating": [4, 12], "mend": [1, 1], "heal": [2, 3], "impair": [2, 3], "acid": [2, 3], "underclock": [1, 1], "chaotic": [4, 12]}
-	var tab_ok := true
+	var stat_ok := true
 	for id in ratios:
 		var it = g._new_item(NANO.chip_item(id))
 		if NANO.width(NANO.get_def(id)) != int(ratios[id][0]) or int(it.def["price"]) != 400 * int(ratios[id][1]):
-			tab_ok = false
-	check("slots and prices: Minor 1/400, Plating 2/1200, Major 4/4800, Mend 1/400, Heal 2/1200, Impair 2/1200, Acid 2/1200, Underclock 1/400, Chaotic 4/4800", tab_ok)
+			stat_ok = false
+	check("slots and prices: Minor 1/400, Plating 2/1200, Major 4/4800, Mend 1/400, Heal 2/1200, Impair 2/1200, Acid 2/1200, Underclock 1/400, Chaotic 4/4800", stat_ok)
 	check("Plating's old chip and Mend (test) are gone: 12 named hacks and 16 Skill chips", NANO.ALL.size() == 28 and NANO.get_def("mend")["name"] == "Mend")
 	check("each of the 16 skills has a Skill chip of +1", ["unarmed", "melee", "ranged", "dodge", "grit", "networking", "analysis", "implementation", "manual", "engineering", "artisan", "research", "streetwise", "etiquette", "diplomacy", "negotiation"].all(func(s): var d: Dictionary = NANO.get_def(s); return not d.is_empty() and d["kind"] == "passive" and int(d["skills"][s]) == 1 and d["name"].begins_with("Skill: ")))
 	# ---- wide chips
@@ -243,5 +243,24 @@ func _initialize() -> void:
 				if int(a["fac"]) != 0 and String(a["role"]) != "hostage" and int(a["lv"]) != 4:
 					lv_ok = false
 	check("the scenario's missions (%d sites): hostiles are level 4 and none stands in the starting room" % sites, all_ok and lv_ok)
+	var NH2 = preload("res://src/nanohacks.gd")
+	var tbl_good := true
+	for d in NH2.ALL:
+		var rws: Array = NH2.rows(d, null)
+		var labs: Array = rws.map(func(r): return r[0])
+		if not (labs.has("Type") and labs.has("Slots") and labs.has("Price") and labs.has("Target")):
+			tbl_good = false
+		for r in rws:
+			if String(r[1]) == "":
+				tbl_good = false
+	check("every chip has a stat table with Type, Target, Slots and Price and no empty value (%d chips)" % NH2.ALL.size(), tbl_good)
+	var pl: Dictionary = {}
+	for r in NH2.rows(NH2.get_def("plating"), null):
+		pl[r[0]] = r[1]
+	check("the Plating table: 2 slots, +1 / +3 armor, 60 kJ, 12 kJ/h, 10 min, ¥1200", pl["Slots"] == "2" and pl["Armor, every body part"] == "+1" and pl["Armor, implanted parts"] == "+3 more" and String(pl["Energy per use"]).begins_with("60 kJ") and pl["Upkeep while running"] == "12 kJ/h" and pl["Duration"] == "10 min" and pl["Price"] == "¥1200")
+	var ac: Dictionary = {}
+	for r in NH2.rows(NH2.get_def("acid"), null):
+		ac[r[0]] = r[1]
+	check("the Acid Feedback table: networked target, 2 and 1 a turn for 5 turns, 20 kJ, 1 min cooldown", ac["Target"] == "Networked target" and ac["Damage, implanted part"] == "2 per turn" and ac["Damage, other part"] == "1 per turn" and ac["Damage turns"] == "5" and String(ac["Energy per use"]).begins_with("20 kJ") and ac["Cooldown"] == "1 min")
 	print("NANOHACKS2 %d/%d" % [ok, n])
 	quit(0 if ok == n else 1)
