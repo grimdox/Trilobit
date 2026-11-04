@@ -7,7 +7,11 @@ const INSET := 26.0                                      # bezel width
 const SCREEN := Rect2(176.0, 66.0, 928.0, 528.0)         # the glass
 const TEXT := Rect2(194.0, 80.0, 892.0, 500.0)           # where the menu text goes
 
-var style: String = ""                                   # "" = hidden, "board", "net", "popup" (a net menu over the scan map)
+var style: String = "":                                  # "" = hidden, "board", "net", "popup" (a net menu over the scan map)
+	set(v):
+		if v != style:
+			style = v
+			queue_redraw()                               # a change must repaint at once: hiding the frame needs a redraw too, or the last one stays on the screen
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
