@@ -33,6 +33,27 @@ func _initialize() -> void:
 	print("NANOALERT %d/%d" % [ok, n])
 	quit(0 if ok == n else 1)
 
+func _put(g, base: int, px: int, py: int, dx: int, dy: int, kind: String) -> void:
+	var c: int = base + (py + dy) * g.size + px + dx
+	match kind:
+		"wall":
+			g.city.tiles[c] = CG.WALL
+			g.sim.walk[c] = 0
+			g.fov.opaque[c] = 1
+		"floor":
+			g.city.tiles[c] = CG.FLOOR
+			g.sim.walk[c] = 1
+			g.fov.opaque[c] = 0
+		"door":
+			g.city.tiles[c] = CG.DOOR
+			g.sim.walk[c] = 1
+			g.fov.opaque[c] = 0
+
+func _rect(g, base: int, px: int, py: int, x0: int, y0: int, x1: int, y1: int, kind: String) -> void:
+	for dy in range(y0, y1 + 1):
+		for dx in range(x0, x1 + 1):
+			_put(g, base, px, py, dx, dy, kind)
+
 func _case(g, hid: String) -> void:
 	g.implants = {"x303": true}
 	g.nanos = []
@@ -43,9 +64,9 @@ func _case(g, hid: String) -> void:
 	g._sync_pools()
 	g.power = g.power_cap()
 	g.skills["networking"] = 5
-	g.body.reset()
 	g.skills["analysis"] = 5
 	g.skills["implementation"] = 5
+	g.body.reset()
 	var c = g._new_item(NANO.chip_item(hid))
 	g.inv.stow(c)
 	g.act_nano_install(c, -1)
@@ -57,45 +78,46 @@ func _case(g, hid: String) -> void:
 	if target < 0:
 		check("%s: someone wired to test on" % hid, false)
 		return
-	# a clear row of floor, a wall between you and them: they are three tiles away and out of sight
+	# you are in room B (x -3..3, y 0..3).  The enemy is in room A above it (x -3..3, y -5..-2) with three doors:
+	#   east (4,-4) to an empty closet, north (0,-6) to another empty closet, and south (-3,-1) down into your room.
 	var base: int = (g.pc / g.s2) * g.s2
 	var px: int = g.lx(g.pc)
 	var py: int = g.ly(g.pc)
-	for dx in range(-1, 6):
-		for dy in [-1, 0, 1]:
-			var cell: int = base + (py + dy) * g.size + px + dx
-			g.city.tiles[cell] = CG.GROUND
-			g.sim.walk[cell] = 1
-	var wall: int = base + py * g.size + px + 2
-	g.city.tiles[wall] = CG.WALL
-	g.sim.walk[wall] = 0
-	g.fov.opaque[wall] = 1
-	var spot: int = base + py * g.size + px + 3
+	_rect(g, base, px, py, -10, -11, 10, 6, "wall")
+	_rect(g, base, px, py, -3, 0, 3, 3, "floor")
+	_rect(g, base, px, py, -3, -5, 3, -2, "floor")
+	_rect(g, base, px, py, 5, -5, 6, -3, "floor")
+	_rect(g, base, px, py, -1, -8, 1, -7, "floor")
+	_put(g, base, px, py, 4, -4, "door")
+	_put(g, base, px, py, 0, -6, "door")
+	_put(g, base, px, py, -3, -1, "door")
+	var spot: int = base + (py - 3) * g.size + px + 3
+	g.pc = base + (py + 3) * g.size + px - 2              # you stand at the back of room B, in line with the south door
 	g.sim.player = g.pc
 	g.sim.place(target, spot)
 	g.hpn[target] = 1000
 	g.hpmax[target] = 1000
 	g._npc_limbs_init(target)
+	g.gunc[target] = 0                                  # unarmed, so nothing is shot through the doorway
 	g.astate[target] = g.UNAWARE
 	g.noticed_you[target] = 0
-	g.face[target] = 0                                  # looking east, away from the player
 	g._compute_fov()
-	var unseen: bool = g.fov.visible[spot] == 0
-	check("%s: the target starts unaware, three tiles off behind a wall" % hid, g.astate[target] == g.UNAWARE and g.cheb(g.sim.pos[target], g.pc) == 3 and unseen)
+	check("%s: the target starts unaware in the room next door, out of sight" % hid, g.astate[target] == g.UNAWARE and g.fov.visible[spot] == 0 and g.fov.around[spot] == 0)
 	g.net_links["h" + str(target)] = {}
 	var used: bool = g.act_nano_use(hid, target, true)
-	if not used:
-		print("    log: ", g.log.slice(maxi(0, g.log.size() - 2)))
 	check("%s: the hack runs through the link" % hid, used)
-	var hp_pl: int = g.body.total()
-	var st: int = g.astate[target]
-	var lp: int = g.lastpos[target]
-	print("    -> state %d (HUNTING = %d), told where you are: %s, noticed_you %d" % [st, g.HUNTING, str(lp == g.pc), g.noticed_you[target]])
-	check("%s: the hacked enemy is now hunting" % hid, st == g.HUNTING)
-	check("%s: and knows exactly where you stand" % hid, lp == g.pc)
-	var d0: int = g.cheb(g.sim.pos[target], g.pc)
-	for _t in 12:
+	check("%s: the hacked enemy goes searching, not hunting, and is not told where you are" % hid, g.astate[target] == g.SEARCHING and g.lastpos[target] != g.pc and g.dsearch.has(target))
+	var doors: Array = []                                # the doors they stand in, in order
+	var found_at := -1
+	for t in 150:
 		g._tick()
-	var d1: int = g.cheb(g.sim.pos[target], g.pc)
-	print("    -> distance %d after 12 turns (was %d); state %d; player hp lost %d; log %s" % [d1, d0, g.astate[target], hp_pl - g.body.total(), str(g.log.slice(maxi(0, g.log.size() - 3)))])
-	check("%s: and goes after you: it closes in or opens fire (distance %d -> %d, you lost %d)" % [hid, d0, d1, hp_pl - g.body.total()], d1 < d0 or d1 <= 1 or g.body.total() < hp_pl)
+		var pos: int = g.sim.pos[target]
+		if g._is_door_cell(pos) and (doors.is_empty() or doors[doors.size() - 1] != pos):
+			doors.append(pos)
+		if g.astate[target] == g.HUNTING:
+			found_at = t
+			break
+	var rel: Array = doors.map(func(d): return Vector2i(g.lx(d) - px, g.ly(d) - py))
+	print("    -> doors visited in order (relative to you): ", rel, "; found you after ", found_at, " turns")
+	check("%s: they check the nearest door first (east closet), then the next off the same room (north closet)" % hid, rel.size() >= 2 and rel[0] == Vector2i(4, -4) and rel[1] == Vector2i(0, -6))
+	check("%s: they look behind the empty doors before the one to your room, and then find you" % hid, rel.size() >= 3 and rel[2] == Vector2i(-3, -1) and found_at >= 0)

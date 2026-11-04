@@ -3368,6 +3368,137 @@ func _alert(i: int) -> void:
 		meter[i] = 100
 		_alarm(i)
 
+## A person who has been hacked knows something is in their implants but not where you are: they go looking, not hunting.  They check behind the nearest door of
+## the room they are in; finding nothing, another door off the same room; and when every door of the room is done, they go on into the next room, until they see you
+## (the normal noticing then turns them to HUNTING).  Civilians run, as ever.  Nobody else is told.
+var dsearch: Dictionary = {}                   # person -> {doors: [cells], done: {cell: true}, goal: cell, path: [cells], seq: turns of the search}
+
+func _hack_alert(i: int) -> void:
+	noticed_you[i] = 1
+	if fac[i] == CIV:
+		_alert(i)
+		return
+	if astate[i] == HUNTING or sim.alive[i] != 1:
+		return
+	astate[i] = SEARCHING
+	sim.ctl[i] = 1
+	meter[i] = 40
+	timer[i] = 400
+	lastpos[i] = sim.pos[i]
+	dsearch[i] = {"done": {}, "goal": -1, "path": []}
+	say_if_seen(sim.pos[i], "%s is alerted and starts looking for whoever is in their head." % name_of(i))
+
+func _is_door_cell(c: int) -> bool:
+	var t: int = city.tiles[c]
+	return (t == CG.DOOR or t == CG.TID["door_closed"]) and sim.walk[c] == 1
+
+## breadth-first over the walkable cells of person i's level, starting at `from`; doors are reached but not crossed.  Returns {dist: {cell: steps}, prev: {cell: cell}}
+func _room_bfs(from: int, cap: int) -> Dictionary:
+	var dist: Dictionary = {from: 0}
+	var prev: Dictionary = {}
+	var q: Array = [from]
+	var head := 0
+	var z: int = z_of(from)
+	while head < q.size() and q.size() < cap:
+		var cur: int = q[head]
+		head += 1
+		if cur != from and _is_door_cell(cur):
+			continue
+		for dd in DIR8:
+			var nx: int = lx(cur) + int(dd[0])
+			var ny: int = cur / size + int(dd[1])
+			if not in_bounds(nx, ny):
+				continue
+			var nc: int = ny * size + nx
+			if dist.has(nc) or z_of(nc) != z or sim.walk[nc] == 0:
+				continue
+			if int(dd[0]) != 0 and int(dd[1]) != 0 and (sim.walk[cur + int(dd[0])] == 0 or sim.walk[cur + int(dd[1]) * size] == 0):
+				continue                                # no cutting corners
+			dist[nc] = int(dist[cur]) + 1
+			prev[nc] = cur
+			q.append(nc)
+	return {"dist": dist, "prev": prev}
+
+func _path_from(prev: Dictionary, to: int) -> Array:
+	var out: Array = []
+	var c: int = to
+	while prev.has(c):
+		out.push_front(c)
+		c = int(prev[c])
+	return out
+
+## pick the next place to look: the nearest door of this room not yet checked; none left, the far side of the nearest door, to start on the next room
+func _dsearch_plan(i: int, ds: Dictionary) -> void:
+	var here: int = sim.pos[i]
+	var bf: Dictionary = _room_bfs(here, 900)
+	var dist: Dictionary = bf["dist"]
+	var best := -1
+	var bd := 1 << 30
+	for c in dist:
+		if c != here and _is_door_cell(c) and not ds["done"].has(c) and int(dist[c]) < bd:
+			bd = int(dist[c])
+			best = c
+	if best < 0:
+		# every door of this room has been looked behind: go on through the nearest one (the last it checked) into the next room, then plan again from there
+		for c in dist:
+			if c != here and _is_door_cell(c) and int(dist[c]) < bd:
+				bd = int(dist[c])
+				best = c
+		if best < 0:
+			ds["goal"] = -1
+			ds["path"] = []
+			return
+		var path0: Array = _path_from(bf["prev"], best)
+		for dd in DIR8:
+			var nx: int = lx(best) + int(dd[0])
+			var ny: int = best / size + int(dd[1])
+			if in_bounds(nx, ny):
+				var nc: int = ny * size + nx
+				if z_of(nc) == z_of(best) and sim.walk[nc] == 1 and not dist.has(nc):
+					path0.append(nc)
+					ds["goal"] = nc
+					ds["path"] = path0
+					ds["done"][best] = true
+					return
+		ds["done"][best] = true
+		ds["goal"] = -1
+		ds["path"] = []
+		return
+	ds["goal"] = best
+	ds["path"] = _path_from(bf["prev"], best)
+
+## one turn of a hacked person's search
+func _dsearch_step(i: int) -> void:
+	var ds: Dictionary = dsearch[i]
+	var here: int = sim.pos[i]
+	if int(ds["goal"]) >= 0 and here == int(ds["goal"]):
+		ds["done"][here] = true                          # they stand in the doorway and look through
+		ds["goal"] = -1
+		ds["path"] = []
+		if fov.around[here] == 1 and sim._sees(here, pc, 16) and light_sees_player(here):
+			astate[i] = HUNTING                          # and you are there
+			sim.ctl[i] = 1
+			meter[i] = 100
+			lastpos[i] = pc
+			if sees_cell(here):
+				say("%s opens the way and spots you!" % name_of(i))
+			_alarm(i)
+		return
+	if int(ds["goal"]) < 0 or (ds["path"] as Array).is_empty():
+		_dsearch_plan(i, ds)
+		if int(ds["goal"]) < 0:
+			ds["done"] = {}                              # nowhere left to look: start the rounds again
+			return
+	var path: Array = ds["path"]
+	var nxt: int = int(path[0])
+	if sim.at[nxt] != -1 or nxt == pc or sim.walk[nxt] == 0:
+		ds["path"] = []                                  # blocked: look again next turn
+		return
+	path.pop_front()
+	ds["path"] = path
+	_face_toward(i, nxt)
+	_move_agent(i, nxt)
+
 func _flee(i: int, turns: int) -> void:
 	if astate[i] != FLEEING:
 		say("%s flees!" % name_of(i))
@@ -4317,6 +4448,8 @@ func _ai() -> void:
 		if st == UNAWARE or st == SUSPICIOUS or st == SEARCHING or st == RETURNING:
 			_notice(i, d)
 			st = astate[i]
+		if st != SEARCHING and not dsearch.is_empty() and dsearch.has(i):
+			dsearch.erase(i)
 		match st:
 			SUSPICIOUS:
 				if not _step_to(i, lastpos[i]) or cheb(sim.pos[i], lastpos[i]) <= 1:
@@ -4324,6 +4457,11 @@ func _ai() -> void:
 					timer[i] = 25
 			SEARCHING:
 				timer[i] -= 1
+				if dsearch.has(i):
+					if timer[i] > 0:
+						_dsearch_step(i)
+						continue
+					dsearch.erase(i)
 				var dir: Array = SIZE_DIRS[rng.randi() % 8]
 				var nx: int = sim.pos[i] % size + dir[0]
 				var ny: int = sim.pos[i] / size + dir[1]
@@ -5511,21 +5649,21 @@ func act_nano_use(hid: String, target: int = -1, via_net: bool = false) -> bool:
 			"underclock":
 				_fx_of(target)["under"] = turn + int(d["turns"])
 				say("%s's clock drags: they act 10%% slower." % name_of(target))
-				_alert(target)
+				_hack_alert(target)
 			"acid":
 				if npc_implants(target).is_empty():
 					say("The acid finds no wiring in %s to eat." % name_of(target))
 				else:
 					_fx_of(target)["acid"] = int(d["turns"])
 					say("Acid feedback floods %s's implants." % name_of(target))
-				_alert(target)
+				_hack_alert(target)
 			"chaotic":
 				if npc_implants(target).is_empty():
 					say("The resonance finds nothing to shake apart in %s." % name_of(target))
 				else:
 					_fx_of(target)["chaos"] = {"at": turn + int(d["turns"])}
 					say("A resonance builds in %s's implants..." % name_of(target))
-				_alert(target)
+				_hack_alert(target)
 	sfx("blip")
 	end_turn()
 	return true
@@ -5535,13 +5673,13 @@ func _impair(i: int, d: Dictionary) -> void:
 	var cands: Array = npc_implants(i).filter(func(id): return BODY.PART_GROUP.get(String(IMP.get_def(String(id)).get("part", "chest")), "chest") in ["arms", "legs"])
 	if cands.is_empty():
 		say("%s has no arm or leg implant to impair." % name_of(i))
-		_alert(i)
+		_hack_alert(i)
 		return
 	var id: String = String(cands[rng.randi() % cands.size()])
 	var grp: String = BODY.PART_GROUP.get(String(IMP.get_def(id).get("part", "chest")), "chest")
 	_fx_of(i)["impair"] = {"grp": grp, "until": turn + int(d["turns"])}
 	say("Impair locks up %s's %s: they lose the use of their %s." % [name_of(i), String(IMP.get_def(id).get("name", "implant")), grp])
-	_alert(i)
+	_hack_alert(i)
 
 ## 10 damage to a random implanted body part of the target; people with no implants take nothing
 func _shock(i: int, base: int) -> void:
@@ -5549,7 +5687,7 @@ func _shock(i: int, base: int) -> void:
 	var rig: Array = npc_implants(i)
 	if rig.is_empty():
 		say("The jolt crackles over %s and finds nothing to bite: they are not wired." % name_of(i))
-		_alert(i)
+		_hack_alert(i)
 		return
 	var part: String = String(IMP.get_def(String(rig[rng.randi() % rig.size()])).get("part", "chest"))
 	var grp: String = BODY.PART_GROUP.get(part, "chest")
@@ -5558,7 +5696,7 @@ func _shock(i: int, base: int) -> void:
 	say("Shock arcs into %s's %s (%d)." % [name_of(i), BODY.NAME[loc], dmg])
 	if _hurt_npc_limb(i, loc, dmg):
 		return
-	_alert(i)
+	_hack_alert(i)
 
 func has_implant(id: String) -> bool:
 	if not implants.get(id, false) or power_left() <= 0.0:
