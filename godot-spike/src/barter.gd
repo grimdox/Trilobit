@@ -4,7 +4,7 @@ extends RefCounted
 ##    sold them goes, anything they have sold is back.  Buying takes tiles out of their stock, selling puts yours into it.
 ##  - The seller's price is the shop's list price less your haggling (Economy.haggle); a merchant pays 40% of an item's value for it, up to
 ##    55% for a good haggler.  Merchants have all the yen they need and take anything but job items.
-##  - Loose ammunition is not a tile: an ammunition box you buy goes straight into your rounds, and rounds cannot be sold here.
+##  - Ammunition is an ordinary stack: a round type is one item, its count the rounds, sold here in boxes (the shop lists two boxes of a type).  Rounds are not sold back here.
 const CLK = preload("res://src/clock.gd")
 const ItemScript = preload("res://src/item.gd")
 
@@ -54,7 +54,12 @@ func _stock(i: int) -> Array:
 		var hag: bool = e.size() < 4 or bool(e[3])
 		if it.stackable():
 			it.count = 4 if it.has_tag("food") else (2 if it.has_tag("ammo") else 3)
-			out.append({"item": it, "base": int(e[2]), "hag": hag})
+			var base: int = int(e[2])
+			if it.has_tag("ammo"):                       # the line is a box's price: the tile is its rounds, priced one by one
+				var box: int = int(it.def["ammo"]["rounds"])
+				it.count = 2 * box
+				base = maxi(1, int(ceil(float(base) / float(box))))
+			out.append({"item": it, "base": base, "hag": hag})
 		else:
 			var qty: int = 3 if e[0] == "trl_water_bottle" else 1
 			for n in qty:
@@ -113,16 +118,12 @@ func buy(i: int, tile: Dictionary, at_g: String = "", at_i: int = -1) -> Diction
 	var cost: int = unit_price(i, tile) * it.count
 	if g.yen < cost:
 		return {"ok": false, "msg": "You can't afford that: ¥%d, and you have ¥%d." % [cost, g.yen]}
-	if it.has_tag("ammo"):
-		var am: Dictionary = it.def["ammo"]
-		g.pool_add(am["cal"], am["kind"], it.count * int(am["rounds"]))
-	else:
-		var placed := false
-		if at_g != "" and g.inv.grid.has(at_g) and at_i >= 0 and at_i < (g.inv.grid[at_g] as Array).size() and g.inv.grid[at_g][at_i] == null and not it.stackable():
-			g.inv.grid[at_g][at_i] = it
-			placed = true
-		if not placed and not g.inv.stow(it):
-			return {"ok": false, "msg": "No room in your pockets: make a tile free first."}
+	var placed := false
+	if at_g != "" and g.inv.grid.has(at_g) and at_i >= 0 and at_i < (g.inv.grid[at_g] as Array).size() and g.inv.grid[at_g][at_i] == null and not it.stackable():
+		g.inv.grid[at_g][at_i] = it
+		placed = true
+	if not placed and not g.inv.stow(it):
+		return {"ok": false, "msg": "No room in your pockets: make a tile free first."}
 	g.yen -= cost
 	g.eco._haggle_xp({"who": i}, cost)
 	g.say("You buy the %s%s (¥%d)." % [it.def["name"], (" x%d" % it.count) if it.count > 1 else "", cost])

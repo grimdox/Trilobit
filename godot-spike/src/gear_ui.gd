@@ -1042,7 +1042,7 @@ func _card_panel(c: CanvasItem, t: float) -> void:
 	# purse and message at the foot of the card
 	var fy: float = CARD.end.y - 14.0
 	if game != null:
-		_txt(c, "¥%d     loose rounds %d" % [game.yen, game.ammo_total()], Vector2(x, fy), 16, YELLOW)
+		_txt(c, "¥%d" % game.yen, Vector2(x, fy), 16, YELLOW)
 	if msg != "" and msg_t > 0.0:
 		var lines: Array = wrap_text(msg, 16, maxw - (190.0 if tab == "equipment" else 0.0))
 		var my: float = fy - 28.0 - (lines.size() - 1) * 20.0

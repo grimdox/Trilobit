@@ -421,7 +421,8 @@ func _shop_stock(i: int, kind: String) -> Array:
 			for n in 6:
 				var a: String = ammo[(i * 5 + n * 3) % ammo.size()]
 				if not out.any(func(x): return x[0] == a):
-					out.append([a, g.db.defs[a]["name"], int(g.db.defs[a]["price"]) * 3 / 2])
+					var boxn: int = int(g.db.defs[a]["ammo"]["rounds"])
+					out.append([a, "%s (box of %d)" % [g.db.defs[a]["name"], boxn], int(ceil(float(int(g.db.defs[a]["price"]) * boxn) * 1.5))])
 		"martial_shop":
 			var melee_ids: Array = g.melee_all
 			for n in 8:
@@ -597,9 +598,8 @@ func choose(m: Dictionary, k: int) -> Dictionary:
 			if e[0] == "trl_water_bottle":
 				it.fill = 500
 			if it.has_tag("ammo"):
-				var am: Dictionary = it.def["ammo"]
-				g.pool_add(am["cal"], am["kind"], int(am["rounds"]))
-			elif not g.stow(it):
+				it.count = int(it.def["ammo"]["rounds"])          # a box of rounds, as one stack
+			if not g.stow(it):
 				g._put(g.pc, it)
 				g.say("No room; it falls at your feet.")
 			g.yen -= int(e[2])

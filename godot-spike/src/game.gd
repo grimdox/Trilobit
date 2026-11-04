@@ -90,7 +90,6 @@ var sfx_queue: Array = []             # sound events for the front end ("shot", 
 # the player
 var pc: int = 0                      # cell index
 var yen: int = 0                                   # starting cash will come from the chosen start; none for now
-var ammo_pool: Dictionary = {"9mm|fmj": 36}   # "caliber|kind" -> rounds carried loose
 var want_kind: Dictionary = {}                 # caliber -> kind the next reload loads
 var aim_turns: int = 0                         # banked aim points (negative after a long burst, never below max aim - 5)
 var aim_dbt: float = 0.0                       # fractional aim loss carried between bullets
@@ -892,6 +891,7 @@ func _start_player() -> void:
 	npc_fx = {}
 	for hid in ["minor_plating", "reflex", "shock", "strike", "mend", "research"]:       # the first six chips (what the starter set was before the new hacks)
 		inv.stow(_new_item(NANO.chip_item(hid)))
+	inv.stow(_new_item("trl_ammo_9mm_fmj", 36))      # a stack of 36 9mm ball rounds
 
 ## a free floor cell in a flat chosen at random from every flat in every apartment building (who owns it is for later)
 func _start_flat() -> int:
@@ -1248,12 +1248,6 @@ func act_pickup() -> bool:
 		if it.has_tag("money"):
 			yen += it.count
 			say("You take ¥%d." % it.count)
-			took += 1
-		elif it.has_tag("ammo"):
-			var am: Dictionary = it.def["ammo"]
-			var n: int = it.count * int(am["rounds"])
-			pool_add(am["cal"], am["kind"], n)
-			say("You take %d rounds of %s %s." % [n, am["cal"], GP.KIND[am["kind"]]["label"]])
 			took += 1
 		elif stow(it):
 			say("You stow the %s." % item_label(it))
@@ -3600,16 +3594,48 @@ func _alarm(i: int) -> void:
 func pool_key(cal: String, kind: String) -> String:
 	return cal + "|" + kind
 
+## the item that is one round of this caliber and kind ("" if there is none)
+func ammo_item_id(cal: String, kind: String) -> String:
+	if _ammo_ids.is_empty():
+		for k in db.defs:
+			var d: Dictionary = db.defs[k]
+			if "ammo" in d.get("tags", []) and d.has("ammo") and d["ammo"].has("dmg"):
+				_ammo_ids[pool_key(String(d["ammo"]["cal"]), String(d["ammo"]["kind"]))] = String(k)
+	return String(_ammo_ids.get(pool_key(cal, kind), ""))
+
+var _ammo_ids: Dictionary = {}
+
+## Ammunition is an ordinary item: a stack of one round type, its count the rounds.  Nothing is carried "loose"; these read and change the stacks in your pack.
 func pool_get(cal: String, kind: String) -> int:
-	return int(ammo_pool.get(pool_key(cal, kind), 0))
+	var id: String = ammo_item_id(cal, kind)
+	var t := 0
+	for it in inv.all_items():
+		if it.id() == id:
+			t += it.count
+	return t
 
 func pool_add(cal: String, kind: String, n: int) -> void:
-	var k := pool_key(cal, kind)
-	ammo_pool[k] = int(ammo_pool.get(k, 0)) + n
-	if ammo_pool[k] <= 0:
-		ammo_pool.erase(k)
+	var id: String = ammo_item_id(cal, kind)
+	if id == "" or n == 0:
+		return
+	if n > 0:
+		var it = _new_item(id, n)
+		if not stow(it):
+			_put(pc, it)
+			say("No room for %d %s rounds: they fall at your feet." % [n, GP.KIND[kind]["label"]])
+		return
+	var need: int = -n
+	for it in inv.all_items():
+		if need <= 0:
+			break
+		if it.id() == id:
+			var take: int = mini(need, it.count)
+			it.count -= take
+			need -= take
+			if it.count <= 0:
+				inv.remove(it)
 
-## loose rounds of one caliber, all kinds
+## every round of one caliber you carry, all kinds
 func reserve(cal: String) -> int:
 	var t := 0
 	for kind in GP.KINDS_BY_CAL.get(cal, []):
@@ -3618,8 +3644,9 @@ func reserve(cal: String) -> int:
 
 func ammo_total() -> int:
 	var t := 0
-	for k in ammo_pool:
-		t += int(ammo_pool[k])
+	for it in inv.all_items():
+		if it.has_tag("ammo") and it.def.has("ammo") and it.def["ammo"].has("dmg"):
+			t += it.count
 	return t
 
 func gun_stats() -> Dictionary:
@@ -6201,7 +6228,7 @@ func outside_tile(x: int, y: int) -> int:
 
 ## everything about the player that travels between zones
 func player_dict() -> Dictionary:
-	return {"done": done_contracts.duplicate(), "boards": boards.duplicate(true), "power": power, "power_state": power_state, "yen": yen, "implants": implants.duplicate(), "nanos": nanos.duplicate(), "nano_fx": nano_fx.duplicate(), "nano_cd": nano_cd.duplicate(), "npc_fx": npc_fx.duplicate(true), "fuel": fuel, "ammo": ammo_pool.duplicate(), "want_kind": want_kind.duplicate(),
+	return {"done": done_contracts.duplicate(), "boards": boards.duplicate(true), "power": power, "power_state": power_state, "yen": yen, "implants": implants.duplicate(), "nanos": nanos.duplicate(), "nano_fx": nano_fx.duplicate(), "nano_cd": nano_cd.duplicate(), "npc_fx": npc_fx.duplicate(true), "fuel": fuel, "want_kind": want_kind.duplicate(),
 		"name": player_name, "attrs": attrs.duplicate(), "app": app.duplicate(), "skills": skills.duplicate(), "xp": xp.duplicate(), "lvl": pc_level, "pts": attr_points, "inv": inv.to_dict(),
 		"stamina": stamina, "stam_v": 2, "ap": ap, "stance": stance, "run_mode": run_mode, "turn": turn, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "bless": bless_left, "drunk": drunk_left, "ate": last_ate, "drank": last_drank, "eco": eco.save(), "barter": barter.to_dict(), "flying": flying,
 		"body": body.to_dict(), "imp_dur": imp_dur.duplicate(), "arts": melee_arts.duplicate()}
@@ -6246,6 +6273,14 @@ func _load_body(d: Dictionary) -> void:
 	aim_frac = 0.0
 
 ## the inventory from a save: the new format, or a save from before the grid (nested pockets, worn armor, a wielded weapon) flattened into it
+## a save from when rounds were carried loose in a pool: they become ammunition items in the pack (what does not fit falls at your feet)
+func _legacy_ammo(d: Dictionary) -> void:
+	var pool: Dictionary = d.get("ammo", {})
+	for k in pool:
+		var parts: PackedStringArray = String(k).split("|")
+		if parts.size() == 2 and int(pool[k]) > 0:
+			pool_add(parts[0], parts[1], int(pool[k]))
+
 func _load_inventory(d: Dictionary) -> void:
 	inv = INV.new()
 	if d.has("inv"):
@@ -6312,10 +6347,10 @@ func apply_player(d: Dictionary) -> void:
 	npc_fx = _fx_load(d.get("npc_fx", {}))
 	_nano_sanitize()
 	fuel = int(d["fuel"])
-	ammo_pool = d["ammo"]
 	want_kind = d["want_kind"]
 	_load_skills(d)
 	_load_inventory(d)
+	_legacy_ammo(d)
 	stamina = int(d["stamina"])
 	if int(d.get("stam_v", 1)) < 2:          # old saves counted stamina out of 30
 		stamina = clampi(int(round(float(stamina) * STAM_LEGACY)), 0, STAMINA_MAX)
@@ -6357,7 +6392,7 @@ func save_dict() -> Dictionary:
 	var vlist := []
 	for v in vehicles:
 		vlist.append(vs.to_dict(v))
-	return {"test_size": test_size, "seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "corpses": corpses, "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "nanos": nanos, "nano_fx": nano_fx, "nano_cd": nano_cd, "npc_fx": npc_fx, "fuel": fuel, "flying": flying, "ammo": ammo_pool, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "lvl": pc_level, "pts": attr_points, "boards": boards, "in_vehicle": in_vehicle,
+	return {"test_size": test_size, "seed": seed_value, "island": (island.seed_value if island != null else -1), "zone": [zone.x, zone.y], "people": sim.n, "turn": turn, "pc": pc, "done": done_contracts, "power": power, "power_state": power_state, "yen": yen, "things": things.filter(func(t): return t["k"] != ""), "corpses": corpses, "critters": critters.filter(func(k): return k["k"] != ""), "implants": implants, "nanos": nanos, "nano_fx": nano_fx, "nano_cd": nano_cd, "npc_fx": npc_fx, "fuel": fuel, "flying": flying, "want_kind": want_kind, "skills": skills, "name": player_name, "attrs": attrs, "app": app, "xp": xp, "lvl": pc_level, "pts": attr_points, "boards": boards, "in_vehicle": in_vehicle,
 			"body": body.to_dict(), "imp_dur": imp_dur.duplicate(), "stamina": stamina, "stam_v": 2, "ap": ap, "arts": melee_arts.duplicate(),
 			"mission": mission, "portal": portal, "rng_state": str(rng.state), "transit": transit.save(), "eco": eco.save(), "barter": barter.to_dict(), "inv": inv.to_dict(),
 			"items_at": it_at, "open_doors": open_doors.keys(), "vehicles": vlist, "tv": CLK.SAVE_VERSION, "tick": sim.tick, "ate": last_ate, "drank": last_drank, "log": log.slice(-30),
@@ -6388,9 +6423,6 @@ func load_dict(d: Dictionary) -> void:
 	power = float(d.get("power", -1.0))
 	power_state = int(d.get("power_state", 0))
 	yen = int(d["yen"])
-	ammo_pool = {}
-	for k in d["ammo"]:
-		ammo_pool[k] = int(d["ammo"][k])
 	want_kind = d.get("want_kind", {})
 	aim_turns = 0
 	aim_target = -1
@@ -6414,6 +6446,7 @@ func load_dict(d: Dictionary) -> void:
 	_load_body(d)
 	rng.state = int(d["rng_state"])
 	_load_inventory(d)
+	_legacy_ammo(d)
 	items_at = {}
 	for k in d["items_at"]:
 		var arr := []

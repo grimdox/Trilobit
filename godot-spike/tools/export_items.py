@@ -26,8 +26,10 @@ for cal, kinds, rounds, price in AMMO:
     for k in kinds:
         lo, hi, er = BULLETS[cal]
         m = KIND_DMG[k]
-        items.append({"id": "trl_ammo_%s_%s" % (cal.replace(".", ""), k), "name": "%s %s box" % (cal, KINDN[k]), "weight_g": rounds * 10, "volume_ml": rounds * 6, "length_mm": 80,
-                      "price": price * (2 if k == "ap" else 1), "tags": ["ammo"],
+        # one item per round type: a stack's count is its rounds (a shop sells them in boxes of `rounds`)
+        items.append({"id": "trl_ammo_%s_%s" % (cal.replace(".", ""), k), "name": "%s %s rounds" % (cal, KINDN[k]), "weight_g": 10, "volume_ml": 6, "length_mm": 30,
+                      "price": max(1, round(price * (2 if k == "ap" else 1) / rounds)), "tags": ["ammo"],
+                      "desc": "Sold in boxes of %d.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them." % rounds,
                       "ammo": {"cal": cal, "kind": k, "rounds": rounds, "dmg": [max(1, round(lo * m * BULLET_DMG_X)), max(1, round(hi * m * BULLET_DMG_X))], "eff_range": KIND_ER.get((cal, k), er)}})
 # gun mods.  effects: acc (flat, percentage points; 5 points = 1 on the 2d10 roll), max_aim (more aim points can be banked), aim_speed (change to the aim points gained per aiming turn; optics are slower to settle but allow range precision through rangepen_pct), hip (bonus when not aiming), range_pct, rangepen_pct (less accuracy lost per tile),
 # close_pen (penalty inside 4 tiles), recoil_pct (less aim lost per bullet), noise_cap (shots are heard no further than this), dmg_pct, mag_pct, jam (percentage points), reload (turns), spread_pct

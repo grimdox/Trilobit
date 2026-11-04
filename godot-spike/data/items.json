@@ -2293,14 +2293,15 @@
  },
  {
   "id": "trl_ammo_9mm_fmj",
-  "name": "9mm ball box",
-  "weight_g": 180,
-  "volume_ml": 108,
-  "length_mm": 80,
-  "price": 14,
+  "name": "9mm ball rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 1,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 18.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": "9mm",
    "kind": "fmj",
@@ -2314,14 +2315,15 @@
  },
  {
   "id": "trl_ammo_9mm_ap",
-  "name": "9mm armor-piercing box",
-  "weight_g": 180,
-  "volume_ml": 108,
-  "length_mm": 80,
-  "price": 28,
+  "name": "9mm armor-piercing rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 2,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 18.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": "9mm",
    "kind": "ap",
@@ -2335,14 +2337,15 @@
  },
  {
   "id": "trl_ammo_9mm_hp",
-  "name": "9mm hollow-point box",
-  "weight_g": 180,
-  "volume_ml": 108,
-  "length_mm": 80,
-  "price": 14,
+  "name": "9mm hollow-point rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 1,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 18.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": "9mm",
    "kind": "hp",
@@ -2356,14 +2359,15 @@
  },
  {
   "id": "trl_ammo_357_fmj",
-  "name": ".357 ball box",
-  "weight_g": 120,
-  "volume_ml": 72,
-  "length_mm": 80,
-  "price": 18,
+  "name": ".357 ball rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 2,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 12.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": ".357",
    "kind": "fmj",
@@ -2377,14 +2381,15 @@
  },
  {
   "id": "trl_ammo_357_ap",
-  "name": ".357 armor-piercing box",
-  "weight_g": 120,
-  "volume_ml": 72,
-  "length_mm": 80,
-  "price": 36,
+  "name": ".357 armor-piercing rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 3,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 12.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": ".357",
    "kind": "ap",
@@ -2398,14 +2403,15 @@
  },
  {
   "id": "trl_ammo_357_hp",
-  "name": ".357 hollow-point box",
-  "weight_g": 120,
-  "volume_ml": 72,
-  "length_mm": 80,
-  "price": 18,
+  "name": ".357 hollow-point rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 2,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 12.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": ".357",
    "kind": "hp",
@@ -2419,14 +2425,15 @@
  },
  {
   "id": "trl_ammo_556_fmj",
-  "name": "5.56 ball box",
-  "weight_g": 200,
-  "volume_ml": 120,
-  "length_mm": 80,
-  "price": 24,
+  "name": "5.56 ball rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 1,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 20.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": "5.56",
    "kind": "fmj",
@@ -2440,14 +2447,15 @@
  },
  {
   "id": "trl_ammo_556_ap",
-  "name": "5.56 armor-piercing box",
-  "weight_g": 200,
-  "volume_ml": 120,
-  "length_mm": 80,
-  "price": 48,
+  "name": "5.56 armor-piercing rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 2,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 20.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": "5.56",
    "kind": "ap",
@@ -2461,14 +2469,15 @@
  },
  {
   "id": "trl_ammo_556_hp",
-  "name": "5.56 hollow-point box",
-  "weight_g": 200,
-  "volume_ml": 120,
-  "length_mm": 80,
-  "price": 24,
+  "name": "5.56 hollow-point rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 1,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 20.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": "5.56",
    "kind": "hp",
@@ -2482,14 +2491,15 @@
  },
  {
   "id": "trl_ammo_12ga_shot",
-  "name": "12ga buckshot box",
-  "weight_g": 100,
-  "volume_ml": 60,
-  "length_mm": 80,
-  "price": 20,
+  "name": "12ga buckshot rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 2,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 10.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": "12ga",
    "kind": "shot",
@@ -2503,14 +2513,15 @@
  },
  {
   "id": "trl_ammo_12ga_slug",
-  "name": "12ga slug box",
-  "weight_g": 100,
-  "volume_ml": 60,
-  "length_mm": 80,
-  "price": 20,
+  "name": "12ga slug rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 2,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 10.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": "12ga",
    "kind": "slug",
@@ -2524,14 +2535,15 @@
  },
  {
   "id": "trl_ammo_338_fmj",
-  "name": ".338 ball box",
-  "weight_g": 100,
-  "volume_ml": 60,
-  "length_mm": 80,
-  "price": 40,
+  "name": ".338 ball rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 4,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 10.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": ".338",
    "kind": "fmj",
@@ -2545,14 +2557,15 @@
  },
  {
   "id": "trl_ammo_338_ap",
-  "name": ".338 armor-piercing box",
-  "weight_g": 100,
-  "volume_ml": 60,
-  "length_mm": 80,
-  "price": 80,
+  "name": ".338 armor-piercing rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 8,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 10.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": ".338",
    "kind": "ap",
@@ -2566,14 +2579,15 @@
  },
  {
   "id": "trl_ammo_762_fmj",
-  "name": "7.62 ball box",
-  "weight_g": 300,
-  "volume_ml": 180,
-  "length_mm": 80,
-  "price": 30,
+  "name": "7.62 ball rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 1,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 30.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": "7.62",
    "kind": "fmj",
@@ -2587,14 +2601,15 @@
  },
  {
   "id": "trl_ammo_762_ap",
-  "name": "7.62 armor-piercing box",
-  "weight_g": 300,
-  "volume_ml": 180,
-  "length_mm": 80,
-  "price": 60,
+  "name": "7.62 armor-piercing rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 2,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 30.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": "7.62",
    "kind": "ap",
@@ -2608,14 +2623,15 @@
  },
  {
   "id": "trl_ammo_127_fmj",
-  "name": "12.7 ball box",
-  "weight_g": 200,
-  "volume_ml": 120,
-  "length_mm": 80,
-  "price": 50,
+  "name": "12.7 ball rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 2,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 20.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": "12.7",
    "kind": "fmj",
@@ -2629,14 +2645,15 @@
  },
  {
   "id": "trl_ammo_127_ap",
-  "name": "12.7 armor-piercing box",
-  "weight_g": 200,
-  "volume_ml": 120,
-  "length_mm": 80,
-  "price": 100,
+  "name": "12.7 armor-piercing rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 5,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 20.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": "12.7",
    "kind": "ap",
@@ -2650,14 +2667,15 @@
  },
  {
   "id": "trl_ammo_40mm_he",
-  "name": "40mm HE grenade box",
-  "weight_g": 30,
-  "volume_ml": 18,
-  "length_mm": 80,
-  "price": 45,
+  "name": "40mm HE grenade rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 15,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 3.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": "40mm",
    "kind": "he",
@@ -2671,14 +2689,15 @@
  },
  {
   "id": "trl_ammo_cell_cell",
-  "name": "cell charge pack box",
-  "weight_g": 200,
-  "volume_ml": 120,
-  "length_mm": 80,
-  "price": 30,
+  "name": "cell charge pack rounds",
+  "weight_g": 10,
+  "volume_ml": 6,
+  "length_mm": 30,
+  "price": 2,
   "tags": [
    "ammo"
   ],
+  "desc": "Sold in boxes of 20.  One round is one shot; they stack in your pack, and a gun is reloaded straight from them.",
   "ammo": {
    "cal": "cell",
    "kind": "cell",

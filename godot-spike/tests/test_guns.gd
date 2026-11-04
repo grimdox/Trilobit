@@ -91,7 +91,9 @@ func run() -> Array:
 	# actions through the game
 	var pl = g._new_item(g.gun_ids["pistol"][0])
 	g.wield = pl
-	g.ammo_pool = {}
+	for it0 in g.inv.all_items().duplicate():
+		if it0.has_tag("ammo"):
+			g.inv.remove(it0)
 	g.pool_add("9mm", "fmj", 30)
 	g.pool_add("9mm", "hp", 40)
 	var mag: int = GP.stats(pl)["mag"]
